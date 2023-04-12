@@ -1,0 +1,173 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+datasource db {
+  provider = "postgres"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum PosterSource {
+  RAW
+  GITHUB
+}
+
+model Post {
+  id     String @id
+  author Player @relation(fields: [playerId], references: [id])
+  title  String
+  text   String
+
+  // To return `Date`s intact through the API we need to add data transformers
+  // https://trpc.io/docs/data-transformers
+  createdAt DateTime @unique @default(now())
+  updatedAt DateTime @unique @default(now())
+  playerId  String
+}
+
+enum UserState {
+  active
+  disabled
+  banned
+}
+
+enum Role {
+  admin
+  moderator
+}
+
+model User {
+  id         String    @id @default(cuid())
+  state      UserState @default(active)
+  role       Role?
+  name       String
+  discordId  String?   @unique
+  identities Player[]
+}
+
+enum CO {
+  adder
+}
+
+enum Unit {
+  pipe_runner
+}
+
+enum Game {
+  advance_dating_by_web
+}
+
+enum Achievement {
+  field_training_complete
+  win_streak
+  underdog
+  handicap
+  lightning_strike
+  destroyer
+  fixer
+  gold_rush
+  champion
+  grizzled_yet
+}
+
+model Clan {
+  id      String   @id @default(cuid())
+  owner   Player   @relation("owner", fields: [ownerId], references: [id])
+  ownerId String
+  members Player[] @relation("member")
+}
+
+model Player {
+  id               String        @id @default(cuid())
+  name             String
+  secret           Boolean
+  mmr              Int           @default(1300)
+  top_mmr          Int           @default(1300)
+  youtubeChannelId String?
+  twitchUserName   String?
+  ChatMessage      ChatMessage[]
+
+  User   User?   @relation(fields: [userId], references: [id])
+  userId String?
+
+  Post            Post[]
+  preferences     Json?
+  achievements    Achievement[]
+  favourite_COs   CO[]
+  favourite_units Unit[]
+  favourite_games Game[]
+
+  match          Match?  @relation(name: "players", fields: [matchId], references: [id])
+  matchId        String? @map("matchId")
+  matchConsent   Match?  @relation(name: "playersChatConsent", fields: [matchConsentId], references: [id])
+  matchConsentId String? @map("matchConsentId")
+
+  Notes Notes[]
+
+  ownedClans Clan[] @relation(name: "owner")
+  clans      Clan[] @relation(name: "member")
+}
+
+model Map {
+  id      String  @id @default(cuid())
+  matches Match[]
+}
+
+model ChatMessage {
+  id        String   @id @default(cuid())
+  content   String
+  createdAt DateTime @default(now())
+
+  author   Player @relation(fields: [authorId], references: [id])
+  authorId String
+
+  match   Match?  @relation(fields: [matchId], references: [id])
+  matchId String? @map("matchId")
+}
+
+enum MatchStatus {
+  ready
+  playing
+  finished
+}
+
+enum LeagueType {
+  standard
+  fog
+  high_funds
+  dual_league
+  standard_teams
+  broken
+}
+
+model Notes {
+  content String
+  public  Boolean @default(false)
+
+  player   Player @relation(fields: [playerId], references: [id])
+  playerId String
+
+  match   Match  @relation(fields: [matchId], references: [id])
+  matchId String
+
+  @@id([playerId, matchId])
+}
+
+model Match {
+  id                             String        @id @default(cuid())
+  leagueType                     LeagueType?
+  status                         MatchStatus
+  map                            Map           @relation(fields: [mapId], references: [id])
+  matchState                     Json
+  players                        Player[]      @relation("players")
+  playersConsentingToPublishChat Player[]      @relation("playersChatConsent")
+  chatMessages                   ChatMessage[]
+  chatIsPublic                   Boolean       @default(false)
+  mapId                          String
+
+  createdAt DateTime @default(now())
+  Notes     Notes[]
+}
