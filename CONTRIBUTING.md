@@ -1,5 +1,5 @@
 # Contributing
-Before anything else, thanks for considering contributing to Wars World, its thanks to people like you that AW community can grow and continue to enjoy this beautiful game.
+Before anything else, thanks for considering contributing to Wars World, its thanks to people like you that AW community can grow and continue to enjoy this beautiful game. Also, contributing doesn't mean you make a commitment to us, we have a philosophy where open source devs are free to come and go as they wish. Whether you just want to implement your move planner feature or become part of the team, we welcome you!
 
 ### Where do I go from here?
 
