@@ -13,8 +13,8 @@ Also if you aren't a developer, you can still contribute as an artist or even as
 
 ### Fork & create a branch
 
-If this is something you think you can fix, then fork WarsWorld and create
-a branch with a descriptive name.
+If the issue/feature you chose iss something you think you can fix, then fork WarsWorld and create
+a branch with a descriptive name so you can start working on it! (Or if you are an inner collaborator, you can just make a new branch inside WarsWorld!)
 
 A good branch name would be descriptive of what you are working for, for example if its an update to the mobile navbar, it could be mobile-navbar-update. 
 
