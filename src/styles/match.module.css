@@ -1,6 +1,10 @@
 .match {
   font-family: sans-serif;
   background-color: #555;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .gap {

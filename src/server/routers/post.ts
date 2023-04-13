@@ -58,14 +58,13 @@ export const postRouter = router({
     )
     .mutation(async ({ input, ctx }) => {
       const { name } = ctx.user;
-      const post = await prisma.post.create({
-        data: {
-          ...input,
-          name,
-          source: 'GITHUB',
-        },
-      });
-      ee.emit('add', post);
+      const post = null;
+      // const post = await prisma.post.create({
+      //   data: {
+      //     ...input,
+      //   },
+      // });
+      // ee.emit('add', post);
       delete currentlyTyping[name];
       ee.emit('isTypingUpdate');
       return post;

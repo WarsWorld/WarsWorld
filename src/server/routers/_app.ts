@@ -2,6 +2,7 @@
  * This file contains the root router of your tRPC-backend
  */
 import { router, publicProcedure } from '../trpc';
+import { matchRouter } from './match';
 import { postRouter } from './post';
 import { observable } from '@trpc/server/observable';
 import { clearInterval } from 'timers';
@@ -10,6 +11,7 @@ export const appRouter = router({
   healthcheck: publicProcedure.query(() => 'yay!'),
 
   post: postRouter,
+  match: matchRouter,
 
   randomNumber: publicProcedure.subscription(() => {
     return observable<number>((emit) => {

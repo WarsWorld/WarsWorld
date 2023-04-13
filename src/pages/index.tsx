@@ -111,6 +111,7 @@ export default function IndexPage() {
       getPreviousPageParam: (d) => d.prevCursor,
     },
   );
+
   const utils = trpc.useContext();
   const { hasPreviousPage, isFetchingPreviousPage, fetchPreviousPage } =
     postsQuery;
@@ -157,10 +158,12 @@ export default function IndexPage() {
       block: 'end',
     });
   }, [scrollTargetRef]);
+
   useEffect(() => {
     scrollToBottomOfList();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
   // subscribe to new posts and add
   trpc.post.onAdd.useSubscription(undefined, {
     onData(post) {
@@ -264,19 +267,7 @@ export default function IndexPage() {
                 {messages?.map((item) => (
                   <article key={item.id} className=" text-gray-50">
                     <header className="flex space-x-2 text-sm">
-                      <h3 className="text-base">
-                        {item.source === 'RAW' ? (
-                          item.name
-                        ) : (
-                          <a
-                            href={`https://github.com/${item.name}`}
-                            target="_blank"
-                            rel="noreferrer"
-                          >
-                            {item.name}
-                          </a>
-                        )}
-                      </h3>
+                      <h3 className="text-base"></h3>
                       <span className="text-gray-500">
                         {new Intl.DateTimeFormat('en-GB', {
                           dateStyle: 'short',

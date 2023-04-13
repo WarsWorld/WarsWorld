@@ -1,0 +1,281 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+.gameBox {
+  .mapGrid {
+    // our individual tiles
+    .mapTile {
+      //the cursor we see over tiles
+      //TODO: Fix the tile cursor, currently it looks centered but it really isn't centered
+      .tileCursor {
+        display: none;
+        position: absolute;
+        bottom: -8px;
+        left: -10px;
+
+        text-align: center;
+        width: 50px;
+        height: 50px;
+        background: url('/img/mapTiles/tileCursor.png') no-repeat;
+        background-size: contain;
+        z-index: 10;
+        image-rendering: pixelated;
+      }
+
+      .tileMove {
+        background: rgba(67, 217, 228, 0.5);
+        border: 2px solid rgb(22, 98, 184);
+        z-index: 5;
+        position: absolute;
+        top: 0;
+        height: 31px;
+        width: 31px;
+      }
+      .tilePath {
+        background: rgba(0, 62, 133, 0.65);
+        border: 2px solid rgb(0, 55, 117);
+        z-index: 6;
+        position: absolute;
+        top: 0;
+        height: 31px;
+        width: 31px;
+      }
+      //the red square on enemy units
+      .tileEnemy {
+        background: rgba(228, 67, 67, 0.25);
+        border: 2px solid rgb(184, 22, 22);
+        z-index: 20;
+        position: absolute;
+        top: 0;
+        margin: 0 auto;
+        height: 31px;
+        width: 31px;
+        &:hover {
+          cursor: pointer;
+          animation: selectTarget 3s linear infinite;
+        } //the red square on enemy units
+      }
+      .tileAttack {
+        animation: selectTarget 4s linear infinite;
+        background: rgba(228, 67, 67, 0.25);
+        border: 2px solid rgb(184, 22, 22);
+        z-index: 20;
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        margin: auto;
+        height: 31px;
+        width: 31px;
+        @keyframes selectTarget {
+          from {
+            transform: rotate(0);
+            background: rgba(228, 67, 67, 0.25);
+          }
+
+          50% {
+            transform: rotate(270deg);
+            background: rgba(228, 67, 67, 0.85);
+          }
+          to {
+            transform: rotate(540deg);
+            background: rgba(228, 67, 67, 0.25);
+          }
+        }
+      } //The battle forecast we see when two units are about to fight
+    }
+  }
+}
+.forecast {
+  position: absolute;
+  z-index: 101;
+  display: grid;
+  left: -300%;
+  right: -300%;
+  top: 150%;
+  grid-template-columns: auto auto auto;
+  background: rgba(255, 255, 255, 0.9);
+  border: 0.1em solid black;
+  color: black;
+  width: 800%;
+  padding: 0.1em;
+  margin: 0 auto;
+  align-items: center;
+  justify-items: center;
+  h1 {
+    font-size: 1rem;
+    padding: 0;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+  }
+  .forecastUnit,
+  .forecastValues {
+    width: 100%;
+    height: 100%;
+  }
+  .forecastRelative {
+    position: relative;
+  }
+  .forecastValues {
+    display: grid;
+    grid-template-columns: auto;
+    justify-items: center;
+    align-items: center;
+  }
+
+  h2 {
+    font-size: 16px;
+    //font-weight: 500
+    width: 100%;
+  }
+  .orangeStarBackgroundUnit {
+    background: rgba(232, 44, 22, 0.5);
+    background-size: cover;
+    width: 100%;
+  }
+  .blueMoonBackgroundUnit {
+    background: rgba(17, 69, 225, 0.5);
+    background-size: cover;
+    width: 100%;
+  }
+  .orangeStarBackground {
+    background: rgba(255, 50, 26, 0.25);
+    background-size: cover;
+    width: 100%;
+  }
+  .blueMoonBackground {
+    background: rgba(21, 80, 255, 0.25);
+    background-size: cover;
+    width: 100%;
+  }
+  .hpBar {
+    margin: 2px 0;
+    text-align: center;
+    justify-self: center;
+    background: rgba(255, 255, 255, 0.75);
+    border: 2px solid black;
+    height: 8px;
+    width: 100%;
+
+    .orangeStarBar {
+      background: rgb(253, 48, 0);
+      background-size: cover;
+      height: 4px;
+    }
+    .blueMoonBar {
+      background: rgb(0, 127, 253);
+      background-size: cover;
+      height: 4px;
+    }
+  }
+}
+@for $i from 0 through 10 {
+  .hpBarWidth#{$i} {
+    width: #{$i} + 0%;
+    height: 4px;
+    z-index: 999;
+  }
+
+  //TODO: Cities, airport, base, comtower and mountains all need to have the same z index
+
+  //This might be a bit complicated at first bu we are basically giving sass instructions to do specific instructions with all of these arrays in order for it to create alot of css background-image classes.
+  //Here we have our array of maptiles
+}
+$mapTiles: fo0, mo0, pl0, oc0, re0;
+$roadTiles: ro1, ro2, ro3, ro4, ro6, ro8, br1, br3;
+$seaTiles: se0;
+$pipeTiles: pi1, pi3, pi4;
+$riverTiles: ri1, ri2, ri3, ri4, ri6, ri8;
+$shoalTiles: sh1, sh3, sh5, sh7;
+$siloTiles: si0, si1;
+
+$mapArrays: $mapTiles, $roadTiles, $seaTiles, $riverTiles, $shoalTiles,
+  $pipeTiles, $siloTiles;
+
+@each $array in $mapArrays {
+  @each $variable in $array {
+    .#{$variable} {
+      image-rendering: pixelated;
+      height: 32px;
+      width: 32px;
+      @if $array == $mapTiles {
+        background: url('/img/mapTiles/#{$variable}.webp') no-repeat;
+      } @else if $array == $roadTiles {
+        background: url('/img/mapTiles/roads/#{$variable}.webp') no-repeat;
+      } @else if $array == $seaTiles {
+        background: url('/img/mapTiles/sea/#{$variable}.webp') no-repeat;
+      } @else if $array == $riverTiles {
+        background: url('/img/mapTiles/river/#{$variable}.webp') no-repeat;
+      } @else if $array == $shoalTiles {
+        background: url('/img/mapTiles/shoal/#{$variable}.webp') no-repeat;
+      } @else if $array == $pipeTiles {
+        background: url('/img/mapTiles/pipes/#{$variable}.webp') no-repeat;
+      } @else if $array == $siloTiles {
+        background: url('/img/mapTiles/silo/#{$variable}.webp') no-repeat;
+        height: 48px;
+        width: 32px;
+        bottom: 0;
+        position: absolute;
+      }
+      background-size: contain;
+    }
+  }
+}
+// here we have our array of map tiles that are not 16x16
+$bases: ne2, os2, bm2;
+$cities: ne1, os1, bm1;
+$hq: os0, bm0;
+$comtower: os5, bm5, ne5;
+
+$countryArrays: $hq, $cities, $bases, $comtower;
+@each $array in $countryArrays {
+  @each $variable in $array {
+    .#{$variable} {
+      image-rendering: pixelated;
+      @if $array == $bases {
+        background: url('/img/mapTiles/countries/base/#{$variable}.webp')
+          no-repeat;
+        //check if its a neutral base or not
+        @if $variable == ne2 {
+          height: 32px;
+          width: 32px;
+        } @else {
+          height: 50px;
+          width: 32px;
+        }
+      } @else if $array == $cities {
+        background: url('/img/mapTiles/countries/city/#{$variable}.webp')
+          no-repeat;
+        height: 42px;
+        width: 32px;
+      } @else if $array == $hq {
+        background: url('/img/mapTiles/countries/hq/#{$variable}.webp')
+          no-repeat;
+        height: 62px;
+        width: 32px;
+      } @else if $array == $comtower {
+        background: url('/img/mapTiles/countries/comtower/#{$variable}.webp')
+          no-repeat;
+        height: 50px;
+        width: 32px;
+      }
+      bottom: 0;
+      z-index: 2;
+      position: absolute;
+      background-size: contain;
+    }
+  }
+} // mountain and city overlap on top of the other tiles so they need to be absolute so they can go over other elements correctly.
+.mo0 {
+  background: url('/img/mapTiles/mo0.webp') no-repeat;
+  background-size: contain;
+  position: absolute;
+  z-index: 2;
+  bottom: 0;
+  height: 42px;
+  width: 32px;
+}
