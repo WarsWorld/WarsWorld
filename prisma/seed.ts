@@ -8,7 +8,11 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 async function main() {
-  // Add stuff
+  await prisma.map.create({
+    data: {
+      name: 'Caustic Finale',
+    },
+  });
 }
 
 main()

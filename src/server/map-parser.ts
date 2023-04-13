@@ -1,4 +1,4 @@
-import { Player } from '@prisma/client';
+import { Army } from 'utils/wars-world-types';
 
 const terrainCodeToText: Record<string, string> = {
   pl: 'plain',
@@ -13,7 +13,7 @@ const terrainCodeToText: Record<string, string> = {
   br: 'road',
 };
 
-const ownerShipCodeToText: Record<string, string> = {
+const ownerShipCodeToText: Record<string, Army> = {
   bm: 'blueMoon',
   os: 'orangeStar',
 };
@@ -64,12 +64,10 @@ const awbwTileMapping: Record<number, string> = {
   '133': 'ne5',
 };
 
-const countries = ['orangeStar', 'blueMoon'];
-
-type UnitOnMap = {
-  id: number;
+export type UnitOnMap = {
+  // id: number;
   name: string;
-  country: string;
+  country: Army;
   hp: number;
   isUsed: boolean;
   capture: boolean;
@@ -78,9 +76,9 @@ type UnitOnMap = {
 export type MapTile = {
   terrainImage: string;
   terrainType: string;
-  terrainOwner: string | false;
+  terrainOwner: Army | null;
   terrainCapture: number;
-  tileUnit: false | UnitOnMap;
+  unit: false | UnitOnMap;
 };
 
 export type PlayerInMatch = {
@@ -99,9 +97,7 @@ export type PlayerState = {
   turn: number;
   day: number;
   unitsToRefresh: [];
-  orangeStar: PlayerInMatch;
-  blueMoon: PlayerInMatch;
-};
+} & Record<Exclude<Army, null>, PlayerInMatch>;
 
 export type MapMetaData = {
   mapName: string;
@@ -148,28 +144,27 @@ export const awbwMapToWWMap = (): Match => {
       const id = foundMapping.slice(0, 2);
 
       const terrain = terrainCodeToText[id] ?? 'property';
-      const ownerShip = ownerShipCodeToText[id] ?? false;
+      const ownerShip = ownerShipCodeToText[id] ?? null;
 
       if (index === 163) {
-        return [
-          ...prev,
-          {
-            terrainImage: foundMapping,
-            terrainType: terrain,
-            terrainOwner: ownerShip,
-            terrainCapture: 0,
-            tileUnit: {
-              id: 0,
-              name: 'Infantry',
-              country: countries[1], //countries[Math.floor(Math.random() * 2)],
-              hp: 100, //Math.floor(Math.random() * (101 - 1) + 1),
-              isUsed: false,
-              capture: false,
-              //ammo
-              //gas
-            },
+        const newTile: MapTile = {
+          terrainImage: foundMapping,
+          terrainType: terrain,
+          terrainOwner: ownerShip,
+          terrainCapture: 0,
+          unit: {
+            // id: 0,
+            name: 'Infantry',
+            country: 'blueMoon', //countries[Math.floor(Math.random() * 2)],
+            hp: 100, //Math.floor(Math.random() * (101 - 1) + 1),
+            isUsed: false,
+            capture: false,
+            //ammo
+            //gas
           },
-        ];
+        };
+
+        return [...prev, newTile];
       }
 
       return [
@@ -179,7 +174,7 @@ export const awbwMapToWWMap = (): Match => {
           terrainType: terrain,
           terrainOwner: ownerShip,
           terrainCapture: 0,
-          tileUnit: false,
+          unit: false,
         },
       ];
     },
