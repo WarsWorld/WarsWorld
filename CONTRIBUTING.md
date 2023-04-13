@@ -3,9 +3,13 @@ Before anything else, thanks for considering contributing to Wars World, its tha
 
 ### Where do I go from here?
 
-If you've noticed a bug or have a feature request, [make an issue for it](https://github.com/WarsWorld/WarsWorld/issues/new)! It's
+You can either look up what needs to be done in our [issues](https://github.com/WarsWorld/WarsWorld/issues) or check out our [project boards](https://github.com/WarsWorld/WarsWorld/projects) and pick up something you'd like to work on!
+
+If you've noticed a bug or have a new feature request, [make an issue for it](https://github.com/WarsWorld/WarsWorld/issues/new)! It's
 generally best if you get confirmation of your bug or approval for your feature
-request this way before starting to code. Its always good to communicate with the team so we can plan together
+request this way before starting to code. 
+
+Also if you aren't a developer, you can still contribute as an artist or even as a CodeTriage! Wars World has a space for everyone that wants to put their part in the AW community.
 
 ### Fork & create a branch
 
@@ -25,7 +29,7 @@ However, AWBW has a lot of parts to it, so we decided that for now, our scope is
 
 We do not have plans on remaking AW or making our own game/version of it, we want to stay close to what AWBW has accomplished because this project is made by AWBW players that want to play the game on a modern avenue.
 
-Below we will soon have our github projects and their full roadmaps.
+[Come see our upcoming projects!](https://github.com/WarsWorld/WarsWorld/projects)
 
 ### Contact Information
 Currently we do not have a Discord sever/slack/zulip chat, so if you want to contact the lead of the project, you can send a DM to femboy#6116 on discord. 
