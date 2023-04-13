@@ -1,16 +1,13 @@
 # WarsWorld
 
-WarsWorld is an attempt at building a modernised clone of [Advance Wars By Web](https://awbw.amarriner.com/) (AWBW), a browser-based competitive multiplayer for the Advance Wars series featuring global leagues and rankings.
+WarsWorld is an open source project made by AWBW players that want to recreate [Advance Wars By Web/AWBW](https://awbw.amarriner.com/), on a modern tech stack so we can all enjoy playing the game we love on a streamlined, blazingly fast, venue that keeps all the stuff we love while removing all the issues.
 
-This repository contains the backend and frontend code and is based on this starter template: https://github.com/trpc/examples-next-prisma-websockets-starter
+This repository contains the backend and frontend code and is based on this [starter template](https://github.com/trpc/examples-next-prisma-websockets-starter).
 
-What follows are parts of the starter template that apply to WarsWorld.
+### Interested in contributing/helping?
+Here are our [Contribution Guidelines](https://github.com/WarsWorld/WarsWorld/blob/main/CONTRIBUTING.md) where you can learn more about how you can help the project out! 
 
-# Prisma + tRPC + WebSockets
-
-Try demo http://websockets.trpc.io/
-
-## Features
+# Our Tech Stack's Features
 
 - 🧙‍♂️ E2E type safety with [tRPC](https://trpc.io)
 - ⚡ Full-stack React with Next.js
