@@ -113,6 +113,7 @@ model Player {
 
 model Map {
   id      String  @id @default(cuid())
+  name    String
   matches Match[]
 }
 

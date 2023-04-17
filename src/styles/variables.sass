@@ -1,0 +1,46 @@
+/* ==================== Variables ==================== */
+// Website Color Palette as per Figma 
+$color-primary: #E47220
+$color-primary-variant: #9EBC9F
+$color-bg: #18223E
+$color-bg-variant: #304478
+$blue-gradient: linear-gradient(180deg, #304478 43.23%, #152B62 63.54%, #162754 84.9%)
+$container-color:#2C2C2C
+
+$text-main: #ffffff
+$text-sub: #8F8F8F
+
+$transition: all 200ms ease
+
+$container-width-lg: 1500px
+$container-height-lg: 850px
+
+@mixin img-hor-flip()
+  -moz-transform: scale(-1, 1)
+  -o-transform: scale(-1, 1)
+  -webkit-transform: scale(-1, 1)
+  transform: scale(-1, 1)
+
+@mixin section()
+  padding: 15px 20px 20px
+  margin: 20px 30px
+  background-color: #1f1f1f
+  border: 5px solid #000
+
+@mixin sectionTitle()
+  color: $color-primary-variant
+  font-style: normal
+  font-weight: 400
+  line-height: 36px
+
+@mixin sectionSubtitle()
+  color: #B4B4B4
+  font-weight: 400
+  font-size: 14px
+  line-height: 21px
+  margin-bottom: 15px
+
+
+// for responsiveness in the future
+// $container-width-md: 86%
+// $container-width-sm: 90%

@@ -1,9 +1,9 @@
-import * as trpc from '@trpc/server';
-import * as trpcNext from '@trpc/server/adapters/next';
-import { NodeHTTPCreateContextFnOptions } from '@trpc/server/adapters/node-http';
-import { IncomingMessage } from 'http';
+import type { inferAsyncReturnType } from '@trpc/server';
+import type { CreateNextContextOptions } from '@trpc/server/adapters/next';
+import type { NodeHTTPCreateContextFnOptions } from '@trpc/server/adapters/node-http';
+import type { IncomingMessage } from 'http';
 import { getSession } from 'next-auth/react';
-import ws from 'ws';
+import type ws from 'ws';
 
 /**
  * Creates context for an incoming request
@@ -11,7 +11,7 @@ import ws from 'ws';
  */
 export const createContext = async (
   opts:
-    | trpcNext.CreateNextContextOptions
+    | CreateNextContextOptions
     | NodeHTTPCreateContextFnOptions<IncomingMessage, ws>,
 ) => {
   const session = await getSession(opts);
@@ -23,4 +23,4 @@ export const createContext = async (
   };
 };
 
-export type Context = trpc.inferAsyncReturnType<typeof createContext>;
+export type Context = inferAsyncReturnType<typeof createContext>;
