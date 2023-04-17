@@ -1,0 +1,44 @@
+
+
+@use 'src/styles/variables';
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200&display=swap');
+
+
+.inProgress {
+  border-radius: 30px;
+  margin: 5em 10em;
+  padding: 2em 4em;
+  background-color: rgba(0, 0, 0, 0.7);
+  h1 {
+    font-size: 4rem;
+
+    padding: 0;
+  }
+  h2 {
+    font-size: 1.5rem;
+    color: variables.$color-primary;
+    font-style: italic;
+  }
+  p {
+    font-size: 1.25rem;
+    padding: 1em 0;
+  }
+
+}
+a {
+  text-decoration: none;
+  color: variables.$color-primary;
+  transition: 0.4s;
+  &:hover {
+    color: variables.$color-primary-variant
+
+  }
+}
+
+body {
+  background-image: url("/img/bg.jpg");
+  background-size: cover;
+  color: white;
+  font-family:'Poppins', sans-serif;
+}
