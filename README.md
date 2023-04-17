@@ -28,6 +28,12 @@ Now go to localhost:3000 and you should be set! If you are having issues, feel f
 
 ``` Soon there will be a more newb/extensive setup your local environment guide here!```
 
+## Troubleshooting
+
+### Building but not able to access the site?
+Ensure you are using an up to date node version. ^18.15.0 is recommended.
+
+
 ## Our Tech Stack's Features
 
 - 🧙‍♂️ E2E type safety with [tRPC](https://trpc.io)
