@@ -22,12 +22,12 @@ nav {
   }
 
   .menu {
-    div {
+    .menuDropdown {
       display: none;
     }
 
     &:hover {
-      div {
+      .menuDropdown {
         display: block;
         position: absolute;
         top: 30px;
