@@ -1,4 +1,6 @@
 import { Match } from '@prisma/client';
+import Navbar from 'components/Navbar';
+import Head from 'next/head';
 import Link from 'next/link';
 import { trpc } from 'utils/trpc';
 
@@ -20,22 +22,33 @@ export default function Games() {
   const createMutation = trpc.match.create.useMutation();
 
   return (
-    <div>
-      <h1>Current games</h1>
-      <button
-        onClick={async () => {
-          await createMutation.mutateAsync({
-            playerName: 'function',
-            selectedCO: 'sami',
-          });
-          refetch();
-        }}
-      >
-        Create game
-      </button>
-      {data === undefined
-        ? 'Loading...'
-        : data.map((match) => <MatchRow key={match.id} match={match} />)}
-    </div>
+    <>
+      <Head>
+        <title>Wars World Matches Page</title>
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
+
+      <Navbar />
+    
+      <section className="matchSection">
+        <div>
+          <h1>Current games</h1>
+          <button
+            onClick={async () => {
+              await createMutation.mutateAsync({
+                playerName: 'function',
+                selectedCO: 'sami',
+              });
+              refetch();
+            }}
+          >
+            Create game
+          </button>
+          {data === undefined
+            ? 'Loading...'
+            : data.map((match) => <MatchRow key={match.id} match={match} />)}
+        </div>
+      </section>
+    </>
   );
 }
