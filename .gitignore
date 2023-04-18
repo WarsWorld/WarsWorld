@@ -4,6 +4,8 @@
 /node_modules
 /.pnp
 .pnp.js
+# https://www.typescriptlang.org/tsconfig#tsBuildInfoFile
+tsconfig.tsbuildinfo
 
 # next.js
 /.next/
