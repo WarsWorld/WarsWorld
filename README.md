@@ -37,7 +37,7 @@ Ensure you are using an up to date node version. ^18.15.0 is recommended.
 ## Our Tech Stack's Features
 
 - 🧙‍♂️ E2E type safety with [tRPC](https://trpc.io)
-- 🖼️ SCSS for customized styling
+- 🖼️ [Tailwind CSS](https://tailwindcss.com/) for easy consistent styling
 - ⚡ Full-stack React with Next.js
 - ⚡ WebSockets / Subscription support
 - ⚡ Database with Prisma
@@ -63,10 +63,6 @@ Ensure you are using an up to date node version. ^18.15.0 is recommended.
 <tr>
       <td><code>./src/pages</code></td>
       <td>Frontend/tsx pages (index, about, match)</td>
-    </tr>
-<tr>
-      <td><code>./src/styles</code></td>
-      <td>SCSS styling files</td>
     </tr>
 <tr>
       <td><code>./src/components</code></td>
