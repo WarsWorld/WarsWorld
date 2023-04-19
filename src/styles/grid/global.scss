@@ -209,7 +209,7 @@ $mapArrays: $mapTiles, $roadTiles, $seaTiles, $riverTiles, $shoalTiles,
   @each $variable in $array {
     .#{$variable} {
       image-rendering: pixelated;
-      // Using 32px = 100% to compute widths to keep same aspect-ratio
+      // Using 32px = 100% to compute widths and heights to keep same aspect-ratio
       height: 100%;
       width: 100%;
       @if $array == $mapTiles {
