@@ -1,8 +1,8 @@
-import Link from "next/link";
+import Link from 'next/link';
 
 export default function Navbar() {
-  const awLogoPath = "/img/layout/awLogo.webp"
-  
+  const awLogoPath = '/img/layout/awLogo.webp';
+
   return (
     <header>
       <nav className="headerNavbar">
@@ -18,5 +18,5 @@ export default function Navbar() {
         <Link href="/">Login</Link>
       </nav>
     </header>
-  )
+  );
 }

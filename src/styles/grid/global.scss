@@ -10,7 +10,6 @@
   .gridSize#{$i} {
     display: grid;
     grid-template-columns: repeat($i, 1fr);
-    grid-template-rows: repeat($i, 1fr);
   }
 }
 
@@ -316,13 +315,13 @@ $countryName: orangeStar, blueMoon;
 
     // our main grid where we have our map tiles
   }
-  
+
   .mapGrid {
     border: 1em solid #091a4f;
     height: 60vh;
     aspect-ratio: 1;
     object-fit: contain;
-    
+
     // our individual tiles
     .mapTile {
       width: 100%;
