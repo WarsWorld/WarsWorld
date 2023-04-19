@@ -1,5 +1,5 @@
 import { Match } from '@prisma/client';
-import Layout from 'components/layout';
+import Layout from 'components/Layout';
 import Link from 'next/link';
 import { trpc } from 'utils/trpc';
 

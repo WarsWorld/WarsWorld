@@ -3,15 +3,19 @@ import Footer from "./Footer";
 import React from "react";
 
 interface Props {
+  addFooter?: boolean;
   children: JSX.Element
 }
 
-export default function Layout({children}: Props) {
+export default function Layout({addFooter, children}: Props) {
   return (
     <div className="layout">
       <Navbar />
       <main className="layoutContent">{children}</main>
-      <Footer />
+      {addFooter 
+        ? <Footer />
+        : null
+      }
     </div>
   )
 }

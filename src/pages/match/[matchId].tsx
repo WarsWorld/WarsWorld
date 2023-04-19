@@ -13,7 +13,7 @@ import {
 import { trpc } from 'utils/trpc';
 import { Army } from 'utils/wars-world-types';
 import styles from '../../styles/match.module.css';
-import Layout from 'components/layout';
+import Layout from 'components/Layout';
 
 const smallPadding: CSSProperties = {
   padding: '0.2rem',

@@ -1,11 +1,11 @@
-import Layout from "components/layout";
+import Layout from "components/Layout";
 import HomePage from "./home";
 
 
 
 export default function IndexPage() {
   return (
-    <Layout>
+    <Layout addFooter>
       <HomePage />
     </Layout>
   );

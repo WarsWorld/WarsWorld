@@ -8,8 +8,9 @@
 
 @for $i from 1 through 30 {
   .gridSize#{$i} {
-    grid-template-columns: repeat($i, 32px);
     display: grid;
+    grid-template-columns: repeat($i, 1fr);
+    grid-template-rows: repeat($i, 1fr);
   }
 }
 
@@ -26,8 +27,8 @@
         left: -10px;
 
         text-align: center;
-        width: 50px;
-        height: 50px;
+        width: 156.25%;
+        height: 156.25%;
         background: url('/img/mapTiles/tileCursor.png') no-repeat;
         background-size: contain;
         z-index: 10;
@@ -40,8 +41,8 @@
         z-index: 5;
         position: absolute;
         top: 0;
-        height: 31px;
-        width: 31px;
+        height: 96.875%;
+        width: 96.875%;
       }
       .tilePath {
         background: rgba(0, 62, 133, 0.65);
@@ -49,8 +50,8 @@
         z-index: 6;
         position: absolute;
         top: 0;
-        height: 31px;
-        width: 31px;
+        height: 96.875%;
+        width: 96.875%;
       }
       //the red square on enemy units
       .tileEnemy {
@@ -60,8 +61,8 @@
         position: absolute;
         top: 0;
         margin: 0 auto;
-        height: 31px;
-        width: 31px;
+        height: 96.875%;
+        width: 96.875%;
         &:hover {
           cursor: pointer;
           animation: selectTarget 3s linear infinite;
@@ -78,8 +79,8 @@
         top: 0;
         bottom: 0;
         margin: auto;
-        height: 31px;
-        width: 31px;
+        height: 96.875%;
+        width: 96.875%;
         @keyframes selectTarget {
           from {
             transform: rotate(0);
@@ -209,8 +210,9 @@ $mapArrays: $mapTiles, $roadTiles, $seaTiles, $riverTiles, $shoalTiles,
   @each $variable in $array {
     .#{$variable} {
       image-rendering: pixelated;
-      height: 32px;
-      width: 32px;
+      // Using 32px = 100% to compute widths to keep same aspect-ratio
+      height: 100%;
+      width: 100%;
       @if $array == $mapTiles {
         background: url('/img/mapTiles/#{$variable}.webp') no-repeat;
       } @else if $array == $roadTiles {
@@ -225,8 +227,8 @@ $mapArrays: $mapTiles, $roadTiles, $seaTiles, $riverTiles, $shoalTiles,
         background: url('/img/mapTiles/pipes/#{$variable}.webp') no-repeat;
       } @else if $array == $siloTiles {
         background: url('/img/mapTiles/silo/#{$variable}.webp') no-repeat;
-        height: 48px;
-        width: 32px;
+        height: 150%;
+        width: 100%;
         bottom: 0;
         position: absolute;
       }
@@ -250,27 +252,27 @@ $countryArrays: $hq, $cities, $bases, $comtower;
           no-repeat;
         //check if its a neutral base or not
         @if $variable == ne2 {
-          height: 32px;
-          width: 32px;
+          height: 100%;
+          width: 100%;
         } @else {
-          height: 50px;
-          width: 32px;
+          height: 156.25%;
+          width: 100%;
         }
       } @else if $array == $cities {
         background: url('/img/mapTiles/countries/city/#{$variable}.webp')
           no-repeat;
-        height: 42px;
-        width: 32px;
+        height: 131.25%;
+        width: 100%;
       } @else if $array == $hq {
         background: url('/img/mapTiles/countries/hq/#{$variable}.webp')
           no-repeat;
-        height: 62px;
-        width: 32px;
+        height: 193.75%;
+        width: 100%;
       } @else if $array == $comtower {
         background: url('/img/mapTiles/countries/comtower/#{$variable}.webp')
           no-repeat;
-        height: 50px;
-        width: 32px;
+        height: 156.25%;
+        width: 100%;
       }
       bottom: 0;
       z-index: 2;
@@ -285,8 +287,8 @@ $countryArrays: $hq, $cities, $bases, $comtower;
   position: absolute;
   z-index: 2;
   bottom: 0;
-  height: 42px;
-  width: 32px;
+  height: 131.25%;
+  width: 100%;
 }
 
 $imageName: Infantry, Mech, Recon, APC, Artillery, Tank, Anti-Air, Missile,
@@ -295,18 +297,10 @@ $imageName: Infantry, Mech, Recon, APC, Artillery, Tank, Anti-Air, Missile,
 $countryName: orangeStar, blueMoon;
 
 .gameBox {
-  display: grid;
-  position: relative;
-  padding: 0;
-  margin: 0;
-  grid-template-columns: auto max-content auto;
   text-align: center;
-  align-items: start;
-  align-content: center;
-  justify-items: center;
-  justify-content: center;
+  margin: 0 60px;
   image-rendering: pixelated;
-  color: black;
+
   button {
     cursor: pointer;
     // background-color: variables.$color-primary
@@ -322,21 +316,24 @@ $countryName: orangeStar, blueMoon;
 
     // our main grid where we have our map tiles
   }
+  
   .mapGrid {
-    margin: 0;
     border: 1em solid #091a4f;
+    height: 60vh;
+    aspect-ratio: 1;
+    object-fit: contain;
+    
     // our individual tiles
-
     .mapTile {
       width: 100%;
       background-color: #bfdd33;
-      aspect-ratio: 1;
       position: relative;
       &:hover {
         .tileCursor {
           display: block;
         }
       }
+
       .tileMenu {
         display: grid;
         grid-template-columns: 1fr;

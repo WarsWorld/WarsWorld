@@ -4,14 +4,12 @@
 header {
   position: fixed;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
   top: 0;
   height: 100px;
+  width: 100%;
   background: rgba(0, 0, 0, 0.5);
   color: white;
   font-size: 1.6vw;
-  width: 100%;
   
   a {
     color: variables.$text-main;
@@ -20,19 +18,25 @@ header {
     }
   }
 
-  .headerMenu {
+  .headerNavbar {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    width: 100%;
+    width: 100vw;
     padding: 0 30px;
 
     .headerLogo {
       display: flex;
-      align-items: center;
       max-width: 216px;
       cursor: pointer;
     }
+  }
+
+  .headerMenu {
+    display: flex;
+    justify-content: center;
+    gap: 50px;
+    width: 100%;
   }
 }
 
