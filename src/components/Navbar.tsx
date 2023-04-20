@@ -9,7 +9,7 @@ export default function Navbar() {
         <Link href="/">
           <img className="headerLogo" src={awLogoPath} alt="AW Logo" />
         </Link>
-        <div className="@flex @items-center">
+        <div className="headerMenu">
           <Link href="/">Current games</Link>
           <Link href="/match">Start a game</Link>
           <Link href="/">Join a game</Link>

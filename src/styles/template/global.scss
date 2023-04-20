@@ -41,6 +41,9 @@ header {
   }
 
   .headerMenu {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     gap: 0.625rem;
     gap: clamp(0.625rem, 0.12rem + 2.53vw, 3.125rem);
     width: 100%;
