@@ -1,130 +1,161 @@
+export type UnitType =
+  | 'infantry'
+  | 'mech'
+  | 'recon'
+  | 'apc'
+  | 'artillery'
+  | 'tank'
+  | 'antiair'
+  | 'missile'
+  | 'rocket'
+  | 'mdTank'
+  | 'piperunner'
+  | 'neotank'
+  | 'megatank';
+
+export type MoveType = 'F' | 'B' | 'W' | 'T' | 'P' | 'A' | 'S' | 'L';
+
 export type BuildableUnit = {
-  name: string;
-  menuName: string;
+  type: UnitType;
+  displayName: string;
   cost: number;
   move: number;
-  moveType: 'F' | 'B' | 'W' | 'T' | 'P';
+  moveType: MoveType;
   range: [number, number];
   facility: 'base';
+  usedAfterMove: boolean;
 };
 
 export const factoryBuildableUnits: BuildableUnit[] = [
   {
-    name: 'infantry',
-    menuName: 'Infantry',
+    type: 'infantry',
+    displayName: 'Infantry',
     cost: 1000,
     move: 3,
     moveType: 'F',
     range: [1, 1],
     facility: 'base',
+    usedAfterMove: false,
   },
   {
-    name: 'mech',
-    menuName: 'Mech',
+    type: 'mech',
+    displayName: 'Mech',
     cost: 3000,
     move: 2,
     moveType: 'B',
     range: [1, 1],
     facility: 'base',
+    usedAfterMove: false,
   },
   {
-    name: 'recon',
-    menuName: 'Recon',
+    type: 'recon',
+    displayName: 'Recon',
     cost: 4000,
     move: 8,
     moveType: 'W',
     range: [1, 1],
     facility: 'base',
+    usedAfterMove: false,
   },
   {
-    name: 'apc',
-    menuName: 'APC',
+    type: 'apc',
+    displayName: 'APC',
     cost: 5000,
     move: 6,
     moveType: 'T',
     range: [0, 0],
     facility: 'base',
+    usedAfterMove: false,
   },
   {
-    name: 'artillery',
-    menuName: 'Artillery',
+    type: 'artillery',
+    displayName: 'Artillery',
     cost: 6000,
     move: 5,
     moveType: 'T',
     range: [2, 3],
     facility: 'base',
+    usedAfterMove: true,
   },
   {
-    name: 'tank',
-    menuName: 'Tank',
+    type: 'tank',
+    displayName: 'Tank',
     cost: 7000,
     move: 6,
     moveType: 'T',
     range: [1, 1],
     facility: 'base',
+    usedAfterMove: false,
   },
   {
-    name: 'antiair',
-    menuName: 'Anti-Air',
+    type: 'antiair',
+    displayName: 'Anti-Air',
     cost: 8000,
     move: 6,
     moveType: 'T',
     range: [1, 1],
     facility: 'base',
+    usedAfterMove: false,
   },
   {
-    name: 'missile',
-    menuName: 'Missile',
+    type: 'missile',
+    displayName: 'Missile',
     cost: 12000,
     move: 4,
     moveType: 'W',
     range: [3, 5],
     facility: 'base',
+    usedAfterMove: true,
   },
   {
-    name: 'rocket',
-    menuName: 'Rocket',
+    type: 'rocket',
+    displayName: 'Rocket',
     cost: 15000,
     move: 5,
     moveType: 'W',
     range: [3, 5],
     facility: 'base',
+    usedAfterMove: true,
   },
   {
-    name: 'mdTank',
-    menuName: 'MdTank',
+    type: 'mdTank',
+    displayName: 'MdTank',
     cost: 16000,
     move: 5,
     moveType: 'T',
     range: [1, 1],
     facility: 'base',
+    usedAfterMove: false,
   },
   {
-    name: 'piperunner',
-    menuName: 'PipeRunner',
+    type: 'piperunner',
+    displayName: 'PipeRunner',
     cost: 20000,
     move: 9,
     moveType: 'P',
     range: [2, 5],
     facility: 'base',
+    usedAfterMove: true,
   },
   {
-    name: 'neotank',
-    menuName: 'NeoTank',
+    type: 'neotank',
+    displayName: 'NeoTank',
     cost: 22000,
     move: 6,
     moveType: 'T',
     range: [1, 1],
     facility: 'base',
+    usedAfterMove: false,
   },
   {
-    name: 'megatank',
-    menuName: 'MegaTank',
+    type: 'megatank',
+    displayName: 'MegaTank',
     cost: 28000,
     move: 4,
     moveType: 'T',
     range: [1, 1],
     facility: 'base',
+    usedAfterMove: false,
   },
 ];
 

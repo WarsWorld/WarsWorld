@@ -11,8 +11,11 @@ async function main() {
   await prisma.map.create({
     data: {
       name: 'Caustic Finale',
+      tiles: [],
     },
   });
+
+  // TODO create match, make easy getting in
 }
 
 main()

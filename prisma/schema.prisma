@@ -10,22 +10,17 @@ generator client {
   provider = "prisma-client-js"
 }
 
-enum PosterSource {
-  RAW
-  GITHUB
-}
-
 model Post {
-  id     String @id
-  author Player @relation(fields: [playerId], references: [id])
-  title  String
-  text   String
+  id       String @id @default(cuid())
+  author   Player @relation(fields: [authorId], references: [id])
+  authorId String
+  title    String
+  text     String
 
   // To return `Date`s intact through the API we need to add data transformers
   // https://trpc.io/docs/data-transformers
-  createdAt DateTime @unique @default(now())
-  updatedAt DateTime @unique @default(now())
-  playerId  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
 }
 
 enum UserState {
@@ -53,57 +48,55 @@ enum CO {
 }
 
 enum Unit {
-  pipe_runner
+  pipeRunner
 }
 
 enum Game {
-  advance_dating_by_web
+  advanceDatingByWeb
 }
 
 enum Achievement {
-  field_training_complete
-  win_streak
+  fieldTrainingComplete
+  winStreak
   underdog
   handicap
-  lightning_strike
+  lightningStrike
   destroyer
   fixer
-  gold_rush
+  goldRush
   champion
-  grizzled_yet
+  grizzledYet
 }
 
 model Clan {
-  id      String   @id @default(cuid())
-  owner   Player   @relation("owner", fields: [ownerId], references: [id])
-  ownerId String
-  members Player[] @relation("member")
+  id          String   @id @default(cuid())
+  name        String
+  description String
+  owner       Player   @relation("owner", fields: [ownerId], references: [id])
+  ownerId     String
+  members     Player[] @relation("member")
 }
 
 model Player {
   id               String        @id @default(cuid())
+  MMR              MMR[]
   name             String
   secret           Boolean
-  mmr              Int           @default(1300)
-  top_mmr          Int           @default(1300)
   youtubeChannelId String?
   twitchUserName   String?
   ChatMessage      ChatMessage[]
 
-  User   User?   @relation(fields: [userId], references: [id])
-  userId String?
+  User   User   @relation(fields: [userId], references: [id])
+  userId String
 
-  Post            Post[]
-  preferences     Json?
-  achievements    Achievement[]
-  favourite_COs   CO[]
-  favourite_units Unit[]
-  favourite_games Game[]
+  Post           Post[]
+  preferences    Json?
+  achievements   Achievement[]
+  favouriteCOs   CO[]
+  favouriteUnits Unit[]
+  favouriteGames Game[]
 
-  match          Match?  @relation(name: "players", fields: [matchId], references: [id])
-  matchId        String? @map("matchId")
-  matchConsent   Match?  @relation(name: "playersChatConsent", fields: [matchConsentId], references: [id])
-  matchConsentId String? @map("matchConsentId")
+  matches Match[]
 
   Notes Notes[]
 
@@ -114,6 +107,7 @@ model Player {
 model Map {
   id      String  @id @default(cuid())
   name    String
+  tiles   Json
   matches Match[]
 }
 
@@ -125,7 +119,7 @@ model ChatMessage {
   author   Player @relation(fields: [authorId], references: [id])
   authorId String
 
-  match   Match?  @relation(fields: [matchId], references: [id])
+  match   Match?  @relation(fields: [matchId], references: [id]) // if no match, it's the public channel
   matchId String? @map("matchId")
 }
 
@@ -138,9 +132,9 @@ enum MatchStatus {
 enum LeagueType {
   standard
   fog
-  high_funds
-  dual_league
-  standard_teams
+  highFunds
+  dualLeague
+  standardTeams
   broken
 }
 
@@ -148,27 +142,45 @@ model Notes {
   content String
   public  Boolean @default(false)
 
-  player   Player @relation(fields: [playerId], references: [id])
+  Player   Player @relation(fields: [playerId], references: [id])
   playerId String
 
-  match   Match  @relation(fields: [matchId], references: [id])
+  Match   Match  @relation(fields: [matchId], references: [id])
   matchId String
 
   @@id([playerId, matchId])
 }
 
+model MMR {
+  leagueType LeagueType
+  Player     Player     @relation(fields: [playerId], references: [id])
+  playerId   String
+  mmr        Int        @default(800)
+  topMmr     Int        @default(800)
+
+  @@id([leagueType, playerId])
+}
+
 model Match {
-  id                             String        @id @default(cuid())
-  leagueType                     LeagueType?
-  status                         MatchStatus
-  map                            Map           @relation(fields: [mapId], references: [id])
-  matchState                     Json
-  players                        Player[]      @relation("players")
-  playersConsentingToPublishChat Player[]      @relation("playersChatConsent")
-  chatMessages                   ChatMessage[]
-  chatIsPublic                   Boolean       @default(false)
-  mapId                          String
+  id         String      @id @default(cuid())
+  leagueType LeagueType
+  status     MatchStatus
+
+  map   Map    @relation(fields: [mapId], references: [id])
+  mapId String
+
+  matchState Json // moves table!
+
+  players Player[]
+  // playersConsentingToPublishChat Player[]
+
+  chatMessages ChatMessage[]
+  chatIsPublic Boolean       @default(false)
 
   createdAt DateTime @default(now())
   Notes     Notes[]
 }
+
+// 1. fractional HP
+// 2. move/map data structures
+// 3. tiers in general, map/league tiers?

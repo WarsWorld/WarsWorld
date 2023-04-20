@@ -10,7 +10,7 @@ const MatchRow = ({ match }: { match: Match }) => {
         border: '2px solid black',
       }}
     >
-      <Link href={`/match/${match.id}`}>Match: {match.id}</Link>
+      <Link href={`/match-pixi/${match.id}`}>Match: {match.id}</Link>
     </div>
   );
 };

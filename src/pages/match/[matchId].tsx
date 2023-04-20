@@ -1,3 +1,5 @@
+import { moveUnit } from 'components/match/move-unit';
+import { BlueTiles, pathFinding } from 'components/match/path-finding';
 import {
   BuildableUnit,
   factoryBuildableUnits,
@@ -19,16 +21,23 @@ const smallPadding: CSSProperties = {
 };
 
 const PlayerBox = ({
-  playerInMatch: playerInMatch,
+  playerInMatch,
+  hasTurn,
 }: {
   playerInMatch: PlayerInMatch;
+  hasTurn: boolean;
 }) => {
   const time = new Date(0);
   time.setSeconds(playerInMatch.timePlayed ?? 1);
 
   return (
     <div
-      style={{ width: '300px', border: '4px solid black', fontSize: '1.2rem' }}
+      style={{
+        width: '300px',
+        border: '4px solid black',
+        fontSize: '1.2rem',
+        opacity: hasTurn ? 1 : 0.5,
+      }}
     >
       <div className={styles.segment}>
         <img
@@ -81,14 +90,14 @@ const PlayerBox = ({
   );
 };
 
-type Segment = {
+export type Segment = {
   tile: MapTile;
   squareHighlight: JSX.Element | null;
   menu: JSX.Element | null;
 };
 
 const Unit = ({ unit }: { unit: UnitOnMap }) => (
-  <div className={unit.country + unit.name + ' tileUnit'}></div>
+  <div className={unit.country + unit.cssClassName + ' tileUnit'}></div>
 );
 
 const HPAndCapture = ({ unit }: { unit: UnitOnMap }) => (
@@ -103,12 +112,7 @@ const HPAndCapture = ({ unit }: { unit: UnitOnMap }) => (
 export default function Match() {
   const [players, setPlayers] = useState<PlayerState | null | undefined>(null);
   const [segments, setSegments] = useState<Segment[] | null | undefined>(null);
-
-  segments
-    ?.filter((s) => s.tile.unit)
-    .forEach((seg) => console.log('has-unit', seg));
-
-  const turn = 2;
+  const [turn, setTurn] = useState(1);
 
   const isTurn = (army: Army) => {
     switch (army) {
@@ -126,8 +130,8 @@ export default function Match() {
       return;
     }
 
-    setSegments(
-      segments.map((segment) => ({
+    setSegments((oldSegments) =>
+      oldSegments?.map((segment) => ({
         ...segment,
         menu: null,
         squareHighlight: null,
@@ -137,16 +141,13 @@ export default function Match() {
 
   const updateSegment = (
     index: number,
-    updater: (oldSegment: Segment) => Segment,
+    updater: (oldSegment: Segment) => Partial<Segment>,
   ) => {
-    console.trace('updateSegment trace');
-
-    setSegments(
-      segments?.map((oldSegment, i) => {
+    setSegments((oldSegments) =>
+      oldSegments?.map((oldSegment, i) => {
         if (i === index) {
-          const newSegment = updater(oldSegment);
-          console.log('newSeg', newSegment);
-          return newSegment;
+          const newSegmentPartial = updater(oldSegment);
+          return { ...oldSegment, ...newSegmentPartial };
         }
 
         return oldSegment;
@@ -179,11 +180,11 @@ export default function Match() {
     army: Army,
   ) => {
     updateSegment(index, (oldSegment) => ({
-      ...oldSegment,
       tile: {
         ...oldSegment.tile,
         unit: {
-          name: buildableUnit.name,
+          cssClassName: buildableUnit.displayName,
+          type: buildableUnit.type,
           country: army,
           hp: 100,
           isUsed: true,
@@ -220,16 +221,118 @@ export default function Match() {
     },
   });
 
-  trpc.match.moves.useSubscription(undefined, {
-    onData: console.log,
-  });
+  // trpc.match.moves.useSubscription(undefined, {
+  //   onData: console.log,
+  // });
 
   const makeMove = trpc.match.makeMove.useMutation();
 
   const passTurn = () => {
+    setTurn(turn + 1);
+
     makeMove.mutate({
       moveType: 'pass-turn',
     });
+  };
+
+  const drawPath = ({
+    blueTiles,
+    startingTileIndex,
+    targetTileIndex,
+  }: {
+    blueTiles: BlueTiles;
+    startingTileIndex: number;
+    targetTileIndex: number;
+  }) => {
+    if (segments == null) {
+      return;
+    }
+
+    const movePath = moveUnit(blueTiles, targetTileIndex);
+
+    setSegments(
+      segments.map((s, index) => {
+        if (movePath.some((m) => m === index)) {
+          return { ...s, squareHighlight: <div className="tilePath"></div> };
+        }
+
+        if (blueTiles.tilesToDraw.some((t) => t.index === index)) {
+          return {
+            ...s,
+            squareHighlight: (
+              <div
+                className="tileMove"
+                onMouseEnter={() => {
+                  drawPath({
+                    blueTiles,
+                    targetTileIndex,
+                    startingTileIndex,
+                  }); // targetTile unsure
+                }}
+              ></div>
+            ),
+          };
+        }
+
+        return { ...s, squareHighlight: null };
+      }),
+    );
+  };
+
+  const checkPath = (tile: MapTile, tileIndex: number) => {
+    if (tile.unit === false || segments == null) {
+      return;
+    }
+
+    const blueTiles = pathFinding(
+      18,
+      18,
+      tile.unit.type,
+      tileIndex,
+      segments,
+      false,
+    );
+
+    setSegments(
+      segments.map((s, index) => {
+        const foundBlueTileMatch = blueTiles.tilesToDraw.find(
+          (t) => t.index === index,
+        );
+
+        if (foundBlueTileMatch === undefined) {
+          return s;
+        }
+
+        return {
+          ...s,
+          squareHighlight: foundBlueTileMatch.hasEnemy ? (
+            <div
+              className="tileEnemy"
+              onMouseEnter={() => {
+                // battleForecast(tileIndex, index, false);
+              }}
+              onMouseLeave={() => {
+                updateSegment(index, () => ({
+                  // useFunction newPosition(blueTiles, tile.index, initialTile);
+                }));
+              }}
+            ></div>
+          ) : (
+            <div
+              className="tileMove"
+              onMouseEnter={() => {
+                console.log('enter');
+                drawPath({
+                  blueTiles,
+                  startingTileIndex: index,
+                  targetTileIndex: tileIndex,
+                });
+              }}
+            ></div>
+          ),
+        };
+      }),
+    );
   };
 
   if (players == null || segments == null) {
@@ -241,49 +344,52 @@ export default function Match() {
       <h1>Match #{matchId}</h1>
       <button onClick={passTurn}>Pass turn</button>
       <div className={styles.gap}>
-        <PlayerBox playerInMatch={players.orangeStar} />
+        <PlayerBox
+          playerInMatch={players.orangeStar}
+          hasTurn={isTurn('orangeStar')}
+        />
         <div className="gridSize18 mapGrid">
-          {segments.map(({ tile, menu }, index) => {
+          {segments.map(({ tile, menu, squareHighlight }, tileIndex) => {
             const { unit, terrainImage, terrainType, terrainOwner } = tile;
 
             return (
               <div
-                key={index}
+                key={tileIndex}
                 onClick={() => {
                   reset();
                   if (unit) {
-                    // check path
+                    checkPath(tile, tileIndex);
                   } else if (terrainType === 'property') {
-                    if (!isTurn(terrainOwner)) {
+                    if (!isTurn(terrainOwner) || menu !== null) {
                       return;
                     }
 
-                    updateSegment(index, (oldSegment) => ({
-                      ...oldSegment,
-                      tile,
+                    updateSegment(tileIndex, () => ({
                       menu: (
                         <div className="tileMenu">
-                          {factoryBuildableUnits.map((buildable, index) => (
-                            <div
-                              key={index}
-                              className="menuOptions" // + menuNoBuy
-                              onClick={() =>
-                                buildUnit(index, buildable, terrainOwner)
-                              }
-                            >
+                          {factoryBuildableUnits.map(
+                            (buildable, buildableUnitIndex) => (
                               <div
-                                className={`menu${terrainOwner}${buildable.menuName}`}
-                              ></div>
-                              <div className={`menuName`}>
-                                {' '}
-                                {buildable.menuName}
+                                key={buildableUnitIndex}
+                                className="menuOptions" // + menuNoBuy
+                                onClick={() =>
+                                  buildUnit(tileIndex, buildable, terrainOwner)
+                                }
+                              >
+                                <div
+                                  className={`menu${terrainOwner}${buildable.displayName}`}
+                                ></div>
+                                <div className={`menuName`}>
+                                  {' '}
+                                  {buildable.displayName}
+                                </div>
+                                <div className={`menuCost`}>
+                                  {' '}
+                                  {buildable.cost}
+                                </div>
                               </div>
-                              <div className={`menuCost`}>
-                                {' '}
-                                {buildable.cost}
-                              </div>
-                            </div>
-                          ))}
+                            ),
+                          )}
                         </div>
                       ),
                       squareHighlight: null,
@@ -293,9 +399,8 @@ export default function Match() {
                 className={`mapTile ${unit && unit.isUsed ? 'stateUsed' : ''}`}
               >
                 <div className={`tileTerrain ${terrainImage}`}></div>
-
                 {unit && <Unit unit={unit} />}
-                {null /** tileSquare */}
+                {squareHighlight}
                 {menu}
                 {unit && <HPAndCapture unit={unit} />}
                 <div className="tileCursor"></div>
@@ -303,7 +408,10 @@ export default function Match() {
             );
           })}
         </div>
-        <PlayerBox playerInMatch={players.blueMoon} />
+        <PlayerBox
+          playerInMatch={players.blueMoon}
+          hasTurn={isTurn('blueMoon')}
+        />
       </div>
     </div>
   );

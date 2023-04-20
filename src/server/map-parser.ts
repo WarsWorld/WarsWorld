@@ -1,3 +1,4 @@
+import { UnitType } from 'components/match/unit-builder';
 import { Army } from 'utils/wars-world-types';
 
 const terrainCodeToText: Record<string, string> = {
@@ -65,8 +66,8 @@ const awbwTileMapping: Record<number, string> = {
 };
 
 export type UnitOnMap = {
-  // id: number;
-  name: string;
+  type: UnitType;
+  cssClassName: string;
   country: Army;
   hp: number;
   isUsed: boolean;
@@ -153,8 +154,8 @@ export const awbwMapToWWMap = (): Match => {
           terrainOwner: ownerShip,
           terrainCapture: 0,
           unit: {
-            // id: 0,
-            name: 'Infantry',
+            cssClassName: 'Infantry',
+            type: 'infantry',
             country: 'blueMoon', //countries[Math.floor(Math.random() * 2)],
             hp: 100, //Math.floor(Math.random() * (101 - 1) + 1),
             isUsed: false,
