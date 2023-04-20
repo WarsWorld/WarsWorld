@@ -17,7 +17,7 @@
   border: 4px solid black;
   font-size: 1.2rem;
   max-width: 300px;
-  @media (max-width: 1500px) {
+  @media (max-width: 1200px) {
     display: grid;
     grid-template-columns: 150px 300px 1fr;
     max-width: initial;
@@ -49,7 +49,7 @@
   display: grid;
   grid-template-rows: repeat(2, 1fr);
 
-  @media (max-width: 1500px) {
+  @media (max-width: 1200px) {
     width: 500px;
   }
 

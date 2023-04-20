@@ -15,7 +15,7 @@
   gap: 0.5rem;
 }
 
-@media (max-width: 1500px) {
+@media (max-width: 1200px) {
   .gap {
     flex-direction: column;
   }

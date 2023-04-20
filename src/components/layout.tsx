@@ -8,13 +8,15 @@ interface Props {
 }
 
 export default function Layout({ addFooter, children }: Props) {
-  if (addFooter) {
-    document.documentElement.style.setProperty(
-      '--layoutGridRows',
-      '10% 1fr 15%',
-    );
-  } else {
-    document.documentElement.style.setProperty('--layoutGridRows', '10% 1fr');
+  if (typeof document !== 'undefined') {
+    if (addFooter) {
+      document.documentElement.style.setProperty(
+        '--layoutGridRows',
+        '10% 1fr 15%',
+      );
+    } else {
+      document.documentElement.style.setProperty('--layoutGridRows', '10% 1fr');
+    }
   }
 
   return (
