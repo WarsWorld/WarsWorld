@@ -13,6 +13,7 @@
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
+  width: 100%;
 }
 
 @media (max-width: 1200px) {

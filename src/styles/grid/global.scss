@@ -18,29 +18,41 @@
   font-size: 1.2rem;
   max-width: 300px;
   @media (max-width: 1200px) {
-    display: grid;
-    grid-template-columns: 150px 300px 1fr;
     max-width: initial;
-  }
-
-  .playerCOBox {
-    min-width: 150px;
-    background-color: #222;
-    color: white;
-    border: 0.3rem solid #111;
-    padding: 0.2rem;
-  }
-
-  .playerNationBox {
-    color: white;
     display: grid;
-    grid-template-rows: repeat(2, 1fr);
-    padding: 5px;
+    grid-template-rows: 1fr 50px;
+    width: 100%;
+  }
 
-    div {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+  .playerCOAndNationBox {
+    @media (max-width: 1200px) {
+      display: grid;
+      grid-template-columns: 150px 1fr;
+    }
+
+    .playerCOBox {
+      min-width: 150px;
+      background-color: #222;
+      color: white;
+      border: 0.3rem solid #111;
+      padding: 0.2rem;
+    }
+
+    .playerNationBox {
+      color: white;
+      display: grid;
+      grid-template-rows: repeat(2, 50px);
+      padding: 5px;
+
+      div {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .playerUsernameIconAndIngameExp {
+        height: 40px;
+      }
     }
   }
 }
@@ -50,7 +62,15 @@
   grid-template-rows: repeat(2, 1fr);
 
   @media (max-width: 1200px) {
-    width: 500px;
+    grid-template-rows: none;
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 70px;
   }
 
   .playerIngameInfoRow1 {
@@ -58,9 +78,6 @@
     grid-template-columns: repeat(3, 1fr);
 
     div {
-      display: flex;
-      justify-content: center;
-      align-items: center;
       background-color: #222;
       color: white;
       outline: 2px solid black;
@@ -72,12 +89,43 @@
     grid-template-columns: repeat(2, 1fr);
 
     div {
-      display: flex;
-      justify-content: center;
-      align-items: center;
       background-color: #222;
       color: white;
       outline: 2px solid black;
+    }
+  }
+}
+
+.gameInnerBox {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+
+  .playerVersus {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  h1 {
+    text-align: center;
+  }
+
+  button {
+    width: 150px;
+  }
+
+  @media (max-width: 1200px) {
+    flex-direction: row;
+
+    .playerVersus {
+      flex-direction: column;
+    }
+
+    h1 {
+      max-width: 1500px;
     }
   }
 }
@@ -388,6 +436,10 @@ $countryName: orangeStar, blueMoon;
     height: 60vh;
     max-width: 60vh;
     aspect-ratio: 1;
+
+    @media (max-width: 1200px) {
+      height: 50vw;
+    }
 
     // our individual tiles
     .mapTile {

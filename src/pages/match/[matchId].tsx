@@ -26,26 +26,28 @@ const PlayerBox = ({
 
   return (
     <div className="playerBox">
-      <div className="playerCOBox">
-        <img
-          style={{
-            height: 100,
-            width: '100%',
-            objectFit: 'none',
-            objectPosition: '0 0',
-          }}
-          src={`/img/CO/${playerInMatch.co}-Full.png`}
-        />
-      </div>
-      <div
-        className="playerNationBox"
-        style={{ backgroundColor: playerInMatch.color }}
-      >
-        <div>
-          <span>{playerInMatch.username}</span>
-          <span>(armyIcon)</span>
+      <div className="playerCOAndNationBox">
+        <div className="playerCOBox">
+          <img
+            style={{
+              height: 100,
+              width: '100%',
+              objectFit: 'none',
+              objectPosition: '0 0',
+            }}
+            src={`/img/CO/${playerInMatch.co}-Full.png`}
+          />
         </div>
-        <div>Placeholder for an exp bar</div>
+        <div
+          className="playerNationBox"
+          style={{ backgroundColor: playerInMatch.color }}
+        >
+          <div className="playerUsernameIconAndIngameExp">
+            <span>{playerInMatch.username}</span>
+            <span>(armyIcon)</span>
+          </div>
+          <div>Placeholder for an exp bar</div>
+        </div>
       </div>
       <div className="playerIngameInfo">
         <div className="playerIngameInfoRow1">
@@ -226,71 +228,85 @@ export default function Match() {
       <Layout>
         <div className={styles.match + ' gameBox'}>
           <h1>Match #{matchId}</h1>
-          <button onClick={passTurn}>Pass turn</button>
           <div className={styles.gap}>
             <PlayerBox playerInMatch={players.orangeStar} />
-            <div className="gridSize18 mapGrid">
-              {segments.map(({ tile, menu }, index) => {
-                const { unit, terrainImage, terrainType, terrainOwner } = tile;
+            <div className="gameInnerBox">
+              <div className="playerVersus">
+                <h1>Player 1</h1>
+                <h2>vs</h2>
+                <h1>Player 2</h1>
+              </div>
+              <div className="gridSize18 mapGrid">
+                {segments.map(({ tile, menu }, index) => {
+                  const { unit, terrainImage, terrainType, terrainOwner } =
+                    tile;
 
-                return (
-                  <div
-                    key={index}
-                    onClick={() => {
-                      reset();
-                      if (unit) {
-                        // check path
-                      } else if (terrainType === 'property') {
-                        if (!isTurn(terrainOwner)) {
-                          return;
+                  return (
+                    <div
+                      key={index}
+                      onClick={() => {
+                        reset();
+                        if (unit) {
+                          // check path
+                        } else if (terrainType === 'property') {
+                          if (!isTurn(terrainOwner)) {
+                            return;
+                          }
+
+                          updateSegment(index, (oldSegment) => ({
+                            ...oldSegment,
+                            tile,
+                            menu: (
+                              <div className="tileMenu">
+                                {factoryBuildableUnits.map(
+                                  (buildable, index) => (
+                                    <div
+                                      key={index}
+                                      className="menuOptions" // + menuNoBuy
+                                      onClick={() =>
+                                        buildUnit(
+                                          index,
+                                          buildable,
+                                          terrainOwner,
+                                        )
+                                      }
+                                    >
+                                      <div
+                                        className={`menu${terrainOwner}${buildable.menuName}`}
+                                      ></div>
+                                      <div className={`menuName`}>
+                                        {' '}
+                                        {buildable.menuName}
+                                      </div>
+                                      <div className={`menuCost`}>
+                                        {' '}
+                                        {buildable.cost}
+                                      </div>
+                                    </div>
+                                  ),
+                                )}
+                              </div>
+                            ),
+                            squareHighlight: null,
+                          }));
                         }
+                      }}
+                      className={`mapTile ${
+                        unit && unit.isUsed ? 'stateUsed' : ''
+                      }`}
+                    >
+                      <div className={`tileTerrain ${terrainImage}`}></div>
 
-                        updateSegment(index, (oldSegment) => ({
-                          ...oldSegment,
-                          tile,
-                          menu: (
-                            <div className="tileMenu">
-                              {factoryBuildableUnits.map((buildable, index) => (
-                                <div
-                                  key={index}
-                                  className="menuOptions" // + menuNoBuy
-                                  onClick={() =>
-                                    buildUnit(index, buildable, terrainOwner)
-                                  }
-                                >
-                                  <div
-                                    className={`menu${terrainOwner}${buildable.menuName}`}
-                                  ></div>
-                                  <div className={`menuName`}>
-                                    {' '}
-                                    {buildable.menuName}
-                                  </div>
-                                  <div className={`menuCost`}>
-                                    {' '}
-                                    {buildable.cost}
-                                  </div>
-                                </div>
-                              ))}
-                            </div>
-                          ),
-                          squareHighlight: null,
-                        }));
-                      }
-                    }}
-                    className={`mapTile ${
-                      unit && unit.isUsed ? 'stateUsed' : ''
-                    }`}
-                  >
-                    <div className={`tileTerrain ${terrainImage}`}></div>
-
-                    {unit && <Unit unit={unit} />}
-                    {null /** tileSquare */}
-                    {menu}
-                    {unit && <HPAndCapture unit={unit} />}
-                    <div className="tileCursor"></div>
-                  </div>
-                );
-              })}
+                      {unit && <Unit unit={unit} />}
+                      {null /** tileSquare */}
+                      {menu}
+                      {unit && <HPAndCapture unit={unit} />}
+                      <div className="tileCursor"></div>
+                    </div>
+                  );
+                })}
+              </div>
+              <button onClick={passTurn}>Pass turn</button>
             </div>
             <PlayerBox playerInMatch={players.blueMoon} />
           </div>
