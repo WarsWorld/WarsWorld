@@ -42,22 +42,24 @@ const PlayerBox = ({
           className="playerNationBox"
           style={{ backgroundColor: playerInMatch.color }}
         >
-          <div className="playerUsernameIconAndIngameExp">
-            <span>{playerInMatch.username}</span>
-            <span>(armyIcon)</span>
+          <div className="playerUsernameIconAndIngameStats">
+            <div className="playerUsernameAndIcon">
+              <span>{playerInMatch.username}</span>
+              <span>(armyIcon)</span>
+            </div>
+            <div className="playerIngameExp">Placeholder for an exp bar</div>
+            <div className="playerIngameInfo">
+              <div className="playerIngameInfoRow1">
+                <div>{time.toISOString().substring(11, 19)}</div>
+                <div>Units: {playerInMatch.unitCount}</div>
+                <div>Income: {playerInMatch.properties}</div>
+              </div>
+              <div className="playerIngameInfoRow2">
+                <div>Gold: {playerInMatch.gold}</div>
+                <div>Army-Value: {playerInMatch.properties * 1000}</div>
+              </div>
+            </div>
           </div>
-          <div>Placeholder for an exp bar</div>
-        </div>
-      </div>
-      <div className="playerIngameInfo">
-        <div className="playerIngameInfoRow1">
-          <div>{time.toISOString().substring(11, 19)}</div>
-          <div>Units: {playerInMatch.unitCount}</div>
-          <div>Income: {playerInMatch.properties}</div>
-        </div>
-        <div className="playerIngameInfoRow2">
-          <div>Gold: {playerInMatch.gold}</div>
-          <div>Army-Value: {playerInMatch.properties * 1000}</div>
         </div>
       </div>
     </div>
@@ -231,10 +233,8 @@ export default function Match() {
           <div className={styles.gap}>
             <PlayerBox playerInMatch={players.orangeStar} />
             <div className="gameInnerBox">
-              <div className="playerVersus">
-                <h1>Player 1</h1>
-                <h2>vs</h2>
-                <h1>Player 2</h1>
+              <div className="gameTime">
+                <h1>00:00:00</h1>
               </div>
               <div className="gridSize18 mapGrid">
                 {segments.map(({ tile, menu }, index) => {

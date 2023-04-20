@@ -3,7 +3,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200&display=swap');
 
 :root {
-  --layoutGridRows: 10% 1fr 15%;
+  --layoutGridRows: 100px 1fr 120px;
 }
 
 #__next {
@@ -47,16 +47,16 @@ main {
 
 .inProgress {
   padding: 2rem;
-  margin: 4rem;
+  margin: 2rem 4rem;
   border-radius: 30px;
   background-color: rgba(0, 0, 0, 0.7);
   max-height: 650px;
   min-width: 400px;
+  max-width: 1000px;
   text-align: center;
-  font-size: clamp(0.75rem, -0.1875rem + 2.4vw, 1.5rem);
 
   h1 {
-    font-size: clamp(1rem, -0.25rem + 3.5vw, 2rem);
+    font-size: clamp(1rem, -0.25rem + 3.3vw, 2rem);
     padding: 0;
   }
 
@@ -65,7 +65,12 @@ main {
     font-style: italic;
   }
 
+  h3 {
+    font-size: clamp(0.75rem, -0.1875rem + 2.3vw, 1.4rem);
+  }
+
   p {
+    font-size: clamp(0.75rem, -0.1875rem + 2.3vw, 1.4rem);
     padding: 1em 0;
   }
 }

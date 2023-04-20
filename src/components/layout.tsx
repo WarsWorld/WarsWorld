@@ -12,10 +12,13 @@ export default function Layout({ addFooter, children }: Props) {
     if (addFooter) {
       document.documentElement.style.setProperty(
         '--layoutGridRows',
-        '10% 1fr 15%',
+        '100px 1fr 120px',
       );
     } else {
-      document.documentElement.style.setProperty('--layoutGridRows', '10% 1fr');
+      document.documentElement.style.setProperty(
+        '--layoutGridRows',
+        '100px 1fr',
+      );
     }
   }
 
