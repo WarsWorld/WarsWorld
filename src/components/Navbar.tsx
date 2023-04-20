@@ -5,7 +5,7 @@ export default function Navbar() {
 
   return (
     <header>
-      <nav className="headerNavbar">
+      <nav className="@flex @justify-between @align-center @py-8">
         <Link href="/">
           <img className="headerLogo" src={awLogoPath} alt="AW Logo" />
         </Link>

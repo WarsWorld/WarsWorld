@@ -1,4 +1,4 @@
-import Layout from 'components/Layout';
+import Layout from 'components/layout';
 import HomePage from './home';
 
 export default function IndexPage() {

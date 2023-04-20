@@ -23,7 +23,7 @@ export default function Layout({ addFooter, children }: Props) {
   }
 
   return (
-    <div className="layout">
+    <div className="@flex @justify-content @align-items">
       <Navbar />
       <main className="layoutContent">{children}</main>
       {addFooter ? <Footer /> : null}
