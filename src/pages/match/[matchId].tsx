@@ -29,12 +29,7 @@ const PlayerBox = ({
       <div className="playerCOAndNationBox">
         <div className="playerCOBox">
           <img
-            style={{
-              height: 100,
-              width: '100%',
-              objectFit: 'none',
-              objectPosition: '0 0',
-            }}
+            className="playerCOIcon"
             src={`/img/CO/${playerInMatch.co}-Full.png`}
           />
         </div>
@@ -229,87 +224,78 @@ export default function Match() {
 
       <Layout>
         <div className={styles.match + ' gameBox'}>
-          <h1>Match #{matchId}</h1>
-          <div className={styles.gap}>
-            <PlayerBox playerInMatch={players.orangeStar} />
-            <div className="gameInnerBox">
-              <div className="gameTime">
-                <h1>00:00:00</h1>
-              </div>
-              <div className="gridSize18 mapGrid">
-                {segments.map(({ tile, menu }, index) => {
-                  const { unit, terrainImage, terrainType, terrainOwner } =
-                    tile;
+          {/* <h1>Match #{matchId}</h1> */}
+          <PlayerBox playerInMatch={players.orangeStar} />
+          <div className="gameInnerBox">
+            <div className="gridSize18 mapGrid">
+              {segments.map(({ tile, menu }, index) => {
+                const { unit, terrainImage, terrainType, terrainOwner } = tile;
 
-                  return (
-                    <div
-                      key={index}
-                      onClick={() => {
-                        reset();
-                        if (unit) {
-                          // check path
-                        } else if (terrainType === 'property') {
-                          if (!isTurn(terrainOwner)) {
-                            return;
-                          }
-
-                          updateSegment(index, (oldSegment) => ({
-                            ...oldSegment,
-                            tile,
-                            menu: (
-                              <div className="tileMenu">
-                                {factoryBuildableUnits.map(
-                                  (buildable, index) => (
-                                    <div
-                                      key={index}
-                                      className="menuOptions" // + menuNoBuy
-                                      onClick={() =>
-                                        buildUnit(
-                                          index,
-                                          buildable,
-                                          terrainOwner,
-                                        )
-                                      }
-                                    >
-                                      <div
-                                        className={`menu${terrainOwner}${buildable.menuName}`}
-                                      ></div>
-                                      <div className={`menuName`}>
-                                        {' '}
-                                        {buildable.menuName}
-                                      </div>
-                                      <div className={`menuCost`}>
-                                        {' '}
-                                        {buildable.cost}
-                                      </div>
-                                    </div>
-                                  ),
-                                )}
-                              </div>
-                            ),
-                            squareHighlight: null,
-                          }));
+                return (
+                  <div
+                    key={index}
+                    onClick={() => {
+                      reset();
+                      if (unit) {
+                        // check path
+                      } else if (terrainType === 'property') {
+                        if (!isTurn(terrainOwner)) {
+                          return;
                         }
-                      }}
-                      className={`mapTile ${
-                        unit && unit.isUsed ? 'stateUsed' : ''
-                      }`}
-                    >
-                      <div className={`tileTerrain ${terrainImage}`}></div>
 
-                      {unit && <Unit unit={unit} />}
-                      {null /** tileSquare */}
-                      {menu}
-                      {unit && <HPAndCapture unit={unit} />}
-                      <div className="tileCursor"></div>
-                    </div>
-                  );
-                })}
-              </div>
+                        updateSegment(index, (oldSegment) => ({
+                          ...oldSegment,
+                          tile,
+                          menu: (
+                            <div className="tileMenu">
+                              {factoryBuildableUnits.map((buildable, index) => (
+                                <div
+                                  key={index}
+                                  className="menuOptions" // + menuNoBuy
+                                  onClick={() =>
+                                    buildUnit(index, buildable, terrainOwner)
+                                  }
+                                >
+                                  <div
+                                    className={`menu${terrainOwner}${buildable.menuName}`}
+                                  ></div>
+                                  <div className={`menuName`}>
+                                    {' '}
+                                    {buildable.menuName}
+                                  </div>
+                                  <div className={`menuCost`}>
+                                    {' '}
+                                    {buildable.cost}
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          ),
+                          squareHighlight: null,
+                        }));
+                      }
+                    }}
+                    className={`mapTile ${
+                      unit && unit.isUsed ? 'stateUsed' : ''
+                    }`}
+                  >
+                    <div className={`tileTerrain ${terrainImage}`}></div>
+
+                    {unit && <Unit unit={unit} />}
+                    {null /** tileSquare */}
+                    {menu}
+                    {unit && <HPAndCapture unit={unit} />}
+                    <div className="tileCursor"></div>
+                  </div>
+                );
+              })}
+            </div>
+            <div className="gameTime">
+              <h1>00:00:00</h1>
               <button onClick={passTurn}>Pass turn</button>
             </div>
-            <PlayerBox playerInMatch={players.blueMoon} />
           </div>
+          <PlayerBox playerInMatch={players.blueMoon} />
         </div>
       </Layout>
     </>

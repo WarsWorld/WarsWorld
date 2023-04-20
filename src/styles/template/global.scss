@@ -7,9 +7,12 @@ header {
   width: 100%;
   background: rgba(0, 0, 0, 0.5);
   color: white;
-  font-size: 1.6vw;
+  font-size: 0.75rem;
+  font-size: clamp(0.75rem, 0.5rem + 1.266vw, 2rem);
 
   a {
+    display: flex;
+    text-align: center;
     color: white;
     &:hover {
       color: variables.$color-primary-variant;
@@ -21,20 +24,25 @@ header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    width: 100vw;
+    width: 100%;
     padding: 0 30px;
+    gap: 10px;
+
+    @media (max-width: 700px) {
+      padding: 0px;
+    }
 
     .headerLogo {
       display: flex;
-      max-width: 216px;
+      width: 6.25rem;
+      width: clamp(6.25rem, 2.25rem + 20vw, 13.5rem);
       cursor: pointer;
     }
   }
 
   .headerMenu {
-    display: flex;
-    justify-content: center;
-    gap: 50px;
+    gap: 0.625rem;
+    gap: clamp(0.625rem, 0.12rem + 2.53vw, 3.125rem);
     width: 100%;
   }
 }

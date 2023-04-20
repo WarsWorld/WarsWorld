@@ -1,6 +1,7 @@
 import '../styles/grid/global.scss';
 import '../styles/template/global.scss';
 import '../styles/index.scss';
+import '../styles/global.css';
 import type { Session } from 'next-auth';
 import { getSession, SessionProvider } from 'next-auth/react';
 import type { AppType } from 'next/app';
