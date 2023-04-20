@@ -52,12 +52,12 @@ const PlayerBox = ({
       <div className="playerIngameInfo">
         <div className="playerIngameInfoRow1">
           <div>{time.toISOString().substring(11, 19)}</div>
-          <div>Gold: {playerInMatch.gold}</div>
+          <div>Units: {playerInMatch.unitCount}</div>
           <div>Income: {playerInMatch.properties}</div>
         </div>
         <div className="playerIngameInfoRow2">
+          <div>Gold: {playerInMatch.gold}</div>
           <div>Army-Value: {playerInMatch.properties * 1000}</div>
-          <div>Units: {playerInMatch.unitCount}</div>
         </div>
       </div>
     </div>

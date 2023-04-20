@@ -71,6 +71,9 @@
     justify-content: center;
     align-items: center;
     height: 70px;
+    @media (max-width: 1200px) {
+      height: 50px;
+    }
   }
 
   .playerIngameInfoRow1 {
