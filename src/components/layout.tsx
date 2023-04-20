@@ -8,24 +8,24 @@ interface Props {
 }
 
 export default function Layout({ addFooter, children }: Props) {
-  if (typeof document !== 'undefined') {
-    if (addFooter) {
-      document.documentElement.style.setProperty(
-        '--layoutGridRows',
-        '100px 1fr 120px',
-      );
-    } else {
-      document.documentElement.style.setProperty(
-        '--layoutGridRows',
-        '100px 1fr',
-      );
-    }
-  }
+  // if (typeof document !== 'undefined') {
+  //   if (addFooter) {
+  //     document.documentElement.style.setProperty(
+  //       '--layoutGridRows',
+  //       '100px 1fr 120px',
+  //     );
+  //   } else {
+  //     document.documentElement.style.setProperty(
+  //       '--layoutGridRows',
+  //       '100px 1fr',
+  //     );
+  //   }
+  // }
 
   return (
-    <div className="@flex @justify-content @align-items">
+    <div className="">
       <Navbar />
-      <main className="layoutContent">{children}</main>
+      <main className="@flex @justify-center @items-center">{children}</main>
       {addFooter ? <Footer /> : null}
     </div>
   );

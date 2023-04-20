@@ -6,23 +6,23 @@ export default function Footer() {
   const gLogoPath = '/img/layout/GitHub.png';
 
   return (
-    <footer>
-      <nav className="menuElementGridF">
+    <footer className="@flex @flex-col @items-center @gap-3 @bg-gradient-to-r from-black">
+      <nav className="">
         <Link href="/">Home</Link>
         <Link href="/">About us</Link>
         <Link href="/">Terms of Use</Link>
         <Link href="/">Rules</Link>
       </nav>
 
-      <nav className="iconElements">
+      <nav className="">
         <img src={rLogoPath} alt="Reddit Logo" />
         <img src={dLogoPath} alt="Discord Logo" />
         <img src={gLogoPath} alt="GitHub Logo" />
       </nav>
 
-      <div className="horizontalLine"> </div>
+      <div className=""> </div>
 
-      <p className="copyrightElement">
+      <p className="@text-center @text-sm @mb-5">
         {' '}
         Advance Wars is (c) 1990-2001 Nintendo and (c) 2001 Intelligent Systems.
         All images are copyright their respective owners.
