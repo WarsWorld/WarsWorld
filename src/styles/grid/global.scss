@@ -13,6 +13,75 @@
   }
 }
 
+.playerBox {
+  border: 4px solid black;
+  font-size: 1.2rem;
+  max-width: 300px;
+  @media (max-width: 1500px) {
+    display: grid;
+    grid-template-columns: 150px 300px 1fr;
+    max-width: initial;
+  }
+
+  .playerCOBox {
+    min-width: 150px;
+    background-color: #222;
+    color: white;
+    border: 0.3rem solid #111;
+    padding: 0.2rem;
+  }
+
+  .playerNationBox {
+    color: white;
+    display: grid;
+    grid-template-rows: repeat(2, 1fr);
+    padding: 5px;
+
+    div {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+  }
+}
+
+.playerIngameInfo {
+  display: grid;
+  grid-template-rows: repeat(2, 1fr);
+
+  @media (max-width: 1500px) {
+    width: 500px;
+  }
+
+  .playerIngameInfoRow1 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+
+    div {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #222;
+      color: white;
+      outline: 2px solid black;
+    }
+  }
+
+  .playerIngameInfoRow2 {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+
+    div {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #222;
+      color: white;
+      outline: 2px solid black;
+    }
+  }
+}
+
 .gameBox {
   .mapGrid {
     // our individual tiles
@@ -296,8 +365,6 @@ $imageName: Infantry, Mech, Recon, APC, Artillery, Tank, Anti-Air, Missile,
 $countryName: orangeStar, blueMoon;
 
 .gameBox {
-  text-align: center;
-  margin: 0 60px;
   image-rendering: pixelated;
 
   button {
@@ -319,8 +386,8 @@ $countryName: orangeStar, blueMoon;
   .mapGrid {
     border: 1em solid #091a4f;
     height: 60vh;
+    max-width: 60vh;
     aspect-ratio: 1;
-    object-fit: contain;
 
     // our individual tiles
     .mapTile {
@@ -344,6 +411,7 @@ $countryName: orangeStar, blueMoon;
         position: absolute;
         top: 0;
         left: 100%;
+
         .menuName {
           background-color: #d3d3d3;
           cursor: pointer;
@@ -434,7 +502,6 @@ h1 {
   padding: 0.5em;
 }
 .playerBox {
-  width: 100%;
   z-index: 25;
 }
 .activePlayer {

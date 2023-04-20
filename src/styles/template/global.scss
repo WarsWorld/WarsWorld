@@ -2,19 +2,18 @@
 
 // Header styling
 header {
-  position: fixed;
   display: flex;
-  top: 0;
   height: 100px;
   width: 100%;
   background: rgba(0, 0, 0, 0.5);
   color: white;
   font-size: 1.6vw;
-  
+
   a {
-    color: variables.$text-main;
+    color: white;
     &:hover {
-      color: orange;
+      color: variables.$color-primary-variant;
+      cursor: pointer;
     }
   }
 
@@ -40,99 +39,56 @@ header {
   }
 }
 
-
 // Footer styling
 footer {
-  position: fixed;
   width: 100%;
-  bottom: 0;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, #000000 83.85%);
 
-  .footerGrid {
-    max-width: 100%;
-    background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, #000000 83.85%);
-    margin: 0 auto;
-    padding: 1rem;
+  .menuElementGridF {
+    display: flex;
+    justify-content: center;
     align-items: center;
-  }
-  
-  .logoElementGridF {
-    display: grid;
-    grid-template-columns: 50%;
-    padding-top: 2%;
-    padding-left: 44%;
+    gap: 30px;
 
-    .imageLogo {
-      height: 17%;
-      width: 17%;
+    a {
+      color: white;
+      &:hover {
+        color: variables.$color-primary-variant;
+        cursor: pointer;
+      }
+    }
+  }
+
+  .horizontalLine {
+    padding: 5px;
+    border-bottom: 1px solid #ccc;
+    width: 80%;
+  }
+
+  .iconElements {
+    display: grid;
+    grid-template-columns: 64px 64px 64px;
+    justify-content: center;
+    padding-top: 10px;
+
+    img {
+      height: 100%;
+      width: 50%;
+      justify-content: end;
       &:hover {
         cursor: pointer;
       }
     }
   }
-  
-  .menuElementGridF {
-    font-family: inter;
-    padding-top: 1.8%;
-    display: grid;
-    grid-template-columns: max-content auto auto auto auto max-content;
-    justify-content: center;
-    grid-column-gap: 3%;
-    padding-left: 4%;
 
-    .menuButtonElementGridF:hover {
-      color: orange;
-      cursor: pointer;
-    }
-  }
-  
-  .horizontalLine {
-    padding-top: 1%;
-    display: grid;
-    border-bottom: 1px solid #ccc;
-    max-width: 63%;
-    margin-left: 20%;
-  }
-  
-  .iconElements {
-    display: grid;
-    grid-template-columns: 3% 3% 3%;
-    justify-content: center;
-    padding-top: 1.2%;
-
-    .iconButtonElementGridRedditF {
-      height: 100%;
-      width: 50%;
-      justify-content: end;
-      &:hover {
-        cursor: pointer
-      }
-    }
-    
-    .iconButtonElementGridDiscordF {
-      display: grid;
-      height: 100%;
-      width: 50%;
-      justify-items: center ;
-      &:hover {
-        cursor: pointer
-      }
-    }
-
-    .iconButtonElementGridGhF {
-      display: grid;
-      height: 100%;
-      width: 50%;
-      &:hover {
-        cursor: pointer
-      }
-    }
-  }
-  
   .copyrightElement {
-    font-family: inter;
-    padding-top: 1.4%;
-    display: grid;
-    justify-content: center;
-    font-size: 0.8vw;
+    text-align: center;
+    font-size: 0.8rem;
+    margin-bottom: 20px;
   }
 }

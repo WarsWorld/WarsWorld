@@ -2,22 +2,21 @@
   font-family: sans-serif;
   background-color: rgba(30, 30, 30, 0.1);
   color: rgb(230, 230, 230);
-  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  position: relative;
 }
 
 .gap {
   display: flex;
+  align-items: center;
+  justify-content: center;
   gap: 0.5rem;
 }
 
-.segment {
-  background-color: #222;
-  color: white;
-  border: 0.3rem solid #111;
-  padding: 0.2rem;
+@media (max-width: 1500px) {
+  .gap {
+    flex-direction: column;
+  }
 }

@@ -4,7 +4,7 @@ import {
   factoryBuildableUnits,
 } from 'components/match/unit-builder';
 import { useRouter } from 'next/router';
-import { CSSProperties, useState } from 'react';
+import { useState } from 'react';
 import {
   MapTile,
   PlayerInMatch,
@@ -16,10 +16,6 @@ import { Army } from 'utils/wars-world-types';
 import styles from '../../styles/match.module.css';
 import Layout from 'components/Layout';
 
-const smallPadding: CSSProperties = {
-  padding: '0.2rem',
-};
-
 const PlayerBox = ({
   playerInMatch: playerInMatch,
 }: {
@@ -29,10 +25,8 @@ const PlayerBox = ({
   time.setSeconds(playerInMatch.timePlayed ?? 1);
 
   return (
-    <div
-      style={{ width: '300px', border: '4px solid black', fontSize: '1.2rem' }}
-    >
-      <div className={styles.segment}>
+    <div className="playerBox">
+      <div className="playerCOBox">
         <img
           style={{
             height: 100,
@@ -44,39 +38,24 @@ const PlayerBox = ({
         />
       </div>
       <div
-        style={{
-          backgroundColor: playerInMatch.color,
-          color: 'white',
-          fontWeight: 'bolder',
-          display: 'flex',
-          justifyContent: 'space-between',
-          ...smallPadding,
-        }}
+        className="playerNationBox"
+        style={{ backgroundColor: playerInMatch.color }}
       >
-        <span>{playerInMatch.username}</span>
-        <span>(armyIcon)</span>
-      </div>
-      <div
-        style={{ display: 'flex', gap: '0.5rem', border: '2px solid green' }}
-      >
-        <div className={styles.gap} style={{ flexDirection: 'column' }}>
-          <div className={styles.gap}>
-            <span className={styles.segment}>
-              {time.toISOString().substring(11, 19)}
-            </span>
-            <span className={styles.segment}>Gold: {playerInMatch.gold}</span>
-          </div>
-          <div className={styles.segment}>Placeholder for an exp bar</div>
+        <div>
+          <span>{playerInMatch.username}</span>
+          <span>(armyIcon)</span>
         </div>
-        <div
-          style={{ width: '40%', flexDirection: 'column' }}
-          className={styles.gap}
-        >
-          <p className={styles.segment}>Units: {playerInMatch.unitCount}</p>
-          <p className={styles.segment}>
-            Army-Value: {playerInMatch.properties * 1000}
-          </p>
-          <p className={styles.segment}>Income: {playerInMatch.properties}</p>
+        <div>Placeholder for an exp bar</div>
+      </div>
+      <div className="playerIngameInfo">
+        <div className="playerIngameInfoRow1">
+          <div>{time.toISOString().substring(11, 19)}</div>
+          <div>Gold: {playerInMatch.gold}</div>
+          <div>Income: {playerInMatch.properties}</div>
+        </div>
+        <div className="playerIngameInfoRow2">
+          <div>Army-Value: {playerInMatch.properties * 1000}</div>
+          <div>Units: {playerInMatch.unitCount}</div>
         </div>
       </div>
     </div>
@@ -245,7 +224,7 @@ export default function Match() {
       </Head>
 
       <Layout>
-        <div className={styles.match + ' gameBox' + ' layoutMatch'}>
+        <div className={styles.match + ' gameBox'}>
           <h1>Match #{matchId}</h1>
           <button onClick={passTurn}>Pass turn</button>
           <div className={styles.gap}>
