@@ -2,6 +2,18 @@ import Layout from 'components/layout';
 import HomePage from './home';
 
 export default function IndexPage() {
+  const documentHeight = () => {
+    if (typeof document !== 'undefined') {
+      const doc = document.documentElement;
+      doc.style.setProperty('--doc-height', `${window.innerHeight}px`);
+    }
+  };
+
+  if (typeof window !== 'undefined') {
+    window.addEventListener('resize', documentHeight);
+    documentHeight();
+  }
+
   return (
     <Layout addFooter>
       <HomePage />

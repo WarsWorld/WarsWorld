@@ -14,7 +14,7 @@ import {
 import { trpc } from 'utils/trpc';
 import { Army } from 'utils/wars-world-types';
 import styles from '../../styles/match.module.css';
-import Layout from 'components/Layout';
+import Layout from 'components/layout';
 
 const PlayerBox = ({
   playerInMatch: playerInMatch,

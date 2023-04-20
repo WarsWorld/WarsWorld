@@ -165,6 +165,8 @@
       width: 6rem;
       width: clamp(6rem, 2.586206896551724rem + 12.068965517241379vw, 9.375rem);
       font-size: clamp(1rem, 0.4375rem + 1.5vw, 2rem);
+      background-color: lightgrey;
+      border-radius: 10px;
       padding: 2px;
     }
   }

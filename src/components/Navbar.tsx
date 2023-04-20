@@ -6,13 +6,15 @@ export default function Navbar() {
 
   return (
     <header>
-      <nav className="@flex @bg-gray-800 @mx-auto @px-2">
+      <nav className="@flex @justify-between @items-center @bg-gray-800 @mx-auto @px-2 navHeader">
         <Link href="/">
-          <img className="@flex @w-24" src={awLogoPath} alt="AW Logo" />
+          <img className="@flex headerLogo" src={awLogoPath} alt="AW Logo" />
         </Link>
-        <NavItem text="Current Games" location="/" />
-        <NavItem text="Start a game" location="/match" />
-        <NavItem text="How to play" location="/" />
+        <div className="@flex @gap-5">
+          <NavItem text="Current Games" location="/" />
+          <NavItem text="Start a game" location="/match" />
+          <NavItem text="How to play" location="/" />
+        </div>
         <div className="@relative @ml-3">
           <NavItem text="Login" location="/" />
         </div>
