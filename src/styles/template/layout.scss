@@ -31,7 +31,18 @@ body {
   }
 
   .isProgress {
-    margin: 20px;
+    @media (max-width: 1200px) {
+      max-width: 65vw;
+    }
+
+    @media (max-width: 500px) {
+      max-width: 80vw;
+    }
+
+    @media (max-height: 750px) {
+      max-width: 95vw;
+      padding: 15px;
+    }
   }
 
   .gameLobby {
@@ -67,6 +78,18 @@ body {
         filter: invert(80%) sepia(11%) saturate(560%) hue-rotate(72deg)
           brightness(80%) contrast(88%);
         transition: 0.4s;
+      }
+    }
+
+    @media (max-height: 800px) {
+      height: 60px;
+
+      .navHeader {
+        height: 60px;
+      }
+
+      .headerLogo {
+        max-height: 50px;
       }
     }
   }

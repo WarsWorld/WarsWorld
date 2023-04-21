@@ -37,7 +37,7 @@ export default function Navbar() {
           </button>
         ) : (
           <>
-            <div className="@flex @gap-5 @text-center">
+            <div className="@grid @grid-cols-3 @gap-10 @text-center @mx-3">
               <NavItem text="Current Games" location="/" />
               <NavItem text="Start a game" location="/match" />
               <NavItem text="How to play" location="/" />

@@ -8,10 +8,18 @@ export default function Footer() {
   return (
     <footer className="@flex @flex-col @items-center @justify-center @gap-4 @bg-gradient-to-t @from-black @p-0">
       <nav className="@flex @gap-10">
-        <Link href="/">Home</Link>
-        <Link href="/">About us</Link>
-        <Link href="/">Terms of Use</Link>
-        <Link href="/">Rules</Link>
+        <Link className="@text-base-a" href="/">
+          Home
+        </Link>
+        <Link className="@text-base-a" href="/">
+          About us
+        </Link>
+        <Link className="@text-base-a" href="/">
+          Terms of Use
+        </Link>
+        <Link className="@text-base-a" href="/">
+          Rules
+        </Link>
       </nav>
 
       <nav className="@flex @justify-center @gap-5">
@@ -20,7 +28,7 @@ export default function Footer() {
         <img className="footerLogo" src={gLogoPath} alt="GitHub Logo" />
       </nav>
 
-      <p className="@text-center @text-sm @p-0 @mx-1">
+      <p className="@text-center @text-base-p @p-0 @mx-1">
         Advance Wars is (c) 1990-2001 Nintendo and (c) 2001 Intelligent Systems.
         All images are copyright their respective owners.
       </p>
