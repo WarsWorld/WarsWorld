@@ -30,7 +30,7 @@ body {
     display: none;
   }
 
-  .isProgress {
+  .inProgress {
     @media (max-width: 1000px) {
       max-width: 65vw;
     }
@@ -96,9 +96,5 @@ body {
 
   footer {
     height: 160px;
-
-    .footerLogo {
-      height: 30px;
-    }
   }
 }

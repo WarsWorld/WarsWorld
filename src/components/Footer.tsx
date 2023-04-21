@@ -23,9 +23,9 @@ export default function Footer() {
       </nav>
 
       <nav className="@flex @justify-center @gap-5">
-        <img className="footerLogo" src={rLogoPath} alt="Reddit Logo" />
-        <img className="footerLogo" src={dLogoPath} alt="Discord Logo" />
-        <img className="footerLogo" src={gLogoPath} alt="GitHub Logo" />
+        <img className="@h-8" src={rLogoPath} alt="Reddit Logo" />
+        <img className="@h-8" src={dLogoPath} alt="Discord Logo" />
+        <img className="@h-8" src={gLogoPath} alt="GitHub Logo" />
       </nav>
 
       <p className="@text-center @text-base-p @p-0 @mx-1">
