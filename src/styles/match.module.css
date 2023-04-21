@@ -10,7 +10,7 @@
   width: 100%;
 }
 
-@media (max-width: 1200px) {
+@media (max-width: 1000px) {
   .match {
     flex-direction: column;
     align-items: center;

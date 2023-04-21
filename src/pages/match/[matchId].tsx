@@ -127,7 +127,7 @@ const HPAndCapture = ({ unit }: { unit: UnitOnMap }) => (
 export default function Match() {
   const [players, setPlayers] = useState<PlayerState | null | undefined>(null);
   const [segments, setSegments] = useState<Segment[] | null | undefined>(null);
-  const query1200 = useMediaQuery('(max-width: 1200px)');
+  const query1000 = useMediaQuery('(max-width: 1000px)');
 
   segments
     ?.filter((s) => s.tile.unit)
@@ -270,7 +270,7 @@ export default function Match() {
       <Layout>
         <div className={styles.match + ' gameBox'}>
           {/* <h1>Match #{matchId}</h1> */}
-          {query1200 ? (
+          {query1000 ? (
             <div>
               <PlayerBox playerInMatch={players.orangeStar} />
               <PlayerBox playerInMatch={players.blueMoon} />
@@ -347,7 +347,7 @@ export default function Match() {
               <button onClick={passTurn}>Pass turn</button>
             </div>
           </div>
-          {query1200 ? null : <PlayerBox playerInMatch={players.blueMoon} />}
+          {query1000 ? null : <PlayerBox playerInMatch={players.blueMoon} />}
         </div>
       </Layout>
     </>

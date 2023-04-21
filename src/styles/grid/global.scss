@@ -18,7 +18,7 @@
   max-width: 300px;
   margin-bottom: 100px;
   outline: 2px solid black;
-  @media (max-width: 1200px) {
+  @media (max-width: 1000px) {
     max-width: initial;
     width: 700px;
     margin-bottom: initial;
@@ -29,7 +29,7 @@
   }
 
   .playerCOAndNationBox {
-    @media (max-width: 1200px) {
+    @media (max-width: 1000px) {
       grid-template-columns: 150px 1fr;
     }
 
@@ -39,7 +39,7 @@
 
     .playerCOBox {
       height: 100px;
-      @media (max-width: 1200px) {
+      @media (max-width: 1000px) {
         height: 120px;
       }
 
@@ -60,7 +60,7 @@
         display: grid;
         grid-template-columns: 200px;
 
-        @media (max-width: 1200px) {
+        @media (max-width: 1000px) {
           grid-template-columns: none;
           grid-template-rows: repeat(3, 40px);
         }
@@ -89,7 +89,7 @@
         flex-direction: column;
         width: 200px;
 
-        @media (max-width: 1200px) {
+        @media (max-width: 1000px) {
           flex-direction: row;
           width: 100%;
         }
@@ -451,7 +451,7 @@ $countryName: orangeStar, blueMoon;
     height: 60vh;
     aspect-ratio: 1;
 
-    @media (max-width: 1200px) {
+    @media (max-width: 1000px) {
       height: 400px;
     }
 
@@ -460,8 +460,9 @@ $countryName: orangeStar, blueMoon;
       min-height: 320px;
     }
 
-    @media (max-height: 800px) {
+    @media (max-height: 750px) {
       height: 50vw;
+      max-height: 550px;
       min-height: 320px;
     }
 
