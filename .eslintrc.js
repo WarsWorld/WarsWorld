@@ -23,5 +23,5 @@ module.exports = {
       version: 'detect',
     },
   },
-  ignorePatterns: ['tailwind.config.js']
+  ignorePatterns: ['tailwind.config.js', 'postcss.config.js'],
 };
