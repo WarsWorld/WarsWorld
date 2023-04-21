@@ -16,6 +16,15 @@ import { Army } from 'utils/wars-world-types';
 import styles from '../../styles/match.module.css';
 import Layout from 'components/layout';
 import { useMediaQuery } from 'utils/useMediaQuery';
+import IngameInfo from 'components/IngameInfo';
+
+interface INationColors {
+  [key: string]: string;
+}
+
+interface INationColorGradients {
+  [key: string]: string;
+}
 
 const PlayerBox = ({
   playerInMatch: playerInMatch,
@@ -25,35 +34,69 @@ const PlayerBox = ({
   const time = new Date(0);
   time.setSeconds(playerInMatch.timePlayed ?? 1);
 
+  const nationColors: INationColors = {
+    blue: '@bg-blue-400',
+    orange: '@bg-orange-400',
+    green: '@bg-green-400',
+    yellow: '@bg-yellow-400',
+  };
+
+  const nationColorGradients: INationColorGradients = {
+    blue: '@bg-gradient-to-l @from-blue-400',
+    orange: '@bg-gradient-to-l @from-orange-400',
+    green: '@bg-gradient-to-l @from-green-400',
+    yellow: '@bg-gradient-to-l @from-yellow-400',
+  };
+
   return (
     <div className="playerBox @relative @z-25">
-      <div className="playerCOAndNationBox">
-        <div className="playerCOBox">
+      <div className="@grid playerCOAndNationBox">
+        <div
+          className={`@relative ${
+            nationColorGradients[playerInMatch.color]
+          } playerCOBox`}
+        >
           <img
-            className="playerCOIcon"
+            className="@absolute @bottom-1 playerCOIcon"
             src={`/img/CO/${playerInMatch.co}-Full.png`}
+          />
+          <img
+            className="@absolute @h-8 @top-1 @right-1 @bg-slate-200"
+            src={`/img/nations/${playerInMatch.nation}.webp`}
           />
         </div>
         <div className="playerNationBox">
           <div className="playerUsernameIconAndIngameStats">
-            <div
-              className="playerUsernameAndIcon"
-              style={{ backgroundColor: playerInMatch.color }}
-            >
+            <div className={`playerUsernameAndIcon`}>
               <span>{playerInMatch.username}</span>
-              <span>(armyIcon)</span>
             </div>
             <div className="playerIngameExp">Placeholder for an exp bar</div>
             <div className="playerIngameInfo">
-              <div className="playerIngameInfoRow1">
-                <div>{time.toISOString().substring(11, 19)}</div>
-                <div>Units: {playerInMatch.unitCount}</div>
-                <div>Income: {playerInMatch.properties}</div>
-              </div>
-              <div className="playerIngameInfoRow2">
-                <div>Gold: {playerInMatch.gold}</div>
-                <div>Army-Value: {playerInMatch.properties * 1000}</div>
-              </div>
+              <IngameInfo
+                iconPath=""
+                value={time.toISOString().substring(11, 19)}
+              />
+              <IngameInfo
+                iconPath={`/img/units/${playerInMatch.nation}/Infantry-0.png`}
+                value={999}
+              />
+              <IngameInfo
+                iconPath="/img/mapTiles/countries/city/ne1.webp"
+                value={999999}
+              />
+              <IngameInfo iconPath="" value={999999} />
+              <IngameInfo iconPath="" value={999999} />
+              {/* <IngameInfo
+                name="Time"
+                value={time.toISOString().substring(11, 19)}
+              />
+              <IngameInfo name="Units" value={playerInMatch.unitCount} />
+              <IngameInfo name="Income" value={playerInMatch.properties} />
+              <IngameInfo name="Gold" value={playerInMatch.gold} />
+              <IngameInfo
+                name="Army-Value"
+                value={playerInMatch.properties * 1000}
+              /> */}
             </div>
           </div>
         </div>

@@ -14,10 +14,10 @@
 }
 
 .playerBox {
-  border: 2px solid black;
   font-size: clamp(0.75rem, 0.4375rem + 1vw, 1rem);
   max-width: 300px;
-  margin-bottom: 150px;
+  margin-bottom: 100px;
+  outline: 2px solid black;
   @media (max-width: 1200px) {
     max-width: initial;
     width: 700px;
@@ -30,33 +30,25 @@
 
   .playerCOAndNationBox {
     @media (max-width: 1200px) {
-      display: grid;
       grid-template-columns: 150px 1fr;
+    }
 
-      @media (max-width: 700px) {
-        grid-template-columns: 110px 1fr;
-      }
+    @media (max-width: 500px) {
+      grid-template-columns: 120px 1fr;
     }
 
     .playerCOBox {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background-color: #222;
-      color: white;
-      border: 0.3rem solid #111;
+      height: 100px;
+      @media (max-width: 1200px) {
+        height: 120px;
+      }
 
       .playerCOIcon {
-        height: 100px;
+        height: 120px;
         width: 100%;
         aspect-ratio: 1;
         object-fit: none;
         object-position: 0 0;
-
-        @media (max-width: 700px) {
-          height: 80px;
-          object-position: -10px 0;
-        }
       }
     }
 
@@ -66,14 +58,11 @@
 
       .playerUsernameIconAndIngameStats {
         display: grid;
-        grid-template-rows: repeat(2, 50px) 1fr;
+        grid-template-columns: 200px;
 
         @media (max-width: 1200px) {
+          grid-template-columns: none;
           grid-template-rows: repeat(3, 40px);
-        }
-
-        @media (max-width: 700px) {
-          grid-template-rows: repeat(4, 30px);
         }
 
         .playerUsernameAndIcon {
@@ -81,6 +70,8 @@
           justify-content: space-between;
           align-items: center;
           padding: 5px 10px;
+          background-color: #222;
+          outline: 2px solid black;
         }
 
         .playerIngameExp {
@@ -89,49 +80,32 @@
           align-items: center;
           padding: 5px;
           background-color: #222;
+          outline: 2px solid black;
         }
       }
 
       .playerIngameInfo {
-        display: grid;
-        grid-template-rows: repeat(2, 50px);
+        display: flex;
+        flex-direction: column;
+        width: 200px;
 
         @media (max-width: 1200px) {
-          grid-template-rows: none;
-          height: 40px;
-          grid-template-columns: repeat(2, 1fr);
+          flex-direction: row;
+          width: 100%;
         }
 
-        @media (max-width: 700px) {
-          grid-template-columns: none;
-          grid-template-rows: repeat(2, 30px);
+        @media (max-width: 500px) {
+          flex-wrap: wrap;
         }
 
-        .playerIngameInfoRow1 {
-          display: grid;
-          grid-template-columns: repeat(3, 1fr);
+        .ingameInfo {
+          outline: 2px solid black;
+          flex-grow: 1;
+          padding: 0.5rem;
 
-          div {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background-color: #222;
-            color: white;
-            outline: 2px solid black;
-          }
-        }
-
-        .playerIngameInfoRow2 {
-          display: grid;
-          grid-template-columns: repeat(2, 1fr);
-
-          div {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background-color: #222;
-            color: white;
-            outline: 2px solid black;
+          @media (max-width: 500px) {
+            flex: 1 1 60px;
+            padding: 0 5px;
           }
         }
       }
