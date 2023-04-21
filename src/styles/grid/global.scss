@@ -29,16 +29,16 @@
   }
 
   .playerCOAndNationBox {
-    @media (max-width: 1000px) {
-      grid-template-columns: 150px 1fr;
-    }
+    display: flex;
+    flex-direction: column;
 
-    @media (max-width: 500px) {
-      grid-template-columns: 120px 1fr;
+    @media (max-width: 1000px) {
+      flex-direction: row;
     }
 
     .playerCOBox {
       height: 100px;
+      aspect-ratio: 1;
       @media (max-width: 1000px) {
         height: 120px;
       }
@@ -49,12 +49,20 @@
         aspect-ratio: 1;
         object-fit: none;
         object-position: 0 0;
+        filter: grayscale(0%);
+        transition: height 0.5s, filter 0.5s;
+      }
+
+      .isNotPlayerTurn {
+        height: 100px;
+        filter: grayscale(50%);
       }
     }
 
     .playerNationBox {
       color: white;
       min-width: 200px;
+      width: 100%;
 
       .playerUsernameIconAndIngameStats {
         display: grid;
@@ -99,6 +107,14 @@
           }
         }
       }
+    }
+  }
+}
+
+.playerBox:last-of-type {
+  @media (max-width: 1000px) {
+    .playerCOAndNationBox {
+      flex-direction: row-reverse;
     }
   }
 }

@@ -26,13 +26,15 @@ interface INationColorGradients {
   [key: string]: string;
 }
 
-const PlayerBox = ({
-  playerInMatch: playerInMatch,
-}: {
+interface Props {
+  playerTurn: boolean;
   playerInMatch: PlayerInMatch;
-}) => {
+}
+
+const PlayerBox = ({ playerTurn, playerInMatch: playerInMatch }: Props) => {
   const time = new Date(0);
   time.setSeconds(playerInMatch.timePlayed ?? 1);
+  console.log(playerTurn);
 
   const nationColors: INationColors = {
     blue: '@bg-blue-400',
@@ -50,14 +52,16 @@ const PlayerBox = ({
 
   return (
     <div className="playerBox @relative @z-25">
-      <div className="@grid playerCOAndNationBox">
+      <div className="playerCOAndNationBox">
         <div
           className={`@relative ${
             nationColorGradients[playerInMatch.color]
           } playerCOBox`}
         >
           <img
-            className="@absolute @bottom-1 playerCOIcon"
+            className={`@absolute @bottom-1 playerCOIcon ${
+              playerTurn ? null : 'isNotPlayerTurn'
+            }`}
             src={`/img/CO/${playerInMatch.co}-Full.png`}
           />
           <img
@@ -135,18 +139,19 @@ export default function Match() {
     ?.filter((s) => s.tile.unit)
     .forEach((seg) => console.log('has-unit', seg));
 
-  const turn = 2;
+  // Original functionality for turn
+  // const turn = 2;
 
-  const isTurn = (army: Army) => {
-    switch (army) {
-      case 'orangeStar':
-        return turn % 2 === 0;
-      case 'blueMoon':
-        return turn % 2 === 1;
-      case null:
-        return false;
-    }
-  };
+  // const isTurn = (army: Army) => {
+  //   switch (army) {
+  //     case 'orangeStar':
+  //       return turn % 2 === 0;
+  //     case 'blueMoon':
+  //       return turn % 2 === 1;
+  //     case null:
+  //       return false;
+  //   }
+  // };
 
   const reset = () => {
     if (segments == null) {
@@ -251,12 +256,20 @@ export default function Match() {
     onData: console.log,
   });
 
-  const makeMove = trpc.match.makeMove.useMutation();
+  // Original functionality for turns
+  // const makeMove = trpc.match.makeMove.useMutation();
+
+  // mock functionality for testing css transitions
+  const [turn, setTurn] = useState({ player1: true, player2: false });
 
   const passTurn = () => {
-    makeMove.mutate({
-      moveType: 'pass-turn',
-    });
+    // Original function
+    // makeMove.mutate({
+    //   moveType: 'pass-turn',
+    // });
+
+    // mock function for testing css transition
+    setTurn({ player1: !turn.player1, player2: !turn.player2 });
   };
 
   if (players == null || segments == null) {
@@ -274,11 +287,20 @@ export default function Match() {
           {/* <h1>Match #{matchId}</h1> */}
           {query1000 ? (
             <div>
-              <PlayerBox playerInMatch={players.orangeStar} />
-              <PlayerBox playerInMatch={players.blueMoon} />
+              <PlayerBox
+                playerTurn={turn.player1}
+                playerInMatch={players.orangeStar}
+              />
+              <PlayerBox
+                playerTurn={turn.player2}
+                playerInMatch={players.blueMoon}
+              />
             </div>
           ) : (
-            <PlayerBox playerInMatch={players.orangeStar} />
+            <PlayerBox
+              playerTurn={turn.player1}
+              playerInMatch={players.orangeStar}
+            />
           )}
           <div className="@flex @items-center @justify-center gameInnerBox">
             <div className="gridSize18 mapGrid">
@@ -293,9 +315,10 @@ export default function Match() {
                       if (unit) {
                         // check path
                       } else if (terrainType === 'property') {
-                        if (!isTurn(terrainOwner)) {
+                        /* Original functionality for turns; UNCOMMENT ONCE ITS WORKING AGAIN*/
+                        /* if (!isTurn(terrainOwner)) {
                           return;
-                        }
+                        } */
 
                         updateSegment(index, (oldSegment) => ({
                           ...oldSegment,
@@ -349,7 +372,12 @@ export default function Match() {
               <button onClick={passTurn}>Pass turn</button>
             </div>
           </div>
-          {query1000 ? null : <PlayerBox playerInMatch={players.blueMoon} />}
+          {query1000 ? null : (
+            <PlayerBox
+              playerTurn={turn.player2}
+              playerInMatch={players.blueMoon}
+            />
+          )}
         </div>
       </Layout>
     </>

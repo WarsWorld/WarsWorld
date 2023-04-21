@@ -14,11 +14,11 @@ export default function NavItem({ text, location }: Props) {
       className={`${
         query500
           ? '@flex @items-center @justify-center @border @border-black @mx-0'
-          : null
+          : ''
       }`}
     >
       <Link
-        className={`@text-base-a ${query500 ? '@p-5' : null}`}
+        className={`@text-base-a ${query500 ? '@p-5' : ''}`}
         href={location}
       >
         {text}
