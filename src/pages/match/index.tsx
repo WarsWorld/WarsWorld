@@ -22,9 +22,10 @@ export default function Games() {
 
   return (
     <Layout>
-      <div className="layoutCurrentGames">
+      <div className="@absolute gameLobby">
         <h1>Current games</h1>
         <button
+          className="@p-1 @mb-2 @bg-slate-300 @rounded @text-gray-700"
           onClick={async () => {
             await createMutation.mutateAsync({
               playerName: 'function',

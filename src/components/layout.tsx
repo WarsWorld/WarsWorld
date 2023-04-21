@@ -12,7 +12,7 @@ export default function Layout({ addFooter, children }: Props) {
     if (addFooter) {
       document.documentElement.style.setProperty(
         '--layoutGridRows',
-        '100px 1fr 120px',
+        '100px 1fr 160px',
       );
     } else {
       document.documentElement.style.setProperty(
@@ -23,9 +23,9 @@ export default function Layout({ addFooter, children }: Props) {
   }
 
   return (
-    <div className="@grid @h-full @w-screen layout">
+    <div className="@grid @relative @h-full @w-screen layout">
       <Navbar />
-      <main className="@flex @h-full @justify-center @items-center">
+      <main className="@flex @h-full @w-screen @justify-center @items-center">
         {children}
       </main>
       {addFooter ? <Footer /> : null}

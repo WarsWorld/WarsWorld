@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { useMediaQuery } from 'utils/useMediaQuery';
 
 interface Props {
   text: string;
@@ -6,9 +7,22 @@ interface Props {
 }
 
 export default function NavItem({ text, location }: Props) {
+  const query500 = useMediaQuery('(max-width: 500px)');
+
   return (
-    <div className="@mx-2">
-      <Link href={location}>{text}</Link>
+    <div
+      className={`${
+        query500
+          ? '@flex @items-center @justify-center @border @border-black @mx-0'
+          : null
+      }`}
+    >
+      <Link
+        className={`@text-base-a ${query500 ? '@p-5' : null}`}
+        href={location}
+      >
+        {text}
+      </Link>
     </div>
   );
 }

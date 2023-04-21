@@ -1,5 +1,5 @@
 :root {
-  --layoutGridRows: 100px 1fr 120px;
+  --layoutGridRows: 100px 1fr 160px;
   --doc-height: 100%;
 }
 
@@ -30,6 +30,14 @@ body {
     display: none;
   }
 
+  .isProgress {
+    margin: 20px;
+  }
+
+  .gameLobby {
+    top: 100px;
+  }
+
   header {
     height: 100px;
 
@@ -37,14 +45,34 @@ body {
       height: 100px;
     }
 
-    .headerLogo {
+    .loginLink {
+      width: 216px;
+    }
+
+    .headerLogo,
+    .loginLink {
       max-width: 6.25rem;
       max-width: clamp(6.25rem, 4.8rem + 7.25vw, 13.5rem);
+
+      @media (max-width: 500px) {
+        max-width: 216px;
+      }
+    }
+
+    .burgerMenu {
+      filter: invert(44%) sepia(69%) saturate(855%) hue-rotate(349deg)
+        brightness(99%) contrast(88%);
+
+      &:hover {
+        filter: invert(80%) sepia(11%) saturate(560%) hue-rotate(72deg)
+          brightness(80%) contrast(88%);
+        transition: 0.4s;
+      }
     }
   }
 
   footer {
-    height: 120px;
+    height: 160px;
 
     .footerLogo {
       height: 30px;

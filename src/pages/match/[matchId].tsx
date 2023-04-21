@@ -15,6 +15,7 @@ import { trpc } from 'utils/trpc';
 import { Army } from 'utils/wars-world-types';
 import styles from '../../styles/match.module.css';
 import Layout from 'components/layout';
+import { useMediaQuery } from 'utils/useMediaQuery';
 
 const PlayerBox = ({
   playerInMatch: playerInMatch,
@@ -25,7 +26,7 @@ const PlayerBox = ({
   time.setSeconds(playerInMatch.timePlayed ?? 1);
 
   return (
-    <div className="playerBox">
+    <div className="playerBox @relative @z-25">
       <div className="playerCOAndNationBox">
         <div className="playerCOBox">
           <img
@@ -33,12 +34,12 @@ const PlayerBox = ({
             src={`/img/CO/${playerInMatch.co}-Full.png`}
           />
         </div>
-        <div
-          className="playerNationBox"
-          style={{ backgroundColor: playerInMatch.color }}
-        >
+        <div className="playerNationBox">
           <div className="playerUsernameIconAndIngameStats">
-            <div className="playerUsernameAndIcon">
+            <div
+              className="playerUsernameAndIcon"
+              style={{ backgroundColor: playerInMatch.color }}
+            >
               <span>{playerInMatch.username}</span>
               <span>(armyIcon)</span>
             </div>
@@ -83,6 +84,7 @@ const HPAndCapture = ({ unit }: { unit: UnitOnMap }) => (
 export default function Match() {
   const [players, setPlayers] = useState<PlayerState | null | undefined>(null);
   const [segments, setSegments] = useState<Segment[] | null | undefined>(null);
+  const query1200 = useMediaQuery('(max-width: 1200px)');
 
   segments
     ?.filter((s) => s.tile.unit)
@@ -225,7 +227,14 @@ export default function Match() {
       <Layout>
         <div className={styles.match + ' gameBox'}>
           {/* <h1>Match #{matchId}</h1> */}
-          <PlayerBox playerInMatch={players.orangeStar} />
+          {query1200 ? (
+            <div>
+              <PlayerBox playerInMatch={players.orangeStar} />
+              <PlayerBox playerInMatch={players.blueMoon} />
+            </div>
+          ) : (
+            <PlayerBox playerInMatch={players.orangeStar} />
+          )}
           <div className="gameInnerBox">
             <div className="gridSize18 mapGrid">
               {segments.map(({ tile, menu }, index) => {
@@ -291,11 +300,11 @@ export default function Match() {
               })}
             </div>
             <div className="gameTime">
-              <h1>00:00:00</h1>
+              <p>00:00:00</p>
               <button onClick={passTurn}>Pass turn</button>
             </div>
           </div>
-          <PlayerBox playerInMatch={players.blueMoon} />
+          {query1200 ? null : <PlayerBox playerInMatch={players.blueMoon} />}
         </div>
       </Layout>
     </>

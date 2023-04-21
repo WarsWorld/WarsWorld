@@ -25,6 +25,12 @@
     font-style: italic;
   }
 
+  h3 {
+    font-size: 0.75rem;
+    font-size: clamp(0.75rem, 0.65rem + 0.5vw, 1.25rem);
+    font-style: italic;
+  }
+
   p {
     font-size: 0.75rem;
     font-size: clamp(0.75rem, 0.65rem + 0.5vw, 1.25rem);
