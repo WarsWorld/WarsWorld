@@ -35,7 +35,7 @@
   "prettier": {
     "printWidth": 80,
     "trailingComma": "all",
-    "singleQuote": true
+    "singleQuote": false
   },
   "dependencies": {
     "@prisma/client": "^4.12.0",

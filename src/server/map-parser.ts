@@ -1,68 +1,68 @@
-import { UnitType } from 'components/match/unit-builder';
-import { Army } from 'utils/wars-world-types';
+import { Army } from "components/schemas/army";
+import { UnitType } from "components/schemas/unit";
 
 const terrainCodeToText: Record<string, string> = {
-  pl: 'plain',
-  fo: 'forest',
-  mo: 'mountain',
-  sh: 'shoal',
-  ri: 'river',
-  ro: 'road',
-  pi: 'pipe',
-  re: 'reef',
-  se: 'sea',
-  br: 'road',
+  pl: "plain",
+  fo: "forest",
+  mo: "mountain",
+  sh: "shoal",
+  ri: "river",
+  ro: "road",
+  pi: "pipe",
+  re: "reef",
+  se: "sea",
+  br: "road",
 };
 
 const ownerShipCodeToText: Record<string, Army> = {
-  bm: 'blueMoon',
-  os: 'orangeStar',
+  bm: "blue-moon",
+  os: "orange-star",
 };
 
 const awbwTileMapping: Record<number, string> = {
-  '1': 'pl0',
-  '3': 'fo0',
-  '2': 'mo0',
-  '34': 'ne1',
-  '111': 'si1',
-  '33': 're0',
+  "1": "pl0",
+  "3": "fo0",
+  "2": "mo0",
+  "34": "ne1",
+  "111": "si1",
+  "33": "re0",
   //river
-  '4': 'ri1',
-  '5': 'ri3',
-  '7': 'ri8',
-  '8': 'ri2',
-  '9': 'ri4',
+  "4": "ri1",
+  "5": "ri3",
+  "7": "ri8",
+  "8": "ri2",
+  "9": "ri4",
   //road
-  '15': 'ro1',
-  '16': 'ro3',
-  '18': 'ro8',
-  '19': 'ro2',
-  '20': 'ro4',
-  '21': 'ro6',
+  "15": "ro1",
+  "16": "ro3",
+  "18": "ro8",
+  "19": "ro2",
+  "20": "ro4",
+  "21": "ro6",
   //bridge
-  '26': 'br1',
-  '27': 'br3',
+  "26": "br1",
+  "27": "br3",
   //ocean
-  '28': 'se0',
+  "28": "se0",
   //shoal
-  '29': 'sh1',
-  '30': 'sh5',
-  '31': 'sh3',
-  '32': 'sh7',
-  '37': 'ne4', //port
+  "29": "sh1",
+  "30": "sh5",
+  "31": "sh3",
+  "32": "sh7",
+  "37": "ne4", //port
   //factory
-  '35': 'ne2',
-  '44': 'bm2',
-  '39': 'os2',
+  "35": "ne2",
+  "44": "bm2",
+  "39": "os2",
   //headquarters
-  '42': 'os0',
-  '47': 'bm0',
-  '105': 'pi1', //pipe
+  "42": "os0",
+  "47": "bm0",
+  "105": "pi1", //pipe
   //pipe ending
-  '109': 'pi3',
-  '110': 'pi4',
+  "109": "pi3",
+  "110": "pi4",
   //comtower
-  '133': 'ne5',
+  "133": "ne5",
 };
 
 export type UnitOnMap = {
@@ -98,7 +98,7 @@ export type PlayerState = {
   turn: number;
   day: number;
   unitsToRefresh: [];
-} & Record<Exclude<Army, null>, PlayerInMatch>;
+} & Record<"orange-star" | "blue-moon", PlayerInMatch>;
 
 export type MapMetaData = {
   mapName: string;
@@ -144,7 +144,7 @@ export const awbwMapToWWMap = (): Match => {
 
       const id = foundMapping.slice(0, 2);
 
-      const terrain = terrainCodeToText[id] ?? 'property';
+      const terrain = terrainCodeToText[id] ?? "property";
       const ownerShip = ownerShipCodeToText[id] ?? null;
 
       if (index === 163) {
@@ -154,9 +154,9 @@ export const awbwMapToWWMap = (): Match => {
           terrainOwner: ownerShip,
           terrainCapture: 0,
           unit: {
-            cssClassName: 'Infantry',
-            type: 'infantry',
-            country: 'blueMoon', //countries[Math.floor(Math.random() * 2)],
+            cssClassName: "Infantry",
+            type: "infantry",
+            country: "blue-moon", //countries[Math.floor(Math.random() * 2)],
             hp: 100, //Math.floor(Math.random() * (101 - 1) + 1),
             isUsed: false,
             capture: false,
@@ -185,35 +185,36 @@ export const awbwMapToWWMap = (): Match => {
   return {
     mapTiles,
     mapMetaData: {
-      mapName: 'Caustic Finale',
+      mapName: "Caustic Finale",
       columns: 18,
       rows: 18,
       players: 2,
-      author: 'Hellraider',
-      published: '05/11/2008',
+      author: "Hellraider",
+      published: "05/11/2008",
     },
     playerState: {
       turn: 0,
       day: 1,
       unitsToRefresh: [],
-      orangeStar: {
+
+      "orange-star": {
         id: 1,
-        username: 'orangeStar',
-        co: 'Sami',
-        color: 'orange',
-        armyValue: '0',
+        username: "orangeStar",
+        co: "Sami",
+        color: "orange",
+        armyValue: "0",
         timePlayed: 10,
         unitCount: 0,
         properties: 3,
         gold: 3000,
       },
 
-      blueMoon: {
+      "blue-moon": {
         id: 2,
-        username: 'blueMoon',
-        co: 'Rachel',
-        color: 'blue',
-        armyValue: '0',
+        username: "blueMoon",
+        co: "Rachel",
+        color: "blue",
+        armyValue: "0",
         timePlayed: 100,
         unitCount: 0,
         properties: 3,
