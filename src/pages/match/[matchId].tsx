@@ -67,11 +67,13 @@ const PlayerBox = ({
         </div>
         <div className="playerNationBox">
           <div className="playerUsernameIconAndIngameStats">
-            <div className={`playerUsernameAndIcon`}>
-              <span>{playerInMatch.username}</span>
+            <div className="@flex @items-center @bg-stone-900 playerUsername">
+              {playerInMatch.username}
             </div>
-            <div className="playerIngameExp">Placeholder for an exp bar</div>
-            <div className="playerIngameInfo">
+            <div className="@flex @items-center @justify-center @bg-stone-900 playerIngameExp">
+              Placeholder for an exp bar
+            </div>
+            <div className="@flex @flex-col playerIngameInfo">
               <IngameInfo
                 iconPath=""
                 value={time.toISOString().substring(11, 19)}
@@ -278,7 +280,7 @@ export default function Match() {
           ) : (
             <PlayerBox playerInMatch={players.orangeStar} />
           )}
-          <div className="gameInnerBox">
+          <div className="@flex @items-center @justify-center gameInnerBox">
             <div className="gridSize18 mapGrid">
               {segments.map(({ tile, menu }, index) => {
                 const { unit, terrainImage, terrainType, terrainOwner } = tile;
@@ -342,7 +344,7 @@ export default function Match() {
                 );
               })}
             </div>
-            <div className="gameTime">
+            <div className="@flex @items-center @justify-center gameTime">
               <p>00:00:00</p>
               <button onClick={passTurn}>Pass turn</button>
             </div>

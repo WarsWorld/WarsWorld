@@ -65,28 +65,18 @@
           grid-template-rows: repeat(3, 40px);
         }
 
-        .playerUsernameAndIcon {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
+        .playerUsername {
           padding: 5px 10px;
-          background-color: #222;
           outline: 2px solid black;
         }
 
         .playerIngameExp {
-          display: flex;
-          justify-content: center;
-          align-items: center;
           padding: 5px;
-          background-color: #222;
           outline: 2px solid black;
         }
       }
 
       .playerIngameInfo {
-        display: flex;
-        flex-direction: column;
         width: 200px;
 
         @media (max-width: 1000px) {
@@ -114,16 +104,10 @@
 }
 
 .gameInnerBox {
-  display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
 
   .gameTime {
-    display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
 
     @media (max-height: 750px) {
       gap: 20px;
@@ -138,10 +122,6 @@
       border-radius: 10px;
       padding: 2px;
     }
-  }
-
-  @media (max-width: 700px) {
-    flex-direction: column;
   }
 }
 
@@ -577,9 +557,6 @@ $countryName: orangeStar, blueMoon;
 }
 h1 {
   padding: 0.5em;
-}
-.playerBox {
-  z-index: 20;
 }
 .activePlayer {
   filter: brightness(1.1) contrast(1.05);
