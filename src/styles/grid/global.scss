@@ -70,7 +70,7 @@
 
         @media (max-width: 1000px) {
           grid-template-columns: none;
-          grid-template-rows: repeat(3, 40px);
+          grid-template-rows: 40px 30px 50px;
         }
 
         .playerUsername {

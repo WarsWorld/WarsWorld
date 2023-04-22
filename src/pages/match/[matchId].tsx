@@ -59,7 +59,7 @@ const PlayerBox = ({ playerTurn, playerInMatch: playerInMatch }: Props) => {
           } playerCOBox`}
         >
           <img
-            className={`@absolute @bottom-1 playerCOIcon ${
+            className={`@absolute @bottom-0 playerCOIcon ${
               playerTurn ? null : 'isNotPlayerTurn'
             }`}
             src={`/img/CO/${playerInMatch.co}-Full.png`}
