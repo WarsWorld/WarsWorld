@@ -28,9 +28,9 @@ export default function Navbar() {
             />
             {showLinks ? (
               <div className="@grid @absolute @mt-2 @bg-slate-900/90 @right-0 @h-80 @w-48">
-                <NavItem text="Current Games" location="/" />
+                <NavItem text="Current Games" location="/match" />
                 <NavItem text="Start a game" location="/match" />
-                <NavItem text="How to play" location="/" />
+                <NavItem text="How to play" location="/howtoplay" />
                 <NavItem text="Login" location="/" />
               </div>
             ) : null}
@@ -38,9 +38,9 @@ export default function Navbar() {
         ) : (
           <>
             <div className="@grid @grid-cols-3 @gap-10 @text-center @mx-3">
-              <NavItem text="Current Games" location="/" />
+              <NavItem text="Current Games" location="/match" />
               <NavItem text="Start a game" location="/match" />
-              <NavItem text="How to play" location="/" />
+              <NavItem text="How to play" location="/howtoplay" />
             </div>
             <div className="@text-center @relative @px-3 loginLink">
               <NavItem text="Login" location="/" />

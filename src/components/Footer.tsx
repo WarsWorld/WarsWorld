@@ -22,10 +22,20 @@ export default function Footer() {
         </Link>
       </nav>
 
-      <nav className="@flex @justify-center @gap-5">
-        <img className="@h-8" src={rLogoPath} alt="Reddit Logo" />
-        <img className="@h-8" src={dLogoPath} alt="Discord Logo" />
-        <img className="@h-8" src={gLogoPath} alt="GitHub Logo" />
+      <nav className="@flex @justify-center @gap-8">
+        <Link href="/">
+          <img className="@h-8" src={rLogoPath} alt="Reddit Logo" />
+        </Link>
+        <Link href="/">
+          <img className="@h-8" src={dLogoPath} alt="Discord Logo" />
+        </Link>
+        <Link
+          href="https://github.com/warsWorld/WarsWorld/"
+          target="_blank"
+          rel="noreferrer"
+        >
+          <img className="@h-8" src={gLogoPath} alt="GitHub Logo" />
+        </Link>
       </nav>
 
       <p className="@text-center @text-base-p @p-0 @mx-1">
