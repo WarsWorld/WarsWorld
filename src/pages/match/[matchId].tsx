@@ -244,7 +244,7 @@ export default function Match() {
   // const makeMove = trpc.match.makeMove.useMutation();
 
   // mock functionality for testing css transitions
-  const [turn, setTurn] = useState({ player1: true, player2: false });
+  const [turn, setTurn] = useState(true);
 
   const passTurn = () => {
     // Original function
@@ -253,7 +253,7 @@ export default function Match() {
     // });
 
     // mock function for testing css transition
-    setTurn({ player1: !turn.player1, player2: !turn.player2 });
+    setTurn(!turn);
   };
 
   if (players == null || segments == null) {
@@ -271,20 +271,11 @@ export default function Match() {
           {/* <h1>Match #{matchId}</h1> */}
           {query1000 ? (
             <div>
-              <PlayerBox
-                playerTurn={turn.player1}
-                playerInMatch={players.orangeStar}
-              />
-              <PlayerBox
-                playerTurn={turn.player2}
-                playerInMatch={players.blueMoon}
-              />
+              <PlayerBox playerTurn={turn} playerInMatch={players.orangeStar} />
+              <PlayerBox playerTurn={!turn} playerInMatch={players.blueMoon} />
             </div>
           ) : (
-            <PlayerBox
-              playerTurn={turn.player1}
-              playerInMatch={players.orangeStar}
-            />
+            <PlayerBox playerTurn={turn} playerInMatch={players.orangeStar} />
           )}
           <div className="@flex @items-center @justify-center gameInnerBox">
             <div className="gridSize18 mapGrid">
@@ -357,10 +348,7 @@ export default function Match() {
             </div>
           </div>
           {query1000 ? null : (
-            <PlayerBox
-              playerTurn={turn.player2}
-              playerInMatch={players.blueMoon}
-            />
+            <PlayerBox playerTurn={!turn} playerInMatch={players.blueMoon} />
           )}
         </div>
       </Layout>
