@@ -18,10 +18,6 @@ import { Layout } from 'components/layout';
 import { useMediaQuery } from 'utils/useMediaQuery';
 import { IngameInfo } from 'components/IngameInfo';
 
-interface INationColors {
-  [key: string]: string;
-}
-
 interface Props {
   playerTurn: boolean;
   playerInMatch: PlayerInMatch;
@@ -31,7 +27,7 @@ const PlayerBox = ({ playerTurn, playerInMatch: playerInMatch }: Props) => {
   const time = new Date(0);
   time.setSeconds(playerInMatch.timePlayed ?? 1);
 
-  const nationColorGradients: INationColors = {
+  const nationColorGradients: Record<string, string> = {
     blue: '@bg-gradient-to-l @from-blue-400',
     orange: '@bg-gradient-to-l @from-orange-400',
     green: '@bg-gradient-to-l @from-green-400',
