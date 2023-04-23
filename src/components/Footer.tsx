@@ -7,7 +7,7 @@ export function Footer() {
 
   return (
     <footer className="@flex @flex-col @items-center @justify-center @gap-4 @bg-gradient-to-t @from-black @p-0">
-      <nav className="@flex @gap-10">
+      <nav className="@flex @gap-8">
         <Link className="@text-base-a" href="/">
           Home
         </Link>

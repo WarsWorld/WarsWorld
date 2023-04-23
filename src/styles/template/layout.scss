@@ -2,15 +2,15 @@
 
 :root {
   --layoutGridRows: 100px 1fr 160px;
-  --doc-height: 100%;
+  // --doc-height: 100%;
 }
 
 #__next,
 html,
 body {
+  height: 100vh;
+  // height: var(--doc-height);
   height: 100dvh;
-  height: var(--doc-height);
-  overflow: hidden;
 }
 
 html,
@@ -20,6 +20,7 @@ body {
 }
 
 .layout {
+  height: 100%;
   grid-template-rows: var(--layoutGridRows);
 
   main {
