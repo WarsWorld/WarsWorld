@@ -1,4 +1,5 @@
 import Link from 'next/link';
+// TODO: Hook can be removed after media query is implemented for tailwind
 import { useMediaQuery } from 'utils/useMediaQuery';
 
 interface Props {
@@ -7,6 +8,7 @@ interface Props {
 }
 
 export function NavItem({ text, location }: Props) {
+  // TODO: Hook can be removed after media query is implemented for tailwind
   const query500 = useMediaQuery('(max-width: 500px)');
 
   return (

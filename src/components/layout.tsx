@@ -1,6 +1,7 @@
 import React from 'react';
 import { Navbar } from './Navbar';
 import { Footer } from './Footer';
+// TODO: Hook can be removed after media query is implemented for tailwind
 import { useMediaQuery } from 'utils/useMediaQuery';
 
 interface Props {
@@ -9,6 +10,7 @@ interface Props {
 }
 
 export function Layout({ footer, children }: Props) {
+  // TODO: Hook can be removed after media query is implemented for tailwind
   const query800H = useMediaQuery('(max-height: 800px)');
 
   if (typeof window !== 'undefined') {
@@ -45,7 +47,7 @@ export function Layout({ footer, children }: Props) {
       <main className="@flex @h-full @w-screen @justify-center @items-center">
         {children}
       </main>
-      {footer ? <Footer /> : null}
+      {footer && <Footer />}
     </div>
   );
 }

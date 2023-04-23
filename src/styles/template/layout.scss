@@ -23,6 +23,7 @@ body {
   height: 100%;
   grid-template-rows: var(--layoutGridRows);
 
+  // TODO: Thing for scrollbar needs to be fixed for wide screen, small height device edge cases
   main {
     overflow: scroll;
     -ms-overflow-style: none;

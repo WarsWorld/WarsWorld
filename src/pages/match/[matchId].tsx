@@ -15,6 +15,7 @@ import { trpc } from 'utils/trpc';
 import { Army } from 'utils/wars-world-types';
 import styles from '../../styles/match.module.css';
 import { Layout } from 'components/layout';
+// TODO: Hook can be removed after media query is implemented for tailwind
 import { useMediaQuery } from 'utils/useMediaQuery';
 import { IngameInfo } from 'components/IngameInfo';
 
@@ -117,6 +118,7 @@ const HPAndCapture = ({ unit }: { unit: UnitOnMap }) => (
 export default function Match() {
   const [players, setPlayers] = useState<PlayerState | null | undefined>(null);
   const [segments, setSegments] = useState<Segment[] | null | undefined>(null);
+  // TODO: Hook can be removed after media query is implemented for tailwind
   const query1000 = useMediaQuery('(max-width: 1000px)');
 
   segments

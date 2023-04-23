@@ -1,13 +1,12 @@
 import { useState, useEffect } from 'react';
 
+// TODO: Hook can be removed after media query is implemented for tailwind
 export const useMediaQuery = (query: string) => {
   const [matches, setMatches] = useState(false);
 
   useEffect(() => {
     const media = window.matchMedia(query);
-    if (media.matches !== matches) {
-      setMatches(media.matches);
-    }
+    setMatches(media.matches);
 
     const listener = () => {
       setMatches(media.matches);

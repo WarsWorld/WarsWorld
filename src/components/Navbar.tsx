@@ -2,10 +2,12 @@ import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { NavItem } from './NavItem';
+// TODO: Hook can be removed after media query is implemented for tailwind
 import { useMediaQuery } from 'utils/useMediaQuery';
 
 export function Navbar() {
   const awLogoPath = '/img/layout/awLogo.webp';
+  // TODO: Hook can be removed after media query is implemented for tailwind
   const query500 = useMediaQuery('(max-width: 500px)');
   const [showLinks, setShowLinks] = useState(false);
 
@@ -16,8 +18,8 @@ export function Navbar() {
           <Image
             className="@flex headerLogo"
             src={awLogoPath}
-            width={216}
-            height={80}
+            width={190}
+            height={50}
             alt="AW Logo"
           />
         </Link>
