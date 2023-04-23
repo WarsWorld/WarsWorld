@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import Link from 'next/link';
-import NavItem from './NavItem';
+import Image from 'next/image';
+import { NavItem } from './NavItem';
 import { useMediaQuery } from 'utils/useMediaQuery';
 
-export default function Navbar() {
+export function Navbar() {
   const awLogoPath = '/img/layout/awLogo.webp';
-  const burgerMenuPath = '/img/layout/burgerMenu.png';
   const query500 = useMediaQuery('(max-width: 500px)');
   const [showLinks, setShowLinks] = useState(false);
 
@@ -13,7 +13,13 @@ export default function Navbar() {
     <header className="@w-screen @relative @z-30">
       <nav className="@flex @justify-between @items-center @bg-gray-800 @mx-auto @px-3 navHeader">
         <Link href="/">
-          <img className="@flex headerLogo" src={awLogoPath} alt="AW Logo" />
+          <Image
+            className="@flex headerLogo"
+            src={awLogoPath}
+            width={216}
+            height={80}
+            alt="AW Logo"
+          />
         </Link>
         {query500 ? (
           <button
@@ -21,11 +27,11 @@ export default function Navbar() {
             type="button"
             onClick={() => setShowLinks(!showLinks)}
           >
-            <img
-              className="@h-7 burgerMenu"
-              src={burgerMenuPath}
-              alt="burger menu icon"
-            />
+            <div className="@flex @flex-col @gap-1 burgerMenu">
+              <div className="@h-1 @w-7 @rounded"></div>
+              <div className="@h-1 @w-7 @rounded"></div>
+              <div className="@h-1 @w-7 @rounded"></div>
+            </div>
             {showLinks ? (
               <div className="@grid @absolute @mt-2 @bg-slate-900/90 @right-0 @h-80 @w-48">
                 <NavItem text="Current Games" location="/match" />

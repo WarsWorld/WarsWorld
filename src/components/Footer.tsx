@@ -1,6 +1,6 @@
 import Link from 'next/link';
 
-export default function Footer() {
+export function Footer() {
   const rLogoPath = '/img/layout/Reddit.png';
   const dLogoPath = '/img/layout/Discord.png';
   const gLogoPath = '/img/layout/GitHub.png';
@@ -40,7 +40,7 @@ export default function Footer() {
 
       <p className="@text-center @text-base-p @p-0 @mx-1">
         Advance Wars is (c) 1990-2001 Nintendo and (c) 2001 Intelligent Systems.
-        All images are copyright their respective owners.
+        All images are copyright of their respective owners.
       </p>
     </footer>
   );

@@ -1,3 +1,5 @@
+@use 'src/styles/variables';
+
 :root {
   --layoutGridRows: 100px 1fr 160px;
   --doc-height: 100%;
@@ -6,7 +8,7 @@
 #__next,
 html,
 body {
-  height: 100vh;
+  height: 100dvh;
   height: var(--doc-height);
   overflow: hidden;
 }
@@ -71,13 +73,15 @@ body {
     }
 
     .burgerMenu {
-      filter: invert(44%) sepia(69%) saturate(855%) hue-rotate(349deg)
-        brightness(99%) contrast(88%);
+      div {
+        background-color: theme('colors.primary');
+        transition: 0.4s;
+      }
 
       &:hover {
-        filter: invert(80%) sepia(11%) saturate(560%) hue-rotate(72deg)
-          brightness(80%) contrast(88%);
-        transition: 0.4s;
+        div {
+          background-color: theme('colors.primary-variant');
+        }
       }
     }
 
@@ -96,5 +100,9 @@ body {
 
   footer {
     height: 160px;
+
+    @media (max-height: 800px) {
+      height: 140px;
+    }
   }
 }

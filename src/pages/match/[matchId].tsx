@@ -14,15 +14,11 @@ import {
 import { trpc } from 'utils/trpc';
 import { Army } from 'utils/wars-world-types';
 import styles from '../../styles/match.module.css';
-import Layout from 'components/layout';
+import { Layout } from 'components/layout';
 import { useMediaQuery } from 'utils/useMediaQuery';
-import IngameInfo from 'components/IngameInfo';
+import { IngameInfo } from 'components/IngameInfo';
 
 interface INationColors {
-  [key: string]: string;
-}
-
-interface INationColorGradients {
   [key: string]: string;
 }
 
@@ -34,16 +30,8 @@ interface Props {
 const PlayerBox = ({ playerTurn, playerInMatch: playerInMatch }: Props) => {
   const time = new Date(0);
   time.setSeconds(playerInMatch.timePlayed ?? 1);
-  console.log(playerTurn);
 
-  const nationColors: INationColors = {
-    blue: '@bg-blue-400',
-    orange: '@bg-orange-400',
-    green: '@bg-green-400',
-    yellow: '@bg-yellow-400',
-  };
-
-  const nationColorGradients: INationColorGradients = {
+  const nationColorGradients: INationColors = {
     blue: '@bg-gradient-to-l @from-blue-400',
     orange: '@bg-gradient-to-l @from-orange-400',
     green: '@bg-gradient-to-l @from-green-400',
@@ -60,7 +48,7 @@ const PlayerBox = ({ playerTurn, playerInMatch: playerInMatch }: Props) => {
         >
           <img
             className={`@absolute @bottom-0 playerCOIcon ${
-              playerTurn ? null : 'isNotPlayerTurn'
+              playerTurn ? '' : 'isNotPlayerTurn'
             }`}
             src={`/img/CO/${playerInMatch.co}-Full.png`}
           />
@@ -80,28 +68,28 @@ const PlayerBox = ({ playerTurn, playerInMatch: playerInMatch }: Props) => {
             <div className="@flex @flex-col playerIngameInfo">
               <IngameInfo
                 iconPath=""
-                value={time.toISOString().substring(11, 19)}
+                ingameStat={time.toISOString().substring(11, 19)}
               />
               <IngameInfo
                 iconPath={`/img/units/${playerInMatch.nation}/Infantry-0.png`}
-                value={999}
+                ingameStat={999}
               />
               <IngameInfo
                 iconPath="/img/mapTiles/countries/city/ne1.webp"
-                value={999999}
+                ingameStat={999999}
               />
-              <IngameInfo iconPath="" value={999999} />
-              <IngameInfo iconPath="" value={999999} />
+              <IngameInfo iconPath="" ingameStat={999999} />
+              <IngameInfo iconPath="" ingameStat={999999} />
               {/* <IngameInfo
                 name="Time"
-                value={time.toISOString().substring(11, 19)}
+                ingameStat={time.toISOString().substring(11, 19)}
               />
-              <IngameInfo name="Units" value={playerInMatch.unitCount} />
-              <IngameInfo name="Income" value={playerInMatch.properties} />
-              <IngameInfo name="Gold" value={playerInMatch.gold} />
+              <IngameInfo name="Units" ingameStat={playerInMatch.unitCount} />
+              <IngameInfo name="Income" ingameStat={playerInMatch.properties} />
+              <IngameInfo name="Gold" ingameStat={playerInMatch.gold} />
               <IngameInfo
                 name="Army-Value"
-                value={playerInMatch.properties * 1000}
+                ingameStat={playerInMatch.properties * 1000}
               /> */}
             </div>
           </div>

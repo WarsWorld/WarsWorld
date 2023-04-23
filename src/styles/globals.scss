@@ -1,3 +1,6 @@
+@use 'src/styles/template/layout';
+@use 'src/styles/grid/global';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

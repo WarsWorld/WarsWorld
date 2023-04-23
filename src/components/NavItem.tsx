@@ -6,7 +6,7 @@ interface Props {
   location: string;
 }
 
-export default function NavItem({ text, location }: Props) {
+export function NavItem({ text, location }: Props) {
   const query500 = useMediaQuery('(max-width: 500px)');
 
   return (

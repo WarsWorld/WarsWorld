@@ -120,24 +120,29 @@
 }
 
 .gameInnerBox {
+  gap: 10px;
   flex-direction: column;
 
-  .gameTime {
-    flex-direction: column;
+  @media (max-height: 700px) {
+    gap: 0;
+  }
 
-    @media (max-height: 750px) {
-      gap: 20px;
-      flex-direction: row;
-    }
+  button {
+    width: 6rem;
+    width: clamp(6rem, 2.59rem + 12.07vw, 9rem);
+    font-size: clamp(0.875rem, 0.75rem + 0.625vw, 1.5rem);
+    background-color: lightgrey;
+    border-radius: 10px;
+    padding: 2px;
+  }
+}
 
-    button {
-      width: 6rem;
-      width: clamp(6rem, 2.59rem + 12.07vw, 9rem);
-      font-size: clamp(0.875rem, 0.75rem + 0.625vw, 1.5rem);
-      background-color: lightgrey;
-      border-radius: 10px;
-      padding: 2px;
-    }
+.gameTime {
+  flex-direction: column;
+
+  @media (max-height: 850px) {
+    gap: 20px;
+    flex-direction: row;
   }
 }
 
@@ -431,20 +436,19 @@ $countryName: orangeStar, blueMoon;
     // background-color: variables.$color-primary
     color: black;
     padding: 0.5em;
-    font-size: 24px;
     font-weight: 500;
     transition: 0.4s;
-    &:hover {
-      // background-color: variables.$color-primary-variant
-      color: black;
-    }
+    // &:hover {
+    //   // background-color: variables.$color-primary-variant
+    //   color: black;
+    // }
 
     // our main grid where we have our map tiles
   }
 
   .mapGrid {
     border: 5px solid #091a4f;
-    height: 60vh;
+    height: 55vh;
     aspect-ratio: 1;
 
     @media (max-width: 1000px) {

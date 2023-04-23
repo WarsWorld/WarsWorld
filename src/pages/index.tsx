@@ -1,22 +1,22 @@
-import Layout from 'components/layout';
-import HomePage from './home';
+import { Layout } from 'components/layout';
+import { Home } from '../components/Home';
 
 export default function IndexPage() {
-  const documentHeight = () => {
-    if (typeof document !== 'undefined') {
-      const doc = document.documentElement;
+  const updateDocumentHeightCSSProperty = () => {
+    if (typeof window !== 'undefined') {
+      const doc = window.document.documentElement;
       doc.style.setProperty('--doc-height', `${window.innerHeight}px`);
     }
   };
 
   if (typeof window !== 'undefined') {
-    window.addEventListener('resize', documentHeight);
-    documentHeight();
+    window.addEventListener('resize', updateDocumentHeightCSSProperty);
+    updateDocumentHeightCSSProperty();
   }
 
   return (
-    <Layout addFooter>
-      <HomePage />
+    <Layout footer>
+      <Home />
     </Layout>
   );
 }
