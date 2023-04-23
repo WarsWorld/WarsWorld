@@ -67,28 +67,28 @@ const PlayerBox = ({ playerTurn, playerInMatch: playerInMatch }: Props) => {
             </div>
             <div className="@flex @flex-col playerIngameInfo">
               <IngameInfo
-                iconPath=""
+                ingameStatIconPath=""
                 ingameStat={time.toISOString().substring(11, 19)}
               />
               <IngameInfo
-                iconPath={`/img/units/${playerInMatch.nation}/Infantry-0.png`}
+                ingameStatIconPath={`/img/units/${playerInMatch.nation}/Infantry-0.png`}
                 ingameStat={999}
               />
               <IngameInfo
-                iconPath="/img/mapTiles/countries/city/ne1.webp"
+                ingameStatIconPath="/img/mapTiles/countries/city/ne1.webp"
                 ingameStat={999999}
               />
-              <IngameInfo iconPath="" ingameStat={999999} />
-              <IngameInfo iconPath="" ingameStat={999999} />
+              <IngameInfo ingameStatIconPath="" ingameStat={999999} />
+              <IngameInfo ingameStatIconPath="" ingameStat={999999} />
               {/* <IngameInfo
-                name="Time"
+                statsIconPath="Time"
                 ingameStat={time.toISOString().substring(11, 19)}
               />
-              <IngameInfo name="Units" ingameStat={playerInMatch.unitCount} />
-              <IngameInfo name="Income" ingameStat={playerInMatch.properties} />
-              <IngameInfo name="Gold" ingameStat={playerInMatch.gold} />
+              <IngameInfo statsIconPath="Units" ingameStat={playerInMatch.unitCount} />
+              <IngameInfo statsIconPath="Income" ingameStat={playerInMatch.properties} />
+              <IngameInfo statsIconPath="Gold" ingameStat={playerInMatch.gold} />
               <IngameInfo
-                name="Army-Value"
+                statsIconPath="Army-Value"
                 ingameStat={playerInMatch.properties * 1000}
               /> */}
             </div>
