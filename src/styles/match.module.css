@@ -1,20 +1,37 @@
 .match {
   font-family: sans-serif;
-  background-color: #555;
-  width: 100%;
+  background-color: rgba(30, 30, 30, 0.1);
+  color: rgb(230, 230, 230);
   display: flex;
-  flex-direction: column;
   align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  height: 100%;
+  width: 100%;
 }
 
-.gap {
-  display: flex;
-  gap: 0.5rem;
+@media (max-width: 1000px) {
+  .match {
+    flex-direction: column;
+    align-items: center;
+  }
 }
 
-.segment {
-  background-color: #222;
-  color: white;
-  border: 0.3rem solid #111;
-  padding: 0.2rem;
+@media (max-width: 700px) {
+  .match {
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
+@media (max-width: 700px) and (max-height: 800px) {
+  .match {
+    gap: 10px;
+  }
+}
+
+@media (max-width: 700px) and (max-height: 700px) {
+  .match {
+    gap: 0;
+  }
 }

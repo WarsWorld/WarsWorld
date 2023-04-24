@@ -4,14 +4,14 @@ const defaultTheme = require('tailwindcss/defaultTheme')
 module.exports = {
   prefix: '@',
   content: [
-    "./src/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/**/*.{ts,tsx}",
   ],
   theme: {
     extend: {
       'sans': ['Proxima Nova', ...defaultTheme.fontFamily.sans],
       colors:
       {
-        'primary': '#E47220',
+        primary: '#E47220',
         'primary-variant': '#9EBC9F'
       }
     },

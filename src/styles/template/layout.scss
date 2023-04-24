@@ -1,0 +1,110 @@
+@use 'src/styles/variables';
+
+:root {
+  --layoutGridRows: 100px 1fr 160px;
+  // --doc-height: 100%;
+}
+
+#__next,
+html,
+body {
+  height: 100vh;
+  // height: var(--doc-height);
+  height: 100dvh;
+}
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+}
+
+.layout {
+  height: 100%;
+  grid-template-rows: var(--layoutGridRows);
+
+  // TODO: Thing for scrollbar needs to be fixed for wide screen, small height device edge cases
+  main {
+    overflow: scroll;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  main::-webkit-scrollbar {
+    display: none;
+  }
+
+  .inProgress {
+    @media (max-width: 1000px) {
+      max-width: 65vw;
+    }
+
+    @media (max-width: 500px) {
+      max-width: 80vw;
+    }
+
+    @media (max-height: 750px) {
+      max-width: 95vw;
+      padding: 15px;
+    }
+  }
+
+  .gameLobby {
+    top: 100px;
+  }
+
+  header {
+    height: 100px;
+
+    .navHeader {
+      height: 100px;
+    }
+
+    .loginLink {
+      width: 216px;
+    }
+
+    .headerLogo,
+    .loginLink {
+      max-width: 6.25rem;
+      max-width: clamp(6.25rem, 4.8rem + 7.25vw, 13.5rem);
+
+      @media (max-width: 500px) {
+        max-width: 216px;
+      }
+    }
+
+    .burgerMenu {
+      div {
+        background-color: theme('colors.primary');
+        transition: 0.4s;
+      }
+
+      &:hover {
+        div {
+          background-color: theme('colors.primary-variant');
+        }
+      }
+    }
+
+    @media (max-height: 800px) {
+      height: 60px;
+
+      .navHeader {
+        height: 60px;
+      }
+
+      .headerLogo {
+        max-height: 50px;
+      }
+    }
+  }
+
+  footer {
+    height: 160px;
+
+    @media (max-height: 800px) {
+      height: 140px;
+    }
+  }
+}

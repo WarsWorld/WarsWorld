@@ -1,0 +1,54 @@
+@use 'src/styles/template/layout';
+@use 'src/styles/grid/global';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200&display=swap');
+
+@layer base {
+  html {
+    font-family: 'Poppins', sans-serif;
+    color: white;
+    background-color: rgba(0, 0, 0, 0.7);
+    background-image: url('/img/bg.jpg');
+    background-size: cover;
+  }
+
+  h1 {
+    font-size: 1rem;
+    font-size: clamp(1rem, 0.4rem + 3vw, 4rem);
+    padding: 0;
+  }
+
+  h2 {
+    font-size: 0.875rem;
+    font-size: clamp(0.875rem, 0.75rem + 0.625vw, 1.5rem);
+    color: theme('colors.primary');
+    font-style: italic;
+  }
+
+  h3 {
+    font-size: 0.75rem;
+    font-size: clamp(0.75rem, 0.65rem + 0.5vw, 1.25rem);
+    font-style: italic;
+  }
+
+  p {
+    font-size: 0.75rem;
+    font-size: clamp(0.75rem, 0.65rem + 0.5vw, 1.25rem);
+    padding: 1em 0;
+  }
+
+  a {
+    font-size: 0.75rem;
+    font-size: clamp(0.75rem, 0.65rem + 0.5vw, 1.25rem);
+    text-decoration: none;
+    color: theme('colors.primary');
+    transition: 0.4s;
+  }
+
+  a:hover {
+    color: theme('colors.primary-variant');
+  }
+}
