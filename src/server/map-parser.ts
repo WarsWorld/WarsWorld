@@ -86,6 +86,7 @@ export type PlayerInMatch = {
   username: string;
   co: string;
   color: string;
+  nation: string;
   armyValue: string;
   timePlayed: number;
   unitCount: number;
@@ -200,6 +201,7 @@ export const awbwMapToWWMap = (): Match => {
         username: 'orangeStar',
         co: 'Sami',
         color: 'orange',
+        nation: 'orangeStar',
         armyValue: '0',
         timePlayed: 10,
         unitCount: 0,
@@ -212,6 +214,7 @@ export const awbwMapToWWMap = (): Match => {
         username: 'blueMoon',
         co: 'Rachel',
         color: 'blue',
+        nation: 'blueMoon',
         armyValue: '0',
         timePlayed: 100,
         unitCount: 0,
