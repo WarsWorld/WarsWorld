@@ -25,25 +25,39 @@ export const propertyTileSchema = canHaveUnitSchema.extend({
   playerSlot: playerSlotForPropertiesSchema,
 });
 
+export const willBeChangeableTile = (
+  tile: Tile,
+): tile is PropertyTile | SiloTile =>
+  [
+    "city",
+    "base",
+    "airport",
+    "harbor",
+    "lab",
+    "comtower",
+    "hq",
+    "unused-silo",
+  ].includes(tile.type);
+
 export type PropertyTile = z.infer<typeof propertyTileSchema>;
 
-export const invariableTileSchema = canHaveUnitSchema.extend({
-  type: z.enum([
-    "shoal",
-    "sea",
-    "forest",
-    "mountain",
-    "reef",
-    "unused-silo",
-    "used-silo",
-  ]),
+export const siloTileSchema = canHaveUnitSchema.extend({
+  type: z.literal("unused-silo"),
 });
+
+export type SiloTile = z.infer<typeof siloTileSchema>;
+
+export const invariableTileSchema = canHaveUnitSchema
+  .extend({
+    type: z.enum(["shoal", "sea", "forest", "mountain", "reef", "used-silo"]),
+  })
+  .or(siloTileSchema);
 
 export type InvariableTile = z.infer<typeof invariableTileSchema>;
 
 export const tileSchema = z.discriminatedUnion("type", [
   propertyTileSchema,
-  invariableTileSchema,
+  ...invariableTileSchema.options,
   ...variableTileSchema.options,
 ]);
 

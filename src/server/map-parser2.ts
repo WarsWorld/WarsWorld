@@ -9,7 +9,7 @@ type AWBWMapData = {
 const convertAWBWMapToWWMap = (awbwMapData: AWBWMapData): WWMap => {
   return {
     name: awbwMapData.name,
-    initialTiles: [
+    tiles: [
       [
         {
           type: "plain",

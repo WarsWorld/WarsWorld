@@ -8,7 +8,7 @@ import {
 import { prisma } from "server/prisma";
 import { publicProcedure, router } from "../trpc";
 
-const getPlayerAmountOfMap = (map: WWMap) => {
+export const getPlayerAmountOfMap = (map: WWMap) => {
   const seenPlayerSlots: PlayerSlot[] = [];
 
   const addToPlayerSlotsIfNotAddedAlready = (playerSlot: PlayerSlot) => {
@@ -17,7 +17,7 @@ const getPlayerAmountOfMap = (map: WWMap) => {
     }
   };
 
-  for (const tile of map.initialTiles.flat()) {
+  for (const tile of map.tiles.flat()) {
     if (isUnitProducingProperty(tile) && !isNeutralProperty(tile)) {
       addToPlayerSlotsIfNotAddedAlready(tile.playerSlot);
     }
@@ -64,7 +64,7 @@ export const mapRouter = router({
       throw new Error("Map must be playable by at least 2 players");
     }
 
-    const tiles = input.initialTiles;
+    const tiles = input.tiles;
 
     if (tiles.every((row) => row.length === tiles[0].length)) {
       throw new Error("All rows of the map must have the same length");
@@ -73,7 +73,7 @@ export const mapRouter = router({
     return prisma.map.create({
       data: {
         name: input.name,
-        tiles: input.initialTiles,
+        tiles: input.tiles,
         numberOfPlayers,
       },
     });
