@@ -8,7 +8,7 @@ import { useMediaQuery } from 'utils/useMediaQuery';
 export function Navbar() {
   const awLogoPath = '/img/layout/awLogo.webp';
   // TODO: Hook can be removed after media query is implemented for tailwind
-  const query500 = useMediaQuery('(max-width: 500px)');
+  const query800 = useMediaQuery('(max-width: 800px)');
   const [showLinks, setShowLinks] = useState(false);
 
   return (
@@ -23,7 +23,7 @@ export function Navbar() {
             alt="AW Logo"
           />
         </Link>
-        {query500 ? (
+        {query800 ? (
           <button
             className="@rounded-full @p-1 @relative"
             type="button"
@@ -38,6 +38,7 @@ export function Navbar() {
               <div className="@grid @absolute @mt-2 @bg-slate-900/90 @right-0 @h-80 @w-48">
                 <NavItem text="Current Games" location="/match" />
                 <NavItem text="Start a game" location="/match" />
+                <NavItem text="Global League" location="/league" />
                 <NavItem text="How to play" location="/howtoplay" />
                 <NavItem text="Login" location="/" />
               </div>
@@ -45,9 +46,10 @@ export function Navbar() {
           </button>
         ) : (
           <>
-            <div className="@grid @grid-cols-3 @gap-10 @text-center @mx-3">
+            <div className="@grid @grid-cols-4 @gap-10 @text-center @mx-3 ">
               <NavItem text="Current Games" location="/match" />
               <NavItem text="Start a game" location="/match" />
+              <NavItem text="Global League" location="/league" />
               <NavItem text="How to play" location="/howtoplay" />
             </div>
             <div className="@text-center @relative @px-3 loginLink">
