@@ -104,11 +104,15 @@ model Player {
   clans      Clan[] @relation(name: "member")
 }
 
+// Right now maps need to be immutable but we
+// probably want to add revisions later on so that they can be "edited".
 model Map {
-  id      String  @id @default(cuid())
-  name    String
-  tiles   Json
-  matches Match[]
+  id              String   @id @default(cuid())
+  name            String
+  tiles           Json
+  numberOfPlayers Int
+  matches         Match[]
+  createdAt       DateTime @default(now())
 }
 
 model ChatMessage {
@@ -179,8 +183,16 @@ model Match {
 
   createdAt DateTime @default(now())
   Notes     Notes[]
+  Event     Event[]
 }
 
-// 1. fractional HP
+model Event {
+  id        String   @id @default(cuid())
+  match     Match    @relation(fields: [matchId], references: [id])
+  matchId   String
+  content   Json
+  createdAt DateTime @default(now())
+}
+
 // 2. move/map data structures
 // 3. tiers in general, map/league tiers?

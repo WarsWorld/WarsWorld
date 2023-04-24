@@ -1,11 +1,7 @@
-import { observable } from '@trpc/server/observable';
-import { Match, awbwMapToWWMap } from 'server/map-parser';
-import { EventEmitter } from 'stream';
-import { z } from 'zod';
-import { prisma } from '../prisma';
-import { publicProcedure, router } from '../trpc';
-
-const ee = new EventEmitter();
+import { Match } from "server/map-parser";
+import { z } from "zod";
+import { prisma } from "../prisma";
+import { publicProcedure, router } from "../trpc";
 
 export const matchRouter = router({
   create: publicProcedure
@@ -13,27 +9,16 @@ export const matchRouter = router({
       z.object({
         playerName: z.string(),
         selectedCO: z.string(),
+        mapId: z.string(),
       }),
     )
     .mutation(async ({ input }) => {
-      const causticFinale = await prisma.map.findFirstOrThrow({
-        where: {
-          name: 'Caustic Finale',
-        },
-      });
-
-      const matchState = awbwMapToWWMap();
-      const { orangeStar, blueMoon } = matchState.playerState;
-      orangeStar.username = input.playerName;
-      orangeStar.co = input.selectedCO;
-      blueMoon.username = '...';
-      blueMoon.co = '';
-
       return prisma.match.create({
         data: {
-          status: 'playing',
-          matchState: awbwMapToWWMap(),
-          mapId: causticFinale.id,
+          status: "ready",
+          mapId: input.mapId,
+          leagueType: "standard",
+          matchState: {},
         },
       });
     }),
@@ -54,26 +39,4 @@ export const matchRouter = router({
       matchState: thing?.matchState as Match,
     };
   }),
-  makeMove: publicProcedure
-    .input(
-      z.object({
-        moveType: z.string(),
-      }),
-    )
-    .mutation(async (data) => {
-      // validate move
-      // store in DB etc.
-      ee.emit('move', data);
-      // maybe no return necessary because of subscription ?
-    }),
-  moves: publicProcedure.subscription(() =>
-    observable((emit) => {
-      const handler = (moveData: unknown) => {
-        emit.next(moveData);
-      };
-
-      ee.on('move', handler);
-      return () => ee.off('move', handler);
-    }),
-  ),
 });

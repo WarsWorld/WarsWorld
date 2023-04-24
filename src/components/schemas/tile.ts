@@ -1,37 +1,36 @@
 import { z } from "zod";
 import { unitSchema } from "./unit";
-import { armySchema } from "./army";
+import { variableTileSchema } from "./variable-tiles";
 
-const canHaveUnitSchema = z.object({
+/**
+ * `-1` is neutral
+ */
+export const playerSlotForPropertiesSchema = z.number().min(-1).max(7);
+export const playerSlotForUnitsSchema = z.number().min(0).max(7);
+
+export type PlayerSlot = z.infer<typeof playerSlotForPropertiesSchema>;
+
+export const isNeutralProperty = (propertyTile: PropertyTile) =>
+  propertyTile.playerSlot === -1;
+
+export const canHaveUnitSchema = z.object({
   unit: z.optional(unitSchema),
 });
 
+export const isUnitProducingProperty = (tile: Tile): tile is PropertyTile =>
+  tile.type === "base" || tile.type === "airport" || tile.type == "harbor";
+
 export const propertyTileSchema = canHaveUnitSchema.extend({
   type: z.enum(["base", "airport", "harbor", "hq", "lab", "comtower", "city"]),
-  army: armySchema,
+  playerSlot: playerSlotForPropertiesSchema,
 });
 
 export type PropertyTile = z.infer<typeof propertyTileSchema>;
 
-export const variableTileSchema = canHaveUnitSchema.extend({
-  type: z.enum([
-    "road",
-    "shoal",
-    "bridge",
-    "destroyed-seam",
-    "pipe",
-    "seam",
-    "sea",
-    "river",
-  ]),
-  variant: z.number().nonnegative(),
-});
-
-export type VariableTile = z.infer<typeof variableTileSchema>;
-
 export const invariableTileSchema = canHaveUnitSchema.extend({
   type: z.enum([
-    "plain",
+    "shoal",
+    "sea",
     "forest",
     "mountain",
     "reef",
@@ -44,8 +43,8 @@ export type InvariableTile = z.infer<typeof invariableTileSchema>;
 
 export const tileSchema = z.discriminatedUnion("type", [
   propertyTileSchema,
-  variableTileSchema,
   invariableTileSchema,
+  ...variableTileSchema.options,
 ]);
 
 export type Tile = z.infer<typeof tileSchema>;

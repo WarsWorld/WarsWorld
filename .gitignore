@@ -16,3 +16,5 @@
 
 *.db
 *.db-journal
+
+.eslintcache

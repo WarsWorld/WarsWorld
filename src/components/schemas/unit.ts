@@ -1,6 +1,17 @@
 import { z } from "zod";
-import { armySchema } from "./army";
 import { positionSchema } from "./position";
+import { playerSlotForPropertiesSchema } from "./tile";
+
+export const unitInitialAmmoMap: Partial<Record<UnitType, number>> = {
+  mech: 3,
+  tank: 9,
+};
+
+// TODO
+export const unitInitialFuelMap: Record<UnitType, number> = {
+  infantry: 99,
+  tank: 50,
+};
 
 export const unitTypeSchema = z.enum([
   "infantry",
@@ -29,8 +40,10 @@ export const unitSchema = z.object({
   fuel: z.optional(z.number().min(0).max(99)),
   // missing means hidden
   ammo: z.optional(z.number().min(0).max(9)),
-  army: armySchema,
+  playerSlot: playerSlotForPropertiesSchema,
   position: positionSchema,
 });
+
+// TODO special unit type for server match state without hidden
 
 export type Unit = z.infer<typeof unitSchema>;

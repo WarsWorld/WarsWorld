@@ -13,7 +13,7 @@ export type TurnEndEvent = {
 
 export type BuildEvent = {
   type: "build"; // maybe add army or can we safely infer that?
-  unit: UnitType;
+  unitType: UnitType;
   position: Position;
 };
 
@@ -76,7 +76,7 @@ export type ForfeitEvent = {
   type: "forfeit";
 };
 
-export type Event =
+export type WWEvent =
   | MatchStartEvent
   | TurnEndEvent
   | BuildEvent
