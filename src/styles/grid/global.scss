@@ -15,7 +15,7 @@
 
 .playerBox {
   font-size: clamp(0.75rem, 0.4375rem + 1vw, 1rem);
-  margin-bottom: 100px;
+  margin-bottom: 75px;
   outline: 2px solid black;
   @media (max-width: 1000px) {
     max-width: initial;
@@ -51,17 +51,13 @@
     .playerNationBox {
       .playerUsernameIconAndIngameStats {
         display: grid;
-        grid-template-columns: 200px;
 
         @media (max-width: 1000px) {
-          grid-template-columns: none;
           grid-template-rows: 40px 30px 50px;
         }
       }
 
       .playerIngameInfo {
-        // width: 200px;
-
         @media (max-width: 1000px) {
           flex-direction: row;
           width: 100%;
@@ -394,7 +390,7 @@ $countryName: orangeStar, blueMoon;
     cursor: pointer;
     // background-color: variables.$color-primary
     color: black;
-    padding: 0.5em;
+    padding: 2px 5px;
     font-weight: 500;
     transition: 0.4s;
     // &:hover {

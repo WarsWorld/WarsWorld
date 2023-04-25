@@ -7,8 +7,11 @@ interface Props {
 
 export function NavItem({ text, location }: Props) {
   return (
-    <div className="@flex @justify-center @items-center @sm:border @sm:border-black @sm:mx-0">
-      <Link className="@text-base-a" href={location}>
+    <div className="@sm:border @sm:border-black @sm:mx-0">
+      <Link
+        className="@flex @justify-center @items-center @text-base-a @h-full @w-full"
+        href={location}
+      >
         {text}
       </Link>
     </div>

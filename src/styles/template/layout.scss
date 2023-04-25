@@ -1,10 +1,5 @@
 @use 'src/styles/variables';
 
-:root {
-  --layoutGridRows: 100px 1fr 160px;
-  // --doc-height: 100%;
-}
-
 #__next,
 html,
 body {
@@ -20,9 +15,6 @@ body {
 }
 
 .layout {
-  height: 100%;
-  grid-template-rows: var(--layoutGridRows);
-
   // TODO: Thing for scrollbar needs to be fixed for wide screen, small height device edge cases
   main {
     overflow: scroll;
@@ -42,16 +34,6 @@ body {
   }
 
   header {
-    .headerLogo,
-    .loginLink {
-      max-width: 6.25rem;
-      max-width: clamp(6.25rem, 4.8rem + 7.25vw, 13.5rem);
-
-      @media (max-width: 500px) {
-        max-width: 216px;
-      }
-    }
-
     .burgerMenu {
       div {
         background-color: theme('colors.primary');
@@ -78,7 +60,7 @@ body {
     }
 
     @media (max-height: 800px) {
-      height: 60px;
+      height: 100%;
 
       .navHeader {
         height: 60px;
@@ -92,7 +74,7 @@ body {
 
   footer {
     @media (max-height: 800px) {
-      height: 140px;
+      height: 100%;
     }
   }
 }

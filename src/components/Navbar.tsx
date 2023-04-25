@@ -9,7 +9,7 @@ import { NavLinksMobile } from './NavLinksMobile';
 export function Navbar() {
   const awLogoPath = '/img/layout/awLogo.webp';
   // TODO: Hook can be removed after media query is fully implemented for tailwind
-  const query500 = useMediaQuery('(max-width: 500px)');
+  const query700 = useMediaQuery('(max-width: 700px)');
   const [showLinks, setShowLinks] = useState(false);
 
   return (
@@ -24,7 +24,7 @@ export function Navbar() {
             alt="AW Logo"
           />
         </Link>
-        {query500 ? (
+        {query700 ? (
           <button
             className="@m-4 @relative"
             type="button"

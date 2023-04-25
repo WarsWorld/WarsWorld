@@ -9,44 +9,35 @@ interface Props {
   children: JSX.Element;
 }
 
+const layoutGridRows = {
+  withFooter: '@grid-rows-[100px_1fr_160px]',
+  noFooter: '@grid-rows-[100px_1fr]',
+};
+
+const layoutGridRows850H = {
+  withFooter: '@grid-rows-[60px_1fr_140px]',
+  noFooter: '@grid-rows-[60px_1fr]',
+};
+
 export function Layout({ footer, children }: Props) {
   // TODO: Hook can be removed after media query is implemented for tailwind
-  const query800H = useMediaQuery('(max-height: 800px)');
+  const query800H = useMediaQuery('(max-height: 850px)');
+  let gridStyling;
 
-  if (typeof window !== 'undefined') {
-    if (footer) {
-      if (query800H) {
-        window.document.documentElement.style.setProperty(
-          '--layoutGridRows',
-          '60px 1fr 140px',
-        );
-      } else {
-        window.document.documentElement.style.setProperty(
-          '--layoutGridRows',
-          '100px 1fr 160px',
-        );
-      }
-    } else {
-      if (query800H) {
-        window.document.documentElement.style.setProperty(
-          '--layoutGridRows',
-          '60px 1fr',
-        );
-      } else {
-        window.document.documentElement.style.setProperty(
-          '--layoutGridRows',
-          '100px 1fr',
-        );
-      }
-    }
+  if (query800H) {
+    gridStyling = layoutGridRows850H;
+  } else {
+    gridStyling = layoutGridRows;
   }
 
   return (
-    <div className="@grid @relative @h-full @w-screen layout">
+    <div
+      className={`@grid @h-full @relative ${
+        footer ? gridStyling['withFooter'] : gridStyling['noFooter']
+      } layout`}
+    >
       <Navbar />
-      <main className="@flex @h-full @w-screen @justify-center @items-center">
-        {children}
-      </main>
+      <main className="@flex @justify-center @items-center">{children}</main>
       {footer && <Footer />}
     </div>
   );
