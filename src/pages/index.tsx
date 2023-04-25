@@ -1,4 +1,3 @@
-import { Layout } from 'components/layout';
 import { Home } from '../components/Home';
 
 export default function IndexPage() {
@@ -14,11 +13,7 @@ export default function IndexPage() {
   //   updateDocumentHeightCSSProperty();
   // }
 
-  return (
-    <Layout footer>
-      <Home />
-    </Layout>
-  );
+  return <Home />;
 }
 
 /**

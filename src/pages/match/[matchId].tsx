@@ -14,7 +14,6 @@ import {
 import { trpc } from 'utils/trpc';
 import { Army } from 'utils/wars-world-types';
 import styles from '../../styles/match.module.css';
-import { Layout } from 'components/layout';
 // TODO: Hook can be removed after media query is implemented for tailwind
 import { useMediaQuery } from 'utils/useMediaQuery';
 import { IngameInfo } from 'components/IngameInfo';
@@ -268,92 +267,90 @@ export default function Match() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
 
-      <Layout>
-        <div className={styles.match + ' gameBox'}>
-          {/* <h1>Match #{matchId}</h1> */}
-          {query1000 ? (
-            <div>
-              <PlayerBox playerTurn={turn} playerInMatch={players.orangeStar} />
-              <PlayerBox playerTurn={!turn} playerInMatch={players.blueMoon} />
-            </div>
-          ) : (
+      <div className={styles.match + ' gameBox'}>
+        {/* <h1>Match #{matchId}</h1> */}
+        {query1000 ? (
+          <div>
             <PlayerBox playerTurn={turn} playerInMatch={players.orangeStar} />
-          )}
-          <div className="@flex @items-center @justify-center gameInnerBox">
-            <div className="gridSize18 mapGrid">
-              {segments.map(({ tile, menu }, index) => {
-                const { unit, terrainImage, terrainType, terrainOwner } = tile;
+            <PlayerBox playerTurn={!turn} playerInMatch={players.blueMoon} />
+          </div>
+        ) : (
+          <PlayerBox playerTurn={turn} playerInMatch={players.orangeStar} />
+        )}
+        <div className="@flex @items-center @justify-center gameInnerBox">
+          <div className="gridSize18 mapGrid">
+            {segments.map(({ tile, menu }, index) => {
+              const { unit, terrainImage, terrainType, terrainOwner } = tile;
 
-                return (
-                  <div
-                    key={index}
-                    onClick={() => {
-                      reset();
-                      if (unit) {
-                        // check path
-                      } else if (terrainType === 'property') {
-                        /* Original functionality for turns; UNCOMMENT ONCE ITS WORKING AGAIN*/
-                        /* if (!isTurn(terrainOwner)) {
+              return (
+                <div
+                  key={index}
+                  onClick={() => {
+                    reset();
+                    if (unit) {
+                      // check path
+                    } else if (terrainType === 'property') {
+                      /* Original functionality for turns; UNCOMMENT ONCE ITS WORKING AGAIN*/
+                      /* if (!isTurn(terrainOwner)) {
                           return;
                         } */
 
-                        updateSegment(index, (oldSegment) => ({
-                          ...oldSegment,
-                          tile,
-                          menu: (
-                            <div className="tileMenu">
-                              {factoryBuildableUnits.map((buildable, index) => (
+                      updateSegment(index, (oldSegment) => ({
+                        ...oldSegment,
+                        tile,
+                        menu: (
+                          <div className="tileMenu">
+                            {factoryBuildableUnits.map((buildable, index) => (
+                              <div
+                                key={index}
+                                className="menuOptions" // + menuNoBuy
+                                onClick={() =>
+                                  buildUnit(index, buildable, terrainOwner)
+                                }
+                              >
                                 <div
-                                  key={index}
-                                  className="menuOptions" // + menuNoBuy
-                                  onClick={() =>
-                                    buildUnit(index, buildable, terrainOwner)
-                                  }
-                                >
-                                  <div
-                                    className={`menu${terrainOwner}${buildable.menuName}`}
-                                  ></div>
-                                  <div className={`menuName`}>
-                                    {' '}
-                                    {buildable.menuName}
-                                  </div>
-                                  <div className={`menuCost`}>
-                                    {' '}
-                                    {buildable.cost}
-                                  </div>
+                                  className={`menu${terrainOwner}${buildable.menuName}`}
+                                ></div>
+                                <div className={`menuName`}>
+                                  {' '}
+                                  {buildable.menuName}
                                 </div>
-                              ))}
-                            </div>
-                          ),
-                          squareHighlight: null,
-                        }));
-                      }
-                    }}
-                    className={`mapTile ${
-                      unit && unit.isUsed ? 'stateUsed' : ''
-                    }`}
-                  >
-                    <div className={`tileTerrain ${terrainImage}`}></div>
+                                <div className={`menuCost`}>
+                                  {' '}
+                                  {buildable.cost}
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        ),
+                        squareHighlight: null,
+                      }));
+                    }
+                  }}
+                  className={`mapTile ${
+                    unit && unit.isUsed ? 'stateUsed' : ''
+                  }`}
+                >
+                  <div className={`tileTerrain ${terrainImage}`}></div>
 
-                    {unit && <Unit unit={unit} />}
-                    {null /** tileSquare */}
-                    {menu}
-                    {unit && <HPAndCapture unit={unit} />}
-                    <div className="tileCursor"></div>
-                  </div>
-                );
-              })}
-            </div>
-            <div className="@flex @items-center @justify-center gameTime">
-              <p>00:00:00</p>
-              <button onClick={passTurn}>Pass turn</button>
-            </div>
+                  {unit && <Unit unit={unit} />}
+                  {null /** tileSquare */}
+                  {menu}
+                  {unit && <HPAndCapture unit={unit} />}
+                  <div className="tileCursor"></div>
+                </div>
+              );
+            })}
           </div>
-          {query1000 ? null : (
-            <PlayerBox playerTurn={!turn} playerInMatch={players.blueMoon} />
-          )}
+          <div className="@flex @items-center @justify-center gameTime">
+            <p>00:00:00</p>
+            <button onClick={passTurn}>Pass turn</button>
+          </div>
         </div>
-      </Layout>
+        {query1000 ? null : (
+          <PlayerBox playerTurn={!turn} playerInMatch={players.blueMoon} />
+        )}
+      </div>
     </>
   );
 }
