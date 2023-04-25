@@ -15,27 +15,9 @@
 
 .playerBox {
   font-size: clamp(0.75rem, 0.4375rem + 1vw, 1rem);
-  margin-bottom: 75px;
-  outline: 2px solid black;
-  @media (max-width: 1000px) {
-    max-width: initial;
-    width: 700px;
-    margin-bottom: initial;
-  }
-
-  @media (max-width: 700px) {
-    max-width: 100vw;
-  }
-
   .playerCOAndNationBox {
-    @media (max-width: 1000px) {
-      flex-direction: row;
-    }
-
     .playerCOBox {
-      @media (max-width: 1000px) {
-        height: 120px;
-      }
+      height: 120px;
 
       .playerCOIcon {
         filter: grayscale(0%);
@@ -49,29 +31,14 @@
     }
 
     .playerNationBox {
-      .playerUsernameIconAndIngameStats {
+      .playerUsernameAndIngameStats {
         display: grid;
-
-        @media (max-width: 1000px) {
-          grid-template-rows: 40px 30px 50px;
-        }
+        grid-template-rows: 40px 30px 50px;
       }
 
       .playerIngameInfo {
-        @media (max-width: 1000px) {
-          flex-direction: row;
-          width: 100%;
-        }
-
-        @media (max-width: 500px) {
-          flex-wrap: wrap;
-        }
-
         .ingameInfo {
-          @media (max-width: 500px) {
-            flex: 1 1 60px;
-            padding: 0 5px;
-          }
+          flex: 1 1 60px;
         }
       }
     }
@@ -79,25 +46,24 @@
 }
 
 .playerBox:last-of-type {
-  @media (max-width: 1000px) {
-    .playerCOAndNationBox {
-      flex-direction: row-reverse;
-    }
+  .playerCOAndNationBox {
+    flex-direction: row-reverse;
   }
 }
 
-.gameInnerBox {
-  @media (max-height: 700px) {
-    gap: 0;
-  }
-}
+.gameBoxContainer {
+  font-family: sans-serif;
 
-.gameTime {
-  flex-direction: column;
-
-  @media (max-height: 850px) {
+  .gameTime {
+    font-size: clamp(0.75rem, 0.5682rem + 0.9091vw, 1.25rem);
     gap: 20px;
     flex-direction: row;
+
+    button {
+      cursor: pointer;
+      padding: 2px 10px;
+      transition: 0.4s;
+    }
   }
 }
 
@@ -386,40 +352,11 @@ $countryName: orangeStar, blueMoon;
 .gameBox {
   image-rendering: pixelated;
 
-  button {
-    cursor: pointer;
-    // background-color: variables.$color-primary
-    color: black;
-    padding: 2px 5px;
-    font-weight: 500;
-    transition: 0.4s;
-    // &:hover {
-    //   // background-color: variables.$color-primary-variant
-    //   color: black;
-    // }
-
-    // our main grid where we have our map tiles
-  }
-
   .mapGrid {
     border: 5px solid #091a4f;
-    height: 55vh;
+    height: 85vw;
+    max-height: 320px;
     aspect-ratio: 1;
-
-    @media (max-width: 1000px) {
-      height: 400px;
-    }
-
-    @media (max-width: 500px) {
-      height: 80vw;
-      min-height: 320px;
-    }
-
-    @media (max-height: 750px) {
-      height: 50vw;
-      max-height: 550px;
-      min-height: 320px;
-    }
 
     // our individual tiles
     .mapTile {
@@ -549,4 +486,112 @@ h1 {
 
 .column3 {
   grid-column: span 3;
+}
+
+@screen phone {
+  .playerIngameInfo {
+    .ingameInfo {
+      padding: 0 5px;
+    }
+  }
+}
+
+@screen tablet {
+  .gameBoxContainer {
+    .gameBox {
+      gap: 1rem;
+      .mapGrid {
+        height: 55vw;
+        min-height: 320px;
+        max-height: initial;
+      }
+
+      .playerIngameInfo {
+        .ingameInfo {
+          padding: 0 10px;
+        }
+      }
+    }
+  }
+}
+
+@screen smallscreen {
+  .gameBoxContainer {
+    gap: 1rem;
+    .gameBox {
+      flex-direction: row;
+    }
+
+    .playerBox {
+      max-height: 55vh;
+
+      .playerCOAndNationBox {
+        flex-direction: column;
+
+        .playerNationBox {
+          min-width: 150px;
+          width: 20vw;
+          .playerUsernameAndIngameStats {
+            display: flex;
+            flex-direction: column;
+            .playerUsername {
+              height: 4vw;
+            }
+
+            .playerExp {
+              height: 4vw;
+            }
+          }
+        }
+      }
+
+      .playerIngameInfo {
+        flex-direction: column;
+        flex-wrap: nowrap;
+        .ingameInfo {
+          flex: none;
+          max-height: 4vw;
+        }
+      }
+    }
+
+    .playerBox:last-of-type {
+      .playerCOAndNationBox {
+        flex-direction: column;
+      }
+    }
+  }
+}
+
+@screen laptop {
+  .gameBoxContainer {
+    .gameBox {
+      .mapGrid {
+        max-height: 650px;
+      }
+    }
+  }
+
+  .playerBox {
+    max-height: inital;
+    font-size: clamp(0.75rem, 0.5682rem + 0.9091vw, 1.25rem);
+
+    .playerUsername {
+      max-height: 50px;
+    }
+
+    .playerExp {
+      max-height: 50px;
+    }
+  }
+}
+
+@screen short {
+  .gameBoxContainer {
+    .gameBox {
+      .mapGrid {
+        max-height: 650px;
+      }
+    }
+  }
 }

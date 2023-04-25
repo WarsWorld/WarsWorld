@@ -3,7 +3,7 @@ import { NavItem } from './NavItem';
 export function NavLinks() {
   return (
     <>
-      <div className="@grid @grid-cols-3 @gap-10 @text-center @mx-3">
+      <div className="@grid @gap-8 @text-center @mx-3 navLinks">
         <NavItem text="Current Games" location="/match" />
         <NavItem text="Start a game" location="/match" />
         <NavItem text="How to play" location="/howtoplay" />

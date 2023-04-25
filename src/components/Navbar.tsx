@@ -2,14 +2,13 @@ import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { NavLinks } from './NavLinks';
-// TODO: Hook can be removed after media query is fully implemented for tailwind
 import { useMediaQuery } from 'utils/useMediaQuery';
 import { NavLinksMobile } from './NavLinksMobile';
 
 export function Navbar() {
   const awLogoPath = '/img/layout/awLogo.webp';
-  // TODO: Hook can be removed after media query is fully implemented for tailwind
-  const query700 = useMediaQuery('(max-width: 700px)');
+  // Might keep useMediaQuery to conditionally switch between full navbar and hamburger menu
+  const notPhone = useMediaQuery('(min-width: 480px)');
   const [showLinks, setShowLinks] = useState(false);
 
   return (
@@ -19,12 +18,14 @@ export function Navbar() {
           <Image
             className="@flex"
             src={awLogoPath}
-            width={190}
+            width={180}
             height={50}
             alt="AW Logo"
           />
         </Link>
-        {query700 ? (
+        {notPhone ? (
+          <NavLinks />
+        ) : (
           <button
             className="@m-4 @relative"
             type="button"
@@ -32,8 +33,6 @@ export function Navbar() {
           >
             <NavLinksMobile showLinks={showLinks} />
           </button>
-        ) : (
-          <NavLinks />
         )}
       </nav>
     </header>

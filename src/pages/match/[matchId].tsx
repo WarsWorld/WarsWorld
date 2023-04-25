@@ -13,9 +13,8 @@ import {
 } from 'server/map-parser';
 import { trpc } from 'utils/trpc';
 import { Army } from 'utils/wars-world-types';
-import styles from '../../styles/match.module.css';
 import { Layout } from 'components/layout';
-// TODO: Hook can be removed after media query is implemented for tailwind
+// Might keep useMediaQuery hook for conditional rendering of playerBox layout
 import { useMediaQuery } from 'utils/useMediaQuery';
 import { IngameInfo } from 'components/IngameInfo';
 
@@ -36,10 +35,10 @@ const PlayerBox = ({ playerTurn, playerInMatch: playerInMatch }: Props) => {
   time.setSeconds(playerInMatch.timePlayed ?? 1);
 
   return (
-    <div className="playerBox @relative @z-25">
-      <div className="@flex @flex-col playerCOAndNationBox">
+    <div className="@relative @z-25 playerBox">
+      <div className="@flex @flex-row playerCOAndNationBox">
         <div
-          className={`@relative @h-[100px] @aspect-square ${
+          className={`@relative @h-[100px] @aspect-square @outline @outline-2 @outline-black ${
             nationColorGradients[playerInMatch.color]
           } playerCOBox`}
         >
@@ -54,15 +53,15 @@ const PlayerBox = ({ playerTurn, playerInMatch: playerInMatch }: Props) => {
             src={`/img/nations/${playerInMatch.nation}.webp`}
           />
         </div>
-        <div className="@text-white @min-w-[200px] @w-full playerNationBox">
-          <div className="playerUsernameIconAndIngameStats">
-            <div className="@flex @items-center @bg-stone-900 @py-1 @px-3 @outline @outline-2 @outline-black">
+        <div className="@text-white @w-full playerNationBox">
+          <div className="playerUsernameAndIngameStats">
+            <div className="@flex @items-center @bg-stone-900 @py-1 @px-3 @outline @outline-2 @outline-black playerUsername">
               {playerInMatch.username}
             </div>
-            <div className="@flex @items-center @justify-center @bg-stone-900 @p-1 @outline @outline-2 @outline-black">
+            <div className="@flex @items-center @justify-center @bg-stone-900 @p-1 @outline @outline-2 @outline-black playerExp">
               Placeholder for an exp bar
             </div>
-            <div className="@flex @flex-col @w-[200px] playerIngameInfo">
+            <div className="@flex @flex-row @flex-wrap @w-full playerIngameInfo">
               <IngameInfo
                 ingameStatIconPath=""
                 ingameStat={time.toISOString().substring(11, 19)}
@@ -118,8 +117,8 @@ const HPAndCapture = ({ unit }: { unit: UnitOnMap }) => (
 export default function Match() {
   const [players, setPlayers] = useState<PlayerState | null | undefined>(null);
   const [segments, setSegments] = useState<Segment[] | null | undefined>(null);
-  // TODO: Hook can be removed after media query is implemented for tailwind
-  const query1000 = useMediaQuery('(max-width: 1000px)');
+  // Might keep useMediaQuery hook for conditional rendering of playerBox layout
+  const notSmallScreen = useMediaQuery('(min-width: 768px)');
 
   segments
     ?.filter((s) => s.tile.unit)
@@ -269,94 +268,109 @@ export default function Match() {
       </Head>
 
       <Layout>
-        <div className={styles.match + ' gameBox'}>
-          {/* <h1>Match #{matchId}</h1> */}
-          {query1000 ? (
-            <div>
+        <div className="@flex @flex-col @items-center @justify-center @h-full @w-full @gap-0 gameBoxContainer">
+          <div className="@flex @flex-col @items-center @justify-center @gap-1 @w-full gameBox">
+            {/* <h1>Match #{matchId}</h1> */}
+            {notSmallScreen ? (
               <PlayerBox playerTurn={turn} playerInMatch={players.orangeStar} />
-              <PlayerBox playerTurn={!turn} playerInMatch={players.blueMoon} />
-            </div>
-          ) : (
-            <PlayerBox playerTurn={turn} playerInMatch={players.orangeStar} />
-          )}
-          <div className="@flex @flex-col @items-center @justify-center @gap-1 gameInnerBox">
-            <div className="gridSize18 mapGrid">
-              {segments.map(({ tile, menu }, index) => {
-                const { unit, terrainImage, terrainType, terrainOwner } = tile;
+            ) : (
+              <div className="@w-full">
+                <PlayerBox
+                  playerTurn={turn}
+                  playerInMatch={players.orangeStar}
+                />
+                <PlayerBox
+                  playerTurn={!turn}
+                  playerInMatch={players.blueMoon}
+                />
+              </div>
+            )}
+            <div className="@flex @flex-col @items-center @justify-center @gap-1 gameInnerBox">
+              <div className="gridSize18 mapGrid">
+                {segments.map(({ tile, menu }, index) => {
+                  const { unit, terrainImage, terrainType, terrainOwner } =
+                    tile;
 
-                return (
-                  <div
-                    key={index}
-                    onClick={() => {
-                      reset();
-                      if (unit) {
-                        // check path
-                      } else if (terrainType === 'property') {
-                        /* Original functionality for turns; UNCOMMENT ONCE ITS WORKING AGAIN*/
-                        /* if (!isTurn(terrainOwner)) {
+                  return (
+                    <div
+                      key={index}
+                      onClick={() => {
+                        reset();
+                        if (unit) {
+                          // check path
+                        } else if (terrainType === 'property') {
+                          /* Original functionality for turns; UNCOMMENT ONCE ITS WORKING AGAIN*/
+                          /* if (!isTurn(terrainOwner)) {
                           return;
                         } */
 
-                        updateSegment(index, (oldSegment) => ({
-                          ...oldSegment,
-                          tile,
-                          menu: (
-                            <div className="tileMenu">
-                              {factoryBuildableUnits.map((buildable, index) => (
-                                <div
-                                  key={index}
-                                  className="menuOptions" // + menuNoBuy
-                                  onClick={() =>
-                                    buildUnit(index, buildable, terrainOwner)
-                                  }
-                                >
-                                  <div
-                                    className={`menu${terrainOwner}${buildable.menuName}`}
-                                  ></div>
-                                  <div className={`menuName`}>
-                                    {' '}
-                                    {buildable.menuName}
-                                  </div>
-                                  <div className={`menuCost`}>
-                                    {' '}
-                                    {buildable.cost}
-                                  </div>
-                                </div>
-                              ))}
-                            </div>
-                          ),
-                          squareHighlight: null,
-                        }));
-                      }
-                    }}
-                    className={`mapTile ${
-                      unit && unit.isUsed ? 'stateUsed' : ''
-                    }`}
-                  >
-                    <div className={`tileTerrain ${terrainImage}`}></div>
+                          updateSegment(index, (oldSegment) => ({
+                            ...oldSegment,
+                            tile,
+                            menu: (
+                              <div className="tileMenu">
+                                {factoryBuildableUnits.map(
+                                  (buildable, index) => (
+                                    <div
+                                      key={index}
+                                      className="menuOptions" // + menuNoBuy
+                                      onClick={() =>
+                                        buildUnit(
+                                          index,
+                                          buildable,
+                                          terrainOwner,
+                                        )
+                                      }
+                                    >
+                                      <div
+                                        className={`menu${terrainOwner}${buildable.menuName}`}
+                                      ></div>
+                                      <div className={`menuName`}>
+                                        {' '}
+                                        {buildable.menuName}
+                                      </div>
+                                      <div className={`menuCost`}>
+                                        {' '}
+                                        {buildable.cost}
+                                      </div>
+                                    </div>
+                                  ),
+                                )}
+                              </div>
+                            ),
+                            squareHighlight: null,
+                          }));
+                        }
+                      }}
+                      className={`mapTile ${
+                        unit && unit.isUsed ? 'stateUsed' : ''
+                      }`}
+                    >
+                      <div className={`tileTerrain ${terrainImage}`}></div>
 
-                    {unit && <Unit unit={unit} />}
-                    {null /** tileSquare */}
-                    {menu}
-                    {unit && <HPAndCapture unit={unit} />}
-                    <div className="tileCursor"></div>
-                  </div>
-                );
-              })}
+                      {unit && <Unit unit={unit} />}
+                      {null /** tileSquare */}
+                      {menu}
+                      {unit && <HPAndCapture unit={unit} />}
+                      <div className="tileCursor"></div>
+                    </div>
+                  );
+                })}
+              </div>
             </div>
-            <div className="@flex @items-center @justify-center gameTime">
-              <p>00:00:00</p>
-              <button
-                className="@w-[clamp(6rem, 2.59rem + 12.07vw, 9rem)] @rounded-lg @bg-stone-200"
-                onClick={passTurn}
-              >
-                Pass turn
-              </button>
-            </div>
+            {notSmallScreen && (
+              <PlayerBox playerTurn={!turn} playerInMatch={players.blueMoon} />
+            )}
           </div>
-          {query1000 ? null : (
-            <PlayerBox playerTurn={!turn} playerInMatch={players.blueMoon} />
-          )}
+          <div className="@flex @items-center @justify-center gameTime">
+            <p className="@py-2">00:00:00</p>
+            <button
+              className="@text-black @rounded-lg @bg-stone-200"
+              onClick={passTurn}
+            >
+              Pass turn
+            </button>
+          </div>
         </div>
       </Layout>
     </>

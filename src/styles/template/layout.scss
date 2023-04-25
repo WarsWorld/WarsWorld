@@ -26,13 +26,6 @@ body {
     display: none;
   }
 
-  .inProgress {
-    @media (max-height: 750px) {
-      max-width: 95vw;
-      padding: 15px;
-    }
-  }
-
   header {
     .burgerMenu {
       div {
@@ -58,23 +51,49 @@ body {
       visibility: visible;
       height: 20rem;
     }
+  }
+}
 
-    @media (max-height: 800px) {
-      height: 100%;
+@screen tablet {
+  .layout {
+    .navLinks {
+      grid-template-columns: repeat(3, 60px);
+    }
 
-      .navHeader {
-        height: 60px;
-      }
-
-      .headerLogo {
-        max-height: 50px;
-      }
+    .inProgress {
+      padding: 2rem;
     }
   }
+}
 
-  footer {
-    @media (max-height: 800px) {
-      height: 100%;
+@screen smallscreen {
+  .layout {
+    .navLinks {
+      grid-template-columns: repeat(3, 140px);
+    }
+
+    .inProgress {
+      padding: 2rem 3rem;
+    }
+  }
+}
+
+@screen laptop {
+  .layout {
+    .navLinks {
+      grid-template-columns: repeat(3, 160px);
+    }
+
+    .inProgress {
+      padding: 3rem;
+    }
+  }
+}
+
+@screen medium {
+  .layout {
+    footer {
+      height: 160px;
     }
   }
 }

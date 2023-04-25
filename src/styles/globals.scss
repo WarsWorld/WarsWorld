@@ -36,13 +36,13 @@
 
   p {
     font-size: 0.75rem;
-    font-size: clamp(0.75rem, 0.65rem + 0.5vw, 1.25rem);
+    font-size: clamp(0.75rem, 0.5682rem + 0.9091vw, 1.25rem);
     padding: 1em 0;
   }
 
   a {
     font-size: 0.75rem;
-    font-size: clamp(0.75rem, 0.65rem + 0.5vw, 1.25rem);
+    font-size: clamp(0.75rem, 0.5682rem + 0.9091vw, 1.25rem);
     text-decoration: none;
     color: theme('colors.primary');
     transition: 0.4s;
