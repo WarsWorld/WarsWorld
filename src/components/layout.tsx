@@ -19,7 +19,7 @@ const layoutGridRows750H = {
 };
 
 export function Layout({ footer, children }: Props) {
-  // TODO: Hook can be removed after media query is implemented for tailwind
+  // Might keep useMediaQuery to help with condition calling of Tailwind grid-rows-* 
   const notMedium = useMediaQuery('(min-height: 750px)');
   let gridStyling;
 
