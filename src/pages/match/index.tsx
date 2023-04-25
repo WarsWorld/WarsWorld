@@ -22,7 +22,7 @@ export default function Games() {
 
   return (
     <Layout>
-      <div className="@absolute gameLobby">
+      <div className="@absolute @top-[100px]">
         <h1>Current games</h1>
         <button
           className="@p-1 @mb-2 @bg-slate-300 @rounded @text-gray-700"

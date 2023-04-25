@@ -15,7 +15,6 @@
 
 .playerBox {
   font-size: clamp(0.75rem, 0.4375rem + 1vw, 1rem);
-  max-width: 300px;
   margin-bottom: 100px;
   outline: 2px solid black;
   @media (max-width: 1000px) {
@@ -29,26 +28,16 @@
   }
 
   .playerCOAndNationBox {
-    display: flex;
-    flex-direction: column;
-
     @media (max-width: 1000px) {
       flex-direction: row;
     }
 
     .playerCOBox {
-      height: 100px;
-      aspect-ratio: 1;
       @media (max-width: 1000px) {
         height: 120px;
       }
 
       .playerCOIcon {
-        height: 120px;
-        width: 100%;
-        aspect-ratio: 1;
-        object-fit: none;
-        object-position: 0 0;
         filter: grayscale(0%);
         transition: height 0.5s, filter 0.5s;
       }
@@ -60,10 +49,6 @@
     }
 
     .playerNationBox {
-      color: white;
-      min-width: 200px;
-      width: 100%;
-
       .playerUsernameIconAndIngameStats {
         display: grid;
         grid-template-columns: 200px;
@@ -72,20 +57,10 @@
           grid-template-columns: none;
           grid-template-rows: 40px 30px 50px;
         }
-
-        .playerUsername {
-          padding: 5px 10px;
-          outline: 2px solid black;
-        }
-
-        .playerIngameExp {
-          padding: 5px;
-          outline: 2px solid black;
-        }
       }
 
       .playerIngameInfo {
-        width: 200px;
+        // width: 200px;
 
         @media (max-width: 1000px) {
           flex-direction: row;
@@ -97,10 +72,6 @@
         }
 
         .ingameInfo {
-          outline: 2px solid black;
-          flex-grow: 1;
-          padding: 0.5rem;
-
           @media (max-width: 500px) {
             flex: 1 1 60px;
             padding: 0 5px;
@@ -120,20 +91,8 @@
 }
 
 .gameInnerBox {
-  gap: 10px;
-  flex-direction: column;
-
   @media (max-height: 700px) {
     gap: 0;
-  }
-
-  button {
-    width: 6rem;
-    width: clamp(6rem, 2.59rem + 12.07vw, 9rem);
-    font-size: clamp(0.875rem, 0.75rem + 0.625vw, 1.5rem);
-    background-color: lightgrey;
-    border-radius: 10px;
-    padding: 2px;
   }
 }
 

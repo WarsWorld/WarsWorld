@@ -8,7 +8,7 @@ export function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <div className="@rounded-lg @bg-black/70 @center @p-8 @max-w-3xl inProgress">
+      <div className="@rounded-lg @bg-black/70 @center @p-8 @max-w-[80vw] @sm:max-w-[65vw] inProgress">
         <h2>Work in progress...</h2>
         <h1>Welcome to Wars World!</h1>
         <p>First of all, congrats on setting your developer environment!</p>

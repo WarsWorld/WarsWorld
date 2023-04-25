@@ -35,35 +35,13 @@ body {
   }
 
   .inProgress {
-    @media (max-width: 1000px) {
-      max-width: 65vw;
-    }
-
-    @media (max-width: 500px) {
-      max-width: 80vw;
-    }
-
     @media (max-height: 750px) {
       max-width: 95vw;
       padding: 15px;
     }
   }
 
-  .gameLobby {
-    top: 100px;
-  }
-
   header {
-    height: 100px;
-
-    .navHeader {
-      height: 100px;
-    }
-
-    .loginLink {
-      width: 216px;
-    }
-
     .headerLogo,
     .loginLink {
       max-width: 6.25rem;
@@ -87,6 +65,18 @@ body {
       }
     }
 
+    .burgerMenuLinks {
+      opacity: 0;
+      visibility: hidden;
+      transition: 0.7s;
+    }
+
+    .showBurgerMenuLinks {
+      opacity: 1;
+      visibility: visible;
+      height: 20rem;
+    }
+
     @media (max-height: 800px) {
       height: 60px;
 
@@ -101,8 +91,6 @@ body {
   }
 
   footer {
-    height: 160px;
-
     @media (max-height: 800px) {
       height: 140px;
     }

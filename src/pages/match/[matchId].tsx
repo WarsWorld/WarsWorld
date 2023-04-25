@@ -24,27 +24,27 @@ interface Props {
   playerInMatch: PlayerInMatch;
 }
 
+const nationColorGradients: Record<string, string> = {
+  blue: '@bg-gradient-to-l @from-blue-400',
+  orange: '@bg-gradient-to-l @from-orange-400',
+  green: '@bg-gradient-to-l @from-green-400',
+  yellow: '@bg-gradient-to-l @from-yellow-400',
+};
+
 const PlayerBox = ({ playerTurn, playerInMatch: playerInMatch }: Props) => {
   const time = new Date(0);
   time.setSeconds(playerInMatch.timePlayed ?? 1);
 
-  const nationColorGradients: Record<string, string> = {
-    blue: '@bg-gradient-to-l @from-blue-400',
-    orange: '@bg-gradient-to-l @from-orange-400',
-    green: '@bg-gradient-to-l @from-green-400',
-    yellow: '@bg-gradient-to-l @from-yellow-400',
-  };
-
   return (
     <div className="playerBox @relative @z-25">
-      <div className="playerCOAndNationBox">
+      <div className="@flex @flex-col playerCOAndNationBox">
         <div
-          className={`@relative ${
+          className={`@relative @h-[100px] @aspect-square ${
             nationColorGradients[playerInMatch.color]
           } playerCOBox`}
         >
           <img
-            className={`@absolute @bottom-0 playerCOIcon ${
+            className={`@absolute @bottom-0 @h-[120px] @w-full @aspect-square @object-none @object-left-top playerCOIcon ${
               playerTurn ? '' : 'isNotPlayerTurn'
             }`}
             src={`/img/CO/${playerInMatch.co}-Full.png`}
@@ -54,15 +54,15 @@ const PlayerBox = ({ playerTurn, playerInMatch: playerInMatch }: Props) => {
             src={`/img/nations/${playerInMatch.nation}.webp`}
           />
         </div>
-        <div className="playerNationBox">
+        <div className="@text-white @min-w-[200px] @w-full playerNationBox">
           <div className="playerUsernameIconAndIngameStats">
-            <div className="@flex @items-center @bg-stone-900 playerUsername">
+            <div className="@flex @items-center @bg-stone-900 @py-1 @px-3 @outline @outline-2 @outline-black">
               {playerInMatch.username}
             </div>
-            <div className="@flex @items-center @justify-center @bg-stone-900 playerIngameExp">
+            <div className="@flex @items-center @justify-center @bg-stone-900 @p-1 @outline @outline-2 @outline-black">
               Placeholder for an exp bar
             </div>
-            <div className="@flex @flex-col playerIngameInfo">
+            <div className="@flex @flex-col @w-[200px] playerIngameInfo">
               <IngameInfo
                 ingameStatIconPath=""
                 ingameStat={time.toISOString().substring(11, 19)}
@@ -279,7 +279,7 @@ export default function Match() {
           ) : (
             <PlayerBox playerTurn={turn} playerInMatch={players.orangeStar} />
           )}
-          <div className="@flex @items-center @justify-center gameInnerBox">
+          <div className="@flex @flex-col @items-center @justify-center @gap-1 gameInnerBox">
             <div className="gridSize18 mapGrid">
               {segments.map(({ tile, menu }, index) => {
                 const { unit, terrainImage, terrainType, terrainOwner } = tile;
@@ -346,7 +346,12 @@ export default function Match() {
             </div>
             <div className="@flex @items-center @justify-center gameTime">
               <p>00:00:00</p>
-              <button onClick={passTurn}>Pass turn</button>
+              <button
+                className="@w-[clamp(6rem, 2.59rem + 12.07vw, 9rem)] @rounded-lg @bg-stone-200"
+                onClick={passTurn}
+              >
+                Pass turn
+              </button>
             </div>
           </div>
           {query1000 ? null : (
