@@ -1,5 +1,6 @@
 @use 'src/styles/template/layout';
 @use 'src/styles/grid/global';
+@use 'src/styles/mixins' as m;
 
 @tailwind base;
 @tailwind components;
@@ -16,33 +17,28 @@
   }
 
   h1 {
-    font-size: 1rem;
-    font-size: clamp(1rem, 0.4rem + 3vw, 4rem);
+    @include m.clampSize(16, 64, 320, 1200);
     padding: 0;
   }
 
   h2 {
-    font-size: 0.875rem;
-    font-size: clamp(0.875rem, 0.75rem + 0.625vw, 1.5rem);
+    @include m.clampSize(16, 24, 320, 1200);
     color: theme('colors.primary');
     font-style: italic;
   }
 
   h3 {
-    font-size: 0.75rem;
-    font-size: clamp(0.75rem, 0.65rem + 0.5vw, 1.25rem);
+    @include m.clampSize(12, 20, 320, 1200);
     font-style: italic;
   }
 
   p {
-    font-size: 0.75rem;
-    font-size: clamp(0.75rem, 0.5682rem + 0.9091vw, 1.25rem);
+    @include m.clampSize(12, 20, 320, 1200);
     padding: 1em 0;
   }
 
   a {
-    font-size: 0.75rem;
-    font-size: clamp(0.75rem, 0.5682rem + 0.9091vw, 1.25rem);
+    @include m.clampSize(12, 20, 320, 1200);
     text-decoration: none;
     color: theme('colors.primary');
     transition: 0.4s;
