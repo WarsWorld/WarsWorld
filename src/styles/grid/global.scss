@@ -14,47 +14,48 @@
   }
 }
 
-.playerBox {
-  @include m.clampSize(12, 20, 320, 1200);
+.gameBoxContainer {
+  font-family: sans-serif;
 
-  .playerCOAndNationBox {
-    .playerCOBox {
-      height: 120px;
+  .playerBox {
+    @include m.clampSize(12, 20, 320, 1200);
 
-      .playerCOIcon {
-        filter: grayscale(0%);
-        transition: height 0.5s, filter 0.5s;
+    .playerCOAndNationBox {
+      .playerCOBox {
+        height: 120px;
+
+        .playerCOIcon {
+          filter: grayscale(0%);
+          transition: height 0.5s, filter 0.5s;
+        }
+
+        .isNotPlayerTurn {
+          height: 100px;
+          filter: grayscale(50%);
+        }
       }
 
-      .isNotPlayerTurn {
-        height: 100px;
-        filter: grayscale(50%);
-      }
-    }
+      .playerNationBox {
+        .playerUsernameAndIngameStats {
+          display: grid;
+          grid-template-rows: 40px 30px 50px;
+        }
 
-    .playerNationBox {
-      .playerUsernameAndIngameStats {
-        display: grid;
-        grid-template-rows: 40px 30px 50px;
-      }
-
-      .playerIngameInfo {
-        .ingameInfo {
-          flex: 1 1 60px;
+        .playerIngameInfo {
+          .ingameInfo {
+            flex: 1 1 60px;
+            padding: 0 5px;
+          }
         }
       }
     }
   }
-}
 
-.playerBox:last-of-type {
-  .playerCOAndNationBox {
-    flex-direction: row-reverse;
+  .playerBox:last-of-type {
+    .playerCOAndNationBox {
+      flex-direction: row-reverse;
+    }
   }
-}
-
-.gameBoxContainer {
-  font-family: sans-serif;
 
   .gameTime {
     @include m.clampSize(16, 20, 320, 1200);
@@ -492,14 +493,6 @@ h1 {
   grid-column: span 3;
 }
 
-@screen phone {
-  .playerIngameInfo {
-    .ingameInfo {
-      padding: 0 5px;
-    }
-  }
-}
-
 @screen tablet {
   .gameBoxContainer {
     .gameBox {
@@ -510,9 +503,13 @@ h1 {
         max-height: initial;
       }
 
-      .playerIngameInfo {
-        .ingameInfo {
-          padding: 0 10px;
+      .playerCOAndNationBox {
+        .playerNationBox {
+          .playerIngameInfo {
+            .ingameInfo {
+              padding: 0 10px;
+            }
+          }
         }
       }
     }
