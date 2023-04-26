@@ -45,6 +45,21 @@ export default function LeaguePage() {
       <div className="@flex @justify-center @items-center @flex-col @max-w-6xl @h-full @border-red-900 @border-4">
         <div>Wars World Global League</div>
 
+        <div className=" @border-red-900 @border-4">
+          <h3>
+            The Global League is the premier AWBW competition for players of all
+            skill levels:
+          </h3>
+
+          <ul className="@list-disc @ml-8">
+            <li>Ranked asynchronous 1 vs. 1 matches</li>
+            <li>3 game modes: standard, fog, high funds</li>
+            <li>Automatic game creation</li>
+            <li>Matchmaking based on player rating</li>
+            <li>Balanced maps and settings</li>
+          </ul>
+        </div>
+
         <div className="@flex">
           <LeaderBoard title="Standard" players={demoData()} />
           <LeaderBoard title="Fog of War" players={demoData()} />
