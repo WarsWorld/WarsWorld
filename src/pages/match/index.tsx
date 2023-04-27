@@ -7,7 +7,7 @@ const MatchRow = ({ match }: { match: Match }) => {
   const { mapMetaData, mapTiles } = match.matchState;
 
   return (
-    <div className="@grid @grid-rows-[1fr_3fr] @p-2 matchRowGrid @outline @outline-black @outline-1">
+    <div className="@grid @grid-rows-[1fr_3fr] @p-2 @mb-10 matchRowGrid @outline @outline-black @outline-2">
       <ul className="@flex @flex-col @justify-center @text-center">
         <li className="matchInfo">Created by: {mapMetaData.author}</li>
         <li className="matchInfo">Date created: {mapMetaData.published}</li>
