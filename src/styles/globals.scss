@@ -1,5 +1,6 @@
 @use 'src/styles/template/layout';
 @use 'src/styles/grid/global';
+@use 'src/styles/pages';
 @use 'src/styles/mixins' as m;
 
 @tailwind base;
@@ -22,7 +23,7 @@
   }
 
   h2 {
-    @include m.clampSize(16, 24, 320, 1200);
+    @include m.clampSize(12, 24, 320, 1200);
     color: theme('colors.primary');
     font-style: italic;
   }
@@ -34,7 +35,7 @@
 
   p {
     @include m.clampSize(12, 20, 320, 1200);
-    padding: 1em 0;
+    padding: 1rem 0;
   }
 
   a {

@@ -1,0 +1,22 @@
+@use 'src/styles/mixins' as m;
+
+.createGameBtn {
+  @include m.clampSize(12, 24, 320, 1200);
+}
+
+.matchInfo {
+  @include m.clampSize(12, 20, 320, 1200);
+}
+
+@screen smallscreen {
+  .allGames {
+    .createGameBtn {
+      height: 30px;
+    }
+
+    .matchRowGrid {
+      grid-template-rows: none;
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+}
