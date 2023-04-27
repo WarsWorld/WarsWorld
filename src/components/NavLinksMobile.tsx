@@ -17,8 +17,7 @@ export function NavLinksMobile({ showLinks }: Props) {
           showLinks ? 'showBurgerMenuLinks' : ''
         }`}
       >
-        <NavItem text="Current Games" location="/match" />
-        <NavItem text="Start a game" location="/match" />
+        <NavItem text="Match Lobby" location="/match" />
         <NavItem text="How to play" location="/howtoplay" />
         <NavItem text="Login" location="/" />
       </div>

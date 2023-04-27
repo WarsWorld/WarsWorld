@@ -40,7 +40,7 @@ export default function Games() {
     <Layout>
       <div className="@h-full @w-full @max-w-[1200px] @p-5 @grid @grid-rows-[1fr_1fr] @gap-10 allGames">
         <div className="currentGames">
-          <div className="@flex @items-center @justify-center @m-2 @gap-10">
+          <div className="@flex @flex-col @items-center @justify-center @mb-10 @gap-2">
             <h1>Current games</h1>
             <button
               className="@flex @items-center @justify-center @h-6 @p-2 @font-bold @bg-slate-300 @rounded @text-gray-700 createGameBtn"
