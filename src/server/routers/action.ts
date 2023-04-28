@@ -1,12 +1,12 @@
 import { observable } from "@trpc/server/observable";
 import { Action, actionSchema } from "components/schemas/action";
-import { createEmitter } from "server/create-emitter";
-import { prisma } from "server/prisma";
-import { WWEvent } from "types/core-game/event";
-import { z } from "zod";
-import { publicProcedure, router } from "../trpc";
 import { armySchema } from "components/schemas/army";
+import { emitEvent, subscribeToEvents } from "server/emitter/event-emitter";
 import { applyEventToMatch } from "server/match-logic/server-match-states";
+import { prisma } from "server/prisma/prisma-client";
+import { EmittableEvent } from "types/core-game/event";
+import { z } from "zod";
+import { publicProcedure, router } from "../trpc/trpc-setup";
 
 const validateAction = (action: Action) => {
   switch (action.type) {
@@ -16,8 +16,6 @@ const validateAction = (action: Action) => {
     }
   }
 };
-
-const wwEventEmitter = createEmitter<WWEvent>();
 
 export const actionRouter = router({
   send: publicProcedure
@@ -38,11 +36,12 @@ export const actionRouter = router({
 
       // important: validate all actions first before changing server state or persisting to DB
 
-      const events = input.actions.map<WWEvent>((action) => {
+      const events = input.actions.map<EmittableEvent>((action) => {
         switch (action.type) {
           case "build": {
             return {
               type: "build",
+              matchId: input.matchId,
               position: action.position,
               unitType: action.unitType,
             };
@@ -61,15 +60,15 @@ export const actionRouter = router({
       });
 
       events.forEach((event) => applyEventToMatch(input.matchId, event));
-      events.forEach(wwEventEmitter.emit);
+      events.forEach((event) => emitEvent(event));
 
       return {
         status: "ok", // TODO not necessary?
       };
     }),
-  onEvent: publicProcedure.subscription(() =>
-    observable<WWEvent>((emit) => {
-      const unsubscribe = wwEventEmitter.subscribe(emit.next);
+  onEvent: publicProcedure.input(z.string()).subscription(({ input }) =>
+    observable<EmittableEvent>((emit) => {
+      const unsubscribe = subscribeToEvents(input, emit.next);
       return () => unsubscribe();
     }),
   ),

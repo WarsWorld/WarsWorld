@@ -1,14 +1,14 @@
-import { WWMap, mapSchema } from "components/schemas/map";
+import { CreatableMap, mapSchema } from "components/schemas/map";
 import {
-  PlayerSlot,
   Tile,
   isNeutralProperty,
   isUnitProducingProperty,
 } from "components/schemas/tile";
-import { prisma } from "server/prisma";
-import { publicProcedure, router } from "../trpc";
+import { prisma } from "server/prisma/prisma-client";
+import { publicProcedure, router } from "../trpc/trpc-setup";
+import { PlayerSlot } from "components/schemas/player-slot";
 
-export const getPlayerAmountOfMap = (map: WWMap) => {
+export const getPlayerAmountOfMap = (map: CreatableMap) => {
   const seenPlayerSlots: PlayerSlot[] = [];
 
   const addToPlayerSlotsIfNotAddedAlready = (playerSlot: PlayerSlot) => {
@@ -32,13 +32,14 @@ export const getPlayerAmountOfMap = (map: WWMap) => {
 
 export const mapRouter = router({
   getAll: publicProcedure.query(async () => {
-    const allMaps = await prisma.map.findMany();
+    const allMaps = await prisma.wWMap.findMany();
 
     return allMaps.map((map) => {
       const tiles = map.tiles as Tile[][];
       const tilesFlat = tiles.flat();
 
       return {
+        id: map.id,
         name: map.name,
         author: "not implemented",
         numberOfPlayers: map.numberOfPlayers,
@@ -70,7 +71,7 @@ export const mapRouter = router({
       throw new Error("All rows of the map must have the same length");
     }
 
-    return prisma.map.create({
+    return prisma.wWMap.create({
       data: {
         name: input.name,
         tiles: input.tiles,

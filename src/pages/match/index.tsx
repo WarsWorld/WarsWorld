@@ -1,21 +1,7 @@
-import { Match } from "@prisma/client";
-import Link from "next/link";
-import { trpc } from "utils/trpc";
+import { MatchRow } from "components/match/MatchRow";
+import { trpc } from "utils/trpc-client";
 
-const MatchRow = ({ match }: { match: Match }) => {
-  return (
-    <div
-      style={{
-        padding: "0.2rem",
-        border: "2px solid black",
-      }}
-    >
-      <Link href={`/match-pixi/${match.id}`}>Match: {match.id}</Link>
-    </div>
-  );
-};
-
-export default function Games() {
+export default function Matches() {
   const { data, refetch } = trpc.match.getAll.useQuery();
   const createMutation = trpc.match.create.useMutation();
 
@@ -26,8 +12,8 @@ export default function Games() {
         onClick={async () => {
           await createMutation.mutateAsync({
             mapId: "12345",
-            playerName: "function",
             selectedCO: "andy",
+            playerId: "function",
           });
           refetch();
         }}

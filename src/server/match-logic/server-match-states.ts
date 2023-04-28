@@ -1,127 +1,111 @@
-import { Player } from "@prisma/client";
-import { WWMap } from "components/schemas/map";
+import { MatchStatus, Player, WWMap } from "@prisma/client";
+import { CO } from "components/schemas/co";
+import { PlayerSlot } from "components/schemas/player-slot";
 import { Position } from "components/schemas/position";
-import { PlayerSlot, willBeChangeableTile } from "components/schemas/tile";
 import {
   Unit,
   unitInitialAmmoMap,
   unitInitialFuelMap,
 } from "components/schemas/unit";
-import { getPlayerAmountOfMap } from "server/routers/map";
-import { WWEvent } from "types/core-game/event";
+import { prisma } from "server/prisma/prisma-client";
+import { EmittableEvent } from "types/core-game/event";
 
-type Positioned = {
+interface Positioned {
   position: Position;
-};
+}
 
-type Ownable = {
+interface Ownable {
   ownerSlot: PlayerSlot;
-};
+}
 
-type CapturableTile = Positioned &
-  Ownable & {
-    type: "city" | "base" | "airport" | "harbor" | "lab" | "comtower" | "hq";
-    hp: number;
-  };
+interface CapturableTile extends Positioned, Ownable {
+  type: "city" | "base" | "airport" | "harbor" | "lab" | "comtower" | "hq";
+  hp: number;
+}
 
-type LaunchableSiloTile = Positioned & {
+interface LaunchableSiloTile extends Positioned {
   type: "unused-silo";
   fired: boolean;
-};
+}
 
-export type ChangeableTiles = CapturableTile | LaunchableSiloTile;
+export type ChangeableTile = CapturableTile | LaunchableSiloTile;
 
-interface PlayerInMatch {
+export interface PlayerInMatch {
   playerSlot: PlayerSlot;
   playerId: Player["id"];
   ready?: boolean;
+  co: CO;
 }
 
-interface MatchState {
+export interface MatchState {
+  id: string;
+  rules: {
+    fogOfWar?: boolean;
+    fundsMultiplier?: number;
+  };
+  status: MatchStatus;
   map: WWMap;
-  changeableTiles: ChangeableTiles[];
+  changeableTiles: ChangeableTile[];
   turn: number;
-  numberOfPlayersRequiredToPlay: number;
   players: PlayerInMatch[];
 }
 
 /**
  * Maps matchIds to states
  */
-const serverMatchStates = new Map<string, MatchState>();
+export const serverMatchStates = new Map<string, MatchState>();
 
-const getChangeableTilesFromMap = (map: WWMap): ChangeableTiles[] => {
-  const changeableTiles: ChangeableTiles[] = [];
+export const rebuildServerState = async () => {
+  console.log("Rebuilding server state...");
 
-  for (const y in map.tiles) {
-    const row = map.tiles[y];
-
-    for (const x in row) {
-      const tile = row[x];
-
-      if (willBeChangeableTile(tile)) {
-        const position: Position = [
-          Number.parseInt(x, 10),
-          Number.parseInt(y, 10),
-        ];
-
-        changeableTiles.push(
-          tile.type === "unused-silo"
-            ? {
-                type: tile.type,
-                position,
-                fired: false,
-              }
-            : {
-                type: tile.type,
-                position,
-                hp: 20,
-                ownerSlot: tile.playerSlot,
-              },
-        );
-      }
-    }
-  }
-
-  return changeableTiles;
-};
-
-export const startMatchState = (
-  matchId: string,
-  map: WWMap,
-  firstPlayer: Player,
-) => {
-  if (serverMatchStates.has(matchId)) {
-    throw new Error(
-      `Match ${matchId} can't be started because it's already started`,
-    );
-  }
-
-  serverMatchStates.set(matchId, {
-    map,
-    turn: 0,
-    changeableTiles: getChangeableTilesFromMap(map),
-    numberOfPlayersRequiredToPlay: getPlayerAmountOfMap(map),
-    players: [
-      {
-        playerId: firstPlayer.id,
-        ready: false,
-        playerSlot: 0,
+  const matches = await prisma.match.findMany({
+    where: {
+      status: {
+        not: "finished",
       },
-    ],
+    },
+    include: {
+      map: true,
+    },
   });
 
-  return serverMatchStates.get(matchId);
+  matches.forEach((match) => {
+    serverMatchStates.set(match.id, {
+      id: match.id,
+      changeableTiles: [],
+      map: match.map,
+      rules: {},
+      players: [],
+      status: match.status,
+      turn: 0,
+    });
+  });
+
+  console.log("Rebuilding server state done.");
 };
 
-export const getMatchState = (matchId: string) =>
-  serverMatchStates.get(matchId);
+export const getMatchesOfPlayer = (playerId: string) =>
+  [...serverMatchStates.values()].filter((match) =>
+    match.players.find((e) => e.playerId === playerId),
+  );
+
+export const getMatches = () => [...serverMatchStates.values()];
+
+export const getMatchState = (matchId: string) => {
+  const match = serverMatchStates.get(matchId);
+
+  if (match === undefined) {
+    throw new Error("Match not found!");
+  }
+
+  return match;
+};
 
 // TODO
 const getCurrentTurnPlayerSlot = (matchState: MatchState): PlayerSlot =>
-  matchState.turn % matchState.numberOfPlayersRequiredToPlay;
+  matchState.turn % matchState.map.numberOfPlayers;
 
-export const applyEventToMatch = (matchId: string, event: WWEvent) => {
+export const applyEventToMatch = (matchId: string, event: EmittableEvent) => {
   const match = serverMatchStates.get(matchId);
 
   if (match === undefined) {

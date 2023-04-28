@@ -22,7 +22,8 @@ const waitActionSchema = z.object({
 });
 
 /**
- * Capture, APC repair, black bomb explosion, toggle stealth/sub hide
+ * Capture, APC repair, black bomb explosion, toggle stealth/sub hide.
+ * Unit inferred by event log (last event must be a "dangling" unit).
  */
 const abilityActionSchema = z.object({
   type: z.literal("ability"),
@@ -104,4 +105,4 @@ export type COPowerAction = z.infer<typeof coPowerActionSchema>;
 export type SuperCOPowerAction = z.infer<typeof superCOPowerActionSchema>;
 export type EndTurnAction = z.infer<typeof endTurnActionSchema>;
 export type RequestDrawAction = z.infer<typeof requestDrawActionSchema>;
-export type ForfeitActionAction = z.infer<typeof forfeitActionSchema>;
+export type ForfeitAction = z.infer<typeof forfeitActionSchema>;

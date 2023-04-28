@@ -10,6 +10,10 @@ generator client {
   provider = "prisma-client-js"
 }
 
+generator json {
+  provider = "prisma-json-types-generator"
+}
+
 model Post {
   id       String @id @default(cuid())
   author   Player @relation(fields: [authorId], references: [id])
@@ -78,23 +82,20 @@ model Clan {
 }
 
 model Player {
-  id               String        @id @default(cuid())
-  MMR              MMR[]
-  name             String
-  secret           Boolean
-  youtubeChannelId String?
-  twitchUserName   String?
-  ChatMessage      ChatMessage[]
+  id          String        @id @default(cuid())
+  MMR         MMR[]
+  name        String
+  secret      Boolean       @default(false)
+  ChatMessage ChatMessage[]
 
   User   User   @relation(fields: [userId], references: [id])
   userId String
 
-  Post           Post[]
-  preferences    Json?
-  achievements   Achievement[]
-  favouriteCOs   CO[]
-  favouriteUnits Unit[]
-  favouriteGames Game[]
+  Post Post[]
+
+  /// [PrismaPreferences]
+  preferences  Json?
+  achievements Achievement[]
 
   matches Match[]
 
@@ -106,13 +107,17 @@ model Player {
 
 // Right now maps need to be immutable but we
 // probably want to add revisions later on so that they can be "edited".
-model Map {
-  id              String   @id @default(cuid())
-  name            String
+model WWMap {
+  id   String @id @default(cuid())
+  name String
+
+  /// [PrismaTiles]
   tiles           Json
   numberOfPlayers Int
   matches         Match[]
   createdAt       DateTime @default(now())
+
+  @@map("Map")
 }
 
 model ChatMessage {
@@ -128,7 +133,7 @@ model ChatMessage {
 }
 
 enum MatchStatus {
-  ready
+  setup
   playing
   finished
 }
@@ -170,12 +175,11 @@ model Match {
   leagueType LeagueType
   status     MatchStatus
 
-  map   Map    @relation(fields: [mapId], references: [id])
+  map   WWMap  @relation(fields: [mapId], references: [id])
   mapId String
 
-  matchState Json // moves table!
-
-  players Player[]
+  /// [PrismaPlayerState]
+  playerState Json
   // playersConsentingToPublishChat Player[]
 
   chatMessages ChatMessage[]
@@ -184,12 +188,16 @@ model Match {
   createdAt DateTime @default(now())
   Notes     Notes[]
   Event     Event[]
+  Player    Player?  @relation(fields: [playerId], references: [id])
+  playerId  String?
 }
 
 model Event {
-  id        String   @id @default(cuid())
-  match     Match    @relation(fields: [matchId], references: [id])
-  matchId   String
+  id      String @id @default(cuid())
+  match   Match  @relation(fields: [matchId], references: [id])
+  matchId String
+
+  /// [PrismaEvent]
   content   Json
   createdAt DateTime @default(now())
 }

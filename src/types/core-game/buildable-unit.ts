@@ -11,10 +11,10 @@ type MoveType =
 
 export type Facility = "factory" | "airport" | "harbor";
 
-type BuildableUnit = {
+interface BuildableUnit {
   facility: Facility;
   cost: number;
-};
+}
 
 export const buildableUnits: Record<UnitType, BuildableUnit> = {
   infantry: {

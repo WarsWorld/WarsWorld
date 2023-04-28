@@ -1,6 +1,6 @@
-import NextAuth from 'next-auth';
-import { AppProviders } from 'next-auth/providers';
-import DiscordProvider from 'next-auth/providers/discord';
+import NextAuth from "next-auth";
+import { AppProviders } from "next-auth/providers";
+import DiscordProvider from "next-auth/providers/discord";
 
 const providers: AppProviders = [];
 const clientId = process.env.DISCORD_CLIENT_ID;

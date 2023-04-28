@@ -1,8 +1,9 @@
-import '../styles/global.scss';
-import type { Session } from 'next-auth';
-import { getSession, SessionProvider } from 'next-auth/react';
-import type { AppType } from 'next/app';
-import { trpc } from 'utils/trpc';
+import type { Session } from "next-auth";
+import { getSession, SessionProvider } from "next-auth/react";
+import type { AppType } from "next/app";
+import { trpc } from "utils/trpc-client";
+import "../styles/global.scss";
+import { ProvidePlayers } from "components/provide-players";
 
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
@@ -10,7 +11,9 @@ const MyApp: AppType<{ session: Session | null }> = ({
 }) => {
   return (
     <SessionProvider session={pageProps.session}>
-      <Component {...pageProps} />
+      <ProvidePlayers>
+        <Component {...pageProps} />
+      </ProvidePlayers>
     </SessionProvider>
   );
 };

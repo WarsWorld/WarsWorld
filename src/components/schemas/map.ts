@@ -6,4 +6,4 @@ export const mapSchema = z.object({
   tiles: z.array(z.array(tileSchema).nonempty().max(99)).nonempty().max(99),
 });
 
-export type WWMap = z.infer<typeof mapSchema>;
+export type CreatableMap = z.infer<typeof mapSchema>;

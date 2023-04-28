@@ -1,94 +1,87 @@
-import { Unit } from "@prisma/client";
-import { Position } from "components/schemas/position";
-import { UnitType } from "components/schemas/unit";
-import { Direction } from "readline";
+import { Player } from "@prisma/client";
+import {
+  AbilityAction,
+  AttackAction,
+  AttemptMoveAction,
+  BuildAction,
+  COPowerAction,
+  EndTurnAction,
+  ForfeitAction,
+  MissileSiloAction,
+  RepairAction,
+  RequestDrawAction,
+  SuperCOPowerAction,
+  UnloadAction,
+  WaitAction,
+} from "components/schemas/action";
+import { CO } from "components/schemas/co";
+import { Unit } from "components/schemas/unit";
 
-export type MatchStartEvent = {
+export interface MatchStartEvent {
   type: "match-start"; // maybe add who's player's turn it is or which army starts?
-};
+}
 
-export type TurnEndEvent = {
-  type: "turn-end"; // maybe add the turn/day number?
-};
-
-export type BuildEvent = {
-  type: "build"; // maybe add army or can we safely infer that?
-  unitType: UnitType;
-  position: Position;
-};
-
-export type AttemptMoveEvent = {
-  type: "attempt-move";
-  path: Position[];
+export interface AttemptMoveEvent extends AttemptMoveAction {
   trap?: Unit;
   discovered?: Unit[];
-};
+}
 
-export type InvalidActionEvent = {
+export interface InvalidActionEvent {
   type: "invalid-action";
   reason: string;
-};
+}
 
-export type WaitEvent = {
-  type: "wait";
-};
-
-export type AbilityEvent = {
-  type: "ability";
-};
-
-export type MissileSiloEvent = {
-  type: "missile-silo";
-  targetPosition: Position;
-};
-
-export type UnloadEvent = {
-  type: "unload";
-  direction: Direction;
+export interface UnloadEvent extends UnloadAction {
   unloadedUnit: Unit;
-};
+}
 
-export type AttackEvent = {
-  type: "attack";
-  defenderPosition: Position;
+export interface AttackEvent extends AttackAction {
   defenderHP: number; // we could probably derive these as well if we just submit the rolled luck value
   attackerHP?: number; // missing means no counter-attack
-};
+}
 
-export type RepairEvent = {
-  type: "repair";
-  direction: Direction;
-};
+export interface PlayerJoinedEvent {
+  type: "player-joined";
+  player: Player;
+  playerSlot: number;
+}
 
-export type COPowerEvent = {
-  type: "co-power";
-};
+export interface PlayerLeftEvent {
+  type: "player-left";
+  player: Player;
+}
 
-export type SuperCOPowerEvent = {
-  type: "super-co-power";
-};
+export interface PlayerChangedReadyStatusEvent {
+  type: "player-changed-ready-status";
+  player: Player;
+  ready: boolean;
+}
 
-export type RequestDrawEvent = {
-  type: "request-draw";
-};
-
-export type ForfeitEvent = {
-  type: "forfeit";
-};
+export interface PlayerPickedCOEvent {
+  type: "player-picked-co";
+  player: Player;
+  co: CO;
+}
 
 export type WWEvent =
   | MatchStartEvent
-  | TurnEndEvent
-  | BuildEvent
+  | EndTurnAction // maybe add the turn/day number?
+  | BuildAction
   | AttemptMoveEvent
   | InvalidActionEvent
-  | WaitEvent
-  | AbilityEvent
-  | MissileSiloEvent
+  | WaitAction
+  | AbilityAction
+  | MissileSiloAction
   | UnloadEvent
   | AttackEvent
-  | RepairEvent
-  | COPowerEvent
-  | SuperCOPowerEvent
-  | RequestDrawEvent
-  | ForfeitEvent;
+  | RepairAction
+  | COPowerAction
+  | SuperCOPowerAction
+  | RequestDrawAction
+  | ForfeitAction
+  | PlayerJoinedEvent
+  | PlayerLeftEvent
+  | PlayerChangedReadyStatusEvent
+  | PlayerPickedCOEvent;
+
+export type EmittableEvent = WWEvent & { matchId: string };

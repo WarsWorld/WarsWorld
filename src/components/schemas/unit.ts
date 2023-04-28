@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { positionSchema } from "./position";
-import { playerSlotForPropertiesSchema } from "./tile";
+import { playerSlotForPropertiesSchema } from "./player-slot";
 
 export const unitInitialAmmoMap: Partial<Record<UnitType, number>> = {
   mech: 3,

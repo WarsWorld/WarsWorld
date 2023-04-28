@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { canHaveUnitSchema } from "./tile";
+import { canHaveUnitSchema } from "./can-have-unit";
 
 const axisConnectionsSchema = z.enum(["right-left", "top-bottom"]);
 
@@ -53,7 +53,9 @@ export const plainTileSchema = canHaveUnitSchema.extend({
 export const riverTileSchema = canHaveUnitSchema.extend({
   type: z.literal("river"),
   // TODO rivers have MANY more variants with flow direction and all
-  variant: twoWayConnectionsSchema.or(threeWayConnectionSchema),
+  variant: twoWayConnectionsSchema
+    .or(threeWayConnectionSchema)
+    .or(fourWayConnectionSchema),
 });
 
 export const variableTileSchema = z.discriminatedUnion("type", [

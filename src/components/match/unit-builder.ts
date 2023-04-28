@@ -2,7 +2,7 @@ import { UnitType } from "components/schemas/unit";
 
 export type MoveType = "F" | "B" | "W" | "T" | "P" | "A" | "S" | "L";
 
-export type BuildableUnit = {
+export interface BuildableUnit {
   type: UnitType;
   displayName: string;
   cost: number;
@@ -11,7 +11,7 @@ export type BuildableUnit = {
   range: [number, number];
   facility: "base";
   usedAfterMove: boolean;
-};
+}
 
 export const factoryBuildableUnits: BuildableUnit[] = [
   {

@@ -1,15 +1,16 @@
-import { Segment } from 'pages/match/[matchId]';
-import TinyQueue from 'tinyqueue';
-import { checkTerrain } from './check-terrain';
-import { UnitType, factoryBuildableUnits } from './unit-builder';
+import TinyQueue from "tinyqueue";
+import { checkTerrain } from "./check-terrain";
+import { factoryBuildableUnits } from "./unit-builder";
+import { Segment } from "components/match-pixi/main";
+import { UnitType } from "components/schemas/unit";
 
-export type SomeTile = {
+export interface SomeTile {
   distance: number;
   index: number;
   x: number;
   y: number;
   hasEnemy?: boolean;
-};
+}
 
 export type BlueTiles = ReturnType<typeof pathFinding>;
 

@@ -1,5 +1,5 @@
-import { MapTile } from 'server/map-parser';
-import { MoveType } from './unit-builder';
+import { MapTile } from "server/tools/map-parser";
+import { MoveType } from "./unit-builder";
 
 const movementCostClear: Record<string, Record<MoveType, number>> = {
   plain: { F: 1, B: 1, T: 1, W: 2, A: 1, P: 9, S: 9, L: 9 },

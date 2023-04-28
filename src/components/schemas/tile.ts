@@ -1,21 +1,10 @@
 import { z } from "zod";
-import { unitSchema } from "./unit";
+import { canHaveUnitSchema } from "./can-have-unit";
+import { playerSlotForPropertiesSchema } from "./player-slot";
 import { variableTileSchema } from "./variable-tiles";
-
-/**
- * `-1` is neutral
- */
-export const playerSlotForPropertiesSchema = z.number().min(-1).max(7);
-export const playerSlotForUnitsSchema = z.number().min(0).max(7);
-
-export type PlayerSlot = z.infer<typeof playerSlotForPropertiesSchema>;
 
 export const isNeutralProperty = (propertyTile: PropertyTile) =>
   propertyTile.playerSlot === -1;
-
-export const canHaveUnitSchema = z.object({
-  unit: z.optional(unitSchema),
-});
 
 export const isUnitProducingProperty = (tile: Tile): tile is PropertyTile =>
   tile.type === "base" || tile.type === "airport" || tile.type == "harbor";
@@ -27,7 +16,7 @@ export const propertyTileSchema = canHaveUnitSchema.extend({
 
 export const willBeChangeableTile = (
   tile: Tile,
-): tile is PropertyTile | SiloTile =>
+): tile is PropertyTile | UnusedSiloTile =>
   [
     "city",
     "base",
@@ -45,7 +34,7 @@ export const siloTileSchema = canHaveUnitSchema.extend({
   type: z.literal("unused-silo"),
 });
 
-export type SiloTile = z.infer<typeof siloTileSchema>;
+export type UnusedSiloTile = z.infer<typeof siloTileSchema>;
 
 export const invariableTileSchema = canHaveUnitSchema
   .extend({

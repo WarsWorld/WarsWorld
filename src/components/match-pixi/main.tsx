@@ -1,7 +1,7 @@
-import { useRouter } from 'next/router';
-import { useEffect, useRef, useState } from 'react';
-import { MapTile, PlayerState } from 'server/map-parser';
-import { trpc } from 'utils/trpc';
+import { useRouter } from "next/router";
+import { useEffect, useRef, useState } from "react";
+import { MapTile, PlayerState } from "server/tools/map-parser";
+import { trpc } from "utils/trpc-client";
 import {
   Application,
   Sprite,
@@ -10,32 +10,32 @@ import {
   Texture,
   settings,
   BaseTexture,
-} from 'pixijs';
-import styles from '../../styles/match.module.css';
+} from "pixijs";
+import styles from "../../styles/match.module.css";
 
 const spriteURLMap: Record<string, string> = {
-  pi: 'pipes',
-  ri: 'river',
-  br: 'roads',
-  ro: 'roads',
-  se: 'sea',
-  sh: 'shoal',
-  si: 'silo',
+  pi: "pipes",
+  ri: "river",
+  br: "roads",
+  ro: "roads",
+  se: "sea",
+  sh: "shoal",
+  si: "silo",
 };
 
 const numberMapping: Record<string, string> = {
-  0: 'hq',
-  1: 'city',
-  2: 'base',
-  3: 'airport',
-  4: 'port',
-  5: 'comtower',
+  0: "hq",
+  1: "city",
+  2: "base",
+  3: "airport",
+  4: "port",
+  5: "comtower",
 };
 
 const getSpriteURL = (terrainImage: string) => {
   const tileCode = terrainImage.slice(0, 2);
 
-  if (['os', 'bm', 'ne'].includes(tileCode)) {
+  if (["os", "bm", "ne"].includes(tileCode)) {
     return `countries/${numberMapping[terrainImage.slice(2)]}/${terrainImage}`;
   }
 
@@ -122,10 +122,10 @@ export const PixiMatch = () => {
   }, [pixiCanvasRef, segments]);
 
   return (
-    <div className={styles.match + ' gameBox'}>
+    <div className={styles.match + " gameBox"}>
       <canvas
         style={{
-          imageRendering: 'pixelated',
+          imageRendering: "pixelated",
         }}
         ref={pixiCanvasRef}
         width={800}
