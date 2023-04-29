@@ -8,7 +8,7 @@ import { NavLinksMobile } from './NavLinksMobile';
 export function Navbar() {
   const awLogoPath = '/img/layout/awLogo.webp';
   // Might keep useMediaQuery to conditionally switch between full navbar and hamburger menu
-  const notSmallScreen = useMediaQuery('(min-width: 768px)');
+  // const notSmallScreen = useMediaQuery('(min-width: 768px)');
   const [showLinks, setShowLinks] = useState(false);
 
   return (
@@ -23,17 +23,14 @@ export function Navbar() {
             alt="AW Logo"
           />
         </Link>
-        {notSmallScreen ? (
-          <NavLinks />
-        ) : (
-          <button
-            className="@m-4 @relative"
-            type="button"
-            onClick={() => setShowLinks(!showLinks)}
-          >
-            <NavLinksMobile showLinks={showLinks} />
-          </button>
-        )}
+        <NavLinks />
+        <button
+          className="@m-4 @relative burgerMenuBtn"
+          type="button"
+          onClick={() => setShowLinks(!showLinks)}
+        >
+          <NavLinksMobile showLinks={showLinks} />
+        </button>
       </nav>
     </header>
   );

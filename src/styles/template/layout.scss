@@ -27,8 +27,9 @@ body {
   }
 
   header {
-    .loginLink {
-      min-width: 180px;
+    .loginLink,
+    .navLinks {
+      display: none;
     }
 
     .burgerMenu {
@@ -58,12 +59,16 @@ body {
   }
 }
 
+.withFooter {
+  grid-template-rows: 60px 1fr 140px;
+}
+
+.noFooter {
+  grid-template-rows: 60px 1fr;
+}
+
 @screen tablet {
   .layout {
-    .navLinks {
-      grid-template-columns: repeat(2, 60px);
-    }
-
     .inProgress {
       padding: 2rem;
     }
@@ -71,9 +76,25 @@ body {
 }
 
 @screen smallscreen {
+  .burgerMenuBtn {
+    display: none;
+  }
+
   .layout {
-    .navLinks {
-      grid-template-columns: repeat(2, 140px);
+    header {
+      .navLinks,
+      .loginLink {
+        display: initial;
+      }
+
+      .loginLink {
+        min-width: 180px;
+      }
+
+      .navLinks {
+        display: flex;
+        gap: 50px;
+      }
     }
 
     .inProgress {
@@ -84,10 +105,6 @@ body {
 
 @screen laptop {
   .layout {
-    .navLinks {
-      grid-template-columns: repeat(2, 160px);
-    }
-
     .inProgress {
       padding: 3rem;
     }
@@ -95,9 +112,15 @@ body {
 }
 
 @screen medium {
-  .layout {
+  .withFooter {
+    grid-template-rows: 100px 1fr 160px;
+
     footer {
       height: 160px;
     }
+  }
+
+  .noFooter {
+    grid-template-rows: 100px 1fr;
   }
 }
