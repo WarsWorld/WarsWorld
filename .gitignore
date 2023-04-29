@@ -20,3 +20,6 @@ tsconfig.tsbuildinfo
 
 *.db
 *.db-journal
+
+# other
+.DS_Store

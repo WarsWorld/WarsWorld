@@ -12,6 +12,13 @@ module.exports = {
         'primary-variant': '#9EBC9F',
       },
     },
+    screens: {
+      tablet: '480px',
+      smallscreen: '768px',
+      laptop: '1024px',
+      short: { raw: '(min-height): 600px' },
+      medium: { raw: '(min-height: 700px)' },
+    },
   },
   plugins: [],
 };
