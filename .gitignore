@@ -13,8 +13,10 @@ tsconfig.tsbuildinfo
 
 # production
 /build
+/dist/
 
 .env
+.eslintcache
 
 *.db
 *.db-journal
