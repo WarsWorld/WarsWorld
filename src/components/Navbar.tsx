@@ -2,13 +2,10 @@ import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { NavLinks } from './NavLinks';
-import { useMediaQuery } from 'utils/useMediaQuery';
 import { NavLinksMobile } from './NavLinksMobile';
 
 export function Navbar() {
   const awLogoPath = '/img/layout/awLogo.webp';
-  // Might keep useMediaQuery to conditionally switch between full navbar and hamburger menu
-  // const notSmallScreen = useMediaQuery('(min-width: 768px)');
   const [showLinks, setShowLinks] = useState(false);
 
   return (
