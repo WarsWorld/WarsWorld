@@ -4,6 +4,7 @@ on:
     branches:
       - main
     pull_request:
+      - main
 jobs:
   build-and-lint:
     runs-on: ${{ matrix.os }}
