@@ -26,6 +26,7 @@
     "start": "cross-env NODE_ENV=production node dist/server/prodServer.js",
     "studio": "prisma studio",
     "lint": "eslint --cache --ext \".js,.ts,.tsx\" --report-unused-disable-directives --report-unused-disable-directives src",
+    "prettier": "prettier --check .",
     "lint-fix": "pnpm lint --fix",
     "postinstall": "prisma generate"
   },

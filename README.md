@@ -5,10 +5,13 @@ Wars World is an open source project made by AWBW players that want to recreate 
 This repository contains the backend and frontend code and is based on this [starter template](https://github.com/trpc/examples-next-prisma-websockets-starter).
 
 ## Interested in contributing/helping?
+
 Here are our [Contribution Guidelines](https://github.com/WarsWorld/WarsWorld/blob/main/CONTRIBUTING.md) where you can learn more about how you can help the project out!
 
 If you want to reach out the dev team/ask some questions, feel free to DM femboy#6116 on Discord (we aren't big enough to need our own Discord server yet...)
+
 ## Setting up your local environment
+
 Running our project locally just takes 5 easy steps!
 
 1 - Make sure you have [Docker Desktop](https://www.docker.com/products/docker-desktop/) installed and run it/the docker daemon (needed to run your local db, you just need to have the app running in the background, nothing else!)
@@ -20,19 +23,21 @@ Running our project locally just takes 5 easy steps!
 4 - Copy the "env.example" to ".env" and setup a random password/string in the PGPASSWORD and NEXTAUTH_SECRET fields.
 
 5 - Install dependencies and run app (run code below)
+
 ```
 pnpm i  //This is basically an npm i/install
 pnpm dx //This is our npm start
 ```
+
 Now go to localhost:3000 and you should be set! If you are having issues, feel free to contact someone in the team!
 
-``` Soon there will be a more newb/extensive setup your local environment guide here!```
+` Soon there will be a more newb/extensive setup your local environment guide here!`
 
 ## Troubleshooting
 
 ### Building but not able to access the site?
-Ensure you are using an up to date node version. ^18.15.0 is recommended.
 
+Ensure you are using an up to date node version. ^18.15.0 is recommended.
 
 ## Our Tech Stack's Features
 
@@ -44,7 +49,6 @@ Ensure you are using an up to date node version. ^18.15.0 is recommended.
 - 🔐 Authorization using [next-auth](https://next-auth.js.org/)
 - ⚙️ VSCode extensions
 - 🎨 ESLint + Prettier
-
 
 ### Files of note
 
@@ -82,4 +86,3 @@ Ensure you are using an up to date node version. ^18.15.0 is recommended.
     </tr>
   </tbody>
 </table>
-

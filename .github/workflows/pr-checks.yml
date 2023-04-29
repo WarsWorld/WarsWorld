@@ -1,4 +1,4 @@
-name: Build and Lint
+name: Pull Request Checks
 on:
   push:
     branches:
@@ -7,12 +7,13 @@ on:
       branches:
         - main
 jobs:
-  build-and-lint:
+  pr-checks:
+    name: Build, Lint, and Prettier
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        node: [ '18.x' ]
-        os: [ ubuntu-latest ]
+        node: ['18.x']
+        os: [ubuntu-latest]
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
@@ -43,3 +44,6 @@ jobs:
 
       - name: Lint
         run: pnpm lint --max-warnings=0
+
+      - name: Prettier
+        run: pnpm prettier
