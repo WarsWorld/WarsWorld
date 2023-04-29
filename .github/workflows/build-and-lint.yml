@@ -4,14 +4,15 @@ on:
     branches:
       - main
     pull_request:
-      - main
+      branches:
+        - main
 jobs:
   build-and-lint:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        node: ['18.x']
-        os: [ubuntu-latest]
+        node: [ '18.x' ]
+        os: [ ubuntu-latest ]
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
