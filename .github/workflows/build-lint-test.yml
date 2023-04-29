@@ -1,0 +1,50 @@
+name: E2E-testing
+on: [push]
+jobs:
+  build-lint-test:
+    name: Build, Lint, and Test
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        node: ['18.x']
+        os: [ubuntu-latest]
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - uses: pnpm/action-setup@v2.2.4
+        with:
+          version: 8.3.1
+
+      - name: Use Node ${{ matrix.node }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node }}
+          cache: 'pnpm'
+
+      - name: Install deps (with cache)
+        run: pnpm install
+
+      - name: Next.js cache
+        uses: actions/cache@v3
+        with:
+          path: ${{ github.workspace }}/.next/cache
+          key: ${{ runner.os }}-${{ runner.node }}-${{ hashFiles('**/pnpm-lock.yaml') }}-nextjs
+
+      - name: Setup Prisma
+        run: pnpm prebuild
+
+      - name: Build
+        run: pnpm build
+
+      - name: Lint
+        run: pnpm lint --max-warnings=0 --output-file eslint-report.json
+
+      - name: Upload test results
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v2
+        with:
+          name: eslint-report
+          path: eslint-report.json
