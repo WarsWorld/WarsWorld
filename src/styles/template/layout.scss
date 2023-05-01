@@ -52,18 +52,18 @@ body {
     }
 
     .burgerMenuLinks {
-      opacity: 0;
-      visibility: hidden;
-      transition: 0.7s;
-      top: 60px;
       z-index: 40;
 
+      &,
       .matchMenuLinks {
         opacity: 0;
         visibility: hidden;
         transition: 0.7s;
-        right: 160px;
         top: 60px;
+      }
+
+      .matchMenuLinks {
+        right: 160px;
       }
 
       .showMatchMenuLinks {
