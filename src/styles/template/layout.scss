@@ -144,14 +144,7 @@ body {
 @screen medium {
   .layout {
     header {
-      .burgerMenuLinks {
-        top: 100px;
-
-        .matchMenuLinks {
-          top: 100px;
-        }
-      }
-
+      .burgerMenuLinks,
       .matchMenuLinks {
         top: 100px;
       }
