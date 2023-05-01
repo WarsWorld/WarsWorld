@@ -1,4 +1,5 @@
 import { NavItem } from './NavItem';
+import { NavLinksMatches } from './NavLinksMatches';
 
 interface Props {
   showMatchLinks: boolean;
@@ -14,14 +15,7 @@ export function NavLinks({ showMatchLinks, handleMatchLinks }: Props) {
           className="@relative @flex @flex-col @justify-center @items-center matchLobbyBtn"
         >
           Match Lobby
-          <div
-            className={`@grid @fixed @justify-center @items-center @bg-gray-800/90 @h-0 matchMenuLinks ${
-              showMatchLinks ? 'showMatchMenuLinks' : ''
-            }`}
-          >
-            <NavItem text="Current Games" location="/match#current-games" />
-            <NavItem text="Completed Games" location="/match#completed-games" />
-          </div>
+          <NavLinksMatches showMatchLinks={showMatchLinks} />
         </button>
         <NavItem text="How to play" location="/howtoplay" />
       </div>
