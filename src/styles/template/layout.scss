@@ -51,32 +51,31 @@ body {
       color: theme('colors.primary');
     }
 
+    .burgerMenuLinks,
+    .matchMenuLinks {
+      opacity: 0;
+      visibility: hidden;
+      transition: 0.7s;
+      top: 60px;
+    }
+
     .burgerMenuLinks {
-      z-index: 40;
-
-      &,
-      .matchMenuLinks {
-        opacity: 0;
-        visibility: hidden;
-        transition: 0.7s;
-        top: 60px;
-      }
-
       .matchMenuLinks {
         right: 160px;
       }
+    }
 
-      .showMatchMenuLinks {
-        opacity: 1;
-        visibility: visible;
-        height: 8rem;
-        z-index: 35;
-      }
+    .showBurgerMenuLinks,
+    .showMatchMenuLinks {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .showMatchMenuLinks {
+      height: 8rem;
     }
 
     .showBurgerMenuLinks {
-      opacity: 1;
-      visibility: visible;
       height: 12rem;
     }
   }
@@ -125,20 +124,6 @@ body {
 
       .burgerMenuLinks {
         display: none;
-      }
-
-      .matchMenuLinks {
-        opacity: 0;
-        visibility: hidden;
-        transition: 0.7s;
-        top: 60px;
-      }
-
-      .showMatchMenuLinks {
-        opacity: 1;
-        visibility: visible;
-        height: 8rem;
-        z-index: 35;
       }
     }
 
