@@ -7,6 +7,16 @@ import { NavLinksMobile } from './NavLinksMobile';
 export function Navbar() {
   const awLogoPath = '/img/layout/awLogo.webp';
   const [showLinks, setShowLinks] = useState(false);
+  const [showMatchLinks, setShowMatchLinks] = useState(false);
+
+  const handleBurgerMenu = () => {
+    setShowLinks(!showLinks);
+    setShowMatchLinks(false);
+  };
+
+  const handleMatchLinks = () => {
+    setShowMatchLinks(!showMatchLinks);
+  };
 
   return (
     <header className="@w-full @relative @z-30">
@@ -20,14 +30,26 @@ export function Navbar() {
             alt="AW Logo"
           />
         </Link>
-        <NavLinks />
+        <NavLinks
+          showMatchLinks={showMatchLinks}
+          handleMatchLinks={handleMatchLinks}
+        />
         <button
-          className="@m-4 @relative burgerMenuBtn"
+          className="@h-7 @w-7 @absolute @right-7 @cursor-pointer burgerMenuBtn"
           type="button"
-          onClick={() => setShowLinks(!showLinks)}
+          onClick={handleBurgerMenu}
         >
-          <NavLinksMobile showLinks={showLinks} />
+          <div className="@flex @flex-col @gap-1 burgerMenuIcon">
+            <div className="@h-1 @w-7 @rounded"></div>
+            <div className="@h-1 @w-7 @rounded"></div>
+            <div className="@h-1 @w-7 @rounded"></div>
+          </div>
         </button>
+        <NavLinksMobile
+          showLinks={showLinks}
+          showMatchLinks={showMatchLinks}
+          handleMatchLinks={handleMatchLinks}
+        />
       </nav>
     </header>
   );

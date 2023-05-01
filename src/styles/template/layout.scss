@@ -1,4 +1,5 @@
 @use 'src/styles/variables';
+@use 'src/styles/mixins' as m;
 
 #__next,
 html,
@@ -32,7 +33,7 @@ body {
       display: none;
     }
 
-    .burgerMenu {
+    .burgerMenuIcon {
       div {
         background-color: theme('colors.primary');
         transition: 0.4s;
@@ -45,17 +46,43 @@ body {
       }
     }
 
+    .matchLobbyBtn {
+      @include m.clampSize(12, 20, 320, 1200);
+      color: theme('colors.primary');
+    }
+
     .burgerMenuLinks {
       opacity: 0;
       visibility: hidden;
       transition: 0.7s;
+      top: 60px;
+      z-index: 40;
+
+      .matchMenuLinks {
+        opacity: 0;
+        visibility: hidden;
+        transition: 0.7s;
+        right: 160px;
+        top: 60px;
+      }
+
+      .showMatchMenuLinks {
+        opacity: 1;
+        visibility: visible;
+        height: 8rem;
+        z-index: 35;
+      }
     }
 
     .showBurgerMenuLinks {
       opacity: 1;
       visibility: visible;
-      height: 20rem;
+      height: 12rem;
     }
+  }
+
+  .currentGames {
+    scroll-margin-top: 50px;
   }
 }
 
@@ -95,6 +122,24 @@ body {
         display: flex;
         gap: 50px;
       }
+
+      .burgerMenuLinks {
+        display: none;
+      }
+
+      .matchMenuLinks {
+        opacity: 0;
+        visibility: hidden;
+        transition: 0.7s;
+        top: 60px;
+      }
+
+      .showMatchMenuLinks {
+        opacity: 1;
+        visibility: visible;
+        height: 8rem;
+        z-index: 35;
+      }
     }
 
     .inProgress {
@@ -112,6 +157,18 @@ body {
 }
 
 @screen medium {
+  .layout {
+    header {
+      .burgerMenuLinks {
+        top: 100px;
+      }
+
+      .matchMenuLinks {
+        top: 100px;
+      }
+    }
+  }
+
   .withFooter {
     grid-template-rows: 100px 1fr 160px;
 
