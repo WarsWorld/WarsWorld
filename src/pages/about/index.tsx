@@ -1,3 +1,4 @@
+import { Layout } from 'components/layout';
 import Link from 'next/link';
 import { useState } from 'react';
 import { trpc } from 'utils/trpc';
@@ -11,9 +12,13 @@ export default function AboutPage() {
   });
 
   return (
-    <div>
-      Here&apos;s a random number from a sub: {num} <br />
-      <Link href="/">Index</Link>
-    </div>
+    <Layout>
+      <div className="@text-center @w-[500px]">
+        <p>
+          Here&apos;s a random number from a sub: {num?.toFixed(5)} <br />
+        </p>
+        <Link href="/">Home</Link>
+      </div>
+    </Layout>
   );
 }

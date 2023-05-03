@@ -1,7 +1,7 @@
 import { Layout } from 'components/layout';
 import Link from 'next/link';
 
-export default function HowToPlayPage() {
+export default function Donations() {
   return (
     <Layout>
       <div className="@text-center @w-[500px]">
