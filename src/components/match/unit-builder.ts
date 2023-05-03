@@ -1,6 +1,6 @@
 import { UnitType } from "components/schemas/unit";
 
-export type MoveType = "F" | "B" | "W" | "T" | "P" | "A" | "S" | "L";
+type MoveType = "F" | "B" | "W" | "T" | "P" | "A" | "S" | "L";
 
 export interface BuildableUnit {
   type: UnitType;

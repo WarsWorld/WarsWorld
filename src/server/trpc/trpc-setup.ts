@@ -4,15 +4,13 @@ import { playerMiddleware, withPlayerIdSchema } from "./middleware/player";
 import { t } from "./trpc-init";
 
 export const { router } = t;
-export const publicProcedure = t.procedure;
+export const publicBaseProcedure = t.procedure;
 
-export const playerProcedure = t.procedure
+export const playerBaseProcedure = t.procedure
   .input(withPlayerIdSchema)
   .use(authMiddleware)
   .use(playerMiddleware);
 
-export const matchProcedure = t.procedure
+export const matchBaseProcedure = playerBaseProcedure
   .input(withMatchIdSchema)
-  .use(authMiddleware)
-  .use(playerMiddleware)
   .use(matchMiddleware);

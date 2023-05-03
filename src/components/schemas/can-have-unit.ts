@@ -1,6 +1,6 @@
 import { z } from "zod";
-import { unitSchema } from "./unit";
+import { creatableUnitSchema } from "./unit";
 
 export const canHaveUnitSchema = z.object({
-  unit: z.optional(unitSchema),
+  unit: z.optional(creatableUnitSchema),
 });

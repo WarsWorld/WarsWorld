@@ -10,11 +10,12 @@ import superjson from "superjson";
 // ℹ️ Type-only import:
 // https://www.typescriptlang.org/docs/handbook/release-notes/typescript-3-8.html#type-only-imports-and-export
 
-const { APP_URL, WS_URL } = process.env;
+const APP_URL = process.env.NEXT_PUBLIC_APP_URL;
+const WS_URL = process.env.NEXT_PUBLIC_WS_URL;
 
 if (APP_URL === undefined || WS_URL === undefined) {
   throw new Error(
-    "APP_URL or WS_URL environment variable is undefined. tRPC client can't be set up.",
+    "NEXT_PUBLIC_APP_URL or NEXT_PUBLIC_WS_URL environment variable is undefined. tRPC client can't be set up.",
   );
 }
 
@@ -59,11 +60,11 @@ export const trpc = createTRPCNext<AppRouter>({
       links: [
         // adds pretty logs to your console in development and logs errors in production
         loggerLink({
-          enabled: () => false,
-          // enabled: (opts) =>
-          //   (process.env.NODE_ENV === 'development' &&
-          //     typeof window !== 'undefined') ||
-          //   (opts.direction === 'down' && opts.result instanceof Error),
+          // enabled: () => false,
+          enabled: (opts) =>
+            (process.env.NODE_ENV === "development" &&
+              typeof window !== "undefined") ||
+            (opts.direction === "down" && opts.result instanceof Error),
         }),
         getEndingLink(ctx),
       ],

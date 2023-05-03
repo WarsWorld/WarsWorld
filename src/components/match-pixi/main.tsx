@@ -1,16 +1,15 @@
 import { useRouter } from "next/router";
-import { useEffect, useRef, useState } from "react";
-import { MapTile, PlayerState } from "server/tools/map-parser";
-import { trpc } from "utils/trpc-client";
 import {
   Application,
-  Sprite,
-  SCALE_MODES,
   Assets,
-  Texture,
-  settings,
   BaseTexture,
+  SCALE_MODES,
+  Sprite,
+  Texture,
 } from "pixijs";
+import { useEffect, useRef, useState } from "react";
+import { MapTile } from "server/tools/map-parser";
+import { trpc } from "utils/trpc-client";
 import styles from "../../styles/match.module.css";
 
 const spriteURLMap: Record<string, string> = {
@@ -62,27 +61,30 @@ export const PixiMatch = () => {
   const { query } = useRouter();
   const matchId = query.matchId as string;
 
-  trpc.match.full.useQuery(matchId, {
-    onSuccess(data) {
-      if (data === null) {
-        throw new Error(`Match ${matchId} not found!`);
-      }
+  trpc.match.full.useQuery(
+    { matchId, playerId },
+    {
+      onSuccess(data) {
+        if (data === null) {
+          throw new Error(`Match ${matchId} not found!`);
+        }
 
-      if (!players) {
-        setPlayers(data.matchState.playerState);
-      }
+        if (!players) {
+          setPlayers(data.players);
+        }
 
-      if (!segments) {
-        setSegments(
-          data.matchState.mapTiles.map((tile) => ({
-            tile,
-            menu: null,
-            squareHighlight: null,
-          })),
-        );
-      }
+        if (!segments) {
+          setSegments(
+            data.map.tiles.map((tile) => ({
+              tile,
+              menu: null,
+              squareHighlight: null,
+            })),
+          );
+        }
+      },
     },
-  });
+  );
 
   useEffect(() => {
     if (pixiCanvasRef.current === null || segments == null) {

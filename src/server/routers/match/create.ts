@@ -1,63 +1,13 @@
-import { WWMap } from "@prisma/client";
+import { LeagueType } from "@prisma/client";
 import { coSchema } from "components/schemas/co";
-import { Position } from "components/schemas/position";
-import {
-  PropertyTile,
-  UnusedSiloTile,
-  willBeChangeableTile,
-} from "components/schemas/tile";
-import {
-  ChangeableTile,
-  serverMatchStates,
-} from "server/match-logic/server-match-states";
+import { getChangeableTilesFromMap } from "server/match-logic/get-changeable-tile-from-map";
+import { serverMatchStates } from "server/match-logic/server-match-states";
 import { prisma } from "server/prisma/prisma-client";
 import { mapMiddleware, withMapIdSchema } from "server/trpc/middleware/map";
-import { playerProcedure } from "server/trpc/trpc-setup";
+import { playerBaseProcedure } from "server/trpc/trpc-setup";
+import { PlayerInMatch } from "types/core-game/server-match-state";
 
-const getChangeableTileFromTile = (
-  tile: PropertyTile | UnusedSiloTile,
-  position: Position,
-): ChangeableTile => {
-  if (tile.type === "unused-silo") {
-    return {
-      type: tile.type,
-      position,
-      fired: false,
-    };
-  }
-
-  return {
-    type: tile.type,
-    position,
-    hp: 20,
-    ownerSlot: tile.playerSlot,
-  };
-};
-
-const getChangeableTilesFromMap = (map: WWMap): ChangeableTile[] => {
-  const changeableTiles: ChangeableTile[] = [];
-
-  for (const y in map.tiles) {
-    const row = map.tiles[y];
-
-    for (const x in row) {
-      const tile = row[x];
-
-      if (willBeChangeableTile(tile)) {
-        const position: Position = [
-          Number.parseInt(x, 10),
-          Number.parseInt(y, 10),
-        ];
-
-        changeableTiles.push(getChangeableTileFromTile(tile, position));
-      }
-    }
-  }
-
-  return changeableTiles;
-};
-
-export const createMatchProcedure = playerProcedure
+export const createMatchProcedure = playerBaseProcedure
   .input(
     withMapIdSchema.extend({
       selectedCO: coSchema,
@@ -65,11 +15,21 @@ export const createMatchProcedure = playerProcedure
   )
   .use(mapMiddleware)
   .mutation(async ({ input, ctx }) => {
+    const initialPlayerState: PlayerInMatch[] = [
+      {
+        playerId: ctx.currentPlayer.id,
+        ready: false,
+        playerSlot: 0,
+        co: input.selectedCO,
+        funds: 0,
+      },
+    ];
+
     const matchOnDB = await prisma.match.create({
       data: {
         status: "setup",
         leagueType: "standard",
-        playerState: [],
+        playerState: initialPlayerState,
         map: {
           connect: {
             id: ctx.map.id,
@@ -82,17 +42,13 @@ export const createMatchProcedure = playerProcedure
       id: matchOnDB.id,
       map: ctx.map,
       turn: 0,
-      rules: {},
+      rules: {
+        leagueType: LeagueType.standard,
+      },
       status: matchOnDB.status,
       changeableTiles: getChangeableTilesFromMap(ctx.map),
-      players: [
-        {
-          playerId: ctx.currentPlayer.id,
-          ready: false,
-          playerSlot: 0,
-          co: input.selectedCO,
-        },
-      ],
+      players: initialPlayerState,
+      units: [],
     });
 
     await prisma.event.create({

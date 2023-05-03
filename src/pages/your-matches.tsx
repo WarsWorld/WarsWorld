@@ -4,7 +4,7 @@ import { useRef } from "react";
 import { trpc } from "utils/trpc-client";
 
 export default function YourMatches() {
-  const { currentPlayer } = usePlayers();
+  const { currentPlayer, setCurrentPlayer, ownedPlayers } = usePlayers();
 
   const matchesQuery = trpc.match.getPlayerMatches.useQuery(
     { playerId: currentPlayer?.id ?? "" },
@@ -19,6 +19,26 @@ export default function YourMatches() {
 
   return (
     <div>
+      <p>
+        Current player:
+        <select
+          onChange={(e) => {
+            const foundPlayer = ownedPlayers?.find(
+              (p) => p.id === e.target.value,
+            );
+
+            if (foundPlayer !== undefined) {
+              setCurrentPlayer(foundPlayer);
+            }
+          }}
+        >
+          {ownedPlayers?.map((p) => (
+            <option key={p.id} value={p.id}>
+              {p.name}
+            </option>
+          ))}
+        </select>
+      </p>
       <h1>Your matches</h1>
       <button
         onClick={async () => {

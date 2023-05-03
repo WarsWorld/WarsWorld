@@ -1,5 +1,4 @@
 import { TRPCError } from "@trpc/server";
-import { isDevelopmentMode } from "utils/is-development-mode";
 import { t } from "../trpc-init";
 
 export const authMiddleware = t.middleware(({ next, ctx }) => {
@@ -7,7 +6,7 @@ export const authMiddleware = t.middleware(({ next, ctx }) => {
 
   const user = ctx.session?.user;
 
-  if (isDevelopmentMode) {
+  if (process.env.NODE_ENV === "development") {
     return next({
       ctx: {
         user,

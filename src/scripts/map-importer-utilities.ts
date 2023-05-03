@@ -1,6 +1,6 @@
-import { WWMap } from "components/schemas/map";
 import { prisma } from "../server/prisma/prisma-client";
 import { Tile } from "../components/schemas/tile";
+import { WWMap } from "@prisma/client";
 
 export interface AWBWMapImportSchema {
   name: string;
@@ -9,7 +9,7 @@ export interface AWBWMapImportSchema {
 }
 
 export const importAWBWMap = (data: AWBWMapImportSchema) =>
-  prisma.map
+  prisma.wWMap
     .create({
       data: {
         name: data.name,

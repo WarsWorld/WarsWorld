@@ -3,7 +3,7 @@
  *
  * @link https://www.prisma.io/docs/guides/database/seed-database
  */
-import { Prisma, PrismaClient } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
 import { developmentPlayerNamePrefix } from "server/trpc/middleware/player";
 
 const prisma = new PrismaClient();
@@ -35,7 +35,7 @@ async function main() {
   await prisma.wWMap.create({
     data: {
       name: "Caustic Finale",
-      tiles: [],
+      tiles: [[]],
       numberOfPlayers: 2,
     },
   });

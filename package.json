@@ -18,8 +18,7 @@
     "db-seed": "prisma db seed",
     "db-migrate-dev": "prisma migrate dev",
     "db-nuke": "docker-compose down --volumes --remove-orphans",
-    "db-nuke-and-setup": "run-s db-nuke db-up db-migrate-dev",
-    "dx": "run-s db-up db-migrate-dev db-seed dev",
+    "dx": "run-s db-up db-migrate-dev dev",
     "generate": "prisma generate",
     "migrate-dev": "prisma migrate dev",
     "migrate": "prisma migrate deploy",
@@ -54,6 +53,7 @@
     "sass": "^1.62.0",
     "superjson": "^1.7.4",
     "tinyqueue": "^2.0.3",
+    "tsconfig-paths": "^4.2.0",
     "tsx": "^3.12.3",
     "ws": "^8.0.0",
     "zod": "^3.0.0"

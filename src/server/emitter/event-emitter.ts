@@ -1,4 +1,4 @@
-import { EmittableEvent } from "types/core-game/event";
+import { EmittableEvent } from "types/core-game/events";
 import { createEmitter } from "./create-emitter";
 
 const wwEventEmitter = createEmitter<EmittableEvent>();

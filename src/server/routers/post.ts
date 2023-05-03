@@ -1,8 +1,8 @@
 import { z } from "zod";
-import { playerProcedure, router } from "../trpc/trpc-setup";
+import { playerBaseProcedure, router } from "../trpc/trpc-setup";
 
 export const postRouter = router({
-  add: playerProcedure
+  add: playerBaseProcedure
     .input(
       z.object({
         id: z.string().uuid().optional(),

@@ -5,7 +5,7 @@ import {
   isUnitProducingProperty,
 } from "components/schemas/tile";
 import { prisma } from "server/prisma/prisma-client";
-import { publicProcedure, router } from "../trpc/trpc-setup";
+import { publicBaseProcedure, router } from "../trpc/trpc-setup";
 import { PlayerSlot } from "components/schemas/player-slot";
 
 export const getPlayerAmountOfMap = (map: CreatableMap) => {
@@ -31,7 +31,7 @@ export const getPlayerAmountOfMap = (map: CreatableMap) => {
 };
 
 export const mapRouter = router({
-  getAll: publicProcedure.query(async () => {
+  getAll: publicBaseProcedure.query(async () => {
     const allMaps = await prisma.wWMap.findMany();
 
     return allMaps.map((map) => {
@@ -58,7 +58,7 @@ export const mapRouter = router({
       };
     });
   }),
-  save: publicProcedure.input(mapSchema).mutation(async ({ input }) => {
+  save: publicBaseProcedure.input(mapSchema).mutation(async ({ input }) => {
     const numberOfPlayers = getPlayerAmountOfMap(input);
 
     if (numberOfPlayers > 2) {

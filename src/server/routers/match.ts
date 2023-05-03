@@ -13,9 +13,9 @@ import {
 import { z } from "zod";
 import { prisma } from "../prisma/prisma-client";
 import {
-  matchProcedure,
-  playerProcedure,
-  publicProcedure,
+  matchBaseProcedure,
+  playerBaseProcedure,
+  publicBaseProcedure,
   router,
 } from "../trpc/trpc-setup";
 import { createMatchProcedure } from "./match/create";
@@ -58,16 +58,18 @@ const matchStateToFrontend = (match: MatchState) => ({
 export const matchRouter = router({
   create: createMatchProcedure,
   // TODO pagination
-  getAll: publicProcedure.query(() => getMatches().map(matchStateToFrontend)),
-  getPlayerMatches: playerProcedure.query(({ ctx }) =>
+  getAll: publicBaseProcedure.query(() =>
+    getMatches().map(matchStateToFrontend),
+  ),
+  getPlayerMatches: playerBaseProcedure.query(({ ctx }) =>
     getMatchesOfPlayer(ctx.currentPlayer.id).map(matchStateToFrontend),
   ),
-  full: matchProcedure.query(async ({ ctx }) => {
+  full: matchBaseProcedure.query(async ({ ctx }) => {
     // TODO by default show no hidden units and FoW is completely dark and empty
     // TODO if the user has a session and has a player in this match it needs to be checked and some information revealed accordingly
-    return ctx.match.status;
+    return ctx.match;
   }),
-  join: matchProcedure
+  join: matchBaseProcedure
     .input(
       z.object({
         selectedCO: coSchema,
@@ -99,7 +101,7 @@ export const matchRouter = router({
         playerSlot: nextAvailablePlayerSlot,
       });
     }),
-  leave: matchProcedure.mutation(async ({ ctx }) => {
+  leave: matchBaseProcedure.mutation(async ({ ctx }) => {
     throwIfMatchNotInSetupState(ctx.match);
 
     if (getPlayerEntryInMatch(ctx.match, ctx.currentPlayer.id) === null) {
@@ -117,7 +119,7 @@ export const matchRouter = router({
       player: ctx.currentPlayer,
     });
   }),
-  setReady: matchProcedure
+  setReady: matchBaseProcedure
     .input(
       z.object({
         readyState: z.boolean(),

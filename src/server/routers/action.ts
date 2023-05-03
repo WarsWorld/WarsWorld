@@ -1,72 +1,122 @@
 import { observable } from "@trpc/server/observable";
-import { Action, actionSchema } from "components/schemas/action";
+import { Action, mainActionSchema } from "components/schemas/action";
 import { armySchema } from "components/schemas/army";
 import { emitEvent, subscribeToEvents } from "server/emitter/event-emitter";
-import { applyEventToMatch } from "server/match-logic/server-match-states";
+import {
+  MatchState,
+  PlayerInMatch,
+  applyEventToMatch,
+} from "server/match-logic/server-match-states";
 import { prisma } from "server/prisma/prisma-client";
-import { EmittableEvent } from "types/core-game/event";
+import { EmittableEvent } from "types/core-game/events";
 import { z } from "zod";
-import { publicProcedure, router } from "../trpc/trpc-setup";
+import {
+  playerBaseProcedure,
+  publicBaseProcedure,
+  router,
+} from "../trpc/trpc-setup";
+import { matchBaseProcedure } from "../trpc/trpc-setup";
+import { unitPropertiesMap } from "types/core-game/buildable-unit";
+import { isSamePosition } from "components/schemas/position";
+import { unitTypeIsTransport } from "components/schemas/unit";
 
-const validateAction = (action: Action) => {
+const validateAction = (
+  action: Action,
+  playerId: string,
+  match: MatchState,
+) => {
+  const actingPlayerInMatch = match.players.find(
+    (p) => p.playerId === playerId && p?.eliminated !== true,
+  );
+
+  if (actingPlayerInMatch === undefined) {
+    throw new Error("You're not in this match or you've been eliminated");
+  }
+
+  if (!actingPlayerInMatch.hasCurrentTurn) {
+    throw new Error("It's not your turn");
+  }
+
   switch (action.type) {
-    case "attemptMove": {
-      // isPlayerTurn
+    case "build": {
+      const { cost, facility } = unitPropertiesMap[action.unitType];
+      // TODO hook: cost and facility modifiers based on powers etc.
+
+      if (cost > actingPlayerInMatch.funds) {
+        throw new Error("You don't have enough funds to build this unit");
+      }
+
+      if (
+        match.units.some((u) => isSamePosition(u.position, action.position))
+      ) {
+        throw new Error("Can't build where there's a unit already");
+      }
+
+      if (
+        match.changeableTiles.find(
+          (t) =>
+            isSamePosition(action.position, t.position) &&
+            t.type === facility &&
+            t.ownerSlot === actingPlayerInMatch.playerSlot,
+        )
+      ) {
+        throw new Error(
+          "Can't build here because the tile is missing the correct build facility or you don't own it",
+        );
+      }
+
+      break;
+    }
+    case "move": {
+      if (match.rules.leagueType === "standard") {
+        // if (match.units.some(u => unitTypeIsTransport(u.type) && u.))
+      }
       // canMakeMove (doesn't have active unit)
     }
   }
 };
 
-export const actionRouter = router({
-  send: publicProcedure
-    .input(
-      z.object({
-        actions: z.array(actionSchema).nonempty().max(2),
-        matchId: z.string(),
-        army: armySchema, // TODO obviously temporary lol
-      }),
-    )
-    .mutation(async ({ input }) => {
-      await prisma.match.findFirstOrThrow({
-        where: { id: input.matchId },
-        select: {},
-      });
+const actionToEvent = (matchId: string, action: Action): EmittableEvent => {
+  switch (action.type) {
+    case "build": {
+      return {
+        type: "build",
+        matchId,
+        position: action.position,
+        unitType: action.unitType,
+      };
+    }
+    default: {
+      throw new Error(`Unknown action type ${action.type}`);
+    }
+  }
+};
 
-      input.actions.forEach(validateAction);
+export const actionRouter = router({
+  send: matchBaseProcedure
+    .input(mainActionSchema)
+    .mutation(async ({ input, ctx }) => {
+      validateAction(input, ctx.currentPlayer.id, ctx.match);
 
       // important: validate all actions first before changing server state or persisting to DB
 
-      const events = input.actions.map<EmittableEvent>((action) => {
-        switch (action.type) {
-          case "build": {
-            return {
-              type: "build",
-              matchId: input.matchId,
-              position: action.position,
-              unitType: action.unitType,
-            };
-          }
-          default: {
-            throw new Error(`Unknown action type ${action.type}`);
-          }
-        }
-      });
+      const event = actionToEvent(input.matchId, input);
 
-      await prisma.event.createMany({
-        data: events.map((e) => ({
+      await prisma.event.create({
+        data: {
           matchId: input.matchId,
-          content: e,
-        })),
+          content: event,
+        },
       });
 
-      events.forEach((event) => applyEventToMatch(input.matchId, event));
-      events.forEach((event) => emitEvent(event));
+      applyEventToMatch(input.matchId, event);
+      emitEvent(event);
 
       return {
         status: "ok", // TODO not necessary?
       };
     }),
-  onEvent: publicProcedure.input(z.string()).subscription(({ input }) =>
+  onEvent: publicBaseProcedure.input(z.string()).subscription(({ input }) =>
     observable<EmittableEvent>((emit) => {
       const unsubscribe = subscribeToEvents(input, emit.next);
       return () => unsubscribe();

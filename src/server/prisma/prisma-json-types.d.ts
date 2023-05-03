@@ -1,7 +1,7 @@
 import { Preferences } from "components/schemas/preferences";
 import { Tile } from "components/schemas/tile";
 import { PlayerInMatch } from "server/match-logic/server-match-states";
-import { WWEvent } from "types/core-game/event";
+import { WWEvent } from "types/core-game/events";
 
 declare global {
   namespace PrismaJson {

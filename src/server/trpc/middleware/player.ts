@@ -3,7 +3,6 @@ import { t } from "../trpc-init";
 import { prisma } from "server/prisma/prisma-client";
 import { Session } from "next-auth";
 import { TRPCError } from "@trpc/server";
-import { isDevelopmentMode } from "utils/is-development-mode";
 
 export const withPlayerIdSchema = z.object({
   playerId: z.string(),
@@ -44,9 +43,10 @@ export const playerMiddleware = t.middleware(async ({ ctx, next, input }) => {
 
   const { playerId } = parseResult.data;
 
-  const ownedPlayers = isDevelopmentMode
-    ? await getDevelopmentModeUserPlayers()
-    : await getProductionModeUserPlayers(ctx.session);
+  const ownedPlayers =
+    process.env.NODE_ENV === "development"
+      ? await getDevelopmentModeUserPlayers()
+      : await getProductionModeUserPlayers(ctx.session);
 
   const currentPlayer = ownedPlayers.find((p) => p.id === playerId);
 
@@ -65,3 +65,19 @@ export const playerMiddleware = t.middleware(async ({ ctx, next, input }) => {
     },
   });
 });
+
+export const playerWithoutCurrentMiddleware = t.middleware(
+  async ({ ctx, next }) => {
+    const ownedPlayers =
+      process.env.NODE_ENV === "development"
+        ? await getDevelopmentModeUserPlayers()
+        : await getProductionModeUserPlayers(ctx.session);
+
+    return next({
+      ctx: {
+        ...ctx,
+        ownedPlayers,
+      },
+    });
+  },
+);
