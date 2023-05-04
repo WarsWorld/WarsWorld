@@ -1,11 +1,11 @@
-import { ServerMatchState } from "types/core-game/server-match-state";
+import { BackendMatchState } from "shared/types/server-match-state";
 
-export const getNextAvailablePlayerSlot = (matchState: ServerMatchState) => {
+export const getNextAvailablePlayerSlot = (matchState: BackendMatchState) => {
   let nextAvailablePlayerSlot: number | null = null;
 
   for (let i = 0; i < matchState.map.numberOfPlayers; i++) {
     const playerSlotIsOccupied = matchState.players.find(
-      (e) => e.playerSlot === i,
+      (e) => e.playerSlot === i
     );
 
     if (!playerSlotIsOccupied) {
@@ -22,8 +22,8 @@ export const getNextAvailablePlayerSlot = (matchState: ServerMatchState) => {
 };
 
 export const getPlayerEntryInMatch = (
-  match: ServerMatchState,
-  playerId: string,
+  match: BackendMatchState,
+  playerId: string
 ) => {
   return match.players.find((e) => e.playerId === playerId) ?? null;
 };

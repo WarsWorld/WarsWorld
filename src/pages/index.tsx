@@ -1,6 +1,6 @@
-import { MatchRow } from "components/match/MatchRow";
+import { MatchRow } from "frontend/match/MatchRow";
 import Link from "next/link";
-import { trpc } from "utils/trpc-client";
+import { trpc } from "frontend/utils/trpc-client";
 
 export default function Index() {
   const { data } = trpc.match.getAll.useQuery();

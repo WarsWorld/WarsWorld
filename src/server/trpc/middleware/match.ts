@@ -2,7 +2,7 @@ import { TRPCError } from "@trpc/server";
 import { getMatchState } from "server/match-logic/server-match-states";
 import { z } from "zod";
 import { t } from "../trpc-init";
-import { ServerMatchState } from "types/core-game/server-match-state";
+import { BackendMatchState } from "shared/types/server-match-state";
 
 export const withMatchIdSchema = z.object({
   matchId: z.string(),
@@ -20,7 +20,7 @@ export const matchMiddleware = t.middleware(async ({ ctx, input, next }) => {
 
   const { matchId } = parseResult.data;
 
-  let match: ServerMatchState | null = null;
+  let match: BackendMatchState | null = null;
 
   try {
     match = getMatchState(matchId);

@@ -1,7 +1,7 @@
-import { MatchRow } from "components/match/MatchRow";
-import { usePlayers } from "components/provide-players";
+import { MatchRow } from "frontend/match/MatchRow";
+import { usePlayers } from "frontend/context/players";
 import { useRef } from "react";
-import { trpc } from "utils/trpc-client";
+import { trpc } from "frontend/utils/trpc-client";
 
 export default function YourMatches() {
   const { currentPlayer, setCurrentPlayer, ownedPlayers } = usePlayers();
@@ -10,7 +10,7 @@ export default function YourMatches() {
     { playerId: currentPlayer?.id ?? "" },
     {
       enabled: currentPlayer !== undefined,
-    },
+    }
   );
 
   const mapQuery = trpc.map.getAll.useQuery();
@@ -24,7 +24,7 @@ export default function YourMatches() {
         <select
           onChange={(e) => {
             const foundPlayer = ownedPlayers?.find(
-              (p) => p.id === e.target.value,
+              (p) => p.id === e.target.value
             );
 
             if (foundPlayer !== undefined) {

@@ -1,20 +1,17 @@
-import { BuildAction } from "components/schemas/action";
-import { PlayerSlot } from "components/schemas/player-slot";
-import {
-  UnitDuringMatch,
-  unitTypeIsUnitWithAmmo,
-} from "components/schemas/unit";
+import { BuildAction } from "server/schemas/action";
+import { PlayerSlot } from "server/schemas/player-slot";
+import { UnitDuringMatch, unitTypeIsUnitWithAmmo } from "server/schemas/unit";
 import { prisma } from "server/prisma/prisma-client";
-import { unitPropertiesMap } from "types/core-game/buildable-unit";
-import { EmittableEvent } from "types/core-game/events";
-import { ServerMatchState } from "types/core-game/server-match-state";
-import { getChangeableTilesFromMap } from "./get-changeable-tile-from-map";
+import { unitPropertiesMap } from "shared/match-logic/buildable-unit";
+import { EmittableEvent } from "shared/types/events";
+import { BackendMatchState } from "shared/types/server-match-state";
+import { getChangeableTilesFromMap } from "../../shared/match-logic/get-changeable-tile-from-map";
 import { LeagueType } from "@prisma/client";
 
 /**
  * Maps matchIds to states
  */
-export const serverMatchStates = new Map<string, ServerMatchState>();
+export const serverMatchStates = new Map<string, BackendMatchState>();
 
 export const rebuildServerState = async () => {
   console.log("Rebuilding server state...");
@@ -53,7 +50,7 @@ export const rebuildServerState = async () => {
 
 export const getMatchesOfPlayer = (playerId: string) =>
   [...serverMatchStates.values()].filter((match) =>
-    match.players.find((e) => e.playerId === playerId),
+    match.players.find((e) => e.playerId === playerId)
   );
 
 export const getMatches = () => [...serverMatchStates.values()];
@@ -70,7 +67,7 @@ export const getMatchState = (matchId: string) => {
 
 const createNewUnitFromBuildAction = (
   event: BuildAction,
-  playerSlot: PlayerSlot,
+  playerSlot: PlayerSlot
 ): UnitDuringMatch => {
   const { unitType } = event;
 
@@ -168,7 +165,7 @@ export const applyEventToMatch = (matchId: string, event: EmittableEvent) => {
   switch (event.type) {
     case "build": {
       const currentPlayerSlot = match.players.find(
-        (p) => p.hasCurrentTurn,
+        (p) => p.hasCurrentTurn
       )?.playerSlot;
 
       if (currentPlayerSlot === undefined) {

@@ -1,17 +1,17 @@
 import { LeagueType } from "@prisma/client";
-import { coSchema } from "components/schemas/co";
-import { getChangeableTilesFromMap } from "server/match-logic/get-changeable-tile-from-map";
+import { coSchema } from "server/schemas/co";
+import { getChangeableTilesFromMap } from "shared/match-logic/get-changeable-tile-from-map";
 import { serverMatchStates } from "server/match-logic/server-match-states";
 import { prisma } from "server/prisma/prisma-client";
 import { mapMiddleware, withMapIdSchema } from "server/trpc/middleware/map";
 import { playerBaseProcedure } from "server/trpc/trpc-setup";
-import { PlayerInMatch } from "types/core-game/server-match-state";
+import { PlayerInMatch } from "shared/types/server-match-state";
 
 export const createMatchProcedure = playerBaseProcedure
   .input(
     withMapIdSchema.extend({
       selectedCO: coSchema,
-    }),
+    })
   )
   .use(mapMiddleware)
   .mutation(async ({ input, ctx }) => {
@@ -22,6 +22,7 @@ export const createMatchProcedure = playerBaseProcedure
         playerSlot: 0,
         co: input.selectedCO,
         funds: 0,
+        powerMeter: 0,
       },
     ];
 

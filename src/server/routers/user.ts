@@ -1,4 +1,4 @@
-import { preferencesSchema } from "components/schemas/preferences";
+import { preferencesSchema } from "server/schemas/preferences";
 import { prisma } from "server/prisma/prisma-client";
 import { authMiddleware } from "server/trpc/middleware/auth";
 import { playerWithoutCurrentMiddleware } from "server/trpc/middleware/player";
@@ -22,6 +22,6 @@ export const userRouter = router({
         where: {
           id: ctx.currentPlayer.id,
         },
-      }),
+      })
   ),
 });

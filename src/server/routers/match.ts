@@ -1,4 +1,4 @@
-import { coSchema } from "components/schemas/co";
+import { coSchema } from "server/schemas/co";
 import { emitEvent } from "server/emitter/event-emitter";
 import {
   getNextAvailablePlayerSlot,
@@ -19,12 +19,12 @@ import {
 import { createMatchProcedure } from "./match/create";
 import {
   PlayerInMatch,
-  ServerMatchState,
-} from "types/core-game/server-match-state";
+  BackendMatchState,
+} from "shared/types/server-match-state";
 
 const updateServerState = async (
-  matchState: ServerMatchState,
-  newPlayersState: PlayerInMatch[],
+  matchState: BackendMatchState,
+  newPlayersState: PlayerInMatch[]
 ) => {
   await prisma.match.update({
     where: {
@@ -37,15 +37,15 @@ const updateServerState = async (
   matchState.players = newPlayersState;
 };
 
-const throwIfMatchNotInSetupState = (match: ServerMatchState) => {
+const throwIfMatchNotInSetupState = (match: BackendMatchState) => {
   if (match.status !== "setup") {
     throw new Error(
-      "This action requires the match to be in 'setup' state, but it isn't",
+      "This action requires the match to be in 'setup' state, but it isn't"
     );
   }
 };
 
-const matchStateToFrontend = (match: ServerMatchState) => ({
+const matchStateToFrontend = (match: BackendMatchState) => ({
   id: match.id,
   map: {
     id: match.map.id,
@@ -61,10 +61,10 @@ export const matchRouter = router({
   create: createMatchProcedure,
   // TODO pagination
   getAll: publicBaseProcedure.query(() =>
-    getMatches().map(matchStateToFrontend),
+    getMatches().map(matchStateToFrontend)
   ),
   getPlayerMatches: playerBaseProcedure.query(({ ctx }) =>
-    getMatchesOfPlayer(ctx.currentPlayer.id).map(matchStateToFrontend),
+    getMatchesOfPlayer(ctx.currentPlayer.id).map(matchStateToFrontend)
   ),
   full: matchBaseProcedure.query(async ({ ctx }) => {
     // TODO by default show no hidden units and FoW is completely dark and empty
@@ -75,7 +75,7 @@ export const matchRouter = router({
     .input(
       z.object({
         selectedCO: coSchema,
-      }),
+      })
     )
     .mutation(async ({ input, ctx }) => {
       throwIfMatchNotInSetupState(ctx.match);
@@ -94,6 +94,7 @@ export const matchRouter = router({
           ready: false,
           co: input.selectedCO,
           funds: 0,
+          powerMeter: 0,
         },
       ]);
 
@@ -113,7 +114,7 @@ export const matchRouter = router({
 
     await updateServerState(
       ctx.match,
-      ctx.match.players.filter((e) => e.playerId !== ctx.currentPlayer.id),
+      ctx.match.players.filter((e) => e.playerId !== ctx.currentPlayer.id)
     );
 
     emitEvent({
@@ -126,7 +127,7 @@ export const matchRouter = router({
     .input(
       z.object({
         readyState: z.boolean(),
-      }),
+      })
     )
     .mutation(async ({ input, ctx }) => {
       throwIfMatchNotInSetupState(ctx.match);
@@ -141,7 +142,7 @@ export const matchRouter = router({
           ...e,
           ready:
             e.playerId === ctx.currentPlayer.id ? input.readyState : e.ready,
-        })),
+        }))
       );
 
       emitEvent({

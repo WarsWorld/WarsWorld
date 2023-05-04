@@ -1,5 +1,5 @@
 import { createContext } from "./trpc/trpc-context";
-import { appRouter } from "./routers/root";
+import { appRouter } from "./routers/app";
 import { applyWSSHandler } from "@trpc/server/adapters/ws";
 import ws from "ws";
 

@@ -1,26 +1,26 @@
 import { observable } from "@trpc/server/observable";
-import { Action, mainActionSchema } from "components/schemas/action";
-import { isSamePosition } from "components/schemas/position";
+import { Action, mainActionSchema } from "server/schemas/action";
+import { isSamePosition } from "server/schemas/position";
 import { emitEvent, subscribeToEvents } from "server/emitter/event-emitter";
 import { applyEventToMatch } from "server/match-logic/server-match-states";
 import { prisma } from "server/prisma/prisma-client";
-import { unitPropertiesMap } from "types/core-game/buildable-unit";
-import { EmittableEvent } from "types/core-game/events";
+import { unitPropertiesMap } from "shared/match-logic/buildable-unit";
+import { EmittableEvent } from "shared/types/events";
 import { z } from "zod";
 import {
   matchBaseProcedure,
   publicBaseProcedure,
   router,
 } from "../trpc/trpc-setup";
-import { ServerMatchState } from "types/core-game/server-match-state";
+import { BackendMatchState } from "shared/types/server-match-state";
 
 const validateAction = (
   action: Action,
   playerId: string,
-  match: ServerMatchState,
+  match: BackendMatchState
 ) => {
   const actingPlayerInMatch = match.players.find(
-    (p) => p.playerId === playerId && p?.eliminated !== true,
+    (p) => p.playerId === playerId && p?.eliminated !== true
   );
 
   if (actingPlayerInMatch === undefined) {
@@ -51,11 +51,11 @@ const validateAction = (
           (t) =>
             isSamePosition(action.position, t.position) &&
             t.type === facility &&
-            t.ownerSlot === actingPlayerInMatch.playerSlot,
+            t.ownerSlot === actingPlayerInMatch.playerSlot
         )
       ) {
         throw new Error(
-          "Can't build here because the tile is missing the correct build facility or you don't own it",
+          "Can't build here because the tile is missing the correct build facility or you don't own it"
         );
       }
 
@@ -114,6 +114,6 @@ export const actionRouter = router({
     observable<EmittableEvent>((emit) => {
       const unsubscribe = subscribeToEvents(input, emit.next);
       return () => unsubscribe();
-    }),
+    })
   ),
 });

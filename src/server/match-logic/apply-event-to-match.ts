@@ -1,7 +1,7 @@
-import { WWEvent } from "types/core-game/events";
-import { ServerMatchState } from "types/core-game/server-match-state";
+import { WWEvent } from "shared/types/events";
+import { BackendMatchState } from "shared/types/server-match-state";
 
-export const applyEventToMatch = (match: ServerMatchState, event: WWEvent) => {
+export const applyEventToMatch = (match: BackendMatchState, event: WWEvent) => {
   const currentTurnPlayer = match.players.find((p) => p.hasCurrentTurn);
 
   switch (event.type) {
