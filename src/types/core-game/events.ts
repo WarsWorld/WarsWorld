@@ -17,8 +17,7 @@ export interface MatchStartEvent {
 }
 
 export interface MoveEvent extends MoveAction {
-  trap?: boolean; // maybe we need a unit here..?
-  discovered?: UnitDuringMatch[];
+  trap?: boolean;
 }
 
 export interface InvalidActionEvent {
@@ -122,4 +121,7 @@ export type WWEvent =
   | SuperCOPowerEvent
   | DirectPersistableAction;
 
-export type EmittableEvent = WWEvent & { matchId: string };
+export type EmittableEvent = WWEvent & {
+  matchId: string;
+  discoveredUnits?: UnitDuringMatch[];
+};

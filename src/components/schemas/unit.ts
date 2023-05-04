@@ -131,6 +131,7 @@ const creatablePipeRunnerSchema = withAmmoUnitStatsSchema.extend(
 export const creatableUnitSchema = z.discriminatedUnion("type", [
   withPlayerSlotAndPositionSchema.extend(creatableInfantrySchema.shape),
   withPlayerSlotAndPositionSchema.extend(creatableMechSchema.shape),
+  withPlayerSlotAndPositionSchema.extend(createReconSchema.shape),
   withPlayerSlotAndPositionSchema.extend(creatableAPCSchema.shape),
   withPlayerSlotAndPositionSchema.extend(creatableOtherLandUnitsWithAmmo.shape),
   withPlayerSlotAndPositionSchema.extend(creatableTransportCopterSchema.shape),

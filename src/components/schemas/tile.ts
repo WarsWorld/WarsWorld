@@ -7,10 +7,10 @@ export const isNeutralProperty = (propertyTile: PropertyTile) =>
   propertyTile.playerSlot === -1;
 
 export const isUnitProducingProperty = (tile: Tile): tile is PropertyTile =>
-  tile.type === "base" || tile.type === "airport" || tile.type == "harbor";
+  tile.type === "base" || tile.type === "airport" || tile.type == "port";
 
 export const propertyTileSchema = canHaveUnitSchema.extend({
-  type: z.enum(["base", "airport", "harbor", "hq", "lab", "comtower", "city"]),
+  type: z.enum(["base", "airport", "port", "hq", "lab", "comtower", "city"]),
   playerSlot: playerSlotForPropertiesSchema,
 });
 
@@ -21,26 +21,26 @@ export const willBeChangeableTile = (
     "city",
     "base",
     "airport",
-    "harbor",
+    "port",
     "lab",
     "comtower",
     "hq",
-    "unused-silo",
+    "unusedSilo",
   ].includes(tile.type);
 
 export type PropertyTile = z.infer<typeof propertyTileSchema>;
 
-export const siloTileSchema = canHaveUnitSchema.extend({
-  type: z.literal("unused-silo"),
+export const unusedSiloTileSchema = canHaveUnitSchema.extend({
+  type: z.literal("unusedSilo"),
 });
 
-export type UnusedSiloTile = z.infer<typeof siloTileSchema>;
+export type UnusedSiloTile = z.infer<typeof unusedSiloTileSchema>;
 
 export const invariableTileSchema = canHaveUnitSchema
   .extend({
-    type: z.enum(["shoal", "sea", "forest", "mountain", "reef", "used-silo"]),
+    type: z.enum(["shoal", "sea", "forest", "mountain", "reef", "usedSilo"]),
   })
-  .or(siloTileSchema);
+  .or(unusedSiloTileSchema);
 
 export type InvariableTile = z.infer<typeof invariableTileSchema>;
 
@@ -49,5 +49,7 @@ export const tileSchema = z.discriminatedUnion("type", [
   ...invariableTileSchema.options,
   ...variableTileSchema.options,
 ]);
+
+export type TileType = z.infer<typeof tileSchema>["type"];
 
 export type Tile = z.infer<typeof tileSchema>;

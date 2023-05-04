@@ -11,7 +11,7 @@ const getChangeableTileFromTile = (
   tile: PropertyTile | UnusedSiloTile,
   position: Position,
 ): ChangeableTile => {
-  if (tile.type === "unused-silo") {
+  if (tile.type === "unusedSilo") {
     return {
       type: tile.type,
       position,

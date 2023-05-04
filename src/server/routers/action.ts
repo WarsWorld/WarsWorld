@@ -1,29 +1,23 @@
 import { observable } from "@trpc/server/observable";
 import { Action, mainActionSchema } from "components/schemas/action";
-import { armySchema } from "components/schemas/army";
+import { isSamePosition } from "components/schemas/position";
 import { emitEvent, subscribeToEvents } from "server/emitter/event-emitter";
-import {
-  MatchState,
-  PlayerInMatch,
-  applyEventToMatch,
-} from "server/match-logic/server-match-states";
+import { applyEventToMatch } from "server/match-logic/server-match-states";
 import { prisma } from "server/prisma/prisma-client";
+import { unitPropertiesMap } from "types/core-game/buildable-unit";
 import { EmittableEvent } from "types/core-game/events";
 import { z } from "zod";
 import {
-  playerBaseProcedure,
+  matchBaseProcedure,
   publicBaseProcedure,
   router,
 } from "../trpc/trpc-setup";
-import { matchBaseProcedure } from "../trpc/trpc-setup";
-import { unitPropertiesMap } from "types/core-game/buildable-unit";
-import { isSamePosition } from "components/schemas/position";
-import { unitTypeIsTransport } from "components/schemas/unit";
+import { ServerMatchState } from "types/core-game/server-match-state";
 
 const validateAction = (
   action: Action,
   playerId: string,
-  match: MatchState,
+  match: ServerMatchState,
 ) => {
   const actingPlayerInMatch = match.players.find(
     (p) => p.playerId === playerId && p?.eliminated !== true,

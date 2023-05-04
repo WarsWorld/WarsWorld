@@ -32,6 +32,10 @@ async function main() {
     });
   }
 
+  /**
+   * author: "Hellraider",
+   * published: "05/11/2008",
+   */
   await prisma.wWMap.create({
     data: {
       name: "Caustic Finale",

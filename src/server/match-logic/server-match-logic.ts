@@ -1,6 +1,6 @@
-import { MatchState } from "./server-match-states";
+import { ServerMatchState } from "types/core-game/server-match-state";
 
-export const getNextAvailablePlayerSlot = (matchState: MatchState) => {
+export const getNextAvailablePlayerSlot = (matchState: ServerMatchState) => {
   let nextAvailablePlayerSlot: number | null = null;
 
   for (let i = 0; i < matchState.map.numberOfPlayers; i++) {
@@ -21,6 +21,9 @@ export const getNextAvailablePlayerSlot = (matchState: MatchState) => {
   return nextAvailablePlayerSlot;
 };
 
-export const getPlayerEntryInMatch = (match: MatchState, playerId: string) => {
+export const getPlayerEntryInMatch = (
+  match: ServerMatchState,
+  playerId: string,
+) => {
   return match.players.find((e) => e.playerId === playerId) ?? null;
 };

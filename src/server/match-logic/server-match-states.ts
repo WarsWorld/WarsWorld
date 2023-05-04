@@ -135,6 +135,7 @@ const createNewUnitFromBuildAction = (
 
   switch (unitType) {
     case "infantry":
+    case "recon":
     case "blackBomb":
       return {
         type: unitType,

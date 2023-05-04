@@ -32,7 +32,7 @@ export type MovementType =
   | "lander"
   | "pipe";
 
-export type Facility = "base" | "airport" | "harbor";
+export type Facility = "base" | "airport" | "port";
 
 interface UnitPropertiesWithoutWeapon {
   cost: number;
@@ -251,14 +251,14 @@ export const unitPropertiesMap: UnitPropertiesMap = {
     vision: 1,
     moveRange: 7,
     movementType: "lander",
-    facility: "harbor",
+    facility: "port",
     initialFuel: 60,
   },
   lander: {
     cost: 12000,
     vision: 1,
     movementType: "lander",
-    facility: "harbor",
+    facility: "port",
     moveRange: 6,
     initialFuel: 99,
   },
@@ -267,7 +267,7 @@ export const unitPropertiesMap: UnitPropertiesMap = {
     vision: 3,
     moveRange: 6,
     movementType: "sea",
-    facility: "harbor",
+    facility: "port",
     initialAmmo: 9,
     initialFuel: 99,
     attackRange: directRange,
@@ -276,7 +276,7 @@ export const unitPropertiesMap: UnitPropertiesMap = {
     cost: 20000,
     vision: 5,
     moveRange: 5,
-    facility: "harbor",
+    facility: "port",
     movementType: "sea",
     initialAmmo: 6,
     initialFuel: 60,
@@ -288,7 +288,7 @@ export const unitPropertiesMap: UnitPropertiesMap = {
     vision: 2,
     movementType: "sea",
     moveRange: 5,
-    facility: "harbor",
+    facility: "port",
     initialAmmo: 9,
     initialFuel: 99,
   },
@@ -297,7 +297,7 @@ export const unitPropertiesMap: UnitPropertiesMap = {
     attackRange: [3, 8],
     vision: 4,
     movementType: "sea",
-    facility: "harbor",
+    facility: "port",
     moveRange: 5,
     initialAmmo: 9,
     initialFuel: 99,

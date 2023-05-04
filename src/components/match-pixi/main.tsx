@@ -1,3 +1,5 @@
+import { usePlayers } from "components/provide-players";
+import { Tile } from "components/schemas/tile";
 import { useRouter } from "next/router";
 import {
   Application,
@@ -8,9 +10,11 @@ import {
   Texture,
 } from "pixijs";
 import { useEffect, useRef, useState } from "react";
-import { MapTile } from "server/tools/map-parser";
+import { PlayerInMatch } from "types/core-game/server-match-state";
 import { trpc } from "utils/trpc-client";
 import styles from "../../styles/match.module.css";
+
+BaseTexture.defaultOptions.scaleMode = SCALE_MODES.NEAREST;
 
 const spriteURLMap: Record<string, string> = {
   pi: "pipes",
@@ -47,23 +51,21 @@ const getSpriteURL = (terrainImage: string) => {
   return `${spriteFolder}/${terrainImage}`;
 };
 
-export type Segment = {
-  tile: MapTile;
-  squareHighlight: JSX.Element | null;
-  menu: JSX.Element | null;
-};
-
 export const PixiMatch = () => {
-  const [players, setPlayers] = useState<PlayerState | null | undefined>(null);
-  const [segments, setSegments] = useState<Segment[] | null | undefined>(null);
+  const { currentPlayer } = usePlayers();
+  const [players, setPlayers] = useState<PlayerInMatch[] | null | undefined>(
+    null,
+  );
+  const [segments, setSegments] = useState<Tile[][] | null | undefined>(null);
   const pixiCanvasRef = useRef<HTMLCanvasElement>(null);
 
   const { query } = useRouter();
   const matchId = query.matchId as string;
 
   trpc.match.full.useQuery(
-    { matchId, playerId },
+    { matchId, playerId: currentPlayer?.id ?? "" },
     {
+      enabled: currentPlayer !== undefined,
       onSuccess(data) {
         if (data === null) {
           throw new Error(`Match ${matchId} not found!`);
@@ -74,13 +76,7 @@ export const PixiMatch = () => {
         }
 
         if (!segments) {
-          setSegments(
-            data.map.tiles.map((tile) => ({
-              tile,
-              menu: null,
-              squareHighlight: null,
-            })),
-          );
+          // setSegments(data.map.tiles);
         }
       },
     },
@@ -91,8 +87,6 @@ export const PixiMatch = () => {
       return;
     }
 
-    BaseTexture.defaultOptions.scaleMode = SCALE_MODES.NEAREST;
-
     const pixiApp = new Application({
       view: pixiCanvasRef.current,
       resolution: 2,
@@ -101,20 +95,22 @@ export const PixiMatch = () => {
     pixiApp.stage.position.set(200, 0);
 
     (async () => {
-      for (const indexString in segments) {
-        const seg = segments[indexString];
-        const index = Number.parseInt(indexString, 10);
+      for (const indexStringY in segments) {
+        for (const indexStringX in segments) {
+          const seg = segments[indexStringY][indexStringX];
+          const indexX = Number.parseInt(indexStringX, 10);
+          const indexY = Number.parseInt(indexStringY, 10);
 
-        const texture = await Assets.load<Texture>(
-          `/img/mapTiles/${getSpriteURL(seg.tile.terrainImage)}.webp`,
-        );
+          const texture = await Assets.load<Texture>(
+            `/img/mapTiles/${getSpriteURL(seg.type)}.webp`,
+          );
 
-        const forestSprite = Sprite.from(texture);
+          const forestSprite = Sprite.from(texture);
 
-        forestSprite.x = (index % 18) * 16;
-        forestSprite.y =
-          Math.floor(index / 18) * 16 - (forestSprite.height - 16);
-        pixiApp.stage.addChild(forestSprite);
+          forestSprite.x = indexX * 16;
+          forestSprite.y = indexY * 16 - (forestSprite.height - 16);
+          pixiApp.stage.addChild(forestSprite);
+        }
       }
     })();
 

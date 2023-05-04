@@ -5,8 +5,6 @@ import {
   getPlayerEntryInMatch,
 } from "server/match-logic/server-match-logic";
 import {
-  MatchState,
-  PlayerInMatch,
   getMatches,
   getMatchesOfPlayer,
 } from "server/match-logic/server-match-states";
@@ -19,9 +17,13 @@ import {
   router,
 } from "../trpc/trpc-setup";
 import { createMatchProcedure } from "./match/create";
+import {
+  PlayerInMatch,
+  ServerMatchState,
+} from "types/core-game/server-match-state";
 
 const updateServerState = async (
-  matchState: MatchState,
+  matchState: ServerMatchState,
   newPlayersState: PlayerInMatch[],
 ) => {
   await prisma.match.update({
@@ -35,7 +37,7 @@ const updateServerState = async (
   matchState.players = newPlayersState;
 };
 
-const throwIfMatchNotInSetupState = (match: MatchState) => {
+const throwIfMatchNotInSetupState = (match: ServerMatchState) => {
   if (match.status !== "setup") {
     throw new Error(
       "This action requires the match to be in 'setup' state, but it isn't",
@@ -43,7 +45,7 @@ const throwIfMatchNotInSetupState = (match: MatchState) => {
   }
 };
 
-const matchStateToFrontend = (match: MatchState) => ({
+const matchStateToFrontend = (match: ServerMatchState) => ({
   id: match.id,
   map: {
     id: match.map.id,
@@ -91,6 +93,7 @@ export const matchRouter = router({
           playerSlot: nextAvailablePlayerSlot,
           ready: false,
           co: input.selectedCO,
+          funds: 0,
         },
       ]);
 

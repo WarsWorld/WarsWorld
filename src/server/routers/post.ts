@@ -10,8 +10,6 @@ export const postRouter = router({
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      const { name } = ctx.user;
-      const post = null;
-      return post;
+      // TODO
     }),
 });

@@ -50,7 +50,7 @@ export const mapRouter = router({
         },
         cities: tilesFlat.filter((tile) => tile.type === "city").length,
         bases: tilesFlat.filter((tile) => tile.type === "base").length,
-        harbors: tilesFlat.filter((tile) => tile.type === "harbor").length,
+        ports: tilesFlat.filter((tile) => tile.type === "port").length,
         airports: tilesFlat.filter((tile) => tile.type === "airport").length,
         comtowers: tilesFlat.filter((tile) => tile.type === "comtower").length,
         labs: tilesFlat.filter((tile) => tile.type === "lab").length,

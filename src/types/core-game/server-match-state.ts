@@ -9,13 +9,13 @@ interface WithPosition {
 }
 
 interface CapturableTile extends WithPosition {
-  type: "city" | "base" | "airport" | "harbor" | "lab" | "comtower" | "hq";
+  type: "city" | "base" | "airport" | "port" | "lab" | "comtower" | "hq";
   hp: number;
   ownerSlot: PlayerSlot;
 }
 
 interface LaunchableSiloTile extends WithPosition {
-  type: "unused-silo";
+  type: "unusedSilo";
   fired: boolean;
 }
 
