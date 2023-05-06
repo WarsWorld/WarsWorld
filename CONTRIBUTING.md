@@ -25,6 +25,8 @@ To make sure our project is able to run locally, follow these 5 easy steps!
 
 2 - Make sure you have [pnpm installed](https://pnpm.io/) (it's like npm but faster).
 
+3 - Make sure you have [node installed](https://nodejs.org/en/download) and the version is recent. version ^18.15.0 is recommended
+
 3 - Clone the repository in your own working environment or IDE.
 
 4 - Copy the "env.example" to ".env" and setup a random password/string in the PGPASSWORD and NEXTAUTH_SECRET fields.
