@@ -25,12 +25,14 @@ To make sure our project is able to run locally, follow these 5 easy steps!
 
 2 - Make sure you have [pnpm installed](https://pnpm.io/) (it's like npm but faster).
 
-3 - Clone the repository in your own working environment or IDE.
+3 - Make sure you have [node installed](https://nodejs.org/en/download) and the version is recent. version ^18.15.0 is recommended
 
-4 - Copy the "env.example" to ".env" and setup a random password/string in the PGPASSWORD and NEXTAUTH_SECRET fields.
+4 - Clone the repository in your own working environment or IDE.
+
+5 - Copy the "env.example" to ".env" and setup a random password/string in the PGPASSWORD and NEXTAUTH_SECRET fields.
 
 
-5 - Install the dependencies from package.json and run app using the following code:
+6 - Install the dependencies from package.json and run app using the following code:
 
 ```
 pnpm i  //This is basically an npm i or npm install
