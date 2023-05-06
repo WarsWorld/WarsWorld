@@ -1,4 +1,5 @@
 @use 'src/styles/variables';
+@use 'src/styles/mixins' as m;
 
 #__next,
 html,
@@ -32,7 +33,7 @@ body {
       display: none;
     }
 
-    .burgerMenu {
+    .burgerMenuIcon {
       div {
         background-color: theme('colors.primary');
         transition: 0.4s;
@@ -45,17 +46,42 @@ body {
       }
     }
 
-    .burgerMenuLinks {
+    .matchLobbyBtn {
+      @include m.clampSize(12, 20, 320, 1200);
+      color: theme('colors.primary');
+    }
+
+    .burgerMenuLinks,
+    .matchMenuLinks {
       opacity: 0;
       visibility: hidden;
       transition: 0.7s;
+      top: 60px;
+    }
+
+    .burgerMenuLinks {
+      .matchMenuLinks {
+        right: 160px;
+      }
+    }
+
+    .showBurgerMenuLinks,
+    .showMatchMenuLinks {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .showMatchMenuLinks {
+      height: 8rem;
     }
 
     .showBurgerMenuLinks {
-      opacity: 1;
-      visibility: visible;
-      height: 20rem;
+      height: 12rem;
     }
+  }
+
+  .currentGames {
+    scroll-margin-top: 50px;
   }
 }
 
@@ -95,6 +121,10 @@ body {
         display: flex;
         gap: 50px;
       }
+
+      .burgerMenuLinks {
+        display: none;
+      }
     }
 
     .inProgress {
@@ -112,6 +142,15 @@ body {
 }
 
 @screen medium {
+  .layout {
+    header {
+      .burgerMenuLinks,
+      .matchMenuLinks {
+        top: 100px;
+      }
+    }
+  }
+
   .withFooter {
     grid-template-rows: 100px 1fr 160px;
 

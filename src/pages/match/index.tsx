@@ -34,12 +34,11 @@ const MatchRow = ({ match }: { match: Match }) => {
 export default function Games() {
   const { data, refetch } = trpc.match.getAll.useQuery();
   const createMutation = trpc.match.create.useMutation();
-  console.log(data);
 
   return (
     <Layout>
       <div className="@h-full @w-full @max-w-[1200px] @p-5 @grid @grid-rows-[1fr_1fr] @gap-10 allGames">
-        <div className="currentGames">
+        <div id="currentGames" className="currentGames">
           <div className="@flex @flex-col @items-center @justify-center @mb-10 @gap-2">
             <h1>Current games</h1>
             <button
@@ -65,7 +64,7 @@ export default function Games() {
                 );
               })}
         </div>
-        <div className="completedGames">
+        <div id="completedGames" className="completedGames">
           <h1 className="@text-center">Completed games</h1>
           {data === undefined
             ? 'Loading...'
