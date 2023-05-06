@@ -4,7 +4,8 @@ import Link from 'next/link';
 import { trpc } from 'utils/trpc';
 
 const MatchRow = ({ match }: { match: Match }) => {
-  const { mapMetaData, mapTiles } = match.matchState;
+  // FIXME: fix the matchState type
+  const { mapMetaData, mapTiles } = match.matchState as any;
 
   return (
     <div className="@grid @grid-rows-[1fr_3fr] @p-2 @mb-10 matchRowGrid @outline @outline-black @outline-2">
