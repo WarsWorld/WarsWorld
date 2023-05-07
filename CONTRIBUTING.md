@@ -40,11 +40,11 @@ pnpm dx //This is our npm start
 Wait for local build be setup and go to localhost:3000. From there, you should be set! If you are having issues, feel free to contact someone in the team.
 
 ## Linting
-
 Our CI/CD process will use a "linter" to check if your code is formatted in a readable way. However, it is up to you to actually fix any formatting issues.
 You can check for any problems by running `pnpm lint`, and you can fix those problems manually or by running `pnpm lint-fix`.
 Alternatively, if you are using VSCode, you should install the extension `rvest.vs-code-prettier-eslint`
 so that your code is automatically formatted every time you save a file.
+
 
 ## RoadMap / Vision
 
