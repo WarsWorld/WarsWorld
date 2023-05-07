@@ -225,8 +225,8 @@ export const getUnitTerrainDefense = (hp: number, tileType: TileType) => {
  * Every unit has exactly one "movement type", for example tanks have type "treads".
  * See https://awbw.fandom.com/wiki/Units#Movement for more details.
  *
- * @param tileType The tile which the unit is trying to enter
- * @param movementType The movement type of the unit
+ * @param tileType The tile which the unit is trying to enter, e.g. 'plains'
+ * @param movementType The movement type of the unit, e.g. 'treads'
  * @param weather The current weather
  * @returns The amount of movement points which must be spent to *enter* the tile
  * (assuming the unit is already adjacent to the tile).
