@@ -13,9 +13,7 @@ export function Home() {
         <h1>Welcome to Wars World!</h1>
         <p>First of all, congrats on setting your developer environment!</p>
         <p>
-          We are in the process of refactoring &quot;AW-Competitive&quot;/Wars
-          World demo (FemboyDeveloper, Rey, Yeti et al.) into
-          Typescript/React/Next.js + tRPC + Prisma/SQL (FunctionDJ&apos;s idea)
+          We are in the process of establishing a new foundation for developers to help with the T3 stack (typescript, tRPC, tailwind, prisma, nextAuth). Please make sure to contact femboy#6116 to join our development discord.
         </p>
         <p>
           Before you decide to take on one of our{' '}

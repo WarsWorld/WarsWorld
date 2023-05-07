@@ -18,7 +18,7 @@ In either case, a good branch name would be descriptive of what you plan to work
 
 ## Setting up your local environment
 
-To make sure our project is able to run locally, follow these 5 easy steps!
+To make sure our project is able to run locally, follow these 6 easy steps!
 
 1 - Make sure you have [Docker Desktop](https://www.docker.com/products/docker-desktop/) installed and run it (the Docker daemon is needed to run your local database, so all need is to have the app running in the background. Nothing else!).
 
@@ -39,7 +39,12 @@ pnpm dx //This is our npm start
 
 Wait for local build be setup and go to localhost:3000. From there, you should be set! If you are having issues, feel free to contact someone in the team.
 
-` Soon there will be a more newb/extensive setup your local environment guide here!`
+## Linting
+Our CI/CD process will use a "linter" to check if your code is formatted in a readable way. However, it is up to you to actually fix any formatting issues.
+You can check for any problems by running `pnpm lint`, and you can fix those problems manually or by running `pnpm lint-fix`.
+Alternatively, if you are using VSCode, you should install the extension `rvest.vs-code-prettier-eslint`
+so that your code is automatically formatted every time you save a file.
+
 
 ## RoadMap / Vision
 

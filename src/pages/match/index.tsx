@@ -4,7 +4,9 @@ import Link from 'next/link';
 import { trpc } from 'utils/trpc';
 
 const MatchRow = ({ match }: { match: Match }) => {
+
   // FIXME: fix the matchState type
+
   const { mapMetaData, mapTiles } = match.matchState as any;
 
   return (
