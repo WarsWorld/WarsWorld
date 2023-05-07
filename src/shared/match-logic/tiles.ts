@@ -75,25 +75,13 @@ const pipeTileProperties: TileProperties = {
 };
 
 /**
- * Defense and movement data for all tiles types.
+ * The "normal" defense and movement costs for all tiles types,
+ * before any modifications from weather and/or COs.
+ *
  * Every unit has exactly one "movement type", for example tanks have type "treads".
  * This object shows the amount of movement points which must be spent
  * to *enter* each type of tile, for each "movement type".
  * `null` means impassible terrain.
- *
- * Note: Movement costs vary based on weather,
- * so we need to either:
- * 1) create one of these objects for each possible weather
- * 2) create one of these objects for "normal" weather and
- * perform some final weather-based modifications in the getter function.
- *
- * Currently we use approach (2).
- *
- * TODO: Create a TileType for a "broken pipe seam".
- *
- * Also we *could* combine usedSilo and unusedSilo
- * because they have the same defense and movement properties.
- * However, that is probably only worth doing if it simplifies silo logic elsewhere.
  */
 const tileProperties: Record<TileType, TileProperties> = {
   plain: {
@@ -236,9 +224,9 @@ export const getUnitTerrainDefense = (hp: number, tileType: TileType) => {
  * which they can spend by moving.
  * Every unit has exactly one "movement type", for example tanks have type "treads".
  *
- * @param tileType The tile which the unit is trying to enter, e.g. "plains"
- * @param movementType The movement type of the unit, e.g. "treads"
- * @param weather The current weather, e.g. "rain"
+ * @param tileType The tile which the unit is trying to enter
+ * @param movementType The movement type of the unit
+ * @param weather The current weather
  * @returns The amount of movement points which must be spent to *enter* the tile
  * (assuming the unit is already adjacent to the tile).
  * `null` means impassible terrain.
