@@ -54,7 +54,7 @@ const manMadeMovementCosts: TileMovementCosts = {
 };
 
 const buildingTileProperties: TileProperties = {
-  /** All man-made *buildings* provide 3 defense, except for the HQ which provides 4. */
+  /** All buildings provide 3 defense, except for the HQ which provides 4. */
   defenseStars: 3,
   movementCosts: manMadeMovementCosts,
 };
@@ -218,26 +218,16 @@ export const getTerrainDefenseStars = (tileType: TileType) =>
  * Specifically, this calculates `D_TR * HP_D` as defined at
  * https://awbw.fandom.com/wiki/Damage_Formula
  *
- * Note: This does *not* round "visual hp", so the defense score is
- * not exactly the same as https://awbw.fandom.com/wiki/Damage_Formula .
- * We might want to add rounding for consistency.
- *
- * @param hp the current hp of the unit, a decimal 0 to 1
+ * @param hp the current hp of the unit, an integer from 1 to 100
  * @param tileType the tile which the unit is on, e.g. "plains"
  */
 export const getUnitTerrainDefense = (hp: number, tileType: TileType) => {
   /**
-   * Historically, this game series has *stored* health as a number from 1 to 100,
-   * and *displayed* health as a number from 1 to 10, by dividing by 10 with rounding.
-   * The old damage formula is based on "visual health"
-   * which is about 1/10 actual health.
-   *
-   * However, *we* are currently planning to store health as a number from 0 to 1,
-   * and display it as decimal from 1 to 10 *exactly* like "8.7".
-   *
-   * So instead of dividing by 10 (with rounding), we multiply by 10.
+   * We *store* health as a number from 1 to 100,
+   * and *display* health as a number from 1 to 10, by dividing by 10 with rounding.
+   * The damage formula is based this "visual health".
    */
-  const visualHp = hp * 10;
+  const visualHp = hp / 10;
   return tileProperties[tileType].defenseStars * visualHp;
 };
 
