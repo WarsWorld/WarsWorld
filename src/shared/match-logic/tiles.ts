@@ -228,7 +228,7 @@ export const getTerrainDefenseStars = (tileType: TileType) =>
   tileProperties[tileType].defenseStars;
 
 /**
- * Caculate the defense of a unit.
+ * Calculate the defense of a unit.
  * Specifically, this calculates `D_TR * HP_D` as defined at
  * https://awbw.fandom.com/wiki/Damage_Formula
  *
