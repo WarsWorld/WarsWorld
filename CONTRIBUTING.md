@@ -1,4 +1,5 @@
 # Contributing
+
 Before anything else, thanks for considering contributing to Wars World. It's thanks to people like you that the Advance Wars (AW) community can grow and continue to enjoy this beautiful game. Also, by contributing, we don't mean you have to feel obligated to fully commit to the project. We have a philosophy where open source devs are free to come and go as they please. Whether you just want to implement/incorporate your move planner feature to Wars World or become part of the Wars World team, we welcome you!
 
 ## Where do I go from here?
@@ -15,11 +16,9 @@ If you are an inner collaborator and already part of the Wars World team, you ca
 
 In either case, a good branch name would be descriptive of what you plan to work on. For example, if it's an update to the mobile navbar, you could name the new branch mobile-navbar-update.
 
-
-
 ## Setting up your local environment
 
-To make sure our project is able to run locally, follow these 5 easy steps!
+To make sure our project is able to run locally, follow these 6 easy steps!
 
 1 - Make sure you have [Docker Desktop](https://www.docker.com/products/docker-desktop/) installed and run it (the Docker daemon is needed to run your local database, so all need is to have the app running in the background. Nothing else!).
 
@@ -31,7 +30,6 @@ To make sure our project is able to run locally, follow these 5 easy steps!
 
 5 - Copy the "env.example" to ".env" and setup a random password/string in the PGPASSWORD and NEXTAUTH_SECRET fields.
 
-
 6 - Install the dependencies from package.json and run app using the following code:
 
 ```
@@ -41,8 +39,12 @@ pnpm dx //This is our npm start
 
 Wait for local build be setup and go to localhost:3000. From there, you should be set! If you are having issues, feel free to contact someone in the team.
 
-` Soon there will be a more newb/extensive setup your local environment guide here!`
+## Linting
 
+Our CI/CD process will use a "linter" to check if your code is formatted in a readable way. However, it is up to you to actually fix any formatting issues.
+You can check for any problems by running `pnpm lint`, and you can fix those problems manually or by running `pnpm lint-fix`.
+Alternatively, if you are using VSCode, you should install the extension `rvest.vs-code-prettier-eslint`
+so that your code is automatically formatted every time you save a file.
 
 ## RoadMap / Vision
 
@@ -57,4 +59,3 @@ We do not have plans for remaking AW or making our own game/version of it. We wa
 ## Contact Information
 
 Currently we do not have a Slack/Zulip chat (but we do have a private Discord server!), so if you want to contact the lead of the project, you can send a DM to femboy#6116 and they'll add you.
-
