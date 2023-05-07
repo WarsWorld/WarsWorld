@@ -223,6 +223,7 @@ export const getUnitTerrainDefense = (hp: number, tileType: TileType) => {
  * Every turn, units get a certain number of movement points
  * which they can spend by moving.
  * Every unit has exactly one "movement type", for example tanks have type "treads".
+ * See https://awbw.fandom.com/wiki/Units#Movement for more details.
  *
  * @param tileType The tile which the unit is trying to enter
  * @param movementType The movement type of the unit
