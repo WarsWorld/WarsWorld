@@ -2,42 +2,41 @@ import { TileType } from "server/schemas/tile";
 import { MovementType } from "shared/match-logic/buildable-unit";
 import { tsIncludes } from "shared/utils/typesafe-includes";
 
-/**
- * Every unit has exactly one "movement type", for example tanks have type "treads".
- * This object shows the amount of movement points which must be spent
- * to *enter* each type of tile, for each "movement type".
- * `null` means impassible terrain.
- *
- * Note: Movement costs vary based on weather,
- * so we need to either:
- * 1) create one of these objects for each possible weather
- * 2) create one of these objects for "normal" weather and
- * perform some final weather-based modifications in the getter function.
- *
- * Currently we use approach (2).
- */
 type TileMovementCosts = Record<MovementType, number | null>;
 
 export interface TileProperties {
+  /** A nonzero integer (or null for impassible) for every possible "movement type". */
   movementCosts: TileMovementCosts;
+  /**
+   * An integer from 0 to 4 which modifies the amount of damage
+   * a unit on this tile takes from attacks.
+   */
   defenseStars: number;
 }
 
+/** All ocean tiles are impassible for land units. */
+const commonOceanMovementCosts = {
+  foot: null,
+  boots: null,
+  treads: null,
+  tires: null,
+  air: 1,
+  pipe: null,
+} satisfies Partial<TileMovementCosts>;
+
 /**
- * Movement costs which are shared by all ground-based map tiles
+ * Some movement costs are shared by all ground-based map tiles
  * like forests, rivers and cities.
  * Specifically, if a map tile is passable for infantry,
  * we consider it to be a "land" tile.
  */
-const landMovementCosts = {
+const commonLandMovementCosts = {
   boots: 1,
   air: 1,
   pipe: null,
   sea: null,
   lander: null,
-  // `as const satisfies ...` allows us to essentially define a custom type with exactly
-  // these keys, while asserting that the new type *also* matches another type/interface.
-} as const satisfies Partial<TileMovementCosts>;
+} satisfies Partial<TileMovementCosts>;
 
 /**
  * All man-made structures (roads, buildings) have the same movement costs,
@@ -48,24 +47,17 @@ const landMovementCosts = {
  *   - For example, ships can move through ports and piperunners can move through bases.
  */
 const manMadeMovementCosts: TileMovementCosts = {
-  ...landMovementCosts,
+  ...commonLandMovementCosts,
   foot: 1,
   treads: 1,
   tires: 1,
 };
 
-/** All man-made *buildings* provide 3 defense, except for the HQ which provides 4. */
-const buildingDefense = 3;
-
-/** All ocean tiles are impassible for land units. */
-const seaMovementCosts = {
-  foot: null,
-  boots: null,
-  treads: null,
-  tires: null,
-  air: 1,
-  pipe: null,
-} as const satisfies Partial<TileMovementCosts>;
+const buildingTileProperties: TileProperties = {
+  /** All man-made *buildings* provide 3 defense, except for the HQ which provides 4. */
+  defenseStars: 3,
+  movementCosts: manMadeMovementCosts,
+};
 
 /** Pipes and (unbroken) pipe seams are exactly the same */
 const pipeTileProperties: TileProperties = {
@@ -84,6 +76,18 @@ const pipeTileProperties: TileProperties = {
 
 /**
  * Defense and movement data for all tiles types.
+ * Every unit has exactly one "movement type", for example tanks have type "treads".
+ * This object shows the amount of movement points which must be spent
+ * to *enter* each type of tile, for each "movement type".
+ * `null` means impassible terrain.
+ *
+ * Note: Movement costs vary based on weather,
+ * so we need to either:
+ * 1) create one of these objects for each possible weather
+ * 2) create one of these objects for "normal" weather and
+ * perform some final weather-based modifications in the getter function.
+ *
+ * Currently we use approach (2).
  *
  * TODO: Create a TileType for a "broken pipe seam".
  *
@@ -95,7 +99,7 @@ const tileProperties: Record<TileType, TileProperties> = {
   plain: {
     defenseStars: 1,
     movementCosts: {
-      ...landMovementCosts,
+      ...commonLandMovementCosts,
       foot: 1,
       treads: 1,
       tires: 2,
@@ -104,7 +108,7 @@ const tileProperties: Record<TileType, TileProperties> = {
   forest: {
     defenseStars: 2,
     movementCosts: {
-      ...landMovementCosts,
+      ...commonLandMovementCosts,
       foot: 1,
       treads: 2,
       tires: 3,
@@ -113,7 +117,7 @@ const tileProperties: Record<TileType, TileProperties> = {
   mountain: {
     defenseStars: 4,
     movementCosts: {
-      ...landMovementCosts,
+      ...commonLandMovementCosts,
       foot: 2,
       treads: null,
       tires: null,
@@ -122,7 +126,7 @@ const tileProperties: Record<TileType, TileProperties> = {
   river: {
     defenseStars: 0,
     movementCosts: {
-      ...landMovementCosts,
+      ...commonLandMovementCosts,
       foot: 2,
       treads: null,
       tires: null,
@@ -135,7 +139,7 @@ const tileProperties: Record<TileType, TileProperties> = {
   sea: {
     defenseStars: 0,
     movementCosts: {
-      ...seaMovementCosts,
+      ...commonOceanMovementCosts,
       sea: 1,
       lander: 1,
     },
@@ -143,7 +147,7 @@ const tileProperties: Record<TileType, TileProperties> = {
   shoal: {
     defenseStars: 0,
     movementCosts: {
-      ...landMovementCosts,
+      ...commonLandMovementCosts,
       foot: 1,
       treads: 1,
       tires: 1,
@@ -155,7 +159,7 @@ const tileProperties: Record<TileType, TileProperties> = {
   reef: {
     defenseStars: 1,
     movementCosts: {
-      ...seaMovementCosts,
+      ...commonOceanMovementCosts,
       sea: 2,
       lander: 2,
     },
@@ -163,7 +167,7 @@ const tileProperties: Record<TileType, TileProperties> = {
   pipe: pipeTileProperties,
   pipeSeam: pipeTileProperties,
   base: {
-    defenseStars: buildingDefense,
+    defenseStars: buildingTileProperties.defenseStars,
     movementCosts: {
       ...manMadeMovementCosts,
       // Any building which *could have* produced a unit has
@@ -173,7 +177,7 @@ const tileProperties: Record<TileType, TileProperties> = {
     },
   },
   port: {
-    defenseStars: buildingDefense,
+    defenseStars: buildingTileProperties.defenseStars,
     movementCosts: {
       ...manMadeMovementCosts,
       // Any building which *could have* produced a unit has
@@ -183,14 +187,8 @@ const tileProperties: Record<TileType, TileProperties> = {
       lander: 1,
     },
   },
-  airport: {
-    defenseStars: buildingDefense,
-    movementCosts: manMadeMovementCosts,
-  },
-  city: {
-    defenseStars: buildingDefense,
-    movementCosts: manMadeMovementCosts,
-  },
+  airport: buildingTileProperties,
+  city: buildingTileProperties,
   hq: {
     defenseStars: 4,
     movementCosts: manMadeMovementCosts,
@@ -199,29 +197,17 @@ const tileProperties: Record<TileType, TileProperties> = {
     defenseStars: 0,
     movementCosts: manMadeMovementCosts,
   },
-  lab: {
-    defenseStars: buildingDefense,
-    movementCosts: manMadeMovementCosts,
-  },
-  comtower: {
-    defenseStars: buildingDefense,
-    movementCosts: manMadeMovementCosts,
-  },
-  unusedSilo: {
-    defenseStars: buildingDefense,
-    movementCosts: manMadeMovementCosts,
-  },
-  usedSilo: {
-    defenseStars: buildingDefense,
-    movementCosts: manMadeMovementCosts,
-  },
+  lab: buildingTileProperties,
+  comtower: buildingTileProperties,
+  unusedSilo: buildingTileProperties,
+  usedSilo: buildingTileProperties,
 };
 
 type Weather = "clear" | "rain" | "snow";
 
 /**
  * Every type of map tile has some number of "defense stars",
- * an integer between 0 and 4, which modifies the amount of damage
+ * an integer between 0 and 4 which modifies the amount of damage
  * a unit on that tile takes from attacks.
  */
 export const getTerrainDefenseStars = (tileType: TileType) =>
