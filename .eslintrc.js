@@ -4,6 +4,9 @@ module.exports = {
     'plugin:@typescript-eslint/recommended',
     'plugin:react/recommended',
     'plugin:react-hooks/recommended',
+    // prettier and eslint configuration based on:
+    // https://blog.logrocket.com/using-prettier-eslint-automate-formatting-fixing-javascript/#remove-conflicting-rules-run-serially
+    'prettier', // Make sure this is last
   ],
   parserOptions: {
     ecmaVersion: 2018,
