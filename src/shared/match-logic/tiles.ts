@@ -215,7 +215,7 @@ export const getUnitTerrainDefense = (hp: number, tileType: TileType) => {
    * and *display* health as a number from 1 to 10, by dividing by 10 with rounding.
    * The damage formula is based this "visual health".
    */
-  const visualHp = hp / 10;
+  const visualHp = Math.ceil(hp / 10);
   return tileProperties[tileType].defenseStars * visualHp;
 };
 
