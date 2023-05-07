@@ -35,7 +35,7 @@ const landMovementCosts = {
   pipe: null,
   sea: null,
   lander: null,
-  // `as const satisfies ...` allows us essentially define a custom type with exactly
+  // `as const satisfies ...` allows us to essentially define a custom type with exactly
   // these keys, while asserting that the new type *also* matches another type/interface.
 } as const satisfies Partial<TileMovementCosts>;
 
