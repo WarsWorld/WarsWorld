@@ -2,10 +2,10 @@ import { TileType } from "server/schemas/tile";
 import { MovementType } from "shared/match-logic/buildable-unit";
 import { tsIncludes } from "shared/utils/typesafe-includes";
 
+/** A nonzero integer (or null for impassible) for every possible "movement type". */
 type TileMovementCosts = Record<MovementType, number | null>;
 
 export interface TileProperties {
-  /** A nonzero integer (or null for impassible) for every possible "movement type". */
   movementCosts: TileMovementCosts;
   /**
    * An integer from 0 to 4 which modifies the amount of damage
