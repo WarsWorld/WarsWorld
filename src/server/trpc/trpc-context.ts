@@ -12,7 +12,7 @@ import type ws from "ws";
 export const createContext = async (
   opts:
     | CreateNextContextOptions
-    | NodeHTTPCreateContextFnOptions<IncomingMessage, ws>,
+    | NodeHTTPCreateContextFnOptions<IncomingMessage, ws>
 ) => {
   const session = await getSession(opts);
 

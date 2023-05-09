@@ -11,7 +11,7 @@ if (clientId !== undefined && clientSecret !== undefined) {
     DiscordProvider({
       clientId,
       clientSecret,
-    }),
+    })
   );
 }
 

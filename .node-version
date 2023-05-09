@@ -1,0 +1,10 @@
+18.15.0
+
+# node is installed globally, but different projects often require different versions.
+# Because some devs need to frequently change node versions,
+# tools like "nvm" and "fnm" make it easier by detecting files
+# like ".node-version" or ".nvmrc".
+#
+# If you don't need to use different node versions for different projects,
+# you can ignore this file and just install node normally.
+

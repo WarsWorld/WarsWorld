@@ -7,7 +7,7 @@ export const postRouter = router({
       z.object({
         id: z.string().uuid().optional(),
         text: z.string().min(1),
-      }),
+      })
     )
     .mutation(async ({ input, ctx }) => {
       // TODO

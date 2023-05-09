@@ -56,7 +56,7 @@ export const PixiMatch = () => {
   const [players, setPlayers] = useState<PlayerInMatch[] | null | undefined>(
     null
   );
-  const [segments, setSegments] = useState<Tile[][] | null | undefined>(null);
+  const [segments] = useState<Tile[][] | null | undefined>(null);
   const pixiCanvasRef = useRef<HTMLCanvasElement>(null);
 
   const { query } = useRouter();

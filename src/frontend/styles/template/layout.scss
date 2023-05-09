@@ -1,0 +1,165 @@
+@use 'src/styles/variables';
+@use 'src/styles/mixins' as m;
+
+#__next,
+html,
+body {
+  height: 100vh;
+  // height: var(--doc-height);
+  height: 100dvh;
+}
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+}
+
+.layout {
+  // TODO: Thing for scrollbar needs to be fixed for wide screen, small height device edge cases
+  main {
+    overflow: scroll;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  main::-webkit-scrollbar {
+    display: none;
+  }
+
+  header {
+    .loginLink,
+    .navLinks {
+      display: none;
+    }
+
+    .burgerMenuIcon {
+      div {
+        background-color: theme('colors.primary');
+        transition: 0.4s;
+      }
+
+      &:hover {
+        div {
+          background-color: theme('colors.primary-variant');
+        }
+      }
+    }
+
+    .matchLobbyBtn {
+      @include m.clampSize(12, 20, 320, 1200);
+      color: theme('colors.primary');
+    }
+
+    .burgerMenuLinks,
+    .matchMenuLinks {
+      opacity: 0;
+      visibility: hidden;
+      transition: 0.7s;
+      top: 60px;
+    }
+
+    .burgerMenuLinks {
+      .matchMenuLinks {
+        right: 160px;
+      }
+    }
+
+    .showBurgerMenuLinks,
+    .showMatchMenuLinks {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .showMatchMenuLinks {
+      height: 8rem;
+    }
+
+    .showBurgerMenuLinks {
+      height: 12rem;
+    }
+  }
+
+  .currentGames {
+    scroll-margin-top: 50px;
+  }
+}
+
+.withFooter {
+  grid-template-rows: 60px 1fr 140px;
+}
+
+.noFooter {
+  grid-template-rows: 60px 1fr;
+}
+
+@screen tablet {
+  .layout {
+    .inProgress {
+      padding: 2rem;
+    }
+  }
+}
+
+@screen smallscreen {
+  .burgerMenuBtn {
+    display: none;
+  }
+
+  .layout {
+    header {
+      .navLinks,
+      .loginLink {
+        display: initial;
+      }
+
+      .loginLink {
+        min-width: 180px;
+      }
+
+      .navLinks {
+        display: flex;
+        gap: 50px;
+      }
+
+      .burgerMenuLinks {
+        display: none;
+      }
+    }
+
+    .inProgress {
+      padding: 2rem 3rem;
+    }
+  }
+}
+
+@screen laptop {
+  .layout {
+    .inProgress {
+      padding: 3rem;
+    }
+  }
+}
+
+@screen medium {
+  .layout {
+    header {
+      .burgerMenuLinks,
+      .matchMenuLinks {
+        top: 100px;
+      }
+    }
+  }
+
+  .withFooter {
+    grid-template-rows: 100px 1fr 160px;
+
+    footer {
+      height: 160px;
+    }
+  }
+
+  .noFooter {
+    grid-template-rows: 100px 1fr;
+  }
+}

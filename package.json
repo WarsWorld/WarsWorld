@@ -24,15 +24,20 @@
     "migrate": "prisma migrate deploy",
     "start": "cross-env NODE_ENV=production node dist/server/main-production.js",
     "studio": "prisma studio",
-    "lint": "eslint --cache --ext \".js,.ts,.tsx\" --report-unused-disable-directives --report-unused-disable-directives src",
-    "lint-fix": "pnpm lint --fix",
+    "lint:eslint": "eslint src --ext \".js,.ts,.tsx\" --cache --report-unused-disable-directives --max-warnings=10",
+    "lint:eslint:fix": "pnpm lint:eslint --fix",
+    "lint:prettier": "prettier --check .",
+    "lint:prettier:fix": "prettier --write .",
+    "lint": "pnpm run lint:prettier && pnpm run lint:eslint",
+    "lint-fix": "pnpm run lint:prettier:fix && pnpm run lint:eslint:fix",
     "postinstall": "prisma generate"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"
   },
   "prettier": {
-    "singleQuote": false
+    "singleQuote": false,
+    "endOfLine": "auto"
   },
   "dependencies": {
     "@prisma/client": "^4.12.0",
@@ -76,6 +81,6 @@
     "prettier": "^2.8.7",
     "prisma": "^4.12.0",
     "tailwindcss": "^3.3.0",
-    "typescript": "^5.0.4"
+    "typescript": "^4.9.5"
   }
 }

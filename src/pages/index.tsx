@@ -1,20 +1,22 @@
-import { MatchRow } from "frontend/match/MatchRow";
-import Link from "next/link";
-import { trpc } from "frontend/utils/trpc-client";
+import { Layout } from "components/layout";
+import { Home } from "../components/Home";
 
-export default function Index() {
-  const { data } = trpc.match.getAll.useQuery();
+export default function IndexPage() {
+  // const updateDocumentHeightCSSProperty = () => {
+  //   if (typeof window !== 'undefined') {
+  //     const doc = window.document.documentElement;
+  //     doc.style.setProperty('--doc-height', `${window.innerHeight}px`);
+  //   }
+  // };
+
+  // if (typeof window !== 'undefined') {
+  //   window.addEventListener('resize', updateDocumentHeightCSSProperty);
+  //   updateDocumentHeightCSSProperty();
+  // }
 
   return (
-    <>
-      <h1>WarsWorld</h1>
-      <Link href="/your-matches">Your matches</Link>
-      <h2>All current games</h2>
-      <div>
-        {data?.map((match) => (
-          <MatchRow key={match.id} match={match} />
-        ))}
-      </div>
-    </>
+    <Layout footer>
+      <Home />
+    </Layout>
   );
 }

@@ -7,7 +7,7 @@ export const createEmitter = <D extends { matchId: string }>() => {
   const unsubscribe = (id: string, listenerToUnsub: Listener) => {
     listenerMap.set(
       id,
-      listenerMap.get(id)?.filter((l) => l !== listenerToUnsub) ?? [],
+      listenerMap.get(id)?.filter((l) => l !== listenerToUnsub) ?? []
     );
   };
 

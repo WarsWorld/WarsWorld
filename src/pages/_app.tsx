@@ -3,6 +3,7 @@ import { trpc } from "frontend/utils/trpc-client";
 import type { Session } from "next-auth";
 import { getSession, SessionProvider } from "next-auth/react";
 import type { AppType } from "next/app";
+import Head from "next/head";
 import "../frontend/styles/global.scss";
 
 const MyApp: AppType<{ session: Session | null }> = ({
@@ -11,6 +12,13 @@ const MyApp: AppType<{ session: Session | null }> = ({
 }) => {
   return (
     <SessionProvider session={pageProps.session}>
+      <Head>
+        <link rel="icon" href="/favicon.ico" />
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1, minimum-scale=1"
+        />
+      </Head>
       <ProvidePlayers>
         <Component {...pageProps} />
       </ProvidePlayers>

@@ -23,7 +23,9 @@
     "**/*.ts",
     "**/*.tsx",
     "./next.config.js",
-    "./.eslintrc.js"
+    "./.eslintrc.js",
+    "./tailwind.config.js",
+    "./postcss.config.js"
   ],
   "exclude": ["node_modules"],
   "ts-node": {

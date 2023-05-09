@@ -4,12 +4,14 @@ import { AttackEvent } from "shared/types/events";
 import { BackendMatchState } from "shared/types/server-match-state";
 
 // checked: is player's turn
-const generateAttackEvent = (
+export const generateAttackEvent = (
   moveAction: MoveAction,
   attackAction: AttackAction,
   matchState: BackendMatchState
 ): AttackEvent => {
-  const currentPlayerInMatch = matchState.players.find((p) => p.hasCurrentTurn);
+  const _currentPlayerInMatch = matchState.players.find(
+    (p) => p.hasCurrentTurn
+  );
 
   const attacker = matchState.units.find((u) =>
     isSamePosition(moveAction.path.at(-1)!, u.position)

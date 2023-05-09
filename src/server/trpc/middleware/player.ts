@@ -79,5 +79,5 @@ export const playerWithoutCurrentMiddleware = t.middleware(
         ownedPlayers,
       },
     });
-  },
+  }
 );
