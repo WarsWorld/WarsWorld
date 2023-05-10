@@ -1,4 +1,4 @@
-@use 'src/styles/mixins' as m;
+@use "src/frontend/styles/mixins" as m;
 
 .createGameBtn {
   @include m.clampSize(12, 24, 320, 1200);
