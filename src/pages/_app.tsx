@@ -4,7 +4,7 @@ import type { Session } from "next-auth";
 import { getSession, SessionProvider } from "next-auth/react";
 import type { AppType } from "next/app";
 import Head from "next/head";
-import "../frontend/styles/global.scss";
+import "../frontend/styles/globals.scss";
 
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
