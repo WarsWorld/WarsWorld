@@ -11,7 +11,7 @@ export function NavLinksMatches({ showMatchLinks }: Props) {
         showMatchLinks ? "showMatchMenuLinks" : ""
       }`}
     >
-      <NavItem text="Current Games" location="/your-matches" />
+      <NavItem text="Your Games" location="/your-matches" />
       <NavItem text="Current Games" location="/your-matches#currentGames" />
       <NavItem text="Completed Games" location="/your-matches#completedGames" />
     </div>
