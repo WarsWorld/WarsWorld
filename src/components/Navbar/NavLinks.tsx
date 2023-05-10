@@ -1,5 +1,5 @@
-import { NavItem } from './NavItem';
-import { NavLinksMatches } from './NavLinksMatches';
+import { NavItem } from "./NavItem";
+import { NavLinksMatches } from "./NavLinksMatches";
 
 interface Props {
   showMatchLinks: boolean;

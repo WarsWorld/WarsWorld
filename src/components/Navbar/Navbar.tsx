@@ -1,11 +1,11 @@
-import { useState } from 'react';
-import Link from 'next/link';
-import Image from 'next/image';
-import { NavLinks } from './NavLinks';
-import { NavLinksMobile } from './NavLinksMobile';
+import { useState } from "react";
+import Link from "next/link";
+import Image from "next/image";
+import { NavLinks } from "./NavLinks";
+import { NavLinksMobile } from "./NavLinksMobile";
 
 export function Navbar() {
-  const awLogoPath = '/img/layout/awLogo.webp';
+  const awLogoPath = "/img/layout/awLogo.webp";
   const [showLinks, setShowLinks] = useState(false);
   const [showMatchLinks, setShowMatchLinks] = useState(false);
 

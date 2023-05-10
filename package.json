@@ -1,6 +1,6 @@
 {
-  "name": "@examples/next-websockets-starter",
-  "version": "10.19.1",
+  "name": "warsworld",
+  "version": "0.0.0",
   "private": true,
   "engines": {
     "node": "^18.15.0"
@@ -11,19 +11,18 @@
     "build:1-next": "cross-env NODE_ENV=production next build",
     "build:2-server": "tsc --project tsconfig.server.json",
     "build": "run-s build:*",
-    "dev:wss": "cross-env PORT=3001 tsx watch src/server/wssDevServer.ts --tsconfig tsconfig.server.json ",
+    "dev:wss": "cross-env PORT=3001 tsx watch src/server/main-wss-development.ts --tsconfig tsconfig.server.json ",
     "dev:next": "next dev",
     "dev": "pnpm migrate-dev && run-p dev:*",
     "db-up": "docker-compose up -d",
     "db-seed": "prisma db seed",
     "db-migrate-dev": "prisma migrate dev",
     "db-nuke": "docker-compose down --volumes --remove-orphans",
-    "dx": "run-s db-up db-migrate-dev db-seed dev",
-    "dev-nuke": "rm -rf prisma/*.db**",
+    "dx": "run-s db-up db-migrate-dev dev",
     "generate": "prisma generate",
     "migrate-dev": "prisma migrate dev",
     "migrate": "prisma migrate deploy",
-    "start": "cross-env NODE_ENV=production node dist/server/prodServer.js",
+    "start": "cross-env NODE_ENV=production node dist/server/main-production.js",
     "studio": "prisma studio",
     "lint:eslint": "eslint src --ext \".js,.ts,.tsx\" --cache --report-unused-disable-directives --max-warnings=10",
     "lint:eslint:fix": "pnpm lint:eslint --fix",
@@ -37,9 +36,8 @@
     "seed": "tsx prisma/seed.ts"
   },
   "prettier": {
-    "printWidth": 80,
-    "trailingComma": "all",
-    "singleQuote": true
+    "singleQuote": false,
+    "endOfLine": "auto"
   },
   "dependencies": {
     "@prisma/client": "^4.12.0",
@@ -51,10 +49,14 @@
     "clsx": "^1.1.1",
     "next": "^13.2.1",
     "next-auth": "^4.14.0",
+    "pixijs": "^7.1.4",
+    "prisma-json-types-generator": "^2.3.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "sass": "^1.62.0",
     "superjson": "^1.7.4",
+    "tinyqueue": "^2.0.3",
+    "tsconfig-paths": "^4.2.0",
     "tsx": "^3.12.3",
     "ws": "^8.0.0",
     "zod": "^3.0.0"
@@ -79,9 +81,6 @@
     "prettier": "^2.8.7",
     "prisma": "^4.12.0",
     "tailwindcss": "^3.3.0",
-    "typescript": "^5.0.4"
-  },
-  "publishConfig": {
-    "access": "restricted"
+    "typescript": "^4.9.5"
   }
 }

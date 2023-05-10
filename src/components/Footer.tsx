@@ -1,9 +1,9 @@
-import Link from 'next/link';
+import Link from "next/link";
 
 export function Footer() {
-  const rLogoPath = '/img/layout/Reddit.png';
-  const dLogoPath = '/img/layout/Discord.png';
-  const gLogoPath = '/img/layout/GitHub.png';
+  const rLogoPath = "/img/layout/Reddit.png";
+  const dLogoPath = "/img/layout/Discord.png";
+  const gLogoPath = "/img/layout/GitHub.png";
 
   return (
     <footer className="@flex @flex-col @items-center @justify-center @gap-4 @bg-gradient-to-t @from-black @p-0 @h-[140px]">

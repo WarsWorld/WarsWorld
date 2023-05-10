@@ -1,6 +1,6 @@
 {
   "recommendations": [
-    "esbenp.prettier-vscode",
+    "rvest.vs-code-prettier-eslint",
     "dbaeumer.vscode-eslint",
     "prisma.prisma",
     "bradlc.vscode-tailwindcss"

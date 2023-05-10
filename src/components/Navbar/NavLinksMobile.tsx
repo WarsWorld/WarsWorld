@@ -1,5 +1,5 @@
-import { NavItem } from './NavItem';
-import { NavLinksMatches } from './NavLinksMatches';
+import { NavItem } from "./NavItem";
+import { NavLinksMatches } from "./NavLinksMatches";
 
 interface Props {
   showLinks: boolean;
@@ -16,7 +16,7 @@ export function NavLinksMobile({
     <>
       <div
         className={`@grid @fixed @justify-center @items-center @bg-gray-800/90 @right-0 @w-[160px] @h-0 burgerMenuLinks ${
-          showLinks ? 'showBurgerMenuLinks' : ''
+          showLinks ? "showBurgerMenuLinks" : ""
         }`}
       >
         <button onClick={handleMatchLinks} className="matchLobbyBtn">

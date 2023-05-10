@@ -1,79 +1,155 @@
-import { observable } from '@trpc/server/observable';
-import { Match, awbwMapToWWMap } from 'server/map-parser';
-import { EventEmitter } from 'stream';
-import { z } from 'zod';
-import { prisma } from '../prisma';
-import { publicProcedure, router } from '../trpc';
+import { coSchema } from "server/schemas/co";
+import { emitEvent } from "server/emitter/event-emitter";
+import {
+  getNextAvailablePlayerSlot,
+  getPlayerEntryInMatch,
+} from "server/match-logic/server-match-logic";
+import {
+  getMatches,
+  getMatchesOfPlayer,
+} from "server/match-logic/server-match-states";
+import { z } from "zod";
+import { prisma } from "../prisma/prisma-client";
+import {
+  matchBaseProcedure,
+  playerBaseProcedure,
+  publicBaseProcedure,
+  router,
+} from "../trpc/trpc-setup";
+import { createMatchProcedure } from "./match/create";
+import {
+  PlayerInMatch,
+  BackendMatchState,
+} from "shared/types/server-match-state";
 
-const ee = new EventEmitter();
+const updateServerState = async (
+  matchState: BackendMatchState,
+  newPlayersState: PlayerInMatch[]
+) => {
+  await prisma.match.update({
+    where: {
+      id: matchState.id,
+    },
+    data: {
+      playerState: newPlayersState,
+    },
+  });
+  matchState.players = newPlayersState;
+};
+
+const throwIfMatchNotInSetupState = (match: BackendMatchState) => {
+  if (match.status !== "setup") {
+    throw new Error(
+      "This action requires the match to be in 'setup' state, but it isn't"
+    );
+  }
+};
+
+const matchStateToFrontend = (match: BackendMatchState) => ({
+  id: match.id,
+  map: {
+    id: match.map.id,
+    name: match.map.name,
+    numberOfPlayers: match.map.numberOfPlayers,
+  },
+  players: match.players,
+  state: match.status,
+  turn: match.turn,
+});
 
 export const matchRouter = router({
-  create: publicProcedure
+  create: createMatchProcedure,
+  // TODO pagination
+  getAll: publicBaseProcedure.query(() =>
+    getMatches().map(matchStateToFrontend)
+  ),
+  getPlayerMatches: playerBaseProcedure.query(({ ctx }) =>
+    getMatchesOfPlayer(ctx.currentPlayer.id).map(matchStateToFrontend)
+  ),
+  full: matchBaseProcedure.query(async ({ ctx }) => {
+    // TODO by default show no hidden units and FoW is completely dark and empty
+    // TODO if the user has a session and has a player in this match it needs to be checked and some information revealed accordingly
+    return ctx.match;
+  }),
+  join: matchBaseProcedure
     .input(
       z.object({
-        playerName: z.string(),
-        selectedCO: z.string(),
-      }),
+        selectedCO: coSchema,
+      })
     )
-    .mutation(async ({ input }) => {
-      const causticFinale = await prisma.map.findFirstOrThrow({
-        where: {
-          name: 'Caustic Finale',
-        },
-      });
+    .mutation(async ({ input, ctx }) => {
+      throwIfMatchNotInSetupState(ctx.match);
 
-      const matchState = awbwMapToWWMap();
-      const { orangeStar, blueMoon } = matchState.playerState;
-      orangeStar.username = input.playerName;
-      orangeStar.co = input.selectedCO;
-      blueMoon.username = '...';
-      blueMoon.co = '';
+      if (getPlayerEntryInMatch(ctx.match, ctx.currentPlayer.id) !== null) {
+        throw new Error("You've already joined this match!");
+      }
 
-      return prisma.match.create({
-        data: {
-          status: 'playing',
-          matchState: awbwMapToWWMap(),
-          mapId: causticFinale.id,
+      const nextAvailablePlayerSlot = getNextAvailablePlayerSlot(ctx.match);
+
+      await updateServerState(ctx.match, [
+        ...ctx.match.players,
+        {
+          playerId: ctx.currentPlayer.id,
+          playerSlot: nextAvailablePlayerSlot,
+          ready: false,
+          co: input.selectedCO,
+          funds: 0,
+          powerMeter: 0,
         },
+      ]);
+
+      emitEvent({
+        type: "player-joined",
+        matchId: ctx.match.id,
+        player: ctx.currentPlayer,
+        playerSlot: nextAvailablePlayerSlot,
       });
     }),
-  getAll: publicProcedure.query(() => prisma.match.findMany()),
-  full: publicProcedure.input(z.string()).query(async ({ input }) => {
-    const thing = await prisma.match.findFirst({
-      where: {
-        id: input,
-      },
-    });
+  leave: matchBaseProcedure.mutation(async ({ ctx }) => {
+    throwIfMatchNotInSetupState(ctx.match);
 
-    if (thing === null) {
-      return null;
+    if (getPlayerEntryInMatch(ctx.match, ctx.currentPlayer.id) === null) {
+      throw new Error("You can't leave this match because you haven't joined");
     }
 
-    return {
-      ...thing,
-      matchState: thing?.matchState as Match,
-    };
+    await updateServerState(
+      ctx.match,
+      ctx.match.players.filter((e) => e.playerId !== ctx.currentPlayer.id)
+    );
+
+    emitEvent({
+      matchId: ctx.match.id,
+      type: "player-left",
+      player: ctx.currentPlayer,
+    });
   }),
-  makeMove: publicProcedure
+  setReady: matchBaseProcedure
     .input(
       z.object({
-        moveType: z.string(),
-      }),
+        readyState: z.boolean(),
+      })
     )
-    .mutation(async (data) => {
-      // validate move
-      // store in DB etc.
-      ee.emit('move', data);
-      // maybe no return necessary because of subscription ?
-    }),
-  moves: publicProcedure.subscription(() =>
-    observable((emit) => {
-      const handler = (moveData: unknown) => {
-        emit.next(moveData);
-      };
+    .mutation(async ({ input, ctx }) => {
+      throwIfMatchNotInSetupState(ctx.match);
 
-      ee.on('move', handler);
-      return () => ee.off('move', handler);
+      if (getPlayerEntryInMatch(ctx.match, ctx.currentPlayer.id) === null) {
+        throw new Error("You haven't joined this match");
+      }
+
+      await updateServerState(
+        ctx.match,
+        ctx.match.players.map((e) => ({
+          ...e,
+          ready:
+            e.playerId === ctx.currentPlayer.id ? input.readyState : e.ready,
+        }))
+      );
+
+      emitEvent({
+        type: "player-changed-ready-status",
+        matchId: ctx.match.id,
+        player: ctx.currentPlayer,
+        ready: input.readyState,
+      });
     }),
-  ),
 });

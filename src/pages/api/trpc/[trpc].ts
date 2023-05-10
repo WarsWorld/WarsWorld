@@ -1,9 +1,9 @@
 /**
  * This file contains the tRPC http response handler and context creation for Next.js
  */
-import * as trpcNext from '@trpc/server/adapters/next';
-import { createContext } from 'server/context';
-import { AppRouter, appRouter } from 'server/routers/_app';
+import * as trpcNext from "@trpc/server/adapters/next";
+import { createContext } from "server/trpc/trpc-context";
+import { AppRouter, appRouter } from "server/routers/app";
 
 export default trpcNext.createNextApiHandler<AppRouter>({
   router: appRouter,
@@ -15,9 +15,9 @@ export default trpcNext.createNextApiHandler<AppRouter>({
    * @link https://trpc.io/docs/error-handling
    */
   onError({ error }) {
-    if (error.code === 'INTERNAL_SERVER_ERROR') {
+    if (error.code === "INTERNAL_SERVER_ERROR") {
       // send to bug reporting
-      console.error('Something went wrong', error);
+      console.error("Something went wrong", error);
     }
   },
   /**
