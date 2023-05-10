@@ -12,32 +12,27 @@ If you want to reach out the dev team/ask some questions, feel free to DM femboy
 
 ## Setting up your local environment
 
-Running our project locally just takes 5 easy steps!
+To make sure our project is able to run locally, follow these 6 easy steps!
 
-1 - Make sure you have [Docker Desktop](https://www.docker.com/products/docker-desktop/) installed and run it/the docker daemon (needed to run your local db, you just need to have the app running in the background, nothing else!)
+1 - Make sure you have [Docker Desktop](https://www.docker.com/products/docker-desktop/) installed and run it (the Docker daemon is needed to run your local database, so all need is to have the app running in the background. Nothing else!).
 
-2 - Make sure you have [pnpm installed](https://pnpm.io/) (its like npm but faster).
+2 - Make sure you have [node installed](https://nodejs.org/en/download) and the version is recent. version ^18.15.0 is recommended
 
-3 - Clone the repository in your own IDE.
+3 - Clone the repository in your own working environment or IDE.
 
 4 - Copy the "env.example" to ".env" and setup a random password/string in the PGPASSWORD and NEXTAUTH_SECRET fields.
 
-5 - Install dependencies and run app (run code below)
+5 - Install the dependencies from package.json and run app using the following code:
 
 ```
-pnpm i  //This is basically an npm i/install
-pnpm dx //This is our npm start
+npm install
+npm run initialise // only run this once!
+npm run dev
 ```
 
 Now go to localhost:3000 and you should be set! If you are having issues, feel free to contact someone in the team!
 
 ` Soon there will be a more newb/extensive setup your local environment guide here!`
-
-## Troubleshooting
-
-### Building but not able to access the site?
-
-Ensure you are using an up to date node version. ^18.15.0 is recommended.
 
 ## Our Tech Stack's Features
 
@@ -49,40 +44,3 @@ Ensure you are using an up to date node version. ^18.15.0 is recommended.
 - 🔐 Authorization using [next-auth](https://next-auth.js.org/)
 - ⚙️ VSCode extensions
 - 🎨 ESLint + Prettier
-
-### Files of note
-
-<table>
-  <thead>
-    <tr>
-      <th>Path</th>
-      <th>Description</th>
-    </tr>
-  </thead>
-  <tbody>
-<tr>
-      <td><code>./public</code></td>
-      <td>Where we store our public files (images, favicon, etc)</td>
-    </tr>
-<tr>
-      <td><code>./src/pages</code></td>
-      <td>Frontend/tsx pages (index, about, match)</td>
-    </tr>
-<tr>
-      <td><code>./src/components</code></td>
-      <td>React components</td>
-    </tr>
-    <tr>
-      <td><a href="./prisma/schema.prisma"><code>./prisma/schema.prisma</code></a></td>
-      <td>Prisma schema</td>
-    </tr>
-    <tr>
-      <td><a href="./src/api/trpc/[trpc].tsx"><code>./src/api/trpc/[trpc].tsx</code></a></td>
-      <td>tRPC response handler</td>
-    </tr>
-    <tr>
-      <td><a href="./src/server/routers"><code>./src/server/routers</code></a></td>
-      <td>Your app's different tRPC-routers</td>
-    </tr>
-  </tbody>
-</table>

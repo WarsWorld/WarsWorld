@@ -1,9 +1,3 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
-
-# dependencies
-/node_modules
-/.pnp
-.pnp.js
 # https://www.typescriptlang.org/tsconfig#tsBuildInfoFile
 tsconfig.tsbuildinfo
 
@@ -16,11 +10,7 @@ tsconfig.tsbuildinfo
 /build
 /dist/
 
+/node_modules
 .env
 .eslintcache
-
-*.db
-*.db-journal
-
-# other
 .DS_Store
