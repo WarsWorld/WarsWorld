@@ -20,27 +20,23 @@ jobs:
         with:
           fetch-depth: 0
 
-      - uses: pnpm/action-setup@v2.2.4
-        with:
-          version: 8.3.1
-
       - name: Use Node ${{ matrix.node }}
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node }}
-          cache: 'pnpm'
+          cache: 'npm'
 
       - name: Install deps (with cache)
-        run: pnpm install
+        run: npm install
 
       - name: Next.js cache
         uses: actions/cache@v3
         with:
           path: ${{ github.workspace }}/.next/cache
-          key: ${{ runner.os }}-${{ runner.node }}-${{ hashFiles('**/pnpm-lock.yaml') }}-nextjs
+          key: ${{ runner.os }}-${{ runner.node }}-${{ hashFiles('**/package-lock.yaml') }}-nextjs
 
       - name: Build
-        run: pnpm build
+        run: npm run build
 
       - name: Lint
-        run: pnpm lint
+        run: npm run lint
