@@ -3,15 +3,21 @@ import { PlayerInMatch } from "shared/types/server-match-state";
 
 interface Props {
   playerTurn: boolean;
-  playerInMatch: PlayerInMatch | null;
+  playerInMatch: PlayerInMatch | undefined;
 }
 
 const nationColorGradients: Record<string, string> = {
-  "blue-moon": "@bg-gradient-to-l @from-blue-400",
-  "orange-star": "@bg-gradient-to-l @from-orange-400",
-  "green-earth": "@bg-gradient-to-l @from-green-400",
-  "yellow-comet": "@bg-gradient-to-l @from-yellow-400",
+  blueMoon: "@bg-gradient-to-l @from-blue-400",
+  orangeStar: "@bg-gradient-to-l @from-orange-400",
+  greenEarth: "@bg-gradient-to-l @from-green-400",
+  yellowComet: "@bg-gradient-to-l @from-yellow-400",
   neutral: "@bg-gradient-to-l @from-gray-400",
+};
+
+const kebabToCamel = (str: string) => {
+  return str.replace(/-([a-z])/, function (_match, letter) {
+    return letter.toUpperCase();
+  });
 };
 
 export const PlayerBox = ({ playerTurn, playerInMatch }: Props) => {
@@ -20,6 +26,7 @@ export const PlayerBox = ({ playerTurn, playerInMatch }: Props) => {
   let playerNation: string;
   let playerId: string;
   let playerUnit: string;
+  let army: string;
 
   if (!playerInMatch) {
     playerGradient = nationColorGradients["neutral"];
@@ -28,11 +35,13 @@ export const PlayerBox = ({ playerTurn, playerInMatch }: Props) => {
     playerId = "Awaiting player...";
     playerUnit = "";
   } else {
-    playerGradient = nationColorGradients[playerInMatch.army];
+    army = kebabToCamel(playerInMatch.army);
+
+    playerGradient = nationColorGradients[army];
     playerCO = `/img/CO/${playerInMatch.co}-Full.png`;
-    playerNation = `/img/nations/${playerInMatch.army}.webp`;
+    playerNation = `/img/nations/${army}.webp`;
     playerId = playerInMatch.playerId;
-    playerUnit = `/img/units/${playerInMatch.army}/Infantry-0.png`;
+    playerUnit = `/img/units/${army}/Infantry-0.png`;
   }
 
   return (
