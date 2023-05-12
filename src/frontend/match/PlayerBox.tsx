@@ -21,28 +21,12 @@ const kebabToCamel = (str: string) => {
 };
 
 export const PlayerBox = ({ playerTurn, playerInMatch }: Props) => {
-  let playerGradient: string;
-  let playerCO: string;
-  let playerNation: string;
-  let playerId: string;
-  let playerUnit: string;
-  let army: string;
-
-  if (!playerInMatch) {
-    playerGradient = nationColorGradients["neutral"];
-    playerCO = `/img/CO/Neutral-Full.png`;
-    playerNation = "";
-    playerId = "Awaiting player...";
-    playerUnit = "";
-  } else {
-    army = kebabToCamel(playerInMatch.army);
-
-    playerGradient = nationColorGradients[army];
-    playerCO = `/img/CO/${playerInMatch.co}-Full.png`;
-    playerNation = `/img/nations/${army}.webp`;
-    playerId = playerInMatch.playerId;
-    playerUnit = `/img/units/${army}/Infantry-0.png`;
-  }
+  const army = playerInMatch?.army && kebabToCamel(playerInMatch.army);
+  const playerGradient = nationColorGradients[army ?? "neutral"];
+  const playerCO = playerInMatch?.co ?? "Neutral";
+  const playerNation = army ?? "neutral";
+  const playerId = playerInMatch?.playerId ?? "Awaiting player...";
+  const playerUnit = army ?? "neutral";
 
   return (
     <div className="@relative @z-25 playerBox">
@@ -54,11 +38,11 @@ export const PlayerBox = ({ playerTurn, playerInMatch }: Props) => {
             className={`@absolute @bottom-0 @h-[120px] @w-full @aspect-square @object-none @object-left-top playerCOIcon ${
               playerTurn ? "" : "isNotPlayerTurn"
             }`}
-            src={playerCO}
+            src={`/img/CO/${playerCO}-Full.png`}
           />
           <img
-            className="@absolute @h-8 @top-1 @right-1 @bg-slate-200"
-            src={playerNation}
+            className="@absolute @h-8 @top-1 @right-1 @aspect-square @bg-slate-200"
+            src={`/img/nations/${playerNation}.webp`}
           />
         </div>
         <div className="@text-white @w-full playerNationBox">
@@ -71,7 +55,10 @@ export const PlayerBox = ({ playerTurn, playerInMatch }: Props) => {
             </div>
             <div className="@flex @flex-row @flex-wrap @w-full playerIngameInfo">
               <IngameInfo ingameStatIconPath="" ingameStat={"00:00:00"} />
-              <IngameInfo ingameStatIconPath={playerUnit} ingameStat={999} />
+              <IngameInfo
+                ingameStatIconPath={`/img/units/${playerUnit}/Infantry-0.png`}
+                ingameStat={999}
+              />
               <IngameInfo
                 ingameStatIconPath="/img/mapTiles/countries/city/ne1.webp"
                 ingameStat={999999}
