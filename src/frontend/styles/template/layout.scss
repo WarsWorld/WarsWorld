@@ -1,5 +1,5 @@
-@use 'src/styles/variables';
-@use 'src/styles/mixins' as m;
+@use "src/frontend/styles/variables";
+@use "src/frontend/styles/mixins" as m;
 
 #__next,
 html,
@@ -35,20 +35,20 @@ body {
 
     .burgerMenuIcon {
       div {
-        background-color: theme('colors.primary');
+        background-color: theme("colors.primary");
         transition: 0.4s;
       }
 
       &:hover {
         div {
-          background-color: theme('colors.primary-variant');
+          background-color: theme("colors.primary-variant");
         }
       }
     }
 
     .matchLobbyBtn {
       @include m.clampSize(12, 20, 320, 1200);
-      color: theme('colors.primary');
+      color: theme("colors.primary");
     }
 
     .burgerMenuLinks,
@@ -72,7 +72,7 @@ body {
     }
 
     .showMatchMenuLinks {
-      height: 8rem;
+      height: 12rem;
     }
 
     .showBurgerMenuLinks {

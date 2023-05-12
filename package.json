@@ -18,6 +18,7 @@
     "prisma:studio": "prisma studio",
     "dev:wss": "cross-env PORT=3001 tsx watch src/server/main-wss-development.ts --tsconfig tsconfig.server.json ",
     "dev:next": "next dev",
+
     "dev": "npm run prisma:push && concurrently \"npm:dev:*\"",
     "lint": "eslint src --ext \".js,.ts,.tsx\" --cache --report-unused-disable-directives --max-warnings=10",
     "lint:fix": "npm run lint --fix",
@@ -25,6 +26,7 @@
     "build:server": "tsc --project tsconfig.server.json",
     "build": "concurrently \"npm:build:*\"",
     "start": "cross-env NODE_ENV=production node dist/server/main-production.js"
+
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"

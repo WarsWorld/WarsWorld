@@ -1,19 +1,19 @@
-@use 'src/styles/template/layout';
-@use 'src/styles/grid/global';
-@use 'src/styles/pages';
-@use 'src/styles/mixins' as m;
+@use "src/frontend/styles/template/layout";
+@use "src/frontend/styles/grid/global";
+@use "src/frontend/styles/pages";
+@use "src/frontend/styles/mixins" as m;
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@200&display=swap");
 
 @layer base {
   html {
-    font-family: 'Poppins', sans-serif;
+    font-family: "Poppins", sans-serif;
     color: white;
     background-color: rgba(0, 0, 0, 0.7);
-    background-image: url('/img/bg.jpg');
+    background-image: url("/img/bg.jpg");
     background-size: cover;
   }
 
@@ -24,7 +24,7 @@
 
   h2 {
     @include m.clampSize(12, 24, 320, 1200);
-    color: theme('colors.primary');
+    color: theme("colors.primary");
     font-style: italic;
   }
 
@@ -33,19 +33,24 @@
     font-style: italic;
   }
 
-  p {
+  p,
+  select {
     @include m.clampSize(12, 20, 320, 1200);
     padding: 1rem 0;
+  }
+
+  button {
+    @include m.clampSize(12, 20, 320, 1200);
   }
 
   a {
     @include m.clampSize(12, 20, 320, 1200);
     text-decoration: none;
-    color: theme('colors.primary');
+    color: theme("colors.primary");
     transition: 0.4s;
   }
 
   a:hover {
-    color: theme('colors.primary-variant');
+    color: theme("colors.primary-variant");
   }
 }
