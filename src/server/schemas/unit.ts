@@ -165,7 +165,7 @@ export const unitWithAmmoSchema = z.discriminatedUnion("type", [
 
 /**
  * These units do *not* have a weapon.
- * Specifically, they have no no "Attack" option.
+ * Specifically, they have no "Attack" option.
  * Note: "Black Bomb" can "Explode", which deals damage but is not an attack.
  */
 export const unitWithoutWeaponSchema = z.discriminatedUnion("type", [
