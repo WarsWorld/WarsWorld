@@ -32,7 +32,7 @@ export interface AttackEvent extends AttackAction {
   /**
    * The new defender HP after the attack.
    * TODO: Consider sending just the luck roll(s) for the event,
-   * and calculating HP later.
+   *       and calculating HP later.
    */
   defenderHP: number;
   /**
