@@ -246,7 +246,7 @@ export const unitPropertiesMap: UnitPropertiesMap = {
     cost: 25000,
     vision: 1,
     moveRange: 9,
-    attackRange: [0, 3], // TODO is this suitable for how we'll handle it?
+    // TODO: Black Bombs do not attack other units, and instead have an "Explode" command
     movementType: "air",
     facility: "airport",
     initialFuel: 45,
