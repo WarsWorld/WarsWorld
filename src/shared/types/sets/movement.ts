@@ -11,7 +11,7 @@ export const movementTypes = [
 
 export type MovementType = (typeof movementTypes)[number];
 
-export function isMovementType(x: any) {
+export function isMovementType(x: any): x is MovementType {
   return (
     typeof x === "string" && (movementTypes as readonly string[]).includes(x)
   );
