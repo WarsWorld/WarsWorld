@@ -90,7 +90,9 @@ export const mainActionSchema = z.discriminatedUnion("type", [
   buildActionSchema,
   moveActionSchema,
   waitActionSchema,
-  unloadActionSchema, // for DoR unload, unloading wouldn't be plainly (i.e. partially) allowed, only as a subaction of move
+  // for DoR unload, unloading wouldn't be plainly (i.e. partially) allowed,
+  // only as a subaction of move
+  unloadActionSchema,
   coPowerActionSchema,
   superCOPowerActionSchema,
   endTurnActionSchema,

@@ -63,17 +63,18 @@ const PlayerBox = ({ playerTurn, playerInMatch: playerInMatch }: Props) => {
               />
               <IngameInfo ingameStatIconPath="" ingameStat={999999} />
               <IngameInfo ingameStatIconPath="" ingameStat={999999} />
+
               {/* <IngameInfo
-                statsIconPath="Time"
-                ingameStat={time.toISOString().substring(11, 19)}
-              />
-              <IngameInfo statsIconPath="Units" ingameStat={playerInMatch.unitCount} />
-              <IngameInfo statsIconPath="Income" ingameStat={playerInMatch.properties} />
-              <IngameInfo statsIconPath="Gold" ingameStat={playerInMatch.gold} />
-              <IngameInfo
-                statsIconPath="Army-Value"
-                ingameStat={playerInMatch.properties * 1000}
-              /> */}
+      statsIconPath="Time"
+      ingameStat={time.toISOString().substring(11, 19)}
+    />
+    <IngameInfo statsIconPath="Units" ingameStat={playerInMatch.unitCount} />
+    <IngameInfo statsIconPath="Income" ingameStat={playerInMatch.properties} />
+    <IngameInfo statsIconPath="Gold" ingameStat={playerInMatch.gold} />
+    <IngameInfo
+      statsIconPath="Army-Value"
+      ingameStat={playerInMatch.properties * 1000}
+    /> */}
             </div>
           </div>
         </div>

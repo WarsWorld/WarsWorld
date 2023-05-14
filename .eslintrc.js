@@ -24,6 +24,17 @@ module.exports = {
     "react/react-in-jsx-scope": "off",
     "react/prop-types": "off",
     "@typescript-eslint/no-explicit-any": "off",
+    "max-len": [
+      "error",
+      {
+        code: 80,
+        tabWidth: 2,
+        ignoreComments: false,
+        ignoreUrls: true,
+        ignoreStrings: true,
+        ignoreTemplateLiterals: true,
+      },
+    ],
     "prettier/prettier": [
       "warn",
       {
