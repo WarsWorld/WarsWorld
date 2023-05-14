@@ -38,16 +38,14 @@ su - ec2-user -c "
   set -euo pipefail
   curl https://nodejs.org/dist/v18.16.0/node-v18.16.0-linux-x64.tar.xz | tar -xJ
   echo 'export PATH="\$PATH:/home/ec2-user/node-v18.16.0-linux-x64/bin"' >> /home/ec2-user/.bashrc
-  cat /home/ec2-user/.bashrc
-  curl -fsSL https://get.pnpm.io/install.sh | sh -
   source .bashrc
   node --version
   git clone https://github.com/WarsWorld/WarsWorld.git
   cd WarsWorld
-  pnpm i
-  pnpm build
+  npm ci
+  npm run build
   echo 'build done'
-  pnpm start
+  npm start
 "
 EOF
 
