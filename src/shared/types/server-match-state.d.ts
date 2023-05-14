@@ -3,19 +3,21 @@ import { CO } from "server/schemas/co";
 import { PlayerSlot } from "server/schemas/player-slot";
 import { Position } from "server/schemas/position";
 import { CreatableUnit } from "server/schemas/unit";
+import { TileType } from "server/schemas/tile";
 
 interface WithPosition {
   position: Position;
 }
 
 interface CapturableTile extends WithPosition {
-  type: "city" | "base" | "airport" | "port" | "lab" | "comtower" | "hq";
+  type: TileType &
+    ("city" | "base" | "airport" | "port" | "lab" | "comtower" | "hq");
   hp: number;
   ownerSlot: PlayerSlot;
 }
 
 interface LaunchableSiloTile extends WithPosition {
-  type: "unusedSilo";
+  type: TileType & "unusedSilo";
   fired: boolean;
 }
 
