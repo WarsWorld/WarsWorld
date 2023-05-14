@@ -16,7 +16,12 @@ export const getDailyFuelUsage = (unit: UnitDuringMatch): number => {
   }
 
   if (movementType === "air") {
-    return unit.type === "stealth" && unit.hidden ? 8 : 5;
+    if (unit.type === "battleCopter" || unit.type === "transportCopter") {
+      return 2;
+    } else if (unit.type === "stealth" && unit.hidden) {
+      return 8;
+    }
+    return 5;
   }
 
   return 0;
