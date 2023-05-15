@@ -18,30 +18,11 @@ In either case, a good branch name would be descriptive of what you plan to work
 
 ## Setting up your local environment
 
-To make sure our project is able to run locally, follow these 6 easy steps!
-
-1 - Make sure you have [Docker Desktop](https://www.docker.com/products/docker-desktop/) installed and run it (the Docker daemon is needed to run your local database, so all need is to have the app running in the background. Nothing else!).
-
-2 - Make sure you have [pnpm installed](https://pnpm.io/) (it's like npm but faster).
-
-3 - Make sure you have [node installed](https://nodejs.org/en/download) and the version is recent. version ^18.15.0 is recommended
-
-4 - Clone the repository in your own working environment or IDE.
-
-5 - Copy the "env.example" to ".env" and setup a random password/string in the PGPASSWORD and NEXTAUTH_SECRET fields.
-
-6 - Install the dependencies from package.json and run app using the following code:
-
-```
-pnpm i  //This is basically an npm i or npm install
-pnpm dx //This is our npm start
-```
-
-Wait for local build be setup and go to localhost:3000. From there, you should be set! If you are having issues, feel free to contact someone in the team.
+Setup instructions can be found in our README.md!
 
 ## Linting
 Our CI/CD process will use a "linter" to check if your code is formatted in a readable way. However, it is up to you to actually fix any formatting issues.
-You can check for any problems by running `pnpm lint`, and you can fix those problems manually or by running `pnpm lint-fix`.
+You can check for any problems by running `npm run lint`, and you can fix those problems manually or by running `npm run lint:fix`.
 Alternatively, if you are using VSCode, you should install the extension `rvest.vs-code-prettier-eslint`
 so that your code is automatically formatted every time you save a file.
 
