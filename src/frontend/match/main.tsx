@@ -11,8 +11,10 @@ import {
 } from "pixijs";
 import { useEffect, useRef, useState } from "react";
 import { PlayerInMatch } from "shared/types/server-match-state";
-import styles from "../styles/match.module.css";
 import { trpc } from "frontend/utils/trpc-client";
+import { useMediaQuery } from "frontend/utils/useMediaQuery";
+import { PlayerBox } from "./PlayerBox";
+import { playerBaseProcedure } from "server/trpc/trpc-setup";
 
 BaseTexture.defaultOptions.scaleMode = SCALE_MODES.NEAREST;
 
@@ -61,6 +63,8 @@ export const PixiMatch = () => {
 
   const { query } = useRouter();
   const matchId = query.matchId as string;
+
+  const notSmallScreen = useMediaQuery("(min-width: 768px)");
 
   trpc.match.full.useQuery(
     { matchId, playerId: currentPlayer?.id ?? "" },
@@ -119,16 +123,45 @@ export const PixiMatch = () => {
     };
   }, [pixiCanvasRef, segments]);
 
+  const [turn, setTurn] = useState(true);
+
+  const passTurn = () => {
+    // mock function for testing css transition
+    setTurn(!turn);
+  };
+
   return (
-    <div className={styles.match + " gameBox"}>
-      <canvas
-        style={{
-          imageRendering: "pixelated",
-        }}
-        ref={pixiCanvasRef}
-        width={800}
-        height={600}
-      ></canvas>
+    <div className="@flex @flex-col @items-center @justify-center @h-full @w-full @gap-0 gameBoxContainer">
+      <div className="@flex @flex-col @items-center @justify-center @gap-1 @w-full gameBox">
+        {notSmallScreen ? (
+          <PlayerBox playerTurn={turn} playerInMatch={players?.[0]} />
+        ) : (
+          <div className="@w-full">
+            <PlayerBox playerTurn={turn} playerInMatch={players?.[0]} />
+            <PlayerBox playerTurn={!turn} playerInMatch={players?.[1]} />
+          </div>
+        )}
+        <div className="@flex @flex-col @items-center @justify-center @gap-1 gameInnerBox">
+          <canvas
+            style={{
+              imageRendering: "pixelated",
+            }}
+            ref={pixiCanvasRef}
+          ></canvas>
+        </div>
+        {notSmallScreen && (
+          <PlayerBox playerTurn={!turn} playerInMatch={players?.[1]} />
+        )}
+      </div>
+      <div className="@flex @items-center @justify-center gameTime">
+        <p className="@py-2">00:00:00</p>
+        <button
+          className="@text-black @rounded-lg @bg-stone-200"
+          onClick={passTurn}
+        >
+          Pass turn
+        </button>
+      </div>
     </div>
   );
 };

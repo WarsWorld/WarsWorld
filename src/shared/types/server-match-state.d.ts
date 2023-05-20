@@ -1,4 +1,5 @@
 import { LeagueType, MatchStatus, Player, WWMap } from "@prisma/client";
+import { Army } from "server/schemas/army";
 import { CO } from "server/schemas/co";
 import { PlayerSlot } from "server/schemas/player-slot";
 import { Position } from "server/schemas/position";
@@ -35,6 +36,7 @@ export interface PlayerInMatch {
   eliminated?: true;
   funds: number;
   powerMeter: number;
+  army: Army;
 }
 
 export interface BackendMatchState {
