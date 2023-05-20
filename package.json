@@ -40,7 +40,7 @@
     "@trpc/client": "^10.19.1",
     "@trpc/next": "^10.19.1",
     "@trpc/server": "^10.19.1",
-    "next": "^13.2.1",
+    "next": "^13.4.3",
     "next-auth": "^4.14.0",
     "pixijs": "^7.1.4",
     "prisma-json-types-generator": "^2.3.1",
