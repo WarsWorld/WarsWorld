@@ -95,6 +95,7 @@ export const matchRouter = router({
           co: input.selectedCO,
           funds: 0,
           powerMeter: 0,
+          army: "orange-star",
         },
       ]);
 
