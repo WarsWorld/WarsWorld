@@ -10,5 +10,23 @@ services:
     environment:
       POSTGRES_PASSWORD: ${PGPASSWORD}
       POSTGRES_HOST_AUTH_METHOD: trust
+
+  app:
+    build:
+      dockerfile: Dockerfile
+    volumes:
+      - .:/app/
+      - /app/node_modules
+    ports:
+      - '3000:3000'
+      - '3001:3001'
+    command: ./run_app.sh
+    env_file:
+      - .env
+    depends_on:
+      - postgres
+    environment:
+      DB_URL: "postgresql://postgres:${PGPASSWORD}@postgres:5432/trpc-starter-websockets?schema=public"
+
 volumes:
   db_data:

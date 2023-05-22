@@ -14,9 +14,19 @@ const developmentPlayerNames = Array(4)
   .map((_, i) => `${developmentPlayerNamePrefix}${i}`);
 
 async function main() {
+  const SEED_USER_NAME: string = "development_user";
+
+  // NOTE: No need to seed data in db if seeded data already exists in db
+  const user = await prisma.user.findFirst({
+    where: { name: SEED_USER_NAME },
+  });
+  if (!!user) {
+    return;
+  }
+
   const developmentUser = await prisma.user.create({
     data: {
-      name: "development_user",
+      name: SEED_USER_NAME,
     },
   });
 
