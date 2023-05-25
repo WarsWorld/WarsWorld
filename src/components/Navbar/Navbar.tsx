@@ -5,7 +5,6 @@ import { NavLinks } from "./NavLinks";
 import { NavLinksMobile } from "./NavLinksMobile";
 
 export function Navbar() {
-  const awLogoPath = "/img/layout/awLogo.webp";
   const [showLinks, setShowLinks] = useState(false);
   const [showMatchLinks, setShowMatchLinks] = useState(false);
 
@@ -20,25 +19,29 @@ export function Navbar() {
 
   return (
     <header className="@w-full @relative @z-30">
-      <nav className="@flex @h-full @justify-between @items-center @bg-gray-800 @mx-auto @px-3">
+      <nav className="@flex @h-full @justify-between @items-center @bg-gray-800 @mx-auto @px-5">
         <Link href="/">
           <Image
-            className="@flex"
-            src={awLogoPath}
-            width={180}
-            height={50}
+            className="@flex "
+            src={"/img/layout/awLogo.webp"}
+            width={200}
+            height={150}
             alt="AW Logo"
           />
         </Link>
+
         <NavLinks
           showMatchLinks={showMatchLinks}
           handleMatchLinks={handleMatchLinks}
         />
+
+        {/* Mobile Navbar */}
+
         <button
           className="@h-7 @w-7 @absolute @right-7 @cursor-pointer burgerMenuBtn"
           type="button"
-          onClick={handleBurgerMenu}
-        >
+          onClick={handleBurgerMenu}>
+
           <div className="@flex @flex-col @gap-1 burgerMenuIcon">
             <div className="@h-1 @w-7 @rounded"></div>
             <div className="@h-1 @w-7 @rounded"></div>
@@ -51,6 +54,5 @@ export function Navbar() {
           handleMatchLinks={handleMatchLinks}
         />
       </nav>
-    </header>
-  );
+    </header>);
 }

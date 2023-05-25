@@ -1,5 +1,4 @@
 @use "src/frontend/styles/template/layout";
-@use "src/frontend/styles/grid/global";
 @use "src/frontend/styles/pages";
 @use "src/frontend/styles/mixins" as m;
 
@@ -13,8 +12,9 @@
     font-family: "Poppins", sans-serif;
     color: white;
     background-color: rgba(0, 0, 0, 0.7);
-    background-image: url("/img/bg.jpg");
-    background-size: cover;
+    background-image: url("/img/layout/wwbg.jpg");
+
+
   }
 
   h1 {
