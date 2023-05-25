@@ -1,8 +1,8 @@
-import { MatchRow } from "frontend/match/MatchRow";
+import { MatchRow } from "frontend/components/match/MatchRow";
 import { usePlayers } from "frontend/context/players";
 import { useRef } from "react";
 import { trpc } from "frontend/utils/trpc-client";
-import { Layout } from "components/layout";
+import { Layout } from "frontend/components/layout";
 
 export default function YourMatches() {
   const { currentPlayer, setCurrentPlayer, ownedPlayers } = usePlayers();

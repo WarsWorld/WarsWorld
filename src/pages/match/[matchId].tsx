@@ -1,6 +1,6 @@
 import Head from "next/head";
-import { PixiMatch } from "frontend/match/main";
-import { Layout } from "components/layout";
+import { PixiMatch } from "frontend/components/match/main";
+import { Layout } from "frontend/components/layout";
 
 export default function Match() {
   return (

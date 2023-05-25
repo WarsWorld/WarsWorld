@@ -1,4 +1,4 @@
-import { IngameInfo } from "components/IngameInfo";
+import { IngameInfo } from "frontend/components/IngameInfo";
 import { PlayerInMatch } from "shared/types/server-match-state";
 
 interface Props {
