@@ -1,5 +1,5 @@
-import { Layout } from "components/layout";
-import { Home } from "../components/Home";
+import { Layout } from "frontend/components/layout";
+import { Home } from "../frontend/components/Home";
 
 export default function IndexPage() {
   // const updateDocumentHeightCSSProperty = () => {
