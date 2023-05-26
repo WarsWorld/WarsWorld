@@ -4,7 +4,7 @@ export function Home() {
   return (
     <section>
       <Head>
-        <title>Wars World</title>
+        <title>Home Page | Wars World</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 

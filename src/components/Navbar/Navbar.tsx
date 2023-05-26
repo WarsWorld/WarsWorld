@@ -23,9 +23,9 @@ export function Navbar() {
         <Link href="/">
           <Image
             className="@flex "
-            src={"/img/layout/awLogo.webp"}
-            width={200}
-            height={150}
+            src={"/img/layout/logo.webp"}
+            width={90}
+            height={90}
             alt="AW Logo"
           />
         </Link>
