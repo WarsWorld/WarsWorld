@@ -1,5 +1,6 @@
 @use "src/frontend/styles/template/layout";
 @use "src/frontend/styles/pages";
+@use "src/frontend/styles/grid/global";
 @use "src/frontend/styles/mixins" as m;
 // This file is used as the base for tailwindCSS
 @tailwind base;
@@ -18,7 +19,7 @@
   }
 
   h1 {
-    @include m.clampSize(16, 64, 320, 1200);
+    @include m.clampSize(16, 46, 320, 1200);
     font-weight: 400;
     padding: 0;
   }
