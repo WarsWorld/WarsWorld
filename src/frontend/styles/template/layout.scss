@@ -46,9 +46,17 @@ body {
       }
     }
 
-    .matchLobbyBtn {
+    .matchLobbyToggle {
       @include m.clampSize(12, 20, 320, 1200);
       color: theme("colors.primary");
+      transition: 0.4s;
+      &:hover {
+        color: theme("colors.primary-variant");
+      }
+    }
+
+    .matchMenuLinks {
+      position: static;
     }
 
     .burgerMenuLinks,
@@ -57,12 +65,6 @@ body {
       visibility: hidden;
       transition: 0.7s;
       top: 60px;
-    }
-
-    .burgerMenuLinks {
-      .matchMenuLinks {
-        right: 160px;
-      }
     }
 
     .showBurgerMenuLinks,
@@ -76,7 +78,7 @@ body {
     }
 
     .showBurgerMenuLinks {
-      height: 12rem;
+      height: 24rem;
     }
   }
 
@@ -102,7 +104,7 @@ body {
 }
 
 @screen smallscreen {
-  .burgerMenuBtn {
+  .burgerMenuToggle {
     display: none;
   }
 
@@ -110,20 +112,19 @@ body {
     header {
       .navLinks,
       .loginLink {
-        display: initial;
+        display: flex;
       }
 
       .loginLink {
-        min-width: 180px;
-      }
-
-      .navLinks {
-        display: flex;
-        gap: 50px;
+        min-width: 80px;
       }
 
       .burgerMenuLinks {
         display: none;
+      }
+
+      .matchMenuLinks {
+        position: fixed;
       }
     }
 
@@ -138,6 +139,10 @@ body {
     .inProgress {
       padding: 3rem;
     }
+  }
+
+  .showBurgerMenuLinks {
+    height: 12rem;
   }
 }
 
