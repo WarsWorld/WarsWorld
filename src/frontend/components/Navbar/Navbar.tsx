@@ -40,8 +40,8 @@ export function Navbar() {
         <button
           className="@h-7 @w-7 @absolute @right-7 @cursor-pointer burgerMenuBtn"
           type="button"
-          onClick={handleBurgerMenu}>
-
+          onClick={handleBurgerMenu}
+        >
           <div className="@flex @flex-col @gap-1 burgerMenuIcon">
             <div className="@h-1 @w-7 @rounded"></div>
             <div className="@h-1 @w-7 @rounded"></div>
@@ -54,5 +54,6 @@ export function Navbar() {
           handleMatchLinks={handleMatchLinks}
         />
       </nav>
-    </header>);
+    </header>
+  );
 }

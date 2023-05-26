@@ -1,5 +1,5 @@
 import Head from "next/head";
-import Banner from "./Home/Banner"
+import Banner from "./Home/Banner";
 export function Home() {
   return (
     <section>
@@ -8,9 +8,9 @@ export function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-<div>
- <Banner/>
-</div>
+      <div>
+        <Banner />
+      </div>
     </section>
   );
 }
