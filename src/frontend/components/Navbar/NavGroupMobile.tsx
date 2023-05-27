@@ -26,8 +26,8 @@ export function NavGroupMobile({
           GAMES
           <NavMenuMatches showMatchLinks={showMatchLinks} />
         </div>
-        <NavItem text="COMPETITION" location="/howtoplay" />
-        <NavItem text="NEWS" location="/howtoplay" />
+        <NavItem text="COMPETITION" location="/" />
+        <NavItem text="NEWS" location="/" />
         <NavItem text="HOW TO PLAY" location="/howtoplay" />
         <NavItem text="COMMUNITY" location="/" />
         <NavItem text="LOGIN" location="/" />
