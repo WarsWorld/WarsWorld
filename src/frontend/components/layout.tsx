@@ -9,16 +9,12 @@ interface Props {
 
 export function Layout({ footer, children }: Props) {
   return (
-    <>
+    <div className="@grid @h-full layout">
       <Navbar />
-      <div
-        className={`@grid @h-full @relative layout ${
-          footer ? "withFooter" : "noFooter"
-        }`}
-      >
-        <main>{children}</main>
+      <div className="@flex @flex-col @h-full @relative scrollable">
+        <main className="@h-full">{children}</main>
         {footer && <Footer />}
       </div>
-    </>
+    </div>
   );
 }

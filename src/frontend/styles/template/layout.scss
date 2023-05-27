@@ -15,15 +15,8 @@ body {
   margin: 0;
 }
 
-body {
-  // TODO: Thing for scrollbar needs to be fixed for wide screen, small height device edge cases
-  overflow: scroll;
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-
-  &::-webkit-scrollbar {
-    display: none;
-  }
+.layout {
+  grid-template-rows: 70px 1fr;
 }
 
 header {
@@ -83,22 +76,28 @@ header {
   }
 }
 
-.layout {
+.scrollable {
+  // TODO: Thing for scrollbar needs to be fixed for wide screen, small height device edge cases
+  overflow: scroll;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  main {
+    display: flex;
+    justify-content: center;
+  }
+
   .currentGames {
-    scroll-margin-top: 50px;
+    scroll-margin-top: 100px;
   }
 }
 
-.withFooter {
-  grid-template-rows: repeat(2, 1fr);
-}
-
-.noFooter {
-  grid-template-rows: 1fr;
-}
-
 @screen tablet {
-  .layout {
+  .scrollable {
     .inProgress {
       padding: 2rem;
     }
@@ -106,6 +105,10 @@ header {
 }
 
 @screen smallscreen {
+  .layout {
+    grid-template-rows: 100px 1fr;
+  }
+
   header {
     height: 100px;
 
@@ -138,7 +141,7 @@ header {
 }
 
 @screen laptop {
-  .layout {
+  .scrollable {
     .inProgress {
       padding: 3rem;
     }
@@ -154,13 +157,5 @@ header {
     .burgerMenuLinks {
       top: 70px;
     }
-  }
-
-  .withFooter {
-    grid-template-rows: repeat(2, 1fr);
-  }
-
-  .noFooter {
-    grid-template-rows: 1fr;
   }
 }
