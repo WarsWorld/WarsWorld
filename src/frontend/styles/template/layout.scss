@@ -15,84 +15,86 @@ body {
   margin: 0;
 }
 
-.layout {
+body {
   // TODO: Thing for scrollbar needs to be fixed for wide screen, small height device edge cases
-  main {
-    overflow: scroll;
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-  }
+  overflow: scroll;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 
-  main::-webkit-scrollbar {
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+header {
+  height: 70px;
+
+  .loginLink,
+  .navGroup {
     display: none;
   }
 
-  header {
-    .loginLink,
-    .navGroup {
-      display: none;
-    }
-
-    .burgerMenuIcon {
-      div {
-        background-color: theme("colors.primary");
-        transition: 0.4s;
-      }
-
-      &:hover {
-        div {
-          background-color: theme("colors.primary-variant");
-        }
-      }
-    }
-
-    .matchLobbyToggle {
-      @include m.clampSize(12, 20, 320, 1200);
-      color: theme("colors.primary");
+  .burgerMenuIcon {
+    div {
+      background-color: theme("colors.primary");
       transition: 0.4s;
-      &:hover {
-        color: theme("colors.primary-variant");
+    }
+
+    &:hover {
+      div {
+        background-color: theme("colors.primary-variant");
       }
-    }
-
-    .matchMenuLinks {
-      position: static;
-    }
-
-    .burgerMenuLinks,
-    .matchMenuLinks {
-      opacity: 0;
-      visibility: hidden;
-      transition: 0.7s;
-      top: 60px;
-    }
-
-    .showBurgerMenuLinks,
-    .showMatchMenuLinks {
-      opacity: 1;
-      visibility: visible;
-    }
-
-    .showMatchMenuLinks {
-      height: 12rem;
-    }
-
-    .showBurgerMenuLinks {
-      height: 30rem;
     }
   }
 
+  .matchLobbyToggle {
+    @include m.clampSize(12, 20, 320, 1200);
+    color: theme("colors.primary");
+    transition: 0.4s;
+    &:hover {
+      color: theme("colors.primary-variant");
+    }
+  }
+
+  .matchMenuLinks {
+    position: static;
+  }
+
+  .burgerMenuLinks,
+  .matchMenuLinks {
+    opacity: 0;
+    visibility: hidden;
+    transition: 0.7s;
+    top: 60px;
+  }
+
+  .showBurgerMenuLinks,
+  .showMatchMenuLinks {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .showMatchMenuLinks {
+    height: 12rem;
+  }
+
+  .showBurgerMenuLinks {
+    height: 30rem;
+  }
+}
+
+.layout {
   .currentGames {
     scroll-margin-top: 50px;
   }
 }
 
 .withFooter {
-  grid-template-rows: 60px 1fr 140px;
+  grid-template-rows: repeat(2, 1fr);
 }
 
 .noFooter {
-  grid-template-rows: 60px 1fr;
+  grid-template-rows: 1fr;
 }
 
 @screen tablet {
@@ -104,30 +106,34 @@ body {
 }
 
 @screen smallscreen {
-  .layout {
-    header {
-      .navGroup,
-      .loginLink {
-        display: flex;
-      }
+  header {
+    height: 100px;
 
-      .loginLink {
-        min-width: 80px;
-      }
-
-      .burgerMenuLinks,
-      .burgerMenuIcon {
-        display: none;
-      }
-
-      .matchMenuLinks {
-        position: fixed;
-      }
+    .navGroup,
+    .loginLink {
+      display: flex;
     }
 
-    .inProgress {
-      padding: 2rem 3rem;
+    .loginLink {
+      min-width: 80px;
     }
+
+    .burgerMenuLinks,
+    .burgerMenuIcon {
+      display: none;
+    }
+
+    .matchMenuLinks {
+      top: 100px;
+    }
+
+    .matchMenuLinks {
+      position: fixed;
+    }
+  }
+
+  .inProgress {
+    padding: 2rem 3rem;
   }
 }
 
@@ -144,24 +150,17 @@ body {
 }
 
 @screen medium {
-  .layout {
-    header {
-      .burgerMenuLinks,
-      .matchMenuLinks {
-        top: 100px;
-      }
+  header {
+    .burgerMenuLinks {
+      top: 70px;
     }
   }
 
   .withFooter {
-    grid-template-rows: 100px 1fr 160px;
-
-    footer {
-      height: 160px;
-    }
+    grid-template-rows: repeat(2, 1fr);
   }
 
   .noFooter {
-    grid-template-rows: 100px 1fr;
+    grid-template-rows: 1fr;
   }
 }

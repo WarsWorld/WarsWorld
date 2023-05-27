@@ -9,14 +9,16 @@ interface Props {
 
 export function Layout({ footer, children }: Props) {
   return (
-    <div
-      className={`@grid @h-full @relative layout ${
-        footer ? "withFooter" : "noFooter"
-      }`}
-    >
+    <>
       <Navbar />
-      <main>{children}</main>
-      {footer && <Footer />}
-    </div>
+      <div
+        className={`@grid @h-full @relative layout ${
+          footer ? "withFooter" : "noFooter"
+        }`}
+      >
+        <main>{children}</main>
+        {footer && <Footer />}
+      </div>
+    </>
   );
 }
