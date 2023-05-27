@@ -48,8 +48,6 @@ export default function Banner() {
           p = <strong> Susan Strong!</strong> Normal Nancy.
         </p>
       </div>
-      <div className="@bg-white @h-[200px] @w-[100px]" />
-      <div className="@bg-white @h-[200px] @w-[100px]" />
     </div>
   );
 }
