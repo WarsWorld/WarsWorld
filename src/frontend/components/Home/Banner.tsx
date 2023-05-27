@@ -3,17 +3,11 @@ import Image from "next/image";
 export default function Banner() {
   return (
     <div>
-      <div
-        className={`@relative @w-screen  @h-100   @bg-cover @bg-[url('/img/layout/homeBanner/gameCollage.jpg')]`}
-      >
-        <div
-          className={
-            "@flex @items-start @gap-10  @backdrop-brightness-[0.40] @w-100 @px-10 @py-40 "
-          }
-        >
+      <div className="@relative @w-screen @h-100 @bg-cover @bg-[url('/img/layout/homeBanner/gameCollage.jpg')]">
+        <div className="@flex @items-start @gap-10 @backdrop-brightness-[0.40] @w-100 @px-10 @py-40">
           <Image
-            className="pixelated  "
-            src={"/img/layout/homeBanner/classicInfantry.png"}
+            className="pixelated"
+            src="/img/layout/homeBanner/classicInfantry.png"
             width={42 * 5}
             height={42 * 5}
             alt="Classic Infantry"
@@ -24,12 +18,12 @@ export default function Banner() {
               <br />
               Rewrite the Tactics
             </h1>
-            <button> Play Now</button>
+            <button className="btn"> Play Now</button>
           </div>
 
           <Image
-            className=" pixelated @scale-x-[-1]"
-            src={"/img/layout/homeBanner/newInfantry.png"}
+            className="pixelated @scale-x-[-1]"
+            src="/img/layout/homeBanner/newInfantry.png"
             width={42 * 5}
             height={42 * 5}
             alt="New Infantry"

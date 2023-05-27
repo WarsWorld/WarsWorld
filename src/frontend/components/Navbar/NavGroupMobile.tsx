@@ -19,13 +19,13 @@ export function NavGroupMobile({
           showLinks ? "showBurgerMenuLinks" : ""
         }`}
       >
-        <div
+        <button
           onClick={handleMatchLinks}
-          className="@relative @flex @flex-col @justify-center @items-center @cursor-pointer matchLobbyToggle"
+          className="@flex @flex-col @relative @justify-center @items-center matchLobbyToggle"
         >
           GAMES
           <NavMenuMatches showMatchLinks={showMatchLinks} />
-        </div>
+        </button>
         <NavItem text="COMPETITION" location="/" />
         <NavItem text="NEWS" location="/" />
         <NavItem text="HOW TO PLAY" location="/howtoplay" />

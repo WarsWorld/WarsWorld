@@ -37,8 +37,8 @@ export function Navbar() {
 
         {/* Mobile Navbar */}
 
-        <div
-          className="@h-7 @w-7 @absolute @right-7 @cursor-pointer burgerMenuToggle"
+        <button
+          className="@flex @justify-center @items-center @h-7 @w-7 @absolute @right-7"
           onClick={handleBurgerMenu}
         >
           <div className="@flex @flex-col @gap-1 burgerMenuIcon">
@@ -46,7 +46,7 @@ export function Navbar() {
             <div className="@h-1 @w-7 @rounded"></div>
             <div className="@h-1 @w-7 @rounded"></div>
           </div>
-        </div>
+        </button>
         <NavGroupMobile
           showLinks={showLinks}
           showMatchLinks={showMatchLinks}
