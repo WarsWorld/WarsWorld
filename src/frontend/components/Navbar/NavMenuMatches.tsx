@@ -2,12 +2,14 @@ import { NavItem } from "./NavItem";
 
 interface Props {
   showMatchLinks: boolean;
+  handleBurgerMenu: () => void;
 }
 
-export function NavMenuMatches({ showMatchLinks }: Props) {
+export function NavMenuMatches({ showMatchLinks, handleBurgerMenu }: Props) {
   return (
     <div
-      className={`@grid @bg-gray-800/90 @w-[200px] @h-0 matchMenuLinks ${
+      onClick={handleBurgerMenu}
+      className={`@grid @bg-gray-800/90 @h-0 @px-2 matchMenuLinks ${
         showMatchLinks ? "showMatchMenuLinks" : ""
       }`}
     >

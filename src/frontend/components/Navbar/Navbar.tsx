@@ -31,6 +31,7 @@ export function Navbar() {
         </Link>
 
         <NavGroup
+          handleBurgerMenu={handleBurgerMenu}
           showMatchLinks={showMatchLinks}
           handleMatchLinks={handleMatchLinks}
         />
@@ -49,6 +50,7 @@ export function Navbar() {
         </button>
         <NavGroupMobile
           showLinks={showLinks}
+          handleBurgerMenu={handleBurgerMenu}
           showMatchLinks={showMatchLinks}
           handleMatchLinks={handleMatchLinks}
         />

@@ -4,19 +4,27 @@ import { NavMenuMatches } from "./NavMenuMatches";
 interface Props {
   showMatchLinks: boolean;
   handleMatchLinks: () => void;
+  handleBurgerMenu: () => void;
 }
 
-export function NavGroup({ showMatchLinks, handleMatchLinks }: Props) {
+export function NavGroup({
+  showMatchLinks,
+  handleMatchLinks,
+  handleBurgerMenu,
+}: Props) {
   return (
     <>
       <div className="@flex @items-center @justify-center @gap-8 navGroup">
-        <div
+        <button
           onClick={handleMatchLinks}
-          className="@relative @flex @flex-col @justify-center @items-center @cursor-pointer matchLobbyToggle"
+          className="@flex @flex-col relative @justify-center @items-center @cursor-pointer matchLobbyToggle"
         >
           GAMES
-          <NavMenuMatches showMatchLinks={showMatchLinks} />
-        </div>
+          <NavMenuMatches
+            showMatchLinks={showMatchLinks}
+            handleBurgerMenu={handleBurgerMenu}
+          />
+        </button>
         <NavItem text="COMPETITION" location="/" />
         <NavItem text="NEWS" location="/" />
         <NavItem text="HOW TO PLAY" location="/howtoplay" />

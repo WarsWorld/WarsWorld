@@ -3,12 +3,14 @@ import { NavMenuMatches } from "./NavMenuMatches";
 
 interface Props {
   showLinks: boolean;
+  handleBurgerMenu: () => void;
   showMatchLinks: boolean;
   handleMatchLinks: () => void;
 }
 
 export function NavGroupMobile({
   showLinks,
+  handleBurgerMenu,
   showMatchLinks,
   handleMatchLinks,
 }: Props) {
@@ -21,10 +23,17 @@ export function NavGroupMobile({
       >
         <button
           onClick={handleMatchLinks}
-          className="@flex @flex-col @relative @justify-center @items-center matchLobbyToggle"
+          className="@flex @flex-col @relative @items-center matchLobbyToggle"
         >
-          GAMES
-          <NavMenuMatches showMatchLinks={showMatchLinks} />
+          <span
+            className={`@text-base-button ${showMatchLinks ? "@mb-4" : ""}`}
+          >
+            GAMES
+          </span>
+          <NavMenuMatches
+            showMatchLinks={showMatchLinks}
+            handleBurgerMenu={handleBurgerMenu}
+          />
         </button>
         <NavItem text="COMPETITION" location="/" />
         <NavItem text="NEWS" location="/" />
