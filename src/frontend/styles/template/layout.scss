@@ -55,6 +55,12 @@ body {
       }
     }
 
+    .burgerMenuToggle {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
     .matchMenuLinks {
       position: static;
     }
@@ -104,10 +110,6 @@ body {
 }
 
 @screen smallscreen {
-  .burgerMenuToggle {
-    display: none;
-  }
-
   .layout {
     header {
       .navGroup,
@@ -119,7 +121,8 @@ body {
         min-width: 80px;
       }
 
-      .burgerMenuLinks {
+      .burgerMenuLinks,
+      .burgerMenuIcon {
         display: none;
       }
 
