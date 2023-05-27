@@ -1,16 +1,18 @@
 import Head from "next/head";
 import Banner from "./Home/Banner";
+import { Layout } from "./layout";
+
 export function Home() {
   return (
-    <section>
+    <>
       <Head>
         <title>Home Page | Wars World</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <div>
+      <Layout footer>
         <Banner />
-      </div>
-    </section>
+      </Layout>
+    </>
   );
 }

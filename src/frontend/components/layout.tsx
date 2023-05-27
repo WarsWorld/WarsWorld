@@ -11,7 +11,7 @@ export function Layout({ footer, children }: Props) {
   return (
     <div className="@grid @h-full layout">
       <Navbar />
-      <div className="@flex @flex-col @h-full @relative scrollable">
+      <div className="@grid @h-full @relative scrollable">
         <main className="@h-full">{children}</main>
         {footer && <Footer />}
       </div>
