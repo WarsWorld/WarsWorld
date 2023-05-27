@@ -1,5 +1,6 @@
 import Head from "next/head";
 import Banner from "./Home/Banner";
+import SmallContainer from "./Home/SmallContainer";
 export function Home() {
   return (
     <section>
@@ -10,6 +11,7 @@ export function Home() {
 
       <div>
         <Banner />
+        <SmallContainer image={"matchContainer"} text={"Connect instantly with opponents of your skill level, immersing yourself in thrilling battles and ensuring a competitive experience."}/>
       </div>
     </section>
   );

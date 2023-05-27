@@ -2,6 +2,7 @@
 @use "src/frontend/styles/pages";
 @use "src/frontend/styles/grid/global";
 @use "src/frontend/styles/mixins" as m;
+@use "src/frontend/styles/variables" as v;
 // This file is used as the base for tailwindCSS
 @tailwind base;
 @tailwind components;
@@ -42,19 +43,17 @@
     font-weight: 400;
   }
 
-  button {
+  .button {
     @include m.clampSize(12, 20, 320, 1200);
     background-color: rgb(146 64 14);
-
     border-radius: 20px;
     padding: 0.5em;
     transition: 0.4s;
-
     letter-spacing: 0.15em;
   }
-  button:hover {
+  .button:hover {
     color: black;
-    background-color: rgb(251 191 36);
+    background-color: v.$color-primary-variant;
 
   }
 
@@ -66,7 +65,7 @@
   }
 
   a:hover {
-    color: theme("colors.primary-variant");
+    color: v.$color-primary-variant;
   }
 }
 

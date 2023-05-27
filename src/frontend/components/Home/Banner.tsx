@@ -1,5 +1,7 @@
 import Image from "next/image";
 
+//Np clue as of why ESLint is littering frontend files with a line for every
+
 export default function Banner() {
   return (
     <div>
@@ -24,7 +26,7 @@ export default function Banner() {
               <br />
               Rewrite the Tactics
             </h1>
-            <button> Play Now</button>
+            <button className={"button"}> Play Now</button>
           </div>
 
           <Image
@@ -36,22 +38,7 @@ export default function Banner() {
           />
         </div>
       </div>
-      <h1>
-        {" "}
-        h1 = <strong> Susan Strong!</strong> Normal Nancy.
-      </h1>
-      <h2>
-        {" "}
-        h2 = <strong> Susan Strong!</strong> Normal Nancy.
-      </h2>
-      <h3>
-        {" "}
-        h3 = <strong> Susan Strong!</strong> Normal Nancy.
-      </h3>
-      <p>
-        {" "}
-        p = <strong> Susan Strong!</strong> Normal Nancy.
-      </p>
+
     </div>
   );
 }
