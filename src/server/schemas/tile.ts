@@ -9,11 +9,6 @@ export const isNeutralProperty = (propertyTile: PropertyTile) =>
 export const isUnitProducingProperty = (tile: Tile): tile is PropertyTile =>
   tile.type === "base" || tile.type === "airport" || tile.type == "port";
 
-export const propertyTileSchema = withUnit.extend({
-  type: z.enum(["base", "airport", "port", "hq", "lab", "comtower", "city"]),
-  playerSlot: playerSlotForPropertiesSchema,
-});
-
 export const willBeChangeableTile = (
   tile: Tile
 ): tile is PropertyTile | UnusedSiloTile =>
@@ -28,20 +23,24 @@ export const willBeChangeableTile = (
     "unusedSilo",
   ].includes(tile.type);
 
+export const propertyTileSchema = withUnit.extend({
+  type: z.enum(["base", "airport", "port", "hq", "lab", "comtower", "city"]),
+  playerSlot: playerSlotForPropertiesSchema,
+});
 export type PropertyTile = z.infer<typeof propertyTileSchema>;
+export type PropertyTileType = z.infer<typeof propertyTileSchema>["type"];
 
 export const unusedSiloTileSchema = withUnit.extend({
   type: z.literal("unusedSilo"),
 });
-
 export type UnusedSiloTile = z.infer<typeof unusedSiloTileSchema>;
+export type UnusedSiloTileType = z.infer<typeof unusedSiloTileSchema>["type"];
 
 export const invariableTileSchema = withUnit
   .extend({
     type: z.enum(["shoal", "sea", "forest", "mountain", "reef", "usedSilo"]),
   })
   .or(unusedSiloTileSchema);
-
 export type InvariableTile = z.infer<typeof invariableTileSchema>;
 
 export const tileSchema = z.discriminatedUnion("type", [
@@ -49,7 +48,7 @@ export const tileSchema = z.discriminatedUnion("type", [
   ...invariableTileSchema.options,
   ...variableTileSchema.options,
 ]);
-
+export type Tile = z.infer<typeof tileSchema>;
 /**
  * Note: "broken pipe seam" does *not* currently have its own TileType
  *       and is considered to be a kind of `plains`.
@@ -57,5 +56,3 @@ export const tileSchema = z.discriminatedUnion("type", [
  * Note: `usedSilo` *does* have its own TileType distinct from `unusedSilo`.
  */
 export type TileType = z.infer<typeof tileSchema>["type"];
-
-export type Tile = z.infer<typeof tileSchema>;

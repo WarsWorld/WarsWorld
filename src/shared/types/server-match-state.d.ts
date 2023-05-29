@@ -1,21 +1,27 @@
 import { LeagueType, MatchStatus, Player, WWMap } from "@prisma/client";
+import { Army } from "server/schemas/army";
 import { CO } from "server/schemas/co";
 import { PlayerSlot } from "server/schemas/player-slot";
 import { Position } from "server/schemas/position";
 import { CreatableUnit } from "server/schemas/unit";
+import {
+  PropertyTileType,
+  TileType,
+  UnusedSiloTileType,
+} from "server/schemas/tile";
 
 interface WithPosition {
   position: Position;
 }
 
 interface CapturableTile extends WithPosition {
-  type: "city" | "base" | "airport" | "port" | "lab" | "comtower" | "hq";
+  type: PropertyTileType;
   hp: number;
   ownerSlot: PlayerSlot;
 }
 
 interface LaunchableSiloTile extends WithPosition {
-  type: "unusedSilo";
+  type: UnusedSiloTileType;
   fired: boolean;
 }
 
@@ -30,6 +36,7 @@ export interface PlayerInMatch {
   eliminated?: true;
   funds: number;
   powerMeter: number;
+  army: Army;
 }
 
 export interface BackendMatchState {

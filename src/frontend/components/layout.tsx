@@ -15,7 +15,7 @@ export function Layout({ footer, children }: Props) {
       }`}
     >
       <Navbar />
-      <main className="@flex @justify-center @items-center">{children}</main>
+      <main>{children}</main>
       {footer && <Footer />}
     </div>
   );
