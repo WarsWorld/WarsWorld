@@ -38,9 +38,10 @@ module.exports = {
     "prettier/prettier": [
       "warn",
       {
-        // this fixes an oddity with the rvest.vs-code-prettier-eslint extension.
+        // this fixes an oddity with the rvest.vs-code-prettier-eslint extension
         // maybe we can look into this another time.
-        // looks like it's not interpreting this property correctly from package.json prettier config..? (es5 should be default value)
+        // looks like it's not interpreting this property correctly
+        // from package.json prettier config..? (es5 should be default value)
         trailingComma: "es5",
       },
     ],
