@@ -23,6 +23,7 @@ export const createMatchProcedure = playerBaseProcedure
         co: input.selectedCO,
         funds: 0,
         powerMeter: 0,
+        army: "orange-star",
       },
     ];
 

@@ -1,4 +1,4 @@
-import { Layout } from "components/layout";
+import { Layout } from "frontend/components/layout";
 import Link from "next/link";
 
 export default function Donations() {
