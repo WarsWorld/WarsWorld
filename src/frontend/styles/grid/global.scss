@@ -1,5 +1,5 @@
-@use "src/frontend/styles/variables";
-@use "src/frontend/styles/mixins" as m;
+@use "../variables";
+@use "../mixins" as m;
 
 * {
   box-sizing: border-box;

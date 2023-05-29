@@ -150,19 +150,7 @@ export const creatableUnitSchema = z.discriminatedUnion("type", [
   withPlayerSlotAndPositionSchema.extend(creatablePipeRunnerSchema.shape),
 ]);
 
-export const unitWithoutAmmoSchema = z.discriminatedUnion("type", [
-  creatableInfantrySchema,
-  createReconSchema,
-  creatableBlackBombSchema,
-]);
-
-export const unitWithoutWeaponSchema = z.discriminatedUnion("type", [
-  creatableAPCSchema,
-  creatableTransportCopterSchema,
-  creatableBlackBoatSchema,
-  creatableLanderSchema,
-]);
-
+/** These units have a weapon, and have finite ammo. */
 export const unitWithAmmoSchema = z.discriminatedUnion("type", [
   creatableMechSchema,
   creatableBattleCopterSchema,
@@ -174,6 +162,25 @@ export const unitWithAmmoSchema = z.discriminatedUnion("type", [
   creatableSubSchema,
   creatableCarrierSchema,
   creatablePipeRunnerSchema,
+]);
+
+/**
+ * These units do *not* have a weapon.
+ * Specifically, they have no "Attack" option.
+ * Note: "Black Bomb" can "Explode", which deals damage but is not an attack.
+ */
+export const unitWithoutWeaponSchema = z.discriminatedUnion("type", [
+  creatableAPCSchema,
+  creatableBlackBoatSchema,
+  creatableBlackBombSchema,
+  creatableLanderSchema,
+  creatableTransportCopterSchema,
+]);
+
+/** These units have a weapon, but the weapon has infinite ammo */
+export const unitWithoutAmmoSchema = z.discriminatedUnion("type", [
+  creatableInfantrySchema,
+  createReconSchema,
 ]);
 
 const unitTypesWithAmmo: string[] = [

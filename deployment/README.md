@@ -1,6 +1,6 @@
 # Deployment
 
-This is work-in-progress and not production ready yet.
+This is work-in-progress and not production ready (or fully working) yet.
 
 ## Prerequisites
 

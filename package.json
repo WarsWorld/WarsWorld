@@ -6,7 +6,6 @@
     "node": "^18.15.0"
   },
   "scripts": {
-    "postinstall": "prisma generate",
     "initialise": "npm run db:up && prisma db push && prisma db seed",
     "db:up": "docker-compose up -d",
     "db:destroy": "docker-compose down --volumes --remove-orphans",
