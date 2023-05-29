@@ -5,6 +5,12 @@ interface Props {
   handleBurgerMenu: () => void;
 }
 
+const navItemObject = [
+  { text: "YOUR GAMES", location: "/your-matches" },
+  { text: "CURRENT GAMES", location: "/your-matches#currentGames" },
+  { text: "COMPLETED GAMES", location: "/your-matches#completedGames" },
+];
+
 export function NavMenuMatches({ showMatchLinks, handleBurgerMenu }: Props) {
   return (
     <div
@@ -13,9 +19,9 @@ export function NavMenuMatches({ showMatchLinks, handleBurgerMenu }: Props) {
         showMatchLinks ? "showMatchMenuLinks" : ""
       }`}
     >
-      <NavItem text="YOUR GAMES" location="/your-matches" />
-      <NavItem text="CURRENT GAMES" location="/your-matches#currentGames" />
-      <NavItem text="COMPLETED GAMES" location="/your-matches#completedGames" />
+      {navItemObject.map((item) => (
+        <NavItem text={item.text} location={item.location} key={item.text} />
+      ))}
     </div>
   );
 }

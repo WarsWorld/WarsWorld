@@ -7,6 +7,13 @@ interface Props {
   handleBurgerMenu: () => void;
 }
 
+const navItemObject = [
+  { text: "COMPETITION", location: "/" },
+  { text: "NEWS", location: "/" },
+  { text: "HOW TO PLAY", location: "/howtoplay" },
+  { text: "COMMUNITY", location: "/" },
+];
+
 export function NavGroup({
   showMatchLinks,
   handleMatchLinks,
@@ -25,10 +32,9 @@ export function NavGroup({
             handleBurgerMenu={handleBurgerMenu}
           />
         </button>
-        <NavItem text="COMPETITION" location="/" />
-        <NavItem text="NEWS" location="/" />
-        <NavItem text="HOW TO PLAY" location="/howtoplay" />
-        <NavItem text="COMMUNITY" location="/" />
+        {navItemObject.map((item) => (
+          <NavItem key={item.text} text={item.text} location={item.location} />
+        ))}
       </div>
       <div className="@flex @justify-center @items-center @relative loginLink">
         <NavItem text="LOGIN" location="/" />

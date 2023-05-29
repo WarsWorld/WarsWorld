@@ -43,9 +43,9 @@ export function Navbar() {
           onClick={handleBurgerMenu}
         >
           <div className="@flex @flex-col @gap-1 burgerMenuIcon">
-            <div className="@h-1 @w-7 @rounded"></div>
-            <div className="@h-1 @w-7 @rounded"></div>
-            <div className="@h-1 @w-7 @rounded"></div>
+            <div className="@h-1 @w-7 @rounded" />
+            <div className="@h-1 @w-7 @rounded" />
+            <div className="@h-1 @w-7 @rounded" />
           </div>
         </button>
         <NavGroupMobile
