@@ -6,7 +6,7 @@ export function Footer() {
   const gLogoPath = "/img/layout/GitHub.png";
 
   return (
-    <footer className="@w-full @flex @flex-col @items-center @justify-center @gap-4 @bg-gradient-to-t @from-black @pb-5">
+    <footer className="@w-full @flex @flex-col @items-center @justify-center @gap-4 @bg-gradient-to-t @from-black">
       <nav className="@flex @gap-8">
         <Link className="@text-base-a" href="/about">
           About us

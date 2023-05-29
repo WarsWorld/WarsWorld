@@ -3,8 +3,8 @@ import Image from "next/image";
 export default function Banner() {
   return (
     <div className="@grid">
-      <div className="@w-screen @h-full @bg-cover @bg-[url('/img/layout/homeBanner/gameCollage.jpg')]">
-        <div className="@flex @items-start @gap-10 @backdrop-brightness-[0.40] @w-100 @px-10 @py-40">
+      <div className="@w-screen @h-full @bg-cover @bg-[url('/img/layout/homeBanner/gameCollage.jpg')] @px-10 @py-40 homeBanner">
+        <div className="@flex @items-start @gap-10">
           <Image
             className="pixelated"
             src="/img/layout/homeBanner/classicInfantry.png"
@@ -20,7 +20,6 @@ export default function Banner() {
             </h1>
             <button className="btn"> Play Now</button>
           </div>
-
           <Image
             className="pixelated @scale-x-[-1]"
             src="/img/layout/homeBanner/newInfantry.png"
