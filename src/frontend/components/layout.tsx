@@ -10,7 +10,7 @@ interface Props {
 export function Layout({ footer, children }: Props) {
   return (
     <div
-      className={`@grid @h-full @relative layout ${
+      className={`@h-full @relative layout ${
         footer ? "withFooter" : "noFooter"
       }`}
     >

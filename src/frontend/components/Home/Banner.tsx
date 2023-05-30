@@ -4,7 +4,7 @@ import Image from "next/image";
 
 export default function Banner() {
   return (
-    <div>
+    <>
       <div
         className={`@relative @w-screen  @h-100   @bg-cover @bg-[url('/img/layout/homeBanner/gameCollage.jpg')]`}
       >
@@ -38,7 +38,6 @@ export default function Banner() {
           />
         </div>
       </div>
-
-    </div>
+    </>
   );
 }
