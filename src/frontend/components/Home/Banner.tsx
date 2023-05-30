@@ -2,7 +2,7 @@ import Image from "next/image";
 
 export default function Banner() {
   return (
-    <div className="@flex @flex-start @w-screen @bg-cover @bg-[url('/img/layout/homeBanner/gameCollage.jpg')] @p-10 homeBanner">
+    <div className="@flex @flex-start @gap-5 @w-full @bg-cover @bg-[url('/img/layout/homeBanner/gameCollage.jpg')] @p-10 homeBanner">
       <Image
         className="pixelated"
         src="/img/layout/homeBanner/classicInfantry.png"
