@@ -38,7 +38,12 @@ export const pipeTileSchema = withUnit.extend({
 export const pipeSeamTileSchema = withUnit.extend({
   type: z.literal("pipeSeam"),
   variant: axisConnectionsSchema,
-  hp: z.number().min(1).max(100),
+  hp: z.number().int().min(1).max(100),
+});
+
+export const brokenPipeSeamTileSchema = withUnit.extend({
+  type: z.literal("brokenPipeSeam"),
+  variant: axisConnectionsSchema,
 });
 
 export const plainTileSchema = withUnit.extend({
@@ -58,10 +63,15 @@ export const riverTileSchema = withUnit.extend({
     .or(fourWayConnectionSchema),
 });
 
+/**
+ * Tiles which can be rotated different ways,
+ *  (which is a purely visual effect).
+ */
 export const variableTileSchema = z.discriminatedUnion("type", [
   roadTileSchema,
   bridgeTileSchema,
   pipeSeamTileSchema,
+  brokenPipeSeamTileSchema,
   pipeTileSchema,
   riverTileSchema,
   plainTileSchema,

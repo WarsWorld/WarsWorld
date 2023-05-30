@@ -33,7 +33,7 @@ const unloadActionSchema = z.object({
     .array(
       // 1 allowed by default, 2 for DoR move+unload
       z.object({
-        loadedUnitIndex: z.number().nonnegative(),
+        loadedUnitIndex: z.number().int().nonnegative(),
         direction: directionSchema,
       })
     )
