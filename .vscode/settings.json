@@ -5,6 +5,7 @@
   "editor.formatOnPaste": false,
   "editor.formatOnType": false,
   "editor.formatOnSaveMode": "file",
+  "editor.tabSize": 2,
   "vs-code-prettier-eslint.prettierLast": false,
   "[prisma]": {
     "editor.defaultFormatter": "Prisma.prisma"
