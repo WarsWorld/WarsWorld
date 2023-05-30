@@ -12,6 +12,8 @@ export function Home() {
 
       <Layout footer>
         <Banner />
+        <h1>Just a test font</h1>
+        <h2>Just a test font</h2>
       </Layout>
     </>
   );
