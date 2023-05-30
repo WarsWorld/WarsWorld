@@ -11,9 +11,11 @@ export function Home() {
       </Head>
 
       <Layout footer>
-        <Banner />
-        <h1>Just a test font</h1>
-        <h2>Just a test font</h2>
+        <>
+          <Banner />
+          <h1>Just a test font</h1>
+          <h2>Just a test font</h2>
+        </>
       </Layout>
     </>
   );
