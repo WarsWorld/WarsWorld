@@ -1,6 +1,6 @@
 import { Tile } from "server/schemas/tile";
-import { getMovementCost } from "shared/match-logic/tiles";
 import { MovementType } from "shared/match-logic/buildable-unit";
+import { getMovementCost } from "./tiles/get-movement-cost";
 
 export function checkTerrain(
   moveType: MovementType,
