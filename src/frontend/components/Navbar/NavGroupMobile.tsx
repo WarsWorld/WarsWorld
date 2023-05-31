@@ -12,35 +12,35 @@ const navItemObject = [
   {
     text: "COMPETITION",
     location: "/",
-    iconPath: "/img/units/tealGalaxy/NeoTank_MSide-0.png",
+    iconPath: "/img/layout/NeoTank_MSide-0.png",
     iconAlt: "Teal Galaxy Neo Tank",
     flip: true,
   },
   {
     text: "NEWS",
     location: "/",
-    iconPath: "/img/units/yellowComet/Sub-0.png",
+    iconPath: "/img/layout/Sub-0.png",
     iconAlt: "Yellow Comet Sub",
     flip: false,
   },
   {
     text: "HOW TO PLAY",
     location: "/howtoplay",
-    iconPath: "/img/units/jadeSun/APC_MSide-0.png",
+    iconPath: "/img/layout/APC_MSide-0.png",
     iconAlt: "Jade Sun APC",
     flip: true,
   },
   {
     text: "COMMUNITY",
     location: "/",
-    iconPath: "/img/units/blueMoon/Cruiser-0.png",
+    iconPath: "/img/layout/Cruiser-0.png",
     iconAlt: "Blue Moon Cruiser",
     flip: false,
   },
   {
     text: "LOGIN",
     location: "/",
-    iconPath: "/img/units/pinkCosmos/Stealth-0.png",
+    iconPath: "/img/layoutStealth-0.png",
     iconAlt: "Pink Cosmos Stealth",
     flip: false,
   },
@@ -70,7 +70,7 @@ export function NavGroupMobile({
               GAME
               <img
                 className="@transform @scale-x-[-1]"
-                src="/img/units/orangeStar/MdTank_MSide-0.png"
+                src="/img/layout/MdTank_MSide-0.png"
                 alt="Orange Star Medium Tank"
               />
             </div>
