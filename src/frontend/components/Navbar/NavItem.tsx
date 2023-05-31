@@ -3,9 +3,9 @@ import Link from "next/link";
 interface Props {
   text: string;
   location: string;
-  iconPath: string;
-  iconAlt: string;
-  flip: boolean;
+  iconPath?: string;
+  iconAlt?: string;
+  flip?: boolean;
 }
 
 export function NavItem({ text, location, iconPath, iconAlt, flip }: Props) {
