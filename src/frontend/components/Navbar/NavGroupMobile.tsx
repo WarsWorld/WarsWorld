@@ -40,7 +40,7 @@ const navItemObject = [
   {
     text: "LOGIN",
     location: "/",
-    iconPath: "/img/layoutStealth-0.png",
+    iconPath: "/img/layout/Stealth-0.png",
     iconAlt: "Pink Cosmos Stealth",
     flip: false,
   },
