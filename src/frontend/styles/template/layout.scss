@@ -42,7 +42,6 @@ header {
 
   .matchLobbyToggle {
     @include m.clampSize(12, 20, 320, 1200);
-    color: theme("colors.primary");
     transition: 0.4s;
     &:hover {
       color: theme("colors.primary-variant");

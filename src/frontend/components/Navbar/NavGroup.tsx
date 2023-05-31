@@ -48,7 +48,7 @@ export function NavGroup({
       <div className="@flex @items-center @justify-center navGroup">
         <button
           onClick={handleMatchLinks}
-          className="@flex @flex-col relative @justify-center @items-center @cursor-pointer matchLobbyToggle"
+          className="@text-white @flex @flex-col relative @justify-center @items-center @cursor-pointer matchLobbyToggle"
         >
           <div className="@flex @justify-center @items-center @gap-2">
             GAME

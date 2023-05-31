@@ -11,7 +11,7 @@ interface Props {
 export function NavItem({ text, location, iconPath, iconAlt, flip }: Props) {
   return (
     <div className="@flex @justify-center @items-center @gap-2 @h-full">
-      <Link className="@text-base-a" href={location}>
+      <Link className="@text-base-a @text-white" href={location}>
         {text}
       </Link>
       <img
