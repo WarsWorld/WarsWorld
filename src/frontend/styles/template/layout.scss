@@ -117,6 +117,10 @@ header {
       display: flex;
     }
 
+    .navGroup {
+      gap: 1rem;
+    }
+
     .loginLink {
       min-width: 80px;
     }
@@ -149,6 +153,12 @@ header {
 
   .showBurgerMenuLinks {
     height: 12rem;
+  }
+
+  header {
+    .navGroup {
+      gap: 2rem;
+    }
   }
 }
 

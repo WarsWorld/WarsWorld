@@ -12,7 +12,7 @@ export default function Banner() {
       />
       <div>
         <h1>
-          Relive the <strong> Nostalgia</strong>
+          Relive the <strong>Nostalgia</strong>
           <br />
           Rewrite the Tactics
         </h1>
