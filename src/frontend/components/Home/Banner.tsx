@@ -18,6 +18,13 @@ export default function Banner() {
         </h1>
         <button className="btn"> Play Now</button>
       </div>
+      <Image
+        className="pixelated @scale-x-[-1]"
+        src="/img/layout/homeBanner/newInfantry.png"
+        width={42 * 5}
+        height={42 * 5}
+        alt="New Infantry"
+      />
     </div>
   );
 }
