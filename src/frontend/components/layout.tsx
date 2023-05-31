@@ -4,7 +4,7 @@ import { Footer } from "./Footer";
 
 interface Props {
   footer?: boolean;
-  children: JSX.Element;
+  children: JSX.Element | JSX.Element[];
 }
 
 export function Layout({ footer, children }: Props) {
