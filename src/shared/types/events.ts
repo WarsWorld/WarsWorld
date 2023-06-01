@@ -10,8 +10,9 @@ import {
 import { CO } from "server/schemas/co";
 import { UnitDuringMatch } from "server/schemas/unit";
 
+// TODO: Maybe add who's player's turn it is or which army starts?
 export interface MatchStartEvent {
-  type: "match-start"; // maybe add who's player's turn it is or which army starts?
+  type: "match-start";
 }
 
 export interface MoveEvent extends MoveAction {
@@ -28,8 +29,20 @@ export interface UnloadEvent extends UnloadAction {
 }
 
 export interface AttackEvent extends AttackAction {
-  defenderHP: number; // we could probably derive these as well if we just submit the rolled luck value
-  attackerHP?: number; // missing means no counter-attack
+  /**
+   * The new defender HP after the attack.
+   * TODO: Consider sending just the luck roll(s) for the event,
+   *       and calculating HP later.
+   */
+  defenderHP: number;
+  /**
+   * The new attacker HP after the attack.
+   * If undefined, that means HP is unchanged
+   * because there was no counter-attack.
+   * TODO: Consider sending just the luck roll(s) for the event,
+   *       and calculating HP later.
+   */
+  attackerHP?: number;
 }
 
 export interface COPowerEvent extends COPowerAction {

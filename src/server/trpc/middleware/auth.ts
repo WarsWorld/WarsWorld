@@ -2,7 +2,8 @@ import { TRPCError } from "@trpc/server";
 import { t } from "../trpc-init";
 
 export const authMiddleware = t.middleware(({ next, ctx }) => {
-  // if in development, anonymous is owner of 2 different players (prisma seeded)
+  // if in development, anonymous is owner of 2 different players
+  // (prisma seeded)
 
   const user = ctx.session?.user;
 

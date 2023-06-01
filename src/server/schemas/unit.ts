@@ -129,7 +129,8 @@ const creatablePipeRunnerSchema = withAmmoUnitStatsSchema.extend(
 );
 
 export const creatableUnitSchema = z.discriminatedUnion("type", [
-  // this can't be easily mapped because it'd be pushing the limits of zod or typescript i think
+  // this can't be easily mapped
+  // because it'd be pushing the limits of zod or typescript i think
   withPlayerSlotAndPositionSchema.extend(creatableInfantrySchema.shape),
   withPlayerSlotAndPositionSchema.extend(creatableMechSchema.shape),
   withPlayerSlotAndPositionSchema.extend(createReconSchema.shape),
@@ -244,7 +245,8 @@ export type UnitType = CreatableUnit["type"];
  * so it must stay here unless someone sacrifices their firstborn at moonlight
  * to an eldritch god and receives the forbidden types that will actually
  * make this work in a generic way.
- * yes, i think this comment is probably still shorter than the types you'd need to write.
+ * yes, i think this comment is probably still shorter
+ * than the types you'd need to write.
  */
 const unitTypes = creatableUnitSchema.options.flatMap((option) => {
   const { _def } = option._def.shape().type;
