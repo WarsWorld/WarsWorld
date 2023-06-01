@@ -1,7 +1,7 @@
 import { Navbar } from "./Navbar";
 import { NavItem } from "./NavItem";
-import { NavLinks } from "./NavLinks";
-import { NavLinksMobile } from "./NavLinksMobile";
-import { NavLinksMatches } from "./NavLinksMatches";
+import { NavGroup } from "./NavGroup";
+import { NavGroupMobile } from "./NavGroupMobile";
+import { NavMenuMatches } from "./NavMenuMatches";
 
-export { Navbar, NavItem, NavLinks, NavLinksMobile, NavLinksMatches };
+export { Navbar, NavItem, NavGroup, NavGroupMobile, NavMenuMatches };

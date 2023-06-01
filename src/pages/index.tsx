@@ -1,4 +1,3 @@
-import { Layout } from "frontend/components/layout";
 import { Home } from "../frontend/components/Home";
 
 export default function IndexPage() {
@@ -14,9 +13,5 @@ export default function IndexPage() {
   //   updateDocumentHeightCSSProperty();
   // }
 
-  return (
-    <Layout footer>
-      <Home />
-    </Layout>
-  );
+  return <Home />;
 }

@@ -16,85 +16,87 @@ body {
 }
 
 .layout {
-  // TODO: Thing for scrollbar needs to be fixed for wide screen, small height device edge cases
-  main {
-    overflow: scroll;
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-  }
+  grid-template-rows: 70px 1fr;
+}
 
-  main::-webkit-scrollbar {
+header {
+  height: 70px;
+
+  .loginLink,
+  .navGroup {
     display: none;
   }
 
-  header {
-    .loginLink,
-    .navLinks {
-      display: none;
+  .burgerMenuIcon {
+    div {
+      background-color: theme("colors.primary");
+      transition: 0.4s;
     }
 
-    .burgerMenuIcon {
+    &:hover {
       div {
-        background-color: theme("colors.primary");
-        transition: 0.4s;
-      }
-
-      &:hover {
-        div {
-          background-color: theme("colors.primary-variant");
-        }
+        background-color: theme("colors.primary-variant");
       }
     }
+  }
 
-    .matchLobbyBtn {
-      @include m.clampSize(12, 20, 320, 1200);
-      color: theme("colors.primary");
+  .matchLobbyToggle {
+    @include m.clampSize(12, 20, 320, 1200);
+    transition: 0.4s;
+    &:hover {
+      color: theme("colors.primary-variant");
     }
+  }
 
-    .burgerMenuLinks,
-    .matchMenuLinks {
-      opacity: 0;
-      visibility: hidden;
-      transition: 0.7s;
-      top: 60px;
-    }
+  .matchMenuLinks {
+    position: static;
+  }
 
-    .burgerMenuLinks {
-      .matchMenuLinks {
-        right: 160px;
-      }
-    }
+  .burgerMenuLinks,
+  .matchMenuLinks {
+    opacity: 0;
+    visibility: hidden;
+    transition: 0.7s;
+    top: 60px;
+  }
 
-    .showBurgerMenuLinks,
-    .showMatchMenuLinks {
-      opacity: 1;
-      visibility: visible;
-    }
+  .showBurgerMenuLinks,
+  .showMatchMenuLinks {
+    opacity: 1;
+    visibility: visible;
+  }
 
-    .showMatchMenuLinks {
-      height: 12rem;
-    }
+  .showMatchMenuLinks {
+    height: 12rem;
+  }
 
-    .showBurgerMenuLinks {
-      height: 12rem;
-    }
+  .showBurgerMenuLinks {
+    height: 30rem;
+  }
+}
+
+.scrollable {
+  // TODO: Thing for scrollbar needs to be fixed for wide screen, small height device edge cases
+  overflow: scroll;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  main {
+    display: flex;
+    justify-content: center;
   }
 
   .currentGames {
-    scroll-margin-top: 50px;
+    scroll-margin-top: 100px;
   }
 }
 
-.withFooter {
-  grid-template-rows: 60px 1fr 140px;
-}
-
-.noFooter {
-  grid-template-rows: 60px 1fr;
-}
-
 @screen tablet {
-  .layout {
+  .scrollable {
     .inProgress {
       padding: 2rem;
     }
@@ -102,64 +104,67 @@ body {
 }
 
 @screen smallscreen {
-  .burgerMenuBtn {
-    display: none;
+  .layout {
+    grid-template-rows: 100px 1fr;
   }
 
-  .layout {
-    header {
-      .navLinks,
-      .loginLink {
-        display: initial;
-      }
+  header {
+    height: 100px;
 
-      .loginLink {
-        min-width: 180px;
-      }
-
-      .navLinks {
-        display: flex;
-        gap: 50px;
-      }
-
-      .burgerMenuLinks {
-        display: none;
-      }
+    .navGroup,
+    .loginLink {
+      display: flex;
     }
 
-    .inProgress {
-      padding: 2rem 3rem;
+    .navGroup {
+      gap: 1rem;
     }
+
+    .loginLink {
+      min-width: 80px;
+    }
+
+    .burgerMenuLinks,
+    .burgerMenuIcon {
+      display: none;
+    }
+
+    .matchMenuLinks {
+      top: 100px;
+    }
+
+    .matchMenuLinks {
+      position: fixed;
+    }
+  }
+
+  .inProgress {
+    padding: 2rem 3rem;
   }
 }
 
 @screen laptop {
-  .layout {
+  .scrollable {
     .inProgress {
       padding: 3rem;
+    }
+  }
+
+  .showBurgerMenuLinks {
+    height: 12rem;
+  }
+
+  header {
+    .navGroup {
+      gap: 2rem;
     }
   }
 }
 
 @screen medium {
-  .layout {
-    header {
-      .burgerMenuLinks,
-      .matchMenuLinks {
-        top: 100px;
-      }
+  header {
+    .burgerMenuLinks {
+      top: 70px;
     }
-  }
-
-  .withFooter {
-    grid-template-rows: 100px 1fr 160px;
-
-    footer {
-      height: 160px;
-    }
-  }
-
-  .noFooter {
-    grid-template-rows: 100px 1fr;
   }
 }

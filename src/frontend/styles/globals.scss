@@ -42,6 +42,10 @@
 
   button {
     @include m.clampSize(12, 20, 320, 1200);
+  }
+
+  .btn {
+    @include m.clampSize(12, 20, 320, 1200);
     background-color: rgb(146 64 14);
 
     border-radius: 20px;
@@ -50,7 +54,8 @@
 
     letter-spacing: 0.15em;
   }
-  button:hover {
+
+  .btn:hover {
     color: black;
     background-color: rgb(251 191 36);
   }
