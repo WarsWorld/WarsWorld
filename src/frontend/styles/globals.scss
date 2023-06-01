@@ -6,7 +6,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap");
 
 @layer base {
   html {
@@ -14,8 +14,6 @@
     color: white;
     background-color: rgba(0, 0, 0, 0.7);
     background-image: url("/img/layout/awbg.jpg");
-
-
   }
 
   h1 {
@@ -44,6 +42,10 @@
 
   button {
     @include m.clampSize(12, 20, 320, 1200);
+  }
+
+  .btn {
+    @include m.clampSize(12, 20, 320, 1200);
     background-color: rgb(146 64 14);
 
     border-radius: 20px;
@@ -52,10 +54,10 @@
 
     letter-spacing: 0.15em;
   }
-  button:hover {
+
+  .btn:hover {
     color: black;
     background-color: rgb(251 191 36);
-
   }
 
   a {
