@@ -4,7 +4,7 @@ import { Footer } from "./Footer";
 
 interface Props {
   footer?: boolean;
-  children: JSX.Element;
+  children: React.ReactElement | React.ReactElement[];
 }
 
 export function Layout({ footer, children }: Props) {

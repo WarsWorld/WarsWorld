@@ -39,15 +39,18 @@
   p,
   select {
     @include m.clampSize(12, 16, 320, 1200);
-    padding: 1rem 0;
+    padding: 0.25rem 0;
     font-weight: 400;
   }
 
   .button {
-    @include m.clampSize(12, 20, 320, 1200);
-    background-color: rgb(146 64 14);
+    @include m.clampSize(12, 16, 320, 1200);
+    color: white;
+    cursor: pointer;
+    background-color: rgb(148, 62, 21);
     border-radius: 20px;
     padding: 0.5em;
+    margin: 0.5em;
     transition: 0.4s;
     letter-spacing: 0.15em;
   }
