@@ -4,11 +4,7 @@ import { CO } from "server/schemas/co";
 import { PlayerSlot } from "server/schemas/player-slot";
 import { Position } from "server/schemas/position";
 import { CreatableUnit } from "server/schemas/unit";
-import {
-  PropertyTileType,
-  TileType,
-  UnusedSiloTileType,
-} from "server/schemas/tile";
+import { PropertyTileType, UnusedSiloTileType } from "server/schemas/tile";
 
 interface WithPosition {
   position: Position;

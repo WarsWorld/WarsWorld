@@ -8,7 +8,7 @@ export const MatchRow = ({ match }: { match: FrontendMatch }) => {
   const { currentPlayer } = usePlayers();
 
   return (
-    <div className="@grid @grid-rows-[1fr_3fr] @p-2 @mb-10 matchRowGrid @outline @outline-black @outline-2">
+    <div className="@grid @p-2 @mb-10 matchRowGrid @outline @outline-black @outline-2">
       <ul className="@flex @flex-col @justify-center @items-center @text-center @gap-2">
         <li className="matchInfo">Player 1 vs. Player 2</li>
         {match.players.some((p) => p.playerId === currentPlayer?.id) ? (

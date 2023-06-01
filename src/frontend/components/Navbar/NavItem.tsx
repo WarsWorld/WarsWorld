@@ -3,17 +3,22 @@ import Link from "next/link";
 interface Props {
   text: string;
   location: string;
+  iconPath?: string;
+  iconAlt?: string;
+  flip?: boolean;
 }
 
-export function NavItem({ text, location }: Props) {
+export function NavItem({ text, location, iconPath, iconAlt, flip }: Props) {
   return (
-    <div className="@sm:border @sm:border-black @sm:mx-0">
-      <Link
-        className="@flex @justify-center @items-center @text-base-a @h-full @w-full @px-4"
-        href={location}
-      >
+    <div className="@flex @justify-center @items-center @gap-2 @h-full">
+      <Link className="@text-base-a @text-white" href={location}>
         {text}
       </Link>
+      <img
+        className={flip ? "@transform @scale-x-[-1]" : ""}
+        src={iconPath}
+        alt={iconAlt}
+      />
     </div>
   );
 }

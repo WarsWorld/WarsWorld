@@ -3,8 +3,8 @@ import { playerSlotForPropertiesSchema } from "./player-slot";
 import { positionSchema } from "./position";
 
 const basicUnitStatsSchema = z.object({
-  hp: z.number().min(1).max(100),
-  fuel: z.number().min(0).max(99),
+  hp: z.number().int().min(1).max(100),
+  fuel: z.number().int().min(0).max(99),
 });
 
 export const withNoAmmoUnitStatsSchema = z.object({
@@ -13,7 +13,7 @@ export const withNoAmmoUnitStatsSchema = z.object({
 
 export const withAmmoUnitStatsSchema = z.object({
   stats: basicUnitStatsSchema.extend({
-    ammo: z.number().min(0),
+    ammo: z.number().int().min(0),
   }),
 });
 
