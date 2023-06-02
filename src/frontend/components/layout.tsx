@@ -9,7 +9,6 @@ interface Props {
 
 export function Layout({ footer, children }: Props) {
   return (
-
     <div className="@grid @h-full layout">
       <Navbar />
       <div className="@grid @relative">

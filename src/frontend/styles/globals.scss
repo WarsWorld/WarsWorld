@@ -44,7 +44,7 @@
   }
 
 
-  .button {
+  .btn {
     @include m.clampSize(12, 16, 320, 1200);
     color: white;
     cursor: pointer;
@@ -56,7 +56,7 @@
     letter-spacing: 0.15em;
   }
 
-  .button:hover {
+  .btn:hover {
     color: black;
     background-color: v.$color-primary-variant;
   }

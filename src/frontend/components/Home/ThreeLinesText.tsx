@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 interface buttonData {
   text: string;
   link: string;
@@ -13,7 +12,7 @@ export default function ThreeLinesText(props: {
   if (props.button) {
     props.button.forEach((buttonItem: buttonData) =>
       buttonArray.push(
-        <a href={buttonItem.link} className={"button"}>
+        <a href={buttonItem.link} className={"btn"}>
           {buttonItem.text}
         </a>
       )
