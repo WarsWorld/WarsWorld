@@ -1,5 +1,6 @@
 /**
- * This file contains the tRPC http response handler and context creation for Next.js
+ * This file contains the tRPC http response handler
+ * and context creation for Next.js
  */
 import * as trpcNext from "@trpc/server/adapters/next";
 import { createContext } from "server/trpc/trpc-context";

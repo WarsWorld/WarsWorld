@@ -26,7 +26,8 @@ async function main() {
         name,
         User: {
           connect: {
-            id: developmentUser.id, // TODO i thought prisma could do this better with direct relationships and not ids...
+            // TODO i thought prisma could do this better with direct relationships and not ids...
+            id: developmentUser.id,
           },
         },
       },

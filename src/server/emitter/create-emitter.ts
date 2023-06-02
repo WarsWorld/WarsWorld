@@ -1,5 +1,9 @@
-//read up on JavaScript event emitters. the code here is a typesafe implementation of the same principal. you can subscribe to events with a callback function that will be called when those events occur.
-
+/**
+ * Read up on JavaScript event emitters.
+ * The code here is a typesafe implementation of the same principal.
+ * You can subscribe to events with a callback function
+ * that will be called when those events occur.
+ */
 export const createEmitter = <D extends { matchId: string }>() => {
   type Listener = (dispatched: D) => void;
   const listenerMap = new Map<string, Listener[]>();

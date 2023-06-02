@@ -1,15 +1,16 @@
 import Head from "next/head";
 import Banner from "./Home/Banner";
+
 import SmallContainer from "./Home/SmallContainer";
 import ThreeLinesText from "./Home/ThreeLinesText";
+
 export function Home() {
   return (
-    <section>
+    <>
       <Head>
         <title>Home Page | Wars World</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-
       <>
         <Banner />
         <ThreeLinesText

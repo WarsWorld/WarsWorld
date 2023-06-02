@@ -92,7 +92,8 @@ export const actionRouter = router({
     .mutation(async ({ input, ctx }) => {
       validateAction(input, ctx.currentPlayer.id, ctx.match);
 
-      // important: validate all actions first before changing server state or persisting to DB
+      // important: validate all actions first before changing server state
+      //            or persisting to DB
 
       const event = actionToEvent(input.matchId, input);
 
