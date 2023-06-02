@@ -18,7 +18,7 @@ export function Home() {
         button={false}
       />
 
-      <div className="@grid @grid-cols-[repeat(auto-fit,minmax(260px,1fr))] @gap-[4vw] @mx-[15vw] @my-10">
+      <div className="@grid @grid-cols-[repeat(auto-fit,minmax(300px,1fr))] @gap-[1vw] @mx-[18vw] @my-20">
         <SmallContainer
           image={"matchContainer"}
           alt={"Grimm challenging you in the road"}

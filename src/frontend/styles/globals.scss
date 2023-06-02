@@ -38,7 +38,7 @@
 
   p,
   select {
-    @include m.clampSize(12, 16, 320, 1200);
+    @include m.clampSize(12, 18, 320, 1200);
     padding: 0.25rem 0;
     font-weight: 400;
   }
