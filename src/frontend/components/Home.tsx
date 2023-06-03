@@ -27,47 +27,40 @@ const homePageCards = [
 
 export function Home() {
   return (
-    <>
-      <Head>
-        <title>Home Page | Wars World</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-
-      <Layout footer>
-        <Banner />
-        <ThreeLinesText
-          subtitle="The Timeless Classic"
-          title="Renewed"
-          text="The best-turn based strategy game optimized!"
-          button={false}
-        />
-        <div className="@flex @flex-col @items-center @justify-center @gap-8 @mx-8 @my-8 cardsContainer">
-          {homePageCards.map((item) => (
-            <SmallContainer
-              key={item.image}
-              image={item.image}
-              alt={item.alt}
-              title={item.title}
-              text={item.text}
-            />
-          ))}
-        </div>
-        <ThreeLinesText
-          subtitle="1v1, Teamgames or FFA"
-          title="There is a Space for You"
-          text="Whether you want to be hardcore or play fun crazy maps"
-          button={[
-            {
-              text: "Play Now",
-              link: "/register",
-            },
-            {
-              text: "Learn to Play",
-              link: "/learn",
-            },
-          ]}
-        />
-      </Layout>
-    </>
+    <Layout footer>
+      <Banner />
+      <ThreeLinesText
+        subtitle="The Timeless Classic"
+        title="Renewed"
+        text="The best-turn based strategy game optimized!"
+        button={false}
+      />
+      <div className="@flex @flex-col @items-center @justify-center @gap-8 @mx-8 @my-8 cardsContainer">
+        {homePageCards.map((item) => (
+          <SmallContainer
+            key={item.image}
+            image={item.image}
+            alt={item.alt}
+            title={item.title}
+            text={item.text}
+          />
+        ))}
+      </div>
+      <ThreeLinesText
+        subtitle="1v1, Teamgames or FFA"
+        title="There is a Space for You"
+        text="Whether you want to be hardcore or play fun crazy maps"
+        button={[
+          {
+            text: "Play Now",
+            link: "/register",
+          },
+          {
+            text: "Learn to Play",
+            link: "/learn",
+          },
+        ]}
+      />
+    </Layout>
   );
 }
