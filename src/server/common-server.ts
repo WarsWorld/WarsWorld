@@ -8,8 +8,8 @@ export const createTRPCwebSocketServer = (wssConfig: ws.ServerOptions) => {
 
   const handler = applyWSSHandler({ wss, router: appRouter, createContext });
 
-  //SIGTERM is a node.js process event (like ctrl + c, it means signal/program termination.
-
+  // SIGTERM is a node.js process event
+  // like ctrl + c, it means signal/program termination.
   process.on("SIGTERM", () => {
     console.log("SIGTERM");
     handler.broadcastReconnectNotification();

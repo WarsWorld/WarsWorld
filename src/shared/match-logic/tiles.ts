@@ -2,7 +2,10 @@ import { TileType } from "server/schemas/tile";
 import { MovementType } from "shared/match-logic/buildable-unit";
 import { tsIncludes } from "shared/utils/typesafe-includes";
 
-/** A nonzero integer (or null for impassible) for every possible "movement type". */
+/**
+ * A nonzero integer (or null for impassible)
+ * for every possible "movement type".
+ */
 type TileMovementCosts = Record<MovementType, number | null>;
 
 export interface TileProperties {
@@ -44,7 +47,8 @@ const commonLandMovementCosts = {
  * - Pipes are impassible except by piperunners.
  * - Any building which *could have* produced a unit
  * has a movement cost of 1 for that unit.
- *   - For example, ships can move through ports and piperunners can move through bases.
+ *   - For example, ships can move through ports
+ *     and piperunners can move through bases.
  */
 const manMadeMovementCosts: TileMovementCosts = {
   ...commonLandMovementCosts,
@@ -78,7 +82,8 @@ const pipeTileProperties: TileProperties = {
  * The "normal" defense and movement costs for all tiles types,
  * before any modifications from weather and/or COs.
  *
- * Every unit has exactly one "movement type", for example tanks have type "treads".
+ * Every unit has exactly one "movement type",
+ * for example tanks have type "treads".
  * This object shows the amount of movement points which must be spent
  * to *enter* each type of tile, for each "movement type".
  * `null` means impassible terrain.
@@ -212,7 +217,8 @@ export const getTerrainDefenseStars = (tileType: TileType) =>
 export const getUnitTerrainDefense = (hp: number, tileType: TileType) => {
   /**
    * We *store* health as a number from 1 to 100,
-   * and *display* health as a number from 1 to 10, by dividing by 10 with rounding.
+   * and *display* health as a number from 1 to 10,
+   * by dividing by 10 with rounding.
    * The damage formula is based this "visual health".
    */
   const visualHp = Math.ceil(hp / 10);
@@ -222,13 +228,15 @@ export const getUnitTerrainDefense = (hp: number, tileType: TileType) => {
 /**
  * Every turn, units get a certain number of movement points
  * which they can spend by moving.
- * Every unit has exactly one "movement type", for example tanks have type "treads".
+ * Every unit has exactly one "movement type",
+ * for example tanks have type "treads".
  * See https://awbw.fandom.com/wiki/Units#Movement for more details.
  *
  * @param tileType The tile which the unit is trying to enter, e.g. 'plains'
  * @param movementType The movement type of the unit, e.g. 'treads'
  * @param weather The current weather
- * @returns The amount of movement points which must be spent to *enter* the tile
+ * @returns The amount of movement points which must be spent
+ *          to *enter* the tile
  * (assuming the unit is already adjacent to the tile).
  * `null` means impassible terrain.
  */

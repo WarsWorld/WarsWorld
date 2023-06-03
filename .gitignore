@@ -14,3 +14,9 @@ tsconfig.tsbuildinfo
 .env
 .eslintcache
 .DS_Store
+/.idea/.gitignore
+/.idea/codeStyles/codeStyleConfig.xml
+/.idea/jsLibraryMappings.xml
+/prisma/migrations/20230510171142_amogus/migration.sql
+/.idea/inspectionProfiles/Project_Default.xml
+/.idea/vcs.xml

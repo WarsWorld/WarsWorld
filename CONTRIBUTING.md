@@ -21,11 +21,11 @@ In either case, a good branch name would be descriptive of what you plan to work
 Setup instructions can be found in our README.md!
 
 ## Linting
+
 Our CI/CD process will use a "linter" to check if your code is formatted in a readable way. However, it is up to you to actually fix any formatting issues.
 You can check for any problems by running `npm run lint`, and you can fix those problems manually or by running `npm run lint:fix`.
 Alternatively, if you are using VSCode, you should install the extension `rvest.vs-code-prettier-eslint`
 so that your code is automatically formatted every time you save a file.
-
 
 ## RoadMap / Vision
 
