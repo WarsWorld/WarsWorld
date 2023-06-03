@@ -25,6 +25,11 @@ const homePageCards = [
   },
 ];
 
+const ThreeLinesTextButtons = [
+  { text: "Play Now", link: "/register" },
+  { text: "Learn to Play", link: "/howtoplay" },
+];
+
 export function Home() {
   return (
     <Layout footer>
@@ -50,16 +55,7 @@ export function Home() {
         subtitle="1v1, Teamgames or FFA"
         title="There is a Space for You"
         text="Whether you want to be hardcore or play fun crazy maps"
-        button={[
-          {
-            text: "Play Now",
-            link: "/register",
-          },
-          {
-            text: "Learn to Play",
-            link: "/learn",
-          },
-        ]}
+        button={ThreeLinesTextButtons}
       />
     </Layout>
   );
