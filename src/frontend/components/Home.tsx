@@ -1,4 +1,3 @@
-import Head from "next/head";
 import Banner from "./Home/Banner";
 import SmallContainer from "./Home/SmallContainer";
 import ThreeLinesText from "./Home/ThreeLinesText";
