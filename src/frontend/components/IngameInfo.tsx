@@ -9,7 +9,7 @@ export function IngameInfo({ ingameStatIconPath, ingameStat }: Props) {
       {ingameStatIconPath ? (
         <img src={ingameStatIconPath} />
       ) : (
-        <div className="@h-3 @w-3 @bg-white @rounded-full"></div>
+        <div className="@h-3 @w-3 @bg-white @rounded-full" />
       )}
       <div>{ingameStat}</div>
     </div>

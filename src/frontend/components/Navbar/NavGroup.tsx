@@ -50,7 +50,7 @@ export function NavGroup({
           onClick={handleMatchLinks}
           className="@text-white @flex @flex-col relative @justify-center @items-center @cursor-pointer matchLobbyToggle"
         >
-          <div className="@flex @justify-center @items-center @gap-2">
+          <div className="@flex @justify-center @items-center @gap-1">
             GAME
             <img
               className="@transform @scale-x-[-1]"

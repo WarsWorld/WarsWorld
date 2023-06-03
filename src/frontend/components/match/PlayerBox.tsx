@@ -54,7 +54,7 @@ export const PlayerBox = ({ playerTurn, playerInMatch }: Props) => {
               Placeholder for an exp bar
             </div>
             <div className="@flex @flex-row @flex-wrap @w-full playerIngameInfo">
-              <IngameInfo ingameStatIconPath="" ingameStat={"00:00:00"} />
+              <IngameInfo ingameStatIconPath="" ingameStat="00:00:00" />
               <IngameInfo
                 ingameStatIconPath={`/img/units/${playerUnit}/Infantry-0.png`}
                 ingameStat={999}
