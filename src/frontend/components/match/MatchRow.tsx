@@ -22,7 +22,6 @@ export const MatchRow = ({ match }: { match: FrontendMatch }) => {
           className="@bg-gray-800 @p-2 @rounded-lg"
           href={`/match/${match.id}`}
         >
-          {" "}
           Enter the Match
         </Link>
         <div className="@h-[70vw] @max-h-[350px] @m-3 @bg-green-700 @aspect-square @outline @outline-black @outline-2">

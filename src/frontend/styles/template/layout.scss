@@ -75,31 +75,11 @@ header {
   }
 }
 
-.scrollable {
-  // TODO: Thing for scrollbar needs to be fixed for wide screen, small height device edge cases
-  overflow: scroll;
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-
-  &::-webkit-scrollbar {
-    display: none;
-  }
-
-  main {
-    display: flex;
-    justify-content: center;
-  }
+.mainContent {
+  top: 70px;
 
   .currentGames {
     scroll-margin-top: 100px;
-  }
-}
-
-@screen tablet {
-  .scrollable {
-    .inProgress {
-      padding: 2rem;
-    }
   }
 }
 
@@ -117,7 +97,7 @@ header {
     }
 
     .navGroup {
-      gap: 1rem;
+      gap: 0.8rem;
     }
 
     .loginLink {
@@ -138,18 +118,12 @@ header {
     }
   }
 
-  .inProgress {
-    padding: 2rem 3rem;
+  .mainContent {
+    top: 100px;
   }
 }
 
 @screen laptop {
-  .scrollable {
-    .inProgress {
-      padding: 3rem;
-    }
-  }
-
   .showBurgerMenuLinks {
     height: 12rem;
   }

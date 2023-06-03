@@ -11,7 +11,7 @@ export function Layout({ footer, children }: Props) {
   return (
     <div className="@grid @h-full layout">
       <Navbar />
-      <div className="@grid @relative">
+      <div className="@grid @relative mainContent">
         <main className="@h-full">{children}</main>
         {footer && <Footer />}
       </div>
