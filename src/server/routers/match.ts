@@ -59,7 +59,7 @@ const matchStateToFrontend = (match: BackendMatchState) => ({
 
 export const matchRouter = router({
   create: createMatchProcedure,
-  // TODO pagination
+  // TODO: pagination
   getAll: publicBaseProcedure.query(() =>
     getMatches().map(matchStateToFrontend)
   ),
@@ -67,8 +67,10 @@ export const matchRouter = router({
     getMatchesOfPlayer(ctx.currentPlayer.id).map(matchStateToFrontend)
   ),
   full: matchBaseProcedure.query(async ({ ctx }) => {
-    // TODO by default show no hidden units and FoW is completely dark and empty
-    // TODO if the user has a session and has a player in this match it needs to be checked and some information revealed accordingly
+    // TODO: By default show no hidden units
+    //       and FoW is completely dark and empty
+    // TODO: If the user has a session and has a player in this match
+    //       it needs to be checked and some information revealed accordingly
     return ctx.match;
   }),
   join: matchBaseProcedure

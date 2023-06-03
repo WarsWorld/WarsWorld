@@ -2,19 +2,20 @@
 @use "src/frontend/styles/pages";
 @use "src/frontend/styles/grid/global";
 @use "src/frontend/styles/mixins" as m;
+@use "src/frontend/styles/variables" as v;
 // This file is used as the base for tailwindCSS
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap");
 
 @layer base {
   html {
     font-family: "Poppins", sans-serif;
     color: white;
     background-color: rgba(0, 0, 0, 0.7);
-    background-image: url("/img/layout/awbg.jpg");
 
+    background-image: url("/img/layout/wwbg.jpg");
 
   }
 
@@ -37,25 +38,27 @@
 
   p,
   select {
-    @include m.clampSize(12, 16, 320, 1200);
-    padding: 1rem 0;
+    @include m.clampSize(12, 18, 320, 1200);
+    padding: 0.25rem 0;
     font-weight: 400;
   }
 
-  button {
-    @include m.clampSize(12, 20, 320, 1200);
-    background-color: rgb(146 64 14);
 
+  .btn {
+    @include m.clampSize(12, 16, 320, 1200);
+    color: white;
+    cursor: pointer;
+    background-color: rgb(148, 62, 21);
     border-radius: 20px;
     padding: 0.5em;
+    margin: 0.5em;
     transition: 0.4s;
-
     letter-spacing: 0.15em;
   }
-  button:hover {
-    color: black;
-    background-color: rgb(251 191 36);
 
+  .btn:hover {
+    color: black;
+    background-color: v.$color-primary-variant;
   }
 
   a {
@@ -66,7 +69,7 @@
   }
 
   a:hover {
-    color: theme("colors.primary-variant");
+    color: v.$color-primary-variant;
   }
 }
 
