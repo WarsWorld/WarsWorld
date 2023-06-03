@@ -48,7 +48,7 @@
     @include m.clampSize(12, 16, 320, 1200);
     color: white;
     cursor: pointer;
-    background-color: rgb(148, 62, 21);
+    background-color: theme("colors.primary-dark");
     border-radius: 20px;
     padding: 0.5em;
     margin: 0.5em;
@@ -58,7 +58,7 @@
 
   .btn:hover {
     color: black;
-    background-color: theme("colors.primary-variant");
+    background-color: theme("colors.secondary");
   }
 
   a {
@@ -69,7 +69,7 @@
   }
 
   a:hover {
-    color: theme("colors.primary-variant");
+    color: theme("colors.secondary");
   }
 }
 
