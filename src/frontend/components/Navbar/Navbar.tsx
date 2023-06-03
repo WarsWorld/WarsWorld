@@ -17,12 +17,12 @@ export function Navbar() {
     setShowMatchLinks(!showMatchLinks);
   };
   return (
-    <header className="@w-full @sticky @top-0 @z-30">
+    <header className="@w-full @fixed @top-0 @z-30">
       <nav className="@flex @h-full @justify-between @items-center @bg-gray-800 @mx-auto @px-5">
         <Link href="/">
           <Image
             className="@flex"
-            src={"/img/layout/logo.webp"}
+            src="/img/layout/logo.webp"
             width={60}
             height={60}
             alt="AW Logo"
