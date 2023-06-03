@@ -1,12 +1,10 @@
-@use "src/frontend/styles/variables";
+
 @use "src/frontend/styles/mixins" as m;
 
 #__next,
 html,
 body {
   height: 100vh;
-  // height: var(--doc-height);
-  height: 100dvh;
 }
 
 html,
