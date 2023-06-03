@@ -1,7 +1,10 @@
 import Image from "next/image";
 
+//Np clue as of why ESLint is littering frontend files with a line for every
+
 export default function Banner() {
   return (
+
     <div className="@bg-cover @bg-[url('/img/layout/homeBanner/gameCollage.jpg')] ">
       <div className="@flex @items-start @gap-10 @backdrop-brightness-50 @px-10 @py-40">
         <Image
@@ -27,6 +30,8 @@ export default function Banner() {
           alt="New Infantry"
         />
       </div>
+
     </div>
+
   );
 }

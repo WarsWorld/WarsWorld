@@ -9,7 +9,7 @@ module.exports = {
     extend: {
       sans: ["Proxima Nova", ...defaultTheme.fontFamily.sans],
       colors: {
-        primary: "#E47220",
+        primary: "#ff9243",
         "primary-variant": "#9EBC9F",
       },
     },

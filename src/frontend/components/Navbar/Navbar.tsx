@@ -16,7 +16,6 @@ export function Navbar() {
   const handleMatchLinks = () => {
     setShowMatchLinks(!showMatchLinks);
   };
-
   return (
     <header className="@w-full @sticky @top-0 @z-30">
       <nav className="@flex @h-full @justify-between @items-center @bg-gray-800 @mx-auto @px-5">
