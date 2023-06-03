@@ -1,8 +1,8 @@
 import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { NavLinks } from "./NavLinks";
-import { NavLinksMobile } from "./NavLinksMobile";
+import { NavGroup } from "./NavGroup";
+import { NavGroupMobile } from "./NavGroupMobile";
 
 export function Navbar() {
   const [showLinks, setShowLinks] = useState(false);
@@ -16,21 +16,21 @@ export function Navbar() {
   const handleMatchLinks = () => {
     setShowMatchLinks(!showMatchLinks);
   };
-
   return (
-    <header className="@w-full @relative @z-30">
+    <header className="@w-full @sticky @top-0 @z-30">
       <nav className="@flex @h-full @justify-between @items-center @bg-gray-800 @mx-auto @px-5">
         <Link href="/">
           <Image
-            className="@flex "
+            className="@flex"
             src={"/img/layout/logo.webp"}
-            width={90}
-            height={90}
+            width={60}
+            height={60}
             alt="AW Logo"
           />
         </Link>
 
-        <NavLinks
+        <NavGroup
+          handleBurgerMenu={handleBurgerMenu}
           showMatchLinks={showMatchLinks}
           handleMatchLinks={handleMatchLinks}
         />
@@ -38,18 +38,18 @@ export function Navbar() {
         {/* Mobile Navbar */}
 
         <button
-          className="@h-7 @w-7 @absolute @right-7 @cursor-pointer burgerMenuBtn"
-          type="button"
+          className="@flex @justify-center @items-center @h-7 @w-7 @absolute @right-7"
           onClick={handleBurgerMenu}
         >
           <div className="@flex @flex-col @gap-1 burgerMenuIcon">
-            <div className="@h-1 @w-7 @rounded"></div>
-            <div className="@h-1 @w-7 @rounded"></div>
-            <div className="@h-1 @w-7 @rounded"></div>
+            <div className="@h-1 @w-7 @rounded" />
+            <div className="@h-1 @w-7 @rounded" />
+            <div className="@h-1 @w-7 @rounded" />
           </div>
         </button>
-        <NavLinksMobile
+        <NavGroupMobile
           showLinks={showLinks}
+          handleBurgerMenu={handleBurgerMenu}
           showMatchLinks={showMatchLinks}
           handleMatchLinks={handleMatchLinks}
         />

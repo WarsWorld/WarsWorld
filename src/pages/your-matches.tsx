@@ -20,7 +20,7 @@ export default function YourMatches() {
 
   return (
     <Layout>
-      <div className="@h-full @w-full @max-w-[1200px] @p-5 @grid @grid-rows-[1fr_1fr_1fr] @gap-10 @text-center allGames">
+      <div className="@h-full @w-full @max-w-[1200px] @p-5 @grid @gap-10 @text-center allGames">
         <div>
           <h1>Your matches</h1>
           <p>

@@ -33,7 +33,7 @@ const unloadActionSchema = z.object({
     .array(
       // 1 allowed by default, 2 for DoR move+unload
       z.object({
-        loadedUnitIndex: z.number().nonnegative(),
+        loadedUnitIndex: z.number().int().nonnegative(),
         direction: directionSchema,
       })
     )
@@ -90,7 +90,9 @@ export const mainActionSchema = z.discriminatedUnion("type", [
   buildActionSchema,
   moveActionSchema,
   waitActionSchema,
-  unloadActionSchema, // for DoR unload, unloading wouldn't be plainly (i.e. partially) allowed, only as a subaction of move
+  // for DoR unload, unloading wouldn't be plainly (i.e. partially) allowed,
+  // only as a subaction of move
+  unloadActionSchema,
   coPowerActionSchema,
   superCOPowerActionSchema,
   endTurnActionSchema,

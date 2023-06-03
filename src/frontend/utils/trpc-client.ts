@@ -43,7 +43,8 @@ const getEndingLink = (ctx: NextPageContext | undefined) => {
 };
 
 /**
- * A set of strongly-typed React hooks from your `AppRouter` type signature with `createReactQueryHooks`.
+ * A set of strongly-typed React hooks
+ * from your `AppRouter` type signature with `createReactQueryHooks`.
  * @link https://trpc.io/docs/react#3-create-trpc-hooks
  */
 export const trpc = createTRPCNext<AppRouter>({
@@ -58,7 +59,8 @@ export const trpc = createTRPCNext<AppRouter>({
        * @link https://trpc.io/docs/links
        */
       links: [
-        // adds pretty logs to your console in development and logs errors in production
+        // adds pretty logs to your console in development
+        // and logs errors in production
         loggerLink({
           // enabled: () => false,
           enabled: (opts) =>

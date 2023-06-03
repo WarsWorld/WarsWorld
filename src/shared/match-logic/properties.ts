@@ -25,7 +25,8 @@ export const propertyPropertiesMap: Record<
   },
   city: {
     providesFunds: true,
-    resuppliedMovementTypes: movementTypesThatGetResuppliedByBases, // pipes can't move here so no need for an exception
+    // pipes can't move here so no need for an exception
+    resuppliedMovementTypes: movementTypesThatGetResuppliedByBases,
   },
   port: { providesFunds: true, resuppliedMovementTypes: ["sea", "lander"] },
   comtower: { providesFunds: false, resuppliedMovementTypes: [] },
