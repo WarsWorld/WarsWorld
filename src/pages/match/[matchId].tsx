@@ -1,10 +1,17 @@
 import { PixiMatch } from "frontend/components/match/main";
 import { Layout } from "frontend/components/layout";
+import Head from "next/head";
 
 export default function Match() {
   return (
-    <Layout>
-      <PixiMatch />
-    </Layout>
+    <>
+      <Head>
+        <title>Game Page | Wars World</title>
+      </Head>
+
+      <Layout>
+        <PixiMatch />
+      </Layout>
+    </>
   );
 }
