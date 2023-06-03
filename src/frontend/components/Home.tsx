@@ -24,11 +24,6 @@ const homePageCards = [
   },
 ];
 
-const ThreeLinesTextButtons = [
-  { text: "Play Now", link: "/register" },
-  { text: "Learn to Play", link: "/howtoplay" },
-];
-
 export function Home() {
   return (
     <Layout footer>
@@ -37,9 +32,8 @@ export function Home() {
         subtitle="The Timeless Classic"
         title="Renewed"
         text="The best-turn based strategy game optimized!"
-        button={false}
       />
-      <div className="@flex @flex-col @items-center @justify-center @gap-8 @mx-8 @my-8 cardsContainer">
+      <div className="@flex @flex-col @items-center @justify-center @gap-8 @mx-8 @my-8 laptop:@flex-row">
         {homePageCards.map((item) => (
           <SmallContainer
             key={item.image}
@@ -54,7 +48,10 @@ export function Home() {
         subtitle="1v1, Teamgames or FFA"
         title="There is a Space for You"
         text="Whether you want to be hardcore or play fun crazy maps"
-        button={ThreeLinesTextButtons}
+        button={[
+          { text: "Play Now", link: "/register" },
+          { text: "Learn to Play", link: "/howtoplay" },
+        ]}
       />
     </Layout>
   );

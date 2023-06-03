@@ -6,7 +6,7 @@ export default function SmallContainer(props: {
   text: string;
 }) {
   return (
-    <div className="@flex @rounded-2xl @relative @hover:scale-125 @drop-shadow-[10px_10px_10px_rgba(0,0,0,0.5)]">
+    <div className="@flex @rounded-2xl @relative hover:@scale-105 @transition @drop-shadow-[10px_10px_10px_rgba(0,0,0,0.5)]">
       <Image
         className="@rounded-2xl @brightness-90 @h-auto @min-w-[250px]"
         src={`/img/layout/${props.image}.jpg`}

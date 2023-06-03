@@ -7,7 +7,7 @@ export default function ThreeLinesText(props: {
   subtitle: string;
   title: string;
   text: string;
-  button: buttonData[] | false;
+  button?: buttonData[];
 }) {
   const buttonArray: React.ReactElement[] = [];
   if (props.button) {
