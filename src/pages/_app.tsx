@@ -25,7 +25,6 @@ const MyApp: AppType<{ session: Session | null }> = ({
         <Layout>
           <Component {...pageProps} />
         </Layout>
-
       </ProvidePlayers>
     </SessionProvider>
   );
