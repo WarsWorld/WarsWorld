@@ -23,7 +23,7 @@ export default function ArticleLinkCard({
       <a href={link} className="@absolute @h-full @w-full"></a>
       <div className="@flex @flex-col @space-y-2">
         <img
-          className="@w-full @h-[15vh] laptop:@h-[25vh] @object-cover"
+          className="@w-full @h-[20vh] laptop:@h-[30vh] @object-cover"
           src={image}
         ></img>
         <div className="@px-2 laptop:@px-4 @py-2 laptop:@pb-4 @space-y-4">
