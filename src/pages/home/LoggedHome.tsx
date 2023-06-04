@@ -24,7 +24,7 @@ const homePageCards = [
   },
 ];
 
-export default function LoggedHome() {
+export function LoggedHome() {
   return (
     <>
       <h1>Work in progress</h1>
