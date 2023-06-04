@@ -1,7 +1,6 @@
-import Banner from "./Home/Banner";
-import SmallContainer from "./Home/SmallContainer";
-import ThreeLinesText from "./Home/ThreeLinesText";
-import { Layout } from "frontend/components/layout";
+import Banner from "../../frontend/components/layout/Banner";
+import SmallContainer from "../../frontend/components/layout/SmallContainer";
+import ThreeLinesText from "../../frontend/components/layout/ThreeLinesText";
 
 const homePageCards = [
   {
@@ -24,9 +23,9 @@ const homePageCards = [
   },
 ];
 
-export function Home() {
+export default function BasicHome() {
   return (
-    <Layout footer>
+    <>
       <Banner />
       <ThreeLinesText
         subtitle="The Timeless Classic"
@@ -53,6 +52,6 @@ export function Home() {
           { text: "Learn to Play", link: "/howtoplay" },
         ]}
       />
-    </Layout>
+    </>
   );
 }
