@@ -1,5 +1,5 @@
 import Head from "next/head";
-import { BasicHome } from "./home/BasicHome";
+import BasicHome from "./home/BasicHome";
 
 export default function IndexPage() {
   return (
