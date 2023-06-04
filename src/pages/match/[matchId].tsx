@@ -9,9 +9,9 @@ export default function Match() {
         <title>Game Page | Wars World</title>
       </Head>
 
-      <Layout>
+
         <PixiMatch />
-      </Layout>
+
     </>
   );
 }

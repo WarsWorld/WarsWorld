@@ -1,7 +1,6 @@
-@use "src/frontend/styles/template/layout";
-@use "src/frontend/styles/pages";
-@use "src/frontend/styles/grid/global";
-@use "src/frontend/styles/mixins" as m;
+@use "template/layout";
+@use "pages/index";
+@use "mixins" as m;
 
 // This file is used as the base for tailwindCSS
 @tailwind base;

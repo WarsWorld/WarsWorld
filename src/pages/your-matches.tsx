@@ -25,7 +25,7 @@ export default function YourMatches() {
         <title>Game Lobby | Wars World</title>
       </Head>
 
-      <Layout>
+
         <div className="@flex @justify-center @items-center">
           <div className="@h-full @w-full @max-w-[1200px] @p-5 @grid @gap-10 @text-center allGames">
             <div>
@@ -98,7 +98,7 @@ export default function YourMatches() {
             </div>
           </div>
         </div>
-      </Layout>
-    </>
+      </>
+
   );
 }

@@ -1,0 +1,157 @@
+
+@use "../mixins" as m;
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+.gameBoxContainer {
+  font-family: sans-serif;
+
+  .playerBox {
+    @include m.clampSize(12, 20, 320, 1200);
+
+    .playerCOAndNationBox {
+      .playerCOBox {
+        height: 120px;
+
+        .playerCOIcon {
+          filter: grayscale(0%);
+          transition: height 0.5s, filter 0.5s;
+        }
+
+        .isNotPlayerTurn {
+          height: 100px;
+          filter: grayscale(50%);
+        }
+      }
+
+      .playerNationBox {
+        .playerUsernameAndIngameStats {
+          display: grid;
+          grid-template-rows: 40px 30px 50px;
+        }
+
+        .playerIngameInfo {
+          .ingameInfo {
+            flex: 1 1 60px;
+            padding: 0 5px;
+          }
+        }
+      }
+    }
+  }
+
+  .playerBox:last-of-type {
+    .playerCOAndNationBox {
+      flex-direction: row-reverse;
+    }
+  }
+
+  .gameTime {
+    @include m.clampSize(16, 20, 320, 1200);
+    gap: 20px;
+    flex-direction: row;
+
+    button {
+      cursor: pointer;
+      padding: 2px 10px;
+      transition: 0.4s;
+    }
+  }
+}
+
+@screen tablet {
+  .gameBoxContainer {
+    .gameBox {
+      gap: 1rem;
+      .mapGrid {
+        height: 55vw;
+        min-height: 320px;
+        max-height: initial;
+      }
+
+      .playerCOAndNationBox {
+        .playerNationBox {
+          .playerIngameInfo {
+            .ingameInfo {
+              padding: 0 10px;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+@screen smallscreen {
+  .gameBoxContainer {
+    gap: 1rem;
+    .gameBox {
+      flex-direction: row;
+    }
+
+    .playerBox {
+      max-height: 55vh;
+
+      .playerCOAndNationBox {
+        flex-direction: column;
+
+        .playerNationBox {
+          min-width: 150px;
+          width: 20vw;
+          .playerUsernameAndIngameStats {
+            display: flex;
+            flex-direction: column;
+            .playerUsername {
+              height: 4vw;
+            }
+
+            .playerExp {
+              height: 4vw;
+            }
+          }
+        }
+      }
+
+      .playerIngameInfo {
+        flex-direction: column;
+        flex-wrap: nowrap;
+        .ingameInfo {
+          flex: none;
+          max-height: 4vw;
+        }
+      }
+    }
+
+    .playerBox:last-of-type {
+      .playerCOAndNationBox {
+        flex-direction: column;
+      }
+    }
+  }
+}
+
+@screen laptop {
+  .gameBoxContainer {
+    .gameBox {
+      .mapGrid {
+        max-height: 650px;
+      }
+    }
+  }
+
+  .playerBox {
+    max-height: initial;
+    @include m.clampSize(16, 20, 320, 1200);
+
+    .playerUsername {
+      max-height: 50px;
+    }
+
+    .playerExp {
+      max-height: 50px;
+    }
+  }
+}
