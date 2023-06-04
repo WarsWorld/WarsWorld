@@ -18,7 +18,7 @@ export function Navbar() {
   };
   return (
     <header className="@w-full @fixed @top-0 @z-30">
-      <nav className="@flex @h-full @justify-between @items-center @bg-gray-800 @mx-auto @px-5">
+      <nav className="@flex @h-full @justify-between @items-center @bg-bg-secondary @mx-auto @px-5">
         <Link href="/">
           <Image
             className="@flex"

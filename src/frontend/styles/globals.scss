@@ -2,7 +2,7 @@
 @use "src/frontend/styles/pages";
 @use "src/frontend/styles/grid/global";
 @use "src/frontend/styles/mixins" as m;
-@use "src/frontend/styles/variables" as v;
+
 // This file is used as the base for tailwindCSS
 @tailwind base;
 @tailwind components;
@@ -48,7 +48,7 @@
     @include m.clampSize(12, 16, 320, 1200);
     color: white;
     cursor: pointer;
-    background-color: rgb(148, 62, 21);
+    background-color: theme("colors.primary-dark");
     border-radius: 20px;
     padding: 0.5em;
     margin: 0.5em;
@@ -58,7 +58,7 @@
 
   .btn:hover {
     color: black;
-    background-color: v.$color-primary-variant;
+    background-color: theme("colors.secondary");
   }
 
   a {
@@ -69,7 +69,7 @@
   }
 
   a:hover {
-    color: v.$color-primary-variant;
+    color: theme("colors.secondary");
   }
 }
 

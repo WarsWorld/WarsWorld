@@ -1,12 +1,10 @@
-@use "src/frontend/styles/variables";
+
 @use "src/frontend/styles/mixins" as m;
 
 #__next,
 html,
 body {
   height: 100vh;
-  // height: var(--doc-height);
-  height: 100dvh;
 }
 
 html,
@@ -35,7 +33,7 @@ header {
 
     &:hover {
       div {
-        background-color: theme("colors.primary-variant");
+        background-color: theme("colors.secondary");
       }
     }
   }
@@ -44,7 +42,7 @@ header {
     @include m.clampSize(12, 20, 320, 1200);
     transition: 0.4s;
     &:hover {
-      color: theme("colors.primary-variant");
+      color: theme("colors.secondary");
     }
   }
 

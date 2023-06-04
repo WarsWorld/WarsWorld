@@ -15,7 +15,7 @@ export function NavMenuMatches({ showMatchLinks, handleBurgerMenu }: Props) {
   return (
     <div
       onClick={handleBurgerMenu}
-      className={`@grid @bg-gray-800/90 @h-0 @px-2 matchMenuLinks ${
+      className={`@grid @bg-bg-primary @h-0 @px-2 matchMenuLinks ${
         showMatchLinks ? "showMatchMenuLinks" : ""
       }`}
     >
