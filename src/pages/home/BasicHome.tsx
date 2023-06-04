@@ -24,7 +24,7 @@ const homePageCards = [
   },
 ];
 
-export function BasicHome() {
+export default function BasicHome() {
   return (
     <>
       <Banner />
