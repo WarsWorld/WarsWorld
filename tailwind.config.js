@@ -15,7 +15,6 @@ module.exports = {
         "bg-primary": "#242A31",
         "bg-secondary": "#293143",
         "bg-tertiary": "#3E4A63",
-
       },
     },
     screens: {
