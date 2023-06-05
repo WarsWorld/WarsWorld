@@ -20,3 +20,15 @@ tsconfig.tsbuildinfo
 /prisma/migrations/20230510171142_amogus/migration.sql
 /.idea/inspectionProfiles/Project_Default.xml
 /.idea/vcs.xml
+.env.example
+.vs/slnx.sqlite
+.vs/VSWorkspaceState.json
+.vs/WW-HowToPlay/config/applicationhost.config
+.vs/WW-HowToPlay/FileContentIndex/37a7b08e-e337-4e2e-b16e-00fd963acc3a.vsidx
+.vs/WW-HowToPlay/FileContentIndex/f3b317c2-89ec-4086-ac62-aa03eaa25d40.vsidx
+.vs/WW-HowToPlay/v17/.wsuo
+.vs/WW-HowToPlay/v17/workspaceFileList.bin
+.vs/slnx.sqlite
+.vs/VSWorkspaceState.json
+.vs/WW-HowToPlay/v17/.wsuo
+.vs/WW-HowToPlay/v17/workspaceFileList.bin
