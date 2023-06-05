@@ -2,7 +2,6 @@ import ArticleLinkCard from "./ArticleLinkCard";
 import TitleColorBox from "./TitleColorBox";
 
 interface Props {
-  key: string;
   title: string;
   description: string;
   color?: string;
@@ -16,14 +15,13 @@ interface Props {
 }
 
 export default function HowToPlaySection({
-  key,
   title,
   description,
   color,
   articles,
 }: Props) {
   return (
-    <section key={key}>
+    <section>
       <div className="@flex @flex-col laptop:@flex-row @items-center laptop:@space-x-8">
         <TitleColorBox title={title} color={color} />
         <p>{description}</p>

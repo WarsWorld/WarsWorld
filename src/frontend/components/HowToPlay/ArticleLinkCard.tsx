@@ -1,25 +1,15 @@
 import React from "react";
 
 interface Props {
-  key: string;
   image: string;
   text?: string;
   heading?: string;
   link?: string;
 }
 
-export default function ArticleLinkCard({
-  key,
-  image,
-  text,
-  heading,
-  link,
-}: Props) {
+export default function ArticleLinkCard({ image, text, heading, link }: Props) {
   return (
-    <div
-      key={key}
-      className="@relative @bg-black/50 @my-4 @shadow-black/60 @shadow-lg @cursor-pointer hover:@scale-105 @transition"
-    >
+    <div className="@relative @bg-black/50 @my-4 @shadow-black/60 @shadow-lg @cursor-pointer hover:@scale-105 @transition">
       <a href={link} className="@absolute @h-full @w-full"></a>
       <div className="@flex @flex-col @space-y-2">
         <img
