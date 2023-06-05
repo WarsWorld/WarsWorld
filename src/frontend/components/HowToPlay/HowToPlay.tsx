@@ -1,4 +1,5 @@
 import HowToPlaySection from "./HowToPlaySection";
+import ThreeLinesText from "../Home/ThreeLinesText";
 
 export function HowToPlay() {
   const data = [
@@ -40,6 +41,34 @@ export function HowToPlay() {
       ],
     },
     {
+      key: "s3",
+      title: "Matches",
+      description: "You can learn here how you can create or join a match.",
+      articles: [
+        {
+          key: "t1",
+          heading: "Create or join a match",
+          text: "Learn how to create public or privates matches or join them.",
+          image: "/img/HowToPlay/pic9.jpg",
+          link: "/",
+        },
+        {
+          key: "t2",
+          heading: "Enter the Global League",
+          text: "Intimidated by the Global League? Here we'll talk about everything you need to know.",
+          image: "/img/HowToPlay/pic8.jpg",
+          link: "/",
+        },
+        {
+          key: "t3",
+          heading: "Play in a tournament",
+          text: "Do you want to join a tournament? Here we'll explain the rules.",
+          image: "/img/HowToPlay/pic7.jpg",
+          link: "/",
+        },
+      ],
+    },
+    {
       key: "s2",
       title: "Advance",
       description:
@@ -67,11 +96,11 @@ export function HowToPlay() {
   return (
     <div className="@flex @flex-col @w-full @items-center @justify-center">
       <div className="@flex @flex-col @space-y-2 @max-w-[90vw] @px-4 @pb-8 laptop:@py-2 laptop:@pb-12">
-        <div className="@flex @flex-col @justify-center @items-center @my-2 laptop:@my-8 @space-y-4">
-          <h3>You will finaly know what an airport is</h3>
-          <h1 className="@font-bold">How to play</h1>
-          <h2>Learn all the fundamentals here and climb the ladder!</h2>
-        </div>
+        <ThreeLinesText
+          subtitle="You will finaly know what an airport is"
+          title="How to play"
+          text="Learn all the fundamentals here and climb the ladder!"
+        />
         <div className="laptop:@px-8 @space-y-10">
           {data.map((section) => {
             return (
