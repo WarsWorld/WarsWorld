@@ -1,14 +1,14 @@
 interface Props {
   title: string;
-  color?: string;
+  tailwind_color?: string;
 }
 
-export default function TitleColorBox({ title, color }: Props) {
+export default function TitleColorBox({ title, tailwind_color }: Props) {
   return (
     <div
       className={
-        "@px-4 @rounded-md @w-full laptop:@max-w-[20vw] @text-center @my-2 @shadow-black/50 @shadow-md " +
-        (color == null ? "@bg-blue-500" : color)
+        "@px-4 @rounded-md @w-full @text-center @my-2 @shadow-black/50 @shadow-md " +
+        (tailwind_color == null ? "@bg-blue-500" : tailwind_color)
       }
     >
       <h1 className="@font-semibold @uppercase">{title}</h1>

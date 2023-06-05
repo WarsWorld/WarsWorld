@@ -4,7 +4,7 @@ import TitleColorBox from "./TitleColorBox";
 interface Props {
   title: string;
   description: string;
-  color?: string;
+  tailwind_color?: string;
   articles: {
     key: string;
     heading: string;
@@ -17,13 +17,15 @@ interface Props {
 export default function HowToPlaySection({
   title,
   description,
-  color,
+  tailwind_color,
   articles,
 }: Props) {
   return (
     <section>
       <div className="@flex @flex-col laptop:@flex-row @items-center laptop:@space-x-8">
-        <TitleColorBox title={title} color={color} />
+        <div className="laptop:@min-w-[20vw]">
+          <TitleColorBox title={title} tailwind_color={tailwind_color} />
+        </div>
         <p>{description}</p>
       </div>
       <div className="@grid @grid-flow-row @grid-cols-1 smallscreen:@grid-cols-2 laptop:@grid-cols-3 smallscreen:@gap-x-8 laptop:@gap-x-10">

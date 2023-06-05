@@ -94,6 +94,10 @@ export function HowToPlay() {
   ];
 
   return (
+    /*  
+      Shows titles and loops through a list of sections that each contain a 
+      title, description and any amount of clickable artciles or tutorials.
+    */
     <div className="@flex @flex-col @w-full @items-center @justify-center">
       <div className="@flex @flex-col @space-y-2 @max-w-[90vw] @px-4 @pb-8 laptop:@py-2 laptop:@pb-12">
         <ThreeLinesText
@@ -108,7 +112,7 @@ export function HowToPlay() {
                 key={section.key}
                 title={section.title}
                 description={section.description}
-                color={section.color}
+                tailwind_color={section.color}
                 articles={section.articles}
               />
             );
