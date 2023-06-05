@@ -13,7 +13,7 @@ export function Layout({ footer, children }: Props) {
       <Navbar />
       <div className="@grid @relative mainContent">
         <main className="@h-full">{children}</main>
-        {footer && <Footer />}
+        {!footer && <Footer />}
       </div>
     </div>
   );

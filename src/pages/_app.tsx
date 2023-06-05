@@ -4,7 +4,8 @@ import type { Session } from "next-auth";
 import { getSession, SessionProvider } from "next-auth/react";
 import type { AppType } from "next/app";
 import Head from "next/head";
-import "../frontend/styles/globals.scss";
+import "../frontend/styles/global.scss";
+import { Layout } from "../frontend/components/layout";
 
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
@@ -13,6 +14,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
   return (
     <SessionProvider session={pageProps.session}>
       <Head>
+        <title>Wars World</title>
         <link rel="icon" href="/favicon.ico" />
         <meta
           name="viewport"
@@ -20,7 +22,9 @@ const MyApp: AppType<{ session: Session | null }> = ({
         />
       </Head>
       <ProvidePlayers>
-        <Component {...pageProps} />
+        <Layout>
+          <Component {...pageProps} />
+        </Layout>
       </ProvidePlayers>
     </SessionProvider>
   );

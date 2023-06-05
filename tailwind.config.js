@@ -9,8 +9,12 @@ module.exports = {
     extend: {
       sans: ["Proxima Nova", ...defaultTheme.fontFamily.sans],
       colors: {
-        primary: "#ff9243",
-        "primary-variant": "#9EBC9F",
+        primary: "#E47220",
+        "primary-dark": "#943E15FF",
+        secondary: "#b7eab8",
+        "bg-primary": "#242A31",
+        "bg-secondary": "#293143",
+        "bg-tertiary": "#3E4A63",
       },
     },
     screens: {
