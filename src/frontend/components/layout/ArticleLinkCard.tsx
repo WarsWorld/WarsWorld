@@ -13,8 +13,9 @@ export default function ArticleLinkCard({ image, text, heading, link }: Props) {
       <a href={link} className="@absolute @h-full @w-full"></a>
       <div className="@flex @flex-col @space-y-2">
         <img
-          className="@w-full @h-[20vh] laptop:@h-[30vh] @object-cover"
+          className="@w-full @h-[20vh] laptop:@h-[22.5vh] @object-cover"
           src={image}
+          alt={heading}
         ></img>
         <div className="@px-2 laptop:@px-4 @py-2 laptop:@pb-4 @space-y-4">
           <h2 className="@font-semibold">{heading}</h2>

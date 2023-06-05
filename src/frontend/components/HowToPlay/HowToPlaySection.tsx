@@ -28,7 +28,7 @@ export default function HowToPlaySection({
         </div>
         <p>{description}</p>
       </div>
-      <div className="@grid @grid-flow-row @grid-cols-1 smallscreen:@grid-cols-2 laptop:@grid-cols-3 smallscreen:@gap-x-8 laptop:@gap-x-10">
+      <div className="@grid @grid-flow-row @grid-cols-1 smallscreen:@grid-cols-2 laptop:@grid-cols-4 smallscreen:@gap-x-8 laptop:@gap-x-10">
         {articles.map((item) => (
           <ArticleLinkCard
             key={item.key}
