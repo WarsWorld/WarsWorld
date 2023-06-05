@@ -1,5 +1,5 @@
 import HowToPlaySection from "./HowToPlaySection";
-import ThreeLinesText from "../Home/ThreeLinesText";
+import ThreeLinesText from "../layout/ThreeLinesText";
 
 export function HowToPlay() {
   const data = [

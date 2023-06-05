@@ -1,5 +1,5 @@
-import ArticleLinkCard from "./ArticleLinkCard";
-import TitleColorBox from "./TitleColorBox";
+import ArticleLinkCard from "../layout/ArticleLinkCard";
+import TitleColorBox from "../layout/TitleColorBox";
 
 interface Props {
   title: string;
