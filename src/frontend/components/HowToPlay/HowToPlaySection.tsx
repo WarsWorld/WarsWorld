@@ -23,7 +23,7 @@ export default function HowToPlaySection({
   return (
     <section>
       <div className="@flex @flex-col laptop:@flex-row @items-center laptop:@space-x-8">
-        <div className="laptop:@min-w-[20vw]">
+        <div className="@min-w-[75vw] laptop:@min-w-[25vw]">
           <TitleColorBox title={title} tailwind_color={tailwind_color} />
         </div>
         <p>{description}</p>
