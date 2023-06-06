@@ -1,4 +1,5 @@
 import Head from "next/head";
+import { HowToPlay } from "frontend/components/HowToPlay/HowToPlay";
 
 export default function IndexPage() {
   return (
@@ -6,7 +7,8 @@ export default function IndexPage() {
       <Head>
         <title>Wars World Guides</title>
       </Head>
-      <h1>learning in progress...</h1>
+
+      <HowToPlay />
     </>
   );
 }

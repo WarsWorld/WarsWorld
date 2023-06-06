@@ -21,6 +21,7 @@ module.exports = {
       tablet: "480px",
       smallscreen: "768px",
       laptop: "1024px",
+      monitor: "1248px",
       short: { raw: "(min-height: 600px)" },
       medium: { raw: "(min-height: 700px)" },
     },
