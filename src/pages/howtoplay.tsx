@@ -1,7 +1,7 @@
-import HowToPlaySection from "./HowToPlaySection";
-import ThreeLinesText from "../layout/ThreeLinesText";
-
-export function HowToPlay() {
+import HowToPlaySection from "../frontend/components/layout/ArticleSection";
+import ThreeLinesText from "../frontend/components/layout/ThreeLinesText";
+import Head from "next/head";
+export default function Howtoplay() {
   const data = [
     {
       key: "s1",
@@ -116,6 +116,9 @@ export function HowToPlay() {
       title, description and any amount of clickable artciles or tutorials.
     */
     <div className="@flex @flex-col @w-full @items-center @justify-center">
+      <Head>
+        <title>Wars World Guides</title>
+      </Head>
       <div className="@flex @flex-col @space-y-2 @max-w-[90vw] @px-4 @pb-8 laptop:@py-2 laptop:@pb-12">
         <ThreeLinesText
           subtitle="You will finaly know what an airport is"
