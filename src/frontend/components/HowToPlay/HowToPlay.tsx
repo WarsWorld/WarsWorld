@@ -15,6 +15,7 @@ export function HowToPlay() {
           heading: "Master the Basics",
           text: "Learn about unit types, terrain effects, and the turn-based gameplay.",
           image: "/img/HowToPlay/pic1.jpg",
+          alt: "Master the Basics",
           link: "/",
         },
         {
@@ -22,6 +23,7 @@ export function HowToPlay() {
           heading: "Resource Management",
           text: "Understand how to efficiently produce units and manage funds.",
           image: "/img/HowToPlay/pic2.jpg",
+          alt: "Resource Management",
           link: "/",
         },
         {
@@ -29,6 +31,7 @@ export function HowToPlay() {
           heading: "Map Awareness",
           text: "Study the map to identify chokepoints, advantageous positions, and key objectives.",
           image: "/img/HowToPlay/pic3.jpg",
+          alt: "Map Awareness",
           link: "/",
         },
         {
@@ -36,6 +39,15 @@ export function HowToPlay() {
           heading: "Fog of War",
           text: "Learn to adapt to limited visibility and use recon units effectively.",
           image: "/img/HowToPlay/pic4.jpg",
+          alt: "Fog of War",
+          link: "/",
+        },
+        {
+          key: "t21",
+          heading: "Fog of War 2",
+          text: "Learn to adapt to limited visibility and use recon units effectively.",
+          image: "/img/HowToPlay/pic4.jpg",
+          alt: "Fog of War",
           link: "/",
         },
       ],
@@ -50,6 +62,7 @@ export function HowToPlay() {
           heading: "Create or join a match",
           text: "Learn how to create public or privates matches or join them.",
           image: "/img/HowToPlay/pic9.jpg",
+          alt: "Create or join a match",
           link: "/",
         },
         {
@@ -57,6 +70,7 @@ export function HowToPlay() {
           heading: "Enter the Global League",
           text: "Intimidated by the Global League? Here we'll talk about everything you need to know.",
           image: "/img/HowToPlay/pic8.jpg",
+          alt: "Enter the Global League",
           link: "/",
         },
         {
@@ -64,6 +78,7 @@ export function HowToPlay() {
           heading: "Play in a tournament",
           text: "Do you want to join a tournament? Here we'll explain the rules.",
           image: "/img/HowToPlay/pic7.jpg",
+          alt: "Play in a tournament",
           link: "/",
         },
       ],
@@ -80,6 +95,7 @@ export function HowToPlay() {
           heading: "Indirect Units",
           text: "Learn how to use indirect units properly.",
           image: "/img/HowToPlay/pic5.jpg",
+          alt: "Indirect Units",
           link: "/",
         },
         {
@@ -87,6 +103,7 @@ export function HowToPlay() {
           heading: "Tech-ups",
           text: "What's a tech-up and how to do it properly? Here we'll answer those questions.",
           image: "/img/HowToPlay/pic6.jpg",
+          alt: "Tech-ups",
           link: "/",
         },
       ],
