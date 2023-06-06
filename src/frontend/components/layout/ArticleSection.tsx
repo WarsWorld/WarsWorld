@@ -1,5 +1,5 @@
-import ArticleLinkCard from "../layout/ArticleLinkCard";
-import TitleColorBox from "../layout/TitleColorBox";
+import ArticleLinkCard from "./ArticleLinkCard";
+import TitleColorBox from "./TitleColorBox";
 
 interface Props {
   title: string;
@@ -15,7 +15,7 @@ interface Props {
   }[];
 }
 
-export default function HowToPlaySection({
+export default function ArticleSection({
   title,
   description,
   tailwind_color,
