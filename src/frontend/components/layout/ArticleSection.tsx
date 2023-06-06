@@ -29,13 +29,12 @@ export default function ArticleSection({
         </div>
         <p>{description}</p>
       </div>
-      <div className="@flex @flex-wrap @gap-8 @justify-center @items-center @w-full">
+      <div className="@grid @grid-flow-row @grid-cols-1 smallscreen:@grid-cols-2 laptop:@grid-cols-3  monitor:@grid-cols-4 large_monitor:@grid-cols-5 smallscreen:@gap-x-8 laptop:@gap-x-10">
         {articles.map((item) => (
           <ArticleLinkCard
             key={item.key}
             image={item.image}
-            img_height="250px"
-            img_width="450px"
+            img_height="275px"
             heading={item.heading}
             text={item.text}
             alt={item.alt}
