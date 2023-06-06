@@ -18,7 +18,7 @@ const navItemObject = [
   },
   {
     text: "NEWS",
-    location: "/",
+    location: "/news",
     iconPath: "/img/layout/Sub-0.png",
     iconAlt: "Yellow Comet Sub",
     flip: false,

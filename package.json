@@ -48,12 +48,14 @@
     "react": "^18.2.0",
     "sass": "^1.62.0",
     "superjson": "^1.7.4",
+    "uuid": "^9.0.0",
     "ws": "^8.0.0",
     "zod": "^3.0.0"
   },
   "devDependencies": {
     "@types/node": "^18.7.20",
     "@types/react": "^18.0.9",
+    "@types/uuid": "^9.0.1",
     "@types/ws": "^8.2.0",
     "@typescript-eslint/eslint-plugin": "^5.47.0",
     "@typescript-eslint/parser": "^5.47.0",
