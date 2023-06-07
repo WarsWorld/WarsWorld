@@ -1,18 +1,11 @@
-import ArticleLinkCard from "./ArticleLinkCard";
+import LinkCard, { ICardInfo } from "./LinkCard";
 import TitleColorBox from "./TitleColorBox";
 
 interface Props {
   title: string;
   description: string;
   tailwind_color?: string;
-  articles: {
-    key: string;
-    heading: string;
-    text: string;
-    image: string;
-    alt: string;
-    link: string;
-  }[];
+  articles: ICardInfo[];
 }
 
 export default function ArticleSection({
@@ -31,16 +24,7 @@ export default function ArticleSection({
       </div>
       <div className="@flex @flex-wrap @gap-8 @justify-center @items-center @w-full">
         {articles.map((item) => (
-          <ArticleLinkCard
-            key={item.key}
-            image={item.image}
-            img_height="250px"
-            img_width="450px"
-            heading={item.heading}
-            text={item.text}
-            alt={item.alt}
-            link={item.link}
-          />
+          <LinkCard key={item.key} cardInfo={item} />
         ))}
       </div>
     </section>

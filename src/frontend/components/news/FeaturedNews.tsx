@@ -2,7 +2,7 @@ import Image from "next/image";
 
 export function FeaturedNews() {
   return (
-    <div className="@flex @justify-center @items-center @w-full">
+    <div className="@flex @justify-center @items-center @max-w-[90vw]">
       <div className="@flex @flex-col smallscreen:@flex-row @cursor-pointer @duration-300 tablet:hover:@shadow-[0_0_10px_10px_rgba(183,234,184,0.5)] tablet:hover:@z-10">
         <div className="@relatve @h-[300px] @w-full smallscreen:@w-[400px] laptop:@w-[60vw] @bg-cover @bg-[url(/img/layout/newsPage/featuredImg.png)]">
           <div className="@h-full @w-full @overflow-hidden @backdrop-brightness-50">
@@ -15,10 +15,10 @@ export function FeaturedNews() {
             />
           </div>
         </div>
-        <div className="@flex @flex-col @min-w-[300px] @p-4 @gap-3 @justify-center @bg-bg-secondary smallscreen:@max-w-[300px] laptop:@max-w-[20vw]">
+        <div className="@flex @flex-col tablet:@min-w-[300px] @p-4 @gap-3 @justify-center @bg-black/50 smallscreen:@max-w-[300px] laptop:@max-w-[20vw]">
           <div>
-            <h3>Welcome back Flak</h3>
-            <h1 className="@text-[1.5rem]">Patch 1.10 is out!</h1>
+            <h3 className="@font-normal">Welcome back Flak</h3>
+            <h2 className="@font-semibold">Patch 1.10 is out!</h2>
           </div>
           <p className="@text-xs @leading-loose">
             The Balance Overhaul patch brings a renewed focus on strategic depth

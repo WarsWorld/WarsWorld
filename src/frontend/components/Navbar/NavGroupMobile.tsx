@@ -25,7 +25,7 @@ const navItemObject = [
   },
   {
     text: "HOW TO PLAY",
-    location: "/learn",
+    location: "/howtoplay",
     iconPath: "/img/layout/APC_MSide-0.png",
     iconAlt: "Jade Sun APC",
     flip: true,
