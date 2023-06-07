@@ -140,13 +140,14 @@ export default function Howtoplay() {
       <Head>
         <title>Wars World Guides</title>
       </Head>
-      <div className="@flex @flex-col @space-y-2 @max-w-[90vw] @px-4 @pb-8 laptop:@py-2 laptop:@pb-12">
+
+      <div className="@flex @flex-col @my-2 @max-w-[90vw] @px-4 @pb-8 laptop:@py-2 laptop:@pb-12">
         <ThreeLinesText
           subtitle="You will finaly know what an airport is"
           title="How to play"
           text="Learn all the fundamentals here and climb the ladder!"
         />
-        <div className="laptop:@px-8 @space-y-10">
+        <div className="@flex @flex-col @gap-8 @my-10">
           {data.map((section) => {
             return (
               <HowToPlaySection
