@@ -18,7 +18,7 @@ interface Props {
 
 export default function LinkCard({ cardInfo }: Props) {
   return (
-    <div className="@relative @bg-black/50 @object-cover @max-w-[450px] @transform @cursor-pointer @duration-300 tablet:hover:@scale-110 tablet:hover:@shadow-[0_0_10px_10px_rgba(183,234,184,0.5)] tablet:hover:@z-10">
+    <div className="@relative @bg-black/50 @object-cover @max-w-[450px] @transform @cursor-pointer @duration-300 tablet:hover:@scale-110 tablet:hover:@z-10">
       <Link href={cardInfo.link} className="@absolute @h-full @w-full" />
       <div className="@flex @flex-col @space-y-2">
         <Image
