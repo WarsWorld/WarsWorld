@@ -49,7 +49,7 @@ export default function BasicHome() {
         text="Whether you want to be hardcore or play fun crazy maps"
         button={[
           { text: "Play Now", link: "/register" },
-          { text: "Learn to Play", link: "/howtoplay" },
+          { text: "Learn to Play", link: "/learn" },
         ]}
       />
     </>
