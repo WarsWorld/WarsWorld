@@ -4,11 +4,11 @@ import Link from "next/link";
 export interface ICardInfo {
   imgSrc: string;
   imgAlt: string;
-  imgWidth: number;
-  imgHeight: number;
   heading: string;
   text: string;
   link: string;
+  imgWidth?: number;
+  imgHeight?: number;
   key?: string;
 }
 
@@ -25,8 +25,8 @@ export default function LinkCard({ cardInfo }: Props) {
           className="@w-full @h-[200px] @object-cover @object-top"
           src={cardInfo.imgSrc}
           alt={cardInfo.imgAlt}
-          width={cardInfo.imgWidth}
-          height={cardInfo.imgHeight}
+          width={cardInfo.imgWidth ? cardInfo.imgWidth : 300}
+          height={cardInfo.imgHeight ? cardInfo.imgWidth : 300}
         />
         <div className="@px-2 laptop:@px-4 @py-2 laptop:@pb-4 @space-y-4 @h-[20vh]">
           <h2 className="@text-[2.5vh] @font-semibold">{cardInfo.heading}</h2>
