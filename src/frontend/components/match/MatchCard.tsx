@@ -57,7 +57,7 @@ export default function MatchCard({
         <div className="@w-4/5 @text-left @px-2 @truncate">{map.name}</div>
         <div className="@w-1/5 @flex @flex-col @h-full @justify-center @bg-match-orange">{`DAY ${turn}`}</div>
       </div>
-      <div className="@relative @flex @flex-col @justify-between @flex-grow @flex-shrink" style={{backgroundImage: `url("../../../../public/img/matchCard/mapBgDemo.png")`, backgroundSize: 'cover'}}>
+      <div className="@relative @flex @flex-col @justify-between @flex-grow @flex-shrink" style={{backgroundImage: `url("/img/matchCard/mapBgDemo.png")`, backgroundSize: 'cover'}}>
         <div className="@absolute @inset-0" style={{backgroundImage: `url("/img/matchCard/mapBgDemo.png")`, backgroundSize: 'cover'}}></div>
         <div className="@absolute @inset-0 @bg-black @opacity-70"></div>
         <div className="@relative @flex @flex-col @justify-between @flex-grow @flex-shrink @z-10">
