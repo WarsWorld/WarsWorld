@@ -24,7 +24,7 @@ export default function MatchSection({
         </div>
         <p>{description}</p>
       </div>
-      <div className="@flex @flex-wrap @justify-around @gap-4">
+      <div className="@flex @flex-wrap @gap-4">
         {matches.map((match) => {
           const randomViewers = Math.floor(Math.random() * 1000);
           const randomFavs = Math.floor(Math.random() * 1000);
