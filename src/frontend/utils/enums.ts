@@ -17,6 +17,14 @@ export enum COEnum {
   "hachi",
   "olaf",
   "grit",
+  "rachel",
+  "sasha",
+  "grimm",
+  "javier",
+  "kindle",
+  "koal",
+  "jugger",
+  "von-bolt",
 }
 
 export enum NationEnum {

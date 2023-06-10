@@ -43,8 +43,8 @@ export default function MatchCard({
     armyIndex === 3 ? armyIndex2-- : armyIndex2++;
   }
 
-  const co1 = COEnum[Math.floor(Math.random() * 18)];
-  const co2 = COEnum[Math.floor(Math.random() * 18)];
+  const co1 = COEnum[Math.floor(Math.random() * 26)];
+  const co2 = COEnum[Math.floor(Math.random() * 26)];
 
   //in seconds
   const timeElapsedD: number = Math.floor(Math.random() * 1000);
@@ -62,7 +62,7 @@ export default function MatchCard({
         <div className="@absolute @inset-0 @bg-black @opacity-70"></div>
         <div className="@relative @flex @flex-col @justify-between @flex-grow @flex-shrink @z-10">
           <div className="@flex @h-8 @max-w-full">
-            {<div className={`@flex @items-center @justify-center @gap-2 @px-2 @min-w-20 ${isLive ? "@bg-bg-match-live" : "@bg-bg-secondary"}`}>{isLive ? liveDiv : TurnStyleString[TurnStyleEnum.Async]}</div>}
+            <div className={`@flex @items-center @justify-center @gap-2 @px-2 @min-w-20 ${isLive ? "@bg-bg-match-live" : "@bg-bg-secondary"}`}>{isLive ? liveDiv : TurnStyleString[TurnStyleEnum.Async]}</div>
             <div className="@flex @items-center @justify-center @min-w-20 @bg-bg-primary">{matchTypeString}</div>
             <div className="@flex @items-center @gap-2 @px-2 @bg-bg-secondary">
               <img className="@h-4" src="/img/matchCard/eye.png"/>
