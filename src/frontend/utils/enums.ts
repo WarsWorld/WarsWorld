@@ -55,6 +55,16 @@ export const MatchTypeShort: Record<MatchType, string> = {
   [MatchType.HighFunds]: "HF",
 };
 
+export enum TurnStyleEnum {
+  Async,
+  Live,
+}
+
+export const TurnStyleString: Record<TurnStyleEnum, string> = {
+  [TurnStyleEnum.Async]: "ASYNC",
+  [TurnStyleEnum.Live]: "LIVE",
+};
+
 export enum SideEnum {
   Left = 0,
   Right = 1,

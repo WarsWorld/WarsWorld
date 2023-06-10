@@ -1,6 +1,6 @@
 import { MatchStatus, Player } from "@prisma/client";
 import { usePlayers } from "frontend/context/players";
-import { COEnum, MatchType, SideEnum } from "frontend/utils/enums";
+import { COEnum, MatchType, MatchTypeShort, SideEnum, TurnStyleEnum, TurnStyleString } from "frontend/utils/enums";
 import React from "react";
 import { MapBasic } from "shared/types/component-data";
 import { PlayerInMatch } from "shared/types/server-match-state";
@@ -24,12 +24,15 @@ export default function MatchCard({
   favorites,
 }: Props) {
   const { currentPlayer, ownedPlayers } = usePlayers();
-  const link = "/";
   const playerMatches: (Player | undefined)[] = playersInMatch?.map(p => ownedPlayers?.find(op => op.id === p.playerId));
   const isDuel = playersInMatch?.length === 2;
-  const turnStyle = null;
+  const liveDiv = (<><img className="@h-4" src="/img/matchCard/liveDot.png"/><p>{TurnStyleString[TurnStyleEnum.Live]}</p></>);
+  //Maybe pull from match state later
+  const turnStyle = TurnStyleEnum[Math.floor(Math.random()*2)];
+  const isLive = turnStyle === TurnStyleEnum[TurnStyleEnum.Live];
   //Determine value based off match rules. Can be multiple
-  const matchType: MatchType[] = [];
+  const matchType: MatchType[] = [MatchType.Standard];
+  const matchTypeString = matchType.map(mt => MatchTypeShort[mt]).join(" + ");
   //TODO: Replace with real data
   const randomRank = (Math.floor(Math.random() * 1500)).toString();
   const randomRank2 = (Math.floor(Math.random() * 1500)).toString();
@@ -59,8 +62,8 @@ export default function MatchCard({
         <div className="@absolute @inset-0 @bg-black @opacity-70"></div>
         <div className="@relative @flex @flex-col @justify-between @flex-grow @flex-shrink @z-10">
           <div className="@flex @h-8 @max-w-full">
-            <div className="@flex @items-center @justify-center @min-w-20 @bg-bg-secondary">{turnStyle || "ASYNC"}</div>
-            <div className="@flex @items-center @justify-center @min-w-20 @bg-bg-primary">{(matchType.length > 0 && matchType.join(" + ")) || "STD"}</div>
+            {<div className={`@flex @items-center @justify-center @gap-2 @px-2 @min-w-20 ${isLive ? "@bg-bg-match-live" : "@bg-bg-secondary"}`}>{isLive ? liveDiv : TurnStyleString[TurnStyleEnum.Async]}</div>}
+            <div className="@flex @items-center @justify-center @min-w-20 @bg-bg-primary">{matchTypeString}</div>
             <div className="@flex @items-center @gap-2 @px-2 @bg-bg-secondary">
               <img className="@h-4" src="/img/matchCard/eye.png"/>
               {` ${spectators}`}

@@ -16,7 +16,7 @@ module.exports = {
         "bg-secondary": "#293143",
         "bg-tertiary": "#3E4963",
         "match-orange": "#C0601B",
-        "match-live": "#432929",
+        "bg-match-live": "#432929",
         "match-live-dot": "#B40000"
       },
       minWidth: {
