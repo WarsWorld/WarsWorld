@@ -1,9 +1,8 @@
-import { MatchRow } from "frontend/components/match/MatchRow";
 import { usePlayers } from "frontend/context/players";
 import { useRef } from "react";
 import { trpc } from "frontend/utils/trpc-client";
-import { Layout } from "frontend/components/layout";
 import Head from "next/head";
+import { MatchRow } from "frontend/components/match/MatchRow";
 
 export default function YourMatches() {
   const { currentPlayer, setCurrentPlayer, ownedPlayers } = usePlayers();
@@ -25,8 +24,8 @@ export default function YourMatches() {
         <title>Game Lobby | Wars World</title>
       </Head>
 
-      <div className="@flex @justify-center @items-center">
-        <div className="@h-full @w-full @max-w-[1200px] @p-5 @grid @gap-10 @text-center allGames">
+      <div className="@flex @justify-center @w-full">
+        <div className="@h-full @w-full @p-5 @grid @gap-10 @text-center allGames">
           <div>
             <h1>Your matches</h1>
             <p>
@@ -83,8 +82,8 @@ export default function YourMatches() {
             </div>
           </div>
           <div id="currentGames" className="currentGames">
-            <div className="@flex @flex-col @items-center @justify-center @mb-10 @gap-2">
-              <h1>Current games</h1>
+            <h1>Current games</h1>
+            <div className="@flex @flex-wrap @justify-around">
               {matchesQuery.data === undefined
                 ? "Loading..."
                 : matchesQuery.data.map((match) => (

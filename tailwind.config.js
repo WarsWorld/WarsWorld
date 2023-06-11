@@ -14,7 +14,13 @@ module.exports = {
         secondary: "#b7eab8",
         "bg-primary": "#242A31",
         "bg-secondary": "#293143",
-        "bg-tertiary": "#3E4A63",
+        "bg-tertiary": "#3E4963",
+        "match-orange": "#C0601B",
+        "bg-match-live": "#432929",
+        "match-live-dot": "#B40000",
+      },
+      minWidth: {
+        20: "5rem",
       },
     },
     screens: {

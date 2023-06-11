@@ -29,7 +29,7 @@ export interface PlayerInMatch {
   playerId: Player["id"];
   ready?: boolean;
   co: CO;
-  eliminated?: true;
+  eliminated?: boolean;
   funds: number;
   powerMeter: number;
   army: Army;
@@ -38,7 +38,7 @@ export interface PlayerInMatch {
 export interface BackendMatchState {
   id: string;
   rules: {
-    fogOfWar?: true;
+    fogOfWar?: boolean;
     fundsMultiplier?: number;
     leagueType: LeagueType;
   };
