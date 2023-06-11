@@ -18,14 +18,14 @@ const navItemObject = [
   },
   {
     text: "NEWS",
-    location: "/",
+    location: "/news",
     iconPath: "/img/layout/Sub-0.png",
     iconAlt: "Yellow Comet Sub",
     flip: false,
   },
   {
     text: "HOW TO PLAY",
-    location: "/learn",
+    location: "/howtoplay",
     iconPath: "/img/layout/APC_MSide-0.png",
     iconAlt: "Jade Sun APC",
     flip: true,
