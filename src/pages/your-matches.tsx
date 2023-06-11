@@ -2,7 +2,7 @@ import { usePlayers } from "frontend/context/players";
 import { useRef } from "react";
 import { trpc } from "frontend/utils/trpc-client";
 import Head from "next/head";
-import MatchSection from "frontend/components/match/MatchSection";
+import { MatchRow } from "frontend/components/match/MatchRow";
 
 export default function YourMatches() {
   const { currentPlayer, setCurrentPlayer, ownedPlayers } = usePlayers();
@@ -82,13 +82,13 @@ export default function YourMatches() {
             </div>
           </div>
           <div id="currentGames" className="currentGames">
-              <h1>Current games</h1>
-              <div className="@flex @flex-wrap @justify-around">
-
+            <h1>Current games</h1>
+            <div className="@flex @flex-wrap @justify-around">
               {matchesQuery.data === undefined
                 ? "Loading..."
-                : <MatchSection title={"Matches"} description={"Your ongoing matches"} />
-                }
+                : matchesQuery.data.map((match) => (
+                    <MatchRow key={match.id} match={match} />
+                  ))}
             </div>
           </div>
           <div id="completedGames" className="completedGames">

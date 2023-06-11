@@ -9,6 +9,7 @@ const navItemObject = [
   { text: "YOUR GAMES", location: "/your-matches" },
   { text: "CURRENT GAMES", location: "/your-matches#currentGames" },
   { text: "COMPLETED GAMES", location: "/your-matches#completedGames" },
+  { text: "SAMPLE MATCHES", location: "/sample-matches" },
 ];
 
 export function NavMenuMatches({ showMatchLinks, handleBurgerMenu }: Props) {
