@@ -28,7 +28,7 @@ export default function MatchSection({
         {matches.map((match) => {
           const randomViewers = Math.floor(Math.random() * 1000);
           const randomFavs = Math.floor(Math.random() * 1000);
-          return(
+          return (
             <MatchCard
               key={match.id}
               map={match.map}
@@ -38,8 +38,8 @@ export default function MatchSection({
               spectators={randomViewers}
               favorites={randomFavs}
             />
-          )}
-        )}
+          );
+        })}
       </div>
     </section>
   );

@@ -1,4 +1,9 @@
-import { NationColorEnum, NationEnum, NationIconEnum, SideEnum } from "frontend/utils/enums";
+import {
+  NationColorEnum,
+  NationEnum,
+  NationIconEnum,
+  SideEnum,
+} from "frontend/utils/enums";
 import React from "react";
 import { Army } from "server/schemas/army";
 import { CO } from "server/schemas/co";
@@ -18,12 +23,16 @@ export default function PlayerNameBar({
   iconSide,
   co = null,
 }: Props) {
-  const borderStyle = iconSide === SideEnum.Left ? "@border-r-2" : "@border-l-2";
+  const borderStyle =
+    iconSide === SideEnum.Left ? "@border-r-2" : "@border-l-2";
   const paddingStyle = iconSide === SideEnum.Left ? "@pr-2" : "@pl-2";
   const armyString = NationEnum[armyIndex] as Army;
   const iconDiv = (
     <div className="@flex @flex-col @flex-shrink-0 @h-full">
-      <img className={`@h-full @bg-white @mx-auto ${borderStyle} @border-b-2 @border-gray-400`} src={`/img/nations/${NationIconEnum[armyString]}.webp`}/>
+      <img
+        className={`@h-full @bg-white @mx-auto ${borderStyle} @border-b-2 @border-gray-400`}
+        src={`/img/nations/${NationIconEnum[armyString]}.webp`}
+      />
     </div>
   );
   const nameDiv = (
@@ -31,16 +40,23 @@ export default function PlayerNameBar({
       <p className="@truncate">{name}</p>
     </div>
   );
-  const rankDiv = (<div className="@flex @flex-col @flex-shrink-0 @h-full @font-light">
+  const rankDiv = (
+    <div className="@flex @flex-col @flex-shrink-0 @h-full @font-light">
       <p>{rank}</p>
-    </div>)
-  const contentDivs = iconSide === SideEnum.Left ? [iconDiv, nameDiv, rankDiv] : [rankDiv, nameDiv, iconDiv];
+    </div>
+  );
+  const contentDivs =
+    iconSide === SideEnum.Left
+      ? [iconDiv, nameDiv, rankDiv]
+      : [rankDiv, nameDiv, iconDiv];
 
   return (
     <div className="@flex @flex-col @min-w-[40%]">
-      <div className={`@flex @flex-row @items-center @justify-between @h-full @gap-2 ${paddingStyle}`}
-        style={{background: `${NationColorEnum[armyString]}`}}>
-          {...contentDivs}
+      <div
+        className={`@flex @flex-row @items-center @justify-between @h-full @gap-2 ${paddingStyle}`}
+        style={{ background: `${NationColorEnum[armyString]}` }}
+      >
+        {...contentDivs}
       </div>
     </div>
   );

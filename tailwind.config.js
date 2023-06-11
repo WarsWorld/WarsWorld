@@ -17,11 +17,11 @@ module.exports = {
         "bg-tertiary": "#3E4963",
         "match-orange": "#C0601B",
         "bg-match-live": "#432929",
-        "match-live-dot": "#B40000"
+        "match-live-dot": "#B40000",
       },
       minWidth: {
-        '20': '5rem'
-      }
+        20: "5rem",
+      },
     },
     screens: {
       tablet: "480px",
