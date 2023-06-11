@@ -1,6 +1,7 @@
 import HowToPlaySection from "../frontend/components/layout/ArticleSection";
 import ThreeLinesText from "../frontend/components/layout/ThreeLinesText";
 import Head from "next/head";
+
 export default function Howtoplay() {
   const data = [
     {
@@ -14,40 +15,40 @@ export default function Howtoplay() {
           key: "t1",
           heading: "Master the Basics",
           text: "Learn about unit types, terrain effects, and the turn-based gameplay.",
-          image: "/img/HowToPlay/pic1.jpg",
-          alt: "Master the Basics",
+          imgSrc: "/img/HowToPlay/pic1.jpg",
+          imgAlt: "Master the Basics",
           link: "/",
         },
         {
           key: "t2",
           heading: "Resource Management",
           text: "Understand how to efficiently produce units and manage funds.",
-          image: "/img/HowToPlay/pic2.jpg",
-          alt: "Resource Management",
+          imgSrc: "/img/HowToPlay/pic2.jpg",
+          imgAlt: "Resource Management",
           link: "/",
         },
         {
           key: "t3",
           heading: "Map Awareness",
           text: "Study the map to identify chokepoints, advantageous positions, and key objectives.",
-          image: "/img/HowToPlay/pic3.jpg",
-          alt: "Map Awareness",
+          imgSrc: "/img/HowToPlay/pic3.jpg",
+          imgAlt: "Map Awareness",
           link: "/",
         },
         {
           key: "t4",
           heading: "Fog of War",
           text: "Learn to adapt to limited visibility and use recon units effectively.",
-          image: "/img/HowToPlay/pic4.jpg",
-          alt: "Fog of War",
+          imgSrc: "/img/HowToPlay/pic4.jpg",
+          imgAlt: "Fog of War",
           link: "/",
         },
         {
           key: "t21",
           heading: "Fog of War 2",
           text: "Learn to adapt to limited visibility and use recon units effectively.",
-          image: "/img/HowToPlay/pic4.jpg",
-          alt: "Fog of War",
+          imgSrc: "/img/HowToPlay/pic4.jpg",
+          imgAlt: "Fog of War",
           link: "/",
         },
       ],
@@ -61,24 +62,24 @@ export default function Howtoplay() {
           key: "t1",
           heading: "Create or join a match",
           text: "Learn how to create public or privates matches or join them.",
-          image: "/img/HowToPlay/pic9.jpg",
-          alt: "Create or join a match",
+          imgSrc: "/img/HowToPlay/pic9.jpg",
+          imgAlt: "Create or join a match",
           link: "/",
         },
         {
           key: "t2",
           heading: "Enter the Global League",
           text: "Intimidated by the Global League? Here we'll talk about everything you need to know.",
-          image: "/img/HowToPlay/pic8.jpg",
-          alt: "Enter the Global League",
+          imgSrc: "/img/HowToPlay/pic8.jpg",
+          imgAlt: "Enter the Global League",
           link: "/",
         },
         {
           key: "t3",
           heading: "Play in a tournament",
           text: "Do you want to join a tournament? Here we'll explain the rules.",
-          image: "/img/HowToPlay/pic7.jpg",
-          alt: "Play in a tournament",
+          imgSrc: "/img/HowToPlay/pic7.jpg",
+          imgAlt: "Play in a tournament",
           link: "/",
         },
       ],
@@ -94,16 +95,16 @@ export default function Howtoplay() {
           key: "t5",
           heading: "Indirect Units",
           text: "Learn how to use indirect units properly.",
-          image: "/img/HowToPlay/pic5.jpg",
-          alt: "Indirect Units",
+          imgSrc: "/img/HowToPlay/pic5.jpg",
+          imgAlt: "Indirect Units",
           link: "/",
         },
         {
           key: "t6",
           heading: "Tech-ups",
           text: "What's a tech-up and how to do it properly? Here we'll answer those questions.",
-          image: "/img/HowToPlay/pic6.jpg",
-          alt: "Tech-ups",
+          imgSrc: "/img/HowToPlay/pic6.jpg",
+          imgAlt: "Tech-ups",
           link: "/",
         },
       ],
@@ -119,13 +120,14 @@ export default function Howtoplay() {
       <Head>
         <title>Wars World Guides</title>
       </Head>
-      <div className="@flex @flex-col @space-y-2 @max-w-[90vw] @px-4 @pb-8 laptop:@py-2 laptop:@pb-12">
+
+      <div className="@flex @flex-col @my-2 @max-w-[90vw] @px-4 @pb-8 laptop:@py-2 laptop:@pb-12">
         <ThreeLinesText
           subtitle="You will finaly know what an airport is"
           title="How to play"
           text="Learn all the fundamentals here and climb the ladder!"
         />
-        <div className="laptop:@px-8 @space-y-10">
+        <div className="@flex @flex-col @gap-8 @my-10">
           {data.map((section) => {
             return (
               <HowToPlaySection
