@@ -36,6 +36,13 @@ const navItemObject = [
     iconAlt: "Blue Moon Cruiser",
     flip: false,
   },
+  {
+    text: "LEADERBOARD",
+    location: "/leaderboard",
+    iconPath: "/img/layout/Sub-0.png",
+    iconAlt: "Yellow Comet Sub",
+    flip: false,
+  },
 ];
 
 export function NavGroup({
