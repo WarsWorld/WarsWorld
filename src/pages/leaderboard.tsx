@@ -1,6 +1,15 @@
 import Head from "next/head";
 import ThreeLinesText from "frontend/components/layout/ThreeLinesText";
-import LeaderboardTable from "./leaderboards/LeaderboradTable";
+import LeaderboardTable from "../frontend/components/leaderboards/LeaderboradTable";
+
+/* 
+  TODO
+  - Pagination
+  - Responsiveness, take out columns games, 
+      win rate and streak when the screen is small
+  - Filters
+  - Best Players Banner
+*/
 
 export default function IndexPage() {
   return (

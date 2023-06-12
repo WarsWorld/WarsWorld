@@ -8,6 +8,7 @@ export type Player = {
 };
 
 export default function getTableData() {
+  // Here you can make the API request
   const data: Player[] = [
     {
       id: "2ca47f5d-6950-4b33-9b8c-3472db9a42be",
