@@ -39,7 +39,7 @@ const navItemObject = [
   {
     text: "LEADERBOARD",
     location: "/leaderboard",
-    iconPath: "/img/layout/Sub-0.png",
+    iconPath: "/img/layout/Bomber-0.png",
     iconAlt: "Yellow Comet Sub",
     flip: false,
   },
