@@ -23,7 +23,7 @@ export default function getTableData() {
       games: 456,
       wins: 300,
       rating: 1800,
-      streak: 200,
+      streak: 21,
     },
     {
       id: "d28f895d-d2d5-492e-89d2-0d9c7b9a22ab",
@@ -31,7 +31,7 @@ export default function getTableData() {
       games: 789,
       wins: 500,
       rating: 1200,
-      streak: 350,
+      streak: 35,
     },
     {
       id: "860ef16f-774a-4099-89e5-c992eb563235",
@@ -39,7 +39,7 @@ export default function getTableData() {
       games: 200,
       wins: 150,
       rating: 1400,
-      streak: 100,
+      streak: 10,
     },
     {
       id: "fba8cfd9-28f3-446c-aeae-cd2b2d98f8d2",
@@ -47,7 +47,7 @@ export default function getTableData() {
       games: 1000,
       wins: 600,
       rating: 1900,
-      streak: 400,
+      streak: 4,
     },
     {
       id: "e11f6829-797d-4b82-b7db-0cbbe7f8a23e",
@@ -55,7 +55,7 @@ export default function getTableData() {
       games: 250,
       wins: 125,
       rating: 1600,
-      streak: 80,
+      streak: 8,
     },
     {
       id: "b0c4be1d-6862-432b-bab2-53a6e7db4d17",
@@ -63,7 +63,7 @@ export default function getTableData() {
       games: 800,
       wins: 400,
       rating: 1700,
-      streak: 200,
+      streak: 20,
     },
     {
       id: "73e66316-00f2-481d-97c5-05f07414ab16",
@@ -79,15 +79,15 @@ export default function getTableData() {
       games: 150,
       wins: 75,
       rating: 1300,
-      streak: 40,
+      streak: 16,
     },
     {
       id: "98f14034-7a37-4e3b-8807-c11e84b9130e",
       name: "HiroshiHayashi",
       games: 300,
-      wins: 200,
+      wins: 300,
       rating: 2000,
-      streak: 100,
+      streak: 300,
     },
     {
       id: "e2001d41-5ef4-4ff9-bf8f-b50e82c508a0",
@@ -95,7 +95,7 @@ export default function getTableData() {
       games: 700,
       wins: 400,
       rating: 1800,
-      streak: 300,
+      streak: 14,
     },
     {
       id: "2b619c61-7bb3-44d0-bb06-394a0efed728",
@@ -103,7 +103,7 @@ export default function getTableData() {
       games: 400,
       wins: 250,
       rating: 1500,
-      streak: 150,
+      streak: 12,
     },
     {
       id: "c2dbf9a5-7e0e-4e80-9b25-549c2b5e42ad",
@@ -111,7 +111,7 @@ export default function getTableData() {
       games: 180,
       wins: 80,
       rating: 1200,
-      streak: 30,
+      streak: 10,
     },
     {
       id: "c9725da9-96f6-4fd7-88fe-c36fc5bbca7d",
@@ -127,7 +127,7 @@ export default function getTableData() {
       games: 300,
       wins: 200,
       rating: 1600,
-      streak: 100,
+      streak: 2,
     },
     {
       id: "a2b29dab-36e1-4a94-a8fb-1093d9cc1c94",
@@ -135,7 +135,7 @@ export default function getTableData() {
       games: 700,
       wins: 400,
       rating: 1800,
-      streak: 300,
+      streak: 2,
     },
     {
       id: "07fe14b3-56dd-44cd-a1d2-07efce8a8f34",
@@ -151,7 +151,7 @@ export default function getTableData() {
       games: 180,
       wins: 80,
       rating: 1200,
-      streak: 30,
+      streak: 3,
     },
     {
       id: "873b598d-9307-4166-bff0-51dbd1ac543a",
@@ -159,7 +159,7 @@ export default function getTableData() {
       games: 1000,
       wins: 800,
       rating: 1950,
-      streak: 500,
+      streak: 5,
     },
     {
       id: "c7d246b5-5872-4fb0-9ae2-d1c31302f866",
@@ -167,7 +167,7 @@ export default function getTableData() {
       games: 600,
       wins: 450,
       rating: 1700,
-      streak: 250,
+      streak: 13,
     },
     {
       id: "f97998b7-6db6-4e63-9e26-169a9e5ebc2b",
@@ -175,7 +175,7 @@ export default function getTableData() {
       games: 250,
       wins: 200,
       rating: 1900,
-      streak: 150,
+      streak: 43,
     },
     {
       id: "409c1941-9cb7-445a-a9f4-45e3eb2af546",
@@ -183,7 +183,7 @@ export default function getTableData() {
       games: 400,
       wins: 150,
       rating: 1400,
-      streak: 50,
+      streak: 5,
     },
     {
       id: "e081ee0e-349c-4257-a0b3-417243f662b5",
@@ -191,7 +191,7 @@ export default function getTableData() {
       games: 900,
       wins: 700,
       rating: 1800,
-      streak: 400,
+      streak: 23,
     },
     {
       id: "55c4f6a9-7f7c-4252-9581-2a0f076ed4c6",
@@ -199,7 +199,7 @@ export default function getTableData() {
       games: 250,
       wins: 180,
       rating: 1600,
-      streak: 75,
+      streak: 7,
     },
     {
       id: "01fd3c4d-0e9d-415a-9d12-3c859d634bfe",
@@ -215,7 +215,7 @@ export default function getTableData() {
       games: 800,
       wins: 500,
       rating: 1950,
-      streak: 350,
+      streak: 5,
     },
     {
       id: "8b8b2f1e-3a6e-4e97-a7e1-2227d3a1e8f5",
@@ -223,7 +223,7 @@ export default function getTableData() {
       games: 400,
       wins: 275,
       rating: 1750,
-      streak: 120,
+      streak: 10,
     },
     {
       id: "f0dd1a6e-4823-43a6-93e7-09dd742bdc9e",
@@ -239,7 +239,7 @@ export default function getTableData() {
       games: 350,
       wins: 200,
       rating: 1650,
-      streak: 80,
+      streak: 8,
     },
     {
       id: "a1f7390a-b438-4871-9c0f-60a6eb71f7be",
@@ -247,7 +247,7 @@ export default function getTableData() {
       games: 700,
       wins: 450,
       rating: 1850,
-      streak: 300,
+      streak: 3,
     },
     {
       id: "0f2e0aa4-1565-4fa7-9420-18e63508bdf0",
@@ -255,7 +255,7 @@ export default function getTableData() {
       games: 450,
       wins: 350,
       rating: 1700,
-      streak: 150,
+      streak: 12,
     },
   ];
   return data;
