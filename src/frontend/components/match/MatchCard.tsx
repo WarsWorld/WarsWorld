@@ -94,9 +94,9 @@ export default function MatchCard({
           return (
             <div key={i} className="@w-[40%] @pt-1">
               <PlayerNameBar
-                name={playersInMatch[i]?.name}
+                name={playerMatches[i]?.name}
                 rank={Math.floor(Math.random() * 1500).toString()}
-                co={COEnum[Math.floor(Math.random() * 28)]}
+                co={COEnum[Math.floor(Math.random() * 28)] as COEnum}
                 armyIndex={Math.floor(Math.random() * 4)}
                 iconSide={iconSide}
               />
