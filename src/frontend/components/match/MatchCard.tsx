@@ -9,6 +9,7 @@ import {
   TurnStyleString,
 } from "frontend/utils/enums";
 import React from "react";
+import { CO } from "server/schemas/co";
 import { MapBasic } from "shared/types/component-data";
 import { PlayerInMatch } from "shared/types/server-match-state";
 import PlayerNameBar from "./PlayerNameBar";
@@ -96,7 +97,7 @@ export default function MatchCard({
               <PlayerNameBar
                 name={playerMatches[i]?.name}
                 rank={Math.floor(Math.random() * 1500).toString()}
-                co={COEnum[Math.floor(Math.random() * 28)] as COEnum}
+                co={COEnum[Math.floor(Math.random() * 28)] as CO}
                 armyIndex={Math.floor(Math.random() * 4)}
                 iconSide={iconSide}
               />
