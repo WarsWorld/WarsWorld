@@ -66,13 +66,13 @@ export default function MatchCard({
   const timeElapsedM: number = Math.floor(Math.random() * 60);
 
   return (
-    <div className="@flex @flex-col @bg-black/50 @my-4 @shadow-black/60 @cursor-pointer hover:@scale-105 @transition @h-[300px] @w-[600px]">
+    <div className="@flex @flex-col @bg-black/50 @my-4 @shadow-black/60 @cursor-pointer hover:@scale-105 @transition @h-[300px] @w-[85vw] @max-w-[400px] tablet:@max-w-[600px]">
       <div
         id="mapBar"
         className="@flex @flex-grow-0 @flex-shrink-0 @h-8 @items-center @bg-bg-tertiary @shadow-md"
       >
         <div className="@w-4/5 @text-left @px-2 @truncate">{map.name}</div>
-        <div className="@w-1/5 @flex @flex-col @h-full @justify-center @bg-match-orange">{`DAY ${turn}`}</div>
+        <div className="@w-1/5 @flex @flex-col @h-full @justify-center @pl-1 tablet:@pl-3 @bg-match-orange">{`DAY ${turn}`}</div>
       </div>
       <div
         className="@relative @flex @flex-col @justify-between @flex-grow @flex-shrink"
@@ -90,40 +90,51 @@ export default function MatchCard({
         ></div>
         <div className="@absolute @inset-0 @bg-black @opacity-70"></div>
         <div className="@relative @flex @flex-col @justify-between @flex-grow @flex-shrink @z-10">
-          <div className="@flex @h-8 @max-w-full">
-            <div
-              className={`@flex @items-center @justify-center @gap-2 @px-2 @min-w-20 ${
-                isLive ? "@bg-bg-match-live" : "@bg-bg-secondary"
-              }`}
-            >
-              {isLive ? liveDiv : TurnStyleString[TurnStyleEnum.Async]}
+          <div className="@flex @flex-col tablet:@flex-row @h-8 @max-w-full">
+            <div className="@flex @h-8">
+              <div
+                className={`@flex @items-center @justify-center @flex-1 @gap-2 @px-2 @min-w-20 ${
+                  isLive ? "@bg-bg-match-live" : "@bg-bg-secondary"
+                }`}
+              >
+                {isLive ? (
+                  liveDiv
+                ) : (
+                  <p>{TurnStyleString[TurnStyleEnum.Async]}</p>
+                )}
+              </div>
+              <div className="@flex @items-center @justify-center @flex-1 @min-w-20 @bg-bg-primary">
+                <p>{matchTypeString}</p>
+              </div>
             </div>
-            <div className="@flex @items-center @justify-center @min-w-20 @bg-bg-primary">
-              {matchTypeString}
-            </div>
-            <div className="@flex @items-center @gap-2 @px-2 @bg-bg-secondary">
-              <img className="@h-4" src="/img/matchCard/eye.png" />
-              {` ${spectators}`}
-            </div>
-            <div className="@flex @items-center @gap-2 @px-2 @bg-bg-primary">
-              <img className="@h-4" src="/img/matchCard/star.png" />
-              {` ${favorites}`}
-            </div>
-            <div className="@flex @items-center @gap-2 @px-2 @truncate @bg-bg-secondary">
-              <img className="@h-4" src="/img/matchCard/clock.png" />
-              {` ${timeElapsedD}d : ${timeElapsedH}h : ${timeElapsedM}m`}
+            <div className="@flex @h-8">
+              <div className="@flex @items-center @gap-2 @px-2 @bg-bg-secondary">
+                <img className="@h-4" src="/img/matchCard/eye.png" />
+                <p> {spectators}</p>
+              </div>
+              <div className="@flex @items-center @gap-2 @px-2 @bg-bg-primary">
+                <img className="@h-4" src="/img/matchCard/star.png" />
+                <p> {favorites}</p>
+              </div>
+              <div className="@flex @items-center @flex-1 @gap-2 @px-2 @truncate @bg-bg-secondary">
+                <img className="@h-4" src="/img/matchCard/clock.png" />
+                <p>
+                  {" "}
+                  {timeElapsedD}d : {timeElapsedH}h : {timeElapsedM}m
+                </p>
+              </div>
             </div>
           </div>
-          <div id="coImages" className="@flex @justify-between @h-[200px]">
-            <div className="@flex @flex-col @overflow-hidden @pl-4 @items-end">
+          <div id="coImages" className="@flex @justify-between @h-[170px]">
+            <div className="@flex @flex-col @overflow-hidden tablet:@pl-4 @items-end">
               <img
-                className="@transform @scale-x-[-1] @max-w-[200px] @object-contain"
+                className="@transform @scale-x-[-1] @max-w-[140px] tablet:@max-w-[200px] @object-cover"
                 src={`/img/CO/smoothFull/Awds-${co1}.webp`}
               />
             </div>
-            <div className="@flex @flex-col @overflow-hidden @pr-4 @items-end">
+            <div className="@flex @flex-col @overflow-hidden tablet:@pr-4 @items-end">
               <img
-                className="@max-w-[200px] @object-contain"
+                className="@max-w-[140px] tablet:@max-w-[200px] @object-cover"
                 src={`/img/CO/smoothFull/Awds-${co2}.webp`}
               />
             </div>

@@ -51,7 +51,7 @@ export default function PlayerNameBar({
       : [rankDiv, nameDiv, iconDiv];
 
   return (
-    <div className="@flex @flex-col @min-w-[40%]">
+    <div className="@flex @flex-col @w-full smallscreen:@w-[40%]">
       <div
         className={`@flex @flex-row @items-center @justify-between @h-full @gap-2 ${paddingStyle}`}
         style={{ background: `${NationColorEnum[armyString]}` }}
