@@ -88,6 +88,7 @@ export function NavGroupMobile({
             iconPath={item.iconPath}
             iconAlt={item.iconAlt}
             flip={item.flip}
+            handleBurgerMenu={handleBurgerMenu}
           />
         ))}
       </div>

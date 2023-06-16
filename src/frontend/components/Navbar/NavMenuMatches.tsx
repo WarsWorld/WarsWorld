@@ -1,8 +1,9 @@
+import { Dispatch, SetStateAction } from "react";
 import { NavItem } from "./NavItem";
 
 interface Props {
   showMatchLinks: boolean;
-  handleBurgerMenu: () => void;
+  handleBurgerMenu?: () => void;
 }
 
 const navItemObject = [
