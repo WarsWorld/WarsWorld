@@ -14,6 +14,7 @@ export function Navbar() {
   };
 
   const handleMatchLinks = () => {
+    setShowLinks(false);
     setShowMatchLinks(!showMatchLinks);
   };
   return (
