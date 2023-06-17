@@ -23,12 +23,12 @@ export default function PlayerNameBar({
   iconSide,
   co = null,
 }: Props) {
-  const borderStyle =
-    iconSide === SideEnum.Left ? "@border-r-2" : "@border-l-2";
-  const paddingStyle = iconSide === SideEnum.Left ? "@pr-2" : "@pl-2";
+  const isLeftIcon = iconSide === SideEnum.Left;
+  const borderStyle = isLeftIcon ? "@border-r-2" : "@border-l-2";
+  const paddingStyle = iconSide === SideEnum.Left ? "@pr-1" : "@pl-1";
   const armyString = NationEnum[armyIndex] as Army;
   const iconDiv = (
-    <div className="@flex @flex-col @flex-shrink-0 @h-full">
+    <div className={`@flex @flex-col @flex-shrink-0 @h-full`}>
       <img
         className={`@h-full @bg-white @mx-auto ${borderStyle} @border-b-2 @border-gray-400`}
         src={`/img/nations/${NationIconEnum[armyString]}.webp`}
@@ -36,24 +36,39 @@ export default function PlayerNameBar({
     </div>
   );
   const nameDiv = (
-    <div className="@flex @flex-col @flex-grow @flex-shrink @h-full @max-w-[66%]">
+    <div className="@flex @flex-col @flex-grow @flex-shrink @h-full @px-1">
       <p className="@truncate">{name}</p>
     </div>
   );
   const rankDiv = (
-    <div className="@flex @flex-col @flex-shrink-0 @h-full @font-light">
+    <div
+      className={`@flex @flex-col @flex-shrink-0 @h-full @w-[40px] ${
+        isLeftIcon && "@self-end"
+      } @font-light`}
+    >
       <p>{rank}</p>
     </div>
   );
-  const contentDivs =
-    iconSide === SideEnum.Left
-      ? [iconDiv, nameDiv, rankDiv]
-      : [rankDiv, nameDiv, iconDiv];
+  const coDiv = co ? (
+    <div className={`@relative @flex @flex-col @flex-shrink-0 @h-full`}>
+      <div className={`@absolute @inset-0 @bg-black @opacity-50`}></div>
+      <img
+        className={`@h-full @relative @z-10 ${
+          !isLeftIcon && "@transform @scale-x-[-1]"
+        }`}
+        src={`/img/CO/smallPixel/${co}-small.png`}
+      />
+    </div>
+  ) : null;
+
+  const contentDivs = isLeftIcon
+    ? [coDiv, iconDiv, nameDiv, rankDiv]
+    : [rankDiv, nameDiv, iconDiv, coDiv];
 
   return (
-    <div className="@flex @flex-col @min-w-[40%]">
+    <div className="@flex @h-8 @min-w-[40%]">
       <div
-        className={`@flex @flex-row @items-center @justify-between @h-full @gap-2 ${paddingStyle}`}
+        className={`@flex @items-center @h-full @w-full ${paddingStyle}`}
         style={{ background: `${NationColorEnum[armyString]}` }}
       >
         {...contentDivs}
