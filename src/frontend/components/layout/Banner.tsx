@@ -1,31 +1,34 @@
 import Image from "next/image";
+import { ReactElement } from "react";
+interface imageData {
+  className: string;
+  alt: string;
+  src: string;
+  width: number;
+  height: number;
+}
+export default function Banner(props: {
+  image1?: imageData;
+  title: ReactElement;
+  image2?: imageData;
+}) {
 
-export default function Banner() {
   return (
     <div className="@bg-cover @bg-[url('/img/layout/homeBanner/gameCollage.jpg')]">
       <div className="@flex @items-start @gap-10 @backdrop-brightness-50 @px-10 @py-40">
-        <Image
-          className="pixelated"
-          src="/img/layout/homeBanner/classicInfantry.png"
-          width={42 * 5}
-          height={42 * 5}
-          alt="Classic Infantry"
-        />
+        {props.image1 && (
+          <Image
+            {...props.image1}
+          />
+        )}
         <div>
-          <h1>
-            Relive the <strong>Nostalgia</strong>
-            <br />
-            Rewrite the Tactics
-          </h1>
-          <button className="btn">Play Now</button>
+          {props.title}
         </div>
-        <Image
-          className="pixelated @scale-x-[-1]"
-          src="/img/layout/homeBanner/newInfantry.png"
-          width={42 * 5}
-          height={42 * 5}
-          alt="New Infantry"
-        />
+        {props.image2 && (
+          <Image
+            {...props.image2}
+          />
+        )}
       </div>
     </div>
   );
