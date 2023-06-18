@@ -68,16 +68,16 @@ export default function MatchCard({
   const timeElapsedM: number = Math.floor(Math.random() * 60);
 
   const duelInner = () => (
-    <div id="coImages" className="@flex @justify-between">
-      <div className="@flex @flex-col @overflow-hidden @max-h-[205px] @pl-4 @items-end">
+    <div id="coImages" className="@flex @justify-between @h-[200px]">
+      <div className="@flex @flex-col @overflow-hidden tablet:@pl-4 @items-end">
         <img
-          className="@transform @scale-x-[-1] @max-w-[200px]  @object-contain"
+          className="@transform @scale-x-[-1] @max-w-[140px] tablet:@max-w-[200px] @object-cover"
           src={`/img/CO/smoothFull/Awds-${co1}.webp`}
         />
       </div>
-      <div className="@flex @flex-col @overflow-hidden @max-h-[205px] @pr-4 @items-end">
+      <div className="@flex @flex-col @overflow-hidden tablet:@pr-4 @items-end">
         <img
-          className="@max-w-[200px] @object-contain"
+          className="@max-w-[140px] tablet:@max-w-[200px] @object-cover"
           src={`/img/CO/smoothFull/Awds-${co2}.webp`}
         />
       </div>
@@ -85,40 +85,62 @@ export default function MatchCard({
   );
 
   const multiplayerInner = () => {
-    const players = new Array(Math.floor(Math.random() * 13) + 3)
+    const players: PlayerInMatch[] = new Array(
+      Math.floor(Math.random() * 13) + 3
+    )
       .fill(playersInMatch[0])
       .map((obj) => ({ ...obj }));
+    const playersTeam1 = players.slice(0, Math.floor(players.length / 2));
+    const playersTeam2 = players.slice(Math.floor(players.length / 2) + 1);
     return (
-      <div className="@flex @flex-wrap @justify-between">
-        {players.map((p, i) => {
-          const iconSide = i % 2 === 0 ? SideEnum.Left : SideEnum.Right;
-          return (
-            <div key={i} className="@w-[40%] @pt-1">
+      <div className="@flex @items-center @justify-between @h-[80%]">
+        <div className="@flex @flex-col @w-[50%]">
+          {playersTeam1.map((player, i) => {
+            const iconSide = SideEnum.Left;
+            return (
               <PlayerNameBar
-                name={playerMatches[i]?.name}
+                name="Player"
                 rank={Math.floor(Math.random() * 1500).toString()}
                 co={COEnum[Math.floor(Math.random() * 28)] as CO}
                 armyIndex={Math.floor(Math.random() * 4)}
                 iconSide={iconSide}
+                multi={true}
+                key={i}
               />
-            </div>
-          );
-        })}
+            );
+          })}
+        </div>
+        <div className="@flex @flex-col @items-end @w-[50%]">
+          {playersTeam2.map((player, i) => {
+            const iconSide = SideEnum.Right;
+            return (
+              <PlayerNameBar
+                name="Player"
+                rank={Math.floor(Math.random() * 1500).toString()}
+                co={COEnum[Math.floor(Math.random() * 28)] as CO}
+                armyIndex={Math.floor(Math.random() * 4)}
+                iconSide={iconSide}
+                multi={true}
+                key={i}
+              />
+            );
+          })}
+        </div>
       </div>
     );
   };
 
   const lowerPlayerBar = () => (
     <div className="@h-8 @z-10">
-      <div className="@flex @h-full @justify-between @self-end">
+      <div className="@flex @h-full @justify-between">
         <PlayerNameBar
-          name={playerMatches[0]?.name}
+          name="Player"
           rank={randomRank}
           armyIndex={armyIndex}
           iconSide={SideEnum.Left}
         />
         <PlayerNameBar
-          name={playerMatches[1]?.name}
+          name="Player"
           rank={randomRank2}
           armyIndex={armyIndex2}
           iconSide={SideEnum.Right}
@@ -128,13 +150,13 @@ export default function MatchCard({
   );
 
   return (
-    <div className="@flex @flex-col @bg-black/50 @my-4 @shadow-black/60 @cursor-pointer hover:@scale-105 @transition @h-[300px] @w-[85vw] @max-w-[400px] tablet:@max-w-[600px]">
+    <div className="@flex @flex-col @bg-black/50 @my-4 @shadow-black/60 @cursor-pointer hover:@scale-105 @transition @h-[350px] @w-[85vw] @max-w-[400px] tablet:@max-w-[600px]">
       <div
         id="mapBar"
         className="@flex @flex-grow-0 @flex-shrink-0 @h-8 @items-center @bg-bg-tertiary @shadow-md"
       >
-        <div className="@w-4/5 @text-left @px-2 @truncate">{map.name}</div>
-        <div className="@w-1/5 @flex @flex-col @h-full @justify-center @pl-1 tablet:@pl-3 @bg-match-orange">{`DAY ${turn}`}</div>
+        <div className="@w-3/4 @text-left @px-2 @truncate">{map.name}</div>
+        <div className="@w-1/4 @flex @flex-col @h-full @justify-center @pl-1 tablet:@pl-3 @bg-match-orange">{`DAY ${turn}`}</div>
       </div>
       <div
         className="@relative @flex @flex-col @justify-between @flex-grow @flex-shrink"
@@ -145,7 +167,7 @@ export default function MatchCard({
       >
         <div className="@absolute @inset-0 @bg-black @opacity-70"></div>
         <div className="@relative @flex @flex-col @justify-between @flex-grow @flex-shrink @z-10">
-          <div className="@flex @flex-col tablet:@flex-row @h-8 @max-w-full">
+          <div className="@flex @flex-col tablet:@flex-row @h-[20%] @max-w-full">
             <div className="@flex @h-8">
               <div
                 className={`@flex @items-center @justify-center @flex-1 @gap-2 @px-2 @min-w-20 ${
