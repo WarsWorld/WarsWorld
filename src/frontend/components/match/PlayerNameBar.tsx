@@ -66,22 +66,23 @@ export default function PlayerNameBar({
         multi ? "smallscreen:@w-[80%]" : "smallscreen:@w-[40%]"
       }`}
     >
-      <div style={{ background: `${NationColorEnum[armyString]}` }}>
-        <div className="@flex @items-center @justify-between">
-          {isLeftIcon && (
-            <div className="@flex">
-              {coDiv}
-              {iconDiv}
-            </div>
-          )}
-          {...contentDivs}
-          {!isLeftIcon && (
-            <div className="@flex">
-              {iconDiv}
-              {coDiv}
-            </div>
-          )}
-        </div>
+      <div
+        className="@flex @items-center @justify-between"
+        style={{ background: `${NationColorEnum[armyString]}` }}
+      >
+        {isLeftIcon && (
+          <div className="@flex">
+            {coDiv}
+            {iconDiv}
+          </div>
+        )}
+        {...contentDivs}
+        {!isLeftIcon && (
+          <div className="@flex">
+            {iconDiv}
+            {coDiv}
+          </div>
+        )}
       </div>
     </div>
   );
