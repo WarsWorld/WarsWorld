@@ -1,10 +1,11 @@
+import { Dispatch, SetStateAction } from "react";
 import { NavItem } from "./NavItem";
 import { NavMenuMatches } from "./NavMenuMatches";
 
 interface Props {
   showMatchLinks: boolean;
   handleMatchLinks: () => void;
-  handleBurgerMenu: () => void;
+  setShowLinks: Dispatch<SetStateAction<boolean>>;
 }
 
 const navItemObject = [
@@ -38,11 +39,7 @@ const navItemObject = [
   },
 ];
 
-export function NavGroup({
-  showMatchLinks,
-  handleMatchLinks,
-  handleBurgerMenu,
-}: Props) {
+export function NavGroup({ showMatchLinks, handleMatchLinks }: Props) {
   return (
     <>
       <div className="@flex @items-center @justify-center navGroup">
@@ -58,10 +55,7 @@ export function NavGroup({
               alt="Orange Star Medium Tank"
             />
           </div>
-          <NavMenuMatches
-            showMatchLinks={showMatchLinks}
-            handleBurgerMenu={handleBurgerMenu}
-          />
+          <NavMenuMatches showMatchLinks={showMatchLinks} />
         </button>
         {navItemObject.map((item) => (
           <NavItem

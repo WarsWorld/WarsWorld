@@ -9,6 +9,7 @@ import {
   TurnStyleString,
 } from "frontend/utils/enums";
 import React from "react";
+import { CO } from "server/schemas/co";
 import { MapBasic } from "shared/types/component-data";
 import { PlayerInMatch } from "shared/types/server-match-state";
 import PlayerNameBar from "./PlayerNameBar";
@@ -34,7 +35,8 @@ export default function MatchCard({
   const playerMatches: (Player | undefined)[] = playersInMatch?.map((p) =>
     ownedPlayers?.find((op) => op.id === p.playerId)
   );
-  const isDuel = playersInMatch?.length === 2;
+  //const isDuel = playersInMatch?.length === 2;
+  const isDuel = Math.floor(Math.random() * 2) === 1;
   const liveDiv = (
     <>
       <img className="@h-4" src="/img/matchCard/liveDot.png" />
@@ -65,6 +67,66 @@ export default function MatchCard({
   const timeElapsedH: number = Math.floor(Math.random() * 24);
   const timeElapsedM: number = Math.floor(Math.random() * 60);
 
+  const duelInner = () => (
+    <div id="coImages" className="@flex @justify-between">
+      <div className="@flex @flex-col @overflow-hidden @max-h-[205px] @pl-4 @items-end">
+        <img
+          className="@transform @scale-x-[-1] @max-w-[200px]  @object-contain"
+          src={`/img/CO/smoothFull/Awds-${co1}.webp`}
+        />
+      </div>
+      <div className="@flex @flex-col @overflow-hidden @max-h-[205px] @pr-4 @items-end">
+        <img
+          className="@max-w-[200px] @object-contain"
+          src={`/img/CO/smoothFull/Awds-${co2}.webp`}
+        />
+      </div>
+    </div>
+  );
+
+  const multiplayerInner = () => {
+    const players = new Array(Math.floor(Math.random() * 13) + 3)
+      .fill(playersInMatch[0])
+      .map((obj) => ({ ...obj }));
+    return (
+      <div className="@flex @flex-wrap @justify-between">
+        {players.map((p, i) => {
+          const iconSide = i % 2 === 0 ? SideEnum.Left : SideEnum.Right;
+          return (
+            <div key={i} className="@w-[40%] @pt-1">
+              <PlayerNameBar
+                name={playerMatches[i]?.name}
+                rank={Math.floor(Math.random() * 1500).toString()}
+                co={COEnum[Math.floor(Math.random() * 28)] as CO}
+                armyIndex={Math.floor(Math.random() * 4)}
+                iconSide={iconSide}
+              />
+            </div>
+          );
+        })}
+      </div>
+    );
+  };
+
+  const lowerPlayerBar = () => (
+    <div className="@h-8 @z-10">
+      <div className="@flex @h-full @justify-between @self-end">
+        <PlayerNameBar
+          name={playerMatches[0]?.name}
+          rank={randomRank}
+          armyIndex={armyIndex}
+          iconSide={SideEnum.Left}
+        />
+        <PlayerNameBar
+          name={playerMatches[1]?.name}
+          rank={randomRank2}
+          armyIndex={armyIndex2}
+          iconSide={SideEnum.Right}
+        />
+      </div>
+    </div>
+  );
+
   return (
     <div className="@flex @flex-col @bg-black/50 @my-4 @shadow-black/60 @cursor-pointer hover:@scale-105 @transition @h-[300px] @w-[85vw] @max-w-[400px] tablet:@max-w-[600px]">
       <div
@@ -81,13 +143,6 @@ export default function MatchCard({
           backgroundSize: "cover",
         }}
       >
-        <div
-          className="@absolute @inset-0"
-          style={{
-            backgroundImage: `url("/img/matchCard/mapBgDemo.png")`,
-            backgroundSize: "cover",
-          }}
-        ></div>
         <div className="@absolute @inset-0 @bg-black @opacity-70"></div>
         <div className="@relative @flex @flex-col @justify-between @flex-grow @flex-shrink @z-10">
           <div className="@flex @flex-col tablet:@flex-row @h-8 @max-w-full">
@@ -125,37 +180,9 @@ export default function MatchCard({
               </div>
             </div>
           </div>
-          <div id="coImages" className="@flex @justify-between @h-[170px]">
-            <div className="@flex @flex-col @overflow-hidden tablet:@pl-4 @items-end">
-              <img
-                className="@transform @scale-x-[-1] @max-w-[140px] tablet:@max-w-[200px] @object-cover"
-                src={`/img/CO/smoothFull/Awds-${co1}.webp`}
-              />
-            </div>
-            <div className="@flex @flex-col @overflow-hidden tablet:@pr-4 @items-end">
-              <img
-                className="@max-w-[140px] tablet:@max-w-[200px] @object-cover"
-                src={`/img/CO/smoothFull/Awds-${co2}.webp`}
-              />
-            </div>
-          </div>
+          {isDuel ? duelInner() : multiplayerInner()}
         </div>
-        <div id="playerRow" className="@h-8 @z-10">
-          <div className="@flex @h-full @justify-between @self-end @gap-2">
-            <PlayerNameBar
-              name={playerMatches[0]?.name}
-              rank={randomRank}
-              armyIndex={armyIndex}
-              iconSide={SideEnum.Left}
-            />
-            <PlayerNameBar
-              name={playerMatches[1]?.name}
-              rank={randomRank2}
-              armyIndex={armyIndex2}
-              iconSide={SideEnum.Right}
-            />
-          </div>
-        </div>
+        {isDuel ? lowerPlayerBar() : null}
       </div>
     </div>
   );

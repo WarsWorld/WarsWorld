@@ -1,6 +1,8 @@
 import Banner from "../../frontend/components/layout/Banner";
 import SmallContainer from "../../frontend/components/layout/SmallContainer";
 import ThreeLinesText from "../../frontend/components/layout/ThreeLinesText";
+import { mockSession } from "next-auth/client/__tests__/helpers/mocks";
+import image = mockSession.user.image;
 
 const homePageCards = [
   {
@@ -26,7 +28,32 @@ const homePageCards = [
 export default function BasicHome() {
   return (
     <>
-      <Banner />
+      <Banner
+        image1={{
+          className: "pixelated",
+          src: "/img/layout/homeBanner/classicInfantry.png",
+          width: 42 * 5,
+          height: 42 * 5,
+          alt: "Classic Infantry",
+        }}
+        title={
+          <>
+            <h1>
+              Relive the <strong>Nostalgia</strong>
+              <br />
+              Rewrite the Tactics
+            </h1>
+            <button className="btn">Play Now</button>
+          </>
+        }
+        image2={{
+          className: "pixelated @scale-x-[-1]",
+          src: "/img/layout/homeBanner/newInfantry.png",
+          width: 42 * 5,
+          height: 42 * 5,
+          alt: "New Infantry",
+        }}
+      />
       <ThreeLinesText
         subtitle="The Timeless Classic"
         title="Renewed"
