@@ -10,12 +10,12 @@ export function Navbar() {
 
   const handleBurgerMenu = () => {
     setShowLinks(!showLinks);
-    setShowMatchLinks(false);
   };
 
   const handleMatchLinks = () => {
     setShowMatchLinks(!showMatchLinks);
   };
+
   return (
     <header className="@w-full @fixed @top-0 @z-30">
       <nav className="@flex @h-full @justify-between @items-center @bg-bg-secondary @mx-auto @px-5">
@@ -30,9 +30,9 @@ export function Navbar() {
         </Link>
 
         <NavGroup
-          handleBurgerMenu={handleBurgerMenu}
           showMatchLinks={showMatchLinks}
           handleMatchLinks={handleMatchLinks}
+          setShowLinks={setShowLinks}
         />
 
         {/* Mobile Navbar */}
