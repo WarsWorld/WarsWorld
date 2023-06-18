@@ -29,12 +29,12 @@ export default function PlayerNameBar({
   const borderStyle = isLeftIcon ? "@border-r-2" : "@border-l-2";
   const armyString = NationEnum[armyIndex] as Army;
   const nameDiv = (
-    <div className="@flex @h-full @px-1 @min-w-[40px] @justify-center @items-center">
+    <div className="@flex @h-full @px-1 @min-w-[35px] @justify-center @items-center">
       <p className="@truncate @p-0">{name}</p>
     </div>
   );
   const rankDiv = (
-    <div className="@flex @flex-col @flex-shrink-0 @h-full @font-light @px-1 @min-w-[32px] @justify-center @items-center">
+    <div className="@flex @flex-col @flex-shrink-0 @h-full @font-light @px-1 @min-w-[32px] tablet:@min-w-[50px] @justify-center @items-center">
       <p className="@p-0">{rank}</p>
     </div>
   );
