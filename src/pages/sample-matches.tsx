@@ -7,16 +7,9 @@ export default function SampleMatches() {
       <Head>
         <title>Game Lobby | Wars World</title>
       </Head>
-      <div className="@flex @justify-center @w-full">
-        <div className="@h-full @w-full @p-5 @grid @gap-10 @text-center allGames"></div>
-        <div className="@flex @flex-wrap @justify-around">
-          {
-            <MatchSection
-              title={"Matches"}
-              description={"Your ongoing matches"}
-            />
-          }
-        </div>
+
+      <div className="@flex @w-full">
+        <MatchSection title={"Matches"} description={"Your ongoing matches"} />
       </div>
     </>
   );
