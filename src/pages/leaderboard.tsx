@@ -1,12 +1,10 @@
 import Head from "next/head";
 import ThreeLinesText from "frontend/components/layout/ThreeLinesText";
 import LeaderboardTable from "../frontend/components/leaderboards/LeaderboradTable";
-
+import Filter from "frontend/components/leaderboards/Filter";
 /* 
   TODO
   - Pagination
-  - Responsiveness, take out columns games, 
-      win rate and streak when the screen is small
   - Filters
   - Best Players Banner
 */
@@ -24,6 +22,17 @@ export default function IndexPage() {
           title="Leaderboards"
           text=""
         />
+        <div className="@flex @flex-row @space-x-8 @mb-16">
+          <div className="@w-64">
+            <Filter label="Gamemode" />
+          </div>
+          <div className="@w-64">
+            <Filter label="Time mode" />
+          </div>
+          <div className="@w-64">
+            <Filter label="Date" />
+          </div>
+        </div>
         <LeaderboardTable />
       </div>
     </div>
