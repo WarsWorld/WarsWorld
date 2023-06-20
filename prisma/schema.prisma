@@ -2,7 +2,7 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 datasource db {
-  provider = "postgres"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -43,8 +43,28 @@ model User {
   state      UserState @default(active)
   role       Role?
   name       String
+  password   String? // Will replace with hash after testing
   discordId  String?   @unique
   identities Player[]
+  accounts   Account[]
+}
+
+model Account {
+  id                String  @id @map("_id")
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
 }
 
 enum CO {

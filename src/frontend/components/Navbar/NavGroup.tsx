@@ -1,5 +1,6 @@
 import { NavItem } from "./NavItem";
 import { NavMenuMatches } from "./NavMenuMatches";
+import { signIn } from "next-auth/react";
 
 interface Props {
   showMatchLinks: boolean;
@@ -75,13 +76,13 @@ export function NavGroup({
         ))}
       </div>
       <div className="@flex @justify-center @items-center @relative loginLink">
-        <NavItem
-          text="LOGIN"
-          location="/"
-          iconPath="/img/layout/Stealth-0.png"
-          iconAlt="Pink Cosmos Stealth"
-          flip={false}
-        />
+        <button
+          onClick={() =>
+            signIn("yourProviderHere", { callbackUrl: "/LoggedHome" })
+          }
+        >
+          Sign in
+        </button>
       </div>
     </>
   );

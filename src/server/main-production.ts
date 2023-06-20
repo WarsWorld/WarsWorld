@@ -24,18 +24,17 @@ const handler = app.getRequestHandler();
     }
 
     // set browsers to deny framing into an iframe (framebusting)
-    res.setHeader('X-Frame-Options', 'DENY');
+    res.setHeader("X-Frame-Options", "DENY");
 
     // set content security policy
-    res.setHeader('Content-Security-Policy', "frame-ancestors 'self'");
+    res.setHeader("Content-Security-Policy", "frame-ancestors 'self'");
 
     // prevent MIME sniffing
-    res.setHeader('X-Content-Type-Options', 'nosniff');
+    res.setHeader("X-Content-Type-Options", "nosniff");
 
     // prevents cross origin script loading
-    res.setHeader('Referrer-Policy', 'same-origin');
+    //res.setHeader('Referrer-Policy', 'same-origin');
 
-    
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const parsedUrl = parse(req.url!, true);
     void handler(req, res, parsedUrl);
