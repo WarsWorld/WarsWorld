@@ -17,14 +17,14 @@ export default function MatchSection({
   const demoTitle = "Matches";
 
   return (
-    <section>
+    <section className="@grid @w-full @mt-5 tablet:@mt-0 tablet:@p-10 @h-full">
       <div className="@flex @flex-col monitor:@flex-row @items-center monitor:@space-x-8">
         <div className="@min-w-[75vw] monitor:@min-w-[20vw]">
           <TitleColorBox title={demoTitle} tailwind_color={tailwind_color} />
         </div>
         <p>{description}</p>
       </div>
-      <div className="@flex @flex-wrap @gap-4">
+      <div className="@flex @flex-wrap @justify-center monitor:@justify-start @gap-x-10">
         {matches.map((match) => {
           const randomViewers = Math.floor(Math.random() * 1000);
           const randomFavs = Math.floor(Math.random() * 1000);
