@@ -3,6 +3,7 @@ import LinkCard from "frontend/components/layout/LinkCard";
 import Head from "next/head";
 import { v4 as uuidv4 } from "uuid";
 import { ICardInfo } from "frontend/components/layout/LinkCard";
+import { ProtectedPage } from "frontend/components/ProtectedPage";
 
 const newsCardsObjectList: ICardInfo[] = [
   {
@@ -65,7 +66,7 @@ const newsCardsObjectList: ICardInfo[] = [
 
 export default function NewsPage() {
   return (
-    <>
+    <ProtectedPage>
       <Head>
         <title>News | Wars World</title>
       </Head>
@@ -82,6 +83,6 @@ export default function NewsPage() {
           })}
         </div>
       </div>
-    </>
+    </ProtectedPage>
   );
 }

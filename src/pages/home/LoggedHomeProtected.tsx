@@ -1,27 +1,11 @@
+import { ProtectedPage } from "frontend/components/ProtectedPage";
 import { useSession } from "next-auth/react";
-import { getServerSession } from "next-auth/next";
-import { authOptions } from "../api/auth/[...nextauth]";
-import type { NextApiRequest, NextApiResponse } from "next";
+import { NextPage } from "next";
 
-export default async function LoggedHome(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
+const LoggedHome: NextPage = () => {
   const { data } = useSession();
-  const session = await getServerSession(req, res, authOptions);
-
-  if (session) {
-    return res.send({
-      content:
-        "Signed In! If you see this authentication was a success and you session is live",
-    });
-  }
-
-  res.send({
-    error: "You must be signed in to view the protected content on this page.",
-  });
   return (
-    <>
+    <ProtectedPage>
       <h1>This will be what the user sees after sucessful login</h1>
       <p>
         We will likely port most of BasicHome.tsx here and then modify as for
@@ -30,6 +14,8 @@ export default async function LoggedHome(
         the useSession along with any user details(username, email, preferences)
       </p>
       <pre>Example: {JSON.stringify(data, null, 2)}</pre>
-    </>
+    </ProtectedPage>
   );
-}
+};
+
+export default LoggedHome;

@@ -77,9 +77,7 @@ export function NavGroup({
       </div>
       <div className="@flex @justify-center @items-center @relative loginLink">
         <button
-          onClick={() =>
-            signIn("yourProviderHere", { callbackUrl: "/LoggedHome" })
-          }
+          onClick={() => signIn(undefined, { callbackUrl: "/home/LoggedHome" })}
         >
           Sign in
         </button>
