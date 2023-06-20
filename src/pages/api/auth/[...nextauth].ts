@@ -1,21 +1,15 @@
 import NextAuth, { NextAuthOptions } from "next-auth";
-import GoogleProvider from "next-auth/providers/github";
-import GithubProvider from "next-auth/providers/google";
+import GoogleProvider from "next-auth/providers/google";
+import GithubProvider from "next-auth/providers/github";
 
-const {
-  GOOGLE_ID = "",
-  GOOGLE_SECRET = "",
-  GITHUB_ID = "",
-  GITHUB_SECRET = "",
-} = process.env;
 // This is the temp big daddy of scripts I've been working on
 // This is a simple implementation of OAuth with 2 providers
 // My main auth script that uses credentials is still WIP
 export const authOptions: NextAuthOptions = {
   providers: [
     GithubProvider({
-      clientId: "process.env.GITHUB_ID",
-      clientSecret: "process.env.GITHUB_SECRET",
+      clientId: process.env.GITHUB_CLIENT_ID!,
+      clientSecret: process.env.GITHUB_CLIENT_SECRET!,
     }),
     GoogleProvider({
       clientId: process.env.GOOGLE_ID,
