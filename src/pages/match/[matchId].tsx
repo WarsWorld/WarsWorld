@@ -16,26 +16,9 @@ import { useEffect, useRef, useState } from "react";
 import { PlayerInMatch } from "shared/types/server-match-state";
 
 import { trpc } from "frontend/utils/trpc-client";
-
 import getJSON from "../api/spriteSheet/getJSON";
-import { GetStaticPaths } from "next";
 
-export const getStaticPaths: GetStaticPaths<{ slug: string }> = async () => {
-  return {
-    paths: [], //indicates that no page needs be created at build time
-    fallback: "blocking", //indicates the type of fallback
-  };
-};
 
-export async function getStaticProps() {
-  const parsedD = await getJSON("orangeStarBuildings");
-  const parsedData = JSON.parse(parsedD);
-  return {
-    props: {
-      parsedData,
-    },
-  };
-}
 
 BaseTexture.defaultOptions.scaleMode = SCALE_MODES.NEAREST;
 
@@ -72,14 +55,25 @@ const Match = ({ parsedData }) => {
       },
     }
   );
+  /*
 
+THE PROBLEM:
+
+We have multiple sprite sheets, we need to be able to pick the sprite sheets depending on the user
+
+solution: get data of match, pick sprite sheets based on that.
+
+
+
+
+ */
   //Important useEffect to make sure Pixi
   // only gets updated when pixiCanvasRef or mapData changes
   // we dont want it to be refreshed in react everytime something changes.
   useEffect(() => {
     //logging our mapData just in case you need to see it in the console.
     console.log(mapData);
-
+    console.log(players);
     const app = new Application({
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
@@ -143,3 +137,31 @@ const Match = ({ parsedData }) => {
   );
 };
 export default Match;
+
+/*
+
+export const getStaticPaths: GetStaticPaths<{ slug: string }> = async () => {
+  return {
+    paths: [], //indicates that no page needs be created at build time
+    fallback: "blocking", //indicates the type of fallback
+  };
+};
+
+export async function getStaticProps() {
+  const parsedD = await getJSON("orangeStarBuildings");
+  const parsedData = JSON.parse(parsedD);
+  return {
+    props: {
+      parsedData,
+    },
+  };
+}*/
+export async function getServerSideProps() {
+  console.log(process.cwd);
+  //lets get orangeStar buildings
+  const res = await getJSON("orangeStarBuildings");
+
+  const parsedData = JSON.parse(res)
+
+  return {props: {parsedData}};
+}
