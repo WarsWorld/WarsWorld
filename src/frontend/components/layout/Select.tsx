@@ -32,7 +32,7 @@ export default function Select({ value, onChange, options }: Props) {
         onBlur={() => setIsOpen(false)}
         onClick={() => setIsOpen((prev) => !prev)}
         tabIndex={0}
-        className="@relative @w-full @min-h-2 @border @border-none @flex @items-center @gap-2 @p-2 @rounded @outline-none @bg-bg-tertiary focus:@border-white @shadow-black/70 @shadow-md"
+        className="@relative @cursor-pointer @w-full @min-h-2 @border @border-bg-tertiary @flex @items-center @gap-2 @p-2 @rounded @outline-none @bg-bg-tertiary @shadow-black/70 @shadow-md"
       >
         <span className="@grow @text-white @pl-2">{value?.label}</span>
         <div className="@bg-bg-secondary @w-0.5 @self-stretch"></div>
@@ -44,7 +44,7 @@ export default function Select({ value, onChange, options }: Props) {
           &#x25BC;
         </div>
         <ul
-          className={`@absolute @m-0 @p-0 @list-none @overflow-y-hidden @shadow-black @shadow-lg @rounded @w-full @left-0 @top-[calc(100%_+_0.25em)] 
+          className={`@absolute @m-0 @p-0 @list-none @overflow-y-hidden @shadow-black @shadow-lg @rounded @w-full @left-0 @top-[calc(100%_+_0.5em)] 
           @bg-bg-tertiary @z-100 @duration-500
           ${isOpen ? "@max-h-96" : "@max-h-0"}`}
         >

@@ -2,6 +2,7 @@ import { useState, useReducer, useEffect } from "react";
 import {
   flexRender,
   getCoreRowModel,
+  getPaginationRowModel,
   useReactTable,
   Table,
 } from "@tanstack/react-table";
@@ -71,8 +72,10 @@ export default function LeaderboardTable() {
     },
     onColumnVisibilityChange: setColumnVisibility,
     getCoreRowModel: getCoreRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
   });
 
+  useEffect(() => table.setPageSize(100));
   // makes the table more responsive by removing and adding columns
   useEffect(() => hideColumns(table, screenWidth), [screenWidth, table]);
 
@@ -117,6 +120,63 @@ export default function LeaderboardTable() {
           ))}
         </tbody>
       </table>
+      <div className="@flex @items-center @gap-3 @mt-8">
+        <button
+          className={`@rounded @py-1 @px-4 @text-lg @font-semibold @shadow-black/50 @shadow-md ${
+            table.getCanPreviousPage()
+              ? "@bg-primary hover:@scale-105 active:@scale-105"
+              : "@bg-primary-dark"
+          }`}
+          onClick={() => table.setPageIndex(0)}
+          disabled={!table.getCanPreviousPage()}
+        >
+          {"<<"}
+        </button>
+        <button
+          className={`@rounded @py-1 @px-4 @text-lg @font-semibold @shadow-black/50 @shadow-md ${
+            table.getCanPreviousPage()
+              ? "@bg-primary hover:@scale-105 active:@scale-105"
+              : "@bg-primary-dark"
+          }`}
+          onClick={() => table.previousPage()}
+          disabled={!table.getCanPreviousPage()}
+        >
+          {"<"}
+        </button>
+        <input
+          type="number"
+          max={table.getPageCount()}
+          value={table.getState().pagination.pageIndex + 1}
+          onChange={(e) => {
+            const page = e.target.value ? Number(e.target.value) - 1 : 0;
+            page < table.getPageCount() && table.setPageIndex(page);
+          }}
+          className="@border-none @py-2 @px-4 @rounded @w-16 @shadow-black/50 @shadow-md @bg-bg-tertiary @text-white @text-center @font-semibold
+          [appearance:textfield] [&::-webkit-outer-spin-button]:@appearance-none [&::-webkit-inner-spin-button]:@appearance-none"
+        />
+        <button
+          className={`@rounded @py-1 @px-4 @text-lg @font-semibold @shadow-black/50 @shadow-md ${
+            table.getCanNextPage()
+              ? "@bg-primary hover:@scale-105 active:@scale-105"
+              : "@bg-primary-dark"
+          }`}
+          onClick={() => table.nextPage()}
+          disabled={!table.getCanNextPage()}
+        >
+          {">"}
+        </button>
+        <button
+          className={`@rounded @py-1 @px-4 @text-lg @font-semibold @shadow-black/50 @shadow-md ${
+            table.getCanNextPage()
+              ? "@bg-primary hover:@scale-105 active:@scale-105"
+              : "@bg-primary-dark"
+          }`}
+          onClick={() => table.setPageIndex(table.getPageCount() - 1)}
+          disabled={!table.getCanNextPage()}
+        >
+          {">>"}
+        </button>
+      </div>
     </div>
   );
 }
