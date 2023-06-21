@@ -1,0 +1,197 @@
+{
+  "frames": {
+    "Airport-0.png": {
+      "frame": { "x": 0, "y": 0, "w": 16, "h": 18 },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 18 },
+      "sourceSize": { "w": 16, "h": 18 }
+    },
+    "Airport-1.png": {
+      "frame": { "x": 16, "y": 0, "w": 16, "h": 18 },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 18 },
+      "sourceSize": { "w": 16, "h": 18 }
+    },
+    "Airport-2.png": {
+      "frame": { "x": 0, "y": 0, "w": 16, "h": 18 },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 18 },
+      "sourceSize": { "w": 16, "h": 18 }
+    },
+    "Base-0.png": {
+      "frame": { "x": 32, "y": 0, "w": 16, "h": 25 },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 25 },
+      "sourceSize": { "w": 16, "h": 25 }
+    },
+    "Base-1.png": {
+      "frame": { "x": 48, "y": 0, "w": 16, "h": 25 },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 25 },
+      "sourceSize": { "w": 16, "h": 25 }
+    },
+    "Base-2.png": {
+      "frame": { "x": 64, "y": 0, "w": 16, "h": 25 },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 25 },
+      "sourceSize": { "w": 16, "h": 25 }
+    },
+    "Base-3.png": {
+      "frame": { "x": 80, "y": 0, "w": 16, "h": 25 },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 25 },
+      "sourceSize": { "w": 16, "h": 25 }
+    },
+    "Base-4.png": {
+      "frame": { "x": 96, "y": 0, "w": 16, "h": 25 },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 25 },
+      "sourceSize": { "w": 16, "h": 25 }
+    },
+    "Base-5.png": {
+      "frame": { "x": 112, "y": 0, "w": 16, "h": 25 },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 25 },
+      "sourceSize": { "w": 16, "h": 25 }
+    },
+    "City-0.png": {
+      "frame": { "x": 128, "y": 0, "w": 16, "h": 22 },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 22 },
+      "sourceSize": { "w": 16, "h": 22 }
+    },
+    "City-1.png": {
+      "frame": { "x": 144, "y": 0, "w": 16, "h": 22 },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 22 },
+      "sourceSize": { "w": 16, "h": 22 }
+    },
+    "City-2.png": {
+      "frame": { "x": 128, "y": 0, "w": 16, "h": 22 },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 22 },
+      "sourceSize": { "w": 16, "h": 22 }
+    },
+    "ComTower-0.png": {
+      "frame": { "x": 160, "y": 0, "w": 16, "h": 25 },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 25 },
+      "sourceSize": { "w": 16, "h": 25 }
+    },
+    "ComTower-1.png": {
+      "frame": { "x": 176, "y": 0, "w": 16, "h": 25 },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 25 },
+      "sourceSize": { "w": 16, "h": 25 }
+    },
+    "ComTower-2.png": {
+      "frame": { "x": 160, "y": 0, "w": 16, "h": 25 },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 25 },
+      "sourceSize": { "w": 16, "h": 25 }
+    },
+    "HQ-0.png": {
+      "frame": { "x": 192, "y": 0, "w": 16, "h": 31 },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 31 },
+      "sourceSize": { "w": 16, "h": 31 }
+    },
+    "HQ-1.png": {
+      "frame": { "x": 208, "y": 0, "w": 16, "h": 31 },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 31 },
+      "sourceSize": { "w": 16, "h": 31 }
+    },
+    "HQ-2.png": {
+      "frame": { "x": 192, "y": 0, "w": 16, "h": 31 },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 31 },
+      "sourceSize": { "w": 16, "h": 31 }
+    },
+    "Lab-0.png": {
+      "frame": { "x": 224, "y": 0, "w": 16, "h": 24 },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 24 },
+      "sourceSize": { "w": 16, "h": 24 }
+    },
+    "Lab-1.png": {
+      "frame": { "x": 240, "y": 0, "w": 16, "h": 24 },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 24 },
+      "sourceSize": { "w": 16, "h": 24 }
+    },
+    "Lab-2.png": {
+      "frame": { "x": 224, "y": 0, "w": 16, "h": 24 },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 24 },
+      "sourceSize": { "w": 16, "h": 24 }
+    },
+    "Port-0.png": {
+      "frame": { "x": 256, "y": 0, "w": 16, "h": 22 },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 22 },
+      "sourceSize": { "w": 16, "h": 22 }
+    },
+    "Port-1.png": {
+      "frame": { "x": 272, "y": 0, "w": 16, "h": 22 },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 22 },
+      "sourceSize": { "w": 16, "h": 22 }
+    },
+    "Port-2.png": {
+      "frame": { "x": 256, "y": 0, "w": 16, "h": 22 },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 22 },
+      "sourceSize": { "w": 16, "h": 22 }
+    }
+  },
+  "animations": {
+    "Airport": ["Airport-0.png", "Airport-1.png", "Airport-2.png"],
+    "Base": [
+      "Base-0.png",
+      "Base-1.png",
+      "Base-2.png",
+      "Base-3.png",
+      "Base-4.png",
+      "Base-5.png"
+    ],
+    "City": ["City-0.png", "City-1.png", "City-2.png"],
+    "ComTower": ["ComTower-0.png", "ComTower-1.png", "ComTower-2.png"],
+    "HQ": ["HQ-0.png", "HQ-1.png", "HQ-2.png"],
+    "Lab": ["Lab-0.png", "Lab-1.png", "Lab-2.png"],
+    "Port": ["Port-0.png", "Port-1.png", "Port-2.png"]
+  },
+  "meta": {
+    "app": "https://www.codeandweb.com/texturepacker",
+    "version": "1.1",
+    "image": "/img/spriteSheet/orangeStar/orangeStarBuildings-0.png",
+    "format": "RGBA8888",
+    "size": { "w": 288, "h": 31 },
+    "scale": "1",
+    "smartupdate": "$TexturePacker:SmartUpdate:286221ec5664cea5c1d45ed9a7e73f0c:dfba759d9d3c2d0cee2a5b26565ef27e:c22557a5082ee746663e13aa1baaef13$"
+  }
+}
