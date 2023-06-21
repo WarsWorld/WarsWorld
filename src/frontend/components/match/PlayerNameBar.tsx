@@ -14,6 +14,7 @@ interface Props {
   armyIndex: number;
   iconSide: SideEnum;
   co?: CO | null;
+  multi?: boolean;
 }
 
 export default function PlayerNameBar({
@@ -22,35 +23,31 @@ export default function PlayerNameBar({
   armyIndex,
   iconSide,
   co = null,
+  multi = false,
 }: Props) {
   const isLeftIcon = iconSide === SideEnum.Left;
   const borderStyle = isLeftIcon ? "@border-r-2" : "@border-l-2";
-  const paddingStyle = iconSide === SideEnum.Left ? "@pr-1" : "@pl-1";
   const armyString = NationEnum[armyIndex] as Army;
+  const nameDiv = (
+    <div className="@flex @h-full @px-1 @min-w-[35px] @justify-center @items-center">
+      <p className="@truncate @p-0">{name}</p>
+    </div>
+  );
+  const rankDiv = (
+    <div className="@flex @flex-col @flex-shrink-0 @h-full @font-light @px-1 @min-w-[32px] tablet:@min-w-[50px] @justify-center @items-center">
+      <p className="@p-0">{rank}</p>
+    </div>
+  );
   const iconDiv = (
-    <div className={`@flex @flex-col @flex-shrink-0 @h-full`}>
+    <div className={`@flex @flex-col @w-[32px] @h-[32px]`}>
       <img
-        className={`@h-full @bg-white @mx-auto ${borderStyle} @border-b-2 @border-gray-400`}
+        className={`@h-8 @bg-white @mx-auto ${borderStyle} @border-b-2 @border-gray-400`}
         src={`/img/nations/${NationIconEnum[armyString]}.webp`}
       />
     </div>
   );
-  const nameDiv = (
-    <div className="@flex @flex-col @flex-grow @flex-shrink @h-full @px-1">
-      <p className="@truncate">{name}</p>
-    </div>
-  );
-  const rankDiv = (
-    <div
-      className={`@flex @flex-col @flex-shrink-0 @h-full @w-[40px] ${
-        isLeftIcon && "@self-end"
-      } @font-light`}
-    >
-      <p>{rank}</p>
-    </div>
-  );
   const coDiv = co ? (
-    <div className={`@relative @flex @flex-col @flex-shrink-0 @h-full`}>
+    <div className={`@relative @flex @flex-col @w-[32px] @h-[32px]`}>
       <div className={`@absolute @inset-0 @bg-black @opacity-50`}></div>
       <img
         className={`@h-full @relative @z-10 ${
@@ -61,17 +58,31 @@ export default function PlayerNameBar({
     </div>
   ) : null;
 
-  const contentDivs = isLeftIcon
-    ? [coDiv, iconDiv, nameDiv, rankDiv]
-    : [rankDiv, nameDiv, iconDiv, coDiv];
+  const contentDivs = isLeftIcon ? [nameDiv, rankDiv] : [rankDiv, nameDiv];
 
   return (
-    <div className="@flex @h-8 @min-w-[40%]">
+    <div
+      className={`@flex @flex-col @w-full ${
+        multi ? "smallscreen:@w-[80%]" : "smallscreen:@w-[40%]"
+      }`}
+    >
       <div
-        className={`@flex @items-center @h-full @w-full ${paddingStyle}`}
+        className="@flex @items-center @justify-between"
         style={{ background: `${NationColorEnum[armyString]}` }}
       >
+        {isLeftIcon && (
+          <div className="@flex">
+            {coDiv}
+            {iconDiv}
+          </div>
+        )}
         {...contentDivs}
+        {!isLeftIcon && (
+          <div className="@flex">
+            {iconDiv}
+            {coDiv}
+          </div>
+        )}
       </div>
     </div>
   );
