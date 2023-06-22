@@ -1,7 +1,7 @@
 import { Dispatch, SetStateAction } from "react";
 import { NavItem } from "./NavItem";
 import { NavMenuMatches } from "./NavMenuMatches";
-import { signIn } from "next-auth/react";
+import { signIn, signOut, useSession } from "next-auth/react";
 
 interface Props {
   showMatchLinks: boolean;
@@ -41,6 +41,9 @@ const navItemObject = [
 ];
 
 export function NavGroup({ showMatchLinks, handleMatchLinks }: Props) {
+  const { data: session, status } = useSession();
+  const loading = status === "loading";
+
   return (
     <>
       <div className="@flex @items-center @justify-center navGroup">
@@ -69,13 +72,47 @@ export function NavGroup({ showMatchLinks, handleMatchLinks }: Props) {
           />
         ))}
       </div>
-      <div className="@flex @justify-center @items-center @relative loginLink">
-        <button
-          onClick={() => signIn("yourProviderHere", { callbackUrl: "/" })}
-        >
-          Sign in
-        </button>
+      <div className={"@flex @justify-center @items-center @gap-1"}>
+        <p className={`nojs-show ${!session && loading}`}>
+          {!session && (
+            <>
+              <span className={"@flex @justify-center @items-center @gap-1"}>
+                You are not signed in
+              </span>
+              <a
+                href={`/api/auth/signin`}
+                className={"@flex @justify-center @items-center @gap-1"}
+                onClick={(e) => {
+                  e.preventDefault();
+                  signIn();
+                }}
+              >
+                Sign in
+              </a>
+            </>
+          )}
+          {session?.user && (
+            <>
+              <span className={"@flex @justify-center @items-center @gap-1"}>
+                <small>Signed in as</small>
+                <br />
+                <b>{session.user.email ?? session.user.name}</b>
+              </span>
+              <a
+                href={`/api/auth/signout`}
+                className={"@flex @justify-center @items-center @gap-1"}
+                onClick={(e) => {
+                  e.preventDefault();
+                  signOut();
+                }}
+              >
+                Sign out
+              </a>
+            </>
+          )}
+        </p>
       </div>
+      {}
     </>
   );
 }
