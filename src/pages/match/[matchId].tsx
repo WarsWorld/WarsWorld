@@ -11,14 +11,15 @@ import {
   Container,
   Spritesheet,
   AnimatedSprite,
+  DisplayObject,
+  utils,
 } from "pixijs";
 import { useEffect, useRef, useState } from "react";
+import { Layer } from "@pixi/layers";
 import { PlayerInMatch } from "shared/types/server-match-state";
 
 import { trpc } from "frontend/utils/trpc-client";
-import getJSON from "../api/spriteSheet/getJSON";
-
-
+import getJSON from "../../spriteSheet/getJSON";
 
 BaseTexture.defaultOptions.scaleMode = SCALE_MODES.NEAREST;
 
@@ -55,30 +56,16 @@ const Match = ({ parsedData }) => {
       },
     }
   );
-  /*
 
-THE PROBLEM:
-
-We have multiple sprite sheets, we need to be able to pick the sprite sheets depending on the user
-
-solution: get data of match, pick sprite sheets based on that.
-
-
-
-
- */
   //Important useEffect to make sure Pixi
   // only gets updated when pixiCanvasRef or mapData changes
   // we dont want it to be refreshed in react everytime something changes.
   useEffect(() => {
-    //logging our mapData just in case you need to see it in the console.
-    console.log(mapData);
-    console.log(players);
     const app = new Application({
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       view: pixiCanvasRef.current,
-      resolution: window.devicePixelRatio || 1,
+      resolution: 2,
       backgroundColor: "#C0E030",
       width: 500,
       height: 400,
@@ -89,52 +76,86 @@ solution: get data of match, pick sprite sheets based on that.
     const awCursor =
       'url("http://localhost:3000/img/spriteSheet/cursor.gif"),auto';
     app.renderer.events.cursorStyles.default = awCursor;
+
     const mapContainer = new Container();
     mapContainer.x = 25;
     mapContainer.y = 25;
-
+    //allows for us to use zIndex
+    mapContainer.sortableChildren = true;
     app.stage.addChild(mapContainer);
 
-    const texture = BaseTexture.from(parsedData.meta.image);
-    const spritesheet = new Spritesheet(texture, parsedData);
-    spritesheet.parse();
-    const buildings = [
-      "Airport",
-      "Base",
-      "City",
-      "ComTower",
-      "HQ",
-      "Lab",
-      "Port",
-    ];
-    buildings.forEach((building, index) => {
-      const tile = new AnimatedSprite(spritesheet.animations[building]);
-      tile.x = index * 32;
-      tile.y = 16;
-      tile.animationSpeed = 0.02;
-      tile.play();
-      mapContainer.addChild(tile);
+
+    const spriteSheets: Spritesheet[] = [];
+    console.log(parsedData.countries);
+
+    parsedData.countries.forEach((country: string) => {
+      const texture = BaseTexture.from(parsedData[country].meta.image);
+      const sheet = new Spritesheet(texture, parsedData[country]);
+      sheet.parse();
+      spriteSheets.push(sheet);
     });
 
+    if (mapData != undefined || mapData != null) {
+      let tile;
+      mapData.forEach((col, colIndex) => {
+        mapData[colIndex].forEach((row, rowIndex) => {
+          const type = row.type;
+          if (row.hasOwnProperty("playerSlot")) {
+            const slot: number = row.playerSlot;
+
+
+            //its neutral
+            if (row.playerSlot === -1) {
+              tile = new Sprite(spriteSheets[2].textures[type + "-0.png"]);
+              //not neutral
+            } else {
+              tile = new AnimatedSprite(spriteSheets[slot].animations[type]);
+              tile.animationSpeed = 0.02;
+              tile.play();
+            }
+          } else {
+            if (row.hasOwnProperty("variant")) tile = new Sprite(spriteSheets[2].textures[row.type + "-" + row.variant + ".png" ]);
+            else tile = new Sprite(spriteSheets[2].textures[row.type + ".png" ]);
+          }
+          tile.anchor.set(0.5, 1);
+          //tile.zIndex = (mapData.length - colIndex) * 10;
+          tile.x = (rowIndex + 1) * 16;
+          tile.y = (colIndex + 1) * 16;
+          mapContainer.addChild(tile);
+        });
+      });
+    }
+    console.log(mapData);
     return () => {
       app.stop();
     };
   }, [pixiCanvasRef, mapData]);
 
-  return (
-    <div className={"@m-10"}>
-      <h1>Basic pixi.js dev environment </h1>
-      <h2>Basic rendering</h2>
-      <canvas
-        style={{
-          imageRendering: "pixelated",
-        }}
-        ref={pixiCanvasRef}
-        width={800}
-        height={600}
-      ></canvas>
-    </div>
-  );
+
+
+
+
+
+
+
+
+  if (!parsedData) return <h1>Loading...</h1>;
+  else {
+    return (
+      <div className={"@m-10"}>
+        <h1>Basic pixi.js dev environment </h1>
+        <h2>Basic rendering</h2>
+        <canvas
+          style={{
+            imageRendering: "pixelated",
+          }}
+          ref={pixiCanvasRef}
+          width={800}
+          height={600}
+        ></canvas>
+      </div>
+    );
+  }
 };
 export default Match;
 
@@ -157,11 +178,14 @@ export async function getStaticProps() {
   };
 }*/
 export async function getServerSideProps() {
-  console.log(process.cwd);
-  //lets get orangeStar buildings
-  const res = await getJSON("orangeStarBuildings");
-
-  const parsedData = JSON.parse(res)
-
-  return {props: {parsedData}};
+  const parsedData = await getJSON([
+    "orange-star",
+    "blue-moon",
+    "fake",
+    "fake",
+    "fake",
+    "fake",
+  ]);
+  //console.log(parsedData);
+  return { props: { parsedData } };
 }
