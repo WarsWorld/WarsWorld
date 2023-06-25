@@ -28,6 +28,15 @@ export default function YourMatches() {
         <div className="@h-full @w-full @p-5 @grid @gap-10 @text-center allGames">
           <div>
             <h1>Your matches</h1>
+            <h1>Hello dev! Read Instructions</h1>
+            <p>
+              To create a match, first change "current player" to any other
+              player.
+              <br />
+              Then click on "create game" and then on "enter match"
+            </p>
+
+            <br />
             <p>
               Current player:{" "}
               <select
