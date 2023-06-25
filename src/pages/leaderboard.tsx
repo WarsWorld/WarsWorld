@@ -5,8 +5,6 @@ import Select, { SelectOption } from "frontend/components/layout/Select";
 import { useState } from "react";
 /* 
   TODO
-  - Pagination
-  - Filters
   - Best Players Banner
 */
 
