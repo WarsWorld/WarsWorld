@@ -21,7 +21,7 @@
   h1 {
     @include m.clampSize(16, 46, 320, 1200);
     font-weight: 400;
-    padding: 0;
+    padding: 0.25em 0;
   }
 
   h2 {
