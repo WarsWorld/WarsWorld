@@ -1,5 +1,38 @@
 import { faker } from "@faker-js/faker";
 
+const cos = [
+  "Adder",
+  "Andy",
+  "Colin",
+  "Drake",
+  "Eagle",
+  "Flak",
+  "Grimm",
+  "Grit",
+  "Hachi",
+  "Hawke",
+  "Jake",
+  "Javier",
+  "Jess",
+  "Jugger",
+  "Kanbei",
+  "Kindle",
+  "Koal",
+  "Lash",
+  "Max",
+  "Nell",
+  "Olaf",
+  "Rachel",
+  "Sami",
+  "Sasha",
+  "Sensei",
+  "Sonja",
+  "Sturm",
+  "Von Bolt",
+];
+
+const countries = ["blueMoon", "greenEarth", "orangeStar", "yellowComet"];
+
 export type Player = {
   id: string;
   name: string;
@@ -7,6 +40,20 @@ export type Player = {
   wins: number;
   rating: number;
   streak: number;
+  co: string;
+  country: string;
+};
+
+export type PlayerLeaderboard = {
+  id: string;
+  rank: number;
+  name: string;
+  games: number;
+  winRate: number;
+  rating: number;
+  streak: number;
+  co: string;
+  country: string;
 };
 
 const newPlayer = (): Player => {
@@ -20,6 +67,8 @@ const newPlayer = (): Player => {
       (games - wins) * faker.number.int({ min: 1, max: 9 }));
   const rating = ratingCalc <= 0 ? 0 : ratingCalc;
   const streak = rating === 0 ? 0 : faker.number.int({ max: wins });
+  const co = faker.helpers.arrayElement(cos);
+  const country = faker.helpers.arrayElement(countries);
   return {
     id,
     name,
@@ -27,12 +76,41 @@ const newPlayer = (): Player => {
     wins,
     rating,
     streak,
+    co,
+    country,
   };
 };
 
-export default function getTableData(amount: number) {
+function transformData(data: Player[]): PlayerLeaderboard[] {
+  let rank = 1;
+
+  const transformedData = data
+    .sort((a, b) => {
+      return b.rating - a.rating;
+    })
+    .map((player) => {
+      const result: PlayerLeaderboard = {
+        id: player.id,
+        rank: rank++,
+        name: player.name,
+        games: player.games,
+        winRate: (player.wins / player.games) * 100,
+        rating: player.rating,
+        streak: player.streak,
+        co: player.co,
+        country: player.country,
+      };
+      return result;
+    });
+
+  return transformedData;
+}
+
+export default function getTableData(amount: number): PlayerLeaderboard[] {
   const data: Player[] = [];
   for (let i = 0; i < amount; i++) data.push(newPlayer());
 
-  return data;
+  const transformedData = transformData(data);
+
+  return transformedData;
 }

@@ -1,4 +1,4 @@
-import { PlayerLeaderboard } from "./LeaderboradTable";
+import { PlayerLeaderboard } from "./TableData";
 import { createColumnHelper } from "@tanstack/react-table";
 
 const columnHelper = createColumnHelper<PlayerLeaderboard>();
@@ -14,11 +14,23 @@ export const columns = [
     header: () => "Rating",
     cell: (info) => info.getValue(),
   }),
-  columnHelper.accessor("name", {
-    id: "3",
-    header: "Player",
-    cell: (info) => <div className="@pl-2 @text-left">{info.getValue()}</div>,
-  }),
+  columnHelper.accessor(
+    (row) => (
+      <div className="@flex @space-x-4">
+        <img
+          className="@w-auto @h-6"
+          src={`img/nations/${row.country}.webp`}
+          alt={row.country}
+        />
+        <div>{row.name}</div>
+      </div>
+    ),
+    {
+      id: "3",
+      header: "Player",
+      cell: (info) => info.getValue(),
+    }
+  ),
   columnHelper.accessor("games", {
     id: "4",
     header: () => "Games",

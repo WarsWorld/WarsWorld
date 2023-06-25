@@ -6,7 +6,7 @@ import {
   useReactTable,
   Table,
 } from "@tanstack/react-table";
-import getTableData, { Player } from "./TableData";
+import getTableData, { PlayerLeaderboard } from "./TableData";
 import { columns } from "./LeaderboardColumns";
 import { useWindowWidth } from "@react-hook/window-size";
 import PaginationButton from "../layout/PaginationButton";
@@ -30,40 +30,6 @@ function hideColumns(table: Table<PlayerLeaderboard>, screenWidth: number) {
   }
 }
 
-export type PlayerLeaderboard = {
-  id: string;
-  rank: number;
-  name: string;
-  games: number;
-  winRate: number;
-  rating: number;
-  streak: number;
-};
-
-function getData(amount: number): PlayerLeaderboard[] {
-  let rank = 1;
-  const requestedData: Player[] = getTableData(amount);
-
-  const transformedData = requestedData
-    .sort((a, b) => {
-      return b.rating - a.rating;
-    })
-    .map((player) => {
-      const result: PlayerLeaderboard = {
-        id: player.id,
-        rank: rank++,
-        name: player.name,
-        games: player.games,
-        winRate: (player.wins / player.games) * 100,
-        rating: player.rating,
-        streak: player.streak,
-      };
-      return result;
-    });
-
-  return transformedData;
-}
-
 export default function LeaderboardTable() {
   const screenWidth = useWindowWidth();
   const [columnVisibility, setColumnVisibility] = useState({});
@@ -82,7 +48,7 @@ export default function LeaderboardTable() {
     getPaginationRowModel: getPaginationRowModel(),
   });
 
-  useEffect(() => setData(getData(500)), []);
+  useEffect(() => setData(getTableData(500)), []);
   // Set the max amount of rows every single page has
   useEffect(() => table.setPageSize(100), [table]);
   // makes the table more responsive by removing and adding columns
