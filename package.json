@@ -55,6 +55,7 @@
     "zod": "^3.0.0"
   },
   "devDependencies": {
+    "@faker-js/faker": "^8.0.2",
     "@types/node": "^18.7.20",
     "@types/react": "^18.0.9",
     "@types/uuid": "^9.0.1",
