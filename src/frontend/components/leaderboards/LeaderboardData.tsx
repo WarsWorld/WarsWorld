@@ -111,7 +111,9 @@ function transformData(data: Player[]): PlayerLeaderboard[] {
   return transformedData;
 }
 
-export default function getTableData(amount: number): PlayerLeaderboard[] {
+export default function getLeaderboardData(
+  amount: number
+): PlayerLeaderboard[] {
   const data: Player[] = [];
   for (let i = 0; i < amount; i++) data.push(newPlayer());
 

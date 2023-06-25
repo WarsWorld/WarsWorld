@@ -4,11 +4,7 @@ interface Props {
   children: React.ReactNode;
 }
 
-export default function PaginationButton({
-  disabled,
-  onClick,
-  children,
-}: Props) {
+export default function SquareButton({ disabled, onClick, children }: Props) {
   return (
     <button
       className={`@rounded @py-1 @px-4 @text-lg @font-semibold @shadow-black/50 @shadow-md ${

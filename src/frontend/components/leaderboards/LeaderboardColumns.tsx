@@ -1,22 +1,22 @@
-import { PlayerLeaderboard } from "./TableData";
+import { PlayerLeaderboard } from "./LeaderboardData";
 import { createColumnHelper } from "@tanstack/react-table";
 
 const columnHelper = createColumnHelper<PlayerLeaderboard>();
 
 export const columns = [
   columnHelper.accessor("rank", {
-    id: "1",
+    id: "Rank",
     header: () => "Rank",
     cell: (info) => info.getValue(),
   }),
   columnHelper.accessor("rating", {
-    id: "2",
+    id: "Rating",
     header: () => "Rating",
     cell: (info) => info.getValue(),
   }),
   columnHelper.accessor(
     (row) => (
-      <div className="@flex @space-x-4">
+      <div className="@w-auto @flex @space-x-4">
         <img
           className="@w-auto @h-6"
           src={`img/nations/${row.country}.webp`}
@@ -31,18 +31,18 @@ export const columns = [
       </div>
     ),
     {
-      id: "3",
+      id: "Player",
       header: "Player",
       cell: (info) => info.getValue(),
     }
   ),
   columnHelper.accessor("games", {
-    id: "4",
+    id: "Games",
     header: () => "Games",
     cell: (info) => info.getValue(),
   }),
   columnHelper.accessor("winRate", {
-    id: "5",
+    id: "Win Rate",
     header: () => "Win rate",
     cell: (info) => (
       <div className="@relative">
@@ -57,7 +57,7 @@ export const columns = [
     ),
   }),
   columnHelper.accessor("streak", {
-    id: "6",
+    id: "Streak",
     header: () => "Streak",
     cell: (info) => (
       <>
