@@ -22,7 +22,12 @@ export const columns = [
           src={`img/nations/${row.country}.webp`}
           alt={row.country}
         />
-        <div>{row.name}</div>
+        <a
+          className="@text-base @p-0 @m-0 @text-white hover:@text-primary"
+          href={row.profileLink}
+        >
+          {row.name}
+        </a>
       </div>
     ),
     {

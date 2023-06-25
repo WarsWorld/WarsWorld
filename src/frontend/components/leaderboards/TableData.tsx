@@ -42,6 +42,7 @@ export type Player = {
   streak: number;
   co: string;
   country: string;
+  profileLink: string;
 };
 
 export type PlayerLeaderboard = {
@@ -54,6 +55,7 @@ export type PlayerLeaderboard = {
   streak: number;
   co: string;
   country: string;
+  profileLink: string;
 };
 
 const newPlayer = (): Player => {
@@ -69,6 +71,7 @@ const newPlayer = (): Player => {
   const streak = rating === 0 ? 0 : faker.number.int({ max: wins });
   const co = faker.helpers.arrayElement(cos);
   const country = faker.helpers.arrayElement(countries);
+  const profileLink = "/";
   return {
     id,
     name,
@@ -78,6 +81,7 @@ const newPlayer = (): Player => {
     streak,
     co,
     country,
+    profileLink,
   };
 };
 
@@ -99,6 +103,7 @@ function transformData(data: Player[]): PlayerLeaderboard[] {
         streak: player.streak,
         co: player.co,
         country: player.country,
+        profileLink: player.profileLink,
       };
       return result;
     });
