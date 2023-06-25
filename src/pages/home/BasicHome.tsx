@@ -46,6 +46,7 @@ export default function BasicHome() {
             <button className="btn">Play Now</button>
           </>
         }
+        backgroundURL="/img/layout/homeBanner/gameCollage.jpg"
         image2={{
           className: "pixelated @scale-x-[-1]",
           src: "/img/layout/homeBanner/newInfantry.png",

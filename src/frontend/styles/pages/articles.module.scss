@@ -1,0 +1,12 @@
+// Any images inside the article grid
+// have these parameters
+// not sure if we can do this in tailwind
+.articleGrid {
+
+  img {
+    height: 50%;
+
+    max-height:500px ;
+
+  }
+}
