@@ -25,7 +25,7 @@ import { PlayerInMatch } from "shared/types/server-match-state";
 
 import { trpc } from "frontend/utils/trpc-client";
 import getJSON from "../../spriteSheet/getJSON";
-
+import showMenu from "../../spriteSheet/showMenu";
 BaseTexture.defaultOptions.scaleMode = SCALE_MODES.NEAREST;
 
 const Match = ({ spriteData }) => {
@@ -84,8 +84,7 @@ const Match = ({ spriteData }) => {
     app.renderer.events.cursorStyles.default = awCursor;
 
     const mapContainer = new Container();
-    mapContainer.x = 0;
-    mapContainer.y = 0;
+
     //allows for us to use zIndex
     mapContainer.sortableChildren = true;
     app.stage.addChild(mapContainer);
@@ -93,6 +92,7 @@ const Match = ({ spriteData }) => {
     const spriteSheets: Spritesheet[] = [];
     console.log(spriteData.countries);
 
+    //Lets create our spritesheets/map the image with the json!
     spriteData.countries.forEach((country: string) => {
       const texture = BaseTexture.from(spriteData[country].meta.image);
       const sheet = new Spritesheet(texture, spriteData[country]);
@@ -115,6 +115,20 @@ const Match = ({ spriteData }) => {
               //NOT NEUTRAL
             } else {
               tile = new AnimatedSprite(spriteSheets[slot].animations[type]);
+              tile.interactive = true;
+              tile.on("pointerdown", async () => {
+                console.log(mapContainer.children);
+                const menu = await showMenu(spriteSheets[slot], type, slot);
+                menu.x = rowIndex * 16 + 16;
+                menu.y = colIndex * 16;
+                mapContainer.addChild(menu);
+              });
+              tile.on("pointerout", () => {
+                //TODO: Fix the animation going out
+                mapContainer.removeChild(
+                  mapContainer.children[441]
+                );
+              })
               //TODO: Seems like properties/buildings have different animation speeds...
               tile.animationSpeed = 0.03;
               tile.play();
