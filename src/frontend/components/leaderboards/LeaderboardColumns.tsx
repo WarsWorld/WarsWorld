@@ -18,7 +18,7 @@ export const columns = [
     (row) => (
       <div className="@w-auto @flex @space-x-4">
         <img
-          className="@w-auto @h-6"
+          className="@w-auto @h-6 @bg-white"
           src={`img/nations/${row.country}.webp`}
           alt={row.country}
         />

@@ -3,6 +3,7 @@ import ThreeLinesText from "frontend/components/layout/ThreeLinesText";
 import LeaderboardTable from "../frontend/components/leaderboards/LeaderboradTable";
 import Select, { SelectOption } from "frontend/components/layout/Select";
 import { useState } from "react";
+import PlayerCard from "../frontend/components/leaderboards/PlayerCard";
 /* 
   TODO
   - Best Players Banner
@@ -34,12 +35,84 @@ export default function IndexPage() {
         <title>Leaderboards</title>
       </Head>
 
+      <ThreeLinesText
+        subtitle="Where the best meet"
+        title="Leaderboards"
+        text=""
+      />
+      <div className="@space-x-4 @flex @flex-row @flex-wrap @mb-8">
+        <div className="@w-56 @h-[50vh] @mb-8">
+          <PlayerCard
+            name="StarFlash"
+            rank={1}
+            mmr={1643}
+            country="orangeStar"
+            co="kindle"
+            profileLink="/"
+          />
+        </div>
+        <div className="@w-56 @h-[50vh] @mb-8">
+          <PlayerCard
+            name="Po1and"
+            rank={2}
+            mmr={1612}
+            country="greenEarth"
+            co="sami"
+            profileLink="/"
+          />
+        </div>
+        <div className="@w-56 @h-[50vh] @mb-8">
+          <PlayerCard
+            name="Tordread"
+            rank={3}
+            mmr={1599}
+            country="yellowComet"
+            co="lash"
+            profileLink="/"
+          />
+        </div>
+        <div className="@w-56 @h-[50vh] @mb-8">
+          <PlayerCard
+            name="Spoot"
+            rank={4}
+            mmr={1587}
+            country="blueMoon"
+            co="grit"
+            profileLink="/"
+          />
+        </div>
+        <div className="@w-56 @h-[50vh] @mb-8">
+          <PlayerCard
+            name="sothe-"
+            rank={5}
+            mmr={1576}
+            country="greenEarth"
+            co="jess"
+            profileLink="/"
+          />
+        </div>
+        <div className="@w-56 @h-[50vh] @mb-8">
+          <PlayerCard
+            name="Go7"
+            rank={6}
+            mmr={1554}
+            country="blueMoon"
+            co="olaf"
+            profileLink="/"
+          />
+        </div>
+        <div className="@w-56 @h-[50vh] @mb-8">
+          <PlayerCard
+            name="斯大林"
+            rank={7}
+            mmr={1524}
+            country="orangeStar"
+            co="andy"
+            profileLink="/"
+          />
+        </div>
+      </div>
       <div className="@flex @flex-col @max-w-full @px-4">
-        <ThreeLinesText
-          subtitle="Where the best meet"
-          title="Leaderboards"
-          text=""
-        />
         <div className="@grid @grid-cols-1 @gap-6 tablet:@grid-cols-2 smallscreen:@grid-cols-3 laptop:@gap-4 laptop:@grid-cols-4 monitor:@grid-cols-6 @mb-12">
           <div className="@w-56 @space-y-2">
             <label>Gamemode</label>
