@@ -36,13 +36,14 @@ export const convertAWBWMapToWWMap = (
         .map((t) => t.trim())
     );
   const tileDataFlat = tileData2DM.flat();
-  const width = tileData2DM[0].length;
+  const row = tileData2DM[0].length;
+  const col = tileData2DM.length;
 
   const parsedArray: Tile[][] = [];
-  for (let i = 0; i < width; i++) {
+  for (let i = 0; i < col; i++) {
     const emptyArray: Tile[] = [];
-    for (let j = 0; j < width; j++) {
-      emptyArray.push(awbwTileMapping[tileDataFlat[j + i * width]]);
+    for (let j = 0; j < row; j++) {
+      emptyArray.push(awbwTileMapping[tileDataFlat[j + i * row]]);
     }
     parsedArray.push(emptyArray);
   }
