@@ -30,7 +30,7 @@ export default function IndexPage() {
   );
 
   return (
-    <div className="@flex @flex-col @w-full @items-center @justify-center">
+    <div className="@flex @flex-col @w-[100vw] @items-center @justify-center">
       <Head>
         <title>Leaderboards</title>
       </Head>
@@ -40,8 +40,8 @@ export default function IndexPage() {
         title="Leaderboards"
         text=""
       />
-      <div className="@space-x-4 @flex @flex-row @flex-wrap @mb-8">
-        <div className="@w-56 @h-[50vh] @mb-8">
+      <div className="@flex @flex-row @flex-wrap @mb-8 @justify-center @items-center">
+        <div className="@w-32 smallscreen:@w-56 @h-[50vh] @mb-8 @mx-4">
           <PlayerCard
             name="StarFlash"
             rank={1}
@@ -51,7 +51,7 @@ export default function IndexPage() {
             profileLink="/"
           />
         </div>
-        <div className="@w-56 @h-[50vh] @mb-8">
+        <div className="@w-32 smallscreen:@w-56 @h-[50vh] @mb-8 @mx-4">
           <PlayerCard
             name="Po1and"
             rank={2}
@@ -61,7 +61,7 @@ export default function IndexPage() {
             profileLink="/"
           />
         </div>
-        <div className="@w-56 @h-[50vh] @mb-8">
+        <div className="@w-32 smallscreen:@w-56 @h-[50vh] @mb-8 @mx-4">
           <PlayerCard
             name="Tordread"
             rank={3}
@@ -71,7 +71,7 @@ export default function IndexPage() {
             profileLink="/"
           />
         </div>
-        <div className="@w-56 @h-[50vh] @mb-8">
+        <div className="@w-32 smallscreen:@w-56 @h-[50vh] @mb-8 @mx-4">
           <PlayerCard
             name="Spoot"
             rank={4}
@@ -81,7 +81,7 @@ export default function IndexPage() {
             profileLink="/"
           />
         </div>
-        <div className="@w-56 @h-[50vh] @mb-8">
+        <div className="@w-32 smallscreen:@w-56 @h-[50vh] @mb-8 @mx-4">
           <PlayerCard
             name="sothe-"
             rank={5}
@@ -91,7 +91,7 @@ export default function IndexPage() {
             profileLink="/"
           />
         </div>
-        <div className="@w-56 @h-[50vh] @mb-8">
+        <div className="@w-32 smallscreen:@w-56 @h-[50vh] @mb-8 @mx-4">
           <PlayerCard
             name="Go7"
             rank={6}
@@ -101,7 +101,7 @@ export default function IndexPage() {
             profileLink="/"
           />
         </div>
-        <div className="@w-56 @h-[50vh] @mb-8">
+        <div className="@w-32 smallscreen:@w-56 @h-[50vh] @mb-8 @mx-4">
           <PlayerCard
             name="斯大林"
             rank={7}

@@ -33,7 +33,7 @@ export default function PlayerCard({
         <div className="@absolute @bottom-0 @right-0 @w-full @h-20 @bg-bg-tertiary">
           <div className="@flex @absolute @bottom-10 @right-0 @w-full @h-10">
             <div className="@flex @w-full @h-full @items-center @justify-center">
-              <h4 className="@text-lg"># {rank}</h4>
+              <h4># {rank}</h4>
             </div>
             <img
               className="@m-[2px] @bg-white"
@@ -41,7 +41,7 @@ export default function PlayerCard({
               alt=""
             />
             <div className="@flex @w-full @h-full @items-center @justify-center">
-              <h4 className="@text-lg">{mmr}</h4>
+              <h4>{mmr}</h4>
             </div>
           </div>
           <div className="@flex @absolute @bottom-0 @w-full @h-10 @bg-white">
