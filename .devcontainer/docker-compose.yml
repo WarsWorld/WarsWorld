@@ -1,0 +1,11 @@
+version: '3.6'
+services:
+  warsworld:
+    image: debian:12.0-slim
+    restart: always
+    volumes:
+      # Mount the project's folder
+      - ..:/workspaces:cached
+    # Overrides default command so things don't shut down after the process ends.
+    command: /bin/sh -c "while sleep 1000; do :; done"
+ 
