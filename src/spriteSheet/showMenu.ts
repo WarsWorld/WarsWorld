@@ -17,10 +17,18 @@ export default async function showMenu(
 ) {
   const menuContainer = new Container();
   menuContainer.eventMode = "static";
-  menuContainer.sortableChildren = true;
+
   const menuElement = new Container();
   menuElement.eventMode = "static";
 
+  /*menuElement.on("pointerdown", () => {
+    console.log("aaaaaa");
+  });*/
+  const background = new Graphics();
+  background.beginFill(0x9c9c9c);
+  background.drawRect(-2, -2, 89, (20 - 1) * 15.5);
+  background.endFill();
+  menuContainer.addChild(background);
   const unitInfo = await unitData(-1, type);
 
   const style = new TextStyle({
@@ -31,11 +39,11 @@ export default async function showMenu(
   unitInfo.forEach((unit, index) => {
     const yValue = index * 14;
 
-    const unitSprite = new AnimatedSprite(spriteSheet.animations[unit.name]);
+    const unitSprite = new AnimatedSprite(spriteSheet.animations[unit.name + "_mdown"]);
     unitSprite.y = yValue;
     unitSprite.width = 8;
     unitSprite.height = 8;
-    unitSprite.animationSpeed = 0.06;
+    unitSprite.animationSpeed = 0.07;
     unitSprite.anchor.set(-0.2, -0.2);
     unitSprite.play();
 
@@ -58,20 +66,14 @@ export default async function showMenu(
     menuElement.addChild(unitName);
     menuElement.addChild(unitCost);
     menuElement.addChild(unitSprite);
-    menuElement.on("pointerdown", ()=>{
-      console.log("aaaaaa");
-    })
+
     menuContainer.addChild(menuElement);
   });
 
-  const background = new Graphics();
-  background.beginFill(0x9c9c9c);
-  background.drawRect(-2, -2, 89, (unitInfo.length - 1) * 15.5);
-  background.endFill();
-  background.zIndex = -1;
-  menuContainer.addChild(background);
 
-  menuContainer.x = x * 16 + 28;
+
+  /*menuContainer.x = x * 16 + 28;*/
+  menuContainer.x = x * 16 + 10;
   menuContainer.y = y * 16;
   return menuContainer;
 }

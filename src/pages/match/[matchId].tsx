@@ -87,7 +87,6 @@ const Match = ({ spriteData }) => {
     app.stage.addChild(mapContainer);
 
     const spriteSheets: Spritesheet[] = [];
-    console.log(spriteData.countries);
 
     //Lets create our spritesheets/map the image with the json!
     spriteData.countries.forEach((country: string) => {
@@ -97,7 +96,7 @@ const Match = ({ spriteData }) => {
       spriteSheets.push(sheet);
     });
 
-    if (mapData != undefined || mapData != null) {
+    if (mapData != undefined) {
       let tile;
       mapData.forEach((col, colIndex) => {
         mapData[colIndex].forEach((row, rowIndex) => {
@@ -117,6 +116,7 @@ const Match = ({ spriteData }) => {
                 tile.eventMode = "static";
                 //Lets make menu appear
                 tile.on("pointerdown", async () => {
+                  console.log("touched an action tile!");
                   const menu = await showMenu(
                     spriteSheets[slot],
                     type,
@@ -126,16 +126,18 @@ const Match = ({ spriteData }) => {
                   );
                   //lets make menu dissapear on hover out
 
-                  menu.on("pointerout", () => {
+                  menu.on("mouseout", () => {
+                    console.log("menu pointerout");
                     const length = mapContainer.children.length;
-                    setTimeout(()=> {
+
+                    setTimeout(() => {
+                      console.log("timeout");
                       mapContainer.removeChild(mapContainer.children[length - 1]);
-                    },1000)
+                    }, 1000);
                   });
                   mapContainer.addChild(menu);
                 });
               }
-
 
               //TODO: Seems like properties/buildings have different animation speeds...
               // gotta figure out how to make sure all buildings are animated properly
