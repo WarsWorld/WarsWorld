@@ -7,25 +7,21 @@ import { usePlayers } from "frontend/context/players";
 import { Tile } from "server/schemas/tile";
 import { useRouter } from "next/router";
 import {
+  AnimatedSprite,
   Application,
-  Assets,
   BaseTexture,
+  Container,
   SCALE_MODES,
   Sprite,
-  Texture,
-  Container,
   Spritesheet,
-  AnimatedSprite,
-  DisplayObject,
-  utils,
-} from "pixijs";
+} from "pixi.js";
 import { useEffect, useRef, useState } from "react";
-import { Layer } from "@pixi/layers";
 import { PlayerInMatch } from "shared/types/server-match-state";
 
 import { trpc } from "frontend/utils/trpc-client";
 import getJSON from "../../spriteSheet/getJSON";
 import showMenu from "../../spriteSheet/showMenu";
+
 BaseTexture.defaultOptions.scaleMode = SCALE_MODES.NEAREST;
 
 const Match = ({ spriteData }) => {
@@ -66,12 +62,14 @@ const Match = ({ spriteData }) => {
   useEffect(() => {
     const app = new Application({
       view: pixiCanvasRef.current,
+      //TODO: Make resolution more responsive (become 1 on mobile, 2 on medium, 3 on big)
+      // also make resolution changeable? as in the press of a button
       resolution: 2,
       backgroundColor: "#3a4817",
       //TODO: The width needs to be = mapData[0].length * 16 + 16, but it seems it errors out if mapData isnt loaded well.
       // However, mapData?.length seems to work well for the height.
-      width: 16 * 30 + 16,
-      height: 16 * mapData?.length + 16,
+      width: 16 * 50 + 16,
+      height: 32 * mapData?.length + 16,
     });
     //8 is half of 16, currently our border half a tile. Needed so mountains and cities display fully at the top.
     app.stage.position.set(0, 8);
@@ -79,9 +77,8 @@ const Match = ({ spriteData }) => {
     //let render our specific cursor
     //TODO: Unsure why does the cursor.gif isnt working as intended... in the IDE it looks static but on windows photos it animates correctly.
     //TODO: Cursor is pretty big, wish we could make it a bit smaller
-    const awCursor =
+    app.renderer.events.cursorStyles.default =
       'url("http://localhost:3000/img/spriteSheet/cursor.gif"),auto';
-    app.renderer.events.cursorStyles.default = awCursor;
 
     const mapContainer = new Container();
 
@@ -115,21 +112,33 @@ const Match = ({ spriteData }) => {
               //NOT NEUTRAL
             } else {
               tile = new AnimatedSprite(spriteSheets[slot].animations[type]);
-              tile.interactive = true;
-              tile.on("pointerdown", async () => {
-                console.log(mapContainer.children);
-                const menu = await showMenu(spriteSheets[slot], type, slot);
-                menu.x = rowIndex * 16 + 16;
-                menu.y = colIndex * 16;
-                mapContainer.addChild(menu);
-              });
-              tile.on("pointerout", () => {
-                //TODO: Fix the animation going out
-                mapContainer.removeChild(
-                  mapContainer.children[441]
-                );
-              })
+              //if our building is able to produce units, it has a menu!
+              if (type !== "hq" && type !== "lab" && type !== "city") {
+                tile.eventMode = "static";
+                //Lets make menu appear
+                tile.on("pointerdown", async () => {
+                  const menu = await showMenu(
+                    spriteSheets[slot],
+                    type,
+                    slot,
+                    rowIndex,
+                    colIndex
+                  );
+                  //lets make menu dissapear on hover out
+
+                  menu.on("pointerout", () => {
+                    const length = mapContainer.children.length;
+                    setTimeout(()=> {
+                      mapContainer.removeChild(mapContainer.children[length - 1]);
+                    },1000)
+                  });
+                  mapContainer.addChild(menu);
+                });
+              }
+
+
               //TODO: Seems like properties/buildings have different animation speeds...
+              // gotta figure out how to make sure all buildings are animated properly
               tile.animationSpeed = 0.03;
               tile.play();
             }
