@@ -126,14 +126,14 @@ const Match = ({ spriteData }) => {
                   );
                   //lets make menu dissapear on hover out
 
-                  menu.on("mouseout", () => {
+                  menu.on("pointerleave", () => {
                     console.log("menu pointerout");
                     const length = mapContainer.children.length;
 
                     setTimeout(() => {
                       console.log("timeout");
                       mapContainer.removeChild(mapContainer.children[length - 1]);
-                    }, 1000);
+                    }, 0);
                   });
                   mapContainer.addChild(menu);
                 });

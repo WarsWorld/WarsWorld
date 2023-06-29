@@ -5,6 +5,8 @@ import {
   AnimatedSprite,
   Graphics,
   TextStyle,
+  Texture,
+  Sprite,
 } from "pixi.js";
 import unitData from "./unitData";
 
@@ -17,18 +19,11 @@ export default async function showMenu(
 ) {
   const menuContainer = new Container();
   menuContainer.eventMode = "static";
+  menuContainer.sortableChildren = true;
 
   const menuElement = new Container();
   menuElement.eventMode = "static";
 
-  /*menuElement.on("pointerdown", () => {
-    console.log("aaaaaa");
-  });*/
-  const background = new Graphics();
-  background.beginFill(0x9c9c9c);
-  background.drawRect(-2, -2, 89, (20 - 1) * 15.5);
-  background.endFill();
-  menuContainer.addChild(background);
   const unitInfo = await unitData(-1, type);
 
   const style = new TextStyle({
@@ -39,7 +34,9 @@ export default async function showMenu(
   unitInfo.forEach((unit, index) => {
     const yValue = index * 14;
 
-    const unitSprite = new AnimatedSprite(spriteSheet.animations[unit.name + "_mdown"]);
+    const unitSprite = new AnimatedSprite(
+      spriteSheet.animations[unit.name + "_mdown"]
+    );
     unitSprite.y = yValue;
     unitSprite.width = 8;
     unitSprite.height = 8;
@@ -57,10 +54,18 @@ export default async function showMenu(
     unitCost.x = 60;
     unitCost.anchor.set(0, -0.1);
 
-    const unitBG = new Graphics();
-    unitBG.beginFill(0xd3d3d3);
-    unitBG.drawRect(0, yValue, 85, 12);
-    unitBG.endFill();
+    const unitBG = new Sprite(Texture.WHITE);
+    unitBG.x = 0;
+    unitBG.y = yValue;
+    unitBG.width = 85;
+    unitBG.height = 12;
+    unitBG.eventMode = "static";
+    unitBG.tint = 0xd3d3d3;
+
+    //This will make ALL unitBGs change tint, even the ones on another menuElement
+    menuElement.on("pointerenter", () => {
+      unitBG.tint = 0xffffff;
+    });
 
     menuElement.addChild(unitBG);
     menuElement.addChild(unitName);
@@ -69,11 +74,15 @@ export default async function showMenu(
 
     menuContainer.addChild(menuElement);
   });
-
-
+  const background = new Graphics();
+  background.beginFill(0x9c9c9c);
+  background.drawRect(-2, -2, 89, (unitInfo.length - 1) * 15.5);
+  background.endFill();
+  background.zIndex = -1;
+  menuContainer.addChild(background);
 
   /*menuContainer.x = x * 16 + 28;*/
-  menuContainer.x = x * 16 + 10;
+  menuContainer.x = x * 16 + 15;
   menuContainer.y = y * 16;
   return menuContainer;
 }
