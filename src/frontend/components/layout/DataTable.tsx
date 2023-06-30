@@ -38,7 +38,10 @@ export default function DataTable({ table, hasFooter = false }: Props) {
             key={row.id}
           >
             {row.getVisibleCells().map((cell) => (
-              <td className="@p-3 @pl-4 @text-center" key={cell.id}>
+              <td
+                className="@p-2 smallscreen:@p-3 smallscreen:@pl-4 @text-center"
+                key={cell.id}
+              >
                 {flexRender(cell.column.columnDef.cell, cell.getContext())}
               </td>
             ))}

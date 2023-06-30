@@ -7,23 +7,23 @@ export const columns = [
   columnHelper.accessor("rank", {
     id: "Rank",
     header: () => "Rank",
-    cell: (info) => info.getValue(),
+    cell: (info) => <p className="@px-1">{info.getValue()}</p>,
   }),
   columnHelper.accessor("rating", {
     id: "Rating",
     header: () => "Rating",
-    cell: (info) => info.getValue(),
+    cell: (info) => <p className="@px-1">{info.getValue()}</p>,
   }),
   columnHelper.accessor(
     (row) => (
-      <div className="@w-auto @flex @space-x-4">
+      <div className="@w-auto @flex @space-x-2 smallscreen:@space-x-4">
         <img
-          className="@w-auto @h-6 @bg-white"
+          className="@w-auto @h-4 smallscreen:@h-6 @bg-white"
           src={`img/nations/${row.country}.webp`}
           alt={row.country}
         />
         <a
-          className="@text-base @p-0 @m-0 @text-white hover:@text-primary"
+          className="@p-0 @m-0 @text-white hover:@text-primary"
           href={row.profileLink}
         >
           {row.name}

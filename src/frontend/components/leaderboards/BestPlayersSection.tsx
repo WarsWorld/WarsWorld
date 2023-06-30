@@ -12,7 +12,7 @@ export default function BestPlayersSection({ bestPlayers }: Props) {
         return (
           <div
             key={player.id}
-            className="@w-24 smallscreen:@w-56 laptop:@w-60 @h-[30vh] smallscreen:@h-[40vh] laptop:@h-[60vh] @mb-8 @mx-2 smallscreen:@mx-4"
+            className="@w-28 smallscreen:@w-56 laptop:@w-60 @h-[30vh] smallscreen:@h-[40vh] laptop:@h-[60vh] @mb-8 @mx-1 smallscreen:@mx-4"
           >
             <PlayerCard
               name={player.name}

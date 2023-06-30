@@ -28,6 +28,7 @@ module.exports = {
       },
     },
     screens: {
+      cellphone: "360px",
       tablet: "480px",
       smallscreen: "768px",
       laptop: "1024px",

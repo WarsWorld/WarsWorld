@@ -26,8 +26,8 @@ export default function LeaderboardFilters({
   setTimeMode,
 }: Props) {
   return (
-    <div className="@grid @grid-cols-1 @gap-6 tablet:@grid-cols-2 smallscreen:@grid-cols-3 laptop:@gap-4 laptop:@grid-cols-4 monitor:@grid-cols-6 @mb-12">
-      <div className="@w-56 @space-y-2">
+    <div className="@grid @gap-6 @grid-cols-2 smallscreen:@grid-cols-3 laptop:@gap-4 laptop:@grid-cols-4 monitor:@grid-cols-6 @mb-8 smallscreen:@mb-12">
+      <div className="@w-30 cellphone:@w-40 tablet:@w-56 @space-y-2">
         <label>Gamemode</label>
         <Select
           options={gamemodes}
@@ -35,7 +35,7 @@ export default function LeaderboardFilters({
           onChange={(o) => setGamemode(o)}
         />
       </div>
-      <div className="@w-56 @space-y-2">
+      <div className="@w-30 cellphone:@w-40 tablet:@w-56 @space-y-2">
         <label>Time mode</label>
         <Select
           options={timeModes}

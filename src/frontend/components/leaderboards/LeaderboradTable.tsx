@@ -2,7 +2,7 @@
 // leaderboards table is generated:
 // https://tanstack.com/table/v8/docs/guide/introduction
 
-import { useState, useReducer, useEffect } from "react";
+import { useState, useEffect } from "react";
 import {
   getCoreRowModel,
   getPaginationRowModel,
@@ -46,6 +46,7 @@ export default function LeaderboardTable({ setBestPlayers }: Props) {
   const [columnVisibility, setColumnVisibility] = useState({});
   const [data, setData] = useState([] as PlayerLeaderboard[]);
 
+  // Use this to rerender the table, probably better used for filter changes
   //const rerender = useReducer(() => ({}), {})[1];
 
   const table = useReactTable({
@@ -71,7 +72,7 @@ export default function LeaderboardTable({ setBestPlayers }: Props) {
   useEffect(() => hideColumns(table, screenWidth), [screenWidth, table]);
 
   return (
-    <div className="@flex @flex-col @w-full @items-center @justify-center @mb-20 @min-w-[80vw]">
+    <div className="@flex @flex-col @w-full @items-center @justify-center @mb-12 smallscreen:@mb-20 @min-w-[90vw] tablet:@min-w-[80vw]">
       <DataTable table={table} />
       <TablePagination table={table} />
     </div>
