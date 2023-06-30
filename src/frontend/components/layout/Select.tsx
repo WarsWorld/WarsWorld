@@ -44,7 +44,7 @@ export default function Select({ value, onChange, options }: Props) {
       </div>
       <ul
         className={`@absolute @m-0 @p-0 @list-none @overflow-y-hidden @shadow-black @shadow-lg @rounded @w-full @left-0 @top-[calc(100%_+_0.5em)] 
-          @bg-bg-tertiary @z-100 @duration-500
+          @bg-bg-tertiary @z-50 @duration-500
           ${isOpen ? "@max-h-96" : "@max-h-0"}`}
       >
         {options.map((option, index) => (
