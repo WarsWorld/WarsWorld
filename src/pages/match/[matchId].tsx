@@ -8,16 +8,12 @@ import { Tile } from "server/schemas/tile";
 import { useRouter } from "next/router";
 import {
   Application,
-  Assets,
   BaseTexture,
   SCALE_MODES,
   Sprite,
-  Texture,
   Container,
   Spritesheet,
   AnimatedSprite,
-  DisplayObject,
-  utils,
 } from "pixijs";
 import { useEffect, useRef, useState } from "react";
 import { Layer } from "@pixi/layers";
@@ -161,7 +157,9 @@ const Match = ({ spriteData }) => {
 export default Match;
 
 export async function getServerSideProps() {
-  //TODO: Should we call all the spritesheets or just the ones the players will need? Unsure how we would know which players are playing what before even loading the match (which right now we do this call before the tRPC call that gets the match data...)
+  //TODO: Should we call all the spritesheets or just the ones the players will need?
+  // Unsure how we would know which players are playing what before even loading the match
+  // (which right now we do this call before the tRPC call that gets the match data...)
   const spriteData = await getJSON(["orange-star", "blue-moon"]);
   return { props: { spriteData } };
 }
