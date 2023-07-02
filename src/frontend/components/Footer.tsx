@@ -31,7 +31,7 @@ export function Footer() {
         ))}
       </nav>
 
-      <nav className="@flex @justify-center @gap-8">
+      {/*<nav className="@flex @justify-center @gap-8">
         {footerLinks2.map((item) => (
           <Link
             className="@h-8"
@@ -43,7 +43,7 @@ export function Footer() {
             <img src={item.imgSrc} alt={item.imgAlt} />
           </Link>
         ))}
-      </nav>
+      </nav>*/}
 
       <p className="@text-center @text-base-p @p-0 @mx-1">
         Advance Wars is (c) 1990-2001 Nintendo and (c) 2001 Intelligent Systems.
