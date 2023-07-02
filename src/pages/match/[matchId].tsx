@@ -73,11 +73,9 @@ const Match = ({ spriteData }) => {
     app.stage.position.set(0, 8);
 
     //let render our specific cursor
-    //TODO: Unsure why does the cursor.gif isnt working as intended... in the IDE it looks static but on windows photos it animates correctly.
-    //TODO: Cursor is pretty big, wish we could make it a bit smaller
-    const awCursor =
-      'url("http://localhost:3000/img/spriteSheet/cursor.gif"),auto';
-    app.renderer.events.cursorStyles.default = awCursor;
+    app.renderer.events.cursorStyles.default = {
+      animation: "gameCursor 1200ms infinite",
+    };
 
     const mapContainer = new Container();
     mapContainer.x = 0;
