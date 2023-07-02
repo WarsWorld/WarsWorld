@@ -1,5 +1,6 @@
 //TODO: Fix TS type issues, TS is getting angry at very complex types
-// Im not going to bother going on rabbit holes to please the TS gods.
+// Im not going to bother going on rabbit holes to please the TS gods
+// and their confusing requests
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
@@ -62,17 +63,20 @@ const Match = ({ spriteData }) => {
   useEffect(() => {
     const app = new Application({
       view: pixiCanvasRef.current,
-      //TODO: Make resolution more responsive (become 1 on mobile, 2 on medium, 3 on big)
-      // also make resolution changeable? as in the press of a button
-      resolution: 2,
+      autoDensity: true,
+      resolution: window.devicePixelRatio,
       backgroundColor: "#3a4817",
       //TODO: The width needs to be = mapData[0].length * 16 + 16, but it seems it errors out if mapData isnt loaded well.
       // However, mapData?.length seems to work well for the height.
-      width: 16 * 50 + 16,
-      height: 32 * mapData?.length + 16,
+      width: 1100,
+      height: 2000,
+      resizeTo: undefined,
     });
-    //8 is half of 16, currently our border half a tile. Needed so mountains and cities display fully at the top.
-    app.stage.position.set(0, 8);
+
+    //TODO: Button with + and - to change the scale of our stage, also needs
+    // to have app.resize() working so we can resize the size of our app.
+    app.stage.scale.set(2.6, 2.6);
+    app.stage.position.set(0, 16);
 
     //let render our specific cursor
     //TODO: Unsure why does the cursor.gif isnt working as intended... in the IDE it looks static but on windows photos it animates correctly.
@@ -80,15 +84,15 @@ const Match = ({ spriteData }) => {
     app.renderer.events.cursorStyles.default =
       'url("http://localhost:3000/img/spriteSheet/cursor.gif"),auto';
 
+    //the container that holds everything
     const mapContainer = new Container();
 
-    //allows for us to use zIndex
+    //allows for us to use zIndex on the children of mapContainer
     mapContainer.sortableChildren = true;
     app.stage.addChild(mapContainer);
 
-    const spriteSheets: Spritesheet[] = [];
-
     //Lets create our spritesheets/map the image with the json!
+    const spriteSheets: Spritesheet[] = [];
     spriteData.countries.forEach((country: string) => {
       const texture = BaseTexture.from(spriteData[country].meta.image);
       const sheet = new Spritesheet(texture, spriteData[country]);
@@ -96,6 +100,7 @@ const Match = ({ spriteData }) => {
       spriteSheets.push(sheet);
     });
 
+    //Lets render our map!
     if (mapData != undefined) {
       let tile;
       mapData.forEach((col, colIndex) => {
@@ -125,15 +130,11 @@ const Match = ({ spriteData }) => {
                     colIndex
                   );
                   //lets make menu dissapear on hover out
-
+                  //TODO: Make menu dissapear if we click somewhere else
                   menu.on("pointerleave", () => {
                     console.log("menu pointerout");
                     const length = mapContainer.children.length;
-
-                    setTimeout(() => {
-                      console.log("timeout");
-                      mapContainer.removeChild(mapContainer.children[length - 1]);
-                    }, 0);
+                    mapContainer.removeChild(mapContainer.children[length - 1]);
                   });
                   mapContainer.addChild(menu);
                 });
@@ -141,8 +142,10 @@ const Match = ({ spriteData }) => {
 
               //TODO: Seems like properties/buildings have different animation speeds...
               // gotta figure out how to make sure all buildings are animated properly
+              // or at least AWBW seems to have different speeds/frames than Daemon's replayer
               tile.animationSpeed = 0.03;
               tile.play();
+              console.log(window.devicePixelRatio);
             }
 
             //NOT A PROPERTY
@@ -155,7 +158,6 @@ const Match = ({ spriteData }) => {
           }
           //makes our sprites render at the bottom, not from the top.
           tile.anchor.set(0.5, 1);
-          //tile.zIndex = (mapData.length - colIndex) * 10;
           tile.x = (rowIndex + 1) * 16;
           tile.y = (colIndex + 1) * 16;
           mapContainer.addChild(tile);
@@ -168,6 +170,7 @@ const Match = ({ spriteData }) => {
     };
   }, [pixiCanvasRef, mapData, spriteData]);
 
+  //Actual return statement for react function
   if (!spriteData) return <h1>Loading...</h1>;
   else {
     return (
@@ -185,6 +188,7 @@ const Match = ({ spriteData }) => {
 };
 export default Match;
 
+//what gets us our spritesheet data
 export async function getServerSideProps() {
   //TODO: Should we call all the spritesheets or just the ones the players will need? Unsure how we would know which players are playing what before even loading the match (which right now we do this call before the tRPC call that gets the match data...)
   const spriteData = await getJSON(["orange-star", "blue-moon"]);
