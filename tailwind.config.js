@@ -18,12 +18,17 @@ module.exports = {
         "match-orange": "#C0601B",
         "bg-match-live": "#432929",
         "match-live-dot": "#B40000",
+        "orange-star": "rgb(208, 64, 56)",
+        "blue-moon": "rgb(70, 110, 254)",
+        "green-earth": "rgb(55, 164, 42)",
+        "yellow-comet": "rgb(218, 165, 32)",
       },
       minWidth: {
         20: "5rem",
       },
     },
     screens: {
+      cellphone: "360px",
       tablet: "480px",
       smallscreen: "768px",
       laptop: "1024px",
