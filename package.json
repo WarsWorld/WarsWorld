@@ -37,6 +37,7 @@
     "endOfLine": "auto"
   },
   "dependencies": {
+    "@pixi/layers": "^2.0.1",
     "@prisma/client": "^4.12.0",
     "@trpc/client": "^10.19.1",
     "@trpc/next": "^10.19.1",
