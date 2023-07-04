@@ -1,37 +1,5 @@
 import { faker } from "@faker-js/faker";
-
-const cos = [
-  "adder",
-  "andy",
-  "colin",
-  "drake",
-  "eagle",
-  "flak",
-  "grimm",
-  "grit",
-  "hachi",
-  "hawke",
-  "jake",
-  "javier",
-  "jess",
-  "jugger",
-  "kanbei",
-  "kindle",
-  "koal",
-  "lash",
-  "max",
-  "nell",
-  "olaf",
-  "rachel",
-  "sami",
-  "sasha",
-  "sensei",
-  "sonja",
-  "sturm",
-  "von-bolt",
-];
-
-const countries = ["blueMoon", "greenEarth", "orangeStar", "yellowComet"];
+import { COEnum, NationEnum } from "frontend/utils/enums";
 
 export type Player = {
   id: string;
@@ -41,7 +9,7 @@ export type Player = {
   rating: number;
   streak: number;
   co: string;
-  country: string;
+  armyNumber: number;
   profileLink: string;
 };
 
@@ -54,7 +22,7 @@ export type PlayerLeaderboard = {
   rating: number;
   streak: number;
   co: string;
-  country: string;
+  armyNumber: number;
   profileLink: string;
 };
 
@@ -69,8 +37,20 @@ const newPlayer = (): Player => {
       (games - wins) * faker.number.int({ min: 1, max: 9 }));
   const rating = ratingCalc <= 0 ? 0 : ratingCalc;
   const streak = rating === 0 ? 0 : faker.number.int({ max: wins });
-  const co = faker.helpers.arrayElement(cos);
-  const country = faker.helpers.arrayElement(countries);
+  const co = faker.helpers.arrayElement(
+    Object.keys(COEnum).filter((item) => {
+      return isNaN(Number(item));
+    })
+  );
+  const armyNumber = Number(
+    faker.helpers.arrayElement(
+      Object.keys(NationEnum)
+        .filter((item) => {
+          return !isNaN(Number(item));
+        })
+        .filter((nation) => nation != "4")
+    )
+  );
   const profileLink = "/";
   return {
     id,
@@ -80,7 +60,7 @@ const newPlayer = (): Player => {
     rating,
     streak,
     co,
-    country,
+    armyNumber,
     profileLink,
   };
 };
@@ -102,7 +82,7 @@ function transformData(data: Player[]): PlayerLeaderboard[] {
         rating: player.rating,
         streak: player.streak,
         co: player.co,
-        country: player.country,
+        armyNumber: player.armyNumber,
         profileLink: player.profileLink,
       };
       return result;

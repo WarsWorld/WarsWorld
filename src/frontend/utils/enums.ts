@@ -46,11 +46,11 @@ export enum NationIconEnum {
 }
 
 export enum NationColorEnum {
-  "orange-star" = "#D04038",
-  "blue-moon" = "#466EFE",
-  "yellow-comet" = "#998D00",
-  "green-earth" = "#37A42A",
-  "black-hole" = "#000000",
+  "orange-star" = "orange-star",
+  "blue-moon" = "blue-moon",
+  "yellow-comet" = "yellow-comet",
+  "green-earth" = "green-earth",
+  "black-hole" = "black-hole",
 }
 
 export enum MatchType {

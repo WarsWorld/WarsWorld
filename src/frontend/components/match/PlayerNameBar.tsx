@@ -67,8 +67,7 @@ export default function PlayerNameBar({
       }`}
     >
       <div
-        className="@flex @items-center @justify-between"
-        style={{ background: `${NationColorEnum[armyString]}` }}
+        className={`@flex @items-center @justify-between @bg-${NationColorEnum[armyString]}`}
       >
         {isLeftIcon && (
           <div className="@flex">

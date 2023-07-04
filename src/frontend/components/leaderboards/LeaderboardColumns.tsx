@@ -1,5 +1,7 @@
 import { PlayerLeaderboard } from "./LeaderboardData";
 import { createColumnHelper } from "@tanstack/react-table";
+import { NationEnum, NationIconEnum } from "frontend/utils/enums";
+import { Army } from "server/schemas/army";
 
 const columnHelper = createColumnHelper<PlayerLeaderboard>();
 
@@ -19,8 +21,10 @@ export const columns = [
       <div className="@w-auto @flex @space-x-2 smallscreen:@space-x-4">
         <img
           className="@w-auto @h-4 smallscreen:@h-6 @bg-white"
-          src={`img/nations/${row.country}.webp`}
-          alt={row.country}
+          src={`img/nations/${
+            NationIconEnum[NationEnum[row.armyNumber] as Army]
+          }.webp`}
+          alt={NationEnum[row.armyNumber]}
         />
         <a
           className="@p-0 @m-0 @text-white hover:@text-primary"
