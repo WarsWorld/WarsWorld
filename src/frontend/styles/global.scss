@@ -15,7 +15,6 @@
     background-color: rgba(0, 0, 0, 0.7);
 
     background-image: url("/img/layout/wwbg.jpg");
-
   }
 
   h1 {
@@ -41,7 +40,6 @@
     padding: 0.25rem 0;
     font-weight: 400;
   }
-
 
   .btn {
     @include m.clampSize(12, 16, 320, 1200);
@@ -75,5 +73,44 @@
 @layer components {
   .pixelated {
     image-rendering: pixelated;
+  }
+}
+
+@keyframes gameCursor {
+  0% {
+    cursor: url("../../../public/img/cursor/frame_00.png"), auto;
+  }
+  9% {
+    cursor: url("../../../public/img/cursor/frame_01.png"), auto;
+  }
+  18% {
+    cursor: url("../../../public/img/cursor/frame_02.png"), auto;
+  }
+  27% {
+    cursor: url("../../../public/img/cursor/frame_03.png"), auto;
+  }
+  36% {
+    cursor: url("../../../public/img/cursor/frame_04.png"), auto;
+  }
+  45% {
+    cursor: url("../../../public/img/cursor/frame_05.png"), auto;
+  }
+  54% {
+    cursor: url("../../../public/img/cursor/frame_06.png"), auto;
+  }
+  63% {
+    cursor: url("../../../public/img/cursor/frame_07.png"), auto;
+  }
+  72% {
+    cursor: url("../../../public/img/cursor/frame_08.png"), auto;
+  }
+  81% {
+    cursor: url("../../../public/img/cursor/frame_09.png"), auto;
+  }
+  90% {
+    cursor: url("../../../public/img/cursor/frame_10.png"), auto;
+  }
+  100% {
+    cursor: url("../../../public/img/cursor/frame_05.png"), auto;
   }
 }

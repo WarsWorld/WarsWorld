@@ -65,10 +65,10 @@ const Match = ({ spriteData }) => {
       view: pixiCanvasRef.current,
       autoDensity: true,
       resolution: window.devicePixelRatio,
-      backgroundColor: "#3a4817",
+      backgroundColor: "#061838",
       //TODO: The width needs to be = mapData[0].length * 16 + 16, but it seems it errors out if mapData isnt loaded well.
       // However, mapData?.length seems to work well for the height.
-      width: 1100,
+      width: 1400,
       height: 2000,
       resizeTo: undefined,
     });
@@ -79,11 +79,10 @@ const Match = ({ spriteData }) => {
     app.stage.position.set(0, 16);
 
     //let render our specific cursor
-    //TODO: Unsure why does the cursor.gif isnt working as intended... in the IDE it looks static but on windows photos it animates correctly.
-    //TODO: Cursor is pretty big, wish we could make it a bit smaller
-    app.renderer.events.cursorStyles.default =
-      'url("http://localhost:3000/img/spriteSheet/cursor.gif"),auto';
-
+    //TODO: Cursor stops working on half screen?
+    app.renderer.events.cursorStyles.default = {
+      animation: "gameCursor 1200ms infinite",
+    };
     //the container that holds everything
     const mapContainer = new Container();
 
@@ -188,9 +187,11 @@ const Match = ({ spriteData }) => {
 };
 export default Match;
 
-//what gets us our spritesheet data
+
 export async function getServerSideProps() {
-  //TODO: Should we call all the spritesheets or just the ones the players will need? Unsure how we would know which players are playing what before even loading the match (which right now we do this call before the tRPC call that gets the match data...)
+  //TODO: Should we call all the spritesheets or just the ones the players will need?
+  // Unsure how we would know which players are playing what before even loading the match
+  // (which right now we do this call before the tRPC call that gets the match data...)
   const spriteData = await getJSON(["orange-star", "blue-moon"]);
   return { props: { spriteData } };
 }

@@ -30,10 +30,10 @@ export default function YourMatches() {
             <h1>Your matches</h1>
             <h1>Hello dev! Read Instructions</h1>
             <p>
-              To create a match, first change "current player" to any other
+              To create a match, first change Current Player to any other
               player.
               <br />
-              Then click on "create game" and then on "enter match"
+              Then click on Create Game and then on Enter Match
             </p>
 
             <br />

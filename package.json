@@ -38,6 +38,8 @@
   },
   "dependencies": {
     "@prisma/client": "^4.12.0",
+    "@react-hook/window-size": "^3.1.1",
+    "@tanstack/react-table": "^8.9.2",
     "@trpc/client": "^10.19.1",
     "@trpc/next": "^10.19.1",
     "@trpc/server": "^10.19.1",
@@ -45,7 +47,7 @@
     "next": "^13.4.4",
     "next-auth": "^4.14.0",
     "pixi.js": "^7.2.4",
-    "prisma-json-types-generator": "^2.3.1",
+    "prisma-json-types-generator": "^2.5.0",
     "react": "^18.2.0",
     "remark": "^14.0.3",
     "remark-html": "^15.0.2",
@@ -56,9 +58,10 @@
     "zod": "^3.0.0"
   },
   "devDependencies": {
+    "@faker-js/faker": "^8.0.2",
     "@types/node": "^18.7.20",
     "@types/react": "^18.0.9",
-    "@types/uuid": "^9.0.1",
+    "@types/uuid": "^9.0.2",
     "@types/ws": "^8.2.0",
     "@typescript-eslint/eslint-plugin": "^5.47.0",
     "@typescript-eslint/parser": "^5.47.0",

@@ -1,8 +1,6 @@
 import Banner from "../../frontend/components/layout/Banner";
 import SmallContainer from "../../frontend/components/layout/SmallContainer";
 import ThreeLinesText from "../../frontend/components/layout/ThreeLinesText";
-import { mockSession } from "next-auth/client/__tests__/helpers/mocks";
-import image = mockSession.user.image;
 
 const homePageCards = [
   {

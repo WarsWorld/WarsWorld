@@ -21,7 +21,7 @@ export default function ThreeLinesText(props: {
   }
 
   return (
-    <div className="@text-center @py-10">
+    <div className="@text-center @pt-10 @pb-6">
       <h2>{props.subtitle}</h2>
       <h1>
         <strong>{props.title}</strong>
