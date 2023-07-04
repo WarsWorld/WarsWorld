@@ -29,28 +29,13 @@ export enum COEnum {
   "von-bolt",
 }
 
+// use this enum for nation colors, icons, etc.
 export enum NationEnum {
   "orange-star",
   "blue-moon",
   "yellow-comet",
   "green-earth",
   "black-hole",
-}
-
-export enum NationIconEnum {
-  "orange-star" = "orangeStar",
-  "blue-moon" = "blueMoon",
-  "yellow-comet" = "yellowComet",
-  "green-earth" = "greenEarth",
-  "black-hole" = "blackHole",
-}
-
-export enum NationColorEnum {
-  "orange-star" = "orange-star",
-  "blue-moon" = "blue-moon",
-  "yellow-comet" = "yellow-comet",
-  "green-earth" = "green-earth",
-  "black-hole" = "black-hole",
 }
 
 export enum MatchType {
