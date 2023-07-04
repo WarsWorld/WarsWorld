@@ -8,7 +8,7 @@ import {
   SCALE_MODES,
   Sprite,
   Texture,
-} from "pixijs";
+} from "pixi.js";
 import { useEffect, useRef, useState } from "react";
 import { PlayerInMatch } from "shared/types/server-match-state";
 import { trpc } from "frontend/utils/trpc-client";
