@@ -56,7 +56,9 @@ Ignore it, just re-run npm initialise.
 
 # Where is the database? How can we see it?
 
-To see the contents of the db all you need to is run ```prisma studio``` or ```npm run prisma:studio```, this should immediatly send you to localhost:5555 and show you the database!
+To see the contents of the db all you need to is run ```prisma studio``` or ```npm run prisma:studio```, this should immediatly send you to localhost:5555 and show you the database! 
+
+If you can't see it, it might be due to your Docker Desktop not working/not being initialised correctly (npm run initialise).
 
 ![image](https://github.com/WarsWorld/WarsWorld/assets/96269542/e6cd369a-026a-4f65-b2fa-c8fb7752ab1a)
 ## Our Tech Stack's Features
