@@ -42,7 +42,9 @@ export default function DataTable({ table, hasFooter = false }: Props) {
                 className="@p-2 smallscreen:@p-3 smallscreen:@pl-4 @text-center"
                 key={cell.id}
               >
-                {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                <div className="@px-1 @text-[0.75em] smallscreen:@text-[1em] monitor:@text-[1.35em] large_monitor:@text-[1.5em]">
+                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                </div>
               </td>
             ))}
           </tr>

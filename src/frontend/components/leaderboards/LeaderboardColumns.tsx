@@ -9,25 +9,25 @@ export const columns = [
   columnHelper.accessor("rank", {
     id: "Rank",
     header: () => "Rank",
-    cell: (info) => <p className="@px-1">{info.getValue()}</p>,
+    cell: (info) => info.getValue(),
   }),
   columnHelper.accessor("rating", {
     id: "Rating",
     header: () => "Rating",
-    cell: (info) => <p className="@px-1">{info.getValue()}</p>,
+    cell: (info) => info.getValue(),
   }),
   columnHelper.accessor(
     (row) => (
-      <div className="@w-auto @flex @space-x-2 smallscreen:@space-x-4">
+      <div className="@flex @space-x-2 smallscreen:@space-x-4">
         <img
-          className="@w-auto @h-4 smallscreen:@h-6 @bg-white"
+          className="@w-auto @h-4 smallscreen:@h-6 monitor:@h-8 @bg-white"
           src={`img/nations/${
             NationIconEnum[NationEnum[row.armyNumber] as Army]
           }.webp`}
           alt={NationEnum[row.armyNumber]}
         />
         <a
-          className="@p-0 @m-0 @text-white hover:@text-primary"
+          className="@p-0 @m-0 @text-white hover:@text-primary @text-[1em]"
           href={row.profileLink}
         >
           {row.name}
