@@ -47,7 +47,9 @@ export default function PlayerCard({
           </div>
           <div className="@flex @absolute @bottom-0 @w-full @h-6 smallscreen:@h-8 laptop:@h-10 large_monitor:@h-16 @bg-white">
             <div
-              className={`@flex @w-full @h-full @items-center @justify-center @bg-${armyString}`}
+              className={`@flex @w-full @h-full @items-center @justify-center ${
+                "@bg-" + armyString
+              }`}
             >
               <h4 className="@font-medium @text-[0.7em] smallscreen:@text-[0.85em] large_monitor:@text-[1.1em]">
                 {name}

@@ -40,5 +40,11 @@ module.exports = {
       medium: { raw: "(min-height: 700px)" },
     },
   },
+  safelist: [
+    {
+      pattern:
+        /(bg|border|text)-(orange-star|blue-moon|green-earth|yellow-comet)/,
+    },
+  ],
   plugins: [],
 };

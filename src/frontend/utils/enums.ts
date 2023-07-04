@@ -30,6 +30,9 @@ export enum COEnum {
 }
 
 // use this enum for nation colors, icons, etc.
+// @bg-orange-star
+// @text-orange-star
+// orange-star-icon.webp
 export enum NationEnum {
   "orange-star",
   "blue-moon",
