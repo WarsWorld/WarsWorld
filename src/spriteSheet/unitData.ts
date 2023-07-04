@@ -1,6 +1,19 @@
-export default function unitData(unitIndex: number, returnData: string) {
+interface UnitData {
+  name: string;
+  menuName: string;
+  cost: number;
+  move: number;
+  moveType: string;
+  range: number[];
+  facility: string;
+}
+
+export default function unitData(
+  unitIndex: number,
+  returnData: string
+): UnitData[] {
   // Here are our units, their names, menu name, cost, move, move type, etc
-  const landData = [
+  const landData: UnitData[] = [
     {
       name: "infantry",
       menuName: "Infantry",
@@ -120,7 +133,7 @@ export default function unitData(unitIndex: number, returnData: string) {
     },
   ];
 
-  const airData = [
+  const airData: UnitData[] = [
     {
       name: "tcopter",
       menuName: "T-Copter",
@@ -176,7 +189,7 @@ export default function unitData(unitIndex: number, returnData: string) {
       facility: "airport",
     },
   ];
-  const seaData = [
+  const seaData: UnitData[] = [
     {
       name: "blackBoat",
       menuName: "Black Boat",
@@ -233,11 +246,13 @@ export default function unitData(unitIndex: number, returnData: string) {
     },
   ];
   //if we specify a unit index, we just get the unit.
-if (unitIndex >= 0){
-  if (returnData === "base") return landData[unitIndex];
-  else if (returnData === "airport") return airData[unitIndex];
-  else return seaData[unitIndex];
-}else if (returnData === "base") return landData;
+  if (unitIndex >= 0) {
+    if (returnData === "base")
+      return landData.filter((_, idx) => idx === unitIndex);
+    else if (returnData === "airport")
+      return airData.filter((_, idx) => idx === unitIndex);
+    else return seaData.filter((_, idx) => idx === unitIndex);
+  } else if (returnData === "base") return landData;
   else if (returnData === "airport") return airData;
   else return seaData;
 }
