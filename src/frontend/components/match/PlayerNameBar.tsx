@@ -1,9 +1,4 @@
-import {
-  NationColorEnum,
-  NationEnum,
-  NationIconEnum,
-  SideEnum,
-} from "frontend/utils/enums";
+import { NationEnum, SideEnum } from "frontend/utils/enums";
 import React from "react";
 import { Army } from "server/schemas/army";
 import { CO } from "server/schemas/co";
@@ -42,7 +37,7 @@ export default function PlayerNameBar({
     <div className={`@flex @flex-col @w-[32px] @h-[32px]`}>
       <img
         className={`@h-8 @bg-white @mx-auto ${borderStyle} @border-b-2 @border-gray-400`}
-        src={`/img/nations/${NationIconEnum[armyString]}.webp`}
+        src={`/img/nations/${armyString}-icon.webp`}
       />
     </div>
   );
@@ -66,10 +61,7 @@ export default function PlayerNameBar({
         multi ? "smallscreen:@w-[80%]" : "smallscreen:@w-[40%]"
       }`}
     >
-      <div
-        className="@flex @items-center @justify-between"
-        style={{ background: `${NationColorEnum[armyString]}` }}
-      >
+      <div className={`@flex @items-center @justify-between @bg-${armyString}`}>
         {isLeftIcon && (
           <div className="@flex">
             {coDiv}

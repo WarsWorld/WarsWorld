@@ -29,28 +29,16 @@ export enum COEnum {
   "von-bolt",
 }
 
+// use this enum for nation colors, icons, etc.
+// @bg-orange-star
+// @text-orange-star
+// orange-star-icon.webp
 export enum NationEnum {
   "orange-star",
   "blue-moon",
   "yellow-comet",
   "green-earth",
   "black-hole",
-}
-
-export enum NationIconEnum {
-  "orange-star" = "orangeStar",
-  "blue-moon" = "blueMoon",
-  "yellow-comet" = "yellowComet",
-  "green-earth" = "greenEarth",
-  "black-hole" = "blackHole",
-}
-
-export enum NationColorEnum {
-  "orange-star" = "#D04038",
-  "blue-moon" = "#466EFE",
-  "yellow-comet" = "#998D00",
-  "green-earth" = "#37A42A",
-  "black-hole" = "#000000",
 }
 
 export enum MatchType {

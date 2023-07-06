@@ -19,9 +19,9 @@ export default function IndexPage() {
   });
 
   return (
-    <div className="@flex @flex-col @w-[100vw] @items-center @justify-center">
+    <div className="@flex @flex-col @w-full @items-center @justify-center">
       <Head>
-        <title>Leaderboards</title>
+        <title>Leaderboards | Wars World</title>
       </Head>
 
       <ThreeLinesText
