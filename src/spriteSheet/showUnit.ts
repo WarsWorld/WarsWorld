@@ -1,7 +1,7 @@
 import { AnimatedSprite, Container, Spritesheet } from "pixi.js";
 import { CreatableUnit } from "../server/schemas/unit";
 import { Tile } from "../server/schemas/tile";
-import { showPassableTiles } from "./showPathing";
+import {showAttackableTiles, showPassableTiles} from "./showPathing";
 
 export function getUnitSprite(
   spriteSheet: Spritesheet,
@@ -29,26 +29,29 @@ export function showUnits(
 
   for (const unit of units) {
     const unitContainer = new Container();
-    console.log(spriteSheets.length);
-    console.log(unit.playerSlot);
-    console.log("amogus");
     unitContainer.addChild(getUnitSprite(spriteSheets[unit.playerSlot], unit));
 
     //if own unit, moved, etc, has different behaviour
 
     unitContainer.eventMode = "static";
-    //Lets make menu appear
-    unitContainer.on("pointerdown", async () => {
-      console.log("touched a unit!");
-      const passableTiles = await showPassableTiles(mapData, unit);
-      mapContainer.addChild(passableTiles);
-      //lets make menu dissapear on hover out
-      //TODO: Make menu dissapear if we click somewhere else
-      unitContainer.on("pointerleave", () => {
-        console.log("unit pointerout");
-        mapContainer.removeChild(passableTiles);
+    if (unit.playerSlot == 0) { //TODO: own team's unit checker
+      //check if waited or not
+      //if ready, then start the create path procedure
+    }
+    else {
+      let isNextAttack = false; //alternate between showing movement and attacking tiles
+      unitContainer.on("pointerdown", async () => {
+        let tilesShown: Container;
+        if (isNextAttack) tilesShown = await showAttackableTiles(mapData, unit);
+        else tilesShown = await showPassableTiles(mapData, unit);
+        isNextAttack = !isNextAttack;
+        mapContainer.addChild(tilesShown);
+        onpointerup = () => {
+          //make menu disappear when releasing click
+          mapContainer.removeChild(tilesShown);
+        };
       });
-    });
+    }
 
     mapContainer.addChild(unitContainer);
   }

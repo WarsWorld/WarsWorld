@@ -150,6 +150,56 @@ function getAttackableTiles(
   return attackCoords;
 }
 
+//TODO COMPLETELY UNTESTED!!
+export async function updatePath(
+  mapData: Tile[][],
+  weather: Weather,
+  movePoints: number,
+  moveType: MovementType,
+  accessibleNodes: Map<Coord, Node>,
+  path: Node[],
+  newPos: Coord
+): Node[] {
+  if (!accessibleNodes.has(newPos))
+    throw new Error("Trying to add an unreachable position!");
+  if (path.length !== 0) {
+    const lastNode = path[path.length - 1];
+
+    for (const node of path) {
+      if (node.pos === newPos) { //the "new" node is part of the current path, so delete all nodes after that one
+        while (node !== path[path.length - 1]) path.pop();
+        return path;
+      }
+    }
+
+    //check if new node is adjacent
+    if (Math.abs(lastNode.pos.x - newPos.x) + Math.abs(lastNode.pos.y - newPos.y) == 1) {
+      const tileDist = getMovementCost(
+        mapData[newPos.x][newpos.y].type,
+        moveType,
+        weather
+      );
+      //if it doesn't surpass movement restrictions, update current path
+      if (tileDist + lastNode.dist <= movePoints) {
+        return path.push({
+          pos: newPos,
+          dist: tileDist + lastNode.dist,
+          parent: lastNode.pos,
+        });
+      }
+    }
+  }
+
+  //if the new position can't be added to the current path, recreate the entire path
+  const newPath: Node[] = [];
+  let currentPos = newPos;
+  do {
+    newPath.push(accessibleNodes[currentPos]);
+    currentPos = accessibleNodes[currentPos].parent;
+  } while (currentPos != unit.position); //TODO does that work?
+  return newPath.reverse();
+}
+
 export async function showPassableTiles(
   mapData: Tile[][],
   unit: CreatableUnit
