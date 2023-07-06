@@ -1,8 +1,3 @@
-//TODO: Fix TS type issues, TS is getting angry at some simple issue about strings?
-
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-nocheck
-
 import path from "path";
 import { promises as fs } from "fs";
 
@@ -12,7 +7,7 @@ export default async function getJSON(countryNames: string[]) {
   //Find the absolute path of the json directory
 
   const jsonDirectory = path.join(process.cwd(), "public/img/spriteSheet");
-  const spriteSheets = { countries: [] };
+  const spriteSheets: { [key: string]: string[] } = { countries: [] };
   for (const country of countryNames) {
     //Read the json data file data.json
     const fileData = await fs.readFile(
