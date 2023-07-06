@@ -7,6 +7,8 @@
 import { usePlayers } from "frontend/context/players";
 import { Tile } from "server/schemas/tile";
 import { useRouter } from "next/router";
+import { CreatableUnit } from "../../server/schemas/unit";
+
 import {
   AnimatedSprite,
   Application,
@@ -22,6 +24,8 @@ import { PlayerInMatch } from "shared/types/server-match-state";
 import { trpc } from "frontend/utils/trpc-client";
 import getJSON from "../../spriteSheet/getJSON";
 import showMenu from "../../spriteSheet/showMenu";
+import { showUnits } from "../../spriteSheet/showUnit";
+import { demoUnits } from "../../spriteSheet/demoUnitList";
 
 BaseTexture.defaultOptions.scaleMode = SCALE_MODES.NEAREST;
 
@@ -162,6 +166,9 @@ const Match = ({ spriteData }) => {
           mapContainer.addChild(tile);
         });
       });
+
+      const units = showUnits(spriteSheets, mapData, demoUnits);
+      mapContainer.addChild(units);
     }
     console.log(mapData);
     return () => {
@@ -186,7 +193,6 @@ const Match = ({ spriteData }) => {
   }
 };
 export default Match;
-
 
 export async function getServerSideProps() {
   //TODO: Should we call all the spritesheets or just the ones the players will need?
