@@ -79,7 +79,7 @@ const Match = ({ spriteData }) => {
     //TODO: Button with + and - to change the scale of our stage, also needs
     // to have app.resize() working so we can resize the size of our app.
     app.stage.scale.set(2.6, 2.6);
-    app.stage.position.set(0, 0);
+    app.stage.position.set(0, 30);
 
     //let render our specific cursor
     //TODO: Cursor stops working on half screen?
@@ -124,13 +124,13 @@ const Match = ({ spriteData }) => {
                 tile.eventMode = "static";
                 //Lets make menu appear
                 tile.on("pointerdown", async () => {
-                  console.log("touched an action tile!");
                   const menu = await showMenu(
                     spriteSheets[slot],
                     type,
                     slot,
                     rowIndex,
-                    colIndex
+                    colIndex,
+                    mapData.length - 1,
                   );
 
                   //if there is a menu already out, lets rempove it
@@ -161,7 +161,6 @@ const Match = ({ spriteData }) => {
               // or at least AWBW seems to have different speeds/frames than Daemon's replayer
               tile.animationSpeed = 0.04;
               tile.play();
-              console.log(window.devicePixelRatio);
             }
 
             //NOT A PROPERTY
