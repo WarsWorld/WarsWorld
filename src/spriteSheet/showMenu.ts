@@ -19,6 +19,10 @@ export default async function showMenu(
   x: number,
   y: number
 ) {
+  //TODO: Gotta add a "funds" value to our parameters
+  // from there, include it here and any unit above our funds,
+  // will be darkened out.
+
   //The big container holding everything
   //set its eventmode to static for interactivity and sortable for zIndex
   const menuContainer = new Container();
@@ -47,6 +51,8 @@ export default async function showMenu(
     unitSprite.animationSpeed = 0.07;
     // try to make it "centered"
     unitSprite.anchor.set(-0.2, -0.2);
+    unitSprite.tint = "rgb(255,255,255)";
+
     unitSprite.play();
 
     const unitName = new BitmapText(`${unit.menuName}`, {
@@ -77,14 +83,12 @@ export default async function showMenu(
     //This will make ALL unitBGs change tint, even the ones on another menuElement
     menuElement.on("pointerenter", () => {
       unitBG.tint = "#ffffff";
-      unitSprite.textures = spriteSheet.animations[unit.name + "_mdown"];
-      unitSprite.play();
+      unitSprite.tint = "rgb(215,215,215)";
     });
 
     menuElement.on("pointerleave", () => {
       unitBG.tint = "#d3d3d3";
-      unitSprite.textures = spriteSheet.animations[unit.name];
-      unitSprite.play();
+      unitSprite.tint = "rgb(255,255,255)";
     });
 
     menuElement.addChild(unitBG);
@@ -104,7 +108,8 @@ export default async function showMenu(
   outerBorder.height = (unitInfo.length - 1) * 15.5;
   outerBorder.zIndex = -1;
   menuContainer.addChild(outerBorder);
-  menuContainer.x = x * 16 + 15;
+  menuContainer.x = x * 16 + 24;
   menuContainer.y = y * 16;
+  menuContainer.name = "menu";
   return menuContainer;
 }
