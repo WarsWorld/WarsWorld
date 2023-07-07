@@ -21,8 +21,10 @@ import { useEffect, useRef, useState } from "react";
 import { PlayerInMatch } from "shared/types/server-match-state";
 
 import { trpc } from "frontend/utils/trpc-client";
-import getJSON from "../../spriteSheet/getJSON";
-import showMenu from "../../spriteSheet/showMenu";
+import getJSON from "../../gameFunction/getJSON";
+import showMenu from "../../gameFunction/showMenu";
+import spriteConstructor from "../../gameFunction/spriteConstructor";
+import plusMinusButtons from "../../gameFunction/components/plusMinusButtons";
 
 BaseTexture.defaultOptions.scaleMode = SCALE_MODES.NEAREST;
 
@@ -71,28 +73,28 @@ const Match = ({ spriteData }) => {
       //TODO: I'd like our app to be the size of the map, not bigger or smaller.
       // The width needs to be = mapData[0].length * 16 + 16, but it seems it errors out if mapData isnt loaded well.
       // However, mapData?.length seems to work well for the height.
-      width: window.outerWidth * 0.975,
-      height: window.outerHeight * 0.975,
-      resizeTo: undefined,
-    });
 
-    //TODO: Button with + and - to change the scale of our stage, also needs
-    // to have app.resize() working so we can resize the size of our app.
-    app.stage.scale.set(2.6, 2.6);
-    app.stage.position.set(0, 30);
+      resizeTo: window,
+    });
+    app.stage.position.set(0, 0);
+    app.stage.sortableChildren = true;
 
     //let render our specific cursor
-    //TODO: Cursor stops working on half screen?
+    //TODO: Cursor stops working on half screen on google chrome (works on firefox).
     app.renderer.events.cursorStyles.default = {
       animation: "gameCursor 1200ms infinite",
     };
     //the container that holds everything
     const mapContainer = new Container();
-    mapContainer.x = 8;
-    mapContainer.y = 16;
+    mapContainer.x = 32;
+    mapContainer.y = 48;
+
     //allows for us to use zIndex on the children of mapContainer
     mapContainer.sortableChildren = true;
+    mapContainer.scale.set(2, 2);
     app.stage.addChild(mapContainer);
+    //lets add our buttons
+    app.stage.addChild(plusMinusButtons(mapContainer));
 
     //Lets create our spritesheets/map the image with the json!
     const spriteSheets: Spritesheet[] = [];
@@ -130,23 +132,26 @@ const Match = ({ spriteData }) => {
                     slot,
                     rowIndex,
                     colIndex,
-                    mapData.length - 1,
+                    mapData.length - 1
                   );
 
-                  //if there is a menu already out, lets rempove it
+                  //if there is a menu already out, lets remove it
                   mapContainer.removeChild(mapContainer.getChildByName("menu"));
 
                   //lets create a transparent screen that covers everything.
                   // if we click on it, we will delete the menu
                   // therefore, achieving a quick way to delete menu if we click out of it
-                  const emptyScreen = new Sprite(Texture.WHITE);
-                  emptyScreen.x = 0;
-                  emptyScreen.y = 0;
+                  const emptyScreen = spriteConstructor(
+                    Texture.WHITE,
+                    0,
+                    0,
+                    app.stage.width,
+                    app.stage.height,
+                    "static",
+                    -1
+                  );
                   emptyScreen.alpha = 0;
-                  emptyScreen.width = app.stage.width;
-                  emptyScreen.height = app.stage.height;
-                  emptyScreen.zIndex = -1;
-                  emptyScreen.eventMode = "static";
+
                   emptyScreen.on("click", (event) => {
                     mapContainer.removeChild(menu);
                     mapContainer.removeChild(emptyScreen);
