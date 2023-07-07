@@ -22,6 +22,9 @@ export default async function getJSON(countryNames: string[]) {
   spriteSheets["neutral"] = JSON.parse(fileData);
   spriteSheets.countries.push("neutral");
 
+  const arrowData = await fs.readFile(jsonDirectory + `/arrow.json`, "utf8");
+  spriteSheets["arrow"] = JSON.parse(arrowData); //considering arrows as a "country" as well
+  spriteSheets.countries.push("arrow");
   //Return the content of the data file in json format
   return spriteSheets;
 }

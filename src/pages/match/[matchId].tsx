@@ -7,7 +7,6 @@
 import { usePlayers } from "frontend/context/players";
 import { Tile } from "server/schemas/tile";
 import { useRouter } from "next/router";
-import { CreatableUnit } from "../../server/schemas/unit";
 
 import {
   AnimatedSprite,
@@ -168,6 +167,9 @@ const Match = ({ spriteData }) => {
       });
 
       const units = showUnits(spriteSheets, mapData, demoUnits);
+      console.log("aa");
+      console.log(units);
+      console.log(mapContainer);
       mapContainer.addChild(units);
     }
     console.log(mapData);
