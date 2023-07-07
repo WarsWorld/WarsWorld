@@ -8,7 +8,6 @@ import {
 import { CreatableUnit } from "../server/schemas/unit";
 import { Tile } from "../server/schemas/tile";
 import {
-  Coord,
   getAccessibleNodes,
   PathNode,
   showAttackableTiles,
@@ -38,24 +37,22 @@ export function showUnits(
   spriteSheets: Spritesheet[],
   mapData: Tile[][],
   units: CreatableUnit[]
-) {
+): Container {
   const mapContainer = new Container();
   mapContainer.eventMode = "static";
 
   for (const unit of units) {
     const unitContainer = new Container();
     unitContainer.addChild(getUnitSprite(spriteSheets[unit.playerSlot], unit));
-
-    //if own unit, moved, etc, has different behaviour
-
     unitContainer.eventMode = "static";
+
     if (unit.playerSlot == 0) {
       //TODO: own team's unit checker
       //check if waited or not
-      //if ready, then start the create path procedure
+      //if ready, then start the create path procedure TODO: (supposing now that all are ready)
       unitContainer.on("pointerdown", async () => {
 
-        //display path
+        //path display initialization
         let path: PathNode[] = [];
         path.push({
           //original node
@@ -77,7 +74,9 @@ export function showUnits(
           unit.position[1]
         );
 
+        //put elements in "layers", in order
         //so that the arrows don't cover the interactive tiles. maybe there's a better way to solve this issue
+        //TODO: probably can be done with a LOT less Containers xd
         const layeredContainer = new Container();
         const tileLayer = new Container();
         const pathLayer = new Container();
@@ -89,10 +88,12 @@ export function showUnits(
         layeredContainer.addChild(interactiveLayer);
         mapContainer.addChild(layeredContainer);
 
+        //create the visual passable tiles layer and the unit sprite layer
         const tilesShown = await showPassableTiles(mapData, unit, accessibleNodes);
         tileLayer.addChild(tilesShown);
         unitLayer.addChild(getUnitSprite(spriteSheets[unit.playerSlot], unit)); //animation not synced with original sprite!
 
+        //create the interactive, transparent tiles layer
         const tilesInteract = new Container();
         for (const [pos, node] of accessibleNodes.entries()) {
           //Transparent squares, interactive, on top of everything
@@ -106,9 +107,7 @@ export function showUnits(
           square.tint = "#000000";
           square.blendMode = 1; //blend mode Add
 
-          //mouseupoutside <- ?
           square.on("pointerover", async () => {
-            console.log(pos);
             path = updatePath(
               mapData,
               "clear",
@@ -118,7 +117,7 @@ export function showUnits(
               path,
               pos
             );
-            //update path display
+            //update path display layer
             currentPathDisplay = showPath(
               spriteSheets[spriteSheets.length - 1],
               path
@@ -127,15 +126,17 @@ export function showUnits(
             pathLayer.addChild(currentPathDisplay);
           });
           square.on("pointerup", async () => {
-            //remove everything
+            //This means a path has been selected (need to change "condition" for that), so remove everything
             mapContainer.removeChild(layeredContainer);
           });
+          //add the interactive square to the interactive tiles container
           tilesInteract.addChild(square);
         }
+        //add the interactive tiles container into the interactive tiles layer
         interactiveLayer.addChild(tilesInteract);
       });
 
-    } else {
+    } else { //unit is NOT in "your" team
       let isNextAttack = false; //alternate between showing movement and attacking tiles
       unitContainer.on("pointerdown", async () => {
         let tilesShown: Container;
@@ -144,7 +145,8 @@ export function showUnits(
         isNextAttack = !isNextAttack;
         mapContainer.addChild(tilesShown);
         onpointerup = () => {
-          //TODO i think this gets executed even if it's not "active"?
+          //TODO i think this gets executed even if it's not "active"? aka this next line is executed every time there's a pointerup
+          //TODO  not only when there's already a container active with this code inside.
           //make menu disappear when releasing click
           mapContainer.removeChild(tilesShown);
         };

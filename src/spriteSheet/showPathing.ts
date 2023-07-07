@@ -107,11 +107,8 @@ export async function showPassableTiles(
 ): Container {
   const unitProperties = unitPropertiesMap[unit.type];
 
-  //The big container holding everything
-  //set its eventmode to static for interactivity and sortable for zIndex
   const markedTiles = new Container();
   markedTiles.eventMode = "static";
-  //markedTiles.sortableChildren = true; ?
 
   if (accessibleNodes === undefined) {
     accessibleNodes = getAccessibleNodes(
@@ -124,6 +121,7 @@ export async function showPassableTiles(
     );
   }
 
+  //add squares one by one
   for (const [pos, node] of accessibleNodes.entries()) {
     const square = new Sprite(Texture.WHITE);
     square.anchor.set(0.5, 1); //?
@@ -132,7 +130,6 @@ export async function showPassableTiles(
     square.width = 16;
     square.height = 16;
     square.eventMode = "static";
-    //square.tint = "#1000" + (16 + value.dist*30).toString(16);
     square.tint = "#80FF80";
     square.blendMode = 2; //blend mode Multiply ?
 
@@ -199,11 +196,8 @@ export async function showAttackableTiles(
 ): Container {
   const unitProperties = unitPropertiesMap[unit.type];
 
-  //The big container holding everything
-  //set its eventmode to static for interactivity and sortable for zIndex
   const markedTiles = new Container();
   markedTiles.eventMode = "static";
-  //markedTiles.sortableChildren = true; ?
 
   if (attackableTiles === undefined) {
     attackableTiles = getAttackableTiles(
@@ -224,7 +218,6 @@ export async function showAttackableTiles(
     square.width = 16;
     square.height = 16;
     square.eventMode = "static";
-    //square.tint = "#1000" + (16 + value.dist*30).toString(16);
     square.tint = "#FF8080";
     square.blendMode = 2; //blend mode Multiply ?
 
@@ -234,7 +227,6 @@ export async function showAttackableTiles(
   return markedTiles;
 }
 
-//TODO COMPLETELY UNTESTED!!
 export function updatePath(
   mapData: Tile[][],
   weather: Weather,
@@ -286,7 +278,7 @@ export function updatePath(
   while (currentPos !== null) {
     newPath.push(accessibleNodes.get(currentPos));
     currentPos = accessibleNodes.get(currentPos).parent;
-  } //TODO does that work?
+  }
   return newPath.reverse();
 }
 
@@ -332,11 +324,11 @@ export function showPath(spriteSheet: Spritesheet, path: PathNode[]) {
 
   const len = path.length;
   const path2 = [...path];
-  path2.push(path[len - 1]);
+  path2.push(path[len - 1]); //to detect the final node
 
   for (let i = 0; i < len; ++i) {
     let spriteName: string;
-    if (i === 0)
+    if (i === 0) //special case for original node
       spriteName = getSpriteName(path2[0].pos, path2[i].pos, path2[i + 1].pos);
     else
       spriteName = getSpriteName(path2[i - 1].pos, path2[i].pos, path2[i + 1].pos);
