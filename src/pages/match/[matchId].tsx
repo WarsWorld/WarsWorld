@@ -15,6 +15,7 @@ import {
   SCALE_MODES,
   Sprite,
   Spritesheet,
+  Texture,
 } from "pixi.js";
 import { useEffect, useRef, useState } from "react";
 import { PlayerInMatch } from "shared/types/server-match-state";
@@ -60,23 +61,25 @@ const Match = ({ spriteData }) => {
   //Important useEffect to make sure Pixi
   // only gets updated when pixiCanvasRef or mapData changes
   // we dont want it to be refreshed in react everytime something changes.
+
   useEffect(() => {
     const app = new Application({
       view: pixiCanvasRef.current,
       autoDensity: true,
       resolution: window.devicePixelRatio,
       backgroundColor: "#061838",
-      //TODO: The width needs to be = mapData[0].length * 16 + 16, but it seems it errors out if mapData isnt loaded well.
+      //TODO: I'd like our app to be the size of the map, not bigger or smaller.
+      // The width needs to be = mapData[0].length * 16 + 16, but it seems it errors out if mapData isnt loaded well.
       // However, mapData?.length seems to work well for the height.
-      width: 1400,
-      height: 2000,
+      width: window.outerWidth * 0.975,
+      height: window.outerHeight * 0.975,
       resizeTo: undefined,
     });
 
     //TODO: Button with + and - to change the scale of our stage, also needs
     // to have app.resize() working so we can resize the size of our app.
     app.stage.scale.set(2.6, 2.6);
-    app.stage.position.set(0, 16);
+    app.stage.position.set(0, 30);
 
     //let render our specific cursor
     //TODO: Cursor stops working on half screen?
@@ -85,7 +88,8 @@ const Match = ({ spriteData }) => {
     };
     //the container that holds everything
     const mapContainer = new Container();
-
+    mapContainer.x = 8;
+    mapContainer.y = 16;
     //allows for us to use zIndex on the children of mapContainer
     mapContainer.sortableChildren = true;
     app.stage.addChild(mapContainer);
@@ -120,31 +124,43 @@ const Match = ({ spriteData }) => {
                 tile.eventMode = "static";
                 //Lets make menu appear
                 tile.on("pointerdown", async () => {
-                  console.log("touched an action tile!");
                   const menu = await showMenu(
                     spriteSheets[slot],
                     type,
                     slot,
                     rowIndex,
-                    colIndex
+                    colIndex,
+                    mapData.length - 1,
                   );
-                  //lets make menu dissapear on hover out
-                  //TODO: Make menu dissapear if we click somewhere else
-                  menu.on("pointerleave", () => {
-                    console.log("menu pointerout");
-                    const length = mapContainer.children.length;
-                    mapContainer.removeChild(mapContainer.children[length - 1]);
+
+                  //if there is a menu already out, lets rempove it
+                  mapContainer.removeChild(mapContainer.getChildByName("menu"));
+
+                  //lets create a transparent screen that covers everything.
+                  // if we click on it, we will delete the menu
+                  // therefore, achieving a quick way to delete menu if we click out of it
+                  const emptyScreen = new Sprite(Texture.WHITE);
+                  emptyScreen.x = 0;
+                  emptyScreen.y = 0;
+                  emptyScreen.alpha = 0;
+                  emptyScreen.width = app.stage.width;
+                  emptyScreen.height = app.stage.height;
+                  emptyScreen.zIndex = -1;
+                  emptyScreen.eventMode = "static";
+                  emptyScreen.on("click", (event) => {
+                    mapContainer.removeChild(menu);
+                    mapContainer.removeChild(emptyScreen);
                   });
                   mapContainer.addChild(menu);
+                  mapContainer.addChild(emptyScreen);
                 });
               }
 
               //TODO: Seems like properties/buildings have different animation speeds...
               // gotta figure out how to make sure all buildings are animated properly
               // or at least AWBW seems to have different speeds/frames than Daemon's replayer
-              tile.animationSpeed = 0.03;
+              tile.animationSpeed = 0.04;
               tile.play();
-              console.log(window.devicePixelRatio);
             }
 
             //NOT A PROPERTY
@@ -173,8 +189,7 @@ const Match = ({ spriteData }) => {
   if (!spriteData) return <h1>Loading...</h1>;
   else {
     return (
-      <div className={"@m-10"}>
-        <h1>Basic pixi.js dev environment </h1>
+      <div>
         <canvas
           style={{
             imageRendering: "pixelated",
@@ -186,7 +201,6 @@ const Match = ({ spriteData }) => {
   }
 };
 export default Match;
-
 
 export async function getServerSideProps() {
   //TODO: Should we call all the spritesheets or just the ones the players will need?
