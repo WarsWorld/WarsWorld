@@ -65,7 +65,7 @@ const Match = ({ spriteData }) => {
   // we dont want it to be refreshed in react everytime something changes.
 
   //TODO: RECalculate width, height and scale based on third party variable
-  const [scale, setScale] = useState<number>(1);
+  const [scale, setScale] = useState<number>(1.8);
 
   useEffect(() => {
     if (mapData) {
@@ -203,24 +203,29 @@ const Match = ({ spriteData }) => {
   if (!spriteData) return <h1>Loading...</h1>;
   else {
     return (
-      <div className={"@text-center"}>
-        <button className={"btn"} onClick={()=>{
+      <div className="@grid @grid-cols-12  @text-center">
+
+        <div className="@col-span-12 @p-2">
+          <button className={"btn @inline"} onClick={()=>{
             setScale(scale + 0.2);
-        }}>+</button>
-        <h2>{scale}</h2>
-        <button className={"btn"} onClick={()=>{
-          setScale(scale - 0.2);
-        }}>-</button>
-        <div className={"@absolute @left-1/2"}>
-
-          <canvas
-            style={{
-              imageRendering: "pixelated",
-            }}
-            ref={pixiCanvasRef}
-          ></canvas>
-
+          }}>+</button>
+          <h2 className="@inline @align-middle"> {Math.round(scale * 10)/10} </h2>
+          <button className={"btn"} onClick={()=>{
+            setScale(scale - 0.2);
+          }}>-</button>
         </div>
+
+<div className="@col-span-12">
+  <canvas className="@inline"
+          style={{
+            imageRendering: "pixelated",
+          }}
+          ref={pixiCanvasRef}
+  ></canvas>
+</div>
+
+
+
 
       </div>
     );
