@@ -141,7 +141,8 @@ const Match = ({ spriteData }) => {
                       slot,
                       rowIndex,
                       colIndex,
-                      mapData.length - 1
+                      mapData.length - 1,
+                      mapData[0].length - 1
                     );
 
                     //if there is a menu already out, lets remove it
@@ -203,7 +204,7 @@ const Match = ({ spriteData }) => {
   if (!spriteData) return <h1>Loading...</h1>;
   else {
     return (
-      <div className="@grid @grid-cols-12  @text-center">
+      <div className="@grid @grid-cols-12  @text-center @my-20">
 
         <div className="@col-span-12 @p-2">
           <button className={"btn @inline"} onClick={()=>{
