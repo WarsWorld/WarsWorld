@@ -117,8 +117,8 @@ export default async function showMenu(
   outerBorder.height = (unitInfo.length - 1) * 13.2;
   outerBorder.zIndex = -1;
   menuContainer.addChild(outerBorder);
-  menuContainer.x = x * 16 + 24;
-  menuContainer.y = y * 16;
+  menuContainer.x = x * 16 + 16;
+  menuContainer.y = y * 16 ;
   outerBorder.alpha = 0.8;
   //the name lets us find the menu easily with getChildByName for easy removal
   menuContainer.name = "menu";
