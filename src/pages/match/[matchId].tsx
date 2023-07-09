@@ -25,6 +25,7 @@ import getJSON from "../../gameFunction/getJSON";
 import showMenu from "../../gameFunction/showMenu";
 import spriteConstructor from "../../gameFunction/spriteConstructor";
 
+
 BaseTexture.defaultOptions.scaleMode = SCALE_MODES.NEAREST;
 
 const Match = ({ spriteData }) => {
@@ -105,87 +106,89 @@ const Match = ({ spriteData }) => {
       });
 
       //Lets render our map!
-      let tile;
-      mapData.forEach((col, colIndex) => {
-        mapData[colIndex].forEach((row, rowIndex) => {
-          const type = row.type;
-          //ITS A PROPERTY
-          if (row.hasOwnProperty("playerSlot")) {
-            const slot: number = row.playerSlot;
+      if (mapData != undefined) {
+        let tile;
+        mapData.forEach((col, colIndex) => {
+          mapData[colIndex].forEach((row, rowIndex) => {
+            const type = row.type;
+            //ITS A PROPERTY
+            if (row.hasOwnProperty("playerSlot")) {
+              const slot: number = row.playerSlot;
 
-            //NEUTRAL
-            if (row.playerSlot === -1) {
-              tile = new Sprite(spriteSheets[2].textures[type + "-0.png"]);
-              //NOT NEUTRAL
-            } else {
-              tile = new AnimatedSprite(spriteSheets[slot].animations[type]);
-              //if our building is able to produce units, it has a menu!
-              if (type !== "hq" && type !== "lab" && type !== "city") {
-                tile.eventMode = "static";
-                //Lets make menu appear
-                tile.on("pointerdown", async () => {
-                  const menu = await showMenu(
-                    spriteSheets[slot],
-                    type,
-                    slot,
-                    rowIndex,
-                    colIndex,
-                    mapData.length - 1,
-                    mapData[0].length - 1
-                  );
+              //NEUTRAL
+              if (row.playerSlot === -1) {
+                tile = new Sprite(spriteSheets[2].textures[type + "-0.png"]);
+                //NOT NEUTRAL
+              } else {
+                tile = new AnimatedSprite(spriteSheets[slot].animations[type]);
+                //if our building is able to produce units, it has a menu!
+                if (type !== "hq" && type !== "lab" && type !== "city") {
+                  tile.eventMode = "static";
+                  //Lets make menu appear
+                  tile.on("pointerdown", async () => {
+                    const menu = await showMenu(
+                      spriteSheets[slot],
+                      type,
+                      slot,
+                      rowIndex,
+                      colIndex,
+                      mapData.length - 1,
+                      mapData[0].length - 1
+                    );
 
-                  //if there is a menu already out, lets remove it
-                  mapContainer.removeChild(mapContainer.getChildByName("menu"));
+                    //if there is a menu already out, lets remove it
+                    mapContainer.removeChild(mapContainer.getChildByName("menu"));
 
-                  //lets create a transparent screen that covers everything.
-                  // if we click on it, we will delete the menu
-                  // therefore, achieving a quick way to delete menu if we click out of it
-                  const emptyScreen = spriteConstructor(
-                    Texture.WHITE,
-                    0,
-                    0,
-                    app.stage.width,
-                    app.stage.height,
-                    "static",
-                    -1
-                  );
-                  emptyScreen.alpha = 0;
+                    //lets create a transparent screen that covers everything.
+                    // if we click on it, we will delete the menu
+                    // therefore, achieving a quick way to delete menu if we click out of it
+                    const emptyScreen = spriteConstructor(
+                      Texture.WHITE,
+                      0,
+                      0,
+                      app.stage.width,
+                      app.stage.height,
+                      "static",
+                      -1
+                    );
+                    emptyScreen.alpha = 0;
 
-                  emptyScreen.on("pointerdown", (event) => {
-                    mapContainer.removeChild(menu);
-                    mapContainer.removeChild(emptyScreen);
+                    emptyScreen.on("pointerdown", (event) => {
+                      mapContainer.removeChild(menu);
+                      mapContainer.removeChild(emptyScreen);
+                    });
+                    mapContainer.addChild(menu);
+                    mapContainer.addChild(emptyScreen);
                   });
-                  mapContainer.addChild(menu);
-                  mapContainer.addChild(emptyScreen);
-                });
+                }
+
+                //TODO: Seems like properties/buildings have different animation speeds...
+                // gotta figure out how to make sure all buildings are animated properly
+                // or at least AWBW seems to have different speeds/frames than Daemon's replayer
+                tile.animationSpeed = 0.04;
+                tile.play();
               }
 
-              //TODO: Seems like properties/buildings have different animation speeds...
-              // gotta figure out how to make sure all buildings are animated properly
-              // or at least AWBW seems to have different speeds/frames than Daemon's replayer
-              tile.animationSpeed = 0.04;
-              tile.play();
+              //NOT A PROPERTY
+            } else {
+              if (row.hasOwnProperty("variant"))
+                tile = new Sprite(
+                  spriteSheets[2].textures[row.type + "-" + row.variant + ".png"]
+                );
+              else tile = new Sprite(spriteSheets[2].textures[row.type + ".png"]);
             }
-
-            //NOT A PROPERTY
-          } else {
-            if (row.hasOwnProperty("variant"))
-              tile = new Sprite(
-                spriteSheets[2].textures[row.type + "-" + row.variant + ".png"]
-              );
-            else tile = new Sprite(spriteSheets[2].textures[row.type + ".png"]);
-          }
-          tile.anchor.set(1, 1);
-          tile.x = (rowIndex + 1) * 16;
-          tile.y = (colIndex + 1) * 16;
-          mapContainer.addChild(tile);
+            tile.anchor.set(1, 1);
+            tile.x = (rowIndex + 1) * 16;
+            tile.y = (colIndex + 1) * 16;
+            mapContainer.addChild(tile);
+          });
         });
-      });
+      }
+      console.log(mapData);
+      return () => {
+        app.stop();
+      };
     }
-    console.log(mapData);
-    return () => {
-      app.stop();
-    };
   }, [pixiCanvasRef, mapData, spriteData, scale]);
 
   //Actual return statement for react function
@@ -193,43 +196,36 @@ const Match = ({ spriteData }) => {
   else {
     return (
       <div className="@grid @grid-cols-12  @text-center @my-20">
+
         <div className="@col-span-12 @p-2">
-          <button
-            className={"btn @inline"}
-            onClick={() => {
-              setScale(scale + 0.2);
-            }}
-          >
-            +
-          </button>
-          <h2 className="@inline @align-middle">
-            {" "}
-            {Math.round(scale * 10) / 10}{" "}
-          </h2>
-          <button
-            className={"btn"}
-            onClick={() => {
-              setScale(scale - 0.2);
-            }}
-          >
-            -
-          </button>
+          <button className={"btn @inline"} onClick={()=>{
+            setScale(scale + 0.2);
+          }}>+</button>
+          <h2 className="@inline @align-middle"> {Math.round(scale * 10)/10} </h2>
+          <button className={"btn"} onClick={()=>{
+            setScale(scale - 0.2);
+          }}>-</button>
         </div>
 
-        <div className="@col-span-12">
-          <canvas
-            className="@inline"
-            style={{
-              imageRendering: "pixelated",
-            }}
-            ref={pixiCanvasRef}
-          ></canvas>
-        </div>
+<div className="@col-span-12">
+  <canvas className="@inline"
+          style={{
+            imageRendering: "pixelated",
+          }}
+          ref={pixiCanvasRef}
+  ></canvas>
+</div>
+
+
+
+
       </div>
     );
   }
+
 };
 export default Match;
+
 
 export async function getServerSideProps() {
   //TODO: Should we call all the spritesheets or just the ones the players will need?
