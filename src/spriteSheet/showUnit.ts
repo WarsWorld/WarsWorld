@@ -10,7 +10,6 @@ import { Tile } from "../server/schemas/tile";
 import {
   getAccessibleNodes,
   getAttackableTiles,
-  getTileSprite,
   PathNode,
   showAttackableTiles,
   showPassableTiles,
@@ -19,6 +18,8 @@ import {
 } from "./showPathing";
 import { unitPropertiesMap } from "../shared/match-logic/buildable-unit";
 import { isSamePosition } from "../server/schemas/position";
+import tileConstructor from "./tileConstructor";
+
 
 export function getUnitSprite(
   spriteSheet: Spritesheet,
@@ -95,6 +96,7 @@ export function showUnits(
         //so that the arrows don't cover the interactive tiles. maybe there's a better way to solve this issue
         //TODO: probably can be done with a LOT less Containers xd
         const layeredContainer = new Container();
+        //The tiles we can see
         const tileLayer = new Container();
         const pathLayer = new Container();
         const unitLayer = new Container();
@@ -136,7 +138,7 @@ export function showUnits(
         const tilesInteract = new Container();
         for (const [pos, node] of accessibleNodes.entries()) {
           //Transparent squares, interactive, on top of everything
-          const square = getTileSprite(pos, "#000000");
+          const square = tileConstructor(pos, "#000000");
           square.blendMode = 1; //blend mode Add
 
           square.on("pointerover", async () => {
@@ -172,7 +174,7 @@ export function showUnits(
             attackableTiles.some((t) => isSamePosition(t, enemyUnit.position))
           ) {
             //visible and interactive tile, cause nothing on top anyway
-            const square = getTileSprite(enemyUnit.position, "#FF8080");
+            const square = tileConstructor(enemyUnit.position, "#FF8080");
             square.blendMode = 2; //blend mode Multiply
 
             square.on("pointerover", async () => {

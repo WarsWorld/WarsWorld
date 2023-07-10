@@ -13,7 +13,7 @@ import { getMovementCost } from "../shared/match-logic/tiles";
 import { Tile, Weather } from "../server/schemas/tile.ts";
 import { CreatableUnit } from "../server/schemas/unit";
 import { positionSchema } from "../server/schemas/position";
-
+import tileConstructor from "./tileConstructor";
 export type Coord = positionSchema;
 export type PathNode = {
   //saves distance from origin and parent (to retrieve the shortest path)
@@ -22,17 +22,7 @@ export type PathNode = {
   parent: Coord | null;
 };
 
-export function getTileSprite(position: Coord, colour: string) {
-  const square = new Sprite(Texture.WHITE);
-  square.anchor.set(0.5, 1); //?
-  square.x = (position[1] + 1) * 16; //<- inverted for some reason
-  square.y = (position[0] + 1) * 16;
-  square.width = 16;
-  square.height = 16;
-  square.eventMode = "static";
-  square.tint = colour;
-  return square;
-}
+
 export function getAccessibleNodes( //TODO: save result of function? _ (Sturm d2d?)
   mapData: Tile[][],
   enemyUnits: CreatableUnit[],
@@ -139,7 +129,7 @@ export async function showPassableTiles(
 
   //add squares one by one
   for (const [pos, node] of accessibleNodes.entries()) {
-    const square = getTileSprite(pos, "#80FF80");
+    const square = tileConstructor(pos, "#79d8f5");
     square.blendMode = 2; //blend mode Multiply ?
 
     markedTiles.addChild(square);
@@ -225,7 +215,7 @@ export async function showAttackableTiles(
             distance <= unitProperties.attackRange[1] &&
             distance >= unitProperties.attackRange[0]
           ) {
-            const square = getTileSprite([i, j], "#FF8080");
+            const square = tileConstructor([i, j], "#FF8080");
             square.blendMode = 2; //blend mode Multiply ?
             markedTiles.addChild(square);
           }
@@ -248,7 +238,7 @@ export async function showAttackableTiles(
   }
 
   for (const pos of attackableTiles) {
-    const square = getTileSprite(pos, "#FF8080");
+    const square = tileConstructor(pos, "#FF8080");
     square.blendMode = 2; //blend mode Multiply ?
     markedTiles.addChild(square);
   }
