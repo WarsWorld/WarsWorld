@@ -17,8 +17,13 @@ export default async function showMenu(
   type: string,
   slot: number,
   x: number,
-  y: number
+  y: number,
+  mapHeight: number
 ) {
+  //TODO: Gotta add a "funds" value to our parameters
+  // from there, include it here and any unit above our funds,
+  // will be darkened out.
+
   //The big container holding everything
   //set its eventmode to static for interactivity and sortable for zIndex
   const menuContainer = new Container();
@@ -27,6 +32,15 @@ export default async function showMenu(
 
   //unitInfo brings back an array with all the data we need (such as infantry name, cost, etc).
   const unitInfo = await unitData(-1, type);
+
+  //if our menu would appear below the middle of the map, we need to bring it up!
+  // Otherwise, our user will have to scroll down to see all the units, which is a poor experience
+  if (y > mapHeight / 2) {
+    const spaceLeft = mapHeight - y;
+    //now if you wonder about 0.675, it basically means the
+    // menu element is 67.5% of a tile, so we only move that much
+    y = y - Math.abs(spaceLeft - unitInfo.length * 0.675);
+  }
 
   //lets load our font
   await Assets.load("/aw2Font.fnt");
@@ -37,7 +51,7 @@ export default async function showMenu(
     const menuElement = new Container();
     menuElement.eventMode = "static";
 
-    const yValue = index * 14;
+    const yValue = index * 12;
 
     //our unit image
     const unitSprite = new AnimatedSprite(spriteSheet.animations[unit.name]);
@@ -47,11 +61,12 @@ export default async function showMenu(
     unitSprite.animationSpeed = 0.07;
     // try to make it "centered"
     unitSprite.anchor.set(-0.2, -0.2);
+
     unitSprite.play();
 
     const unitName = new BitmapText(`${unit.menuName}`, {
       fontName: "awFont",
-      fontSize: 14,
+      fontSize: 12,
     });
     unitName.y = yValue;
     unitName.x = 15;
@@ -59,7 +74,7 @@ export default async function showMenu(
 
     const unitCost = new BitmapText(`${unit.cost}`, {
       fontName: "awFont",
-      fontSize: 12,
+      fontSize: 10,
     });
     unitCost.y = yValue;
     unitCost.x = 60;
@@ -69,22 +84,20 @@ export default async function showMenu(
     const unitBG = new Sprite(Texture.WHITE);
     unitBG.x = 0;
     unitBG.y = yValue;
-    unitBG.width = 90;
-    unitBG.height = 12;
-    unitBG.eventMode = "static";
-    unitBG.tint = "#d3d3d3";
+    unitBG.width = 84;
+    unitBG.height = 10;
 
-    //This will make ALL unitBGs change tint, even the ones on another menuElement
+    unitBG.eventMode = "static";
+    unitBG.tint = "#ffffff";
+    unitBG.alpha = 0.5;
+
+    //lets add a hover effect to our elements
     menuElement.on("pointerenter", () => {
-      unitBG.tint = "#ffffff";
-      unitSprite.textures = spriteSheet.animations[unit.name + "_mdown"];
-      unitSprite.play();
+      unitBG.alpha = 1;
     });
 
     menuElement.on("pointerleave", () => {
-      unitBG.tint = "#d3d3d3";
-      unitSprite.textures = spriteSheet.animations[unit.name];
-      unitSprite.play();
+      unitBG.alpha = 0.5;
     });
 
     menuElement.addChild(unitBG);
@@ -100,11 +113,14 @@ export default async function showMenu(
   outerBorder.tint = "#8c8c8c";
   outerBorder.x = -2;
   outerBorder.y = -2;
-  outerBorder.width = 94;
-  outerBorder.height = (unitInfo.length - 1) * 15.5;
+  outerBorder.width = 88;
+  outerBorder.height = (unitInfo.length - 1) * 13.2;
   outerBorder.zIndex = -1;
   menuContainer.addChild(outerBorder);
-  menuContainer.x = x * 16 + 15;
+  menuContainer.x = x * 16 + 24;
   menuContainer.y = y * 16;
+  outerBorder.alpha = 0.8;
+  //the name lets us find the menu easily with getChildByName for easy removal
+  menuContainer.name = "menu";
   return menuContainer;
 }
