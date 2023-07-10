@@ -40,4 +40,26 @@ export const demoUnits: CreatableUnit[] = [
       fuel: 99,
     },
   },
+
+  {
+    type: "rocket",
+    playerSlot: 1,
+    position: [7, 5],
+    stats: {
+      hp: 9,
+      fuel: 99,
+      ammo: 3,
+    },
+  },
+
+  {
+    type: "mech",
+    playerSlot: 1,
+    position: [3, 3],
+    stats: {
+      hp: 9,
+      fuel: 99,
+      ammo: 3,
+    },
+  },
 ];

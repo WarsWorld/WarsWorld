@@ -12,11 +12,9 @@ import {
 import { getMovementCost } from "../shared/match-logic/tiles";
 import { Tile, Weather } from "../server/schemas/tile.ts";
 import { CreatableUnit } from "../server/schemas/unit";
+import { positionSchema } from "../server/schemas/position";
 
-export type Coord = {
-  x: number;
-  y: number;
-};
+export type Coord = positionSchema;
 export type PathNode = {
   //saves distance from origin and parent (to retrieve the shortest path)
   pos: Coord;
@@ -24,8 +22,20 @@ export type PathNode = {
   parent: Coord | null;
 };
 
+export function getTileSprite(position: Coord, colour: string) {
+  const square = new Sprite(Texture.WHITE);
+  square.anchor.set(0.5, 1); //?
+  square.x = (position[1] + 1) * 16; //<- inverted for some reason
+  square.y = (position[0] + 1) * 16;
+  square.width = 16;
+  square.height = 16;
+  square.eventMode = "static";
+  square.tint = colour;
+  return square;
+}
 export function getAccessibleNodes( //TODO: save result of function? _ (Sturm d2d?)
   mapData: Tile[][],
+  enemyUnits: CreatableUnit[],
   weather: Weather,
   movePoints: number,
   moveType: MovementType,
@@ -37,7 +47,7 @@ export function getAccessibleNodes( //TODO: save result of function? _ (Sturm d2
   //queues[a] has current queued nodes with distance a from origin (technically a "stack", not a queue, but the result doesn't change)
   const queues: PathNode[][] = [];
   queues.push([]);
-  queues[0].push({ pos: { x: x, y: y }, dist: 0, parent: null }); //queues[0] has the origin node, initially
+  queues[0].push({ pos: [x, y], dist: 0, parent: null }); //queues[0] has the origin node, initially
 
   const visited: boolean[][] = [];
   // Initialize visited matrix
@@ -46,6 +56,10 @@ export function getAccessibleNodes( //TODO: save result of function? _ (Sturm d2
     for (let j = 0; j < mapData[i].length; j++) {
       visited[i][j] = false;
     }
+  }
+  for (const unit of enemyUnits) {
+    //enemy tiles are impassible
+    visited[unit.position[0]][unit.position[1]] = true;
   }
 
   function isValidTile(row: number, col: number): boolean {
@@ -66,14 +80,14 @@ export function getAccessibleNodes( //TODO: save result of function? _ (Sturm d2
     const currNode = queues[currentDist].pop();
     const currPos = currNode.pos;
 
-    if (visited[currPos.x][currPos.y]) continue;
+    if (visited[currPos[0]][currPos[1]]) continue;
     //update variables to mark as visited and add to result
-    visited[currPos.x][currPos.y] = true;
+    visited[currPos[0]][currPos[1]] = true;
     accessibleTiles.set(currPos, currNode);
 
     //the 4 adjacent node's coordinates:
-    const xCoords = [currPos.x - 1, currPos.x + 1, currPos.x, currPos.x];
-    const yCoords = [currPos.y, currPos.y, currPos.y - 1, currPos.y + 1];
+    const xCoords = [currPos[0] - 1, currPos[0] + 1, currPos[0], currPos[0]];
+    const yCoords = [currPos[1], currPos[1], currPos[1] - 1, currPos[1] + 1];
 
     for (let i = 0; i < 4; ++i) {
       if (isValidTile(xCoords[i], yCoords[i])) {
@@ -88,7 +102,7 @@ export function getAccessibleNodes( //TODO: save result of function? _ (Sturm d2
         if (nodeDist <= movePoints) {
           while (queues.length <= nodeDist) queues.push([]); //increase queues size until new node can be added
           queues[nodeDist].push({
-            pos: { x: xCoords[i], y: yCoords[i] },
+            pos: [xCoords[i], yCoords[i]],
             dist: nodeDist,
             parent: currPos,
           }); //add new node with new distance and parent
@@ -103,6 +117,7 @@ export function getAccessibleNodes( //TODO: save result of function? _ (Sturm d2
 export async function showPassableTiles(
   mapData: Tile[][],
   unit: CreatableUnit,
+  enemyUnits: CreatableUnit[],
   accessibleNodes?: Map<Coord, PathNode>
 ): Container {
   const unitProperties = unitPropertiesMap[unit.type];
@@ -113,6 +128,7 @@ export async function showPassableTiles(
   if (accessibleNodes === undefined) {
     accessibleNodes = getAccessibleNodes(
       mapData,
+      enemyUnits,
       "clear", //!
       unitProperties.moveRange,
       unitProperties.movementType,
@@ -123,14 +139,7 @@ export async function showPassableTiles(
 
   //add squares one by one
   for (const [pos, node] of accessibleNodes.entries()) {
-    const square = new Sprite(Texture.WHITE);
-    square.anchor.set(0.5, 1); //?
-    square.x = (pos.y + 1) * 16; //<- inverted for some reason
-    square.y = (pos.x + 1) * 16;
-    square.width = 16;
-    square.height = 16;
-    square.eventMode = "static";
-    square.tint = "#80FF80";
+    const square = getTileSprite(pos, "#80FF80");
     square.blendMode = 2; //blend mode Multiply ?
 
     markedTiles.addChild(square);
@@ -141,20 +150,25 @@ export async function showPassableTiles(
 
 export function getAttackableTiles(
   mapData: Tile[][],
+  enemyUnits: CreatableUnit[],
   weather: Weather,
   movePoints: number,
   moveType: MovementType,
   x: number,
-  y: number
+  y: number,
+  accessibleNodes?: Map<Coord, PathNode>
 ): Coord[] {
-  const nodes: Map<Coord, PathNode> = getAccessibleNodes(
-    mapData,
-    weather,
-    movePoints,
-    moveType,
-    x,
-    y
-  );
+  if (accessibleNodes === undefined) {
+    accessibleNodes = getAccessibleNodes(
+      mapData,
+      enemyUnits,
+      weather,
+      movePoints,
+      moveType,
+      x,
+      y
+    );
+  }
 
   function isValidTile(row: number, col: number): boolean {
     //used to check out of boundaries
@@ -173,14 +187,14 @@ export function getAttackableTiles(
   }
 
   const attackCoords: Coord[] = [];
-  for (const [pos, node] of nodes.entries()) {
-    const xCoords = [pos.x - 1, pos.x + 1, pos.x, pos.x];
-    const yCoords = [pos.y, pos.y, pos.y - 1, pos.y + 1];
+  for (const [pos, node] of accessibleNodes.entries()) {
+    const xCoords = [pos[0] - 1, pos[0] + 1, pos[0], pos[0]];
+    const yCoords = [pos[1], pos[1], pos[1] - 1, pos[1] + 1];
     for (let i = 0; i < 4; ++i) {
       //all positions adjacent to tiles where the unit can move to are attacking tiles
       if (isValidTile(xCoords[i], yCoords[i]))
         if (!visited[xCoords[i]][yCoords[i]]) {
-          attackCoords.push({ x: xCoords[i], y: yCoords[i] });
+          attackCoords.push([xCoords[i], yCoords[i]]);
           visited[xCoords[i]][yCoords[i]] = true;
         }
     }
@@ -192,6 +206,7 @@ export function getAttackableTiles(
 export async function showAttackableTiles(
   mapData: Tile[][],
   unit: CreatableUnit,
+  enemyUnits: CreatableUnit[],
   attackableTiles?: Coord[]
 ): Container {
   const unitProperties = unitPropertiesMap[unit.type];
@@ -199,9 +214,31 @@ export async function showAttackableTiles(
   const markedTiles = new Container();
   markedTiles.eventMode = "static";
 
+  if ("attackRange" in unitProperties) {
+    if (unitProperties.attackRange[0] != 1) {
+      //ranged unit
+      for (let i = 0; i < mapData.length; ++i) {
+        for (let j = 0; j < mapData[0].length; ++j) {
+          const distance =
+            Math.abs(i - unit.position[0]) + Math.abs(j - unit.position[1]); //untested, maybe swapped
+          if (
+            distance <= unitProperties.attackRange[1] &&
+            distance >= unitProperties.attackRange[0]
+          ) {
+            const square = getTileSprite([i, j], "#FF8080");
+            square.blendMode = 2; //blend mode Multiply ?
+            markedTiles.addChild(square);
+          }
+        }
+      }
+      return markedTiles;
+    }
+  }
+
   if (attackableTiles === undefined) {
     attackableTiles = getAttackableTiles(
       mapData,
+      enemyUnits,
       "clear", //!
       unitProperties.moveRange,
       unitProperties.movementType,
@@ -211,16 +248,8 @@ export async function showAttackableTiles(
   }
 
   for (const pos of attackableTiles) {
-    const square = new Sprite(Texture.WHITE);
-    square.anchor.set(0.5, 1); //?
-    square.x = (pos.y + 1) * 16; //<- inverted for some reason
-    square.y = (pos.x + 1) * 16;
-    square.width = 16;
-    square.height = 16;
-    square.eventMode = "static";
-    square.tint = "#FF8080";
+    const square = getTileSprite(pos, "#FF8080");
     square.blendMode = 2; //blend mode Multiply ?
-
     markedTiles.addChild(square);
   }
 
@@ -251,12 +280,12 @@ export function updatePath(
 
     //check if new node is adjacent
     if (
-      Math.abs(lastNode.pos.x - newPos.x) +
-        Math.abs(lastNode.pos.y - newPos.y) ==
+      Math.abs(lastNode.pos[0] - newPos[0]) +
+        Math.abs(lastNode.pos[1] - newPos[1]) ==
       1
     ) {
       const tileDist = getMovementCost(
-        mapData[newPos.x][newPos.y].type,
+        mapData[newPos[0]][newPos[1]].type,
         moveType,
         weather
       );
@@ -290,34 +319,34 @@ export function showPath(spriteSheet: Spritesheet, path: PathNode[]) {
 
   function getSpriteName(a: Coord, b: Coord, c: Coord): string {
     //path from a to b to c, the sprite is the one displayed in b (middle node)
-    const dify = Math.abs(a.y - c.y);
-    const difx = Math.abs(a.x - c.x);
+    const dify = Math.abs(a[1] - c[1]);
+    const difx = Math.abs(a[0] - c[0]);
     if (dify + difx === 2) {
       //not start nor end
       if (dify === 2) return "ew";
       if (difx === 2) return "ns";
 
       let ans: string;
-      if (a.x > b.x || c.x > b.x) ans = "s";
+      if (a[0] > b[0] || c[0] > b[0]) ans = "s";
       else ans = "n";
-      if (a.y > b.y || c.y > b.y) ans += "e";
+      if (a[1] > b[1] || c[1] > b[1]) ans += "e";
       else ans += "w";
       return ans;
     }
-    if (a.y === b.y && a.x === b.x) {
+    if (a[1] === b[1] && a[0] === b[0]) {
       //starting node
-      if (c.y === b.y && c.x === b.x)
-          //AND ending node
+      if (c[1] === b[1] && c[0] === b[0])
+        //AND ending node
         return "od";
-      if (c.y < b.y) return "ow";
-      if (c.y > b.y) return "oe";
-      if (c.x > b.x) return "os";
+      if (c[1] < b[1]) return "ow";
+      if (c[1] > b[1]) return "oe";
+      if (c[0] > b[0]) return "os";
       return "on";
     } else {
       //ending node
-      if (a.y < b.y) return "wd";
-      if (a.y > b.y) return "ed";
-      if (a.x < b.x) return "nd";
+      if (a[1] < b[1]) return "wd";
+      if (a[1] > b[1]) return "ed";
+      if (a[0] < b[0]) return "nd";
       return "sd";
     }
   }
@@ -328,15 +357,20 @@ export function showPath(spriteSheet: Spritesheet, path: PathNode[]) {
 
   for (let i = 0; i < len; ++i) {
     let spriteName: string;
-    if (i === 0) //special case for original node
+    if (i === 0)
+      //special case for original node
       spriteName = getSpriteName(path2[0].pos, path2[i].pos, path2[i + 1].pos);
     else
-      spriteName = getSpriteName(path2[i - 1].pos, path2[i].pos, path2[i + 1].pos);
+      spriteName = getSpriteName(
+        path2[i - 1].pos,
+        path2[i].pos,
+        path2[i + 1].pos
+      );
 
     const nodeSprite = new Sprite(spriteSheet.textures[spriteName + ".png"]);
     nodeSprite.anchor.set(0.5, 1); //?
-    nodeSprite.x = (path2[i].pos.y + 1) * 16; //swapped, again...?
-    nodeSprite.y = (path2[i].pos.x + 1) * 16;
+    nodeSprite.x = (path2[i].pos[1] + 1) * 16; //swapped, again...?
+    nodeSprite.y = (path2[i].pos[0] + 1) * 16;
     mapContainer.addChild(nodeSprite);
   }
 

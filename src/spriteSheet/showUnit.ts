@@ -9,6 +9,8 @@ import { CreatableUnit } from "../server/schemas/unit";
 import { Tile } from "../server/schemas/tile";
 import {
   getAccessibleNodes,
+  getAttackableTiles,
+  getTileSprite,
   PathNode,
   showAttackableTiles,
   showPassableTiles,
@@ -16,6 +18,7 @@ import {
   updatePath,
 } from "./showPathing";
 import { unitPropertiesMap } from "../shared/match-logic/buildable-unit";
+import { isSamePosition } from "../server/schemas/position";
 
 export function getUnitSprite(
   spriteSheet: Spritesheet,
@@ -51,12 +54,15 @@ export function showUnits(
       //check if waited or not
       //if ready, then start the create path procedure TODO: (supposing now that all are ready)
       unitContainer.on("pointerdown", async () => {
+        const enemyUnits: CreatableUnit[] = [];
+        for (const unit of units)
+          if (unit.playerSlot != 0) enemyUnits.push(unit); //push if not same team
 
         //path display initialization
         let path: PathNode[] = [];
         path.push({
           //original node
-          pos: { x: unit.position[0], y: unit.position[1] },
+          pos: [unit.position[0], unit.position[1]],
           dist: 0,
           parent: null,
         });
@@ -67,11 +73,22 @@ export function showUnits(
 
         const accessibleNodes = getAccessibleNodes(
           mapData,
+          enemyUnits,
           "clear", //!
           unitPropertiesMap[unit.type].moveRange,
           unitPropertiesMap[unit.type].movementType,
           unit.position[0],
           unit.position[1]
+        );
+        const attackableTiles = getAttackableTiles(
+          mapData,
+          enemyUnits,
+          "clear", //!,
+          unitPropertiesMap[unit.type].moveRange,
+          unitPropertiesMap[unit.type].movementType,
+          unit.position[0],
+          unit.position[1],
+          accessibleNodes
         );
 
         //put elements in "layers", in order
@@ -81,30 +98,45 @@ export function showUnits(
         const tileLayer = new Container();
         const pathLayer = new Container();
         const unitLayer = new Container();
+        const outsideLayer = new Container();
         const interactiveLayer = new Container();
         layeredContainer.addChild(tileLayer);
         layeredContainer.addChild(pathLayer);
         layeredContainer.addChild(unitLayer);
+        layeredContainer.addChild(outsideLayer);
         layeredContainer.addChild(interactiveLayer);
         mapContainer.addChild(layeredContainer);
 
         //create the visual passable tiles layer and the unit sprite layer
-        const tilesShown = await showPassableTiles(mapData, unit, accessibleNodes);
+        const tilesShown = await showPassableTiles(
+          mapData,
+          unit,
+          enemyUnits,
+          accessibleNodes
+        );
         tileLayer.addChild(tilesShown);
+
         unitLayer.addChild(getUnitSprite(spriteSheets[unit.playerSlot], unit)); //animation not synced with original sprite!
+
+        const mapCover = new Sprite(Texture.WHITE);
+        mapCover.x = 0.5 * 16; //<- probably better way. I'm trying to cover the map with that
+        mapCover.y = 0;
+        mapCover.width = mapData[0].length * 16;
+        mapCover.height = mapData.length * 16;
+        mapCover.eventMode = "static";
+        mapCover.tint = "#000000";
+        mapCover.blendMode = 1; //additive
+        mapCover.on("pointerdown", async () => {
+          console.log("clicked outside");
+          mapContainer.removeChild(layeredContainer);
+        });
+        outsideLayer.addChild(mapCover);
 
         //create the interactive, transparent tiles layer
         const tilesInteract = new Container();
         for (const [pos, node] of accessibleNodes.entries()) {
           //Transparent squares, interactive, on top of everything
-          const square = new Sprite(Texture.WHITE);
-          square.anchor.set(0.5, 1); //?
-          square.x = (pos.y + 1) * 16; //<- inverted for some reason
-          square.y = (pos.x + 1) * 16;
-          square.width = 16;
-          square.height = 16;
-          square.eventMode = "static";
-          square.tint = "#000000";
+          const square = getTileSprite(pos, "#000000");
           square.blendMode = 1; //blend mode Add
 
           square.on("pointerover", async () => {
@@ -125,23 +157,50 @@ export function showUnits(
             pathLayer.removeChildren();
             pathLayer.addChild(currentPathDisplay);
           });
-          square.on("pointerup", async () => {
+          square.on("pointerdown", async () => {
             //This means a path has been selected (need to change "condition" for that), so remove everything
+            console.log("path selected");
             mapContainer.removeChild(layeredContainer);
           });
           //add the interactive square to the interactive tiles container
           tilesInteract.addChild(square);
         }
+
+        for (const enemyUnit of enemyUnits) {
+          if (
+            //probably can improve efficiency on that
+            attackableTiles.some((t) => isSamePosition(t, enemyUnit.position))
+          ) {
+            //visible and interactive tile, cause nothing on top anyway
+            const square = getTileSprite(enemyUnit.position, "#FF8080");
+            square.blendMode = 2; //blend mode Multiply
+
+            square.on("pointerover", async () => {
+              //show dmg calc
+            });
+            square.on("pointerdown", async () => {
+              //This means an attack has been commited (maybe require confirmation, like awbw?)
+              console.log("unit attacked");
+              mapContainer.removeChild(layeredContainer);
+            });
+
+            interactiveLayer.addChild(square);
+          }
+        }
         //add the interactive tiles container into the interactive tiles layer
         interactiveLayer.addChild(tilesInteract);
       });
-
-    } else { //unit is NOT in "your" team
+    } else {
+      //unit is NOT in "your" team
       let isNextAttack = false; //alternate between showing movement and attacking tiles
       unitContainer.on("pointerdown", async () => {
+        const enemyUnits: CreatableUnit[] = [];
+        for (const unit of units)
+          if (unit.playerSlot === 0) enemyUnits.push(unit); //not true, need to get playerSlot and not equal
         let tilesShown: Container;
-        if (isNextAttack) tilesShown = await showAttackableTiles(mapData, unit);
-        else tilesShown = await showPassableTiles(mapData, unit);
+        if (isNextAttack)
+          tilesShown = await showAttackableTiles(mapData, unit, enemyUnits);
+        else tilesShown = await showPassableTiles(mapData, unit, enemyUnits);
         isNextAttack = !isNextAttack;
         mapContainer.addChild(tilesShown);
         onpointerup = () => {
