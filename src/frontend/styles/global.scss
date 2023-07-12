@@ -9,6 +9,29 @@
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap");
 
 @layer base {
+
+  /* width */
+  ::-webkit-scrollbar {
+    width: 12px;
+    height: 10px;
+  }
+
+  /* Track */
+  ::-webkit-scrollbar-track {
+    background: #333b54;
+
+  }
+
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: #0d1526;
+  }
+
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: #030a31;
+  }
+
   html {
     font-family: "Poppins", sans-serif;
     color: white;

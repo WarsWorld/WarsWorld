@@ -13,7 +13,7 @@ import { getMovementCost } from "../shared/match-logic/tiles";
 import { Tile, Weather } from "../server/schemas/tile.ts";
 import { CreatableUnit } from "../server/schemas/unit";
 import { positionSchema } from "../server/schemas/position";
-import tileConstructor from "./tileConstructor";
+import { tileConstructor } from "./spriteConstructor";
 export type Coord = positionSchema;
 export type PathNode = {
   //saves distance from origin and parent (to retrieve the shortest path)
@@ -104,6 +104,8 @@ export function getAccessibleNodes( //TODO: save result of function? _ (Sturm d2
   return accessibleTiles;
 }
 
+
+
 export async function showPassableTiles(
   mapData: Tile[][],
   unit: CreatableUnit,
@@ -128,15 +130,15 @@ export async function showPassableTiles(
   }
 
   //add squares one by one
-  for (const [pos, node] of accessibleNodes.entries()) {
-    const square = tileConstructor(pos, "#79d8f5");
-    square.blendMode = 2; //blend mode Multiply ?
-
+  for (const [pos] of accessibleNodes.entries()) {
+    //TODO: Add a border to "edge" tiles
+    const square = tileConstructor(pos, "#43d9e4");
     markedTiles.addChild(square);
   }
-
   return markedTiles;
 }
+
+
 
 export function getAttackableTiles(
   mapData: Tile[][],
@@ -215,8 +217,7 @@ export async function showAttackableTiles(
             distance <= unitProperties.attackRange[1] &&
             distance >= unitProperties.attackRange[0]
           ) {
-            const square = tileConstructor([i, j], "#FF8080");
-            square.blendMode = 2; //blend mode Multiply ?
+            const square = tileConstructor([i, j], "#be1919");
             markedTiles.addChild(square);
           }
         }
@@ -238,8 +239,7 @@ export async function showAttackableTiles(
   }
 
   for (const pos of attackableTiles) {
-    const square = tileConstructor(pos, "#FF8080");
-    square.blendMode = 2; //blend mode Multiply ?
+    const square = tileConstructor(pos, "#be1919");
     markedTiles.addChild(square);
   }
 
@@ -304,8 +304,8 @@ export function updatePath(
 export function showPath(spriteSheet: Spritesheet, path: PathNode[]) {
   if (path.length < 1) throw new Error("Empty path!");
 
-  const mapContainer = new Container();
-  mapContainer.eventMode = "static";
+  const arrowContainer = new Container();
+  arrowContainer.eventMode = "static";
 
   function getSpriteName(a: Coord, b: Coord, c: Coord): string {
     //path from a to b to c, the sprite is the one displayed in b (middle node)
@@ -358,11 +358,12 @@ export function showPath(spriteSheet: Spritesheet, path: PathNode[]) {
       );
 
     const nodeSprite = new Sprite(spriteSheet.textures[spriteName + ".png"]);
-    nodeSprite.anchor.set(0.5, 1); //?
-    nodeSprite.x = (path2[i].pos[1] + 1) * 16; //swapped, again...?
+    nodeSprite.anchor.set(1, 1);
+    nodeSprite.x = (path2[i].pos[1] + 1) * 16;
     nodeSprite.y = (path2[i].pos[0] + 1) * 16;
-    mapContainer.addChild(nodeSprite);
+    arrowContainer.addChild(nodeSprite);
   }
-
-  return mapContainer;
+  //this name will let us easily remove arrows later
+  arrowContainer.name = "arrows";
+  return arrowContainer;
 }

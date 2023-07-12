@@ -12,6 +12,9 @@ export default function unitData(
   unitIndex: number,
   returnData: string
 ): UnitData[] {
+
+  console.log(unitIndex);
+  console.log(returnData);
   // Here are our units, their names, menu name, cost, move, move type, etc
   const landData: UnitData[] = [
     {
@@ -135,7 +138,7 @@ export default function unitData(
 
   const airData: UnitData[] = [
     {
-      name: "tcopter",
+      name: "t-copter",
       menuName: "T-Copter",
       cost: 5000,
       move: 6,
@@ -144,7 +147,7 @@ export default function unitData(
       facility: "airport",
     },
     {
-      name: "bcopter",
+      name: "b-copter",
       menuName: "B-Copter",
       cost: 9000,
       move: 6,
@@ -162,7 +165,7 @@ export default function unitData(
       facility: "airport",
     },
     {
-      name: "figther",
+      name: "fighter",
       menuName: "Fighter",
       cost: 20000,
       move: 9,
@@ -180,7 +183,7 @@ export default function unitData(
       facility: "airport",
     },
     {
-      name: "blackBomb",
+      name: "blackbomb",
       menuName: "Black Bomb",
       cost: 25000,
       move: 9,
@@ -191,7 +194,7 @@ export default function unitData(
   ];
   const seaData: UnitData[] = [
     {
-      name: "blackBoat",
+      name: "blackboat",
       menuName: "Black Boat",
       cost: 7500,
       move: 7,
