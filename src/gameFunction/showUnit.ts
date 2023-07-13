@@ -49,7 +49,8 @@ export function showUnits(
   const returnContainer = new Container();
   returnContainer.sortableChildren = true;
   returnContainer.eventMode = "static";
-
+  //Check to see if same unit is clicked twice on the same spot
+  let secondTimeClickingUnit = false;
   for (const unit of units) {
     const unitSprite = getUnitSprite(spriteSheets[unit.playerSlot], unit);
     returnContainer.addChild(unitSprite);
@@ -60,158 +61,183 @@ export function showUnits(
       // check if waited or not
       // if ready, then start the create path procedure TODO: (supposing now that all are ready)
       unitSprite.on("pointerdown", async () => {
-        unitSprite.zIndex = 10;
-        const enemyUnits: CreatableUnit[] = [];
-        for (const unit of units)
-          if (unit.playerSlot != 0) enemyUnits.push(unit); //push if not same team
 
-        //path display initialization
-        let path: PathNode[] = [];
-        path.push({
-          //original node
-          pos: [unit.position[0], unit.position[1]],
-          dist: 0,
-          parent: null,
-        });
-        let currentPathDisplay = showPath(
-          spriteSheets[spriteSheets.length - 1],
-          path
-        );
-
-        const accessibleNodes = getAccessibleNodes(
-          mapData,
-          enemyUnits,
-          "clear", //!
-          unitPropertiesMap[unit.type].moveRange,
-          unitPropertiesMap[unit.type].movementType,
-          unit.position[0],
-          unit.position[1]
-        );
-        const attackableTiles = getAttackableTiles(
-          mapData,
-          enemyUnits,
-          "clear", //!,
-          unitPropertiesMap[unit.type].moveRange,
-          unitPropertiesMap[unit.type].movementType,
-          unit.position[0],
-          unit.position[1],
-          accessibleNodes
-        );
-
-        //We clicked an unit, lets clean up other tiles/arrows/paths from previous unit clicked
-        const layerName = returnContainer.getChildByName("moveTiles");
-        if (layerName !== null) returnContainer.removeChild(layerName);
-
-        //the container holding arrow/path and other squareContainer and interactiveSqUAREScONTAINER
-        const arrowAndSquaresContainer = new Container();
-        arrowAndSquaresContainer.name = "moveTiles";
-        arrowAndSquaresContainer.sortableChildren = true;
-
-        //The blue and red tiles we can see
-        const squareContainer = new Container();
-        arrowAndSquaresContainer.addChild(squareContainer);
-
-        //Interactive squares that recalculate path and execute other functions
-        const interactiveSquaresContainer = new Container();
-        interactiveSquaresContainer.zIndex = 1;
-        arrowAndSquaresContainer.addChild(interactiveSquaresContainer);
-
-        //create the visual passable tiles layer and the unit sprite layer
-        const tilesShown = await showPassableTiles(
-          mapData,
-          unit,
-          enemyUnits,
-          accessibleNodes
-        );
-        squareContainer.addChild(tilesShown);
-
-        //create the interactive, transparent tiles layer
-        for (const [pos] of accessibleNodes.entries()) {
-          //Transparent squares, interactive, on top of everything
-          const invisibleSquare = tileConstructor(pos, "#000000");
-          invisibleSquare.alpha = 0;
-          invisibleSquare.on("pointerover", () => {
-            console.log("im hovering over invisible square!");
-            path = updatePath(
-              mapData,
-              "clear",
-              unitPropertiesMap[unit.type].moveRange,
-              unitPropertiesMap[unit.type].movementType,
-              accessibleNodes,
-              path,
-              pos
-            );
-            //update path display layer
-            currentPathDisplay = showPath(
-              spriteSheets[spriteSheets.length - 1],
-              path
-            );
-
-            invisibleSquare.on("click", () => {
-              //TODO: Display unit menu (wait, capture, etc) and execute checks for menu items
-              // such as if infantry and on non-owned city, show capture OR
-              // if adjacent to enemy unit/can fire from position, show fire command in menu.
-
-              //TODO: Check to make sure the coordinates selected don't have an ally unit, if they do,
-              // show the path for that unit (since we can't move into other units).
-
-              // TODO: Also remove the zIndex = 0, this is just for now since we dont display menus yet.
-              unitSprite.zIndex = 0;
-              console.log("path selected");
-              returnContainer.removeChild(arrowAndSquaresContainer);
-            });
-            //lets cleanup previous arrows.
-            const arrowName = arrowAndSquaresContainer.getChildByName("arrows");
-            if (arrowName !== null)
-              arrowAndSquaresContainer.removeChild(arrowName);
-
-            arrowAndSquaresContainer.addChild(currentPathDisplay);
-          });
-
-          //add the interactive square to the interactive tiles container
-          interactiveSquaresContainer.addChild(invisibleSquare);
+        //Is this the first time we are clicking this unit? if not,
+        // then display the menu where they are
+        // because it means we want to activate the unit where its sitting.
+        if (secondTimeClickingUnit) {
+          //TODO Run show menu function on current spot (don't have to do anything else )
+          secondTimeClickingUnit = false;
+          console.log("Displaying menu on same spot");
+          const layerName = returnContainer.getChildByName("arrowAndSquaresContainer");
+          if (layerName !== null) returnContainer.removeChild(layerName);
         }
-
-        //Lets create the red squares for enemy units!
-        for (const enemyUnit of enemyUnits) {
-          if (
-            //probably can improve efficiency on that
-            attackableTiles.some((t) => isSamePosition(t, enemyUnit.position))
-          ) {
-            const enemySquare = tileConstructor(enemyUnit.position, "#932f2f");
-
-            enemySquare.on("pointerover", async () => {
-              //TODO: show dmg forecast/preview/%s checking current units and current terrains
-            });
-            enemySquare.on("pointerdown", async () => {
-              unitSprite.zIndex = 0;
-              //TODO This means an enemy unit has been clicked, if clicked again, initiate combat from "current" / "last" arrow/tile position.
-              console.log("unit attacked");
-              returnContainer.removeChild(arrowAndSquaresContainer);
-            });
-
-            squareContainer.addChild(enemySquare);
+        //First time clicking this unit, calculate the path and everything
+        else {
+          unitSprite.zIndex = 10;
+          const enemyUnits: CreatableUnit[] = [];
+          for (const unit of units) {
+            if (unit.playerSlot != 0) enemyUnits.push(unit); //push if not same team}
           }
-        }
 
-        //Invisible rectangle that serves as our eventListener that we are clicking outside the pathfinding so we need to remove the pathfinding
-        const outsideOfPath = spriteConstructor(
-          Texture.WHITE,
-          0,
-          0,
-          mapData[0].length * 16,
-          mapData.length * 16,
-          "static"
-        );
-        outsideOfPath.alpha = 0;
-        outsideOfPath.zIndex = -1;
-        outsideOfPath.on("pointerdown", async () => {
-          unitSprite.zIndex = 0;
-          console.log("invisible rectangle clicked, eliminating layers");
-          returnContainer.removeChild(arrowAndSquaresContainer);
-        });
-        arrowAndSquaresContainer.addChild(outsideOfPath);
-        returnContainer.addChild(arrowAndSquaresContainer);
+          //path display initialization
+          let path: PathNode[] = [];
+          path.push({
+            //original node
+            pos: [unit.position[0], unit.position[1]],
+            dist: 0,
+            parent: null,
+          });
+          let currentPathDisplay = showPath(
+            spriteSheets[spriteSheets.length - 1],
+            path
+          );
+
+          const accessibleNodes = getAccessibleNodes(
+            mapData,
+            enemyUnits,
+            "clear", //!
+            unitPropertiesMap[unit.type].moveRange,
+            unitPropertiesMap[unit.type].movementType,
+            unit.position[0],
+            unit.position[1]
+          );
+          const attackableTiles = getAttackableTiles(
+            mapData,
+            enemyUnits,
+            "clear", //!,
+            unitPropertiesMap[unit.type].moveRange,
+            unitPropertiesMap[unit.type].movementType,
+            unit.position[0],
+            unit.position[1],
+            accessibleNodes
+          );
+
+          //We clicked an unit, lets clean up other tiles/arrows/paths from previous unit clicked
+          const layerName = returnContainer.getChildByName("arrowAndSquaresContainer");
+          if (layerName !== null) returnContainer.removeChild(layerName);
+
+          //the container holding arrow/path and other squareContainer and interactiveSqUAREScONTAINER
+          const arrowAndSquaresContainer = new Container();
+          arrowAndSquaresContainer.name = "arrowAndSquaresContainer";
+          arrowAndSquaresContainer.sortableChildren = true;
+
+          //The blue and red tiles we can see
+          const squareContainer = new Container();
+          arrowAndSquaresContainer.addChild(squareContainer);
+
+          //Interactive squares that recalculate path and execute other functions
+          const interactiveSquaresContainer = new Container();
+          interactiveSquaresContainer.zIndex = 1;
+          arrowAndSquaresContainer.addChild(interactiveSquaresContainer);
+
+          //create the visual passable tiles layer and the unit sprite layer
+          const tilesShown = await showPassableTiles(
+            mapData,
+            unit,
+            enemyUnits,
+            accessibleNodes
+          );
+          squareContainer.addChild(tilesShown);
+
+          //create the interactive, transparent tiles layer
+          for (const [pos] of accessibleNodes.entries()) {
+            //Transparent squares, interactive, on top of everything
+            const invisibleSquare = tileConstructor(pos, "#000000");
+            invisibleSquare.alpha = 0;
+            invisibleSquare.name = "invisibleSquare";
+            invisibleSquare.on("pointerover", () => {
+              console.log("im hovering over invisible square!");
+              path = updatePath(
+                mapData,
+                "clear",
+                unitPropertiesMap[unit.type].moveRange,
+                unitPropertiesMap[unit.type].movementType,
+                accessibleNodes,
+                path,
+                pos
+              );
+              //update path display layer
+              currentPathDisplay = showPath(
+                spriteSheets[spriteSheets.length - 1],
+                path
+              );
+
+
+              invisibleSquare.on("click", () => {
+                //TODO: Through a function called showUnitMenu or something outside this file
+                // Display unit menu (wait, capture, etc) and execute checks for menu items
+                // such as if infantry and on non-owned city, show capture OR
+                // if adjacent to enemy unit/can fire from position, show fire command in menu.
+
+                //TODO: Check to make sure the coordinates selected don't have an ally unit, if they do,
+                // show the path for that unit (since we can't move into other units).
+
+                // TODO: Also remove the zIndex = 0, this is just for now since we dont display menus yet.
+                unitSprite.zIndex = 0;
+                console.log("path selected");
+                secondTimeClickingUnit = false;
+                returnContainer.removeChild(arrowAndSquaresContainer);
+              });
+              //lets cleanup previous arrows.
+              const arrowName =
+                arrowAndSquaresContainer.getChildByName("arrows");
+              if (arrowName !== null)
+                arrowAndSquaresContainer.removeChild(arrowName);
+
+              arrowAndSquaresContainer.addChild(currentPathDisplay);
+            });
+
+            //add the interactive square to the interactive tiles container
+            interactiveSquaresContainer.addChild(invisibleSquare);
+          }
+
+          //Lets create the red squares for enemy units!
+          for (const enemyUnit of enemyUnits) {
+            if (
+              //probably can improve efficiency on that
+              attackableTiles.some((t) => isSamePosition(t, enemyUnit.position))
+            ) {
+              const enemySquare = tileConstructor(
+                enemyUnit.position,
+                "#932f2f"
+              );
+
+              enemySquare.on("pointerover", async () => {
+                //TODO: show dmg forecast/preview/%s checking current units and current terrains
+              });
+              enemySquare.on("pointerdown", async () => {
+                unitSprite.zIndex = 0;
+                //TODO This means an enemy unit has been clicked, if clicked again, initiate combat from "current" / "last" arrow/tile position.
+                console.log("unit attacked");
+                secondTimeClickingUnit = false;
+                returnContainer.removeChild(arrowAndSquaresContainer);
+              });
+
+              squareContainer.addChild(enemySquare);
+            }
+          }
+
+          //Invisible rectangle that serves as our eventListener that we are clicking outside the pathfinding so we need to remove the pathfinding
+          const outsideOfPath = spriteConstructor(
+            Texture.WHITE,
+            0,
+            0,
+            mapData[0].length * 16,
+            mapData.length * 16,
+            "static"
+          );
+          outsideOfPath.alpha = 0;
+          outsideOfPath.zIndex = -1;
+          outsideOfPath.on("pointerdown", async () => {
+            unitSprite.zIndex = 0;
+            console.log("invisible rectangle clicked, eliminating layers");
+            returnContainer.removeChild(arrowAndSquaresContainer);
+          });
+          arrowAndSquaresContainer.addChild(outsideOfPath);
+          returnContainer.addChild(arrowAndSquaresContainer);
+          secondTimeClickingUnit = true;
+        }
       });
     }
     //unit is in the opposite team/is an enemy

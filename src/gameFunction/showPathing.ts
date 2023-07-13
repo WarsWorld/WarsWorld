@@ -1,5 +1,4 @@
-//TODO: Fix TS issues, it treats an array as if it was not an array
-// with forEach and type-safety is secondary to the project so...  - Javi
+//TODO: Fix TS issues
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
@@ -14,12 +13,12 @@ import { Tile, Weather } from "../server/schemas/tile.ts";
 import { CreatableUnit } from "../server/schemas/unit";
 import { positionSchema } from "../server/schemas/position";
 import { tileConstructor } from "./spriteConstructor";
-export type Coord = positionSchema;
+export type positionSchema = positionSchema;
 export type PathNode = {
   //saves distance from origin and parent (to retrieve the shortest path)
-  pos: Coord;
+  pos: positionSchema;
   dist: number;
-  parent: Coord | null;
+  parent: positionSchema | null;
 };
 
 
@@ -31,8 +30,8 @@ export function getAccessibleNodes( //TODO: save result of function? _ (Sturm d2
   moveType: MovementType,
   x: number,
   y: number
-): Map<Coord, PathNode> {
-  const accessibleTiles: Map<Coord, PathNode> = new Map(); //return variable
+): Map<positionSchema, PathNode> {
+  const accessibleTiles: Map<positionSchema, PathNode> = new Map(); //return variable
 
   //queues[a] has current queued nodes with distance a from origin (technically a "stack", not a queue, but the result doesn't change)
   const queues: PathNode[][] = [];
@@ -76,14 +75,14 @@ export function getAccessibleNodes( //TODO: save result of function? _ (Sturm d2
     accessibleTiles.set(currPos, currNode);
 
     //the 4 adjacent node's coordinates:
-    const xCoords = [currPos[0] - 1, currPos[0] + 1, currPos[0], currPos[0]];
-    const yCoords = [currPos[1], currPos[1], currPos[1] - 1, currPos[1] + 1];
+    const xpositionSchemas = [currPos[0] - 1, currPos[0] + 1, currPos[0], currPos[0]];
+    const ypositionSchemas = [currPos[1], currPos[1], currPos[1] - 1, currPos[1] + 1];
 
     for (let i = 0; i < 4; ++i) {
-      if (isValidTile(xCoords[i], yCoords[i])) {
+      if (isValidTile(xpositionSchemas[i], ypositionSchemas[i])) {
         //if one adjacent tile is valid
         const movementCost = getMovementCost(
-          mapData[xCoords[i]][yCoords[i]].type,
+          mapData[xpositionSchemas[i]][ypositionSchemas[i]].type,
           moveType,
           weather
         );
@@ -92,7 +91,7 @@ export function getAccessibleNodes( //TODO: save result of function? _ (Sturm d2
         if (nodeDist <= movePoints) {
           while (queues.length <= nodeDist) queues.push([]); //increase queues size until new node can be added
           queues[nodeDist].push({
-            pos: [xCoords[i], yCoords[i]],
+            pos: [xpositionSchemas[i], ypositionSchemas[i]],
             dist: nodeDist,
             parent: currPos,
           }); //add new node with new distance and parent
@@ -110,7 +109,7 @@ export async function showPassableTiles(
   mapData: Tile[][],
   unit: CreatableUnit,
   enemyUnits: CreatableUnit[],
-  accessibleNodes?: Map<Coord, PathNode>
+  accessibleNodes?: Map<positionSchema, PathNode>
 ): Container {
   const unitProperties = unitPropertiesMap[unit.type];
 
@@ -148,8 +147,8 @@ export function getAttackableTiles(
   moveType: MovementType,
   x: number,
   y: number,
-  accessibleNodes?: Map<Coord, PathNode>
-): Coord[] {
+  accessibleNodes?: Map<positionSchema, PathNode>
+): positionSchema[] {
   if (accessibleNodes === undefined) {
     accessibleNodes = getAccessibleNodes(
       mapData,
@@ -178,28 +177,28 @@ export function getAttackableTiles(
     }
   }
 
-  const attackCoords: Coord[] = [];
+  const attackpositionSchemas: positionSchema[] = [];
   for (const [pos, node] of accessibleNodes.entries()) {
-    const xCoords = [pos[0] - 1, pos[0] + 1, pos[0], pos[0]];
-    const yCoords = [pos[1], pos[1], pos[1] - 1, pos[1] + 1];
+    const xpositionSchemas = [pos[0] - 1, pos[0] + 1, pos[0], pos[0]];
+    const ypositionSchemas = [pos[1], pos[1], pos[1] - 1, pos[1] + 1];
     for (let i = 0; i < 4; ++i) {
       //all positions adjacent to tiles where the unit can move to are attacking tiles
-      if (isValidTile(xCoords[i], yCoords[i]))
-        if (!visited[xCoords[i]][yCoords[i]]) {
-          attackCoords.push([xCoords[i], yCoords[i]]);
-          visited[xCoords[i]][yCoords[i]] = true;
+      if (isValidTile(xpositionSchemas[i], ypositionSchemas[i]))
+        if (!visited[xpositionSchemas[i]][ypositionSchemas[i]]) {
+          attackpositionSchemas.push([xpositionSchemas[i], ypositionSchemas[i]]);
+          visited[xpositionSchemas[i]][ypositionSchemas[i]] = true;
         }
     }
   }
 
-  return attackCoords;
+  return attackpositionSchemas;
 }
 
 export async function showAttackableTiles(
   mapData: Tile[][],
   unit: CreatableUnit,
   enemyUnits: CreatableUnit[],
-  attackableTiles?: Coord[]
+  attackableTiles?: positionSchema[]
 ): Container {
   const unitProperties = unitPropertiesMap[unit.type];
 
@@ -251,9 +250,9 @@ export function updatePath(
   weather: Weather,
   movePoints: number,
   moveType: MovementType,
-  accessibleNodes: Map<Coord, PathNode>,
+  accessibleNodes: Map<positionSchema, PathNode>,
   path: PathNode[],
-  newPos: Coord
+  newPos: positionSchema
 ): PathNode[] {
   if (newPos === undefined || newPos === null || !accessibleNodes.has(newPos))
     throw new Error("Trying to add an unreachable position!");
@@ -307,7 +306,7 @@ export function showPath(spriteSheet: Spritesheet, path: PathNode[]) {
   const arrowContainer = new Container();
   arrowContainer.eventMode = "static";
 
-  function getSpriteName(a: Coord, b: Coord, c: Coord): string {
+  function getSpriteName(a: positionSchema, b: positionSchema, c: positionSchema): string {
     //path from a to b to c, the sprite is the one displayed in b (middle node)
     const dify = Math.abs(a[1] - c[1]);
     const difx = Math.abs(a[0] - c[0]);
