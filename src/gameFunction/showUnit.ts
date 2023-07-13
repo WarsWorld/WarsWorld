@@ -1,8 +1,3 @@
-//TODO: Fix TS issues
-
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-nocheck
-
 import {
   AnimatedSprite,
   Container,
@@ -28,8 +23,6 @@ import {
   spriteConstructor,
   tileConstructor,
 } from "./spriteConstructor";
-
-
 
 // Creates the sprite of an unit
 export function getUnitSprite(
@@ -68,7 +61,6 @@ export function showUnits(
       // check if waited or not
       // if ready, then start the create path procedure TODO: (supposing now that all are ready)
       unitSprite.on("pointerdown", async () => {
-
         //Is this the first time we are clicking this unit? if not,
         // then display the menu where they are
         // because it means we want to activate the unit where its sitting.
@@ -76,7 +68,9 @@ export function showUnits(
           //TODO Run show menu function on current spot (don't have to do anything else )
           secondTimeClickingUnit = false;
           console.log("Displaying menu on same spot");
-          const layerName = returnContainer.getChildByName("arrowAndSquaresContainer");
+          const layerName = returnContainer.getChildByName(
+            "arrowAndSquaresContainer"
+          );
           if (layerName !== null) returnContainer.removeChild(layerName);
         }
         //First time clicking this unit, calculate the path and everything
@@ -121,7 +115,9 @@ export function showUnits(
           );
 
           //We clicked an unit, lets clean up other tiles/arrows/paths from previous unit clicked
-          const layerName = returnContainer.getChildByName("arrowAndSquaresContainer");
+          const layerName = returnContainer.getChildByName(
+            "arrowAndSquaresContainer"
+          );
           if (layerName !== null) returnContainer.removeChild(layerName);
 
           //the container holding arrow/path and other squareContainer and interactiveSqUAREScONTAINER
@@ -169,7 +165,6 @@ export function showUnits(
                 spriteSheets[spriteSheets.length - 1],
                 path
               );
-
 
               invisibleSquare.on("click", () => {
                 //TODO: Through a function called showUnitMenu or something outside this file
@@ -283,7 +278,3 @@ export function showUnits(
 
   return returnContainer;
 }
-
-
-
-
