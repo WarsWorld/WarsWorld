@@ -23,7 +23,7 @@ export const demoUnits: CreatableUnit[] = [
   {
     type: "tank",
     playerSlot: 0,
-    position: [3, 3],
+    position: [0, 0],
     stats: {
       hp: 9,
       fuel: 99,
@@ -34,7 +34,7 @@ export const demoUnits: CreatableUnit[] = [
   {
     type: "recon",
     playerSlot: 1,
-    position: [3, 4],
+    position: [0, 1],
     stats: {
       hp: 9,
       fuel: 99,
