@@ -21,10 +21,11 @@ import { useEffect, useRef, useState } from "react";
 import { PlayerInMatch } from "shared/types/server-match-state";
 
 import { trpc } from "frontend/utils/trpc-client";
+import { showUnits } from "../../gameFunction/showUnit";
+import { demoUnits } from "../../gameFunction/demoUnitList";
 import getJSON from "../../gameFunction/getJSON";
 import showMenu from "../../gameFunction/showMenu";
-import spriteConstructor from "../../gameFunction/spriteConstructor";
-
+import { spriteConstructor } from "../../gameFunction/spriteConstructor";
 
 BaseTexture.defaultOptions.scaleMode = SCALE_MODES.NEAREST;
 
@@ -63,7 +64,7 @@ const Match = ({ spriteData }) => {
   //Important useEffect to make sure Pixi
   // only gets updated when pixiCanvasRef or mapData changes
   // we dont want it to be refreshed in react everytime something changes.
-  const [scale, setScale] = useState<number>(1.8);
+  const [scale, setScale] = useState<number>(2);
 
   useEffect(() => {
     if (mapData) {
@@ -137,7 +138,9 @@ const Match = ({ spriteData }) => {
                     );
 
                     //if there is a menu already out, lets remove it
-                    mapContainer.removeChild(mapContainer.getChildByName("menu"));
+                    mapContainer.removeChild(
+                      mapContainer.getChildByName("menu")
+                    );
 
                     //lets create a transparent screen that covers everything.
                     // if we click on it, we will delete the menu
@@ -173,17 +176,27 @@ const Match = ({ spriteData }) => {
             } else {
               if (row.hasOwnProperty("variant"))
                 tile = new Sprite(
-                  spriteSheets[2].textures[row.type + "-" + row.variant + ".png"]
+                  spriteSheets[2].textures[
+                    row.type + "-" + row.variant + ".png"
+                  ]
                 );
-              else tile = new Sprite(spriteSheets[2].textures[row.type + ".png"]);
+              else
+                tile = new Sprite(spriteSheets[2].textures[row.type + ".png"]);
             }
+            //makes our sprites render at the bottom, not from the top.
             tile.anchor.set(1, 1);
             tile.x = (rowIndex + 1) * 16;
             tile.y = (colIndex + 1) * 16;
             mapContainer.addChild(tile);
           });
         });
+
+
+        //Lets display units!
+        const units = showUnits(spriteSheets, mapData, demoUnits);
+        mapContainer.addChild(units);
       }
+      console.log("Below is the mapData");
       console.log(mapData);
       return () => {
         app.stop();
@@ -196,36 +209,43 @@ const Match = ({ spriteData }) => {
   else {
     return (
       <div className="@grid @grid-cols-12  @text-center @my-20">
-
         <div className="@col-span-12 @p-2">
-          <button className={"btn @inline"} onClick={()=>{
-            setScale(scale + 0.2);
-          }}>+</button>
-          <h2 className="@inline @align-middle"> {Math.round(scale * 10)/10} </h2>
-          <button className={"btn"} onClick={()=>{
-            setScale(scale - 0.2);
-          }}>-</button>
+          <button
+            className={"btn @inline"}
+            onClick={() => {
+              setScale(scale + 0.2);
+            }}
+          >
+            +
+          </button>
+          <h2 className="@inline @align-middle">
+            {" "}
+            {Math.round(scale * 10) / 10}{" "}
+          </h2>
+          <button
+            className={"btn"}
+            onClick={() => {
+              setScale(scale - 0.2);
+            }}
+          >
+            -
+          </button>
         </div>
 
-<div className="@col-span-12">
-  <canvas className="@inline"
-          style={{
-            imageRendering: "pixelated",
-          }}
-          ref={pixiCanvasRef}
-  ></canvas>
-</div>
-
-
-
-
+        <div className="@col-span-12">
+          <canvas
+            className="@inline"
+            style={{
+              imageRendering: "pixelated",
+            }}
+            ref={pixiCanvasRef}
+          ></canvas>
+        </div>
       </div>
     );
   }
-
 };
 export default Match;
-
 
 export async function getServerSideProps() {
   //TODO: Should we call all the spritesheets or just the ones the players will need?
