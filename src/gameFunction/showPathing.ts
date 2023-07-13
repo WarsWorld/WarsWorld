@@ -104,7 +104,7 @@ export function getAccessibleNodes( //TODO: save result of function? _ (Sturm d2
           queues[nodeDist].push({
             pos: [xpositionSchemas[i], ypositionSchemas[i]],
             dist: nodeDist,
-            parent: currPos !== undefined ? currPos : null,
+            parent: currPos,
           }); //add new node with new distance and parent
         }
       }

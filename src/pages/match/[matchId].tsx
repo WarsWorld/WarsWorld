@@ -1,9 +1,11 @@
-//TODO: Fix TS type issues, TS is getting angry at very complex types
-// Im not going to bother going on rabbit holes to please the TS gods
-// and their confusing requests
-
+//TODO: Fix TS type issues
+// - spriteData props needs a more defiend Type, it's set to any for now because the type is pretty complex
+//      and probably the data type will grow in complexity with every feature added.
+//      That data Type could be made with zod, idk...
+// - mapData of type Type[][] needs a check for row.playerSlot and row.variant to cry.
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
+
 import { usePlayers } from "frontend/context/players";
 import { Tile } from "server/schemas/tile";
 import { useRouter } from "next/router";
@@ -29,7 +31,13 @@ import { spriteConstructor } from "../../gameFunction/spriteConstructor";
 
 BaseTexture.defaultOptions.scaleMode = SCALE_MODES.NEAREST;
 
-const Match = ({ spriteData }) => {
+interface SpriteData {
+  spriteData: any;
+}
+
+const Match = ({ spriteData }: SpriteData) => {
+  console.log("Here is the spriteData: ");
+  console.log(spriteData);
   const { currentPlayer } = usePlayers();
   const [players, setPlayers] = useState<PlayerInMatch[] | null | undefined>(
     null
@@ -71,7 +79,8 @@ const Match = ({ spriteData }) => {
       const mapScale = scale * 16;
       const mapMargin = scale * 32;
       const app = new Application({
-        view: pixiCanvasRef.current,
+        view:
+          pixiCanvasRef.current === null ? undefined : pixiCanvasRef.current,
         autoDensity: true,
         resolution: window.devicePixelRatio,
         backgroundColor: "#061838",
@@ -85,7 +94,7 @@ const Match = ({ spriteData }) => {
       //TODO: Cursor stops working on half screen on google chrome (works on firefox).
       app.renderer.events.cursorStyles.default = {
         animation: "gameCursor 1200ms infinite",
-      };
+      } as CSSStyleDeclaration;
 
       //the container that holds the map
       const mapContainer = new Container();
@@ -138,9 +147,9 @@ const Match = ({ spriteData }) => {
                     );
 
                     //if there is a menu already out, lets remove it
-                    mapContainer.removeChild(
-                      mapContainer.getChildByName("menu")
-                    );
+                    const menuContainer = mapContainer.getChildByName("menu");
+                    if (menuContainer !== null)
+                      mapContainer.removeChild(menuContainer);
 
                     //lets create a transparent screen that covers everything.
                     // if we click on it, we will delete the menu
@@ -190,7 +199,6 @@ const Match = ({ spriteData }) => {
             mapContainer.addChild(tile);
           });
         });
-
 
         //Lets display units!
         const units = showUnits(spriteSheets, mapData, demoUnits);
