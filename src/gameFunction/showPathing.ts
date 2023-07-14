@@ -1,7 +1,7 @@
-//TODO: Fix TS issues
-
+// TODO: Check Weather import
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
+
 import { Container, Texture, Sprite, BaseTexture, Spritesheet } from "pixi.js";
 import {
   MovementType,
@@ -10,13 +10,13 @@ import {
 import { getMovementCost } from "../shared/match-logic/tiles";
 import { Tile, Weather } from "../server/schemas/tile.ts";
 import { CreatableUnit } from "../server/schemas/unit";
-import { positionSchema } from "../server/schemas/position";
+import { Position } from "../server/schemas/position";
 import { tileConstructor } from "./spriteConstructor";
 export type PathNode = {
   //saves distance from origin and parent (to retrieve the shortest path)
-  pos: typeof positionSchema;
+  pos: Position;
   dist: number;
-  parent: typeof positionSchema | null;
+  parent: Position | null;
 };
 
 export function getAccessibleNodes( //TODO: save result of function? _ (Sturm d2d?)
@@ -27,8 +27,8 @@ export function getAccessibleNodes( //TODO: save result of function? _ (Sturm d2
   moveType: MovementType,
   x: number,
   y: number
-): Map<typeof positionSchema, PathNode> {
-  const accessibleTiles: Map<typeof positionSchema, PathNode> = new Map(); //return variable
+): Map<Position, PathNode> {
+  const accessibleTiles: Map<Position, PathNode> = new Map(); //return variable
 
   //queues[a] has current queued nodes with distance a from origin (technically a "stack", not a queue, but the result doesn't change)
   const queues: PathNode[][] = [];
@@ -68,7 +68,7 @@ export function getAccessibleNodes( //TODO: save result of function? _ (Sturm d2
     let currPos;
     if (currNode?.pos !== null) currPos = currNode?.pos;
 
-    if (visited[currPos[0]][currPos[1]]) continue;
+    if (currPos === undefined || visited[currPos[0]][currPos[1]]) continue;
     //update variables to mark as visited and add to result
     visited[currPos[0]][currPos[1]] = true;
     accessibleTiles.set(currPos, <PathNode>currNode);
@@ -118,7 +118,7 @@ export async function showPassableTiles(
   mapData: Tile[][],
   unit: CreatableUnit,
   enemyUnits: CreatableUnit[],
-  accessibleNodes?: Map<(typeof positionSchema), PathNode>
+  accessibleNodes?: Map<Position, PathNode>
 ) {
   const unitProperties = unitPropertiesMap[unit.type];
 
@@ -154,8 +154,8 @@ export function getAttackableTiles(
   moveType: MovementType,
   x: number,
   y: number,
-  accessibleNodes?: Map<(typeof positionSchema), PathNode>
-): (typeof positionSchema)[] {
+  accessibleNodes?: Map<Position, PathNode>
+): Position[] {
   if (accessibleNodes === undefined) {
     accessibleNodes = getAccessibleNodes(
       mapData,
@@ -184,9 +184,9 @@ export function getAttackableTiles(
     }
   }
 
-  const attackpositionSchemas: (typeof positionSchema)[] = [];
+  const attackpositionSchemas: Position[] = [];
   for (const [pos, node] of accessibleNodes.entries()) {
-    const xpositionSchemas= [pos[0] - 1, pos[0] + 1, pos[0], pos[0]];
+    const xpositionSchemas = [pos[0] - 1, pos[0] + 1, pos[0], pos[0]];
     const ypositionSchemas = [pos[1], pos[1], pos[1] - 1, pos[1] + 1];
     for (let i = 0; i < 4; ++i) {
       //all positions adjacent to tiles where the unit can move to are attacking tiles
@@ -208,7 +208,7 @@ export async function showAttackableTiles(
   mapData: Tile[][],
   unit: CreatableUnit,
   enemyUnits: CreatableUnit[],
-  attackableTiles?: typeof positionSchema[]
+  attackableTiles?: Position[]
 ) {
   const unitProperties = unitPropertiesMap[unit.type];
 
@@ -260,9 +260,9 @@ export function updatePath(
   weather: Weather,
   movePoints: number,
   moveType: MovementType,
-  accessibleNodes: Map<typeof positionSchema, PathNode>,
+  accessibleNodes: Map<Position, PathNode>,
   path: PathNode[],
-  newPos: typeof positionSchema
+  newPos: Position
 ): PathNode[] {
   if (newPos === undefined || newPos === null || !accessibleNodes.has(newPos))
     throw new Error("Trying to add an unreachable position!");
@@ -289,7 +289,7 @@ export function updatePath(
         weather
       );
       //if it doesn't surpass movement restrictions, update current path
-      if (tileDist + lastNode.dist <= movePoints) {
+      if (tileDist !== null && tileDist + lastNode.dist <= movePoints) {
         path.push({
           pos: newPos,
           dist: tileDist + lastNode.dist,
@@ -302,10 +302,13 @@ export function updatePath(
 
   //if the new position can't be added to the current path, recreate the entire path
   const newPath: PathNode[] = [];
-  let currentPos = newPos;
+  let currentPos: [number, number] | null = newPos;
   while (currentPos !== null) {
-    newPath.push(accessibleNodes.get(currentPos));
-    currentPos = accessibleNodes.get(currentPos).parent;
+    const accessibleNodesPath = accessibleNodes.get(currentPos);
+    if (accessibleNodesPath !== undefined) {
+      newPath.push(accessibleNodesPath);
+      currentPos = accessibleNodesPath.parent;
+    }
   }
   return newPath.reverse();
 }
@@ -316,11 +319,7 @@ export function showPath(spriteSheet: Spritesheet, path: PathNode[]) {
   const arrowContainer = new Container();
   arrowContainer.eventMode = "static";
 
-  function getSpriteName(
-    a: positionSchema,
-    b: positionSchema,
-    c: positionSchema
-  ): string {
+  function getSpriteName(a: Position, b: Position, c: Position): string {
     //path from a to b to c, the sprite is the one displayed in b (middle node)
     const dify = Math.abs(a[1] - c[1]);
     const difx = Math.abs(a[0] - c[0]);

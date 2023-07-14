@@ -1,3 +1,8 @@
+//TODO: Fix TS issues
+
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-nocheck
+
 import {
   AnimatedSprite,
   Container,
@@ -23,7 +28,6 @@ import {
   spriteConstructor,
   tileConstructor,
 } from "./spriteConstructor";
-import { ZodNumber, ZodTuple } from "zod";
 
 // Creates the sprite of an unit
 export function getUnitSprite(
@@ -62,6 +66,7 @@ export function showUnits(
       // check if waited or not
       // if ready, then start the create path procedure TODO: (supposing now that all are ready)
       unitSprite.on("pointerdown", async () => {
+
         //Is this the first time we are clicking this unit? if not,
         // then display the menu where they are
         // because it means we want to activate the unit where its sitting.
@@ -86,8 +91,6 @@ export function showUnits(
           let path: PathNode[] = [];
           path.push({
             //original node
-            //TODO: Fix ts issue, as many others, it has to do with numbers and the zodTuple and position
-            //@ts-ignore
             pos: [unit.position[0], unit.position[1]],
             dist: 0,
             parent: null,
@@ -208,15 +211,9 @@ export function showUnits(
           for (const enemyUnit of enemyUnits) {
             if (
               //probably can improve efficiency on that
-
-              //TODO: fix error here, apparently it believes the first position is a zodTuple
-              // and the second position is a number?
-              //@ts-ignore
               attackableTiles.some((t) => isSamePosition(t, enemyUnit.position))
             ) {
               const enemySquare = tileConstructor(
-                //todo: fix this ts error, it was a ZodTuple<[ZodNumber, ZodNumber]> but that doesnt quite work?
-                //@ts-ignore
                 enemyUnit.position,
                 "#932f2f"
               );
@@ -294,3 +291,7 @@ export function showUnits(
 
   return returnContainer;
 }
+
+
+
+
