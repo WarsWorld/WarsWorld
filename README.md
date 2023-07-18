@@ -10,7 +10,7 @@ This repository contains the backend and frontend code and is based on this [sta
 
 Here are our [Contribution Guidelines](https://github.com/WarsWorld/WarsWorld/blob/main/CONTRIBUTING.md) where you can learn more about how you can help the project out!
 
-If you want to reach out the dev team/ask some questions, feel free to [join our Discord server!](https://discord.gg/9cgTs5ZGT2)
+If you want to reach out the dev team/ask some questions, feel free to join our Discord server by sending a DM to femboy.io 
 
 # Setting up your local environment
 
