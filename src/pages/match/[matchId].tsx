@@ -29,6 +29,9 @@ import getJSON from "../../gameFunction/getJSON";
 import showMenu from "../../gameFunction/showMenu";
 import { spriteConstructor } from "../../gameFunction/spriteConstructor";
 
+
+
+
 BaseTexture.defaultOptions.scaleMode = SCALE_MODES.NEAREST;
 
 interface SpriteData {
@@ -36,8 +39,8 @@ interface SpriteData {
 }
 
 const Match = ({ spriteData }: SpriteData) => {
-  console.log("Here is the spriteData: ");
-  console.log(spriteData);
+
+  const mutation = trpc.action.send.useMutation();
   const { currentPlayer } = usePlayers();
   const [players, setPlayers] = useState<PlayerInMatch[] | null | undefined>(
     null
@@ -143,7 +146,8 @@ const Match = ({ spriteData }: SpriteData) => {
                       rowIndex,
                       colIndex,
                       mapData.length - 1,
-                      mapData[0].length - 1
+                      mapData[0].length - 1,
+                      mutation
                     );
 
                     //if there is a menu already out, lets remove it

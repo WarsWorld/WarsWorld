@@ -7,12 +7,14 @@ import { MatchRow } from "frontend/components/match/MatchRow";
 export default function YourMatches() {
   const { currentPlayer, setCurrentPlayer, ownedPlayers } = usePlayers();
 
-  const matchesQuery = trpc.match.getPlayerMatches.useQuery(
+  const yourMatchesQuery = trpc.match.getPlayerMatches.useQuery(
     { playerId: currentPlayer?.id ?? "" },
     {
       enabled: currentPlayer !== undefined,
     }
   );
+
+  const allMatchesQuery = trpc.match.getAll.useQuery();
 
   const mapQuery = trpc.map.getAll.useQuery();
   const createMutation = trpc.match.create.useMutation();
@@ -27,7 +29,6 @@ export default function YourMatches() {
       <div className="@flex @justify-center @w-full">
         <div className="@h-full @w-full @p-5 @grid @gap-10 @text-center allGames">
           <div>
-            <h1>Your matches</h1>
             <h1>Hello dev! Read Instructions</h1>
             <p>
               To create a match, first change Current Player to any other
@@ -40,7 +41,7 @@ export default function YourMatches() {
             <p>
               Current player:{" "}
               <select
-                className="@bg-gray-800 @px-2 @rounded-lg"
+                className="@bg-gray-800 @px-2 @rounded-lg btn"
                 onChange={(e) => {
                   const foundPlayer = ownedPlayers?.find(
                     (p) => p.id === e.target.value
@@ -60,7 +61,7 @@ export default function YourMatches() {
             </p>
             <div className="@flex @justify-center @gap-5">
               <button
-                className="@bg-gray-800 @px-2 @rounded-lg"
+                className="@bg-gray-800 @px-2 @rounded-lg btn"
                 onClick={async () => {
                   const mapId = mapSelectionRef.current?.value;
 
@@ -69,17 +70,17 @@ export default function YourMatches() {
                   }
 
                   await createMutation.mutateAsync({
-                    selectedCO: "andy",
+                    selectedCO: "sami",
                     mapId,
                     playerId: currentPlayer.id,
                   });
-                  matchesQuery.refetch();
+                  yourMatchesQuery.refetch();
                 }}
               >
                 Create game
               </button>
               <select
-                className="@bg-gray-800 @px-2 @rounded-lg"
+                className="@bg-gray-800 @px-2 @rounded-lg btn"
                 ref={mapSelectionRef}
               >
                 {mapQuery.data?.map((map) => (
@@ -91,15 +92,29 @@ export default function YourMatches() {
             </div>
           </div>
           <div id="currentGames" className="currentGames">
-            <h1>Current games</h1>
+            <h1>Matches you created</h1>
             <div className="@flex @flex-wrap @justify-around">
-              {matchesQuery.data === undefined
+              {yourMatchesQuery.data === undefined
                 ? "Loading..."
-                : matchesQuery.data.map((match) => (
+                : yourMatchesQuery.data.map((match) => (
                     <MatchRow key={match.id} match={match} />
                   ))}
             </div>
           </div>
+
+          <div id="currentGames" className="currentGames">
+            <h1>Join a match</h1>
+            <div className="@flex @flex-wrap @justify-around">
+              {allMatchesQuery.data === undefined
+                ? "Loading..."
+                : allMatchesQuery.data.map((match) => {
+
+                  //Lets make sure we didn't make this match,
+                  if (match.players[0].playerId !== currentPlayer.id) return <MatchRow key={match.id} match={match} />;
+                })}
+            </div>
+          </div>
+
           <div id="completedGames" className="completedGames">
             <h1 className="@text-center">Completed games</h1>
           </div>
