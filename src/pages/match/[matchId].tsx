@@ -78,7 +78,9 @@ const Match = ({ spriteData }: SpriteData) => {
   const [scale, setScale] = useState<number>(2);
 
   useEffect(() => {
+
     if (mapData) {
+
       const mapScale = scale * 16;
       const mapMargin = scale * 32;
       const app = new Application({
@@ -208,8 +210,10 @@ const Match = ({ spriteData }: SpriteData) => {
         const units = showUnits(spriteSheets, mapData, demoUnits);
         mapContainer.addChild(units);
       }
+
       console.log("Below is the mapData");
       console.log(mapData);
+      console.log(players);
       return () => {
         app.stop();
       };

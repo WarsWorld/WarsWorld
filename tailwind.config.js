@@ -12,8 +12,8 @@ module.exports = {
         primary: "#E47220",
         "primary-dark": "#943E15FF",
         secondary: "#b7eab8",
-        "bg-primary": "#242A31",
-        "bg-secondary": "#293143",
+        "bg-primary": "#191f23",
+        "bg-secondary": "#293144",
         "bg-tertiary": "#3E4963",
         "match-orange": "#C0601B",
         "bg-match-live": "#432929",
@@ -23,12 +23,13 @@ module.exports = {
         "blue-moon": "rgb(70, 110, 254)",
         "green-earth": "rgb(55, 164, 42)",
         "yellow-comet": "rgb(218, 165, 32)",
-        "black-hole": "rgb(0, 0, 0)",
+        "black-hole": "rgb(12,12,12)",
       },
       minWidth: {
         20: "5rem",
       },
     },
+
     screens: {
       cellphone: "360px",
       tablet: "480px",
@@ -43,7 +44,7 @@ module.exports = {
   safelist: [
     {
       pattern:
-        /(bg|border|text)-(orange-star|blue-moon|green-earth|yellow-comet)/,
+        /(bg|border|text)-(orange-star|blue-moon|green-earth|yellow-comet|black-hole)/,
     },
   ],
   plugins: [],

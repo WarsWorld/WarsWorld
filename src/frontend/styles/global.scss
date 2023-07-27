@@ -1,5 +1,6 @@
 @use "template/layout";
 @use "pages/index";
+@use "match/matchCard";
 @use "mixins" as m;
 
 // This file is used as the base for tailwindCSS

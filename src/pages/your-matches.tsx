@@ -3,6 +3,9 @@ import { useRef } from "react";
 import { trpc } from "frontend/utils/trpc-client";
 import Head from "next/head";
 import { MatchRow } from "frontend/components/match/MatchRow";
+import MatchCardTop from "../frontend/components/match/v2/MatchCardTop";
+import MatchPlayer from "../frontend/components/match/v2/MatchPlayer";
+import MatchCard from "../frontend/components/match/v2/MatchCard";
 
 export default function YourMatches() {
   const { currentPlayer, setCurrentPlayer, ownedPlayers } = usePlayers();
@@ -36,7 +39,6 @@ export default function YourMatches() {
               <br />
               Then click on Create Game and then on Enter Match
             </p>
-
             <br />
             <p>
               Current player:{" "}
@@ -91,27 +93,29 @@ export default function YourMatches() {
               </select>
             </div>
           </div>
+
           <div id="currentGames" className="currentGames">
             <h1>Matches you created</h1>
-            <div className="@flex @flex-wrap @justify-around">
+            <div className="@grid [grid-template-columns:repeat(auto-fit,minmax(300px,1fr))] @gap-10">
               {yourMatchesQuery.data === undefined
                 ? "Loading..."
                 : yourMatchesQuery.data.map((match) => (
-                    <MatchRow key={match.id} match={match} />
+                    <MatchCard key={match.id} match={match} />
                   ))}
             </div>
           </div>
 
           <div id="currentGames" className="currentGames">
             <h1>Join a match</h1>
-            <div className="@flex @flex-wrap @justify-around">
+            <div className="@grid [grid-template-columns:repeat(auto-fit,minmax(300px,1fr))] @gap-10">
               {allMatchesQuery.data === undefined
                 ? "Loading..."
                 : allMatchesQuery.data.map((match) => {
-
-                  //Lets make sure we didn't make this match,
-                  if (match.players[0].playerId !== currentPlayer.id) return <MatchRow key={match.id} match={match} />;
-                })}
+                    console.log(match);
+                    //Lets make sure we didn't make this match,
+                    if (match.players[0].playerId !== currentPlayer.id)
+                      return <MatchCard match={match} />;
+                  })}
             </div>
           </div>
 

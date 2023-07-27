@@ -155,4 +155,29 @@ export const matchRouter = router({
         ready: input.readyState,
       });
     }),
+  switchCO: matchBaseProcedure
+    .input(
+      z.object({
+        selectedCO: coSchema,
+      })
+    )
+    .mutation(async ({ input, ctx }) => {
+      throwIfMatchNotInSetupState(ctx.match);
+      console.log(ctx);
+
+      await updateServerState(
+        ctx.match,
+        //todo: this should only find the first match, not loop through every player
+        ctx.match.players.map((player) => ({
+          ...player,
+          co: player.playerId === ctx.currentPlayer.id ? input.selectedCO : player.co,
+        }))
+      );
+      emitEvent({
+        type: "player-picked-co",
+        co: input.selectedCO,
+        matchId: ctx.match.id,
+        player: ctx.currentPlayer,
+      });
+    }),
 });
