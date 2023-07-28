@@ -25,10 +25,10 @@ export default function MatchPlayer({
       <div className={"@truncate @text-right"}>
         <div
           style={{
-            backgroundImage: `url("/img/CO/smoothFull/Awds-${co}.webp")`,
+            backgroundImage: `url("/img/CO/pixelated/${co}-full.png")`,
           }}
           className={
-            "@h-[200px] @bg-cover " + (opponent ? "@brightness-[0.1]" : "")
+            "@h-[200px] [image-rendering:pixelated] @bg-cover " + (opponent ? "@brightness-[0.1]" : "")
           }
         ></div>
         <div
@@ -50,9 +50,9 @@ export default function MatchPlayer({
       <div className={"@truncate @text-left"}>
         <div
           style={{
-            backgroundImage: `url("/img/CO/smoothFull/Awds-${co}.webp")`,
+            backgroundImage: `url("/img/CO/pixelated/${co}-full.png")`,
           }}
-          className={"@h-[200px] @bg-cover @scale-x-[-1]"}
+          className={"@h-[200px] [image-rendering:pixelated] @bg-cover @scale-x-[-1]"}
         ></div>
         <div className={`@flex @bg-${country}`}>
           <img

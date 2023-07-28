@@ -21,6 +21,7 @@ import {
   PlayerInMatch,
   BackendMatchState,
 } from "shared/types/server-match-state";
+import { armySchema } from "../schemas/army";
 
 const updateServerState = async (
   matchState: BackendMatchState,
@@ -163,19 +164,44 @@ export const matchRouter = router({
     )
     .mutation(async ({ input, ctx }) => {
       throwIfMatchNotInSetupState(ctx.match);
-      console.log(ctx);
+
+      console.log(ctx.match.players[0]);
+      const findPlayer = ctx.match.players.find(
+        (player) => player.playerId === ctx.currentPlayer.id
+      );
+      if (findPlayer) findPlayer.co = input.selectedCO;
 
       await updateServerState(
         ctx.match,
-        //todo: this should only find the first match, not loop through every player
-        ctx.match.players.map((player) => ({
-          ...player,
-          co: player.playerId === ctx.currentPlayer.id ? input.selectedCO : player.co,
-        }))
+        ctx.match.players
       );
       emitEvent({
         type: "player-picked-co",
         co: input.selectedCO,
+        matchId: ctx.match.id,
+        player: ctx.currentPlayer,
+      });
+    }),
+  switchArmy: matchBaseProcedure
+    .input(
+      z.object({
+        selectedArmy: armySchema,
+      })
+    )
+    .mutation(async ({ input, ctx }) => {
+      throwIfMatchNotInSetupState(ctx.match);
+      const findPlayer = ctx.match.players.find(
+        (player) => player.playerId === ctx.currentPlayer.id
+      );
+      if (findPlayer) findPlayer.army = input.selectedArmy;
+
+      await updateServerState(
+        ctx.match,
+        ctx.match.players
+      );
+      emitEvent({
+        type: "player-picked-army",
+        army: input.selectedArmy,
         matchId: ctx.match.id,
         player: ctx.currentPlayer,
       });

@@ -72,7 +72,7 @@ export default function YourMatches() {
                   }
 
                   await createMutation.mutateAsync({
-                    selectedCO: "sami",
+                    selectedCO: "lash",
                     mapId,
                     playerId: currentPlayer.id,
                   });
@@ -95,26 +95,40 @@ export default function YourMatches() {
           </div>
 
           <div id="currentGames" className="currentGames">
-            <h1>Matches you created</h1>
+            <h1>
+              Your Matches
+              <p>Matches you are part of/joined.</p>
+            </h1>
             <div className="@grid [grid-template-columns:repeat(auto-fit,minmax(300px,1fr))] @gap-10">
               {yourMatchesQuery.data === undefined
                 ? "Loading..."
                 : yourMatchesQuery.data.map((match) => (
-                    <MatchCard key={match.id} match={match} />
+                    <MatchCard key={match.id} match={match} inMatch={true} />
                   ))}
             </div>
           </div>
 
           <div id="currentGames" className="currentGames">
-            <h1>Join a match</h1>
+            <h1>
+              Join a match
+              <p>Matches you are NOT part of.</p>
+            </h1>
             <div className="@grid [grid-template-columns:repeat(auto-fit,minmax(300px,1fr))] @gap-10">
               {allMatchesQuery.data === undefined
                 ? "Loading..."
                 : allMatchesQuery.data.map((match) => {
-                    console.log(match);
-                    //Lets make sure we didn't make this match,
-                    if (match.players[0].playerId !== currentPlayer.id)
-                      return <MatchCard match={match} />;
+                  let inMatch = false;
+                  match.players.forEach(player => {
+                    if (player.playerId == currentPlayer.id) inMatch = true;
+                  })
+                  if (!inMatch)
+                      return (
+                        <MatchCard
+                          key={match.id}
+                          match={match}
+                          inMatch={false}
+                        />
+                      );
                   })}
             </div>
           </div>

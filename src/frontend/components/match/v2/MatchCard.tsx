@@ -2,22 +2,64 @@ import MatchCardTop from "./MatchCardTop";
 import MatchPlayer from "./MatchPlayer";
 import { FrontendMatch } from "../../../../shared/types/component-data";
 import { CO, coSchema } from "../../../../server/schemas/co";
-import { armySchema } from "../../../../server/schemas/army";
+import { Army, armySchema } from "../../../../server/schemas/army";
 import MatchCardSetup from "./MatchCardSetup";
 import { useState } from "react";
+import { usePlayers } from "../../../context/players";
+import { fi } from "@faker-js/faker";
 
 interface matchData {
   match: FrontendMatch;
+  inMatch: boolean;
 }
 
-export default function MatchCard({ match }: matchData) {
-  const [playerCO, setPlayerCO] = useState(match.players[0].co);
+export default function MatchCard({ match, inMatch}: matchData) {
+  const { currentPlayer, setCurrentPlayer, ownedPlayers } = usePlayers();
+  /*console.log(currentPlayer);
+  console.log(ownedPlayers);*/
 
-  function changeCO (newCO: CO) {
-    setPlayerCO(newCO);
+  let firstPlayer;
+  let playerIndex;
+  let secondPlayer;
+
+  if (currentPlayer != undefined) {
+    match.players.forEach((player, index) => {
+      console.log("PLAYERRR");
+      console.log(player);
+      console.log(currentPlayer);
+      if (player.playerId == currentPlayer.id) {
+        firstPlayer = player;
+        playerIndex = index;
+      }
+    });
   }
+  if (firstPlayer === undefined) {
+    firstPlayer = match.players[0];
+    secondPlayer = match.players[1];
+  } else {
+    playerIndex === 0
+      ? (secondPlayer = match.players[1])
+      : (secondPlayer = match.players[0]);
+  }
+
+  console.log(firstPlayer);
+  console.log(secondPlayer);
+  console.log("banana");
+  console.log(match.players);
+  const [playerCO, setPlayerCO] = useState(firstPlayer.co);
+  const [army, setArmy] = useState(firstPlayer.army);
+
+  function changeCO(newCO: CO, army: Army) {
+    if (newCO) setPlayerCO(newCO);
+    if (army) setArmy(army);
+  }
+
   let twoPlayerCheck = false;
-  if (match.players[1]) twoPlayerCheck = true;
+  if (secondPlayer) twoPlayerCheck = true;
+
+  //TODO: Match the currentPlayers id to the id of a player in the match,
+  // if it matches, set them as first player,
+  // otherwise, just use regular order
 
   return (
     <div className="@grid @bg-bg-primary @relative">
@@ -30,16 +72,12 @@ export default function MatchCard({ match }: matchData) {
         time={0.15}
       />
       <div className="@grid @grid-cols-2 @gap-3">
-        <MatchPlayer
-          name={match.players[0].playerId}
-          co={playerCO}
-          country={match.players[0].army}
-        />
+        <MatchPlayer name={firstPlayer.playerId} co={playerCO} country={army} />
         {twoPlayerCheck ? (
           <MatchPlayer
-            name={match.players[1].playerId}
-            co={match.players[1].co}
-            country={match.players[1].army}
+            name={secondPlayer.playerId}
+            co={secondPlayer.co}
+            country={secondPlayer.army}
             flipCO={true}
           />
         ) : (
@@ -60,7 +98,12 @@ export default function MatchCard({ match }: matchData) {
           />
         )}
       </div>
-      <MatchCardSetup functionCO={changeCO} matchID={match.id} playerID={match.players[0].playerId} />
+      <MatchCardSetup
+        functionCO={changeCO}
+        matchID={match.id}
+        playerID={currentPlayer.id}
+        inMatch={inMatch}
+      />
     </div>
   );
 }
