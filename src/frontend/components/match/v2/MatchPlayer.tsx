@@ -8,6 +8,7 @@ interface matchData {
   country: Army;
   flipCO?: boolean;
   opponent?: boolean;
+  playerReady?: boolean;
 }
 
 export default function MatchPlayer({
@@ -16,31 +17,36 @@ export default function MatchPlayer({
   country,
   flipCO,
   opponent,
+  playerReady,
 }: matchData) {
-
-
-  //it might be an opponent or TBD player
+  //it might be the other player AND an unpicked spot (a greyed out opponent)
   if (flipCO)
     return (
       <div className={"@truncate @text-right"}>
         <div
           style={{
             backgroundImage: `url("/img/CO/pixelated/${co}-full.png")`,
+
           }}
-          className={
-            "@h-[200px] [image-rendering:pixelated] @bg-cover " + (opponent ? "@brightness-[0.1]" : "")
-          }
+          className={`@h-[200px] [image-rendering:pixelated] @bg-cover 
+             ${opponent ? "@brightness-[0.1]" : ""} 
+             ${playerReady ? "@contrast-[1]" : "@contrast-[0.5]"
+          }`}
         ></div>
         <div
           className={`@flex @flex-row-reverse
       ${opponent ? "@bg-gray-600" : `@bg-${country}`}`}
         >
           <img
-            src={opponent ? `/img/nations/black-hole.gif` : `/img/nations/${country}.gif`}
-            className="@h-8 [image-rendering:pixelated]"
+            src={
+              opponent
+                ? `/img/nations/black-hole.gif`
+                : `/img/nations/${country}.gif`
+            }
+            className="@h-7 [image-rendering:pixelated]"
             alt="opponent chosen CO"
           />
-          <p className="@truncate @px-0.5">{name}</p>
+          <p className="@truncate @px-0.5 @text-sm">{name}</p>
         </div>
       </div>
     );
@@ -52,15 +58,17 @@ export default function MatchPlayer({
           style={{
             backgroundImage: `url("/img/CO/pixelated/${co}-full.png")`,
           }}
-          className={"@h-[200px] [image-rendering:pixelated] @bg-cover @scale-x-[-1]"}
+          className={`@h-[200px] [image-rendering:pixelated] @bg-cover @scale-x-[-1] ${
+            playerReady ? "@contrast-[1]" : "@contrast-[0.5]"
+          }`}
         ></div>
         <div className={`@flex @bg-${country}`}>
           <img
             src={`/img/nations/${country}.gif`}
-            className="@h-8 [image-rendering:pixelated]"
+            className="@h-7 [image-rendering:pixelated]"
             alt="opponent chosen CO"
           />
-          <p className="@truncate @px-0.5">{name}</p>
+          <p className="@truncate @px-0.5 @text-sm">{name}</p>
         </div>
       </div>
     );

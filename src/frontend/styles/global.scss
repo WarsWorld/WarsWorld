@@ -82,6 +82,7 @@
   }
 
 
+  //The button we use for match cards right now
   .btnMenu {
     @include m.clampSize(12, 16, 320, 1200);
     color: white;

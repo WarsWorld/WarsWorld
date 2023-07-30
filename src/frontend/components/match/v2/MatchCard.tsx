@@ -4,19 +4,19 @@ import { FrontendMatch } from "../../../../shared/types/component-data";
 import { CO, coSchema } from "../../../../server/schemas/co";
 import { Army, armySchema } from "../../../../server/schemas/army";
 import MatchCardSetup from "./MatchCardSetup";
-import { useState } from "react";
+import React, { useState } from "react";
 import { usePlayers } from "../../../context/players";
 import { fi } from "@faker-js/faker";
+import Link from "next/link";
+import { MatchStatus } from "@prisma/client";
 
 interface matchData {
   match: FrontendMatch;
   inMatch: boolean;
 }
 
-export default function MatchCard({ match, inMatch}: matchData) {
+export default function MatchCard({ match, inMatch }: matchData) {
   const { currentPlayer, setCurrentPlayer, ownedPlayers } = usePlayers();
-  /*console.log(currentPlayer);
-  console.log(ownedPlayers);*/
 
   let firstPlayer;
   let playerIndex;
@@ -24,9 +24,6 @@ export default function MatchCard({ match, inMatch}: matchData) {
 
   if (currentPlayer != undefined) {
     match.players.forEach((player, index) => {
-      console.log("PLAYERRR");
-      console.log(player);
-      console.log(currentPlayer);
       if (player.playerId == currentPlayer.id) {
         firstPlayer = player;
         playerIndex = index;
@@ -42,24 +39,19 @@ export default function MatchCard({ match, inMatch}: matchData) {
       : (secondPlayer = match.players[0]);
   }
 
-  console.log(firstPlayer);
-  console.log(secondPlayer);
-  console.log("banana");
-  console.log(match.players);
   const [playerCO, setPlayerCO] = useState(firstPlayer.co);
   const [army, setArmy] = useState(firstPlayer.army);
 
-  function changeCO(newCO: CO, army: Army) {
+  const [ready, setReady] = useState(firstPlayer.ready);
+
+  function changeCO(newCO: CO, army: Army, status: boolean) {
     if (newCO) setPlayerCO(newCO);
     if (army) setArmy(army);
+    if (status != null) setReady(status);
   }
 
   let twoPlayerCheck = false;
   if (secondPlayer) twoPlayerCheck = true;
-
-  //TODO: Match the currentPlayers id to the id of a player in the match,
-  // if it matches, set them as first player,
-  // otherwise, just use regular order
 
   return (
     <div className="@grid @bg-bg-primary @relative">
@@ -72,13 +64,14 @@ export default function MatchCard({ match, inMatch}: matchData) {
         time={0.15}
       />
       <div className="@grid @grid-cols-2 @gap-3">
-        <MatchPlayer name={firstPlayer.playerId} co={playerCO} country={army} />
+        <MatchPlayer name={firstPlayer.playerId} co={playerCO} country={army} playerReady={ready}/>
         {twoPlayerCheck ? (
           <MatchPlayer
             name={secondPlayer.playerId}
             co={secondPlayer.co}
             country={secondPlayer.army}
             flipCO={true}
+            playerReady={secondPlayer.ready}
           />
         ) : (
           <MatchPlayer
@@ -95,15 +88,34 @@ export default function MatchCard({ match, inMatch}: matchData) {
             }
             flipCO={true}
             opponent={true}
+            playerReady={true}
           />
         )}
       </div>
-      <MatchCardSetup
-        functionCO={changeCO}
-        matchID={match.id}
-        playerID={currentPlayer.id}
-        inMatch={inMatch}
-      />
+      {
+        // if we are not in the match AND the match is full, we can't alter setup in anyway or form
+        !inMatch && match.players.length == 2 || match.state != "setup" ? (
+          ""
+        ) : (
+          <MatchCardSetup
+            functionCO={changeCO}
+            matchID={match.id}
+            playerID={currentPlayer.id}
+            inMatch={inMatch}
+            readyStatus={ready}
+          />
+        )
+      }
+
+      {match.state != "setup" && match.players.length == 2 ?
+        <Link href={`/match/${match.id}`}
+              className="btnMenu @inline-block"
+        > Enter Match
+        </Link>
+      : !inMatch && match.players.length == 2  ? <div>{"Match hasn't started yet."}</div> : <div></div>
+
+      }
+
     </div>
   );
 }

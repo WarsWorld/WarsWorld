@@ -30,7 +30,7 @@ export default function YourMatches() {
       </Head>
 
       <div className="@flex @justify-center @w-full">
-        <div className="@h-full @w-full @p-5 @grid @gap-10 @text-center allGames">
+        <div className="@h-full @w-full @p-5 @grid @gap-10 @text-center">
           <div>
             <h1>Hello dev! Read Instructions</h1>
             <p>
@@ -94,12 +94,12 @@ export default function YourMatches() {
             </div>
           </div>
 
-          <div id="currentGames" className="currentGames">
+          <div>
             <h1>
               Your Matches
               <p>Matches you are part of/joined.</p>
             </h1>
-            <div className="@grid [grid-template-columns:repeat(auto-fit,minmax(300px,1fr))] @gap-10">
+            <div className="@grid [grid-template-columns:repeat(auto-fill,minmax(300px,1fr))] @gap-10">
               {yourMatchesQuery.data === undefined
                 ? "Loading..."
                 : yourMatchesQuery.data.map((match) => (
@@ -108,20 +108,53 @@ export default function YourMatches() {
             </div>
           </div>
 
-          <div id="currentGames" className="currentGames">
+          <div>
             <h1>
               Join a match
-              <p>Matches you are NOT part of.</p>
+              <p>Matches you can join.</p>
             </h1>
-            <div className="@grid [grid-template-columns:repeat(auto-fit,minmax(300px,1fr))] @gap-10">
+            <div className="@grid [grid-template-columns:repeat(auto-fill,minmax(300px,1fr))] @gap-10">
               {allMatchesQuery.data === undefined
                 ? "Loading..."
                 : allMatchesQuery.data.map((match) => {
-                  let inMatch = false;
-                  match.players.forEach(player => {
-                    if (player.playerId == currentPlayer.id) inMatch = true;
-                  })
-                  if (!inMatch)
+                    let inMatch = false;
+                    match.players.forEach((player) => {
+                      if (
+                        player.playerId == currentPlayer.id ||
+                        match.players.length == 2
+                      )
+                        inMatch = true;
+                    });
+                    if (!inMatch)
+                      return (
+                        <MatchCard
+                          key={match.id}
+                          match={match}
+                          inMatch={false}
+                        />
+                      );
+                  })}
+            </div>
+          </div>
+
+          <div>
+            <h1>
+              Spectate a Match
+              <p>Matches with two players (not you).</p>
+            </h1>
+            <div className="@grid [grid-template-columns:repeat(auto-fill,minmax(300px,1fr))] @gap-10">
+              {allMatchesQuery.data === undefined
+                ? "Loading..."
+                : allMatchesQuery.data.map((match) => {
+                    let inMatch = false;
+                    match.players.forEach((player) => {
+                      if (
+                        player.playerId == currentPlayer.id ||
+                        match.players.length != 2
+                      )
+                        inMatch = true;
+                    });
+                    if (!inMatch)
                       return (
                         <MatchCard
                           key={match.id}

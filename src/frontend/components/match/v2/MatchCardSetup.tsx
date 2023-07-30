@@ -8,6 +8,7 @@ interface matchData {
   matchID: string;
   functionCO: any;
   inMatch: boolean;
+  readyStatus: boolean;
 }
 
 export default function MatchCardSetup({
@@ -15,17 +16,19 @@ export default function MatchCardSetup({
   matchID,
   functionCO,
   inMatch,
+  readyStatus,
 }: matchData) {
   const switchCO = trpc.match.switchCO.useMutation();
   const switchArmy = trpc.match.switchArmy.useMutation();
   const joinMatch = trpc.match.join.useMutation();
+  const readyMatch = trpc.match.setReady.useMutation();
   const [showCO, setShowCO] = useState(false);
   const [showArmy, setShowArmy] = useState(false);
 
   if (inMatch)
     return (
       <div className="@flex  ">
-        <div className="@col-span-5">
+        <div>
           <button
             className="btnMenu"
             onClick={() => {
@@ -46,7 +49,8 @@ export default function MatchCardSetup({
                         matchId: matchID,
                         playerId: playerID,
                       });
-                      functionCO(co, null);
+                      functionCO(co);
+                      setShowCO(false);
                     }}
                     key={co}
                     className={`@flex @items-center @p-1 @bg-bg-primary hover:@bg-primary @cursor-pointer @duration-300`}
@@ -66,7 +70,7 @@ export default function MatchCardSetup({
           )}
         </div>
 
-        <div className="@col-span-5">
+        <div>
           <button
             className=" btnMenu"
             onClick={() => {
@@ -88,6 +92,8 @@ export default function MatchCardSetup({
                         selectedArmy: army,
                       });
                       functionCO(null, army);
+                      setShowArmy(false);
+
                     }}
                     key={army}
                     className={`@flex @items-center @p-1 @bg-bg-primary hover:@bg-primary @cursor-pointer @duration-300`}
@@ -106,12 +112,30 @@ export default function MatchCardSetup({
             <></>
           )}
         </div>
+        <div>
+          <button
+            className=" btnMenu"
+            onClick={async () => {
+
+              await readyMatch.mutateAsync({
+                matchId: matchID,
+                playerId: playerID,
+                readyState: !readyStatus,
+              });
+              functionCO(null, null, !readyStatus);
+              location.href = location.href;
+            }}
+          >
+            {readyStatus ? "Unready" : "Ready up"}
+          </button>
+        </div>
       </div>
     );
+  // Not part of the game, can't change CO or Army or Ready
   else
     return (
       <div className="@flex  ">
-        <div className="@col-span-5">
+        <div>
           <button
             className=" btnMenu"
             onClick={async () => {
@@ -120,6 +144,9 @@ export default function MatchCardSetup({
                 playerId: playerID,
                 selectedCO: "sami",
               });
+              //lets reload the page
+              location.href = location.href;
+
             }}
           >
             Join Game

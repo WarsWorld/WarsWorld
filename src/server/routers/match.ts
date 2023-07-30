@@ -140,6 +140,15 @@ export const matchRouter = router({
         throw new Error("You haven't joined this match");
       }
 
+      //TODO: Loop through players in match and their ids, see which one just clicked ready, if the other players is there
+      // and also ready, then start the game!
+      let readycount = 0;
+      ctx.match.players.forEach((player) => {
+
+        if (player.ready == true)  readycount++;
+        else if (player.playerId == ctx.currentPlayer.id && input.readyState) readycount++;
+      });
+      if (readycount == 2) ctx.match.status = "playing";
       await updateServerState(
         ctx.match,
         ctx.match.players.map((e) => ({
@@ -171,10 +180,7 @@ export const matchRouter = router({
       );
       if (findPlayer) findPlayer.co = input.selectedCO;
 
-      await updateServerState(
-        ctx.match,
-        ctx.match.players
-      );
+      await updateServerState(ctx.match, ctx.match.players);
       emitEvent({
         type: "player-picked-co",
         co: input.selectedCO,
@@ -195,10 +201,7 @@ export const matchRouter = router({
       );
       if (findPlayer) findPlayer.army = input.selectedArmy;
 
-      await updateServerState(
-        ctx.match,
-        ctx.match.players
-      );
+      await updateServerState(ctx.match, ctx.match.players);
       emitEvent({
         type: "player-picked-army",
         army: input.selectedArmy,
