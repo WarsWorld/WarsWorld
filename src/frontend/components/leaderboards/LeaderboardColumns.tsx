@@ -1,7 +1,6 @@
+import Link from "next/link";
 import { PlayerLeaderboard } from "./LeaderboardData";
 import { createColumnHelper } from "@tanstack/react-table";
-import { NationEnum } from "frontend/utils/enums";
-import { Army } from "server/schemas/army";
 
 const columnHelper = createColumnHelper<PlayerLeaderboard>();
 
@@ -21,15 +20,15 @@ export const columns = [
       <div className="@flex @space-x-2 smallscreen:@space-x-4">
         <img
           className="@w-auto @h-4 smallscreen:@h-6 monitor:@h-8 @bg-white"
-          src={`img/nations/${NationEnum[row.armyNumber] as Army}-icon.webp`}
-          alt={NationEnum[row.armyNumber]}
+          src={`img/nations/${row.army}.gif`}
+          alt={row.army}
         />
-        <a
+        <Link
           className="@p-0 @m-0 @text-white hover:@text-primary @text-[1em]"
           href={row.profileLink}
         >
           {row.name}
-        </a>
+        </Link>
       </div>
     ),
     {

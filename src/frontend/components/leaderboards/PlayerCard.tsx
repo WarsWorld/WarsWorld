@@ -1,11 +1,11 @@
-import { NationEnum } from "frontend/utils/enums";
+import Link from "next/link";
 import { Army } from "server/schemas/army";
 interface Props {
   rank: number;
   name: string;
   mmr: number;
   co: string;
-  country: number;
+  country: Army;
   profileLink: string;
 }
 
@@ -17,10 +17,8 @@ export default function PlayerCard({
   country,
   profileLink,
 }: Props) {
-  const armyString = NationEnum[country] as Army;
-
   return (
-    <a href={profileLink} className="@text-white hover:@text-white">
+    <Link href={profileLink} className="@text-white hover:@text-white">
       <div className="@relative @w-full @h-full @bg-black/50 @shadow-black/80 @shadow-lg @rounded-lg @overflow-hidden hover:@scale-105 @duration-75">
         <img
           className="@absolute @scale-[1.2] @top-8 @left-2 smallscreen:@left-4 smallscreen:@top-16"
@@ -36,7 +34,7 @@ export default function PlayerCard({
             </div>
             <img
               className="@m-[2px] large_monitor:@m-[4px] @bg-white"
-              src={`img/nations/${armyString}-icon.webp`}
+              src={`img/nations/${country}.gif`}
               alt=""
             />
             <div className="@flex @w-full @h-full @items-center @justify-center">
@@ -48,7 +46,7 @@ export default function PlayerCard({
           <div className="@flex @absolute @bottom-0 @w-full @h-6 smallscreen:@h-8 laptop:@h-10 large_monitor:@h-16 @bg-white">
             <div
               className={`@flex @w-full @h-full @items-center @justify-center ${
-                "@bg-" + armyString
+                "@bg-" + country
               }`}
             >
               <h4 className="@font-medium @text-[0.7em] smallscreen:@text-[0.85em] large_monitor:@text-[1.1em]">
@@ -58,6 +56,6 @@ export default function PlayerCard({
           </div>
         </div>
       </div>
-    </a>
+    </Link>
   );
 }
