@@ -21,15 +21,11 @@ export const MatchRow = ({ match }: { match: FrontendMatch }) => {
         <p>Day 3</p>
       </div>
       <div>
-
         <p>Player component</p>
-
       </div>
 
       <div>
-
         <p>VS</p>
-
       </div>
 
       <div>
@@ -38,7 +34,6 @@ export const MatchRow = ({ match }: { match: FrontendMatch }) => {
 
       <div>
         <div className="@bg-green-900 @p-10 @outline @outline-black"></div>
-
       </div>
 
       <ul className="">

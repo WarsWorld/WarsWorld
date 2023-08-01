@@ -164,10 +164,7 @@ export default function MatchCard({
         <div className="@relative @flex @flex-col @justify-between @flex-grow @z-10">
           <div className="@flex @flex-col tablet:@flex-row @h-[20%] tablet:@h-8 @max-w-full">
             <div className="@flex @h-8">
-              <div
-                className="" > LIVE
-
-              </div>
+              <div className=""> LIVE</div>
               <div className="@flex @items-center @justify-center @flex-1 @min-w-20 @bg-bg-primary">
                 <p>{matchTypeString}</p>
               </div>

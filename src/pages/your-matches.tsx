@@ -114,14 +114,16 @@ export default function YourMatches() {
               <p>Matches you can join.</p>
             </h1>
             <div className="@grid [grid-template-columns:repeat(auto-fill,minmax(300px,1fr))] @gap-10">
-              {allMatchesQuery.data === undefined
+              {allMatchesQuery.data === undefined ||
+              yourMatchesQuery.data === undefined
                 ? "Loading..."
                 : allMatchesQuery.data.map((match) => {
                     let inMatch = false;
                     match.players.forEach((player) => {
                       if (
-                        player.playerId == currentPlayer.id ||
-                        match.players.length == 2
+                        currentPlayer !== undefined &&
+                        (player.playerId == currentPlayer.id ||
+                          match.players.length == 2)
                       )
                         inMatch = true;
                     });
@@ -143,14 +145,16 @@ export default function YourMatches() {
               <p>Matches with two players (not you).</p>
             </h1>
             <div className="@grid [grid-template-columns:repeat(auto-fill,minmax(300px,1fr))] @gap-10">
-              {allMatchesQuery.data === undefined
+              {allMatchesQuery.data === undefined ||
+              yourMatchesQuery.data === undefined
                 ? "Loading..."
                 : allMatchesQuery.data.map((match) => {
                     let inMatch = false;
                     match.players.forEach((player) => {
                       if (
-                        player.playerId == currentPlayer.id ||
-                        match.players.length != 2
+                        currentPlayer !== undefined &&
+                        (player.playerId == currentPlayer.id ||
+                          match.players.length != 2)
                       )
                         inMatch = true;
                     });
