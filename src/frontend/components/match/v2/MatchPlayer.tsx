@@ -26,12 +26,10 @@ export default function MatchPlayer({
         <div
           style={{
             backgroundImage: `url("/img/CO/pixelated/${co}-full.png")`,
-
           }}
           className={`@h-[200px] [image-rendering:pixelated] @bg-cover 
              ${opponent ? "@brightness-[0.1]" : ""} 
-             ${playerReady ? "@contrast-[1]" : "@contrast-[0.5]"
-          }`}
+             ${playerReady ? "@contrast-[1]" : "@contrast-[0.5]"}`}
         ></div>
         <div
           className={`@flex @flex-row-reverse
