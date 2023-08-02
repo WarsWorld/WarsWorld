@@ -8,14 +8,8 @@ import MatchPlayer from "../frontend/components/match/v2/MatchPlayer";
 import MatchCard from "../frontend/components/match/v2/MatchCard";
 
 export default function YourMatches() {
-  const [hydrated, setHydrated] = useState(false);
-  // This state is here so the select will have the player in LS selected every time yo refresh the page
-  // Open for alternitive solutions
-  useEffect(() => {
-    setHydrated(true);
-  }, []);
-
-  const { currentPlayer, setCurrentPlayer, ownedPlayers } = usePlayers();
+  const { currentPlayer, setCurrentPlayer, ownedPlayers, isPlayerLoaded } =
+    usePlayers();
 
   const yourMatchesQuery = trpc.match.getPlayerMatches.useQuery(
     { playerId: currentPlayer?.id ?? "" },
@@ -29,8 +23,6 @@ export default function YourMatches() {
   const mapQuery = trpc.map.getAll.useQuery();
   const createMutation = trpc.match.create.useMutation();
   const mapSelectionRef = useRef<HTMLSelectElement>(null);
-
-  if (!hydrated) return null;
 
   return (
     <>
@@ -49,28 +41,34 @@ export default function YourMatches() {
               Then click on Create Game and then on Enter Match
             </p>
             <br />
-            <p>
-              Current player:{" "}
-              <select
-                className="@bg-gray-800 @px-2 @rounded-lg btn"
-                onChange={(e) => {
-                  const foundPlayer = ownedPlayers?.find(
-                    (p) => p.id === e.target.value
-                  );
+            {isPlayerLoaded ? (
+              <p>
+                Current player:{" "}
+                <select
+                  className="@bg-gray-800 @px-2 @rounded-lg btn"
+                  onChange={(e) => {
+                    const foundPlayer = ownedPlayers?.find(
+                      (p) => p.id === e.target.value
+                    );
 
-                  if (foundPlayer !== undefined) {
-                    setCurrentPlayer(foundPlayer);
-                  }
-                }}
-                defaultValue={currentPlayer?.id}
-              >
-                {ownedPlayers?.map((p) => (
-                  <option key={p.id} value={p.id}>
-                    {p.name}
-                  </option>
-                ))}
-              </select>
-            </p>
+                    if (foundPlayer !== undefined) {
+                      setCurrentPlayer(foundPlayer);
+                    }
+                  }}
+                  defaultValue={currentPlayer?.id}
+                >
+                  {ownedPlayers?.map((p) => (
+                    <option key={p.id} value={p.id}>
+                      {p.name}
+                    </option>
+                  ))}
+                </select>
+              </p>
+            ) : (
+              // Loading Players Section
+              <p>Loading Players...</p>
+            )}
+
             <div className="@flex @justify-center @gap-5">
               <button
                 className="@bg-gray-800 @px-2 @rounded-lg btn"

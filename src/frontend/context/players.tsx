@@ -1,5 +1,11 @@
 import { Player } from "@prisma/client";
-import { ReactNode, createContext, useContext } from "react";
+import {
+  ReactNode,
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+} from "react";
 import { useLocalStorage } from "frontend/utils/use-local-storage";
 import { trpc } from "frontend/utils/trpc-client";
 
@@ -22,14 +28,19 @@ export const usePlayers = () => {
     "currentPlayerId",
     null
   );
-
   const currentPlayer = ownedPlayers?.find((p) => p.id === currentPlayerId);
-
   const setCurrentPlayer = (player: Player) => setCurrentPlayerId(player.id);
+  const [isPlayerLoaded, setIsPlayerLoaded] = useState(false);
+
+  useEffect(() => {
+    if (currentPlayer) setIsPlayerLoaded(true);
+  }, [currentPlayer, setIsPlayerLoaded]);
 
   return {
     ownedPlayers,
     currentPlayer,
     setCurrentPlayer,
+    isPlayerLoaded,
+    setIsPlayerLoaded,
   };
 };
