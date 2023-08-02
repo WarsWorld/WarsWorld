@@ -64,7 +64,12 @@ export default function MatchCard({ match, inMatch }: matchData) {
         time={0.15}
       />
       <div className="@grid @grid-cols-2 @gap-3">
-        <MatchPlayer name={firstPlayer.playerId} co={playerCO} country={army} playerReady={ready}/>
+        <MatchPlayer
+          name={firstPlayer.playerId}
+          co={playerCO}
+          country={army}
+          playerReady={ready}
+        />
         {twoPlayerCheck ? (
           <MatchPlayer
             name={secondPlayer.playerId}
@@ -94,28 +99,30 @@ export default function MatchCard({ match, inMatch }: matchData) {
       </div>
       {
         // if we are not in the match AND the match is full, we can't alter setup in anyway or form
-        !inMatch && match.players.length == 2 || match.state != "setup" ? (
+        (!inMatch && match.players.length == 2) || match.state != "setup" ? (
           ""
         ) : (
           <MatchCardSetup
             functionCO={changeCO}
             matchID={match.id}
-            playerID={currentPlayer.id}
+            // TODO: how can we handle if a player is undefined? for now I put an empty string
+            playerID={currentPlayer ? currentPlayer.id : ""}
             inMatch={inMatch}
-            readyStatus={ready}
+            readyStatus={ready ? ready : false}
           />
         )
       }
 
-      {match.state != "setup" && match.players.length == 2 ?
-        <Link href={`/match/${match.id}`}
-              className="btnMenu @inline-block"
-        > Enter Match
+      {match.state != "setup" && match.players.length == 2 ? (
+        <Link href={`/match/${match.id}`} className="btnMenu @inline-block">
+          {" "}
+          Enter Match
         </Link>
-      : !inMatch && match.players.length == 2  ? <div>{"Match hasn't started yet."}</div> : <div></div>
-
-      }
-
+      ) : !inMatch && match.players.length == 2 ? (
+        <div>{"Match hasn't started yet."}</div>
+      ) : (
+        <div></div>
+      )}
     </div>
   );
 }

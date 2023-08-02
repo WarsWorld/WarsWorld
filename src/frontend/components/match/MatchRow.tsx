@@ -40,7 +40,7 @@ export const MatchRow = ({ match }: { match: FrontendMatch }) => {
         <li className="matchInfo">Player 1 vs Player 2</li>
         {match.players.some((p) => p.playerId === currentPlayer?.id) ? (
           <button className="@bg-gray-800 @p-2 @rounded-lg btn">Leave</button>
-        ) : (
+        ) : currentPlayer ? (
           <button
             onClick={async () => {
               await joinMatch.mutateAsync({
@@ -53,7 +53,10 @@ export const MatchRow = ({ match }: { match: FrontendMatch }) => {
           >
             Join
           </button>
+        ) : (
+          <button disabled>Join</button>
         )}
+
         <Link
           className="@bg-gray-800 @p-2 @rounded-lg btn"
           href={`/match/${match.id}`}

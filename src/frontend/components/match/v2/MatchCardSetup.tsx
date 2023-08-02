@@ -93,7 +93,6 @@ export default function MatchCardSetup({
                       });
                       functionCO(null, army);
                       setShowArmy(false);
-
                     }}
                     key={army}
                     className={`@flex @items-center @p-1 @bg-bg-primary hover:@bg-primary @cursor-pointer @duration-300`}
@@ -116,7 +115,6 @@ export default function MatchCardSetup({
           <button
             className=" btnMenu"
             onClick={async () => {
-
               await readyMatch.mutateAsync({
                 matchId: matchID,
                 playerId: playerID,
@@ -146,7 +144,6 @@ export default function MatchCardSetup({
               });
               //lets reload the page
               location.href = location.href;
-
             }}
           >
             Join Game

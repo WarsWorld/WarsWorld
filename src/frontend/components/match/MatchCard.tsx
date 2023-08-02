@@ -195,8 +195,8 @@ export default function MatchCard({
         </div>
         {isDuel && (
           <LowerPlayerBar
-            randomRank={900}
-            randomRank2={900}
+            randomRank={"900"}
+            randomRank2={"900"}
             armyIndex={0}
             armyIndex2={1}
           />
