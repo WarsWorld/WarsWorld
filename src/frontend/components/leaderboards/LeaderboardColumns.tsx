@@ -19,7 +19,7 @@ export const columns = [
     (row) => (
       <div className="@flex @space-x-2 smallscreen:@space-x-4">
         <img
-          className="@w-auto @h-4 smallscreen:@h-6 monitor:@h-8 @bg-white"
+          className="@w-auto @h-4 smallscreen:@h-6 monitor:@h-8 [image-rendering:pixelated]"
           src={`img/nations/${row.army}.gif`}
           alt={row.army}
         />
