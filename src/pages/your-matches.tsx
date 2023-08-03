@@ -8,8 +8,12 @@ import MatchPlayer from "../frontend/components/match/v2/MatchPlayer";
 import MatchCard from "../frontend/components/match/v2/MatchCard";
 
 export default function YourMatches() {
-  const { currentPlayer, setCurrentPlayer, ownedPlayers, isPlayerLoaded } =
-    usePlayers();
+  const {
+    currentPlayer,
+    setCurrentPlayer,
+    ownedPlayers,
+    areOwnedPlayersLoaded,
+  } = usePlayers();
 
   const yourMatchesQuery = trpc.match.getPlayerMatches.useQuery(
     { playerId: currentPlayer?.id ?? "" },
@@ -41,7 +45,7 @@ export default function YourMatches() {
               Then click on Create Game and then on Enter Match
             </p>
             <br />
-            {isPlayerLoaded ? (
+            {areOwnedPlayersLoaded ? (
               <p>
                 Current player:{" "}
                 <select
