@@ -22,20 +22,24 @@ import {
   BackendMatchState,
 } from "shared/types/server-match-state";
 import { armySchema } from "../schemas/army";
+import { MatchStatus } from "@prisma/client";
 
 const updateServerState = async (
   matchState: BackendMatchState,
-  newPlayersState: PlayerInMatch[]
+  newPlayersState: PlayerInMatch[],
+  matchStatus: MatchStatus = matchState.status
 ) => {
   await prisma.match.update({
     where: {
       id: matchState.id,
     },
     data: {
+      status: matchStatus,
       playerState: newPlayersState,
     },
   });
   matchState.players = newPlayersState;
+  matchState.status = matchStatus;
 };
 
 const throwIfMatchNotInSetupState = (match: BackendMatchState) => {
@@ -140,22 +144,20 @@ export const matchRouter = router({
         throw new Error("You haven't joined this match");
       }
 
-      //TODO: Loop through players in match and their ids, see which one just clicked ready, if the other players is there
-      // and also ready, then start the game!
       let readycount = 0;
       ctx.match.players.forEach((player) => {
-
-        if (player.ready == true)  readycount++;
-        else if (player.playerId == ctx.currentPlayer.id && input.readyState) readycount++;
+        if (player.ready) readycount++;
+        else if (player.playerId == ctx.currentPlayer.id && input.readyState)
+          readycount++;
       });
-      if (readycount == 2) ctx.match.status = "playing";
       await updateServerState(
         ctx.match,
         ctx.match.players.map((e) => ({
           ...e,
           ready:
             e.playerId === ctx.currentPlayer.id ? input.readyState : e.ready,
-        }))
+        })),
+        readycount == 2 ? "playing" : ctx.match.status
       );
 
       emitEvent({
