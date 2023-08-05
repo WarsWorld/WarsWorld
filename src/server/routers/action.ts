@@ -26,10 +26,10 @@ const validateAction = (
   if (actingPlayerInMatch === undefined) {
     throw new Error("You're not in this match or you've been eliminated");
   }
-
-  if (!actingPlayerInMatch.hasCurrentTurn) {
+  //TODO re-add this check, was unadded to test tRPC momentarily
+  /*if (!actingPlayerInMatch.hasCurrentTurn) {
     throw new Error("It's not your turn");
-  }
+  }*/
 
   switch (action.type) {
     case "build": {
@@ -96,17 +96,20 @@ export const actionRouter = router({
       //            or persisting to DB
 
       const event = actionToEvent(input.matchId, input);
-
+    console.log("Prisma create");
+    console.log("---------------------------------");
       await prisma.event.create({
         data: {
           matchId: input.matchId,
           content: event,
         },
       });
-
+    console.log("Apply event to match");
+    console.log("---------------------------------");
       applyEventToMatch(input.matchId, event);
       emitEvent(event);
-
+    console.log("TRPC IS WORKING");
+    console.log("---------------------------------");
       return {
         status: "ok", // TODO not necessary?
       };

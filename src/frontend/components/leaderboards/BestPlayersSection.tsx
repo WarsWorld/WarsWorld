@@ -18,7 +18,7 @@ export default function BestPlayersSection({ bestPlayers }: Props) {
               name={player.name}
               rank={player.rank}
               mmr={player.rating}
-              country={player.armyNumber}
+              country={player.army}
               co={player.co}
               profileLink={player.profileLink}
             />

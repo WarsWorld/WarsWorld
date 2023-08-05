@@ -9,6 +9,7 @@ import {
 } from "server/schemas/action";
 import { CO } from "server/schemas/co";
 import { UnitDuringMatch } from "server/schemas/unit";
+import { Army } from "../../server/schemas/army";
 
 // TODO: Maybe add who's player's turn it is or which army starts?
 export interface MatchStartEvent {
@@ -76,6 +77,11 @@ export interface PlayerPickedCOEvent extends WithPlayer {
   co: CO;
 }
 
+export interface PlayerPickedArmyEvent extends WithPlayer {
+  type: "player-picked-army";
+  army: Army;
+}
+
 export interface PlayerEliminated extends WithPlayer {
   type: "player-eliminated";
 }
@@ -89,6 +95,7 @@ export type WWEvent =
   | PlayerLeftEvent
   | PlayerChangedReadyStatusEvent
   | PlayerPickedCOEvent
+  | PlayerPickedArmyEvent
   | PlayerEliminated
   | COPowerEvent
   | SuperCOPowerEvent
