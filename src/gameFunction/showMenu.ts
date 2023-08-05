@@ -11,6 +11,9 @@ import {
   Assets,
 } from "pixi.js";
 import unitData from "./unitData";
+import { trpc } from "frontend/utils/trpc-client";
+import { unitTypeSchema } from "../server/schemas/unit";
+
 
 export default async function showMenu(
   spriteSheet: Spritesheet,
@@ -19,8 +22,12 @@ export default async function showMenu(
   x: number,
   y: number,
   mapHeight: number,
-  mapWidth: number
+  mapWidth: number,
+  trpcAction: any
 ) {
+
+
+
   //TODO: Gotta add a "funds" value to our parameters
   // from there, include it here and any unit above our funds,
   // will be darkened out.
@@ -103,6 +110,16 @@ export default async function showMenu(
     //lets add a hover effect to our elements
     menuElement.on("pointerenter", () => {
       unitBG.alpha = 1;
+    });
+
+    menuElement.on("pointerdown", async () => {
+      await trpcAction.mutateAsync({
+        type: "build",
+        unitType: "infantry",
+        position: [x, y],
+        playerId: "cljvrs6nc0002js2wl5g3jo5m",
+        matchId: "cljw16lea0000jscweoeop1ct"
+      });
     });
 
     menuElement.on("pointerleave", () => {

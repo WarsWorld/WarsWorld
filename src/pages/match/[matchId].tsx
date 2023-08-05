@@ -28,6 +28,10 @@ import { demoUnits } from "../../gameFunction/demoUnitList";
 import getJSON from "../../gameFunction/getJSON";
 import showMenu from "../../gameFunction/showMenu";
 import { spriteConstructor } from "../../gameFunction/spriteConstructor";
+import MatchPlayer from "../../frontend/components/match/v2/MatchPlayer";
+
+
+
 
 BaseTexture.defaultOptions.scaleMode = SCALE_MODES.NEAREST;
 
@@ -36,8 +40,8 @@ interface SpriteData {
 }
 
 const Match = ({ spriteData }: SpriteData) => {
-  console.log("Here is the spriteData: ");
-  console.log(spriteData);
+
+  const mutation = trpc.action.send.useMutation();
   const { currentPlayer } = usePlayers();
   const [players, setPlayers] = useState<PlayerInMatch[] | null | undefined>(
     null
@@ -54,9 +58,11 @@ const Match = ({ spriteData }: SpriteData) => {
     {
       enabled: currentPlayer !== undefined,
       onSuccess(data) {
-        if (data === null) {
-          throw new Error(`Match ${matchId} not found!`);
-        }
+        if (data === null) throw new Error(`Match ${matchId} not found!`);
+
+
+        if (data.status != "playing") throw new Error(`This match hasn't started yet. make sure to ready up!`);
+
 
         if (!players) {
           setPlayers(data.players);
@@ -65,6 +71,7 @@ const Match = ({ spriteData }: SpriteData) => {
         if (!mapData) {
           setMapData(data.map.tiles);
         }
+
       },
     }
   );
@@ -75,7 +82,9 @@ const Match = ({ spriteData }: SpriteData) => {
   const [scale, setScale] = useState<number>(2);
 
   useEffect(() => {
+
     if (mapData) {
+
       const mapScale = scale * 16;
       const mapMargin = scale * 32;
       const app = new Application({
@@ -143,7 +152,8 @@ const Match = ({ spriteData }: SpriteData) => {
                       rowIndex,
                       colIndex,
                       mapData.length - 1,
-                      mapData[0].length - 1
+                      mapData[0].length - 1,
+                      mutation
                     );
 
                     //if there is a menu already out, lets remove it
@@ -204,8 +214,10 @@ const Match = ({ spriteData }: SpriteData) => {
         const units = showUnits(spriteSheets, mapData, demoUnits);
         mapContainer.addChild(units);
       }
+
       console.log("Below is the mapData");
       console.log(mapData);
+      console.log(players);
       return () => {
         app.stop();
       };
@@ -216,7 +228,7 @@ const Match = ({ spriteData }: SpriteData) => {
   if (!spriteData) return <h1>Loading...</h1>;
   else {
     return (
-      <div className="@grid @grid-cols-12  @text-center @my-20">
+      <div className="@grid @grid-cols-12 @text-center @my-20 @mx-2">
         <div className="@col-span-12 @p-2">
           <button
             className={"btn @inline"}
@@ -239,8 +251,11 @@ const Match = ({ spriteData }: SpriteData) => {
             -
           </button>
         </div>
+<div className="@col-span-2 [image-rendering:pixelated]">
+  {players ? <MatchPlayer name={players[0].playerId} co={players[0].co} country={players[0].army} playerReady={true}/> : "loading"}
 
-        <div className="@col-span-12">
+</div>
+        <div className="@col-span-8">
           <canvas
             className="@inline"
             style={{
@@ -248,6 +263,10 @@ const Match = ({ spriteData }: SpriteData) => {
             }}
             ref={pixiCanvasRef}
           ></canvas>
+        </div>
+        <div className="@col-span-2">
+          {players ? <MatchPlayer name={players[1].playerId} co={players[1].co} country={players[1].army} playerReady={true}
+                        flipCO={true} /> : "loading"}
         </div>
       </div>
     );

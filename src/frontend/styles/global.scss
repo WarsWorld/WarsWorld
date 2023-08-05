@@ -1,5 +1,6 @@
 @use "template/layout";
 @use "pages/index";
+@use "match/matchCard";
 @use "mixins" as m;
 
 // This file is used as the base for tailwindCSS
@@ -73,10 +74,27 @@
     padding: 0.5em;
     margin: 0.5em;
     transition: 0.4s;
-    letter-spacing: 0.15em;
   }
 
   .btn:hover {
+    color: black;
+    background-color: theme("colors.secondary");
+  }
+
+
+  //The button we use for match cards right now
+  .btnMenu {
+    @include m.clampSize(12, 16, 320, 1200);
+    color: white;
+    cursor: pointer;
+    background-color: theme("colors.bg-tertiary");
+    border-radius: 10px;
+    padding: 0.25em;
+    margin: 0.25em;
+    transition: 0.4s;
+  }
+
+  .btnMenu:hover {
     color: black;
     background-color: theme("colors.secondary");
   }

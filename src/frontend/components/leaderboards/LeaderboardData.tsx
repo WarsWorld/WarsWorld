@@ -1,5 +1,6 @@
 import { faker } from "@faker-js/faker";
-import { COEnum, NationEnum } from "frontend/utils/enums";
+import { CO, coSchema } from "server/schemas/co";
+import { Army, armySchema } from "server/schemas/army";
 
 export type Player = {
   id: string;
@@ -8,8 +9,8 @@ export type Player = {
   wins: number;
   rating: number;
   streak: number;
-  co: string;
-  armyNumber: number;
+  co: CO;
+  army: Army;
   profileLink: string;
 };
 
@@ -21,8 +22,8 @@ export type PlayerLeaderboard = {
   winRate: number;
   rating: number;
   streak: number;
-  co: string;
-  armyNumber: number;
+  co: CO;
+  army: Army;
   profileLink: string;
 };
 
@@ -38,19 +39,15 @@ const newPlayer = (): Player => {
   const rating = ratingCalc <= 0 ? 0 : ratingCalc;
   const streak = rating === 0 ? 0 : faker.number.int({ max: wins });
   const co = faker.helpers.arrayElement(
-    Object.keys(COEnum).filter((item) => {
+    Object.keys(coSchema.Enum).filter((item) => {
       return isNaN(Number(item));
     })
-  );
-  const armyNumber = Number(
-    faker.helpers.arrayElement(
-      Object.keys(NationEnum)
-        .filter((item) => {
-          return !isNaN(Number(item));
-        })
-        .filter((nation) => nation != "4")
-    )
-  );
+  ) as CO;
+  const army = faker.helpers.arrayElement(
+    Object.keys(armySchema.Enum).filter((item) => {
+      return isNaN(Number(item));
+    })
+  ) as Army;
   const profileLink = "/";
   return {
     id,
@@ -60,7 +57,7 @@ const newPlayer = (): Player => {
     rating,
     streak,
     co,
-    armyNumber,
+    army,
     profileLink,
   };
 };
@@ -82,7 +79,7 @@ function transformData(data: Player[]): PlayerLeaderboard[] {
         rating: player.rating,
         streak: player.streak,
         co: player.co,
-        armyNumber: player.armyNumber,
+        army: player.army,
         profileLink: player.profileLink,
       };
       return result;

@@ -21,20 +21,25 @@ import {
   PlayerInMatch,
   BackendMatchState,
 } from "shared/types/server-match-state";
+import { armySchema } from "../schemas/army";
+import { MatchStatus } from "@prisma/client";
 
 const updateServerState = async (
   matchState: BackendMatchState,
-  newPlayersState: PlayerInMatch[]
+  newPlayersState: PlayerInMatch[],
+  matchStatus: MatchStatus = matchState.status
 ) => {
   await prisma.match.update({
     where: {
       id: matchState.id,
     },
     data: {
+      status: matchStatus,
       playerState: newPlayersState,
     },
   });
   matchState.players = newPlayersState;
+  matchState.status = matchStatus;
 };
 
 const throwIfMatchNotInSetupState = (match: BackendMatchState) => {
@@ -139,13 +144,20 @@ export const matchRouter = router({
         throw new Error("You haven't joined this match");
       }
 
+      let readycount = 0;
+      ctx.match.players.forEach((player) => {
+        if (player.ready) readycount++;
+        else if (player.playerId == ctx.currentPlayer.id && input.readyState)
+          readycount++;
+      });
       await updateServerState(
         ctx.match,
         ctx.match.players.map((e) => ({
           ...e,
           ready:
             e.playerId === ctx.currentPlayer.id ? input.readyState : e.ready,
-        }))
+        })),
+        readycount == 2 ? "playing" : ctx.match.status
       );
 
       emitEvent({
@@ -153,6 +165,50 @@ export const matchRouter = router({
         matchId: ctx.match.id,
         player: ctx.currentPlayer,
         ready: input.readyState,
+      });
+    }),
+  switchCO: matchBaseProcedure
+    .input(
+      z.object({
+        selectedCO: coSchema,
+      })
+    )
+    .mutation(async ({ input, ctx }) => {
+      throwIfMatchNotInSetupState(ctx.match);
+
+      console.log(ctx.match.players[0]);
+      const findPlayer = ctx.match.players.find(
+        (player) => player.playerId === ctx.currentPlayer.id
+      );
+      if (findPlayer) findPlayer.co = input.selectedCO;
+
+      await updateServerState(ctx.match, ctx.match.players);
+      emitEvent({
+        type: "player-picked-co",
+        co: input.selectedCO,
+        matchId: ctx.match.id,
+        player: ctx.currentPlayer,
+      });
+    }),
+  switchArmy: matchBaseProcedure
+    .input(
+      z.object({
+        selectedArmy: armySchema,
+      })
+    )
+    .mutation(async ({ input, ctx }) => {
+      throwIfMatchNotInSetupState(ctx.match);
+      const findPlayer = ctx.match.players.find(
+        (player) => player.playerId === ctx.currentPlayer.id
+      );
+      if (findPlayer) findPlayer.army = input.selectedArmy;
+
+      await updateServerState(ctx.match, ctx.match.players);
+      emitEvent({
+        type: "player-picked-army",
+        army: input.selectedArmy,
+        matchId: ctx.match.id,
+        player: ctx.currentPlayer,
       });
     }),
 });

@@ -36,8 +36,8 @@ export default function PlayerNameBar({
   const iconDiv = (
     <div className={`@flex @flex-col @w-[32px] @h-[32px]`}>
       <img
-        className={`@h-8 @bg-white @mx-auto ${borderStyle} @border-b-2 @border-gray-400`}
-        src={`/img/nations/${armyString}-icon.webp`}
+        className={`@h-8 @mx-auto [image-rendering:pixelated]`}
+        src={`/img/nations/${armyString}.gif`}
       />
     </div>
   );
@@ -48,7 +48,7 @@ export default function PlayerNameBar({
         className={`@h-full @relative @z-10 ${
           !isLeftIcon && "@transform @scale-x-[-1]"
         }`}
-        src={`/img/CO/smallPixel/${co}-small.png`}
+        src={`/img/CO/pixelated/${co}-small.png`}
       />
     </div>
   ) : null;
