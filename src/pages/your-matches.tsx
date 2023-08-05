@@ -1,18 +1,28 @@
 import { usePlayers } from "frontend/context/players";
-import { useRef } from "react";
+import { useRef, useEffect, useState } from "react";
 import { trpc } from "frontend/utils/trpc-client";
 import Head from "next/head";
 import { MatchRow } from "frontend/components/match/MatchRow";
+import MatchCardTop from "../frontend/components/match/v2/MatchCardTop";
+import MatchPlayer from "../frontend/components/match/v2/MatchPlayer";
+import MatchCard from "../frontend/components/match/v2/MatchCard";
 
 export default function YourMatches() {
-  const { currentPlayer, setCurrentPlayer, ownedPlayers } = usePlayers();
+  const {
+    currentPlayer,
+    setCurrentPlayer,
+    ownedPlayers,
+    areOwnedPlayersLoaded,
+  } = usePlayers();
 
-  const matchesQuery = trpc.match.getPlayerMatches.useQuery(
+  const yourMatchesQuery = trpc.match.getPlayerMatches.useQuery(
     { playerId: currentPlayer?.id ?? "" },
     {
       enabled: currentPlayer !== undefined,
     }
   );
+
+  const allMatchesQuery = trpc.match.getAll.useQuery();
 
   const mapQuery = trpc.map.getAll.useQuery();
   const createMutation = trpc.match.create.useMutation();
@@ -25,9 +35,8 @@ export default function YourMatches() {
       </Head>
 
       <div className="@flex @justify-center @w-full">
-        <div className="@h-full @w-full @p-5 @grid @gap-10 @text-center allGames">
+        <div className="@h-full @w-full @p-5 @grid @gap-10 @text-center">
           <div>
-            <h1>Your matches</h1>
             <h1>Hello dev! Read Instructions</h1>
             <p>
               To create a match, first change Current Player to any other
@@ -35,32 +44,38 @@ export default function YourMatches() {
               <br />
               Then click on Create Game and then on Enter Match
             </p>
-
             <br />
-            <p>
-              Current player:{" "}
-              <select
-                className="@bg-gray-800 @px-2 @rounded-lg"
-                onChange={(e) => {
-                  const foundPlayer = ownedPlayers?.find(
-                    (p) => p.id === e.target.value
-                  );
+            {areOwnedPlayersLoaded ? (
+              <p>
+                Current player:{" "}
+                <select
+                  className="@bg-gray-800 @px-2 @rounded-lg btn"
+                  onChange={(e) => {
+                    const foundPlayer = ownedPlayers?.find(
+                      (p) => p.id === e.target.value
+                    );
 
-                  if (foundPlayer !== undefined) {
-                    setCurrentPlayer(foundPlayer);
-                  }
-                }}
-              >
-                {ownedPlayers?.map((p) => (
-                  <option key={p.id} value={p.id}>
-                    {p.name}
-                  </option>
-                ))}
-              </select>
-            </p>
+                    if (foundPlayer !== undefined) {
+                      setCurrentPlayer(foundPlayer);
+                    }
+                  }}
+                  defaultValue={currentPlayer?.id}
+                >
+                  {ownedPlayers?.map((p) => (
+                    <option key={p.id} value={p.id}>
+                      {p.name}
+                    </option>
+                  ))}
+                </select>
+              </p>
+            ) : (
+              // Loading Players Section
+              <p>Loading Players...</p>
+            )}
+
             <div className="@flex @justify-center @gap-5">
               <button
-                className="@bg-gray-800 @px-2 @rounded-lg"
+                className="@bg-gray-800 @px-2 @rounded-lg btn"
                 onClick={async () => {
                   const mapId = mapSelectionRef.current?.value;
 
@@ -69,17 +84,17 @@ export default function YourMatches() {
                   }
 
                   await createMutation.mutateAsync({
-                    selectedCO: "andy",
+                    selectedCO: "lash",
                     mapId,
                     playerId: currentPlayer.id,
                   });
-                  matchesQuery.refetch();
+                  yourMatchesQuery.refetch();
                 }}
               >
                 Create game
               </button>
               <select
-                className="@bg-gray-800 @px-2 @rounded-lg"
+                className="@bg-gray-800 @px-2 @rounded-lg btn"
                 ref={mapSelectionRef}
               >
                 {mapQuery.data?.map((map) => (
@@ -90,16 +105,83 @@ export default function YourMatches() {
               </select>
             </div>
           </div>
-          <div id="currentGames" className="currentGames">
-            <h1>Current games</h1>
-            <div className="@flex @flex-wrap @justify-around">
-              {matchesQuery.data === undefined
+
+          <div>
+            <h1>
+              Your Matches
+              <p>Matches you are part of/joined.</p>
+            </h1>
+            <div className="@grid [grid-template-columns:repeat(auto-fill,minmax(300px,1fr))] @gap-10">
+              {yourMatchesQuery.data === undefined
                 ? "Loading..."
-                : matchesQuery.data.map((match) => (
-                    <MatchRow key={match.id} match={match} />
+                : yourMatchesQuery.data.map((match) => (
+                    <MatchCard key={match.id} match={match} inMatch={true} />
                   ))}
             </div>
           </div>
+
+          <div>
+            <h1>
+              Join a match
+              <p>Matches you can join.</p>
+            </h1>
+            <div className="@grid [grid-template-columns:repeat(auto-fill,minmax(300px,1fr))] @gap-10">
+              {allMatchesQuery.data === undefined ||
+              yourMatchesQuery.data === undefined
+                ? "Loading..."
+                : allMatchesQuery.data.map((match) => {
+                    let inMatch = false;
+                    match.players.forEach((player) => {
+                      if (
+                        currentPlayer !== undefined &&
+                        (player.playerId == currentPlayer.id ||
+                          match.players.length == 2)
+                      )
+                        inMatch = true;
+                    });
+                    if (!inMatch)
+                      return (
+                        <MatchCard
+                          key={match.id}
+                          match={match}
+                          inMatch={false}
+                        />
+                      );
+                  })}
+            </div>
+          </div>
+
+          <div>
+            <h1>
+              Spectate a Match
+              <p>Matches with two players (not you).</p>
+            </h1>
+            <div className="@grid [grid-template-columns:repeat(auto-fill,minmax(300px,1fr))] @gap-10">
+              {allMatchesQuery.data === undefined ||
+              yourMatchesQuery.data === undefined
+                ? "Loading..."
+                : allMatchesQuery.data.map((match) => {
+                    let inMatch = false;
+                    match.players.forEach((player) => {
+                      if (
+                        currentPlayer !== undefined &&
+                        (player.playerId == currentPlayer.id ||
+                          match.players.length != 2)
+                      )
+                        inMatch = true;
+                    });
+                    if (!inMatch)
+                      return (
+                        <MatchCard
+                          key={match.id}
+                          match={match}
+                          inMatch={false}
+                        />
+                      );
+                  })}
+            </div>
+          </div>
+
           <div id="completedGames" className="completedGames">
             <h1 className="@text-center">Completed games</h1>
           </div>

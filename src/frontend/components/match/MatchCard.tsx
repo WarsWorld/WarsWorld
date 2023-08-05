@@ -138,35 +138,11 @@ export default function MatchCard({
   );
   //const isDuel = playersInMatch?.length === 2;
   const isDuel = Math.floor(Math.random() * 2) === 1;
-  const liveDiv = (
-    <>
-      <img className="@h-4" src="/img/matchCard/liveDot.png" />
-      <p>{TurnStyleString[TurnStyleEnum.Live]}</p>
-    </>
-  );
-  //Maybe pull from match state later
-  const turnStyle = TurnStyleEnum[Math.floor(Math.random() * 2)];
-  const isLive = turnStyle === TurnStyleEnum[TurnStyleEnum.Live];
+
   //Determine value based off match rules. Can be multiple
   const matchType: MatchType[] = [MatchType.Standard];
   const matchTypeString = matchType.map((mt) => MatchTypeShort[mt]).join(" + ");
   //TODO: Replace with real data
-  const randomRank = Math.floor(Math.random() * 1500).toString();
-  const randomRank2 = Math.floor(Math.random() * 1500).toString();
-
-  const armyIndex = Math.floor(Math.random() * 4);
-  let armyIndex2 = Math.floor(Math.random() * 4);
-  if (armyIndex2 === armyIndex) {
-    armyIndex === 3 ? armyIndex2-- : armyIndex2++;
-  }
-
-  const co1 = COEnum[Math.floor(Math.random() * 26)];
-  const co2 = COEnum[Math.floor(Math.random() * 26)];
-
-  //in seconds
-  const timeElapsedD: number = Math.floor(Math.random() * 1000);
-  const timeElapsedH: number = Math.floor(Math.random() * 24);
-  const timeElapsedM: number = Math.floor(Math.random() * 60);
 
   return (
     <div className="@flex @flex-col @bg-black/50 @my-4 @shadow-black/60 @cursor-pointer hover:@scale-105 @transition @h-[350px] @w-[85vw] @max-w-[400px] tablet:@max-w-[600px]">
@@ -188,17 +164,7 @@ export default function MatchCard({
         <div className="@relative @flex @flex-col @justify-between @flex-grow @z-10">
           <div className="@flex @flex-col tablet:@flex-row @h-[20%] tablet:@h-8 @max-w-full">
             <div className="@flex @h-8">
-              <div
-                className={`@flex @items-center @justify-center @flex-1 @gap-2 @px-2 @min-w-20 ${
-                  isLive ? "@bg-bg-match-live" : "@bg-bg-secondary"
-                }`}
-              >
-                {isLive ? (
-                  liveDiv
-                ) : (
-                  <p>{TurnStyleString[TurnStyleEnum.Async]}</p>
-                )}
-              </div>
+              <div className=""> LIVE</div>
               <div className="@flex @items-center @justify-center @flex-1 @min-w-20 @bg-bg-primary">
                 <p>{matchTypeString}</p>
               </div>
@@ -216,23 +182,23 @@ export default function MatchCard({
                 <img className="@h-4" src="/img/matchCard/clock.png" />
                 <p>
                   {" "}
-                  {timeElapsedD}d : {timeElapsedH}h : {timeElapsedM}m
+                  {6}d : {23}h : {59}m
                 </p>
               </div>
             </div>
           </div>
           {isDuel ? (
-            <DuelInner co1={co1} co2={co2} />
+            <DuelInner co1={"Sami"} co2={"Lash"} />
           ) : (
             <MultiplayerInner playersInMatch={playersInMatch} />
           )}
         </div>
         {isDuel && (
           <LowerPlayerBar
-            randomRank={randomRank}
-            randomRank2={randomRank2}
-            armyIndex={armyIndex}
-            armyIndex2={armyIndex2}
+            randomRank={"900"}
+            randomRank2={"900"}
+            armyIndex={0}
+            armyIndex2={1}
           />
         )}
       </div>
