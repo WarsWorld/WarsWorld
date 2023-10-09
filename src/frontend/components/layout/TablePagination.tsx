@@ -7,7 +7,7 @@ interface Props {
 
 export default function TablePagination({ table }: Props) {
   return (
-    <div className="@flex @items-center @gap-2 tablet:@gap-3 @mt-8">
+    <div className="@flex @items-center @gap-2 tablet:@gap-3 @mt-8 @text-xl">
       <SquareButton
         onClick={() => table.setPageIndex(0)}
         disabled={!table.getCanPreviousPage()}

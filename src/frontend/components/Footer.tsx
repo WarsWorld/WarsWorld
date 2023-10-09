@@ -25,7 +25,11 @@ export function Footer() {
     <footer className="@max-h-[200px] @w-full @flex @flex-col @items-center @justify-center @gap-4 @bg-gradient-to-t @from-black @pb-5">
       <nav className="@flex @gap-8">
         {footerLinks1.map((item) => (
-          <Link className="@text-base-a" key={item.text} href={item.href}>
+          <Link
+            className="@text-base-a @text-2xl @text-primary hover:@text-primary hover:@scale-105"
+            key={item.text}
+            href={item.href}
+          >
             {item.text}
           </Link>
         ))}

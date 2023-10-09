@@ -1,34 +1,36 @@
 import Image from "next/image";
-interface imageData {
-  className: string;
-  alt: string;
-  src: string;
-  width: number;
-  height: number;
-}
-export default function Banner(props: {
-  image1?: imageData;
-  title: React.ReactElement | React.ReactElement[];
-  backgroundURL: string,
-  image2?: imageData;
-}) {
 
+export default function Banner2(props: {
+  title: React.ReactElement | React.ReactElement[];
+  backgroundURL: string;
+}) {
   return (
-    <div  style={{backgroundImage:`url(${props.backgroundURL})`}} className={`@bg-cover `}>
-      <div className="@flex @items-start @gap-10 @backdrop-brightness-[0.35] @px-10 @py-40">
-        {props.image1 && (
-          <Image
-            {...props.image1}
-          />
-        )}
-        <div>
-          {props.title}
-        </div>
-        {props.image2 && (
-          <Image
-            {...props.image2}
-          />
-        )}
+    <div className="@relative @h-[90vh] @overflow-hidden @shadow-black @shadow-2xl">
+      <div
+        style={{ backgroundImage: `url(${props.backgroundURL})` }}
+        className={`@bg-cover @w-full @absolute @h-full`}
+      >
+        <div className="@flex @items-start @gap-10 @h-full @backdrop-brightness-[0.25]"></div>
+      </div>
+      <div className="@flex @items-start @gap-10 @h-full @top-[20vh] @left-[7.5vw] @absolute @z-20">
+        <div>{props.title}</div>
+      </div>
+      <div className="@relative @z-10">
+        <img
+          className="@absolute @left-[52.5vw] @h-[120vh]"
+          alt=""
+          src="img/CO/smoothFull/Awds-sami.webp"
+        />
+        <img
+          className="@absolute @left-[67.5vw] @h-[120vh]"
+          alt=""
+          src="img/CO/smoothFull/Awds-sasha.webp"
+        />
+        <img
+          className="@absolute @left-[80vw] @h-[120vh]"
+          alt=""
+          src="img/CO/smoothFull/Awds-nell.webp"
+        />
       </div>
     </div>
   );

@@ -6,7 +6,7 @@ export default function SmallContainer(props: {
   text: string;
 }) {
   return (
-    <div className="@flex @rounded-2xl @relative hover:@scale-105 @transition @drop-shadow-[10px_10px_10px_rgba(0,0,0,0.5)]">
+    <div className="@flex @rounded-2xl @relative hover:@scale-105 @transition @drop-shadow-[10px_10px_10px_rgba(0,0,0,0.25)]">
       <Image
         className="@rounded-2xl @brightness-90 @h-auto @min-w-[250px]"
         src={`/img/layout/${props.image}.jpg`}
@@ -14,7 +14,7 @@ export default function SmallContainer(props: {
         width={380}
         height={600}
       />
-      <div className="@text-center @p-2 @absolute @rounded-2xl @bottom-0 @z-10 @backdrop-brightness-[.15]">
+      <div className="@text-center @p-2 @absolute @rounded-2xl @bottom-0 @z-10">
         <h2 className="@text-white">
           <strong>{props.title}</strong>
         </h2>
