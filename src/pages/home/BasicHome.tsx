@@ -30,13 +30,13 @@ export default function BasicHome() {
       <Banner
         title={
           <>
-            <h1 className="@text-7xl">
+            <h1 className="@text-[1.25rem] tablet:@text-[3rem] smallscreen:@text-[3.5rem] monitor:@text-[5rem] large_monitor:@text-[7rem]">
               Relive the <strong>Nostalgia</strong>
               <br />
               Rewrite the Tactics
             </h1>
             <div className="@flex @justify-center">
-              <div className="@mt-12 @h-24 @text-5xl @w-[50%] @shadow-lg @shadow-black">
+              <div className="@mt-4 tablet:@mt-12 @h-12 tablet:@h-20 monitor:@h-24 large_monitor:@h-28 @text-xl tablet:@text-4xl monitor:@text-5xl large_monitor:@text-6xl @w-[50vw] tablet:@w-[50%] @shadow-lg @shadow-black">
                 <SquareButton onClick={undefined}>Play Now</SquareButton>
               </div>
             </div>
@@ -44,7 +44,7 @@ export default function BasicHome() {
         }
         backgroundURL="/img/layout/homeBanner/gameCollage.jpg"
       />
-      <div className="@my-4">
+      <div className="@my-1 tablet:@my-4">
         <ThreeLinesText
           subtitle="The Timeless Classic"
           title="Renewed"

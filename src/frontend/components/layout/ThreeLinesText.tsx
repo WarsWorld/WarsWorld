@@ -19,7 +19,7 @@ export default function ThreeLinesText(props: {
       buttonArray.push(
         <div className="">
           <SquareButton
-            key={buttonItem.link}
+            key={buttonItem.text}
             onClick={() => router.push(buttonItem.link)}
           >
             {buttonItem.text}

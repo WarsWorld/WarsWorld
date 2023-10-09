@@ -17,15 +17,16 @@ export function Navbar() {
   };
 
   return (
-    <header className="@w-full @fixed @top-0 @z-30">
-      <nav className="@flex @h-full @justify-between @items-center @bg-bg-secondary @mx-auto @px-5">
+    <header className="@w-full @fixed @top-0 @z-30 @h-[12vh] @shadow-lg @shadow-bg-primary">
+      <nav className="@flex @h-full @justify-between @items-center @bg-gradient-to-r @from-bg-primary @via-bg-secondary @to-bg-primary @mx-auto @px-6">
         <Link href="/">
           <Image
-            className="@flex"
+            className="@flex @w-[4.5vw]"
             src="/img/layout/logo.webp"
-            width={60}
-            height={60}
             alt="AW Logo"
+            width={0}
+            height={0}
+            sizes="100vw"
           />
         </Link>
 
@@ -54,6 +55,7 @@ export function Navbar() {
           handleMatchLinks={handleMatchLinks}
         />
       </nav>
+      <div className="@h-1 @w-full @bg-gradient-to-r @from-bg-primary @from-10% @via-primary @to-bg-primary @to-90%"></div>
     </header>
   );
 }
