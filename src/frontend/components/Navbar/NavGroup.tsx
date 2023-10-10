@@ -49,7 +49,7 @@ export function NavGroup({ showMatchLinks, handleMatchLinks }: Props) {
           className="@text-white @flex @flex-col relative @justify-center @items-center @cursor-pointer matchLobbyToggle"
         >
           <NavButton key="GAME">GAME</NavButton>
-          <div className="@flex @justify-center @relative @w-full">
+          <div className="@flex @justify-center @relative @w-full ">
             <NavMenuMatches showMatchLinks={showMatchLinks} />
           </div>
         </button>

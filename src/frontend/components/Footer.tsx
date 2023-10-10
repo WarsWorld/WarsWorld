@@ -26,7 +26,7 @@ export function Footer() {
       <nav className="@flex @gap-8">
         {footerLinks1.map((item) => (
           <Link
-            className="@text-base-a @text-2xl @text-primary hover:@text-primary hover:@scale-105"
+            className="@text-base-a @text-lg smallscreen:@text-2xl @text-primary hover:@text-primary hover:@scale-105"
             key={item.text}
             href={item.href}
           >

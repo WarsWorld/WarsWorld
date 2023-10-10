@@ -17,11 +17,8 @@ export default function ThreeLinesText(props: {
   if (props.button) {
     props.button.forEach((buttonItem: buttonData) =>
       buttonArray.push(
-        <div className="">
-          <SquareButton
-            key={buttonItem.text}
-            onClick={() => router.push(buttonItem.link)}
-          >
+        <div className="" key={buttonItem.text}>
+          <SquareButton onClick={() => router.push(buttonItem.link)}>
             {buttonItem.text}
           </SquareButton>
         </div>

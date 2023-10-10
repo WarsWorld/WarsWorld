@@ -11,7 +11,7 @@ export default function Banner2(props: {
   const [cos, setCos] = useState(<></>);
 
   useEffect(() => {
-    if (screenWidth <= 768) {
+    if (screenWidth < 1024) {
       setCos(
         <div className="@relative @z-10">
           <Image

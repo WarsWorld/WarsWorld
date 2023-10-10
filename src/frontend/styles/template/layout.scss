@@ -1,4 +1,3 @@
-
 @use "src/frontend/styles/mixins" as m;
 
 #__next,
@@ -29,12 +28,6 @@ header {
     div {
       background-color: theme("colors.primary");
       transition: 0.4s;
-    }
-
-    &:hover {
-      div {
-        background-color: theme("colors.secondary");
-      }
     }
   }
 
@@ -100,11 +93,6 @@ header {
 
     .loginLink {
       min-width: 80px;
-    }
-
-    .burgerMenuLinks,
-    .burgerMenuIcon {
-      display: none;
     }
 
     .matchMenuLinks {
