@@ -29,6 +29,12 @@ header {
       background-color: theme("colors.primary");
       transition: 0.4s;
     }
+
+    &:hover {
+      div {
+        background-color: theme("colors.secondary");
+      }
+    }
   }
 
   .matchLobbyToggle {

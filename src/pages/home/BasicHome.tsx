@@ -26,7 +26,7 @@ const homePageCards = [
 
 export default function BasicHome() {
   return (
-    <>
+    <div className="@w-[100vw]">
       <Banner
         title={
           <>
@@ -73,6 +73,6 @@ export default function BasicHome() {
           ]}
         />
       </div>
-    </>
+    </div>
   );
 }
