@@ -7,6 +7,25 @@ import MatchCardTop from "../frontend/components/match/v2/MatchCardTop";
 import MatchPlayer from "../frontend/components/match/v2/MatchPlayer";
 import MatchCard from "../frontend/components/match/v2/MatchCard";
 import PageTitle from "frontend/components/layout/PageTitle";
+import SquareButton from "frontend/components/layout/SquareButton";
+import Select, { SelectOption } from "frontend/components/layout/Select";
+interface Map {
+  id: string;
+  name: string;
+  author: string;
+  numberOfPlayers: number;
+  size: {
+    width: number;
+    height: number;
+  };
+  cities: number;
+  bases: number;
+  ports: number;
+  airports: number;
+  comtowers: number;
+  labs: number;
+  created: Date;
+}
 
 export default function YourMatches() {
   const {
@@ -23,11 +42,45 @@ export default function YourMatches() {
     }
   );
 
+  useEffect(() => {
+    if (currentPlayer)
+      setPlayer({
+        label: currentPlayer.name,
+        value: currentPlayer.id,
+      });
+  }, [currentPlayer]);
+
   const allMatchesQuery = trpc.match.getAll.useQuery();
 
   const mapQuery = trpc.map.getAll.useQuery();
   const createMutation = trpc.match.create.useMutation();
-  const mapSelectionRef = useRef<HTMLSelectElement>(null);
+  const [currentMap, setCurrentMap] = useState<Map>();
+
+  const players: SelectOption[] = [];
+  ownedPlayers?.forEach((player) =>
+    players.push({ label: player.name, value: player.id })
+  );
+
+  const maps: SelectOption[] = [];
+  mapQuery.data?.forEach((map) =>
+    maps.push({ label: map.name, value: map.id })
+  );
+
+  const [player, setPlayer] = useState<SelectOption | undefined>({
+    label: "No players loaded",
+    value: "",
+  });
+  const [selectMap, setSelectMap] = useState<SelectOption | undefined>(
+    mapQuery.data
+      ? {
+          label: mapQuery.data[0].name,
+          value: mapQuery.data[0].id,
+        }
+      : {
+          label: "No maps loaded",
+          value: "",
+        }
+  );
 
   return (
     <>
@@ -46,64 +99,64 @@ export default function YourMatches() {
               Then click on Create Game and then on Enter Match
             </p>
             <br />
-            {areOwnedPlayersLoaded ? (
-              <p>
-                Current player:{" "}
-                <select
-                  className="@bg-gray-800 @px-2 @rounded-lg btn"
-                  onChange={(e) => {
-                    const foundPlayer = ownedPlayers?.find(
-                      (p) => p.id === e.target.value
-                    );
-
-                    if (foundPlayer !== undefined) {
-                      setCurrentPlayer(foundPlayer);
-                    }
-                  }}
-                  defaultValue={currentPlayer?.id}
-                >
-                  {ownedPlayers?.map((p) => (
-                    <option key={p.id} value={p.id}>
-                      {p.name}
-                    </option>
-                  ))}
-                </select>
-              </p>
+            {areOwnedPlayersLoaded && currentPlayer ? (
+              <div className="@flex @flex-row @justify-center @items-center @py-2 @pb-6">
+                <p className="@pr-8">Current Player: </p>
+                <div className="@relative @w-64">
+                  <Select
+                    options={players}
+                    value={player}
+                    onChange={(o) => {
+                      setPlayer(o);
+                      const newCurrentPlayer = ownedPlayers?.find(
+                        (p) => p.id === o?.value
+                      );
+                      setCurrentPlayer(newCurrentPlayer ?? currentPlayer);
+                    }}
+                  />
+                </div>
+              </div>
             ) : (
               // Loading Players Section
               <p>Loading Players...</p>
             )}
 
-            <div className="@flex @justify-center @gap-5">
-              <button
-                className="@bg-gray-800 @px-2 @rounded-lg btn"
-                onClick={async () => {
-                  const mapId = mapSelectionRef.current?.value;
+            <div className="@flex @justify-center @gap-5 @py-4">
+              <div className="@px-2">
+                <SquareButton
+                  onClick={async () => {
+                    const mapId = currentMap?.id;
 
-                  if (mapId === undefined || currentPlayer === undefined) {
-                    return;
-                  }
+                    if (mapId === undefined || currentPlayer === undefined) {
+                      return;
+                    }
 
-                  await createMutation.mutateAsync({
-                    selectedCO: "lash",
-                    mapId,
-                    playerId: currentPlayer.id,
-                  });
-                  yourMatchesQuery.refetch();
-                }}
-              >
-                Create game
-              </button>
-              <select
-                className="@bg-gray-800 @px-2 @rounded-lg btn"
-                ref={mapSelectionRef}
-              >
-                {mapQuery.data?.map((map) => (
-                  <option key={map.id} value={map.id}>
-                    {map.name}
-                  </option>
-                ))}
-              </select>
+                    await createMutation.mutateAsync({
+                      selectedCO: "lash",
+                      mapId,
+                      playerId: currentPlayer.id,
+                    });
+                    yourMatchesQuery.refetch();
+                  }}
+                >
+                  Create game
+                </SquareButton>
+              </div>
+              <div className="@flex @flex-col @items-center ">
+                <div className="@w-96">
+                  <Select
+                    options={maps}
+                    value={selectMap}
+                    onChange={(o) => {
+                      setSelectMap(o);
+                      const newCurrentMap = mapQuery.data?.find(
+                        (p) => p.id === o?.value
+                      );
+                      setCurrentMap(newCurrentMap);
+                    }}
+                  />
+                </div>
+              </div>
             </div>
           </div>
 
