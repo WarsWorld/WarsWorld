@@ -22,7 +22,7 @@ const footerLinks2 = [
 
 export function Footer() {
   return (
-    <footer className="@max-h-[200px] @w-[100vw] @flex @flex-col @items-center @justify-center @gap-4 @bg-gradient-to-t @from-black @pb-5">
+    <footer className="@max-h-[200px] @w-full @flex @flex-col @items-center @justify-center @gap-4 @bg-gradient-to-t @from-black @pb-5">
       <nav className="@flex @gap-8">
         {footerLinks1.map((item) => (
           <Link

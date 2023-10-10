@@ -6,6 +6,7 @@ import { MatchRow } from "frontend/components/match/MatchRow";
 import MatchCardTop from "../frontend/components/match/v2/MatchCardTop";
 import MatchPlayer from "../frontend/components/match/v2/MatchPlayer";
 import MatchCard from "../frontend/components/match/v2/MatchCard";
+import PageTitle from "frontend/components/layout/PageTitle";
 
 export default function YourMatches() {
   const {
@@ -35,7 +36,7 @@ export default function YourMatches() {
       </Head>
 
       <div className="@flex @justify-center @w-full">
-        <div className="@h-full @w-full @p-5 @grid @gap-10 @text-center">
+        <div className="@h-full @w-full @mt-4 @grid @gap-10 @text-center">
           <div>
             <h1>Hello dev! Read Instructions</h1>
             <p>
@@ -106,84 +107,91 @@ export default function YourMatches() {
             </div>
           </div>
 
-          <div>
-            <h1>
-              Your Matches
-              <p>Matches you are part of/joined.</p>
-            </h1>
-            <div className="@grid [grid-template-columns:repeat(auto-fill,minmax(300px,1fr))] @gap-10">
-              {yourMatchesQuery.data === undefined
-                ? "Loading..."
-                : yourMatchesQuery.data.map((match) => (
-                    <MatchCard key={match.id} match={match} inMatch={true} />
-                  ))}
+          <div className="@w-full @my-2">
+            <PageTitle>Your Matches</PageTitle>
+          </div>
+          <div className="@flex @flex-col @align-middle @items-center">
+            <div className="@w-[90vw]">
+              <div className="@grid [grid-template-columns:repeat(auto-fill,minmax(300px,1fr))] @gap-10">
+                {yourMatchesQuery.data === undefined
+                  ? "Loading..."
+                  : yourMatchesQuery.data.map((match) => (
+                      <MatchCard key={match.id} match={match} inMatch={true} />
+                    ))}
+              </div>
             </div>
           </div>
 
-          <div>
-            <h1>
-              Join a match
-              <p>Matches you can join.</p>
-            </h1>
-            <div className="@grid [grid-template-columns:repeat(auto-fill,minmax(300px,1fr))] @gap-10">
-              {allMatchesQuery.data === undefined ||
-              yourMatchesQuery.data === undefined
-                ? "Loading..."
-                : allMatchesQuery.data.map((match) => {
-                    let inMatch = false;
-                    match.players.forEach((player) => {
-                      if (
-                        currentPlayer !== undefined &&
-                        (player.playerId == currentPlayer.id ||
-                          match.players.length == 2)
-                      )
-                        inMatch = true;
-                    });
-                    if (!inMatch)
-                      return (
-                        <MatchCard
-                          key={match.id}
-                          match={match}
-                          inMatch={false}
-                        />
-                      );
-                  })}
+          <div className="@w-full @my-2">
+            <PageTitle>Join a match</PageTitle>
+            <p className="@py-0 @mt-4">Matches you can join.</p>
+          </div>
+          <div className="@flex @flex-col @align-middle @items-center">
+            <div className="@w-[90vw]">
+              <div className="@grid [grid-template-columns:repeat(auto-fill,minmax(300px,1fr))] @gap-10">
+                {allMatchesQuery.data === undefined ||
+                yourMatchesQuery.data === undefined
+                  ? "Loading..."
+                  : allMatchesQuery.data.map((match) => {
+                      let inMatch = false;
+                      match.players.forEach((player) => {
+                        if (
+                          currentPlayer !== undefined &&
+                          (player.playerId == currentPlayer.id ||
+                            match.players.length == 2)
+                        )
+                          inMatch = true;
+                      });
+                      if (!inMatch)
+                        return (
+                          <MatchCard
+                            key={match.id}
+                            match={match}
+                            inMatch={false}
+                          />
+                        );
+                    })}
+              </div>
+            </div>
+          </div>
+          <div className="@w-full @my-2">
+            <PageTitle>Spectate a Match</PageTitle>
+            <p className="@py-0 @mt-4">Matches with two players (not you).</p>
+          </div>
+          <div className="@flex @flex-col @align-middle @items-center">
+            <div className="@w-[90vw]">
+              <div className="@grid [grid-template-columns:repeat(auto-fill,minmax(300px,1fr))] @gap-10">
+                {allMatchesQuery.data === undefined ||
+                yourMatchesQuery.data === undefined
+                  ? "Loading..."
+                  : allMatchesQuery.data.map((match) => {
+                      let inMatch = false;
+                      match.players.forEach((player) => {
+                        if (
+                          currentPlayer !== undefined &&
+                          (player.playerId == currentPlayer.id ||
+                            match.players.length != 2)
+                        )
+                          inMatch = true;
+                      });
+                      if (!inMatch)
+                        return (
+                          <MatchCard
+                            key={match.id}
+                            match={match}
+                            inMatch={false}
+                          />
+                        );
+                    })}
+              </div>
             </div>
           </div>
 
-          <div>
-            <h1>
-              Spectate a Match
-              <p>Matches with two players (not you).</p>
-            </h1>
-            <div className="@grid [grid-template-columns:repeat(auto-fill,minmax(300px,1fr))] @gap-10">
-              {allMatchesQuery.data === undefined ||
-              yourMatchesQuery.data === undefined
-                ? "Loading..."
-                : allMatchesQuery.data.map((match) => {
-                    let inMatch = false;
-                    match.players.forEach((player) => {
-                      if (
-                        currentPlayer !== undefined &&
-                        (player.playerId == currentPlayer.id ||
-                          match.players.length != 2)
-                      )
-                        inMatch = true;
-                    });
-                    if (!inMatch)
-                      return (
-                        <MatchCard
-                          key={match.id}
-                          match={match}
-                          inMatch={false}
-                        />
-                      );
-                  })}
-            </div>
+          <div className="@w-full @my-2">
+            <PageTitle>Completed games</PageTitle>
           </div>
-
-          <div id="completedGames" className="completedGames">
-            <h1 className="@text-center">Completed games</h1>
+          <div id="completedGames" className="@mb-12">
+            <h1 className="@text-center">Work is progress...</h1>
           </div>
         </div>
       </div>

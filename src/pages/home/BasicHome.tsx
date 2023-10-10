@@ -26,7 +26,7 @@ const homePageCards = [
 
 export default function BasicHome() {
   return (
-    <div className="@w-[100vw]">
+    <div className="@w-full">
       <Banner
         title={
           <>

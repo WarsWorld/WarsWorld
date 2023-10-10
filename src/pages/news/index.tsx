@@ -3,6 +3,7 @@ import LinkCard from "frontend/components/layout/LinkCard";
 import Head from "next/head";
 import { v4 as uuidv4 } from "uuid";
 import { ICardInfo } from "frontend/components/layout/LinkCard";
+import PageTitle from "frontend/components/layout/PageTitle";
 
 const newsCardsObjectList: ICardInfo[] = [
   {
@@ -70,11 +71,10 @@ export default function NewsPage() {
         <title>News | Wars World</title>
       </Head>
 
-      <div className="@flex @flex-col tablet:@p-5 @gap-10 @h-full @w-full @justify-center @items-center">
-        <div className="@flex @flex-col @h-full @items-center @gap-2 @max-w-[90vw] @mt-5">
-          <h1>News</h1>
-          <h3>Latest</h3>
-        </div>
+      <div className="@w-full @mt-8">
+        <PageTitle>News</PageTitle>
+      </div>
+      <div className="@flex @flex-col @p-5 @gap-10 @w-full @justify-center @items-center">
         <FeaturedNews />
         <div className="@flex @flex-wrap @gap-8 @justify-center @items-center @max-w-[90vw] @mb-5">
           {newsCardsObjectList.map((item) => {
