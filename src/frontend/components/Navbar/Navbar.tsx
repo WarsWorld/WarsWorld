@@ -64,8 +64,6 @@ export function Navbar() {
             <NavGroupMobile
               showLinks={showLinks}
               handleBurgerMenu={handleBurgerMenu}
-              showMatchLinks={showMatchLinks}
-              handleMatchLinks={handleMatchLinks}
             />
           </>
         ) : (

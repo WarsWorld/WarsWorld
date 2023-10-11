@@ -1,12 +1,8 @@
-import NavButton from "../layout/NavButton";
 import { NavItem } from "./NavItem";
-import { NavMenuMatches } from "./NavMenuMatches";
 
 interface Props {
   showLinks: boolean;
   handleBurgerMenu: () => void;
-  showMatchLinks: boolean;
-  handleMatchLinks: () => void;
 }
 
 const navItemObject = [
@@ -43,12 +39,7 @@ const navItemObject = [
   },
 ];
 
-export function NavGroupMobile({
-  showLinks,
-  handleBurgerMenu,
-  showMatchLinks,
-  handleMatchLinks,
-}: Props) {
+export function NavGroupMobile({ showLinks, handleBurgerMenu }: Props) {
   return (
     <>
       <ul

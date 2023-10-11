@@ -13,9 +13,9 @@ interface Props {
 export function NavItem({
   text,
   location,
-  iconPath,
+  /*iconPath,
   iconAlt,
-  flip,
+  flip,*/
   handleBurgerMenu,
 }: Props) {
   return (

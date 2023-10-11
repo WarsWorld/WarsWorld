@@ -10,6 +10,7 @@ const footerLinks1 = [
   { text: "Donations", href: "/donations" },
 ];
 
+/*
 const footerLinks2 = [
   { imgSrc: rLogoPath, imgAlt: "Reddit Logo", href: "/" },
   { imgSrc: dLogoPath, imgAlt: "Discord Logo", href: "/" },
@@ -19,6 +20,7 @@ const footerLinks2 = [
     href: "https://github.com/warsWorld/WarsWorld/",
   },
 ];
+*/
 
 export function Footer() {
   return (
