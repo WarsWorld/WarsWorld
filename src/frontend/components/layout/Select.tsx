@@ -19,7 +19,7 @@ export default function Select({ value, onChange, options }: Props) {
     option !== value && onChange(option);
   }
   function isOptionSelected(option: SelectOption) {
-    return option === value;
+    return option.value === value?.value;
   }
 
   useEffect(() => {
@@ -57,7 +57,7 @@ export default function Select({ value, onChange, options }: Props) {
             onMouseEnter={() => setHighlightedIndex(index)}
             key={option.value}
             className={`@py-2 @px-4 @cursor-pointer 
-              ${isOptionSelected(option) && "@bg-blue-500"}
+              ${isOptionSelected(option) && "@bg-blue-500 hover:@bg-blue-900"}
               ${index === highlightedIndex && "@bg-bg-secondary"}
               `}
           >

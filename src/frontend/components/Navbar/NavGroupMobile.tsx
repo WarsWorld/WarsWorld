@@ -52,7 +52,7 @@ export function NavGroupMobile({
   return (
     <>
       <ul
-        className={`@absolute @m-0 @p-0 @list-none @overflow-y-hidden @shadow-black @shadow-lg @right-0 @w-[75vw] smallscreen:@w-[45vw] @top-[calc(100%_+_0.35em)]
+        className={`@absolute @m-0 @p-0 @list-none @overflow-y-hidden @shadow-black @shadow-lg @right-0 @w-full smallscreen:@w-[45vw] @top-[calc(100%_+_0.3em)]
       @bg-gradient-to-r @from-bg-primary @from-30% @to-bg-secondary @z-50 @duration-[750ms]
           ${showLinks ? "@max-h-[100vh]" : "@max-h-0"}`}
       >
