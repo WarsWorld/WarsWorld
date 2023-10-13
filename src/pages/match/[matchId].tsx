@@ -30,9 +30,6 @@ import showMenu from "../../gameFunction/showMenu";
 import { spriteConstructor } from "../../gameFunction/spriteConstructor";
 import MatchPlayer from "../../frontend/components/match/v2/MatchPlayer";
 
-
-
-
 BaseTexture.defaultOptions.scaleMode = SCALE_MODES.NEAREST;
 
 interface SpriteData {
@@ -40,7 +37,6 @@ interface SpriteData {
 }
 
 const Match = ({ spriteData }: SpriteData) => {
-
   const mutation = trpc.action.send.useMutation();
   const { currentPlayer } = usePlayers();
   const [players, setPlayers] = useState<PlayerInMatch[] | null | undefined>(
@@ -60,9 +56,10 @@ const Match = ({ spriteData }: SpriteData) => {
       onSuccess(data) {
         if (data === null) throw new Error(`Match ${matchId} not found!`);
 
-
-        if (data.status != "playing") throw new Error(`This match hasn't started yet. make sure to ready up!`);
-
+        if (data.status != "playing")
+          throw new Error(
+            `This match hasn't started yet. make sure to ready up!`
+          );
 
         if (!players) {
           setPlayers(data.players);
@@ -71,7 +68,6 @@ const Match = ({ spriteData }: SpriteData) => {
         if (!mapData) {
           setMapData(data.map.tiles);
         }
-
       },
     }
   );
@@ -82,9 +78,7 @@ const Match = ({ spriteData }: SpriteData) => {
   const [scale, setScale] = useState<number>(2);
 
   useEffect(() => {
-
     if (mapData) {
-
       const mapScale = scale * 16;
       const mapMargin = scale * 32;
       const app = new Application({
@@ -251,10 +245,18 @@ const Match = ({ spriteData }: SpriteData) => {
             -
           </button>
         </div>
-<div className="@col-span-2 [image-rendering:pixelated]">
-  {players ? <MatchPlayer name={players[0].playerId} co={players[0].co} country={players[0].army} playerReady={true}/> : "loading"}
-
-</div>
+        <div className="@col-span-2 [image-rendering:pixelated]">
+          {players ? (
+            <MatchPlayer
+              name={players[0].playerId}
+              co={players[0].co}
+              country={players[0].army}
+              playerReady={true}
+            />
+          ) : (
+            "loading"
+          )}
+        </div>
         <div className="@col-span-8">
           <canvas
             className="@inline"
@@ -265,8 +267,17 @@ const Match = ({ spriteData }: SpriteData) => {
           ></canvas>
         </div>
         <div className="@col-span-2">
-          {players ? <MatchPlayer name={players[1].playerId} co={players[1].co} country={players[1].army} playerReady={true}
-                        flipCO={true} /> : "loading"}
+          {players ? (
+            <MatchPlayer
+              name={players[1].playerId}
+              co={players[1].co}
+              country={players[1].army}
+              playerReady={true}
+              flipCO={true}
+            />
+          ) : (
+            "loading"
+          )}
         </div>
       </div>
     );

@@ -54,24 +54,11 @@ export function NavGroup({ showMatchLinks, handleMatchLinks }: Props) {
           </div>
         </button>
         {navItemObject.map((item) => (
-          <NavItem
-            key={item.text}
-            text={item.text}
-            location={item.location}
-            iconPath={item.iconPath}
-            iconAlt={item.iconAlt}
-            flip={item.flip}
-          />
+          <NavItem key={item.text} text={item.text} location={item.location} />
         ))}
       </div>
       <div className="@flex @justify-center @items-center @relative loginLink">
-        <NavItem
-          text="LOGIN"
-          location="/"
-          iconPath="/img/layout/Stealth-0.png"
-          iconAlt="Pink Cosmos Stealth"
-          flip={false}
-        />
+        <NavItem text="LOGIN" location="/" />
       </div>
     </>
   );

@@ -3,13 +3,7 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
 
-import {
-  AnimatedSprite,
-  Container,
-  DisplayObject,
-  Spritesheet,
-  Texture,
-} from "pixi.js";
+import { AnimatedSprite, Container, Spritesheet, Texture } from "pixi.js";
 import { CreatableUnit } from "../server/schemas/unit";
 import { Tile } from "../server/schemas/tile";
 import {
@@ -66,7 +60,6 @@ export function showUnits(
       // check if waited or not
       // if ready, then start the create path procedure TODO: (supposing now that all are ready)
       unitSprite.on("pointerdown", async () => {
-
         //Is this the first time we are clicking this unit? if not,
         // then display the menu where they are
         // because it means we want to activate the unit where its sitting.
@@ -291,7 +284,3 @@ export function showUnits(
 
   return returnContainer;
 }
-
-
-
-

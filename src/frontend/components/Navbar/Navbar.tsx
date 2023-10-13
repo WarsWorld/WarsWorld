@@ -52,13 +52,7 @@ export function Navbar() {
                   <div className="@h-1 @w-9 smallscreen:@h-[0.3rem] smallscreen:@w-14 @rounded @bg-gradient-to-r @from-primary @to-primary-dark" />
                 </div>
               </button>
-              <NavItem
-                text="LOGIN"
-                location="/"
-                iconPath="/img/layout/Stealth-0.png"
-                iconAlt="Pink Cosmos Stealth"
-                flip={false}
-              />
+              <NavItem text="LOGIN" location="/" />
             </div>
 
             <NavGroupMobile
