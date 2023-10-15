@@ -7,10 +7,10 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap");
 
 @layer base {
-
   /* width */
   ::-webkit-scrollbar {
     width: 12px;
@@ -20,7 +20,6 @@
   /* Track */
   ::-webkit-scrollbar-track {
     background: #333b54;
-
   }
 
   /* Handle */
@@ -81,7 +80,6 @@
     background-color: theme("colors.secondary");
   }
 
-
   //The button we use for match cards right now
   .btnMenu {
     @include m.clampSize(12, 16, 320, 1200);
@@ -114,6 +112,21 @@
 @layer components {
   .pixelated {
     image-rendering: pixelated;
+  }
+}
+
+@layer utilities {
+  @variants responsive {
+    /* Hide scrollbar for Chrome, Safari and Opera */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+
+    /* Hide scrollbar for IE, Edge and Firefox */
+    .no-scrollbar {
+      -ms-overflow-style: none; /* IE and Edge */
+      scrollbar-width: none; /* Firefox */
+    }
   }
 }
 
