@@ -15,7 +15,8 @@ export default function YourMatches() {
         enabled: currentPlayer !== undefined,
       }
     );
-  const { data: allMatchesQuery } = trpc.match.getAll.useQuery();
+  const { data: allMatchesQuery, refetch: refecthAllMatches } =
+    trpc.match.getAll.useQuery();
 
   const joinableMatchesQuery = allMatchesQuery?.filter(
     (match) =>
@@ -43,6 +44,7 @@ export default function YourMatches() {
         <div className="@h-full @w-full @mt-4 @grid @gap-10 @text-center">
           <CreateMatch
             refecthYourMatches={refecthYourMatches}
+            refecthAllMatches={refecthAllMatches}
             currentPlayer={currentPlayer}
             setCurrentPlayer={setCurrentPlayer}
           />
