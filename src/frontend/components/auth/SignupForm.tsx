@@ -1,12 +1,12 @@
 import SquareButton from "../layout/SquareButton";
 import FormInput from "../layout/FormInput";
-import { Dispatch, FormEvent, SetStateAction, useState } from "react";
+import { FormEvent, useState } from "react";
 
 interface Props {
-  setIsModalOpen: Dispatch<SetStateAction<boolean>>;
+  onSubmitEndBehaviour: () => void;
 }
 
-export default function SignupForm({ setIsModalOpen }: Props) {
+export default function SignupForm({ onSubmitEndBehaviour }: Props) {
   const [signupData, setSignupData] = useState({
     user: "",
     email: "",
@@ -25,7 +25,7 @@ export default function SignupForm({ setIsModalOpen }: Props) {
     event.preventDefault();
     console.log("SUBMMIT");
     console.log(signupData);
-    setIsModalOpen(false);
+    onSubmitEndBehaviour();
   };
 
   return (

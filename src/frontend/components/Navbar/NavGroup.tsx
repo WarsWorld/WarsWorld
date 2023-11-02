@@ -2,7 +2,7 @@ import { Dispatch, SetStateAction } from "react";
 import { NavItem } from "./NavItem";
 import { NavMenuMatches } from "./NavMenuMatches";
 import NavButton from "./NavButton";
-import LoginModal from "../modals/LoginModal";
+import LoginSignupModal from "../modals/LoginSignupModal";
 import SquareButton from "../layout/SquareButton";
 
 interface Props {
@@ -74,7 +74,7 @@ export function NavGroup({
           <SquareButton onClick={() => setIsOpen(true)}>LOGIN</SquareButton>
         </div>
       </div>
-      <LoginModal isOpen={isOpen} setIsOpen={setIsOpen} />
+      <LoginSignupModal isOpen={isOpen} setIsOpen={setIsOpen} />
     </>
   );
 }

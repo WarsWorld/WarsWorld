@@ -12,8 +12,13 @@ interface Props {
   setIsOpen: Dispatch<SetStateAction<boolean>>;
 }
 
-export default function LoginModal({ isOpen, setIsOpen, width }: Props) {
+export default function LoginSignupModal({ isOpen, setIsOpen, width }: Props) {
   const [isSignupForm, setIsSignupForm] = useState(false);
+
+  const onSubmitEndBehaviour = () => {
+    setIsSignupForm(false);
+    setIsOpen(false);
+  };
 
   return (
     <>
@@ -26,7 +31,7 @@ export default function LoginModal({ isOpen, setIsOpen, width }: Props) {
           /* SIGNUP */
           <DefaultDialogDesign title="Signup" width={width ?? "50vw"}>
             <div className="@pt-8 @px-10">
-              <SignupForm setIsModalOpen={setIsOpen} />
+              <SignupForm onSubmitEndBehaviour={onSubmitEndBehaviour} />
               <div className="@flex @flex-col @items-center @justify-center @pb-6 @px-10 @gap-2">
                 <div className="@h-[0.15rem] @w-full @bg-bg-primary @my-2" />
                 <p>Already have an account?</p>
@@ -42,10 +47,10 @@ export default function LoginModal({ isOpen, setIsOpen, width }: Props) {
           /* LOGIN */
           <DefaultDialogDesign title="Login" width={width ?? "50vw"}>
             <div className="@pt-8 @px-10">
-              <LoginForm setIsModalOpen={setIsOpen} />
+              <LoginForm onSubmitEndBehaviour={onSubmitEndBehaviour} />
               <div className="@flex @flex-col @items-center @justify-center @pb-6 @px-10 @gap-2">
                 <Link
-                  className="@my-2"
+                  className="@my-2 @text @no-underline hover:@underline"
                   href="."
                   onClick={() => setIsOpen(false)}
                 >

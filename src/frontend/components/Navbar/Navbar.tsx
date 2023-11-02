@@ -5,7 +5,7 @@ import { NavGroup } from "./NavGroup";
 import { NavGroupMobile } from "./NavGroupMobile";
 import { useWindowWidth } from "@react-hook/window-size";
 import SquareButton from "../layout/SquareButton";
-import LoginModal from "../modals/LoginModal";
+import LoginSignupModal from "../modals/LoginSignupModal";
 
 export function Navbar() {
   const windowWidth = useWindowWidth();
@@ -59,7 +59,7 @@ export function Navbar() {
                   <SquareButton onClick={() => setIsOpen(true)}>
                     LOGIN
                   </SquareButton>
-                  <LoginModal
+                  <LoginSignupModal
                     isOpen={isOpen}
                     setIsOpen={setIsOpen}
                     width="95vw"
