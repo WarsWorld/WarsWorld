@@ -4,13 +4,15 @@ import Image from "next/image";
 import { NavGroup } from "./NavGroup";
 import { NavGroupMobile } from "./NavGroupMobile";
 import { useWindowWidth } from "@react-hook/window-size";
-import { NavItem } from "./NavItem";
+import SquareButton from "../layout/SquareButton";
+import LoginModal from "../modals/LoginModal";
 
 export function Navbar() {
   const windowWidth = useWindowWidth();
   const [showLinks, setShowLinks] = useState(false);
   const [showMatchLinks, setShowMatchLinks] = useState(false);
   const [isMobileWidth, setIsMobileWidth] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
   const handleBurgerMenu = () => {
     setShowLinks(!showLinks);
@@ -26,7 +28,7 @@ export function Navbar() {
   }, [windowWidth]);
 
   return (
-    <header className="@w-full @fixed @top-0 @z-30 @shadow-lg @shadow-bg-primary">
+    <header className="@w-screen @fixed @top-0 @z-30 @shadow-lg @shadow-bg-primary">
       <nav className="@flex @h-full @justify-between @items-center @bg-gradient-to-r @from-bg-primary @via-bg-secondary @to-bg-primary @mx-auto @px-4 smallscreen:@px-8 laptop:@px-6">
         <Link href="/">
           <Image
@@ -41,7 +43,7 @@ export function Navbar() {
 
         {!isMobileWidth ? (
           <>
-            <div className="@flex @justify-center @items-center @relative @gap-8 tablet:@gap-10 laptop:@gap-16">
+            <div className="@w-screen @flex @justify-end @items-center @relative @gap-8 tablet:@gap-10 laptop:@gap-16">
               <button
                 className="@flex @justify-center @items-center @h-7 @w-7"
                 onClick={handleBurgerMenu}
@@ -52,7 +54,18 @@ export function Navbar() {
                   <div className="@h-1 @w-9 smallscreen:@h-[0.3rem] smallscreen:@w-14 @rounded @bg-gradient-to-r @from-primary @to-primary-dark" />
                 </div>
               </button>
-              <NavItem text="LOGIN" location="/" />
+              <div className="@flex @h-full @justify-center @items-center @relative">
+                <div className="@flex @justify-center @items-center @text-2xl @h-12 hover:@scale-[1.025] @cursor-pointer">
+                  <SquareButton onClick={() => setIsOpen(true)}>
+                    LOGIN
+                  </SquareButton>
+                  <LoginModal
+                    isOpen={isOpen}
+                    setIsOpen={setIsOpen}
+                    width="95vw"
+                  />
+                </div>
+              </div>
             </div>
 
             <NavGroupMobile
@@ -66,6 +79,8 @@ export function Navbar() {
               showMatchLinks={showMatchLinks}
               handleMatchLinks={handleMatchLinks}
               setShowLinks={setShowLinks}
+              setIsOpen={setIsOpen}
+              isOpen={isOpen}
             />
           </>
         )}

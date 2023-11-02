@@ -2,11 +2,15 @@ import { Dispatch, SetStateAction } from "react";
 import { NavItem } from "./NavItem";
 import { NavMenuMatches } from "./NavMenuMatches";
 import NavButton from "./NavButton";
+import LoginModal from "../modals/LoginModal";
+import SquareButton from "../layout/SquareButton";
 
 interface Props {
   showMatchLinks: boolean;
   handleMatchLinks: () => void;
   setShowLinks: Dispatch<SetStateAction<boolean>>;
+  setIsOpen: Dispatch<SetStateAction<boolean>>;
+  isOpen: boolean;
 }
 
 const navItemObject = [
@@ -40,7 +44,12 @@ const navItemObject = [
   },
 ];
 
-export function NavGroup({ showMatchLinks, handleMatchLinks }: Props) {
+export function NavGroup({
+  showMatchLinks,
+  handleMatchLinks,
+  setIsOpen,
+  isOpen,
+}: Props) {
   return (
     <>
       <div className="@flex @items-center @justify-center @gap-10 monitor:@gap-16 @h-full">
@@ -60,9 +69,12 @@ export function NavGroup({ showMatchLinks, handleMatchLinks }: Props) {
           <NavItem key={item.text} text={item.text} location={item.location} />
         ))}
       </div>
-      <div className="@flex @h-full @justify-center @items-center @relative loginLink">
-        <NavItem text="LOGIN" location="/" />
+      <div className="@flex @h-full @justify-center @items-center @relative @pr-6">
+        <div className="@flex @justify-center @items-center @text-2xl @w-32 @h-12 hover:@scale-[1.025] @cursor-pointer">
+          <SquareButton onClick={() => setIsOpen(true)}>LOGIN</SquareButton>
+        </div>
       </div>
+      <LoginModal isOpen={isOpen} setIsOpen={setIsOpen} />
     </>
   );
 }
