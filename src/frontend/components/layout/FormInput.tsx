@@ -2,16 +2,32 @@ import { ChangeEventHandler } from "react";
 
 interface Props {
   text: string;
+  isError?: boolean;
+  errorMessage?: string;
+  value?: string | number | readonly string[];
   id?: string;
   type?: string;
   onChange?: ChangeEventHandler;
 }
 
-export default function FormInput({ text, id, type, onChange }: Props) {
+export default function FormInput({
+  text,
+  id,
+  type,
+  value,
+  isError,
+  errorMessage,
+  onChange,
+}: Props) {
   return (
     <>
       <div className="@my-1">
-        <label htmlFor={id ?? ""} className="@text-2xl">
+        <label
+          htmlFor={id ?? ""}
+          className={`@text-2xl ${
+            isError ? "@text-orange-star" : "@text-white"
+          }`}
+        >
           {text}
         </label>
         <input
@@ -20,8 +36,12 @@ export default function FormInput({ text, id, type, onChange }: Props) {
           type={type ?? ""}
           content="Hello"
           onChange={onChange}
-          className="@border-primary @border-2 @text-xl @w-full @p-2 @mt-2 @rounded"
+          value={value}
+          className={`@text-black @border-[2.5px] @text-xl @w-full @p-2 @mt-2 @rounded ${
+            isError ? "@border-orange-star" : "@border-primary"
+          }`}
         />
+        {isError && <p className="@text-orange-star @pt-2">{errorMessage}</p>}
       </div>
     </>
   );
