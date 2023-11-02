@@ -1,7 +1,7 @@
 import { Dispatch, SetStateAction } from "react";
 import { NavItem } from "./NavItem";
 import { NavMenuMatches } from "./NavMenuMatches";
-import NavButton from "../layout/NavButton";
+import NavButton from "./NavButton";
 
 interface Props {
   showMatchLinks: boolean;
@@ -43,12 +43,15 @@ const navItemObject = [
 export function NavGroup({ showMatchLinks, handleMatchLinks }: Props) {
   return (
     <>
-      <div className="@flex @items-center @justify-center @gap-10 monitor:@gap-16">
+      <div className="@flex @items-center @justify-center @gap-10 monitor:@gap-16 @h-full">
         <button
-          onClick={handleMatchLinks}
-          className="@text-white @flex @flex-col relative @justify-center @items-center @cursor-pointer matchLobbyToggle"
+          onMouseEnter={handleMatchLinks}
+          onMouseLeave={handleMatchLinks}
+          className="@text-white @flex @flex-col relative @justify-center @items-center @cursor-pointer matchLobbyToggle @h-full"
         >
-          <NavButton key="GAME">GAME</NavButton>
+          <NavButton key="GAME" hasArrow isOpen={showMatchLinks}>
+            GAME
+          </NavButton>
           <div className="@flex @justify-center @relative @w-full ">
             <NavMenuMatches showMatchLinks={showMatchLinks} />
           </div>
@@ -57,7 +60,7 @@ export function NavGroup({ showMatchLinks, handleMatchLinks }: Props) {
           <NavItem key={item.text} text={item.text} location={item.location} />
         ))}
       </div>
-      <div className="@flex @justify-center @items-center @relative loginLink">
+      <div className="@flex @h-full @justify-center @items-center @relative loginLink">
         <NavItem text="LOGIN" location="/" />
       </div>
     </>
