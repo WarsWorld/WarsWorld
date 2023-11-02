@@ -1,7 +1,10 @@
 import { Dialog } from "@headlessui/react";
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import DefaultDialogDesign from "../layout/modal/DefaultDialogDesign";
 import SquareButton from "../layout/SquareButton";
+import Link from "next/link";
+import LoginForm from "../auth/LoginForm";
+import SignupForm from "../auth/SignupForm";
 
 interface Props {
   width?: string;
@@ -10,6 +13,8 @@ interface Props {
 }
 
 export default function LoginModal({ isOpen, setIsOpen, width }: Props) {
+  const [isSignupForm, setIsSignupForm] = useState(false);
+
   return (
     <>
       <Dialog
@@ -17,29 +22,46 @@ export default function LoginModal({ isOpen, setIsOpen, width }: Props) {
         onClose={() => setIsOpen(false)}
         className="@relative @z-40"
       >
-        <DefaultDialogDesign title="LOGIN" width={width ?? "75vw"}>
-          <div className="@p-10">
-            <p>
-              Lorem ipsum dolor sit amet consectetur, adipisicing elit. Eveniet,
-              blanditiis quas nobis asperiores saepe earum ipsa porro unde
-              maiores, rem eius iste aut officiis voluptatum voluptates ratione,
-              perferendis veniam ducimus consequatur vitae aliquam mollitia
-              deleniti eum. Adipisci mollitia distinctio nihil. Lorem, ipsum
-              dolor sit amet consectetur adipisicing elit. Repellat iure ex
-              eligendi explicabo nihil dolorum tempora odit! Totam adipisci,
-              rerum dignissimos quo deserunt sunt ipsa aliquid id ad doloribus.
-              Commodi eos ipsum nobis repellat necessitatibus voluptatem
-              possimus eligendi quasi vero!
-            </p>
-          </div>
-          <div className="@flex @items-end @justify-end @py-6 @px-10">
-            <div className="@w-40 @h-16 @text-2xl">
-              <SquareButton onClick={() => setIsOpen(false)}>
-                Cancel
-              </SquareButton>
+        {isSignupForm ? (
+          /* SIGNUP */
+          <DefaultDialogDesign title="Signup" width={width ?? "50vw"}>
+            <div className="@pt-8 @px-10">
+              <SignupForm setIsModalOpen={setIsOpen} />
+              <div className="@flex @flex-col @items-center @justify-center @pb-6 @px-10 @gap-2">
+                <div className="@h-[0.15rem] @w-full @bg-bg-primary @my-2" />
+                <p>Already have an account?</p>
+                <div className="@my-2 @w-80 @h-12 @text-2xl">
+                  <SquareButton onClick={() => setIsSignupForm(false)}>
+                    Log in
+                  </SquareButton>
+                </div>
+              </div>
             </div>
-          </div>
-        </DefaultDialogDesign>
+          </DefaultDialogDesign>
+        ) : (
+          /* LOGIN */
+          <DefaultDialogDesign title="Login" width={width ?? "50vw"}>
+            <div className="@pt-8 @px-10">
+              <LoginForm setIsModalOpen={setIsOpen} />
+              <div className="@flex @flex-col @items-center @justify-center @pb-6 @px-10 @gap-2">
+                <Link
+                  className="@my-2"
+                  href="."
+                  onClick={() => setIsOpen(false)}
+                >
+                  Forgot password?
+                </Link>
+                <div className="@h-[0.15rem] @w-full @bg-bg-primary @my-2" />
+                <p>Don&apos;t have an account?</p>
+                <div className="@my-2 @w-80 @h-12 @text-2xl">
+                  <SquareButton onClick={() => setIsSignupForm(true)}>
+                    Create New Account
+                  </SquareButton>
+                </div>
+              </div>
+            </div>
+          </DefaultDialogDesign>
+        )}
       </Dialog>
     </>
   );
