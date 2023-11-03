@@ -8,7 +8,11 @@ export const withPlayerIdSchema = z.object({
   playerId: z.string(),
 });
 
-export const developmentPlayerNamePrefix = "devPlayer";
+export const withPlayerNameSchema = z.object({
+  name: z.string(),
+});
+
+export const developmentPlayerNamePrefix = "[dev]";
 
 const getDevelopmentModeUserPlayers = () =>
   prisma.player.findMany({

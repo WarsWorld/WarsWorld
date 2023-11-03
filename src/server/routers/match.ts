@@ -97,6 +97,7 @@ export const matchRouter = router({
         ...ctx.match.players,
         {
           playerId: ctx.currentPlayer.id,
+          name: ctx.currentPlayer.name,
           playerSlot: nextAvailablePlayerSlot,
           ready: false,
           co: input.selectedCO,

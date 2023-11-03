@@ -5,13 +5,16 @@
  */
 import { PrismaClient } from "@prisma/client";
 import { importAWBWMap } from "server/tools/map-importer-utilities";
-import { developmentPlayerNamePrefix } from "server/trpc/middleware/player";
+import { developmentPlayerNamePrefix as Prefix } from "server/trpc/middleware/player";
 
 const prisma = new PrismaClient();
 
-const developmentPlayerNames = Array(4)
-  .fill(1)
-  .map((_, i) => `${developmentPlayerNamePrefix}${i}`);
+const developmentPlayerNames = [
+  "Grimm Guy",
+  "Incuggarch",
+  "Master Chief Z",
+  "Dev Player 4",
+].map((name) => `${Prefix} ${name}`);
 
 async function main() {
   const developmentUser = await prisma.user.create({

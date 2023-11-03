@@ -63,14 +63,14 @@ export default function MatchCard({ match, inMatch }: matchData) {
       />
       <div className="@grid @grid-cols-2 @gap-3">
         <MatchPlayer
-          name={firstPlayer.playerId}
+          name={firstPlayer.name}
           co={playerCO}
           country={army}
           playerReady={ready}
         />
         {twoPlayerCheck ? (
           <MatchPlayer
-            name={secondPlayer.playerId}
+            name={secondPlayer.name}
             co={secondPlayer.co}
             country={secondPlayer.army}
             flipCO={true}

@@ -32,7 +32,7 @@ export default function SignupForm({ onSubmitEndBehaviour }: Props) {
     <>
       <form className="@flex @flex-col @gap-6">
         <FormInput
-          key="su-email"
+          key="su_email"
           text="Email:"
           id="email"
           type="email"
@@ -45,7 +45,7 @@ export default function SignupForm({ onSubmitEndBehaviour }: Props) {
           }
         />
         <FormInput
-          key="su-user"
+          key="su_user"
           text="Username:"
           id="username"
           type="text"
@@ -58,7 +58,7 @@ export default function SignupForm({ onSubmitEndBehaviour }: Props) {
           }
         />
         <FormInput
-          key="su-password"
+          key="su_password"
           text="Password:"
           id="password"
           type="password"
@@ -71,9 +71,9 @@ export default function SignupForm({ onSubmitEndBehaviour }: Props) {
           }
         />
         <FormInput
-          key="su-con-password"
+          key="su_confirm_password"
           text="Confirm password:"
-          id="password"
+          id="confirm_password"
           type="password"
           value={signupData.confirmPassword}
           onChange={(event) =>

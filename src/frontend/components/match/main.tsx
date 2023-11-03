@@ -67,7 +67,10 @@ export const PixiMatch = () => {
   const notSmallScreen = useMediaQuery("(min-width: 768px)");
 
   trpc.match.full.useQuery(
-    { matchId, playerId: currentPlayer?.id ?? "" },
+    {
+      matchId,
+      playerId: currentPlayer?.id ?? "",
+    },
     {
       enabled: currentPlayer !== undefined,
       onSuccess(data) {

@@ -39,7 +39,7 @@ export default function CreateMatch({
     value: "",
   });
   const [selectMap, setSelectMap] = useState<SelectOption | undefined>(
-    !isLoadingMapQuery && mapQuery
+    !isLoadingMapQuery && mapQuery && mapQuery.length > 0
       ? {
           label: mapQuery[0].name,
           value: mapQuery[0].id,
@@ -56,7 +56,8 @@ export default function CreateMatch({
         label: currentPlayer.name,
         value: currentPlayer.id,
       });
-  }, [currentPlayer]);
+    if (mapQuery && !currentMapId) setCurrentMapId(mapQuery[0].id);
+  }, [currentPlayer, mapQuery, currentMapId]);
 
   const createMatchHandler = async () => {
     const mapId = currentMapId;
@@ -67,6 +68,7 @@ export default function CreateMatch({
       selectedCO: "lash",
       mapId,
       playerId: currentPlayer.id,
+      name: currentPlayer.name,
     });
 
     refecthAllMatches();

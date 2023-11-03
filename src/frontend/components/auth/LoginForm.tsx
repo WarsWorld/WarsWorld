@@ -30,7 +30,7 @@ export default function LoginForm({ onSubmitEndBehaviour }: Props) {
     <>
       <form onSubmit={onSubmitLoginForm} className="@flex @flex-col @gap-6">
         <FormInput
-          key="li-user"
+          key="li_user"
           text="Username:"
           id="username"
           type="text"
@@ -43,7 +43,7 @@ export default function LoginForm({ onSubmitEndBehaviour }: Props) {
           }
         />
         <FormInput
-          key="li-password"
+          key="li_password"
           text="Password:"
           id="password"
           type="password"
