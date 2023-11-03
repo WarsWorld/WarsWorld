@@ -1,12 +1,15 @@
 import SquareButton from "../layout/SquareButton";
 import FormInput from "../layout/FormInput";
 import { FormEvent, useState } from "react";
+import { signIn } from "next-auth/react";
+import { useRouter } from "next/router";
 
 interface Props {
   onSubmitEndBehaviour: () => void;
 }
 
 export default function LoginForm({ onSubmitEndBehaviour }: Props) {
+  const nextJsRouter = useRouter();
   const [loginData, setLoginData] = useState({
     user: "",
     password: "",
@@ -19,10 +22,21 @@ export default function LoginForm({ onSubmitEndBehaviour }: Props) {
     }));
   };
 
-  const onSubmitLoginForm = (event: FormEvent) => {
+  const onSubmitLoginForm = async (event: FormEvent) => {
     event.preventDefault();
-    console.log("SUBMMITED");
-    console.log(loginData);
+    const loginResponse = await signIn("credentials", {
+      name: loginData.user,
+      password: loginData.password,
+      redirect: false,
+    });
+
+    if (loginResponse && !loginResponse.error) {
+      console.log("You logged in successfully");
+      nextJsRouter.push("/");
+    } else {
+      console.log("Error: " + loginResponse);
+      console.log("Email or password is incorrect");
+    }
     onSubmitEndBehaviour();
   };
 

@@ -44,6 +44,8 @@ model User {
   role       Role?
   name       String
   discordId  String?   @unique
+  password   String
+  createdAt  DateTime  @default(now())
   identities Player[]
 }
 
