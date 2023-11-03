@@ -55,7 +55,7 @@ export default function LoginForm({ onSubmitEndBehaviour }: Props) {
             )
           }
         />
-        <div className="@flex @flex-col @items-center @justify-center @pt-2 @px-10">
+        <div className="@flex @flex-col @items-center @justify-center @pt-4 @px-10">
           <div className="@w-96 @h-16 @text-3xl @my-2">
             <SquareButton>Login</SquareButton>
           </div>

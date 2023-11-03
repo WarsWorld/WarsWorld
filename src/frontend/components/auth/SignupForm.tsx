@@ -83,7 +83,7 @@ export default function SignupForm({ onSubmitEndBehaviour }: Props) {
             )
           }
         />
-        <div className="@flex @flex-col @items-center @justify-center @pb-2 @px-10 @gap-2">
+        <div className="@flex @flex-col @items-center @justify-center @py-4 @px-10">
           <div className="@w-96 @h-16 @text-3xl @my-2">
             <SquareButton onClick={onSubmitSignupForm}>Signup</SquareButton>
           </div>

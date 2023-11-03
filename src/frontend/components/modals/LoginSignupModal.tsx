@@ -33,7 +33,7 @@ export default function LoginSignupModal({ isOpen, setIsOpen, width }: Props) {
         {isSignupForm ? (
           /* SIGNUP */
           <DefaultDialogDesign title="Signup" width={width ?? "50vw"}>
-            <div className="@pt-8 @px-10">
+            <div className="@pt-8 @px-20">
               <SignupForm onSubmitEndBehaviour={onSubmitEndBehaviour} />
               <div className="@flex @flex-col @items-center @justify-center @pb-6 @px-10 @gap-2">
                 <div className="@h-[0.15rem] @w-full @bg-bg-primary @my-2" />
@@ -49,7 +49,7 @@ export default function LoginSignupModal({ isOpen, setIsOpen, width }: Props) {
         ) : (
           /* LOGIN */
           <DefaultDialogDesign title="Login" width={width ?? "50vw"}>
-            <div className="@pt-8 @px-10">
+            <div className="@pt-8 @px-20">
               <LoginForm onSubmitEndBehaviour={onSubmitEndBehaviour} />
               <div className="@flex @flex-col @items-center @justify-center @pb-6 @px-10 @gap-2">
                 <Link
