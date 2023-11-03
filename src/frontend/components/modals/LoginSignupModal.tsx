@@ -24,7 +24,10 @@ export default function LoginSignupModal({ isOpen, setIsOpen, width }: Props) {
     <>
       <Dialog
         open={isOpen}
-        onClose={() => setIsOpen(false)}
+        onClose={() => {
+          setIsOpen(false);
+          setIsSignupForm(false);
+        }}
         className="@relative @z-40"
       >
         {isSignupForm ? (
@@ -37,7 +40,7 @@ export default function LoginSignupModal({ isOpen, setIsOpen, width }: Props) {
                 <p>Already have an account?</p>
                 <div className="@my-2 @w-80 @h-12 @text-2xl">
                   <SquareButton onClick={() => setIsSignupForm(false)}>
-                    Log in
+                    Login
                   </SquareButton>
                 </div>
               </div>

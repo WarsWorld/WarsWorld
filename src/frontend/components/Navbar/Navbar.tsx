@@ -18,10 +18,6 @@ export function Navbar() {
     setShowLinks(!showLinks);
   };
 
-  const handleMatchLinks = () => {
-    setShowMatchLinks(!showMatchLinks);
-  };
-
   useEffect(() => {
     if (windowWidth >= 1024) setIsMobileWidth(true);
     else setIsMobileWidth(false);
@@ -77,7 +73,7 @@ export function Navbar() {
           <>
             <NavGroup
               showMatchLinks={showMatchLinks}
-              handleMatchLinks={handleMatchLinks}
+              setShowMatchLinks={setShowMatchLinks}
               setShowLinks={setShowLinks}
               setIsOpen={setIsOpen}
               isOpen={isOpen}

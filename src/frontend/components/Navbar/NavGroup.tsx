@@ -7,7 +7,7 @@ import SquareButton from "../layout/SquareButton";
 
 interface Props {
   showMatchLinks: boolean;
-  handleMatchLinks: () => void;
+  setShowMatchLinks: Dispatch<SetStateAction<boolean>>;
   setShowLinks: Dispatch<SetStateAction<boolean>>;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
   isOpen: boolean;
@@ -46,7 +46,7 @@ const navItemObject = [
 
 export function NavGroup({
   showMatchLinks,
-  handleMatchLinks,
+  setShowMatchLinks,
   setIsOpen,
   isOpen,
 }: Props) {
@@ -54,8 +54,8 @@ export function NavGroup({
     <>
       <div className="@flex @items-center @justify-center @gap-10 monitor:@gap-16 @h-full">
         <button
-          onMouseEnter={handleMatchLinks}
-          onMouseLeave={handleMatchLinks}
+          onMouseEnter={() => setShowMatchLinks(true)}
+          onMouseLeave={() => setShowMatchLinks(false)}
           className="@text-white @flex @flex-col relative @justify-center @items-center @cursor-pointer matchLobbyToggle @h-full"
         >
           <NavButton key="GAME" hasArrow isOpen={showMatchLinks}>
