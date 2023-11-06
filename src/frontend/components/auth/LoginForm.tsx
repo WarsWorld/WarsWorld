@@ -14,6 +14,10 @@ export default function LoginForm({ onSubmitEndBehaviour }: Props) {
     user: "",
     password: "",
   });
+  const [error, setError] = useState({
+    isError: false,
+    message: "",
+  });
 
   const onChangeGenericHandler = (identifier: string, value: string) => {
     setLoginData((prevData) => ({
@@ -24,24 +28,50 @@ export default function LoginForm({ onSubmitEndBehaviour }: Props) {
 
   const onSubmitLoginForm = async (event: FormEvent) => {
     event.preventDefault();
-    const loginResponse = await signIn("credentials", {
-      name: loginData.user,
-      password: loginData.password,
-      redirect: false,
-    });
+    try {
+      const loginResponse = await signIn("credentials", {
+        name: loginData.user,
+        password: loginData.password,
+        redirect: false,
+      });
 
-    if (loginResponse && !loginResponse.error) {
-      console.log("You logged in successfully");
-      nextJsRouter.push("/");
-    } else {
-      console.log("Error: " + loginResponse);
+      if (!loginResponse)
+        throw {
+          title: "Couldn't connect to the server.",
+          statusCode: null,
+        };
+
+      if (loginResponse.status === 401)
+        throw {
+          title: "Email or password is incorrect",
+          statusCode: loginResponse.status,
+        };
+
+      if (loginResponse.ok) {
+        console.log("You logged in successfully");
+        setError({
+          isError: false,
+          message: "",
+        });
+        nextJsRouter.push("/");
+        onSubmitEndBehaviour();
+      }
+    } catch (e: any) {
       console.log("Email or password is incorrect");
+      setError({
+        isError: true,
+        message: e.title,
+      });
     }
-    onSubmitEndBehaviour();
   };
 
   return (
     <>
+      {error.isError && (
+        <p className="@text-orange-star @text-2xl @px-6 @pb-4">
+          {error.message}
+        </p>
+      )}
       <form onSubmit={onSubmitLoginForm} className="@flex @flex-col @gap-6">
         <FormInput
           key="li_user"

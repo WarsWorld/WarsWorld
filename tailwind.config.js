@@ -25,6 +25,9 @@ module.exports = {
         "green-earth": "rgb(55, 164, 42)",
         "yellow-comet": "rgb(218, 165, 32)",
         "black-hole": "rgb(12,12,12)",
+        // Social Media Colors
+        discord: "#7289DA",
+        github: "#171515",
       },
       minWidth: {
         20: "5rem",
@@ -46,6 +49,9 @@ module.exports = {
     {
       pattern:
         /(bg|border|text)-(orange-star|blue-moon|green-earth|yellow-comet|black-hole)/,
+    },
+    {
+      pattern: /(bg|border|text)-(github|discord)/,
     },
   ],
   plugins: [],

@@ -6,13 +6,16 @@ import { NavGroupMobile } from "./NavGroupMobile";
 import { useWindowWidth } from "@react-hook/window-size";
 import SquareButton from "../layout/SquareButton";
 import LoginSignupModal from "../modals/LoginSignupModal";
+import { useSearchParams } from "next/navigation";
 
 export function Navbar() {
+  const searchParams = useSearchParams();
+
   const windowWidth = useWindowWidth();
   const [showLinks, setShowLinks] = useState(false);
   const [showMatchLinks, setShowMatchLinks] = useState(false);
   const [isMobileWidth, setIsMobileWidth] = useState(false);
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(searchParams.has("loginOpen"));
 
   const handleBurgerMenu = () => {
     setShowLinks(!showLinks);
@@ -52,7 +55,7 @@ export function Navbar() {
               </button>
               <div className="@flex @h-full @justify-center @items-center @relative">
                 <div className="@flex @justify-center @items-center @text-2xl @h-12 hover:@scale-[1.025] @cursor-pointer">
-                  <SquareButton onClick={() => setIsOpen(true)}>
+                  <SquareButton onClick={() => setIsOpen((prev) => !prev)}>
                     LOGIN
                   </SquareButton>
                   <LoginSignupModal

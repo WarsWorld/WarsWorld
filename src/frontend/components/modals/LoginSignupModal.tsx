@@ -5,6 +5,7 @@ import SquareButton from "../layout/SquareButton";
 import Link from "next/link";
 import LoginForm from "../auth/LoginForm";
 import SignupForm from "../auth/SignupForm";
+import SocialMediaSignInButton from "../layout/SocialMediaSignInButton";
 
 interface Props {
   width?: string;
@@ -24,10 +25,7 @@ export default function LoginSignupModal({ isOpen, setIsOpen, width }: Props) {
     <>
       <Dialog
         open={isOpen}
-        onClose={() => {
-          setIsOpen(false);
-          setIsSignupForm(false);
-        }}
+        onClose={onSubmitEndBehaviour}
         className="@relative @z-40"
       >
         {isSignupForm ? (
@@ -59,6 +57,16 @@ export default function LoginSignupModal({ isOpen, setIsOpen, width }: Props) {
                 >
                   Forgot password?
                 </Link>
+                <div className="@flex @flex-wrap @justify-center @w-full @gap-4">
+                  {["GitHub", "Discord"].map((socialMedia) => (
+                    <div
+                      key={socialMedia}
+                      className="@h-14 @text-3xl @w-72 @my-2"
+                    >
+                      <SocialMediaSignInButton name={socialMedia} />
+                    </div>
+                  ))}
+                </div>
                 <div className="@h-[0.15rem] @w-full @bg-bg-primary @my-2" />
                 <p>Don&apos;t have an account?</p>
                 <div className="@my-2 @w-80 @h-12 @text-2xl">

@@ -8,7 +8,6 @@ import { User } from "@prisma/client";
 export const authConfig: NextAuthOptions = {
   providers: [
     CredentialsProvider({
-      name: "Sign in",
       credentials: {
         // TODO: Change name to a unique identifier, maybe for email or both idk.
         name: {
@@ -19,6 +18,7 @@ export const authConfig: NextAuthOptions = {
         password: {
           label: "Password",
           type: "password",
+          placeholder: "Password",
         },
       },
       async authorize(credentials) {
@@ -32,7 +32,11 @@ export const authConfig: NextAuthOptions = {
         // Verify Password here
         // TODO: Encryption here
         if (dbUser && dbUser.password === credentials.password) {
-          const { password, createdAt, id, ...dbUserWithoutPassword } = dbUser;
+          const dbUserWithoutPassword = {
+            name: dbUser.name,
+            role: dbUser.role,
+            state: dbUser.state,
+          };
           return dbUserWithoutPassword as User;
         }
 
@@ -48,6 +52,13 @@ export const authConfig: NextAuthOptions = {
       clientSecret: process.env.DISCORD_CLIENT_SECRET as string,
     }),
   ],
+  pages: {
+    signIn: "/?loginOpen",
+    // signOut: "/",
+    error: "/?loginOpen", // Error code passed in query string as ?error=
+    // verifyRequest: "/", // (used for check email message)
+    // newUser: "/",
+  },
 };
 
 export default authConfig;

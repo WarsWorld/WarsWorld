@@ -1,4 +1,4 @@
 import NextAuth from "next-auth";
-import authConfig from "server/lib/authConfig";
+import authConfig from "pages/lib/authConfig";
 
 export default NextAuth(authConfig);
