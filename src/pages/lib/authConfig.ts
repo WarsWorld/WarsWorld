@@ -4,6 +4,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import GithubProvider from "next-auth/providers/github";
 import { prisma } from "server/prisma/prisma-client";
 import { User } from "@prisma/client";
+import { loginSchema } from "server/schemas/auth";
 
 export const authConfig: NextAuthOptions = {
   providers: [
@@ -25,8 +26,13 @@ export const authConfig: NextAuthOptions = {
         if (!credentials || !credentials.name || !credentials.password)
           return null;
 
+        const creds = await loginSchema.parseAsync({
+          username: credentials.name,
+          password: credentials.password,
+        });
+
         const dbUser = await prisma.user.findFirst({
-          where: { name: credentials.name },
+          where: { name: creds.username },
         });
 
         // Verify Password here

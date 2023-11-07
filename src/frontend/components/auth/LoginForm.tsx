@@ -3,6 +3,7 @@ import FormInput from "../layout/FormInput";
 import { FormEvent, useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/router";
+import ErrorSuccessBlock from "../layout/ErrorSuccessBlock";
 
 interface Props {
   onSubmitEndBehaviour: () => void;
@@ -43,7 +44,7 @@ export default function LoginForm({ onSubmitEndBehaviour }: Props) {
 
       if (loginResponse.status === 401)
         throw {
-          title: "Email or password is incorrect",
+          title: "Email or password are incorrect",
           statusCode: loginResponse.status,
         };
 
@@ -67,11 +68,8 @@ export default function LoginForm({ onSubmitEndBehaviour }: Props) {
 
   return (
     <>
-      {error.isError && (
-        <p className="@text-orange-star @text-2xl @px-6 @pb-4">
-          {error.message}
-        </p>
-      )}
+      {error.isError && <ErrorSuccessBlock isError title={error.message} />}
+
       <form onSubmit={onSubmitLoginForm} className="@flex @flex-col @gap-6">
         <FormInput
           key="li_user"

@@ -45,6 +45,7 @@ model User {
   name       String
   discordId  String?   @unique
   password   String
+  email      String    @unique
   createdAt  DateTime  @default(now())
   identities Player[]
 }
@@ -90,7 +91,7 @@ model Player {
   secret      Boolean       @default(false)
   ChatMessage ChatMessage[]
 
-  User   User   @relation(fields: [userId], references: [id])
+  User   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String
 
   Post Post[]

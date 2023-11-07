@@ -18,9 +18,11 @@ export default function NavLoginLogout({ isOpen, setIsOpen, width }: Props) {
       <div className="@flex @justify-center @items-center @text-2xl @w-full @h-full">
         {!session && (
           <>
-            <SquareButton onClick={() => setIsOpen((prev) => !prev)}>
-              LOGIN
-            </SquareButton>
+            <div className="@w-32">
+              <SquareButton onClick={() => setIsOpen((prev) => !prev)}>
+                LOGIN
+              </SquareButton>
+            </div>
             <LoginSignupModal
               isOpen={isOpen}
               setIsOpen={setIsOpen}
@@ -29,8 +31,8 @@ export default function NavLoginLogout({ isOpen, setIsOpen, width }: Props) {
           </>
         )}
         {session?.user && (
-          <div className="@flex @flex-col @align-middle @text-center @justify-center">
-            <p>{session.user.name}</p>
+          <div className="@flex @flex-col @w-full @align-middle @text-center @justify-center">
+            <p className="@text-md">{session.user.name}</p>
             <div
               className="hover:@scale-[1.02] @text-lg @cursor-pointer @text-primary-light hover:@text-primary"
               onClick={() => signOut()}

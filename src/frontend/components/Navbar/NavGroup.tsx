@@ -2,8 +2,6 @@ import { Dispatch, SetStateAction } from "react";
 import { NavItem } from "./NavItem";
 import { NavMenuMatches } from "./NavMenuMatches";
 import NavButton from "./NavButton";
-import LoginSignupModal from "../modals/LoginSignupModal";
-import SquareButton from "../layout/SquareButton";
 import NavLoginLogout from "./NavLoginLogout";
 
 interface Props {
@@ -70,10 +68,8 @@ export function NavGroup({
           <NavItem key={item.text} text={item.text} location={item.location} />
         ))}
       </div>
-      <div className="@flex @h-12 @w-[15vw] @justify-end @items-center @relative @pr-12">
-        <div className="@w-32">
-          <NavLoginLogout isOpen={isOpen} setIsOpen={setIsOpen} />
-        </div>
+      <div className="@flex @h-12 @w-[15vw] @justify-end @items-center @relative">
+        <NavLoginLogout isOpen={isOpen} setIsOpen={setIsOpen} />
       </div>
     </>
   );

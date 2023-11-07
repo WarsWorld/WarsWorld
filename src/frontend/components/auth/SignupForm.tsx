@@ -1,18 +1,27 @@
 import SquareButton from "../layout/SquareButton";
 import FormInput from "../layout/FormInput";
-import { FormEvent, useState } from "react";
+import { Dispatch, FormEvent, SetStateAction, useState } from "react";
+import { trpc } from "frontend/utils/trpc-client";
+import ErrorSuccessBlock from "../layout/ErrorSuccessBlock";
 
 interface Props {
-  onSubmitEndBehaviour: () => void;
+  setIsSignupForm: Dispatch<SetStateAction<boolean>>;
+  setDidSignUp: Dispatch<SetStateAction<boolean>>;
 }
 
-export default function SignupForm({ onSubmitEndBehaviour }: Props) {
+export default function SignupForm({ setIsSignupForm, setDidSignUp }: Props) {
   const [signupData, setSignupData] = useState({
     user: "",
     email: "",
     password: "",
     confirmPassword: "",
   });
+
+  const {
+    mutateAsync: registerAsync,
+    isError,
+    error,
+  } = trpc.user.registerUser.useMutation();
 
   const onChangeGenericHandler = (identifier: string, value: string) => {
     setSignupData((prevData) => ({
@@ -21,15 +30,38 @@ export default function SignupForm({ onSubmitEndBehaviour }: Props) {
     }));
   };
 
-  const onSubmitSignupForm = (event: FormEvent) => {
+  const onSubmitSignupForm = async (event: FormEvent) => {
     event.preventDefault();
-    console.log("SUBMMIT");
-    console.log(signupData);
-    onSubmitEndBehaviour();
+
+    try {
+      await registerAsync({
+        email: signupData.email,
+        username: signupData.user,
+        password: signupData.password,
+        confirmPassword: signupData.confirmPassword,
+      });
+    } catch (e) {
+      return e;
+    }
+
+    setIsSignupForm(false);
+    setDidSignUp(true);
+  };
+
+  const defineErrorMessage = () => {
+    if (error?.data?.zodError) return "Data validation error";
+    if (error) return error.message;
   };
 
   return (
     <>
+      {isError && (
+        <ErrorSuccessBlock
+          isError
+          title="Couldn't sign up"
+          message={defineErrorMessage()}
+        />
+      )}
       <form className="@flex @flex-col @gap-6">
         <FormInput
           key="su_email"

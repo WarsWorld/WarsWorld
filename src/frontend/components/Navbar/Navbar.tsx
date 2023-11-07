@@ -4,8 +4,6 @@ import Image from "next/image";
 import { NavGroup } from "./NavGroup";
 import { NavGroupMobile } from "./NavGroupMobile";
 import { useWindowWidth } from "@react-hook/window-size";
-import SquareButton from "../layout/SquareButton";
-import LoginSignupModal from "../modals/LoginSignupModal";
 import { useSearchParams } from "next/navigation";
 import NavLoginLogout from "./NavLoginLogout";
 

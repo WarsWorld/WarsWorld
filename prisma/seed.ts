@@ -21,6 +21,7 @@ async function main() {
     data: {
       name: "development_user",
       password: "secret",
+      email: "development@example.com",
     },
   });
 

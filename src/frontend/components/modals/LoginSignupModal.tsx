@@ -6,6 +6,7 @@ import Link from "next/link";
 import LoginForm from "../auth/LoginForm";
 import SignupForm from "../auth/SignupForm";
 import SocialMediaSignInButton from "../layout/SocialMediaSignInButton";
+import ErrorSuccessBlock from "../layout/ErrorSuccessBlock";
 
 interface Props {
   width?: string;
@@ -15,10 +16,12 @@ interface Props {
 
 export default function LoginSignupModal({ isOpen, setIsOpen, width }: Props) {
   const [isSignupForm, setIsSignupForm] = useState(false);
+  const [didSignUp, setDidSignUp] = useState(false);
 
   const onSubmitEndBehaviour = () => {
     setIsSignupForm(false);
     setIsOpen(false);
+    setDidSignUp(false);
   };
 
   return (
@@ -32,7 +35,13 @@ export default function LoginSignupModal({ isOpen, setIsOpen, width }: Props) {
           /* SIGNUP */
           <DefaultDialogDesign title="Signup" width={width ?? "50vw"}>
             <div className="@pt-8 @px-20">
-              <SignupForm onSubmitEndBehaviour={onSubmitEndBehaviour} />
+              {didSignUp && (
+                <ErrorSuccessBlock title="Successfully signed up" />
+              )}
+              <SignupForm
+                setIsSignupForm={setIsSignupForm}
+                setDidSignUp={setDidSignUp}
+              />
               <div className="@flex @flex-col @items-center @justify-center @pb-6 @px-10 @gap-2">
                 <div className="@h-[0.15rem] @w-full @bg-bg-primary @my-2" />
                 <p>Already have an account?</p>
@@ -48,6 +57,9 @@ export default function LoginSignupModal({ isOpen, setIsOpen, width }: Props) {
           /* LOGIN */
           <DefaultDialogDesign title="Login" width={width ?? "50vw"}>
             <div className="@pt-8 @px-20">
+              {didSignUp && (
+                <ErrorSuccessBlock title="Successfully signed up" />
+              )}
               <LoginForm onSubmitEndBehaviour={onSubmitEndBehaviour} />
               <div className="@flex @flex-col @items-center @justify-center @pb-6 @px-10 @gap-2">
                 <Link
@@ -57,6 +69,7 @@ export default function LoginSignupModal({ isOpen, setIsOpen, width }: Props) {
                 >
                   Forgot password?
                 </Link>
+
                 <div className="@flex @flex-wrap @justify-center @w-full @gap-4">
                   {["GitHub", "Discord"].map((socialMedia) => (
                     <div
