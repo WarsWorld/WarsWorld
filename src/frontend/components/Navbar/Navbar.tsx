@@ -7,6 +7,7 @@ import { useWindowWidth } from "@react-hook/window-size";
 import SquareButton from "../layout/SquareButton";
 import LoginSignupModal from "../modals/LoginSignupModal";
 import { useSearchParams } from "next/navigation";
+import NavLoginLogout from "./NavLoginLogout";
 
 export function Navbar() {
   const searchParams = useSearchParams();
@@ -29,16 +30,18 @@ export function Navbar() {
   return (
     <header className="@w-screen @fixed @top-0 @z-30 @shadow-lg @shadow-bg-primary">
       <nav className="@flex @h-full @justify-between @items-center @bg-gradient-to-r @from-bg-primary @via-bg-secondary @to-bg-primary @mx-auto @px-4 smallscreen:@px-8 laptop:@px-6">
-        <Link href="/">
-          <Image
-            className="@flex @w-16 smallscreen:@w-20"
-            src="/img/layout/logo.webp"
-            alt="AW Logo"
-            width={0}
-            height={0}
-            sizes="100vw"
-          />
-        </Link>
+        <div className="@h-full @w-[25vw] smallscreen:@w-[10vw] @flex @flex-col @justify-center @align-middle">
+          <Link className="@flex @align-middle @justify-start" href="/">
+            <Image
+              className="@w-16 smallscreen:@w-20"
+              src="/img/layout/logo.webp"
+              alt="AW Logo"
+              width={0}
+              height={0}
+              sizes="100vw"
+            />
+          </Link>
+        </div>
 
         {!isMobileWidth ? (
           <>
@@ -54,16 +57,11 @@ export function Navbar() {
                 </div>
               </button>
               <div className="@flex @h-full @justify-center @items-center @relative">
-                <div className="@flex @justify-center @items-center @text-2xl @h-12 hover:@scale-[1.025] @cursor-pointer">
-                  <SquareButton onClick={() => setIsOpen((prev) => !prev)}>
-                    LOGIN
-                  </SquareButton>
-                  <LoginSignupModal
-                    isOpen={isOpen}
-                    setIsOpen={setIsOpen}
-                    width="95vw"
-                  />
-                </div>
+                <NavLoginLogout
+                  isOpen={isOpen}
+                  setIsOpen={setIsOpen}
+                  width="90vw"
+                />
               </div>
             </div>
 

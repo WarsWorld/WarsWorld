@@ -4,6 +4,7 @@ import { NavMenuMatches } from "./NavMenuMatches";
 import NavButton from "./NavButton";
 import LoginSignupModal from "../modals/LoginSignupModal";
 import SquareButton from "../layout/SquareButton";
+import NavLoginLogout from "./NavLoginLogout";
 
 interface Props {
   showMatchLinks: boolean;
@@ -52,7 +53,7 @@ export function NavGroup({
 }: Props) {
   return (
     <>
-      <div className="@flex @items-center @justify-center @gap-10 monitor:@gap-16 @h-full">
+      <div className="@flex @items-center @justify-center @gap-10 monitor:@gap-16 @h-full @w-[70vw]">
         <button
           onMouseEnter={() => setShowMatchLinks(true)}
           onMouseLeave={() => setShowMatchLinks(false)}
@@ -69,12 +70,11 @@ export function NavGroup({
           <NavItem key={item.text} text={item.text} location={item.location} />
         ))}
       </div>
-      <div className="@flex @h-full @justify-center @items-center @relative @pr-6">
-        <div className="@flex @justify-center @items-center @text-2xl @w-32 @h-12 hover:@scale-[1.025] @cursor-pointer">
-          <SquareButton onClick={() => setIsOpen(true)}>LOGIN</SquareButton>
+      <div className="@flex @h-12 @w-[15vw] @justify-end @items-center @relative @pr-12">
+        <div className="@w-32">
+          <NavLoginLogout isOpen={isOpen} setIsOpen={setIsOpen} />
         </div>
       </div>
-      <LoginSignupModal isOpen={isOpen} setIsOpen={setIsOpen} />
     </>
   );
 }
