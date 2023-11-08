@@ -60,6 +60,34 @@ If you can't see it, it might be due to your Docker Desktop not working/not bein
 
 ![image](https://github.com/WarsWorld/WarsWorld/assets/96269542/e6cd369a-026a-4f65-b2fa-c8fb7752ab1a)
 
+
+## How to use accounts and login to WarsWorld as a dev
+
+This is more advanced, still in the works, and is NOT necessary for development.
+
+Directions for Github Account:
+
+1 - Open Github, click your icon, and choose ```settings```
+
+2 - Scroll down the options on the left panel and click ```Developer Settings```
+
+3 - It will bring you to a new page, again on the left click ```OAuth Apps```
+
+4 - Click ```New OAuth App```
+
+5 - Fill in an Application Name, set the Homepage to ```http://localhost:3000```
+
+6 - Set the Authorization Callback URL to ```http://localhost:3000/api/auth/callback/github```
+
+7 - Click Register application and open the app
+
+8 - You're given your Github Client ID, copy that and add to your ```.env```
+
+9 - On the Github page, click ```Generate a new client secret```
+
+10 - Copy this and paste it into ```.env``` as your Github Client Secret. All Done!
+
+
 ## Our Tech Stack's Features
 
 - 🧙‍♂️ E2E type safety with [tRPC](https://trpc.io)

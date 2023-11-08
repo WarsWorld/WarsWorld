@@ -6,7 +6,7 @@ import { prisma } from "server/prisma/prisma-client";
 import { User } from "@prisma/client";
 import { loginSchema } from "server/schemas/auth";
 
-export const authConfig: NextAuthOptions = {
+export const authOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
       credentials: {
@@ -40,8 +40,7 @@ export const authConfig: NextAuthOptions = {
         if (dbUser && dbUser.password === credentials.password) {
           const dbUserWithoutPassword = {
             name: dbUser.name,
-            role: dbUser.role,
-            state: dbUser.state,
+            email: dbUser.email,
           };
           return dbUserWithoutPassword as User;
         }
@@ -67,4 +66,4 @@ export const authConfig: NextAuthOptions = {
   },
 };
 
-export default authConfig;
+export default authOptions;

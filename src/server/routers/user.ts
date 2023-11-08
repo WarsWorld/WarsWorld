@@ -9,6 +9,7 @@ import {
 } from "server/trpc/trpc-setup";
 import { z } from "zod";
 import { signUpSchema } from "server/schemas/auth";
+import { TRPCError } from "@trpc/server";
 
 export const userRouter = router({
   me: publicBaseProcedure
@@ -43,12 +44,16 @@ export const userRouter = router({
       });
 
       if (isUserInDB && isUserInDB > 0)
-        throw new Error(
-          "There is already a user with that email in the database"
-        );
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "There is already a user with that email in the database",
+        });
 
       if (input.password !== input.confirmPassword)
-        throw new Error("Passwords do not match");
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Passwords do not match",
+        });
 
       // Write user to the database
       const user = await prisma.user.create({

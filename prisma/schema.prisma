@@ -44,10 +44,29 @@ model User {
   role       Role?
   name       String
   discordId  String?   @unique
-  password   String
-  email      String    @unique
+  password   String?
+  email      String?   @unique
   createdAt  DateTime  @default(now())
   identities Player[]
+  accounts   Account[]
+}
+
+model Account {
+  id                String  @id @map("_id")
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
 }
 
 enum CO {
