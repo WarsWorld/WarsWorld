@@ -30,16 +30,11 @@ export const usePlayers = () => {
   );
   const currentPlayer = ownedPlayers?.find((p) => p.id === currentPlayerId);
   const setCurrentPlayer = (player: Player) => setCurrentPlayerId(player.id);
-  const [areOwnedPlayersLoaded, setAreOwnedPlayersLoaded] = useState(false);
-
-  useEffect(() => {
-    if (ownedPlayers) setAreOwnedPlayersLoaded(true);
-  }, [ownedPlayers, setAreOwnedPlayersLoaded]);
 
   return {
     ownedPlayers,
     currentPlayer,
     setCurrentPlayer,
-    areOwnedPlayersLoaded,
+    areOwnedPlayersLoaded: Boolean(ownedPlayers),
   };
 };

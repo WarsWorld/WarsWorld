@@ -43,6 +43,8 @@ export const rebuildServerState = async () => {
       turn: 0,
       units: [],
     });
+
+    // TODO apply all events to serverMatchState
   });
 
   console.log("Rebuilding server state done.");
