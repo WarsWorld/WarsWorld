@@ -51,7 +51,7 @@ module.exports = {
         /(bg|border|text)-(orange-star|blue-moon|green-earth|yellow-comet|black-hole)/,
     },
     {
-      pattern: /(bg|border|text)-(github|discord)/,
+      pattern: /(bg|border|text)-(github|discord|white|black)/,
     },
   ],
   plugins: [],

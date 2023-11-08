@@ -70,8 +70,9 @@ export default function LoginSignupModal({ isOpen, setIsOpen, width }: Props) {
                   Forgot password?
                 </Link>
 
+                <p className="@pt-4">You can also sign in with:</p>
                 <div className="@flex @flex-wrap @justify-center @w-full @gap-4">
-                  {["GitHub", "Discord"].map((socialMedia) => (
+                  {["GitHub", "Discord", "Google"].map((socialMedia) => (
                     <div
                       key={socialMedia}
                       className="@h-14 @text-3xl @w-72 @my-2"

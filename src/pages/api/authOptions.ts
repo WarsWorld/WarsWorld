@@ -2,6 +2,7 @@ import { NextAuthOptions } from "next-auth";
 import DiscordProvider from "next-auth/providers/discord";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GithubProvider from "next-auth/providers/github";
+import GoogleProvider from "next-auth/providers/google";
 import { prisma } from "server/prisma/prisma-client";
 import { User } from "@prisma/client";
 import { loginSchema } from "server/schemas/auth";
@@ -56,6 +57,10 @@ export const authOptions: NextAuthOptions = {
       clientId: process.env.DISCORD_CLIENT_ID as string,
       clientSecret: process.env.DISCORD_CLIENT_SECRET as string,
     }),
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID as string,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+    }),
   ],
   pages: {
     signIn: "/?loginOpen",
@@ -63,6 +68,17 @@ export const authOptions: NextAuthOptions = {
     error: "/?loginOpen", // Error code passed in query string as ?error=
     // verifyRequest: "/", // (used for check email message)
     // newUser: "/",
+  },
+  callbacks: {
+    async jwt({ token }) {
+      token.userRole = "admin";
+      return token;
+    },
+    async redirect({ url, baseUrl }) {
+      if (url.startsWith("/")) return `${baseUrl}${url}`;
+      else if (new URL(url).origin === baseUrl) return url;
+      return baseUrl; // redirect callback
+    },
   },
 };
 
