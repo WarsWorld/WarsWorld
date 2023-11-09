@@ -17,9 +17,10 @@ export const withAmmoUnitStatsSchema = z.object({
   }),
 });
 
-export const withPlayerSlotAndPositionSchema = z.object({
+export const unitInMapSharedPropertiesSchema = z.object({
   playerSlot: playerSlotForPropertiesSchema,
   position: positionSchema,
+  isReady: z.boolean(),
 });
 
 export const withHiddenSchema = z.object({

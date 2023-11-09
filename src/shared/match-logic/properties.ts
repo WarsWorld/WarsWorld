@@ -29,7 +29,7 @@ export const propertyPropertiesMap: Record<
     resuppliedMovementTypes: movementTypesThatGetResuppliedByBases,
   },
   port: { providesFunds: true, resuppliedMovementTypes: ["sea", "lander"] },
-  comtower: { providesFunds: false, resuppliedMovementTypes: [] },
+  commtower: { providesFunds: false, resuppliedMovementTypes: [] },
   lab: { providesFunds: false, resuppliedMovementTypes: [] },
   hq: {
     providesFunds: true,

@@ -12,7 +12,21 @@ import {
   publicBaseProcedure,
   router,
 } from "../trpc/trpc-setup";
-import { BackendMatchState } from "shared/types/server-match-state";
+import {
+  BackendMatchState,
+  PlayerInMatch,
+} from "shared/types/server-match-state";
+import { handleMoveAction } from "server/match-logic/action-handlers/move";
+
+interface ActionHandlerProps<T extends Action> {
+  currentPlayer: PlayerInMatch;
+  action: T;
+  matchState: BackendMatchState;
+}
+
+export type ActionHandler<T extends Action> = (
+  props: ActionHandlerProps<T>
+) => unknown;
 
 // 1. validate shape (zod, .input())
 // 2. validate action
@@ -55,7 +69,7 @@ const validateAction = (
           (t) =>
             isSamePosition(action.position, t.position) &&
             t.type === facility &&
-            t.ownerSlot === actingPlayerInMatch.playerSlot
+            t.ownerSlot === actingPlayerInMatch.slot
         )
       ) {
         throw new Error(
@@ -66,10 +80,11 @@ const validateAction = (
       break;
     }
     case "move": {
-      if (match.rules.leagueType === "standard") {
-        // if (match.units.some(u => unitTypeIsTransport(u.type) && u.))
-      }
-      // canMakeMove (doesn't have active unit)
+      handleMoveAction({
+        currentPlayer: actingPlayerInMatch,
+        action,
+        matchState: match,
+      });
     }
   }
 };

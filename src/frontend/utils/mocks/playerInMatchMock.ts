@@ -1,7 +1,7 @@
 import { PlayerInMatch } from "shared/types/server-match-state";
 
 export const playerInMatch1: PlayerInMatch = {
-  playerSlot: 0,
+  slot: 0,
   hasCurrentTurn: true,
   playerId: "111",
   ready: true,
@@ -13,7 +13,7 @@ export const playerInMatch1: PlayerInMatch = {
 };
 
 export const playerInMatch2: PlayerInMatch = {
-  playerSlot: 1,
+  slot: 1,
   hasCurrentTurn: false,
   playerId: "222",
   ready: false,

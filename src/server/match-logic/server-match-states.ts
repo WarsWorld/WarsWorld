@@ -1,6 +1,6 @@
 import { BuildAction } from "server/schemas/action";
 import { PlayerSlot } from "server/schemas/player-slot";
-import { UnitDuringMatch, unitTypeIsUnitWithAmmo } from "server/schemas/unit";
+import { WWUnit, unitTypeIsUnitWithAmmo } from "server/schemas/unit";
 import { prisma } from "server/prisma/prisma-client";
 import { unitPropertiesMap } from "shared/match-logic/buildable-unit";
 import { EmittableEvent } from "shared/types/events";
@@ -42,6 +42,8 @@ export const rebuildServerState = async () => {
       status: match.status,
       turn: 0,
       units: [],
+      currentWeather: "clear",
+      weatherNextDay: null,
     });
 
     // TODO apply all events to serverMatchState
@@ -70,7 +72,7 @@ export const getMatchState = (matchId: string) => {
 const createNewUnitFromBuildAction = (
   event: BuildAction,
   playerSlot: PlayerSlot
-): UnitDuringMatch => {
+): WWUnit => {
   const { unitType } = event;
 
   const unitProperties = unitPropertiesMap[unitType];
@@ -83,7 +85,7 @@ const createNewUnitFromBuildAction = (
       fuel: unitProperties.initialFuel,
       hp: 100,
     },
-  } satisfies Partial<UnitDuringMatch>;
+  } satisfies Partial<WWUnit>;
 
   if (unitTypeIsUnitWithAmmo(unitType)) {
     const ammo = unitPropertiesMap[unitType].initialAmmo;
@@ -94,7 +96,7 @@ const createNewUnitFromBuildAction = (
         ...partialUnit.stats,
         ammo,
       },
-    } satisfies Partial<UnitDuringMatch>;
+    } satisfies Partial<WWUnit>;
 
     switch (unitType) {
       case "artillery":
@@ -168,7 +170,7 @@ export const applyEventToMatch = (matchId: string, event: EmittableEvent) => {
     case "build": {
       const currentPlayerSlot = match.players.find(
         (p) => p.hasCurrentTurn
-      )?.playerSlot;
+      )?.slot;
 
       if (currentPlayerSlot === undefined) {
         throw new Error("TODO?");

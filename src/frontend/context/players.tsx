@@ -22,6 +22,7 @@ export const ProvidePlayers = ({ children }: { children: ReactNode }) => {
 };
 
 export const usePlayers = () => {
+  // TODO make sure development_player0 is set by default - currently not.
   const ownedPlayers = useContext(playersContext);
 
   const [currentPlayerId, setCurrentPlayerId] = useLocalStorage(
