@@ -29,7 +29,7 @@ async function main() {
     await prisma.player.create({
       data: {
         name,
-        User: {
+        user: {
           connect: {
             // TODO i thought prisma could do this better with direct relationships and not ids...
             id: developmentUser.id,

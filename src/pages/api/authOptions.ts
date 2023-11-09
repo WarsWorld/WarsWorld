@@ -1,13 +1,24 @@
+/* 
+  NOTE: If you try to register or first login with two providers that have the same email, the second provider will fail.
+  The first provider will register the first email and so the second cannot be registered.
+*/
 import { NextAuthOptions } from "next-auth";
-import DiscordProvider from "next-auth/providers/discord";
+import DiscordProvider, { DiscordProfile } from "next-auth/providers/discord";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GithubProvider from "next-auth/providers/github";
 import GoogleProvider from "next-auth/providers/google";
-import { prisma } from "server/prisma/prisma-client";
 import { User } from "@prisma/client";
 import { loginSchema } from "server/schemas/auth";
+import { Adapter } from "next-auth/adapters";
+import { prisma } from "server/prisma/prisma-client";
+import WarsWorldAdapter from "./WarsWorldAdapter";
+
+const adapter = WarsWorldAdapter(prisma) as Adapter;
 
 export const authOptions: NextAuthOptions = {
+  secret: process.env.NEXTAUTH_SECRET,
+  adapter: adapter,
+  debug: true,
   providers: [
     CredentialsProvider({
       credentials: {
@@ -56,6 +67,20 @@ export const authOptions: NextAuthOptions = {
     DiscordProvider({
       clientId: process.env.DISCORD_CLIENT_ID as string,
       clientSecret: process.env.DISCORD_CLIENT_SECRET as string,
+      async profile(profile: DiscordProfile) {
+        /* 
+          For some reason Discord provider doesn't send the user's data properly.
+          It probably expects another type of squema.
+          That's why I manually made the object here.
+          This object is going to be fed into prisma.user.create() behind the scenes.
+        */
+        return {
+          id: profile.id,
+          name: profile.username,
+          email: profile.email,
+          emailVerified: null,
+        };
+      },
     }),
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID as string,
@@ -64,20 +89,23 @@ export const authOptions: NextAuthOptions = {
   ],
   pages: {
     signIn: "/?loginOpen",
-    // signOut: "/",
-    error: "/?loginOpen", // Error code passed in query string as ?error=
-    // verifyRequest: "/", // (used for check email message)
-    // newUser: "/",
+    error: "/?loginOpen",
+  },
+  session: {
+    strategy: "jwt",
   },
   callbacks: {
-    async jwt({ token }) {
-      token.userRole = "admin";
-      return token;
-    },
     async redirect({ url, baseUrl }) {
       if (url.startsWith("/")) return `${baseUrl}${url}`;
       else if (new URL(url).origin === baseUrl) return url;
       return baseUrl; // redirect callback
+    },
+    async jwt({ token, user }) {
+      if (user) {
+        token.id = user.id;
+      }
+      token.userRole = "admin";
+      return token;
     },
   },
 };

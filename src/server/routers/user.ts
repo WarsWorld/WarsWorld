@@ -45,7 +45,7 @@ export const userRouter = router({
 
       if (isUserInDB && isUserInDB > 0)
         throw new TRPCError({
-          code: "BAD_REQUEST",
+          code: "CONFLICT",
           message: "There is already a user with that email in the database",
         });
 
@@ -63,10 +63,11 @@ export const userRouter = router({
           email: input.email,
         },
       });
+
       await prisma.player.create({
         data: {
           name: input.username,
-          User: {
+          user: {
             connect: {
               id: user.id,
             },
