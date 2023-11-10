@@ -31,6 +31,7 @@ export interface COProperties {
   };
 }
 
+// @ts-expect-error: Working on the other CO's i think
 export const COPropertiesMap: Record<CO, COProperties> = {
   andy,
   adder,

@@ -146,6 +146,7 @@ export const inflatePath = (path: Path): Path => {
 
 export const deflatePath = (path: Path): Path => {
   /* TODO stub, reversal of inflatePath ("compression") */
+  return path;
 };
 
 const applyCOPowerHooksForMovementRange = (

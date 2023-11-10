@@ -79,12 +79,12 @@ const createNewUnitFromBuildAction = (
 
   const partialUnit = {
     playerSlot,
-    actionState: "waited",
     position: event.position,
     stats: {
       fuel: unitProperties.initialFuel,
       hp: 100,
     },
+    isReady: true,
   } satisfies Partial<WWUnit>;
 
   if (unitTypeIsUnitWithAmmo(unitType)) {

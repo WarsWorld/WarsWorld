@@ -8,6 +8,7 @@ export const demoUnit: WWUnit = {
     hp: 9,
     fuel: 99,
   },
+  isReady: true,
 };
 export const demoUnits: WWUnit[] = [
   {
@@ -18,6 +19,7 @@ export const demoUnits: WWUnit[] = [
       hp: 9,
       fuel: 99,
     },
+    isReady: true,
   },
 
   {
@@ -29,6 +31,7 @@ export const demoUnits: WWUnit[] = [
       fuel: 99,
       ammo: 9,
     },
+    isReady: true,
   },
 
   {
@@ -39,6 +42,7 @@ export const demoUnits: WWUnit[] = [
       hp: 9,
       fuel: 99,
     },
+    isReady: true,
   },
 
   {
@@ -50,6 +54,7 @@ export const demoUnits: WWUnit[] = [
       fuel: 99,
       ammo: 3,
     },
+    isReady: true,
   },
 
   {
@@ -61,5 +66,6 @@ export const demoUnits: WWUnit[] = [
       fuel: 99,
       ammo: 3,
     },
+    isReady: true,
   },
 ];
