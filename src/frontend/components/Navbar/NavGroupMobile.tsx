@@ -1,14 +1,14 @@
 import { NavItem } from "./NavItem";
-import { NavMenuMatches } from "./NavMenuMatches";
 
 interface Props {
   showLinks: boolean;
   handleBurgerMenu: () => void;
-  showMatchLinks: boolean;
-  handleMatchLinks: () => void;
 }
 
 const navItemObject = [
+  { text: "YOUR GAMES", location: "/your-matches" },
+  { text: "CURRENT GAMES", location: "/your-matches#currentGames" },
+  { text: "COMPLETED GAMES", location: "/your-matches#completedGames" },
   {
     text: "COMPETITION",
     location: "/",
@@ -37,61 +37,29 @@ const navItemObject = [
     iconAlt: "Blue Moon Cruiser",
     flip: false,
   },
-  {
-    text: "LOGIN",
-    location: "/",
-    iconPath: "/img/layout/Stealth-0.png",
-    iconAlt: "Pink Cosmos Stealth",
-    flip: false,
-  },
 ];
 
-export function NavGroupMobile({
-  showLinks,
-  handleBurgerMenu,
-  showMatchLinks,
-  handleMatchLinks,
-}: Props) {
+export function NavGroupMobile({ showLinks, handleBurgerMenu }: Props) {
   return (
     <>
-      <div
-        className={`@grid @fixed @justify-center @items-center @bg-gray-800 @right-0 @w-full @h-0 burgerMenuLinks ${
-          showLinks ? "showBurgerMenuLinks" : ""
-        }`}
+      <ul
+        className={`@absolute @m-0 @p-0 @list-none @overflow-y-hidden @shadow-black @shadow-lg @right-0 @w-full smallscreen:@w-[45vw] @top-[calc(100%_+_0.3em)]
+      @bg-gradient-to-r @from-bg-primary @from-30% @to-bg-secondary @z-50 @duration-[750ms]
+          ${showLinks ? "@max-h-[100vh]" : "@max-h-0"}`}
       >
-        <button
-          onClick={handleMatchLinks}
-          className="@flex @flex-col @relative @items-center matchLobbyToggle"
-        >
-          <span
-            className={`@text-base-button ${showMatchLinks ? "@mb-4" : ""}`}
+        {navItemObject.map((option) => (
+          <li
+            key={option.text}
+            className={`@py-3 @px-4 large_monitor:@py-4 @cursor-pointer @border-primary-dark @border-b-[1px]`}
           >
-            <div className="@flex @justify-center @items-center @gap-2">
-              GAME
-              <img
-                className="@transform @scale-x-[-1]"
-                src="/img/layout/MdTank_MSide-0.png"
-                alt="Orange Star Medium Tank"
-              />
-            </div>
-          </span>
-          <NavMenuMatches
-            showMatchLinks={showMatchLinks}
-            handleBurgerMenu={handleBurgerMenu}
-          />
-        </button>
-        {navItemObject.map((item) => (
-          <NavItem
-            key={item.text}
-            text={item.text}
-            location={item.location}
-            iconPath={item.iconPath}
-            iconAlt={item.iconAlt}
-            flip={item.flip}
-            handleBurgerMenu={handleBurgerMenu}
-          />
+            <NavItem
+              text={option.text}
+              location={option.location}
+              handleBurgerMenu={handleBurgerMenu}
+            />
+          </li>
         ))}
-      </div>
+      </ul>
     </>
   );
 }

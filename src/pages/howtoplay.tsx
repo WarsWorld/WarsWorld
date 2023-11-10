@@ -1,3 +1,4 @@
+import PageTitle from "frontend/components/layout/PageTitle";
 import HowToPlaySection from "../frontend/components/layout/ArticleSection";
 import ThreeLinesText from "../frontend/components/layout/ThreeLinesText";
 import Head from "next/head";
@@ -121,13 +122,17 @@ export default function Howtoplay() {
         <title>Wars World Guides</title>
       </Head>
 
-      <div className="@flex @flex-col @my-2 @max-w-[90vw] @px-4 @pb-8 laptop:@py-2 laptop:@pb-12">
+      <div className="@w-full @mt-8">
+        <PageTitle>How to Play</PageTitle>
+      </div>
+
+      <div className="@flex @flex-col @max-w-[90vw] @px-4 @pb-8 laptop:@pb-12">
         <ThreeLinesText
           subtitle="You will finaly know what an airport is"
-          title="How to play"
+          title=""
           text="Learn all the fundamentals here and climb the ladder!"
         />
-        <div className="@flex @flex-col @gap-8 @my-10">
+        <div className="@flex @flex-col @gap-8 @my-2 smallscreen:@my-10">
           {data.map((section) => {
             return (
               <HowToPlaySection

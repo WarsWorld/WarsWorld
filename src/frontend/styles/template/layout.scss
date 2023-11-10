@@ -1,4 +1,3 @@
-
 @use "src/frontend/styles/mixins" as m;
 
 #__next,
@@ -100,11 +99,6 @@ header {
 
     .loginLink {
       min-width: 80px;
-    }
-
-    .burgerMenuLinks,
-    .burgerMenuIcon {
-      display: none;
     }
 
     .matchMenuLinks {

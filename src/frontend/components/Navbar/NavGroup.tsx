@@ -1,6 +1,7 @@
 import { Dispatch, SetStateAction } from "react";
 import { NavItem } from "./NavItem";
 import { NavMenuMatches } from "./NavMenuMatches";
+import NavButton from "../layout/NavButton";
 
 interface Props {
   showMatchLinks: boolean;
@@ -42,40 +43,22 @@ const navItemObject = [
 export function NavGroup({ showMatchLinks, handleMatchLinks }: Props) {
   return (
     <>
-      <div className="@flex @items-center @justify-center navGroup">
+      <div className="@flex @items-center @justify-center @gap-10 monitor:@gap-16">
         <button
           onClick={handleMatchLinks}
           className="@text-white @flex @flex-col relative @justify-center @items-center @cursor-pointer matchLobbyToggle"
         >
-          <div className="@flex @justify-center @items-center @gap-1">
-            GAME
-            <img
-              className="@transform @scale-x-[-1]"
-              src="/img/layout/MdTank_MSide-0.png"
-              alt="Orange Star Medium Tank"
-            />
+          <NavButton key="GAME">GAME</NavButton>
+          <div className="@flex @justify-center @relative @w-full ">
+            <NavMenuMatches showMatchLinks={showMatchLinks} />
           </div>
-          <NavMenuMatches showMatchLinks={showMatchLinks} />
         </button>
         {navItemObject.map((item) => (
-          <NavItem
-            key={item.text}
-            text={item.text}
-            location={item.location}
-            iconPath={item.iconPath}
-            iconAlt={item.iconAlt}
-            flip={item.flip}
-          />
+          <NavItem key={item.text} text={item.text} location={item.location} />
         ))}
       </div>
       <div className="@flex @justify-center @items-center @relative loginLink">
-        <NavItem
-          text="LOGIN"
-          location="/"
-          iconPath="/img/layout/Stealth-0.png"
-          iconAlt="Pink Cosmos Stealth"
-          flip={false}
-        />
+        <NavItem text="LOGIN" location="/" />
       </div>
     </>
   );

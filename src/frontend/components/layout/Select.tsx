@@ -19,7 +19,7 @@ export default function Select({ value, onChange, options }: Props) {
     option !== value && onChange(option);
   }
   function isOptionSelected(option: SelectOption) {
-    return option === value;
+    return option.value === value?.value;
   }
 
   useEffect(() => {
@@ -43,7 +43,7 @@ export default function Select({ value, onChange, options }: Props) {
         &#x25BC;
       </div>
       <ul
-        className={`@absolute @m-0 @p-0 @list-none @overflow-y-hidden @shadow-black @shadow-lg @rounded @w-full @left-0 @top-[calc(100%_+_0.5em)] 
+        className={`@absolute @m-0 @p-0 @list-none @overflow-y-auto no-scrollbar @shadow-black @shadow-lg @rounded @w-full @left-0 @top-[calc(100%_+_0.5em)] 
           @bg-bg-tertiary @z-50 @duration-500
           ${isOpen ? "@max-h-96" : "@max-h-0"}`}
       >
@@ -57,7 +57,7 @@ export default function Select({ value, onChange, options }: Props) {
             onMouseEnter={() => setHighlightedIndex(index)}
             key={option.value}
             className={`@py-2 @px-4 @cursor-pointer 
-              ${isOptionSelected(option) && "@bg-blue-500"}
+              ${isOptionSelected(option) && "@bg-blue-500 hover:@bg-blue-900"}
               ${index === highlightedIndex && "@bg-bg-secondary"}
               `}
           >

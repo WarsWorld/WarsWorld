@@ -1,11 +1,11 @@
 import Head from "next/head";
-import ThreeLinesText from "frontend/components/layout/ThreeLinesText";
 import LeaderboardTable from "../frontend/components/leaderboards/LeaderboradTable";
 import { SelectOption } from "frontend/components/layout/Select";
 import { useState } from "react";
 import BestPlayersSection from "frontend/components/leaderboards/BestPlayersSection";
 import { PlayerLeaderboard } from "frontend/components/leaderboards/LeaderboardData";
 import LeaderboardFilters from "frontend/components/leaderboards/LeaderboardFilters";
+import PageTitle from "frontend/components/layout/PageTitle";
 
 export default function IndexPage() {
   const [bestPlayers, setBestPlayers] = useState([] as PlayerLeaderboard[]);
@@ -23,14 +23,11 @@ export default function IndexPage() {
       <Head>
         <title>Leaderboards | Wars World</title>
       </Head>
+      <div className="@w-full @my-8">
+        <PageTitle>Leaderboards</PageTitle>
+      </div>
 
-      <ThreeLinesText
-        subtitle="Where the best meet"
-        title="Leaderboards"
-        text=""
-      />
-
-      <div className="@mb-4">
+      <div className="@my-4">
         <BestPlayersSection bestPlayers={bestPlayers} />
       </div>
 

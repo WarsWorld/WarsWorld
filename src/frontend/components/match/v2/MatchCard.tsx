@@ -6,9 +6,7 @@ import { Army, armySchema } from "../../../../server/schemas/army";
 import MatchCardSetup from "./MatchCardSetup";
 import React, { useState } from "react";
 import { usePlayers } from "../../../context/players";
-import { fi } from "@faker-js/faker";
 import Link from "next/link";
-import { MatchStatus } from "@prisma/client";
 
 interface matchData {
   match: FrontendMatch;
@@ -16,7 +14,7 @@ interface matchData {
 }
 
 export default function MatchCard({ match, inMatch }: matchData) {
-  const { currentPlayer, setCurrentPlayer, ownedPlayers } = usePlayers();
+  const { currentPlayer } = usePlayers();
 
   let firstPlayer;
   let playerIndex;

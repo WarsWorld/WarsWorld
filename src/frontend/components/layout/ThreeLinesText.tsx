@@ -1,3 +1,6 @@
+import SquareButton from "./SquareButton";
+import { useRouter } from "next/router";
+
 interface buttonData {
   text: string;
   link: string;
@@ -9,25 +12,28 @@ export default function ThreeLinesText(props: {
   text: string;
   button?: buttonData[];
 }) {
+  const router = useRouter();
   const buttonArray: React.ReactElement[] = [];
   if (props.button) {
     props.button.forEach((buttonItem: buttonData) =>
       buttonArray.push(
-        <a key={buttonItem.link} href={buttonItem.link} className="btn">
-          {buttonItem.text}
-        </a>
+        <div className="" key={buttonItem.text}>
+          <SquareButton onClick={() => router.push(buttonItem.link)}>
+            {buttonItem.text}
+          </SquareButton>
+        </div>
       )
     );
   }
 
   return (
     <div className="@text-center @pt-10 @pb-6">
-      <h2>{props.subtitle}</h2>
+      <h2 className="@font-light">{props.subtitle}</h2>
       <h1>
         <strong>{props.title}</strong>
       </h1>
       <p>{props.text}</p>
-      <div className="@mt-4 @gap-1">{buttonArray}</div>
+      <div className="@flex @justify-center @mt-4 @gap-2">{buttonArray}</div>
     </div>
   );
 }
