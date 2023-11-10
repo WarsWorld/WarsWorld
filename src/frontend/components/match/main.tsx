@@ -34,7 +34,7 @@ const numberMapping: Record<string, string> = {
   2: "base",
   3: "airport",
   4: "port",
-  5: "comtower",
+  5: "commtower",
 };
 
 const getSpriteURL = (terrainImage: string) => {

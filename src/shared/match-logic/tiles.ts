@@ -8,7 +8,7 @@ import { tsIncludes } from "shared/utils/typesafe-includes";
  */
 type TileMovementCosts = Record<MovementType, number | null>;
 
-export interface TileProperties {
+interface TileProperties {
   movementCosts: TileMovementCosts;
   /**
    * An integer from 0 to 4 which modifies the amount of damage
@@ -191,12 +191,12 @@ const tileProperties: Record<TileType, TileProperties> = {
     movementCosts: manMadeMovementCosts,
   },
   lab: buildingTileProperties,
-  comtower: buildingTileProperties,
+  commtower: buildingTileProperties,
   unusedSilo: buildingTileProperties,
   usedSilo: buildingTileProperties,
 };
 
-type Weather = "clear" | "rain" | "snow";
+export type Weather = "clear" | "rain" | "snow";
 
 /**
  * Every type of map tile has some number of "defense stars",
@@ -278,10 +278,7 @@ export const getMovementCost = (
         return clearMovementCost + 1;
       }
 
-      if (
-        tileType === "forest" &&
-        tsIncludes(movementType, ["foot", "boots"])
-      ) {
+      if (tileType === "forest" && movementType === "foot") {
         return clearMovementCost + 1;
       }
 

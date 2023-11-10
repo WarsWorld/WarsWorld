@@ -12,7 +12,25 @@ import {
   publicBaseProcedure,
   router,
 } from "../trpc/trpc-setup";
-import { BackendMatchState } from "shared/types/server-match-state";
+import {
+  BackendMatchState,
+  PlayerInMatch,
+} from "shared/types/server-match-state";
+import { handleMoveAction } from "server/match-logic/action-handlers/move";
+
+interface ActionHandlerProps<T extends Action> {
+  currentPlayer: PlayerInMatch;
+  action: T;
+  matchState: BackendMatchState;
+}
+
+export type ActionHandler<T extends Action> = (
+  props: ActionHandlerProps<T>
+) => unknown;
+
+// 1. validate shape (zod, .input())
+// 2. validate action
+// 3. create event from action
 
 const validateAction = (
   action: Action,
@@ -51,7 +69,7 @@ const validateAction = (
           (t) =>
             isSamePosition(action.position, t.position) &&
             t.type === facility &&
-            t.ownerSlot === actingPlayerInMatch.playerSlot
+            t.ownerSlot === actingPlayerInMatch.slot
         )
       ) {
         throw new Error(
@@ -62,10 +80,11 @@ const validateAction = (
       break;
     }
     case "move": {
-      if (match.rules.leagueType === "standard") {
-        // if (match.units.some(u => unitTypeIsTransport(u.type) && u.))
-      }
-      // canMakeMove (doesn't have active unit)
+      handleMoveAction({
+        currentPlayer: actingPlayerInMatch,
+        action,
+        matchState: match,
+      });
     }
   }
 };
@@ -96,20 +115,18 @@ export const actionRouter = router({
       //            or persisting to DB
 
       const event = actionToEvent(input.matchId, input);
-    console.log("Prisma create");
-    console.log("---------------------------------");
+
       await prisma.event.create({
         data: {
           matchId: input.matchId,
           content: event,
         },
       });
-    console.log("Apply event to match");
-    console.log("---------------------------------");
+
       applyEventToMatch(input.matchId, event);
+
       emitEvent(event);
-    console.log("TRPC IS WORKING");
-    console.log("---------------------------------");
+
       return {
         status: "ok", // TODO not necessary?
       };

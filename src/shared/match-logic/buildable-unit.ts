@@ -1,14 +1,11 @@
 import {
-  UnitDuringMatch,
+  WWUnit,
   WithAmmoUnitType,
   WithoutAmmoUnitType,
   WithoutWeaponUnitType,
 } from "server/schemas/unit";
 
-export const isSeaUnit = (unit: UnitDuringMatch) =>
-  ["sea", "lander"].includes(unitPropertiesMap[unit.type].movementType);
-
-export const getDailyFuelUsage = (unit: UnitDuringMatch): number => {
+export const getDailyFuelUsage = (unit: WWUnit): number => {
   const { movementType } = unitPropertiesMap[unit.type];
 
   if (movementType === "sea" || movementType === "lander") {

@@ -3,8 +3,14 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
 
-import { AnimatedSprite, Container, Spritesheet, Texture } from "pixi.js";
-import { CreatableUnit } from "../server/schemas/unit";
+import {
+  AnimatedSprite,
+  Container,
+  DisplayObject,
+  Spritesheet,
+  Texture,
+} from "pixi.js";
+import { WWUnit } from "../server/schemas/unit";
 import { Tile } from "../server/schemas/tile";
 import {
   getAccessibleNodes,
@@ -26,7 +32,7 @@ import {
 // Creates the sprite of an unit
 export function getUnitSprite(
   spriteSheet: Spritesheet,
-  unit: CreatableUnit
+  unit: WWUnit
 ): AnimatedSprite {
   return animatedSpriteConstructor(
     spriteSheet.animations[unit.type],
@@ -43,7 +49,7 @@ export function getUnitSprite(
 export function showUnits(
   spriteSheets: Spritesheet[],
   mapData: Tile[][],
-  units: CreatableUnit[]
+  units: WWUnit[]
 ): Container {
   const returnContainer = new Container();
   returnContainer.sortableChildren = true;
@@ -75,7 +81,7 @@ export function showUnits(
         //First time clicking this unit, calculate the path and everything
         else {
           unitSprite.zIndex = 10;
-          const enemyUnits: CreatableUnit[] = [];
+          const enemyUnits: WWUnit[] = [];
           for (const unit of units) {
             if (unit.playerSlot != 0) enemyUnits.push(unit); //push if not same team}
           }
@@ -255,7 +261,7 @@ export function showUnits(
       // (like where is our Bcopter safe from two AA).
       let isNextAttack = false; //alternate between showing movement and attacking tiles
       unitSprite.on("pointerdown", async () => {
-        const enemyUnits: CreatableUnit[] = [];
+        const enemyUnits: WWUnit[] = [];
         for (const unit of units)
           if (unit.playerSlot === 0) enemyUnits.push(unit); //not true, need to get playerSlot and not equal
         let tilesShown: Container;

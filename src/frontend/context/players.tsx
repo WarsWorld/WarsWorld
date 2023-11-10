@@ -22,6 +22,7 @@ export const ProvidePlayers = ({ children }: { children: ReactNode }) => {
 };
 
 export const usePlayers = () => {
+  // TODO make sure development_player0 is set by default - currently not.
   const ownedPlayers = useContext(playersContext);
 
   const [currentPlayerId, setCurrentPlayerId] = useLocalStorage(
@@ -30,16 +31,11 @@ export const usePlayers = () => {
   );
   const currentPlayer = ownedPlayers?.find((p) => p.id === currentPlayerId);
   const setCurrentPlayer = (player: Player) => setCurrentPlayerId(player.id);
-  const [areOwnedPlayersLoaded, setAreOwnedPlayersLoaded] = useState(false);
-
-  useEffect(() => {
-    if (ownedPlayers) setAreOwnedPlayersLoaded(true);
-  }, [ownedPlayers, setAreOwnedPlayersLoaded]);
 
   return {
     ownedPlayers,
     currentPlayer,
     setCurrentPlayer,
-    areOwnedPlayersLoaded,
+    areOwnedPlayersLoaded: Boolean(ownedPlayers),
   };
 };

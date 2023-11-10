@@ -9,7 +9,7 @@ import {
 } from "../shared/match-logic/buildable-unit";
 import { getMovementCost } from "../shared/match-logic/tiles";
 import { Tile, Weather } from "../server/schemas/tile.ts";
-import { CreatableUnit } from "../server/schemas/unit";
+import { WWUnit } from "../server/schemas/unit";
 import { Position } from "../server/schemas/position";
 import { tileConstructor } from "./spriteConstructor";
 export type PathNode = {
@@ -21,7 +21,7 @@ export type PathNode = {
 
 export function getAccessibleNodes( //TODO: save result of function? _ (Sturm d2d?)
   mapData: Tile[][],
-  enemyUnits: CreatableUnit[],
+  enemyUnits: WWUnit[],
   weather: Weather,
   movePoints: number,
   moveType: MovementType,
@@ -116,8 +116,8 @@ export function getAccessibleNodes( //TODO: save result of function? _ (Sturm d2
 
 export async function showPassableTiles(
   mapData: Tile[][],
-  unit: CreatableUnit,
-  enemyUnits: CreatableUnit[],
+  unit: WWUnit,
+  enemyUnits: WWUnit[],
   accessibleNodes?: Map<Position, PathNode>
 ) {
   const unitProperties = unitPropertiesMap[unit.type];
@@ -148,7 +148,7 @@ export async function showPassableTiles(
 
 export function getAttackableTiles(
   mapData: Tile[][],
-  enemyUnits: CreatableUnit[],
+  enemyUnits: WWUnit[],
   weather: Weather,
   movePoints: number,
   moveType: MovementType,
@@ -206,8 +206,8 @@ export function getAttackableTiles(
 
 export async function showAttackableTiles(
   mapData: Tile[][],
-  unit: CreatableUnit,
-  enemyUnits: CreatableUnit[],
+  unit: WWUnit,
+  enemyUnits: WWUnit[],
   attackableTiles?: Position[]
 ) {
   const unitProperties = unitPropertiesMap[unit.type];

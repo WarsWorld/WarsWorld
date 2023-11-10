@@ -3,8 +3,10 @@ import { Army } from "server/schemas/army";
 import { CO } from "server/schemas/co";
 import { PlayerSlot } from "server/schemas/player-slot";
 import { Position } from "server/schemas/position";
-import { CreatableUnit } from "server/schemas/unit";
+import { WWUnit } from "server/schemas/unit";
 import { PropertyTileType, UnusedSiloTileType } from "server/schemas/tile";
+import { Weather } from "shared/match-logic/tiles";
+import { COPowerState } from "shared/match-logic/co-utilities";
 
 interface WithPosition {
   position: Position;
@@ -26,7 +28,7 @@ export type ChangeableTile = CapturableTile | LaunchableSiloTile;
 //TODO: Add player name to this, it would make things easier rather than
 // having to always look up players id to get their username
 export interface PlayerInMatch {
-  playerSlot: PlayerSlot;
+  slot: PlayerSlot;
   hasCurrentTurn?: boolean;
   playerId: Player["id"];
   ready?: boolean;
@@ -35,6 +37,7 @@ export interface PlayerInMatch {
   funds: number;
   powerMeter: number;
   army: Army;
+  COPowerState: COPowerState;
 }
 
 //TODO: Add favorites, possibly spectators, also a timer
@@ -48,9 +51,9 @@ export interface BackendMatchState {
   status: MatchStatus;
   map: WWMap;
   changeableTiles: ChangeableTile[];
-  units: CreatableUnit[];
+  units: WWUnit[];
   turn: number;
   players: PlayerInMatch[];
+  currentWeather: Weather;
+  weatherNextDay: Weather | null;
 }
-
-

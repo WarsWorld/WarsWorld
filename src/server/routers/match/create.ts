@@ -19,11 +19,12 @@ export const createMatchProcedure = playerBaseProcedure
       {
         playerId: ctx.currentPlayer.id,
         ready: false,
-        playerSlot: 0,
+        slot: 0,
         co: input.selectedCO,
         funds: 0,
         powerMeter: 0,
         army: "orange-star",
+        COPowerState: "no-power",
       },
     ];
 
@@ -51,6 +52,8 @@ export const createMatchProcedure = playerBaseProcedure
       changeableTiles: getChangeableTilesFromMap(ctx.map),
       players: initialPlayerState,
       units: [],
+      currentWeather: "clear",
+      weatherNextDay: null,
     });
 
     await prisma.event.create({

@@ -1,6 +1,6 @@
-import { CreatableUnit } from "../server/schemas/unit";
+import { WWUnit } from "../server/schemas/unit";
 
-export const demoUnit: CreatableUnit = {
+export const demoUnit: WWUnit = {
   type: "infantry",
   playerSlot: 0,
   position: [5, 5],
@@ -9,7 +9,7 @@ export const demoUnit: CreatableUnit = {
     fuel: 99,
   },
 };
-export const demoUnits: CreatableUnit[] = [
+export const demoUnits: WWUnit[] = [
   {
     type: "infantry",
     playerSlot: 0,

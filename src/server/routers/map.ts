@@ -1,6 +1,7 @@
 import { CreatableMap, mapSchema } from "server/schemas/map";
 import {
   Tile,
+  TileType,
   isNeutralProperty,
   isUnitProducingProperty,
 } from "server/schemas/tile";
@@ -30,6 +31,21 @@ export const getPlayerAmountOfMap = (map: CreatableMap) => {
   return seenPlayerSlots.length;
 };
 
+/**
+ * This is the list of tile types that are shown
+ * on the map list.
+ */
+const propertyTileTypes = [
+  "city",
+  "base",
+  "airport",
+  "commtower",
+  "lab",
+  "port",
+] satisfies TileType[];
+
+type PropertyStatsType = Record<(typeof propertyTileTypes)[number], number>;
+
 export const mapRouter = router({
   getAll: publicBaseProcedure.query(async () => {
     const allMaps = await prisma.wWMap.findMany();
@@ -48,12 +64,13 @@ export const mapRouter = router({
           width: tiles[0].length,
           height: tiles.length,
         },
-        cities: tilesFlat.filter((tile) => tile.type === "city").length,
-        bases: tilesFlat.filter((tile) => tile.type === "base").length,
-        ports: tilesFlat.filter((tile) => tile.type === "port").length,
-        airports: tilesFlat.filter((tile) => tile.type === "airport").length,
-        comtowers: tilesFlat.filter((tile) => tile.type === "comtower").length,
-        labs: tilesFlat.filter((tile) => tile.type === "lab").length,
+        propertyStats: propertyTileTypes.reduce<PropertyStatsType>(
+          (prev, cur) => ({
+            ...prev,
+            [cur]: tilesFlat.filter((tile) => tile.type === cur).length,
+          }),
+          {} as PropertyStatsType
+        ),
         created: map.createdAt,
       };
     });

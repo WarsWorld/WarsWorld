@@ -18,13 +18,13 @@ export const willBeChangeableTile = (
     "airport",
     "port",
     "lab",
-    "comtower",
+    "commtower",
     "hq",
     "unusedSilo",
   ].includes(tile.type);
 
 export const propertyTileSchema = withUnit.extend({
-  type: z.enum(["base", "airport", "port", "hq", "lab", "comtower", "city"]),
+  type: z.enum(["base", "airport", "port", "hq", "lab", "commtower", "city"]),
   playerSlot: playerSlotForPropertiesSchema,
 });
 export type PropertyTile = z.infer<typeof propertyTileSchema>;
