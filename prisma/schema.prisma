@@ -110,7 +110,7 @@ model Player {
   id          String        @id @default(cuid())
   MMR         MMR[]
   name        String
-  secret      Boolean       @default(false)
+  secret      Boolean       @default(false) // secret = true means that parent user is hidden on profile
   ChatMessage ChatMessage[]
 
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -213,12 +213,13 @@ model Match {
   createdAt DateTime @default(now())
   Notes     Notes[]
   Event     Event[]
-  Player    Player?  @relation(fields: [playerId], references: [id])
-  playerId  String?
+  Player    Player?  @relation(fields: [playerId], references: [id]) // for notes relationship?
+  playerId  String? // to-do maybe shouldn't exist..?
 }
 
 model Event {
   id      String @id @default(cuid())
+  // todo eventCounter or sorts (per match obviously)
   match   Match  @relation(fields: [matchId], references: [id])
   matchId String
 

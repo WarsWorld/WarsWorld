@@ -6,7 +6,7 @@ import {
   withAmmoUnitStatsSchema,
   withHiddenSchema,
   withNoAmmoUnitStatsSchema,
-  withPlayerSlotAndPositionSchema,
+  unitInMapSharedPropertiesSchema,
 } from "./unit-traits";
 
 const creatableInfantrySchema = withNoAmmoUnitStatsSchema.extend(
@@ -131,23 +131,23 @@ const creatablePipeRunnerSchema = withAmmoUnitStatsSchema.extend(
 export const creatableUnitSchema = z.discriminatedUnion("type", [
   // this can't be easily mapped
   // because it'd be pushing the limits of zod or typescript i think
-  withPlayerSlotAndPositionSchema.extend(creatableInfantrySchema.shape),
-  withPlayerSlotAndPositionSchema.extend(creatableMechSchema.shape),
-  withPlayerSlotAndPositionSchema.extend(createReconSchema.shape),
-  withPlayerSlotAndPositionSchema.extend(creatableAPCSchema.shape),
-  withPlayerSlotAndPositionSchema.extend(creatableOtherLandUnitsWithAmmo.shape),
-  withPlayerSlotAndPositionSchema.extend(creatableTransportCopterSchema.shape),
-  withPlayerSlotAndPositionSchema.extend(creatableBattleCopterSchema.shape),
-  withPlayerSlotAndPositionSchema.extend(creatableBlackBombSchema.shape),
-  withPlayerSlotAndPositionSchema.extend(creatableBlackBoatSchema.shape),
-  withPlayerSlotAndPositionSchema.extend(creatableLanderSchema.shape),
-  withPlayerSlotAndPositionSchema.extend(creatableCruiserSchema.shape),
-  withPlayerSlotAndPositionSchema.extend(creatableBomberAndFighterSchema.shape),
-  withPlayerSlotAndPositionSchema.extend(creatableStealthSchema.shape),
-  withPlayerSlotAndPositionSchema.extend(creatableBattleshipSchema.shape),
-  withPlayerSlotAndPositionSchema.extend(creatableSubSchema.shape),
-  withPlayerSlotAndPositionSchema.extend(creatableCarrierSchema.shape),
-  withPlayerSlotAndPositionSchema.extend(creatablePipeRunnerSchema.shape),
+  unitInMapSharedPropertiesSchema.extend(creatableInfantrySchema.shape),
+  unitInMapSharedPropertiesSchema.extend(creatableMechSchema.shape),
+  unitInMapSharedPropertiesSchema.extend(createReconSchema.shape),
+  unitInMapSharedPropertiesSchema.extend(creatableAPCSchema.shape),
+  unitInMapSharedPropertiesSchema.extend(creatableOtherLandUnitsWithAmmo.shape),
+  unitInMapSharedPropertiesSchema.extend(creatableTransportCopterSchema.shape),
+  unitInMapSharedPropertiesSchema.extend(creatableBattleCopterSchema.shape),
+  unitInMapSharedPropertiesSchema.extend(creatableBlackBombSchema.shape),
+  unitInMapSharedPropertiesSchema.extend(creatableBlackBoatSchema.shape),
+  unitInMapSharedPropertiesSchema.extend(creatableLanderSchema.shape),
+  unitInMapSharedPropertiesSchema.extend(creatableCruiserSchema.shape),
+  unitInMapSharedPropertiesSchema.extend(creatableBomberAndFighterSchema.shape),
+  unitInMapSharedPropertiesSchema.extend(creatableStealthSchema.shape),
+  unitInMapSharedPropertiesSchema.extend(creatableBattleshipSchema.shape),
+  unitInMapSharedPropertiesSchema.extend(creatableSubSchema.shape),
+  unitInMapSharedPropertiesSchema.extend(creatableCarrierSchema.shape),
+  unitInMapSharedPropertiesSchema.extend(creatablePipeRunnerSchema.shape),
 ]);
 
 /** These units have a weapon, and have finite ammo. */
@@ -231,9 +231,9 @@ export type WithoutWeaponUnitType = z.infer<
 >["type"];
 export type WithAmmoUnitType = z.infer<typeof unitWithAmmoSchema>["type"];
 
-export type CreatableUnit = z.infer<typeof creatableUnitSchema>;
+export type WWUnit = z.infer<typeof creatableUnitSchema>;
 
-export type UnitType = CreatableUnit["type"];
+export type UnitType = WWUnit["type"];
 
 /**
  * i would usually extract the following into a function with a good name
@@ -261,20 +261,14 @@ const unitTypes = creatableUnitSchema.options.flatMap((option) => {
 type WhatZodWants = [(typeof unitTypes)[number], ...typeof unitTypes];
 export const unitTypeSchema = z.enum(unitTypes as WhatZodWants);
 
-interface WithActionState {
-  actionState: "ready" | "waited" | "unloadable";
-}
-
-export type UnitDuringMatch = CreatableUnit & WithActionState;
-
-export interface UnitDuringMatchHiddenStats extends WithActionState {
+export type WWHiddenUnit = {
   type: UnitType;
   playerSlot: PlayerSlot;
   stats: "hidden";
   position: Position;
-}
+};
 
-export type FrontendUnit = UnitDuringMatch | UnitDuringMatchHiddenStats;
+export type FrontendUnit = WWUnit | WWHiddenUnit;
 
 export const withUnit = z.object({
   unit: z.optional(creatableUnitSchema),

@@ -1,20 +1,34 @@
 import { Player } from "@prisma/client";
 import {
+  AbilityAction,
   AttackAction,
+  BuildAction,
   COPowerAction,
-  DirectPersistableAction,
+  LaunchMissileAction,
   MoveAction,
+  PassTurnAction,
+  RepairAction,
   SuperCOPowerAction,
   UnloadAction,
+  WaitAction,
 } from "server/schemas/action";
 import { CO } from "server/schemas/co";
-import { UnitDuringMatch } from "server/schemas/unit";
+import { WWUnit } from "server/schemas/unit";
+import { Weather } from "shared/match-logic/tiles";
 import { Army } from "../../server/schemas/army";
 
 // TODO: Maybe add who's player's turn it is or which army starts?
 export interface MatchStartEvent {
   type: "match-start";
+  weather: Weather;
 }
+
+export type MatchEndEvent = {
+  type: "match-end";
+  condition: string;
+  winningTeamPlayerIds: string[] | null; // null = draw
+  // TODO this type can probably be made a lot more fine-grained later on
+};
 
 export interface MoveEvent extends MoveAction {
   trap?: boolean;
@@ -26,7 +40,7 @@ export interface InvalidActionEvent {
 }
 
 export interface UnloadEvent extends UnloadAction {
-  unloadedUnit: UnitDuringMatch;
+  unloadedUnit: WWUnit;
 }
 
 export interface AttackEvent extends AttackAction {
@@ -86,6 +100,19 @@ export interface PlayerEliminated extends WithPlayer {
   type: "player-eliminated";
 }
 
+// TODO maybe add the turn/day number
+// TODO important! add repairs, fuel drain, loss condition like
+// last unit was a fighter and crashed etc.
+export interface PassTurnEvent extends PassTurnAction {
+  newWeather?: Weather;
+}
+
+export type AbilityEvent = AbilityAction;
+export type BuildEvent = BuildAction;
+export type LaunchMissileEvent = LaunchMissileAction;
+export type RepairEvent = RepairAction;
+export type WaitEvent = WaitAction;
+
 export type WWEvent =
   | MatchStartEvent
   | MoveEvent
@@ -99,9 +126,14 @@ export type WWEvent =
   | PlayerEliminated
   | COPowerEvent
   | SuperCOPowerEvent
-  | DirectPersistableAction;
+  | PassTurnEvent
+  | AbilityEvent
+  | BuildEvent
+  | LaunchMissileEvent
+  | RepairEvent
+  | WaitEvent;
 
 export type EmittableEvent = WWEvent & {
   matchId: string;
-  discoveredUnits?: UnitDuringMatch[];
+  discoveredUnits?: WWUnit[];
 };

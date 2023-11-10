@@ -10,7 +10,7 @@ import { Layout } from "../frontend/components/layout";
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
   pageProps,
-}) => {
+}: any) => {
   return (
     <SessionProvider session={pageProps.session}>
       <Head>
@@ -30,7 +30,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
   );
 };
 
-MyApp.getInitialProps = async ({ ctx }) => {
+MyApp.getInitialProps = async ({ ctx }: any) => {
   return {
     session: await getSession(ctx),
   };

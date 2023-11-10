@@ -4,9 +4,7 @@ export const getNextAvailablePlayerSlot = (matchState: BackendMatchState) => {
   let nextAvailablePlayerSlot: number | null = null;
 
   for (let i = 0; i < matchState.map.numberOfPlayers; i++) {
-    const playerSlotIsOccupied = matchState.players.find(
-      (e) => e.playerSlot === i
-    );
+    const playerSlotIsOccupied = matchState.players.find((e) => e.slot === i);
 
     if (!playerSlotIsOccupied) {
       nextAvailablePlayerSlot = i;

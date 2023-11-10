@@ -1,6 +1,6 @@
-import { CreatableUnit } from "../server/schemas/unit";
+import { WWUnit } from "../server/schemas/unit";
 
-export const demoUnit: CreatableUnit = {
+export const demoUnit: WWUnit = {
   type: "infantry",
   playerSlot: 0,
   position: [5, 5],
@@ -8,8 +8,9 @@ export const demoUnit: CreatableUnit = {
     hp: 9,
     fuel: 99,
   },
+  isReady: true,
 };
-export const demoUnits: CreatableUnit[] = [
+export const demoUnits: WWUnit[] = [
   {
     type: "infantry",
     playerSlot: 0,
@@ -18,6 +19,7 @@ export const demoUnits: CreatableUnit[] = [
       hp: 9,
       fuel: 99,
     },
+    isReady: true,
   },
 
   {
@@ -29,6 +31,7 @@ export const demoUnits: CreatableUnit[] = [
       fuel: 99,
       ammo: 9,
     },
+    isReady: true,
   },
 
   {
@@ -39,6 +42,7 @@ export const demoUnits: CreatableUnit[] = [
       hp: 9,
       fuel: 99,
     },
+    isReady: true,
   },
 
   {
@@ -50,6 +54,7 @@ export const demoUnits: CreatableUnit[] = [
       fuel: 99,
       ammo: 3,
     },
+    isReady: true,
   },
 
   {
@@ -61,5 +66,6 @@ export const demoUnits: CreatableUnit[] = [
       fuel: 99,
       ammo: 3,
     },
+    isReady: true,
   },
 ];

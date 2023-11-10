@@ -28,7 +28,8 @@ export const coSchema = z.enum([
   "koal",
   "von-bolt",
   "sasha",
-  "rachel"
+  "rachel",
+  "hadeez",
 ]);
 
 export type CO = z.infer<typeof coSchema>;

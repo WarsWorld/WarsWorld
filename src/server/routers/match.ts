@@ -98,12 +98,13 @@ export const matchRouter = router({
         {
           playerId: ctx.currentPlayer.id,
           name: ctx.currentPlayer.name,
-          playerSlot: nextAvailablePlayerSlot,
+          slot: nextAvailablePlayerSlot,
           ready: false,
           co: input.selectedCO,
           funds: 0,
           powerMeter: 0,
           army: "orange-star",
+          COPowerState: "no-power",
         },
       ]);
 
