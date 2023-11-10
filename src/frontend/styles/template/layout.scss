@@ -1,136 +1,49 @@
 @use "src/frontend/styles/mixins" as m;
 
-#__next,
-html,
-body {
-  height: 100vh;
+$HeaderHeightBigScreen: 100px;
+$FooterHeightBigScreen: 100px;
+$HeaderHeightSmallScreen: 70px;
+$FooterHeightSmallScreen: 120px;
+
+#__next {
+  position: absolute;
+  min-height: 100%;
+  width: 100%;
+}
+html {
+  min-height: 100%;
 }
 
-html,
 body {
-  padding: 0;
-  margin: 0;
-}
-
-.layout {
-  grid-template-rows: 70px 1fr;
+  position: absolute;
+  min-height: 100%;
+  width: 100%;
 }
 
 header {
-  height: 70px;
+  height: $HeaderHeightSmallScreen;
+}
 
-  .loginLink,
-  .navGroup {
-    display: none;
-  }
-
-  .burgerMenuIcon {
-    div {
-      background-color: theme("colors.primary");
-      transition: 0.4s;
-    }
-
-    &:hover {
-      div {
-        background-color: theme("colors.secondary");
-      }
-    }
-  }
-
-  .matchLobbyToggle {
-    @include m.clampSize(12, 20, 320, 1200);
-    transition: 0.4s;
-    &:hover {
-      color: theme("colors.secondary");
-    }
-  }
-
-  .matchMenuLinks {
-    position: static;
-  }
-
-  .burgerMenuLinks,
-  .matchMenuLinks {
-    opacity: 0;
-    visibility: hidden;
-    transition: 0.7s;
-    top: 60px;
-  }
-
-  .showBurgerMenuLinks,
-  .showMatchMenuLinks {
-    opacity: 1;
-    visibility: visible;
-  }
-
-  .showMatchMenuLinks {
-    height: 12rem;
-  }
-
-  .showBurgerMenuLinks {
-    height: 30rem;
-  }
+footer {
+  height: $FooterHeightSmallScreen;
 }
 
 .mainContent {
-  top: 70px;
-
-  .currentGames {
-    scroll-margin-top: 100px;
-  }
+  margin-top: $HeaderHeightSmallScreen;
+  margin-bottom: $FooterHeightSmallScreen;
 }
 
 @screen smallscreen {
-  .layout {
-    grid-template-rows: 100px 1fr;
+  header {
+    height: $HeaderHeightBigScreen;
   }
 
-  header {
-    height: 100px;
-
-    .navGroup,
-    .loginLink {
-      display: flex;
-    }
-
-    .navGroup {
-      gap: 0.8rem;
-    }
-
-    .loginLink {
-      min-width: 80px;
-    }
-
-    .matchMenuLinks {
-      top: 100px;
-    }
-
-    .matchMenuLinks {
-      position: fixed;
-    }
+  footer {
+    height: $FooterHeightSmallScreen;
   }
 
   .mainContent {
-    top: 100px;
-  }
-}
-
-@screen laptop {
-  .showBurgerMenuLinks {
-    height: 12rem;
-  }
-
-  header {
-    .navGroup {
-      gap: 2rem;
-    }
-  }
-}
-
-@screen medium {
-  header {
-    .burgerMenuLinks {
-      top: 70px;
-    }
+    margin-top: $HeaderHeightBigScreen;
+    margin-bottom: $FooterHeightSmallScreen;
   }
 }

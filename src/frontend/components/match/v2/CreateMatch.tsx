@@ -90,7 +90,7 @@ export default function CreateMatch({
   };
 
   return (
-    <div className="@w-[100vw]">
+    <div className="@w-full">
       <h1>Hello dev! Read Instructions</h1>
       <p>
         To create a match, first change Current Player to any other player.
