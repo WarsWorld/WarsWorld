@@ -19,7 +19,7 @@ export default function IndexPage() {
   });
 
   return (
-    <div className="@flex @flex-col @w-full @items-center @justify-center">
+    <>
       <Head>
         <title>Leaderboards | Wars World</title>
       </Head>
@@ -44,6 +44,6 @@ export default function IndexPage() {
           timeMode={timeMode}
         />
       </div>
-    </div>
+    </>
   );
 }
