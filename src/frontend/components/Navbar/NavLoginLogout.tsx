@@ -3,6 +3,7 @@ import SquareButton from "../layout/SquareButton";
 import LoginSignupModal from "../modals/LoginSignupModal";
 import { useSession } from "next-auth/react";
 import { signOut } from "next-auth/react";
+import { usePlayers } from "frontend/context/players";
 
 interface Props {
   setIsOpen: Dispatch<SetStateAction<boolean>>;
@@ -11,6 +12,7 @@ interface Props {
 }
 
 export default function NavLoginLogout({ isOpen, setIsOpen, width }: Props) {
+  const { clearLSCurrentPlayer } = usePlayers();
   const { data: session } = useSession();
 
   return (
@@ -35,7 +37,10 @@ export default function NavLoginLogout({ isOpen, setIsOpen, width }: Props) {
             <p className="@text-md">{session.user.name}</p>
             <div
               className="hover:@scale-[1.02] @text-lg @cursor-pointer @text-primary-light hover:@text-primary"
-              onClick={() => signOut()}
+              onClick={() => {
+                clearLSCurrentPlayer();
+                signOut();
+              }}
             >
               LOGOUT
             </div>

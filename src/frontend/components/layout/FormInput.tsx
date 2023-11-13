@@ -24,7 +24,7 @@ export default function FormInput({
       <div className="@my-1">
         <label
           htmlFor={id ?? ""}
-          className={`@text-2xl ${
+          className={`@text-xl smallscreen:@text-2xl ${
             isError ? "@text-orange-star" : "@text-white"
           }`}
         >
@@ -37,7 +37,7 @@ export default function FormInput({
           content="Hello"
           onChange={onChange}
           value={value}
-          className={`@text-black @border-[2.5px] @text-xl @w-full @p-3 @mt-2 @rounded-xl ${
+          className={`@text-black @border-[2.5px] @text-xl smallscreen:@text-2xl @w-full @p-3 @mt-2 @rounded-xl ${
             isError ? "@border-orange-star" : "@border-primary"
           }`}
         />

@@ -41,35 +41,29 @@ export default function YourMatches() {
         <title>Game Lobby | Wars World</title>
       </Head>
 
-      <div className="@flex @justify-center @w-full">
-        <div className="@h-full @w-full @mt-4 @grid @gap-10 @text-center">
-          <CreateMatch
-            refecthYourMatches={refecthYourMatches}
-            refecthAllMatches={refecthAllMatches}
-            currentPlayer={currentPlayer}
-            setCurrentPlayer={setCurrentPlayer}
-          />
-          <MatchSection
-            title="Your Matches"
-            matches={yourMatchesQuery}
-            inMatch
-          />
-          <MatchSection
-            title="Join a match"
-            matches={joinableMatchesQuery}
-            description="Matches you can join."
-          />
-          <MatchSection
-            title="Spectate a Match"
-            matches={spectateableMatches}
-            description="Matches with two players (not you)."
-          />
-          <MatchSection
-            title="Completed games"
-            matches={undefined}
-            description="Work is progress..."
-          />
-        </div>
+      <div className="@h-full @w-full @mt-4 @mb-16 @grid @gap-10 @text-center">
+        <CreateMatch
+          refecthYourMatches={refecthYourMatches}
+          refecthAllMatches={refecthAllMatches}
+          currentPlayer={currentPlayer}
+          setCurrentPlayer={setCurrentPlayer}
+        />
+        <MatchSection title="Your Matches" matches={yourMatchesQuery} inMatch />
+        <MatchSection
+          title="Join a match"
+          matches={joinableMatchesQuery}
+          description="Matches you can join."
+        />
+        <MatchSection
+          title="Spectate a Match"
+          matches={spectateableMatches}
+          description="Matches with two players (not you)."
+        />
+        <MatchSection
+          title="Completed games"
+          matches={undefined}
+          description="Work is progress..."
+        />
       </div>
     </ProtectPage>
   );

@@ -1,41 +1,67 @@
 import { Player } from "@prisma/client";
-import {
-  ReactNode,
-  createContext,
-  useContext,
-  useState,
-  useEffect,
-} from "react";
+import { ReactNode, createContext, useContext, useState } from "react";
 import { useLocalStorage } from "frontend/utils/use-local-storage";
 import { trpc } from "frontend/utils/trpc-client";
 
-const playersContext = createContext<Player[] | undefined>(undefined);
+type UserContext =
+  | {
+      ownedPlayers: Player[] | undefined;
+      currentPlayerId: string | null;
+      setCurrentPlayerId: (value: string) => void;
+    }
+  | undefined;
+
+const playersContext = createContext<UserContext>(undefined);
 
 export const ProvidePlayers = ({ children }: { children: ReactNode }) => {
-  const { data } = trpc.user.me.useQuery();
+  const { data } = trpc.user.me.useQuery(undefined, {
+    onSuccess: (newUser) => {
+      setUser(newUser);
+      if (
+        newUser.ownedPlayers &&
+        newUser.ownedPlayers[0] &&
+        currentPlayerId === ""
+      )
+        setCurrentPlayerId(newUser.ownedPlayers[0].id);
+    },
+  });
+  const [user, setUser] = useState(data);
+  const [currentPlayerId, setCurrentPlayerId] = useLocalStorage(
+    "currentPlayerId",
+    null
+  );
 
   return (
-    <playersContext.Provider value={data?.ownedPlayers}>
+    <playersContext.Provider
+      value={{
+        ownedPlayers: user?.ownedPlayers,
+        currentPlayerId,
+        setCurrentPlayerId,
+      }}
+    >
       {children}
     </playersContext.Provider>
   );
 };
 
 export const usePlayers = () => {
-  // TODO make sure development_player0 is set by default - currently not.
-  const ownedPlayers = useContext(playersContext);
+  const user = useContext(playersContext);
+  const ownedPlayers = user?.ownedPlayers;
+  const currentPlayerId = user?.currentPlayerId;
+  const setCurrentPlayerId = user?.setCurrentPlayerId;
 
-  const [currentPlayerId, setCurrentPlayerId] = useLocalStorage(
-    "currentPlayerId",
-    null
-  );
   const currentPlayer = ownedPlayers?.find((p) => p.id === currentPlayerId);
-  const setCurrentPlayer = (player: Player) => setCurrentPlayerId(player.id);
+  const setCurrentPlayer = (player: Player) => {
+    if (setCurrentPlayerId) setCurrentPlayerId(player.id);
+  };
+  const clearLSCurrentPlayer = () => {
+    if (setCurrentPlayerId) setCurrentPlayerId("");
+  };
 
   return {
     ownedPlayers,
     currentPlayer,
     setCurrentPlayer,
-    areOwnedPlayersLoaded: Boolean(ownedPlayers),
+    clearLSCurrentPlayer,
   };
 };

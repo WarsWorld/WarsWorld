@@ -2,6 +2,7 @@ import SquareButton from "frontend/components/layout/SquareButton";
 import Banner from "../../frontend/components/layout/Banner";
 import SmallContainer from "../../frontend/components/layout/SmallContainer";
 import ThreeLinesText from "../../frontend/components/layout/ThreeLinesText";
+import Link from "next/link";
 
 const homePageCards = [
   {
@@ -36,8 +37,13 @@ export default function BasicHome() {
               Rewrite the Tactics
             </h1>
             <div className="@flex @justify-center">
-              <div className="@mt-4 tablet:@mt-12 @h-12 tablet:@h-20 monitor:@h-24 large_monitor:@h-28 @text-xl tablet:@text-4xl monitor:@text-5xl large_monitor:@text-6xl @w-[50vw] tablet:@w-[50%] @shadow-lg @shadow-black">
-                <SquareButton onClick={undefined}>Play Now</SquareButton>
+              <div className="@mt-4 tablet:@mt-12 @h-12 tablet:@h-20 monitor:@h-24 large_monitor:@h-28 @w-[50vw] tablet:@w-[50%] @shadow-lg @shadow-black">
+                <Link
+                  className="@text-white @text-xl tablet:@text-4xl monitor:@text-5xl large_monitor:@text-6xl"
+                  href="/your-matches"
+                >
+                  <SquareButton>Play Now</SquareButton>
+                </Link>
               </div>
             </div>
           </>

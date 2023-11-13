@@ -5,11 +5,7 @@ import { signIn } from "next-auth/react";
 import { useRouter } from "next/router";
 import ErrorSuccessBlock from "../layout/ErrorSuccessBlock";
 
-interface Props {
-  onSubmitEndBehaviour: () => void;
-}
-
-export default function LoginForm({ onSubmitEndBehaviour }: Props) {
+export default function LoginForm() {
   const nextJsRouter = useRouter();
   const [loginData, setLoginData] = useState({
     user: "",
@@ -54,8 +50,7 @@ export default function LoginForm({ onSubmitEndBehaviour }: Props) {
           isError: false,
           message: "",
         });
-        nextJsRouter.push("/");
-        onSubmitEndBehaviour();
+        nextJsRouter.reload();
       }
     } catch (e: any) {
       console.log("Email or password is incorrect");
@@ -70,7 +65,10 @@ export default function LoginForm({ onSubmitEndBehaviour }: Props) {
     <>
       {error.isError && <ErrorSuccessBlock isError title={error.message} />}
 
-      <form onSubmit={onSubmitLoginForm} className="@flex @flex-col @gap-6">
+      <form
+        onSubmit={onSubmitLoginForm}
+        className="@flex @flex-col @gap-2 smallscreen:@gap-6"
+      >
         <FormInput
           key="li_user"
           text="Username:"
@@ -98,7 +96,7 @@ export default function LoginForm({ onSubmitEndBehaviour }: Props) {
           }
         />
         <div className="@flex @flex-col @items-center @justify-center @pt-4 @px-10">
-          <div className="@w-96 @h-16 @text-3xl @my-2">
+          <div className="@w-[80vw] smallscreen:@w-96 @h-16 @text-3xl @my-2">
             <SquareButton>Login</SquareButton>
           </div>
         </div>

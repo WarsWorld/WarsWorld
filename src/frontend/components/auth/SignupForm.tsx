@@ -116,7 +116,7 @@ export default function SignupForm({ setIsSignupForm, setDidSignUp }: Props) {
           }
         />
         <div className="@flex @flex-col @items-center @justify-center @py-4 @px-10">
-          <div className="@w-96 @h-16 @text-3xl @my-2">
+          <div className="@w-[80vw] smallscreen:@w-96 @h-16 @text-3xl @my-2">
             <SquareButton onClick={onSubmitSignupForm}>Signup</SquareButton>
           </div>
         </div>

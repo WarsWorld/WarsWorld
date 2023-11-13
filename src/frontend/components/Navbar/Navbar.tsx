@@ -58,7 +58,7 @@ export function Navbar() {
                 <NavLoginLogout
                   isOpen={isOpen}
                   setIsOpen={setIsOpen}
-                  width="90vw"
+                  width="95vw"
                 />
               </div>
             </div>

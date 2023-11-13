@@ -30,7 +30,9 @@ const getProductionModeUserPlayers = (session: Session | null) => {
 
   return prisma.player.findMany({
     where: {
-      userId: session.user.name,
+      user: {
+        name: session.user.name,
+      },
     },
   });
 };
@@ -47,10 +49,7 @@ export const playerMiddleware = t.middleware(async ({ ctx, next, input }) => {
 
   const { playerId } = parseResult.data;
 
-  const ownedPlayers =
-    process.env.NODE_ENV === "development"
-      ? await getDevelopmentModeUserPlayers()
-      : await getProductionModeUserPlayers(ctx.session);
+  const ownedPlayers = await getProductionModeUserPlayers(ctx.session);
 
   const currentPlayer = ownedPlayers.find((p) => p.id === playerId);
 
@@ -72,10 +71,7 @@ export const playerMiddleware = t.middleware(async ({ ctx, next, input }) => {
 
 export const playerWithoutCurrentMiddleware = t.middleware(
   async ({ ctx, next }) => {
-    const ownedPlayers =
-      process.env.NODE_ENV === "development"
-        ? await getDevelopmentModeUserPlayers()
-        : await getProductionModeUserPlayers(ctx.session);
+    const ownedPlayers = await getProductionModeUserPlayers(ctx.session);
 
     return next({
       ctx: {

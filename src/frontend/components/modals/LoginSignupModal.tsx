@@ -18,7 +18,7 @@ export default function LoginSignupModal({ isOpen, setIsOpen, width }: Props) {
   const [isSignupForm, setIsSignupForm] = useState(false);
   const [didSignUp, setDidSignUp] = useState(false);
 
-  const onSubmitEndBehaviour = () => {
+  const onClose = () => {
     setIsSignupForm(false);
     setIsOpen(false);
     setDidSignUp(false);
@@ -26,15 +26,11 @@ export default function LoginSignupModal({ isOpen, setIsOpen, width }: Props) {
 
   return (
     <>
-      <Dialog
-        open={isOpen}
-        onClose={onSubmitEndBehaviour}
-        className="@relative @z-40"
-      >
+      <Dialog open={isOpen} onClose={onClose} className="@relative @z-40">
         {isSignupForm ? (
           /* SIGNUP */
           <DefaultDialogDesign title="Signup" width={width ?? "50vw"}>
-            <div className="@pt-8 @px-20">
+            <div className="@pt-4 smallscreen:@pt-8 @px-4 smallscreen:@px-20">
               {didSignUp && (
                 <ErrorSuccessBlock title="Successfully signed up" />
               )}
@@ -44,8 +40,10 @@ export default function LoginSignupModal({ isOpen, setIsOpen, width }: Props) {
               />
               <div className="@flex @flex-col @items-center @justify-center @pb-6 @px-10 @gap-2">
                 <div className="@h-[0.15rem] @w-full @bg-bg-primary @my-2" />
-                <p>Already have an account?</p>
-                <div className="@my-2 @w-80 @h-12 @text-2xl">
+                <p className="@text-lg smallscreen:@text">
+                  Already have an account?
+                </p>
+                <div className="@my-2 @w-[80vw] smallscreen:@w-80 @h-14 @text-2xl">
                   <SquareButton onClick={() => setIsSignupForm(false)}>
                     Login
                   </SquareButton>
@@ -56,34 +54,38 @@ export default function LoginSignupModal({ isOpen, setIsOpen, width }: Props) {
         ) : (
           /* LOGIN */
           <DefaultDialogDesign title="Login" width={width ?? "50vw"}>
-            <div className="@pt-8 @px-20">
+            <div className="@pt-4 smallscreen:@pt-8 @px-4 smallscreen:@px-20">
               {didSignUp && (
                 <ErrorSuccessBlock title="Successfully signed up" />
               )}
-              <LoginForm onSubmitEndBehaviour={onSubmitEndBehaviour} />
-              <div className="@flex @flex-col @items-center @justify-center @pb-6 @px-10 @gap-2">
+              <LoginForm />
+              <div className="@flex @flex-col @items-center @justify-center @pb-6 smallscreen:@px-10 @gap-2">
                 <Link
-                  className="@my-2 @text @no-underline hover:@underline"
+                  className="@my-2 @text-xl smallscreen:@text @no-underline hover:@underline"
                   href="."
                   onClick={() => setIsOpen(false)}
                 >
                   Forgot password?
                 </Link>
 
-                <p className="@pt-4">You can also sign in with:</p>
+                <p className="@pt-4 @text-lg smallscreen:@text">
+                  You can also sign in with:
+                </p>
                 <div className="@flex @flex-wrap @justify-center @w-full @gap-4">
                   {["GitHub", "Discord", "Google"].map((socialMedia) => (
                     <div
                       key={socialMedia}
-                      className="@h-14 @text-3xl @w-72 @my-2"
+                      className="@h-14 @text-2xl large_monitor:@text-3xl @w-[75vw] smallscreen:@w-48 large_monitor:@w-56"
                     >
                       <SocialMediaSignInButton name={socialMedia} />
                     </div>
                   ))}
                 </div>
                 <div className="@h-[0.15rem] @w-full @bg-bg-primary @my-2" />
-                <p>Don&apos;t have an account?</p>
-                <div className="@my-2 @w-80 @h-12 @text-2xl">
+                <p className="@text-lg smallscreen:@text">
+                  Don&apos;t have an account?
+                </p>
+                <div className="@my-2 @w-[80vw] smallscreen:@w-80 @h-20 cellphone:@h-14 @text-2xl">
                   <SquareButton onClick={() => setIsSignupForm(true)}>
                     Create New Account
                   </SquareButton>
