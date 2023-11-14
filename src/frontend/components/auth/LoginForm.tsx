@@ -1,6 +1,6 @@
 import SquareButton from "../layout/SquareButton";
 import FormInput from "../layout/FormInput";
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/router";
 import ErrorSuccessBlock from "../layout/ErrorSuccessBlock";
@@ -21,7 +21,30 @@ export default function LoginForm({ onClose }: Props) {
     isError: false,
     message: "",
   });
-  const isCallback = searchParams.has("callbackUrl");
+  const errorParam = searchParams.get("error");
+  const isProviderCallback = errorParam == "Callback";
+  const isProtectionError = errorParam == "ProtectedPage";
+  const isOAuthAccountNotLinked = errorParam == "OAuthAccountNotLinked";
+
+  useEffect(() => {
+    if (isProviderCallback)
+      setError({
+        isError: true,
+        message: "Error trying to login with that provider.",
+      });
+
+    if (isOAuthAccountNotLinked)
+      setError({
+        isError: true,
+        message: "There is already an user with that email",
+      });
+
+    if (isProtectionError)
+      setError({
+        isError: true,
+        message: "You must be logged in to access this page.",
+      });
+  }, [isOAuthAccountNotLinked, isProviderCallback, isProtectionError]);
 
   const onChangeGenericHandler = (identifier: string, value: string) => {
     setLoginData((prevData) => ({
@@ -70,9 +93,6 @@ export default function LoginForm({ onClose }: Props) {
 
   return (
     <>
-      {isCallback && (
-        <ErrorSuccessBlock isError title="You must login to access that page" />
-      )}
       {error.isError && <ErrorSuccessBlock isError title={error.message} />}
 
       <form
