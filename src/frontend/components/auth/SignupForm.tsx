@@ -5,11 +5,16 @@ import { trpc } from "frontend/utils/trpc-client";
 import ErrorSuccessBlock from "../layout/ErrorSuccessBlock";
 
 interface Props {
-  setIsSignupForm: (value: boolean) => Promise<void>;
+  setIsSignupForm: (value: boolean, callbackUrl?: string) => Promise<void>;
   setDidSignUp: Dispatch<SetStateAction<boolean>>;
+  callbackUrl: string | null;
 }
 
-export default function SignupForm({ setIsSignupForm, setDidSignUp }: Props) {
+export default function SignupForm({
+  setIsSignupForm,
+  setDidSignUp,
+  callbackUrl,
+}: Props) {
   const [signupData, setSignupData] = useState({
     user: "",
     email: "",
@@ -44,7 +49,7 @@ export default function SignupForm({ setIsSignupForm, setDidSignUp }: Props) {
       return e;
     }
 
-    setIsSignupForm(false);
+    setIsSignupForm(false, callbackUrl == null ? undefined : callbackUrl);
     setDidSignUp(true);
   };
 

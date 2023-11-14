@@ -7,10 +7,10 @@ import ErrorSuccessBlock from "../layout/ErrorSuccessBlock";
 import { useSearchParams } from "next/navigation";
 
 interface Props {
-  onClose: () => Promise<void>;
+  onLoginSuccess: () => Promise<void>;
 }
 
-export default function LoginForm({ onClose }: Props) {
+export default function LoginForm({ onLoginSuccess }: Props) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [loginData, setLoginData] = useState({
@@ -79,7 +79,7 @@ export default function LoginForm({ onClose }: Props) {
           isError: false,
           message: "",
         });
-        onClose().then(() => {
+        onLoginSuccess().then(() => {
           router.reload();
         });
       }

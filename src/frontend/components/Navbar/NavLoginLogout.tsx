@@ -5,7 +5,7 @@ import { signOut } from "next-auth/react";
 import { usePlayers } from "frontend/context/players";
 
 interface Props {
-  setIsOpen: (value: boolean) => Promise<void>;
+  setIsOpen: (value: boolean, callbackUrl?: string) => Promise<void>;
   isOpen: boolean;
   width?: string;
 }

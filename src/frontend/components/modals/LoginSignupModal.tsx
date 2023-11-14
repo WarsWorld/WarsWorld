@@ -13,7 +13,7 @@ import { useRouter } from "next/router";
 interface Props {
   width?: string;
   isOpen: boolean;
-  setIsOpen: (value: boolean) => Promise<void>;
+  setIsOpen: (value: boolean, callbackUrl?: string) => Promise<void>;
 }
 
 export default function LoginSignupModal({ isOpen, setIsOpen, width }: Props) {
@@ -22,10 +22,28 @@ export default function LoginSignupModal({ isOpen, setIsOpen, width }: Props) {
 
   const [didSignUp, setDidSignUp] = useState(false);
   const isSignupForm = searchParams.has("SignUpForm");
-  const setIsSignupForm = async (value: boolean) => {
-    if (value) await router.replace("", { query: "authModalOpen&SignUpForm" });
-    else await router.replace("", { query: "authModalOpen" });
+  const callbackUrl = searchParams.get("callbackUrl");
+
+  const setIsSignupForm = async (value: boolean, callbackUrl?: string) => {
+    if (value)
+      await router.replace("", {
+        query: `authModalOpen&SignUpForm${
+          callbackUrl && "&callbackUrl=" + encodeURIComponent(callbackUrl)
+        }`,
+      });
+    else
+      await router.replace("", {
+        query: `authModalOpen${
+          callbackUrl && "&callbackUrl=" + encodeURIComponent(callbackUrl)
+        }`,
+      });
   };
+
+  const onLoginSuccess = async () =>
+    await setIsOpen(
+      false,
+      callbackUrl === null ? undefined : decodeURIComponent(callbackUrl)
+    );
 
   const onClose = async () => await setIsOpen(false);
 
@@ -42,6 +60,7 @@ export default function LoginSignupModal({ isOpen, setIsOpen, width }: Props) {
               <SignupForm
                 setIsSignupForm={setIsSignupForm}
                 setDidSignUp={setDidSignUp}
+                callbackUrl={callbackUrl}
               />
               <div className="@flex @flex-col @items-center @justify-center @pb-6 @px-10 @gap-2">
                 <div className="@h-[0.15rem] @w-full @bg-bg-primary @my-2" />
@@ -49,7 +68,14 @@ export default function LoginSignupModal({ isOpen, setIsOpen, width }: Props) {
                   Already have an account?
                 </p>
                 <div className="@my-2 @w-[80vw] smallscreen:@w-80 @h-14 @text-2xl">
-                  <SquareButton onClick={() => setIsSignupForm(false)}>
+                  <SquareButton
+                    onClick={() =>
+                      setIsSignupForm(
+                        false,
+                        callbackUrl == null ? undefined : callbackUrl
+                      )
+                    }
+                  >
                     Login
                   </SquareButton>
                 </div>
@@ -63,12 +89,12 @@ export default function LoginSignupModal({ isOpen, setIsOpen, width }: Props) {
               {didSignUp && (
                 <ErrorSuccessBlock title="Successfully signed up" />
               )}
-              <LoginForm onClose={onClose} />
+              <LoginForm onLoginSuccess={onLoginSuccess} />
               <div className="@flex @flex-col @items-center @justify-center @pb-6 smallscreen:@px-10 @gap-2">
                 <Link
                   className="@my-2 @text-xl smallscreen:@text @no-underline hover:@underline"
                   href="."
-                  onClick={() => setIsOpen(false)}
+                  onClick={onClose}
                 >
                   Forgot password?
                 </Link>
@@ -91,7 +117,14 @@ export default function LoginSignupModal({ isOpen, setIsOpen, width }: Props) {
                   Don&apos;t have an account?
                 </p>
                 <div className="@my-2 @w-[80vw] smallscreen:@w-80 @h-20 cellphone:@h-14 @text-2xl">
-                  <SquareButton onClick={() => setIsSignupForm(true)}>
+                  <SquareButton
+                    onClick={() =>
+                      setIsSignupForm(
+                        true,
+                        callbackUrl == null ? undefined : callbackUrl
+                      )
+                    }
+                  >
                     Create New Account
                   </SquareButton>
                 </div>
