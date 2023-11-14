@@ -12,6 +12,7 @@ import { loginSchema } from "server/schemas/auth";
 import { Adapter } from "next-auth/adapters";
 import { prisma } from "server/prisma/prisma-client";
 import WarsWorldAdapter from "./WarsWorldAdapter";
+import { compare } from "bcrypt";
 
 const adapter = WarsWorldAdapter(prisma) as Adapter;
 
@@ -47,9 +48,11 @@ export const authOptions: NextAuthOptions = {
           where: { name: creds.username },
         });
 
-        // Verify Password here
-        // TODO: Encryption here
-        if (dbUser && dbUser.password === credentials.password) {
+        if (
+          dbUser &&
+          dbUser.password &&
+          (await compare(credentials.password, dbUser.password))
+        ) {
           const dbUserWithoutPassword = {
             name: dbUser.name,
             email: dbUser.email,

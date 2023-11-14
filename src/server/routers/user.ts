@@ -10,12 +10,18 @@ import {
 import { z } from "zod";
 import { signUpSchema } from "server/schemas/auth";
 import { TRPCError } from "@trpc/server";
+import hashPassword from "server/hashPassword";
 
 export const userRouter = router({
   me: publicBaseProcedure
     .use(authMiddleware)
     .use(playerWithoutCurrentMiddleware)
-    .query(({ ctx }) => ctx), // TODO session exposed in FE dangerous? 😳
+    .query(({ ctx }) => {
+      return {
+        user: ctx.user,
+        ownedPlayers: ctx.ownedPlayers,
+      };
+    }), // TODO session exposed in FE dangerous? 😳
   updatePreferences: playerBaseProcedure.input(preferencesSchema).mutation(
     async ({ input, ctx }) =>
       await prisma.player.update({
@@ -55,11 +61,13 @@ export const userRouter = router({
           message: "Passwords do not match",
         });
 
+      const hashedPassword = await hashPassword(input.password);
+
       // Write user to the database
       const user = await prisma.user.create({
         data: {
           name: input.username,
-          password: input.password,
+          password: hashedPassword,
           email: input.email,
         },
       });

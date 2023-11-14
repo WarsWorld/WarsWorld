@@ -1,13 +1,15 @@
 import { z } from "zod";
 
+// TODO: better password zod validation
+
 export const loginSchema = z.object({
-  username: z.string().nonempty(),
-  password: z.string().min(4).max(12),
+  username: z.string().min(1),
+  password: z.string().min(4).max(20),
 });
 
 export const signUpSchema = loginSchema.extend({
   email: z.string().email(),
-  confirmPassword: z.string().min(4).max(12),
+  confirmPassword: z.string().min(4).max(20),
 });
 
 export type ILogin = z.infer<typeof loginSchema>;

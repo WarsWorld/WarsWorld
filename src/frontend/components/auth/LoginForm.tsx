@@ -40,12 +40,11 @@ export default function LoginForm() {
 
       if (loginResponse.status === 401)
         throw {
-          title: "Email or password are incorrect",
+          title: "User or password are incorrect",
           statusCode: loginResponse.status,
         };
 
       if (loginResponse.ok) {
-        console.log("You logged in successfully");
         setError({
           isError: false,
           message: "",
@@ -53,7 +52,6 @@ export default function LoginForm() {
         nextJsRouter.reload();
       }
     } catch (e: any) {
-      console.log("Email or password is incorrect");
       setError({
         isError: true,
         message: e.title,

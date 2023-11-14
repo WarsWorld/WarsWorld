@@ -4,6 +4,7 @@
  * @link https://www.prisma.io/docs/guides/database/seed-database
  */
 import { PrismaClient } from "@prisma/client";
+import hashPassword from "server/hashPassword";
 import { importAWBWMap } from "server/tools/map-importer-utilities";
 import { developmentPlayerNamePrefix as Prefix } from "server/trpc/middleware/player";
 
@@ -17,10 +18,12 @@ const developmentPlayerNames = [
 ].map((name) => `${Prefix} ${name}`);
 
 async function main() {
+  const hashedPassword = await hashPassword("secret");
+
   const developmentUser = await prisma.user.create({
     data: {
       name: "development_user",
-      password: "secret",
+      password: hashedPassword,
       email: "development@example.com",
     },
   });
