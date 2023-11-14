@@ -1,7 +1,10 @@
 import { Position } from "server/schemas/position";
 import { UnitType, WWUnit } from "server/schemas/unit";
 import { BackendMatchState } from "shared/types/server-match-state";
-import { COCombatHookProps, COHooks, getCOHooksWithDefaults } from "./co-hooks";
+import {
+  COCombatHookProps,
+  getCOHooksWithPowers as getCOHooks,
+} from "./co-hooks";
 import { getCommtowerAttackBoost } from "./co-utilities";
 import { getCurrentTile } from "./get-current-tile";
 import { getPlayerBySlot } from "./players";
@@ -43,11 +46,9 @@ const roundUpTo = (value: number, step: number) => {
 export const calculateDamage = (
   matchState: BackendMatchState,
   attackerPosition: Position,
-  defenderPosition: Position,
-  COHooks: COHooks
+  defenderPosition: Position
 ) => {
-  const COHooksWithDefaults = getCOHooksWithDefaults(COHooks);
-
+  const COHooks = getCOHooks(matchState);
   const attackerUnit = getUnit(matchState, attackerPosition);
   const defenderUnit = getUnit(matchState, defenderPosition);
 
@@ -71,29 +72,29 @@ export const calculateDamage = (
   const visualHPOfDefender = getVisualHPfromHP(defenderUnit.stats.hp);
 
   const attackModifier =
-    COHooksWithDefaults.onAttackModifier({
+    COHooks.onAttackModifier({
       ...COHookPropsWithoutValue,
       currentValue: 100,
     }) + getCommtowerAttackBoost(matchState, attackerUnit.playerSlot);
 
-  const defenseModifier = COHooksWithDefaults.onDefenseModifier({
+  const defenseModifier = COHooks.onDefenseModifier({
     ...COHookPropsWithoutValue,
     currentValue: 100,
   });
 
   // base luck: 0-9, whole numbers i think
-  const goodLuckValue = COHooksWithDefaults.onGoodLuck({
+  const goodLuckValue = COHooks.onGoodLuck({
     ...COHookPropsWithoutValue,
     currentValue: Math.floor(Math.random() * 10),
   });
 
-  const badLuckValue = COHooksWithDefaults.onBadLuck({
+  const badLuckValue = COHooks.onBadLuck({
     ...COHookPropsWithoutValue,
     currentValue: 0,
   });
 
   // 0-4 (+ lash COP) whole numbers
-  const terrainStars = COHooksWithDefaults.onTerrainStars({
+  const terrainStars = COHooks.onTerrainStars({
     ...COHookPropsWithoutValue,
     currentValue: getTerrainDefenseStars(
       COHookPropsWithoutValue.defendingPlayerData.tileType

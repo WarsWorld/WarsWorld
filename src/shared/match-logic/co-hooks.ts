@@ -3,7 +3,9 @@ import { WWUnit, UnitType } from "server/schemas/unit";
 import {
   BackendMatchState,
   PlayerInMatch,
+  getCurrentTurnPlayer,
 } from "shared/types/server-match-state";
+import { COPropertiesMap } from "./co";
 
 export interface COHookPlayerProps {
   player: PlayerInMatch;
@@ -43,12 +45,31 @@ type COCombatHookNames =
   | "onTerrainStars"
   | "onAttackRange";
 
-export type COHooks = Partial<
-  Record<COPacifistHookNames, COPacifistHook> &
-    Record<COCombatHookNames, COCombatHook>
->;
+export type COHooks = Record<COPacifistHookNames, COPacifistHook> &
+  Record<COCombatHookNames, COCombatHook>;
 
-const defaultCOHooks: Required<COHooks> = {
+export const getCOHooksWithPowers = (
+  matchState: BackendMatchState
+): COHooks => {
+  const currentPlayer = getCurrentTurnPlayer(matchState);
+
+  const CO = COPropertiesMap[currentPlayer.co];
+
+  const d2dHooks = getCOHooksWithDefaults(CO.dayToDay?.hooks ?? {});
+  const COPHooks = CO.powers.COPower?.hooks ?? {};
+  const SCOPHooks = CO.powers.superCOPower?.hooks ?? {};
+
+  switch (currentPlayer.COPowerState) {
+    case "no-power":
+      return d2dHooks;
+    case "co-power":
+      return { ...d2dHooks, ...COPHooks };
+    case "super-co-power":
+      return { ...d2dHooks, ...SCOPHooks };
+  }
+};
+
+const defaultCOHooks: COHooks = {
   onAttackModifier: defaultCOHook,
   onDefenseModifier: defaultCOHook,
   onGoodLuck: defaultCOHook,
@@ -61,9 +82,7 @@ const defaultCOHooks: Required<COHooks> = {
   onFuelDrain: defaultCOHook,
 };
 
-export const getCOHooksWithDefaults = (
-  COHooks: COHooks
-): Required<COHooks> => ({
+export const getCOHooksWithDefaults = (COHooks: Partial<COHooks>): COHooks => ({
   ...defaultCOHooks,
   ...COHooks,
 });
