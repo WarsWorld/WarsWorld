@@ -48,9 +48,7 @@ type COCombatHookNames =
 export type COHooks = Record<COPacifistHookNames, COPacifistHook> &
   Record<COCombatHookNames, COCombatHook>;
 
-export const getCOHooksWithPowers = (
-  matchState: BackendMatchState
-): COHooks => {
+export const getCOHooks = (matchState: BackendMatchState): COHooks => {
   const currentPlayer = getCurrentTurnPlayer(matchState);
 
   const CO = COPropertiesMap[currentPlayer.co];

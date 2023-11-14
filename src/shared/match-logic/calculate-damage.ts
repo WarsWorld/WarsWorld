@@ -1,10 +1,7 @@
 import { Position } from "server/schemas/position";
 import { UnitType, WWUnit } from "server/schemas/unit";
 import { BackendMatchState } from "shared/types/server-match-state";
-import {
-  COCombatHookProps,
-  getCOHooksWithPowers as getCOHooks,
-} from "./co-hooks";
+import { COCombatHookProps, getCOHooks as getCOHooks } from "./co-hooks";
 import { getCommtowerAttackBoost } from "./co-utilities";
 import { getCurrentTile } from "./get-current-tile";
 import { getPlayerBySlot } from "./players";
