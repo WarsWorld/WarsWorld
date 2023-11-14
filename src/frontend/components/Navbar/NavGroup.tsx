@@ -8,7 +8,7 @@ interface Props {
   showMatchLinks: boolean;
   setShowMatchLinks: Dispatch<SetStateAction<boolean>>;
   setShowLinks: Dispatch<SetStateAction<boolean>>;
-  setIsOpen: Dispatch<SetStateAction<boolean>>;
+  setIsOpen: (value: boolean) => Promise<void>;
   isOpen: boolean;
 }
 

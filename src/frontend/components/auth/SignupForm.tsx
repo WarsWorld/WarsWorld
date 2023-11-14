@@ -5,7 +5,7 @@ import { trpc } from "frontend/utils/trpc-client";
 import ErrorSuccessBlock from "../layout/ErrorSuccessBlock";
 
 interface Props {
-  setIsSignupForm: Dispatch<SetStateAction<boolean>>;
+  setIsSignupForm: (value: boolean) => Promise<void>;
   setDidSignUp: Dispatch<SetStateAction<boolean>>;
 }
 

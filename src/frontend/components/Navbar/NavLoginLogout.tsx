@@ -1,4 +1,3 @@
-import { Dispatch, SetStateAction } from "react";
 import SquareButton from "../layout/SquareButton";
 import LoginSignupModal from "../modals/LoginSignupModal";
 import { useSession } from "next-auth/react";
@@ -6,7 +5,7 @@ import { signOut } from "next-auth/react";
 import { usePlayers } from "frontend/context/players";
 
 interface Props {
-  setIsOpen: Dispatch<SetStateAction<boolean>>;
+  setIsOpen: (value: boolean) => Promise<void>;
   isOpen: boolean;
   width?: string;
 }
@@ -21,9 +20,7 @@ export default function NavLoginLogout({ isOpen, setIsOpen, width }: Props) {
         {!session && (
           <>
             <div className="@w-32">
-              <SquareButton onClick={() => setIsOpen((prev) => !prev)}>
-                LOGIN
-              </SquareButton>
+              <SquareButton onClick={() => setIsOpen(true)}>LOGIN</SquareButton>
             </div>
             <LoginSignupModal
               isOpen={isOpen}

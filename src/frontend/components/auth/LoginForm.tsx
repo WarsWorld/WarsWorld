@@ -4,9 +4,15 @@ import { FormEvent, useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/router";
 import ErrorSuccessBlock from "../layout/ErrorSuccessBlock";
+import { useSearchParams } from "next/navigation";
 
-export default function LoginForm() {
-  const nextJsRouter = useRouter();
+interface Props {
+  onClose: () => Promise<void>;
+}
+
+export default function LoginForm({ onClose }: Props) {
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const [loginData, setLoginData] = useState({
     user: "",
     password: "",
@@ -15,6 +21,7 @@ export default function LoginForm() {
     isError: false,
     message: "",
   });
+  const isCallback = searchParams.has("callbackUrl");
 
   const onChangeGenericHandler = (identifier: string, value: string) => {
     setLoginData((prevData) => ({
@@ -49,7 +56,9 @@ export default function LoginForm() {
           isError: false,
           message: "",
         });
-        nextJsRouter.reload();
+        onClose().then(() => {
+          router.reload();
+        });
       }
     } catch (e: any) {
       setError({
@@ -61,6 +70,9 @@ export default function LoginForm() {
 
   return (
     <>
+      {isCallback && (
+        <ErrorSuccessBlock isError title="You must login to access that page" />
+      )}
       {error.isError && <ErrorSuccessBlock isError title={error.message} />}
 
       <form

@@ -6,15 +6,21 @@ import { NavGroupMobile } from "./NavGroupMobile";
 import { useWindowWidth } from "@react-hook/window-size";
 import { useSearchParams } from "next/navigation";
 import NavLoginLogout from "./NavLoginLogout";
+import { useRouter } from "next/router";
 
 export function Navbar() {
   const searchParams = useSearchParams();
+  const router = useRouter();
 
   const windowWidth = useWindowWidth();
   const [showLinks, setShowLinks] = useState(false);
   const [showMatchLinks, setShowMatchLinks] = useState(false);
   const [isMobileWidth, setIsMobileWidth] = useState(false);
-  const [isOpen, setIsOpen] = useState(searchParams.has("loginOpen"));
+  const isOpen = searchParams.has("authModalOpen");
+  const setIsOpen = async (value: boolean) => {
+    if (value) await router.replace("", { query: "authModalOpen" });
+    else await router.replace("");
+  };
 
   const handleBurgerMenu = () => {
     setShowLinks(!showLinks);

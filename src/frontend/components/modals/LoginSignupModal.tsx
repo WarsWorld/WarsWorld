@@ -1,5 +1,5 @@
 import { Dialog } from "@headlessui/react";
-import { Dispatch, SetStateAction, useState } from "react";
+import { useState } from "react";
 import DefaultDialogDesign from "../layout/modal/DefaultDialogDesign";
 import SquareButton from "../layout/SquareButton";
 import Link from "next/link";
@@ -7,22 +7,27 @@ import LoginForm from "../auth/LoginForm";
 import SignupForm from "../auth/SignupForm";
 import SocialMediaSignInButton from "../layout/SocialMediaSignInButton";
 import ErrorSuccessBlock from "../layout/ErrorSuccessBlock";
+import { useSearchParams } from "next/navigation";
+import { useRouter } from "next/router";
 
 interface Props {
   width?: string;
   isOpen: boolean;
-  setIsOpen: Dispatch<SetStateAction<boolean>>;
+  setIsOpen: (value: boolean) => Promise<void>;
 }
 
 export default function LoginSignupModal({ isOpen, setIsOpen, width }: Props) {
-  const [isSignupForm, setIsSignupForm] = useState(false);
-  const [didSignUp, setDidSignUp] = useState(false);
+  const searchParams = useSearchParams();
+  const router = useRouter();
 
-  const onClose = () => {
-    setIsSignupForm(false);
-    setIsOpen(false);
-    setDidSignUp(false);
+  const [didSignUp, setDidSignUp] = useState(false);
+  const isSignupForm = searchParams.has("SignUpForm");
+  const setIsSignupForm = async (value: boolean) => {
+    if (value) await router.replace("", { query: "authModalOpen&SignUpForm" });
+    else await router.replace("", { query: "authModalOpen" });
   };
+
+  const onClose = async () => await setIsOpen(false);
 
   return (
     <>
@@ -58,7 +63,7 @@ export default function LoginSignupModal({ isOpen, setIsOpen, width }: Props) {
               {didSignUp && (
                 <ErrorSuccessBlock title="Successfully signed up" />
               )}
-              <LoginForm />
+              <LoginForm onClose={onClose} />
               <div className="@flex @flex-col @items-center @justify-center @pb-6 smallscreen:@px-10 @gap-2">
                 <Link
                   className="@my-2 @text-xl smallscreen:@text @no-underline hover:@underline"
