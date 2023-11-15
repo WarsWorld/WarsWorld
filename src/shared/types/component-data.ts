@@ -1,16 +1,16 @@
 import { MatchStatus } from "@prisma/client";
 import { PlayerInMatch } from "./server-match-state";
 
-export interface FrontendMatch {
+export type FrontendMatch = {
   id: string;
   map: MapBasic;
   players: PlayerInMatch[];
   state: MatchStatus;
   turn: number;
-}
+};
 
-export interface MapBasic {
+export type MapBasic = {
   id: string;
   name: string;
   numberOfPlayers: number;
-}
+};

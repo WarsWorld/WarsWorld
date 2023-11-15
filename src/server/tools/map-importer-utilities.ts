@@ -2,11 +2,11 @@ import { prisma } from "../prisma/prisma-client";
 import { Tile } from "../schemas/tile";
 import { WWMap } from "@prisma/client";
 
-export interface AWBWMapImportSchema {
+export type AWBWMapImportSchema = {
   name: string;
   tileDataString: string;
   numberOfPlayers: 2;
-}
+};
 
 export const importAWBWMap = (data: AWBWMapImportSchema) =>
   prisma.wWMap

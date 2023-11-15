@@ -36,27 +36,31 @@ export type MovementType =
 
 export type Facility = "base" | "airport" | "port";
 
-interface UnitPropertiesWithoutWeapon {
+type UnitPropertiesWithoutWeapon = {
   cost: number;
   facility: Facility;
   movementType: MovementType;
   moveRange: number;
   initialFuel: number;
   vision: number;
-}
+};
 
 export type Range = [number, number];
 
 const directRange: Range = [1, 1];
 
-interface UnitPropertiesWithoutAmmo extends UnitPropertiesWithoutWeapon {
+type UnitPropertiesWithoutAmmo = UnitPropertiesWithoutWeapon & {
   attackRange: Range;
-}
+};
 
-interface UnitPropertiesWithAmmo extends UnitPropertiesWithoutAmmo {
+type UnitPropertiesWithAmmo = UnitPropertiesWithoutAmmo & {
   initialAmmo: number;
-}
+};
 
+/**
+ * TODO
+ * this is too convoluted/unreadable.
+ */
 type UnitPropertiesMap = Record<
   WithoutAmmoUnitType,
   UnitPropertiesWithoutAmmo

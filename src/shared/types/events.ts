@@ -18,10 +18,10 @@ import { Weather } from "shared/match-logic/tiles";
 import { Army } from "../../server/schemas/army";
 
 // TODO: Maybe add who's player's turn it is or which army starts?
-export interface MatchStartEvent {
+export type MatchStartEvent = {
   type: "match-start";
   weather: Weather;
-}
+};
 
 export type MatchEndEvent = {
   type: "match-end";
@@ -30,20 +30,20 @@ export type MatchEndEvent = {
   // TODO this type can probably be made a lot more fine-grained later on
 };
 
-export interface MoveEvent extends MoveAction {
+export type MoveEvent = MoveAction & {
   trap?: boolean;
-}
+};
 
-export interface InvalidActionEvent {
+export type InvalidActionEvent = {
   type: "invalid-action";
   reason: string;
-}
+};
 
-export interface UnloadEvent extends UnloadAction {
+export type UnloadEvent = UnloadAction & {
   unloadedUnit: WWUnit;
-}
+};
 
-export interface AttackEvent extends AttackAction {
+export type AttackEvent = AttackAction & {
   /**
    * The new defender HP after the attack.
    * TODO: Consider sending just the luck roll(s) for the event,
@@ -58,54 +58,54 @@ export interface AttackEvent extends AttackAction {
    *       and calculating HP later.
    */
   attackerHP?: number;
-}
+};
 
-export interface COPowerEvent extends COPowerAction {
+export type COPowerEvent = COPowerAction & {
   rngRoll?: number;
-}
+};
 
-export interface SuperCOPowerEvent extends SuperCOPowerAction {
+export type SuperCOPowerEvent = SuperCOPowerAction & {
   rngRoll?: number;
-}
+};
 
-interface WithPlayer {
+type WithPlayer = {
   player: Player;
-}
+};
 
-export interface PlayerJoinedEvent extends WithPlayer {
+export type PlayerJoinedEvent = WithPlayer & {
   type: "player-joined";
   playerSlot: number;
-}
+};
 
-export interface PlayerLeftEvent extends WithPlayer {
+export type PlayerLeftEvent = WithPlayer & {
   type: "player-left";
-}
+};
 
-export interface PlayerChangedReadyStatusEvent extends WithPlayer {
+export type PlayerChangedReadyStatusEvent = WithPlayer & {
   type: "player-changed-ready-status";
   ready: boolean;
-}
+};
 
-export interface PlayerPickedCOEvent extends WithPlayer {
+export type PlayerPickedCOEvent = WithPlayer & {
   type: "player-picked-co";
   co: CO;
-}
+};
 
-export interface PlayerPickedArmyEvent extends WithPlayer {
+export type PlayerPickedArmyEvent = WithPlayer & {
   type: "player-picked-army";
   army: Army;
-}
+};
 
-export interface PlayerEliminated extends WithPlayer {
+export type PlayerEliminated = WithPlayer & {
   type: "player-eliminated";
-}
+};
 
 // TODO maybe add the turn/day number
 // TODO important! add repairs, fuel drain, loss condition like
 // last unit was a fighter and crashed etc.
-export interface PassTurnEvent extends PassTurnAction {
+export type PassTurnEvent = PassTurnAction & {
   newWeather?: Weather;
-}
+};
 
 export type AbilityEvent = AbilityAction;
 export type BuildEvent = BuildAction;

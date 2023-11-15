@@ -1,4 +1,4 @@
-interface UnitData {
+type UnitData = {
   name: string;
   menuName: string;
   cost: number;
@@ -6,13 +6,12 @@ interface UnitData {
   moveType: string;
   range: number[];
   facility: string;
-}
+};
 
 export default function unitData(
   unitIndex: number,
   returnData: string
 ): UnitData[] {
-
   console.log(unitIndex);
   console.log(returnData);
   // Here are our units, their names, menu name, cost, move, move type, etc

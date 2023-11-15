@@ -8,14 +8,14 @@ import { tsIncludes } from "shared/utils/typesafe-includes";
  */
 type TileMovementCosts = Record<MovementType, number | null>;
 
-interface TileProperties {
+type TileProperties = {
   movementCosts: TileMovementCosts;
   /**
    * An integer from 0 to 4 which modifies the amount of damage
    * a unit on this tile takes from attacks.
    */
   defenseStars: number;
-}
+};
 
 /** All ocean tiles are impassible for land units. */
 const commonOceanMovementCosts = {

@@ -32,9 +32,9 @@ import MatchPlayer from "../../frontend/components/match/v2/MatchPlayer";
 
 BaseTexture.defaultOptions.scaleMode = SCALE_MODES.NEAREST;
 
-interface SpriteData {
+type SpriteData = {
   spriteData: any;
-}
+};
 
 const Match = ({ spriteData }: SpriteData) => {
   const mutation = trpc.action.send.useMutation();
