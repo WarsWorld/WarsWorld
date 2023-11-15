@@ -88,11 +88,11 @@ Directions for Github Account:
 
 Directions for Discord Account:
 
-- Follow this guide to get the client and secret: `https://support.heateor.com/discord-client-id-discord-client-secret/`
+- Follow this guide to get the client and secret:[Discord Guide](https://support.heateor.com/discord-client-id-discord-client-secret/)
 
 Directions for Google Account:
 
-- Follow through steps 1 to 3 and 5 to get the client and secret and set up the redirect link: `https://developers.google.com/identity/oauth2/web/guides/get-google-api-clientid`
+- Follow through steps 1 to 3 and 5 to get the client and secret and set up the redirect link: [Google Guide](https://developers.google.com/identity/oauth2/web/guides/get-google-api-clientid)
 
 ## Our Tech Stack's Features
 
