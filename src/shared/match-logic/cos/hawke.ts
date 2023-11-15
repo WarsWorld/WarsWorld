@@ -4,7 +4,7 @@ import { healUnit, getEnemyUnits, damageUnitUntil1HP } from "../units";
 export const hawke: COProperties = {
   displayName: "Hawke",
   dayToDay: {
-    description: "Units gain +10% attack.",
+    description: "Units gain +10% attack.ts.",
     hooks: {
       onAttackModifier: ({ currentValue }) => currentValue + 10,
     },

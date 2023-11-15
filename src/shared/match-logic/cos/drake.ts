@@ -6,7 +6,7 @@ export const drake: COProperties = {
   displayName: "Drake",
   dayToDay: {
     description:
-      "Naval units gain +1 movement and +25% defense. Air units lose -20% attack. Unaffected by rain (except vision), and has a higher chance of rain in random weather.",
+      "Naval units gain +1 movement and +25% defense. Air units lose -20% attack.ts. Unaffected by rain (except vision), and has a higher chance of rain in random weather.",
     hooks: {
       // TODO higher chance of rain in random weather (idk if we implement random weather)
       // TODO drake's movement is not affected by rain

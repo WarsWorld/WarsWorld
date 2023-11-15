@@ -167,7 +167,7 @@ export const unitWithAmmoSchema = z.discriminatedUnion("type", [
 /**
  * These units do *not* have a weapon.
  * Specifically, they have no "Attack" option.
- * Note: "Black Bomb" can "Explode", which deals damage but is not an attack.
+ * Note: "Black Bomb" can "Explode", which deals damage but is not an attack.ts.
  */
 export const unitWithoutWeaponSchema = z.discriminatedUnion("type", [
   creatableAPCSchema,
@@ -271,5 +271,5 @@ export type WWHiddenUnit = {
 export type FrontendUnit = WWUnit | WWHiddenUnit;
 
 export const withUnit = z.object({
-  unit: z.optional(creatableUnitSchema),
+  unit: z.nullable(creatableUnitSchema),
 });

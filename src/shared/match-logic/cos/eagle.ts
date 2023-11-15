@@ -6,7 +6,7 @@ export const eagle: COProperties = {
   displayName: "Eagle",
   dayToDay: {
     description:
-      "Air units gain +15% attack and +10% defense, and consume -2 fuel per day. Naval units lose -30% attack.",
+      "Air units gain +15% attack.ts and +10% defense, and consume -2 fuel per day. Naval units lose -30% attack.ts.",
     hooks: {
       onAttackModifier({ currentValue, currentPlayerData }) {
         switch (unitPropertiesMap[currentPlayerData.unitType].facility) {
@@ -36,7 +36,7 @@ export const eagle: COProperties = {
     COPower: {
       name: "Lightning Drive",
       stars: 3,
-      description: "Air units gain +5% attack and +10% defense.",
+      description: "Air units gain +5% attack.ts and +10% defense.",
       hooks: {
         onAttackModifier({ currentValue, currentPlayerData }) {
           return unitPropertiesMap[currentPlayerData.unitType].facility ===
@@ -55,7 +55,7 @@ export const eagle: COProperties = {
     superCOPower: {
       name: "Lightning Strike",
       description:
-        "Air units gain +5% attack and +10% defense. All non-footsoldier units may move and fire again, even if built this turn.",
+        "Air units gain +5% attack.ts and +10% defense. All non-footsoldier units may move and fire again, even if built this turn.",
       stars: 9,
       instantEffect({ matchState, currentPlayerData }) {
         getPlayerUnits(matchState, currentPlayerData.player.slot)

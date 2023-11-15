@@ -17,7 +17,7 @@ export const andy: COProperties = {
     },
     superCOPower: {
       name: "Hyper Upgrade",
-      description: "All units gain +5HP, +10% attack, and +1 movement.",
+      description: "All units gain +5HP, +10% attack.ts, and +1 movement.",
       stars: 6,
       instantEffect({ matchState, currentPlayerData }) {
         getPlayerUnits(matchState, currentPlayerData.player.slot).forEach(

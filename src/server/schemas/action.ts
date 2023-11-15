@@ -26,18 +26,29 @@ const launchMissileActionSchema = z.object({
   targetPosition: positionSchema,
 });
 
-const unloadActionSchema = z.object({
-  type: z.literal("unload"),
+//AW2 behaviour, sub-action (comes after a move action)
+const unloadWaitActionSchema = z.object({
+  type: z.literal("unload1"),
   unloads: z
     .array(
       // 1 allowed by default, 2 for DoR move+unload
       z.object({
-        loadedUnitIndex: z.number().int().nonnegative(),
+        loadedUnitIndex: z.number().int().nonnegative(), //0, 1
         direction: directionSchema,
       })
     )
     .min(1)
     .max(2),
+});
+
+//AWBW behaviour, main action (needs position of transport, cause it's a main action)
+const unloadNoWaitActionSchema = z.object({
+  type: z.literal("unload2"),
+  transportPosition: positionSchema,
+  unloads: z.object({
+    loadedUnitIndex: z.number().int().nonnegative(),
+    direction: directionSchema,
+  }),
 });
 
 const attackActionSchema = z.object({
@@ -62,11 +73,12 @@ const passTurnActionSchema = z.object({
   type: z.literal("endTurn"),
 });
 
+//subAction comes after a move action (which can also be "stand still")
 const subActionSchema = z.discriminatedUnion("type", [
-  attackActionSchema,
   waitActionSchema,
+  attackActionSchema,
   abilityActionSchema,
-  unloadActionSchema,
+  unloadWaitActionSchema,
   repairActionSchema,
   launchMissileActionSchema,
 ]);
@@ -78,12 +90,11 @@ const moveActionSchema = z.object({
 });
 
 export const mainActionSchema = z.discriminatedUnion("type", [
-  buildActionSchema,
   moveActionSchema,
-  waitActionSchema,
+  buildActionSchema,
   // for DoR unload, unloading wouldn't be plainly (i.e. partially) allowed,
   // only as a subaction of move - Function
-  unloadActionSchema,
+  unloadNoWaitActionSchema,
   coPowerActionSchema,
   superCOPowerActionSchema,
   passTurnActionSchema,
@@ -99,7 +110,8 @@ export type MoveAction = z.infer<typeof moveActionSchema>;
 export type WaitAction = z.infer<typeof waitActionSchema>;
 export type AbilityAction = z.infer<typeof abilityActionSchema>;
 export type LaunchMissileAction = z.infer<typeof launchMissileActionSchema>;
-export type UnloadAction = z.infer<typeof unloadActionSchema>;
+export type UnloadWaitAction = z.infer<typeof unloadWaitActionSchema>;
+export type UnloadNoWaitAction = z.infer<typeof unloadNoWaitActionSchema>;
 export type AttackAction = z.infer<typeof attackActionSchema>;
 export type RepairAction = z.infer<typeof repairActionSchema>;
 export type COPowerAction = z.infer<typeof coPowerActionSchema>;

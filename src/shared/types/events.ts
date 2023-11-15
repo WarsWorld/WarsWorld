@@ -5,12 +5,13 @@ import {
   BuildAction,
   COPowerAction,
   LaunchMissileAction,
-  MoveAction,
   PassTurnAction,
   RepairAction,
   SuperCOPowerAction,
-  UnloadAction,
+  UnloadWaitAction,
+  UnloadNoWaitAction,
   WaitAction,
+  MoveAction,
 } from "server/schemas/action";
 import { CO } from "server/schemas/co";
 import { WWUnit } from "server/schemas/unit";
@@ -30,8 +31,9 @@ export type MatchEndEvent = {
   // TODO this type can probably be made a lot more fine-grained later on
 };
 
-export interface MoveEvent extends MoveAction {
-  trap?: boolean;
+export interface MoveEvent extends Omit<MoveAction, "subAction"> {
+  trap: boolean;
+  subEvent: WWEvent;
 }
 
 export interface InvalidActionEvent {
@@ -39,9 +41,13 @@ export interface InvalidActionEvent {
   reason: string;
 }
 
-export interface UnloadEvent extends UnloadAction {
+/*export interface UnloadWaitEvent extends UnloadWaitAction {
   unloadedUnit: WWUnit;
 }
+
+export interface UnloadNoWaitEvent extends UnloadNoWaitAction {
+  unloadedUnit: WWUnit;
+}*/ //why is unloaded unit specified?
 
 export interface AttackEvent extends AttackAction {
   /**
@@ -112,11 +118,14 @@ export type BuildEvent = BuildAction;
 export type LaunchMissileEvent = LaunchMissileAction;
 export type RepairEvent = RepairAction;
 export type WaitEvent = WaitAction;
+export type UnloadNoWaitEvent = UnloadNoWaitAction;
+export type UnloadWaitEvent = UnloadWaitAction;
 
 export type WWEvent =
   | MatchStartEvent
   | MoveEvent
-  | UnloadEvent
+  | UnloadNoWaitEvent
+  | UnloadWaitEvent
   | AttackEvent
   | PlayerJoinedEvent
   | PlayerLeftEvent

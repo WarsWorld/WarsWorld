@@ -2,7 +2,7 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
 
-import { Container, Texture, Sprite, BaseTexture, Spritesheet } from "pixi.js";
+import { Container, Sprite, Spritesheet } from "pixi.js";
 import {
   MovementType,
   unitPropertiesMap,

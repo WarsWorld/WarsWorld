@@ -243,7 +243,7 @@ export const unitPropertiesMap: UnitPropertiesMap = {
     cost: 25000,
     vision: 1,
     moveRange: 9,
-    // TODO: Black Bombs do not attack other units
+    // TODO: Black Bombs do not attack.ts other units
     // and instead have an "Explode" command
     movementType: "air",
     facility: "airport",
