@@ -1,4 +1,4 @@
-import { PlayerInMatch } from "shared/types/server-match-state";
+import type { PlayerInMatch } from "shared/types/server-match-state";
 
 export const playerInMatch1: PlayerInMatch = {
   slot: 0,

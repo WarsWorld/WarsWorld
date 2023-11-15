@@ -1,7 +1,10 @@
 import { unitPropertiesMap } from "../../../shared/match-logic/buildable-unit";
 import { addDirection } from "../../../shared/match-logic/positions";
-import { MainActionToEvent, SubActionToEvent } from "../../routers/action";
-import { UnloadNoWaitAction, UnloadWaitAction } from "../../schemas/action";
+import type { MainActionToEvent, SubActionToEvent } from "../../routers/action";
+import type {
+  UnloadNoWaitAction,
+  UnloadWaitAction,
+} from "../../schemas/action";
 import { badRequest } from "./trpc-error-manager";
 
 export const unloadWaitActionToEvent: SubActionToEvent<UnloadWaitAction> = ({

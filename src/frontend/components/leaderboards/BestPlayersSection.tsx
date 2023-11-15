@@ -1,5 +1,5 @@
 import PlayerCard from "./PlayerCard";
-import { PlayerLeaderboard } from "./LeaderboardData";
+import type { PlayerLeaderboard } from "./LeaderboardData";
 
 interface Props {
   bestPlayers: PlayerLeaderboard[];

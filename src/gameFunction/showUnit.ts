@@ -3,26 +3,21 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
 
-import {
-  AnimatedSprite,
-  Container,
-  DisplayObject,
-  Spritesheet,
-  Texture,
-} from "pixi.js";
-import { WWUnit } from "../server/schemas/unit";
-import { Tile } from "../server/schemas/tile";
+import type { AnimatedSprite, Spritesheet } from "pixi.js";
+import { Container, Texture } from "pixi.js";
+import { isSamePosition } from "../server/schemas/position";
+import type { Tile } from "../server/schemas/tile";
+import type { WWUnit } from "../server/schemas/unit";
+import { unitPropertiesMap } from "../shared/match-logic/buildable-unit";
+import type { PathNode } from "./showPathing";
 import {
   getAccessibleNodes,
   getAttackableTiles,
-  PathNode,
   showAttackableTiles,
   showPassableTiles,
   showPath,
   updatePath,
 } from "./showPathing";
-import { unitPropertiesMap } from "../shared/match-logic/buildable-unit";
-import { isSamePosition } from "../server/schemas/position";
 import {
   animatedSpriteConstructor,
   spriteConstructor,

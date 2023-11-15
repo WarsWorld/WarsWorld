@@ -1,6 +1,6 @@
-import { Position } from "server/schemas/position";
-import { UnitType, WWUnit } from "server/schemas/unit";
-import { MatchWrapper } from "shared/wrappers/match";
+import type { Position } from "server/schemas/position";
+import type { UnitType, WWUnit } from "server/schemas/unit";
+import type { MatchWrapper } from "shared/wrappers/match";
 import { getTerrainDefenseStars } from "./tiles";
 
 const getBaseDamage = (

@@ -57,27 +57,30 @@ export const postRouter = router({
       });
     }),
   delete: playerBaseProcedure
-    .input(z.object({
-      postToDeleteId: z.string()
-    }))
+    .input(
+      z.object({
+        postToDeleteId: z.string(),
+      })
+    )
     .mutation(async ({ input, ctx }) => {
       const post = await prisma.post.findUniqueOrThrow({
         where: {
-          id: input.postToDeleteId
-        }
-      })
+          id: input.postToDeleteId,
+        },
+      });
 
       if (post.authorId !== ctx.currentPlayer.id) {
         throw new TRPCError({
           code: "UNAUTHORIZED",
-          message: "You can't delete this post because it doesn't belong to your player"
-        })
+          message:
+            "You can't delete this post because it doesn't belong to your player",
+        });
       }
 
       await prisma.post.delete({
         where: {
-          id: input.postToDeleteId
-        }
-      })
-    })
+          id: input.postToDeleteId,
+        },
+      });
+    }),
 });

@@ -1,5 +1,5 @@
-import { PropertyTile } from "server/schemas/tile";
-import { MovementType } from "shared/match-logic/buildable-unit";
+import type { PropertyTile } from "server/schemas/tile";
+import type { MovementType } from "shared/match-logic/buildable-unit";
 
 type PropertyProperties = {
   providesFunds: boolean;

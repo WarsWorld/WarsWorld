@@ -5,7 +5,7 @@ import { coSchema } from "server/schemas/co";
 import { mapMiddleware, withMapIdSchema } from "server/trpc/middleware/map";
 import { playerBaseProcedure } from "server/trpc/trpc-setup";
 import { getChangeableTilesFromMap } from "shared/match-logic/get-changeable-tile-from-map";
-import { PlayerInMatch } from "shared/types/server-match-state";
+import type { PlayerInMatch } from "shared/types/server-match-state";
 import { MapWrapper } from "shared/wrappers/map";
 import { MatchWrapper } from "shared/wrappers/match";
 import { PlayersWrapper } from "shared/wrappers/players";

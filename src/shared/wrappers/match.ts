@@ -1,20 +1,22 @@
-import { LeagueType, MatchStatus, Player } from "@prisma/client";
-import { Position, isSamePosition } from "server/schemas/position";
-import {
+import type { LeagueType, MatchStatus, Player } from "@prisma/client";
+import type { Position } from "server/schemas/position";
+import { isSamePosition } from "server/schemas/position";
+import type {
   COHookProps,
   COHookPropsWithDefender,
 } from "shared/match-logic/co-hooks";
 import { createUnitFromBuildAction } from "shared/match-logic/create-unit-from-build-action";
-import { Weather, getBaseMovementCost } from "shared/match-logic/tiles";
-import { EmittableEvent } from "shared/types/events";
-import { ChangeableTile } from "shared/types/server-match-state";
-import { MapWrapper } from "./map";
-import { PlayersWrapper } from "./players";
-import { UnitsWrapper } from "./units";
+import type { Weather } from "shared/match-logic/tiles";
+import { getBaseMovementCost } from "shared/match-logic/tiles";
+import type { EmittableEvent } from "shared/types/events";
+import type { ChangeableTile } from "shared/types/server-match-state";
+import type { MapWrapper } from "./map";
+import type { PlayersWrapper } from "./players";
+import type { UnitsWrapper } from "./units";
 import { PlayerInMatchWrapper } from "./player-in-match";
-import { PlayerSlot } from "server/schemas/player-slot";
-import { CO } from "server/schemas/co";
-import { MovementType } from "shared/match-logic/buildable-unit";
+import type { PlayerSlot } from "server/schemas/player-slot";
+import type { CO } from "server/schemas/co";
+import type { MovementType } from "shared/match-logic/buildable-unit";
 
 /** TODO: Add favorites, possibly spectators, also a timer */
 export class MatchWrapper {

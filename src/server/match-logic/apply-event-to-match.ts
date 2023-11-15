@@ -1,12 +1,12 @@
-import { PlayerInMatchWrapper } from "shared/wrappers/player-in-match";
+import type { PlayerInMatchWrapper } from "shared/wrappers/player-in-match";
 import { unitPropertiesMap } from "../../shared/match-logic/buildable-unit";
 import { addDirection } from "../../shared/match-logic/positions";
-import { WWEvent } from "../../shared/types/events";
-import { BuildAction } from "../schemas/action";
+import type { WWEvent } from "../../shared/types/events";
+import type { BuildAction } from "../schemas/action";
 import { allDirections } from "../schemas/direction";
-import { PlayerSlot } from "../schemas/player-slot";
-import { Position } from "../schemas/position";
-import { WWUnit } from "../schemas/unit";
+import type { PlayerSlot } from "../schemas/player-slot";
+import type { Position } from "../schemas/position";
+import type { WWUnit } from "../schemas/unit";
 import { matchStore } from "./match-store";
 
 const createNewUnitFromBuildEvent = (

@@ -1,5 +1,5 @@
-import { SubActionToEvent } from "../../routers/action";
-import { AbilityAction } from "../../schemas/action";
+import type { SubActionToEvent } from "../../routers/action";
+import type { AbilityAction } from "../../schemas/action";
 import { badRequest } from "./trpc-error-manager";
 
 //Capture, APC supply, black bomb explosion, toggle stealth/sub hide.

@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction } from "react";
+import type { Dispatch, SetStateAction } from "react";
 import { NavItem } from "./NavItem";
 import { NavMenuMatches } from "./NavMenuMatches";
 import NavButton from "../layout/NavButton";

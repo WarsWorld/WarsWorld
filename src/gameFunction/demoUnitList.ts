@@ -1,4 +1,4 @@
-import { WWUnit } from "../server/schemas/unit";
+import type { WWUnit } from "../server/schemas/unit";
 
 export const demoUnit: WWUnit = {
   type: "infantry",

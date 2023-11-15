@@ -1,19 +1,13 @@
+import type { Spritesheet } from "pixi.js";
 import {
-  Container,
-  Text,
-  Spritesheet,
   AnimatedSprite,
-  BitmapText,
-  TextStyle,
-  Texture,
-  Sprite,
-  BitmapFont,
   Assets,
+  BitmapText,
+  Container,
+  Sprite,
+  Texture,
 } from "pixi.js";
 import unitData from "./unitData";
-import { trpc } from "frontend/utils/trpc-client";
-import { unitTypeSchema } from "../server/schemas/unit";
-
 
 export default async function showMenu(
   spriteSheet: Spritesheet,
@@ -25,9 +19,6 @@ export default async function showMenu(
   mapWidth: number,
   trpcAction: any
 ) {
-
-
-
   //TODO: Gotta add a "funds" value to our parameters
   // from there, include it here and any unit above our funds,
   // will be darkened out.
@@ -118,7 +109,7 @@ export default async function showMenu(
         unitType: "infantry",
         position: [x, y],
         playerId: "cljvrs6nc0002js2wl5g3jo5m",
-        matchId: "cljw16lea0000jscweoeop1ct"
+        matchId: "cljw16lea0000jscweoeop1ct",
       });
     });
 

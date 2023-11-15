@@ -1,5 +1,5 @@
 import { AnimatedSprite, Sprite, Texture } from "pixi.js";
-import { Position } from "../server/schemas/position";
+import type { Position } from "../server/schemas/position";
 
 export function spriteConstructor(
   texture: Texture,

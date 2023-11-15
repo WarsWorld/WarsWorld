@@ -1,4 +1,4 @@
-import { COProperties } from "../co";
+import type { COProperties } from "../co";
 import { isIndirectAttackUnit } from "../units";
 
 export const grit: COProperties = {

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { PlayerLeaderboard } from "./LeaderboardData";
+import type { PlayerLeaderboard } from "./LeaderboardData";
 import { createColumnHelper } from "@tanstack/react-table";
 
 const columnHelper = createColumnHelper<PlayerLeaderboard>();

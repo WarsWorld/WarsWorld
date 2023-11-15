@@ -1,8 +1,6 @@
-import { Position } from "server/schemas/position";
-import { TileType } from "server/schemas/tile";
-import { MovementType } from "shared/match-logic/buildable-unit";
+import type { TileType } from "server/schemas/tile";
+import type { MovementType } from "shared/match-logic/buildable-unit";
 import { tsIncludes } from "shared/utils/typesafe-includes";
-import { MatchWrapper } from "shared/wrappers/match";
 
 /**
  * A nonzero integer (or null for impassible)

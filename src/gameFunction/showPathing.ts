@@ -2,16 +2,15 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
 
-import { Container, Sprite, Spritesheet } from "pixi.js";
-import {
-  MovementType,
-  unitPropertiesMap,
-} from "../shared/match-logic/buildable-unit";
-import { Tile, Weather } from "../server/schemas/tile.ts";
-import { WWUnit } from "../server/schemas/unit";
-import { Position } from "../server/schemas/position";
+import type { Spritesheet } from "pixi.js";
+import { Container, Sprite } from "pixi.js";
+import type { MovementType } from "../shared/match-logic/buildable-unit";
+import { unitPropertiesMap } from "../shared/match-logic/buildable-unit";
+import type { Tile, Weather } from "../server/schemas/tile.ts";
+import type { WWUnit } from "../server/schemas/unit";
+import type { Position } from "../server/schemas/position";
 import { tileConstructor } from "./spriteConstructor";
-import { MatchWrapper } from "shared/wrappers/match";
+import type { MatchWrapper } from "shared/wrappers/match";
 export type PathNode = {
   //saves distance from origin and parent (to retrieve the shortest path)
   pos: Position;
@@ -196,7 +195,7 @@ export function getAttackableTiles(
   }
 
   const attackpositionSchemas: Position[] = [];
-  for (const [pos, node] of accessibleNodes.entries()) {
+  for (const [pos] of accessibleNodes.entries()) {
     const xpositionSchemas = [pos[0] - 1, pos[0] + 1, pos[0], pos[0]];
     const ypositionSchemas = [pos[1], pos[1], pos[1] - 1, pos[1] + 1];
     for (let i = 0; i < 4; ++i) {

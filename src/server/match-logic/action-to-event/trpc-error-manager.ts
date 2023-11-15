@@ -1,7 +1,7 @@
 import { TRPCError } from "@trpc/server";
-import { PlayerSlot } from "../../schemas/player-slot";
-import { Position } from "../../schemas/position";
-import { WWUnit } from "../../schemas/unit";
+import type { PlayerSlot } from "../../schemas/player-slot";
+import type { Position } from "../../schemas/position";
+import type { WWUnit } from "../../schemas/unit";
 
 export const badRequest = (message: string) =>
   new TRPCError({

@@ -2,12 +2,12 @@ import { observable } from "@trpc/server/observable";
 import { emitEvent, subscribeToEvents } from "server/emitter/event-emitter";
 import { moveActionToEvent } from "server/match-logic/action-to-event/move";
 import { prisma } from "server/prisma/prisma-client";
-import { Action, mainActionSchema } from "server/schemas/action";
-import { Position } from "server/schemas/position";
-import { EmittableEvent, WWEvent } from "shared/types/events";
-import { PlayerInMatch } from "shared/types/server-match-state";
-import { MatchWrapper } from "shared/wrappers/match";
-import { PlayerInMatchWrapper } from "shared/wrappers/player-in-match";
+import type { Action } from "server/schemas/action";
+import { mainActionSchema } from "server/schemas/action";
+import type { Position } from "server/schemas/position";
+import type { EmittableEvent, WWEvent } from "shared/types/events";
+import type { MatchWrapper } from "shared/wrappers/match";
+import type { PlayerInMatchWrapper } from "shared/wrappers/player-in-match";
 import { z } from "zod";
 import { addDirection } from "../../shared/match-logic/positions";
 import { abilityActionToEvent } from "../match-logic/action-to-event/ability";
@@ -25,7 +25,6 @@ import {
   applySubEventToMatch,
 } from "../match-logic/apply-event-to-match";
 import {
-  matchBaseProcedure,
   playerInMatchBaseProcedure,
   publicBaseProcedure,
   router,

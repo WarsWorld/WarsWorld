@@ -1,4 +1,4 @@
-import { UnitType } from "server/schemas/unit";
+import type { UnitType } from "server/schemas/unit";
 import { unitPropertiesMap } from "./buildable-unit";
 
 export const isIndirectAttackUnit = (unitType: UnitType) => {

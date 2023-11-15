@@ -1,5 +1,5 @@
-import { CO } from "server/schemas/co";
-import { COHookProps, COHooksAllowReturnUndefined } from "./co-hooks";
+import type { CO } from "server/schemas/co";
+import type { COHookProps, COHooksAllowReturnUndefined } from "./co-hooks";
 import { adder } from "./cos/adder";
 import { andy } from "./cos/andy";
 import { colin } from "./cos/colin";

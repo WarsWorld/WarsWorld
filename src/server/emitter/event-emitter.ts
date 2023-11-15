@@ -1,4 +1,4 @@
-import { EmittableEvent } from "shared/types/events";
+import type { EmittableEvent } from "shared/types/events";
 import { createEmitter } from "./create-emitter";
 
 const wwEventEmitter = createEmitter<EmittableEvent>();

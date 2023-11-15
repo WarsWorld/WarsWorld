@@ -1,5 +1,5 @@
-import { Player } from "@prisma/client";
-import {
+import type { Player } from "@prisma/client";
+import type {
   AbilityAction,
   AttackAction,
   BuildAction,
@@ -13,10 +13,10 @@ import {
   WaitAction,
   MoveAction,
 } from "server/schemas/action";
-import { CO } from "server/schemas/co";
-import { WWUnit } from "server/schemas/unit";
-import { Weather } from "shared/match-logic/tiles";
-import { Army } from "../../server/schemas/army";
+import type { CO } from "server/schemas/co";
+import type { WWUnit } from "server/schemas/unit";
+import type { Weather } from "shared/match-logic/tiles";
+import type { Army } from "../../server/schemas/army";
 
 // TODO: Maybe add who's player's turn it is or which army starts?
 export type MatchStartEvent = {

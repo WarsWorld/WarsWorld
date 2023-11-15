@@ -1,6 +1,6 @@
-import { AttackAction, MoveAction } from "server/schemas/action";
-import { AttackEvent } from "shared/types/events";
-import { MatchWrapper } from "shared/wrappers/match";
+import type { AttackAction, MoveAction } from "server/schemas/action";
+import type { AttackEvent } from "shared/types/events";
+import type { MatchWrapper } from "shared/wrappers/match";
 
 // checked: is player's turn
 export const generateAttackEvent = (

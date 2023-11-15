@@ -1,4 +1,4 @@
-import { COProperties } from "../co";
+import type { COProperties } from "../co";
 
 export const sturm: COProperties = {
   displayName: "Sturm",
@@ -17,7 +17,7 @@ export const sturm: COProperties = {
       name: "Meteor Strike",
       description: "TODO",
       stars: 9,
-      instantEffect({ attackerData: currentPlayerData }) {
+      instantEffect() {
         // stub
       },
       hooks: {

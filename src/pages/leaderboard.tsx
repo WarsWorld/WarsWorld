@@ -1,9 +1,9 @@
 import Head from "next/head";
 import LeaderboardTable from "../frontend/components/leaderboards/LeaderboradTable";
-import { SelectOption } from "frontend/components/layout/Select";
+import type { SelectOption } from "frontend/components/layout/Select";
 import { useState } from "react";
 import BestPlayersSection from "frontend/components/leaderboards/BestPlayersSection";
-import { PlayerLeaderboard } from "frontend/components/leaderboards/LeaderboardData";
+import type { PlayerLeaderboard } from "frontend/components/leaderboards/LeaderboardData";
 import LeaderboardFilters from "frontend/components/leaderboards/LeaderboardFilters";
 import PageTitle from "frontend/components/layout/PageTitle";
 

@@ -2,9 +2,9 @@ import { TRPCError } from "@trpc/server";
 import { emitEvent } from "server/emitter/event-emitter";
 import { matchStore } from "server/match-logic/match-store";
 import { coSchema } from "server/schemas/co";
-import { MapWrapper } from "shared/wrappers/map";
-import { MatchWrapper } from "shared/wrappers/match";
-import { PlayersWrapper } from "shared/wrappers/players";
+import type { MapWrapper } from "shared/wrappers/map";
+import type { MatchWrapper } from "shared/wrappers/match";
+import type { PlayersWrapper } from "shared/wrappers/players";
 import { z } from "zod";
 import { armySchema } from "../schemas/army";
 import {

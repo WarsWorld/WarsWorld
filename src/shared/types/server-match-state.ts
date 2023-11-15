@@ -1,10 +1,10 @@
-import { Player } from "@prisma/client";
-import { Army } from "server/schemas/army";
-import { CO } from "server/schemas/co";
-import { PlayerSlot } from "server/schemas/player-slot";
-import { Position } from "server/schemas/position";
-import { PropertyTileType, UnusedSiloTileType } from "server/schemas/tile";
-import { COPowerState } from "shared/match-logic/co-power-state";
+import type { Player } from "@prisma/client";
+import type { Army } from "server/schemas/army";
+import type { CO } from "server/schemas/co";
+import type { PlayerSlot } from "server/schemas/player-slot";
+import type { Position } from "server/schemas/position";
+import type { PropertyTileType, UnusedSiloTileType } from "server/schemas/tile";
+import type { COPowerState } from "shared/match-logic/co-power-state";
 
 type WithPosition = {
   position: Position;

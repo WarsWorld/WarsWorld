@@ -1,4 +1,4 @@
-import { COProperties } from "../co";
+import type { COProperties } from "../co";
 
 export const drake: COProperties = {
   displayName: "Drake",

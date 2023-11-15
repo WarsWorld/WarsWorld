@@ -1,6 +1,6 @@
-import { BuildAction } from "server/schemas/action";
-import { PlayerSlot } from "server/schemas/player-slot";
-import { WWUnit } from "server/schemas/unit";
+import type { BuildAction } from "server/schemas/action";
+import type { PlayerSlot } from "server/schemas/player-slot";
+import type { WWUnit } from "server/schemas/unit";
 import { unitPropertiesMap } from "./buildable-unit";
 
 export const createUnitFromBuildAction = (
@@ -21,8 +21,8 @@ export const createUnitFromBuildAction = (
     isReady: true,
   } satisfies Partial<WWUnit>;
 
-  if (unitTypeIsUnitWithAmmo(unitType)) {
-    const ammo = unitPropertiesMap[unitType].initialAmmo;
+  if ("initialAmmo" in unitProperties) {
+    const ammo = unitProperties.initialAmmo;
 
     const partialUnitWithAmmo = {
       ...partialUnit,
@@ -63,7 +63,8 @@ export const createUnitFromBuildAction = (
         return {
           type: unitType,
           ...partialUnitWithAmmo,
-          loadedUnits: [],
+          loadedUnit: null,
+          loadedUnit2: null,
         };
     }
   }
@@ -88,7 +89,8 @@ export const createUnitFromBuildAction = (
       return {
         type: unitType,
         ...partialUnit,
-        loadedUnits: [],
+        loadedUnit: null,
+        loadedUnit2: null,
       };
   }
 };

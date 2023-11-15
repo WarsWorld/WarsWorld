@@ -1,14 +1,14 @@
-import { Position } from "server/schemas/position";
+import type { Position } from "server/schemas/position";
 import { unitPropertiesMap } from "shared/match-logic/buildable-unit";
 import { COPropertiesMap } from "shared/match-logic/co";
-import {
+import type {
   COHookAllowReturnUndefined,
   COHookPlayerProps,
   COHookWithDefenderAllowReturnUndefined,
 } from "shared/match-logic/co-hooks";
-import { PlayerInMatch } from "shared/types/server-match-state";
-import { MatchWrapper } from "./match";
-import { WWUnit } from "server/schemas/unit";
+import type { PlayerInMatch } from "shared/types/server-match-state";
+import type { MatchWrapper } from "./match";
+import type { WWUnit } from "server/schemas/unit";
 
 export class PlayerInMatchWrapper {
   constructor(public data: PlayerInMatch, public match: MatchWrapper) {}

@@ -1,6 +1,6 @@
 import { addDirection } from "../../../shared/match-logic/positions";
-import { SubActionToEvent } from "../../routers/action";
-import { RepairAction } from "../../schemas/action";
+import type { SubActionToEvent } from "../../routers/action";
+import type { RepairAction } from "../../schemas/action";
 import { badRequest } from "./trpc-error-manager";
 
 export const repairActionToEvent: SubActionToEvent<RepairAction> = ({

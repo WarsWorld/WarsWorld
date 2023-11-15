@@ -1,6 +1,4 @@
-import { PlayerInMatch } from "../../../../shared/types/server-match-state";
-import React from "react";
-import { MatchStatus } from "@prisma/client";
+import type { MatchStatus } from "@prisma/client";
 
 interface matchData {
   //players: PlayerInMatch[];

@@ -1,7 +1,7 @@
 //TODO: only implemented for standard. for FOW it's a lot harder.
-import { MatchWrapper } from "shared/wrappers/match";
-import { Position } from "../../schemas/position";
-import { WWUnit } from "../../schemas/unit";
+import type { MatchWrapper } from "shared/wrappers/match";
+import type { Position } from "../../schemas/position";
+import type { WWUnit } from "../../schemas/unit";
 
 const dirsX = [-1, 1, 0, 0];
 const dirsY = [0, 0, -1, 1];

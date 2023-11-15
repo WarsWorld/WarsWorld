@@ -1,6 +1,6 @@
-import { Player } from "@prisma/client";
-import { PlayerSlot } from "server/schemas/player-slot";
-import { PlayerInMatchWrapper } from "./player-in-match";
+import type { Player } from "@prisma/client";
+import type { PlayerSlot } from "server/schemas/player-slot";
+import type { PlayerInMatchWrapper } from "./player-in-match";
 
 export class PlayersWrapper {
   constructor(public data: PlayerInMatchWrapper[]) {}

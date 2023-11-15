@@ -1,7 +1,7 @@
 import { NationEnum, SideEnum } from "frontend/utils/enums";
 import React from "react";
-import { Army } from "server/schemas/army";
-import { CO } from "server/schemas/co";
+import type { Army } from "server/schemas/army";
+import type { CO } from "server/schemas/co";
 
 interface Props {
   name: string | undefined;
@@ -21,7 +21,7 @@ export default function PlayerNameBar({
   multi = false,
 }: Props) {
   const isLeftIcon = iconSide === SideEnum.Left;
-  const borderStyle = isLeftIcon ? "@border-r-2" : "@border-l-2";
+  // const borderStyle = isLeftIcon ? "@border-r-2" : "@border-l-2";
   const armyString = NationEnum[armyIndex] as Army;
   const nameDiv = (
     <div className="@flex @h-full @px-1 @min-w-[35px] @justify-center @items-center">

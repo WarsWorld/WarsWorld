@@ -1,6 +1,6 @@
 import React from "react";
-import { CO } from "../../../../server/schemas/co";
-import { Army } from "../../../../server/schemas/army";
+import type { CO } from "../../../../server/schemas/co";
+import type { Army } from "../../../../server/schemas/army";
 
 interface matchData {
   name: string;

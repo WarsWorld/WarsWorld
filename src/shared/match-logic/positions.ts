@@ -1,5 +1,5 @@
-import { Position } from "server/schemas/position";
-import { Direction } from "../../server/schemas/direction";
+import type { Position } from "server/schemas/position";
+import type { Direction } from "../../server/schemas/direction";
 
 export const addPositions = (
   position1: Position,

@@ -1,4 +1,4 @@
-import { MapBasic } from "shared/types/component-data";
+import type { MapBasic } from "shared/types/component-data";
 
 export const mapBasicMock: MapBasic[] = [
   {

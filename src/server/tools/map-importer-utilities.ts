@@ -1,6 +1,6 @@
 import { prisma } from "../prisma/prisma-client";
-import { Tile } from "../schemas/tile";
-import { WWMap } from "@prisma/client";
+import type { Tile } from "../schemas/tile";
+import type { WWMap } from "@prisma/client";
 
 export type AWBWMapImportSchema = {
   name: string;

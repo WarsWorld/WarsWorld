@@ -1,8 +1,8 @@
 import { TRPCError } from "@trpc/server";
-import { MainActionToEvent } from "server/routers/action";
-import { MoveAction } from "server/schemas/action";
+import type { MainActionToEvent } from "server/routers/action";
+import type { MoveAction } from "server/schemas/action";
 import { unitPropertiesMap } from "shared/match-logic/buildable-unit";
-import { MoveEvent } from "../../../shared/types/events";
+import type { MoveEvent } from "../../../shared/types/events";
 import {
   badRequest,
   throwIfUnitIsWaited,

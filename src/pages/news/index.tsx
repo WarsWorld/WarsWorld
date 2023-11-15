@@ -1,12 +1,11 @@
-import { FeaturedNews } from "frontend/components/news/FeaturedNews";
-import LinkCard from "frontend/components/layout/LinkCard";
-import Head from "next/head";
-import { v4 as uuidv4 } from "uuid";
+/* eslint-disable @typescript-eslint/consistent-type-imports */
 import { ICardInfo } from "frontend/components/layout/LinkCard";
-import { trpc } from "frontend/utils/trpc-client";
-import { usePlayers } from "frontend/context/players";
-import { useState } from "react";
 import PageTitle from "frontend/components/layout/PageTitle";
+import { FeaturedNews } from "frontend/components/news/FeaturedNews";
+import { usePlayers } from "frontend/context/players";
+import { trpc } from "frontend/utils/trpc-client";
+import Head from "next/head";
+import { useState } from "react";
 
 /**
  * previous, the newsCardObjectList data and <LinkCard> component

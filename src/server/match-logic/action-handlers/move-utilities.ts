@@ -1,7 +1,8 @@
 import { TRPCError } from "@trpc/server";
-import { Direction } from "server/schemas/direction";
-import { Path, Position, isSamePosition } from "server/schemas/position";
-import { WWUnit } from "server/schemas/unit";
+import type { Direction } from "server/schemas/direction";
+import type { Path, Position } from "server/schemas/position";
+import { isSamePosition } from "server/schemas/position";
+import type { WWUnit } from "server/schemas/unit";
 
 /**
  * TODO
@@ -20,8 +21,9 @@ import { WWUnit } from "server/schemas/unit";
 
 /**
  * Diagonal movement must be explicit, so there must not be changes to both X and Y between corner positions.
+ * @deprecated
  */
-const throwIfPathIsAmbiguous = (path: Path) => {
+const _throwIfPathIsAmbiguous = (path: Path) => {
   path.forEach((nextPosition, index) => {
     const previousPosition = path[index - 1];
 
@@ -42,8 +44,10 @@ const throwIfPathIsAmbiguous = (path: Path) => {
  *
  * TODO change this from "subsequent" to make sure all positions in the path are unique because
  * units can't cross their own path.
+ *
+ * @deprecated
  */
-const throwIfPathContainsDuplicatePositions = (path: Path) => {
+const _throwIfPathContainsDuplicatePositions = (path: Path) => {
   path.forEach((currentPosition, index) => {
     const previousPosition = path[index - 1];
 
@@ -123,8 +127,11 @@ const getAllPositionsBetweenTwoPositions = (
   return positions.slice(0, -1); // last position is equal to positionB and we only want in-between
 };
 
-/** Fills the gaps between all path corners. */
-const inflatePath = (path: Path): Path => {
+/**
+ * Fills the gaps between all path corners.
+ * @deprecated
+ */
+const _inflatePath = (path: Path): Path => {
   return path.reduce<Path>((previousPositions, currentPosition, index) => {
     const nextPosition = path[index + 1]; // can be undefined (last position), then positionsBetween will be empty
     const positionsBetween = getAllPositionsBetweenTwoPositions(

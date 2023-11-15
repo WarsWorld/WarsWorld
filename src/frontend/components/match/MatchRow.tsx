@@ -1,5 +1,6 @@
 import { usePlayers } from "frontend/context/players";
-import { inferTRPCOutput, trpc } from "frontend/utils/trpc-client";
+import type { inferTRPCOutput } from "frontend/utils/trpc-client";
+import { trpc } from "frontend/utils/trpc-client";
 import Link from "next/link";
 
 type FrontendMatch = inferTRPCOutput<"match", "getAll">[number];

@@ -7,7 +7,7 @@
 // @ts-nocheck
 
 import { usePlayers } from "frontend/context/players";
-import { Tile } from "server/schemas/tile";
+import type { Tile } from "server/schemas/tile";
 import { useRouter } from "next/router";
 import {
   AnimatedSprite,
@@ -20,7 +20,7 @@ import {
   Texture,
 } from "pixi.js";
 import { useEffect, useRef, useState } from "react";
-import { PlayerInMatch } from "shared/types/server-match-state";
+import type { PlayerInMatch } from "shared/types/server-match-state";
 
 import { trpc } from "frontend/utils/trpc-client";
 import { showUnits } from "../../gameFunction/showUnit";

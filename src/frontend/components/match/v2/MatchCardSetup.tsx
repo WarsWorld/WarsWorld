@@ -1,6 +1,6 @@
-import React, { useState } from "react";
-import { CO, coSchema } from "../../../../server/schemas/co";
-import { Army, armySchema } from "../../../../server/schemas/army";
+import { useState } from "react";
+import { armySchema } from "../../../../server/schemas/army";
+import { coSchema } from "../../../../server/schemas/co";
 import { trpc } from "../../../utils/trpc-client";
 
 interface matchData {
@@ -40,7 +40,7 @@ export default function MatchCardSetup({
           </button>
           {showCO ? (
             <div className="@grid @grid-cols-4 @absolute  @z-10  @bg-bg-tertiary @outline-black @outline-2 @gap-2">
-              {coSchema._def.values.map((co, index) => {
+              {coSchema._def.values.map((co) => {
                 return (
                   <div
                     onClick={async () => {
@@ -82,7 +82,7 @@ export default function MatchCardSetup({
           </button>
           {showArmy ? (
             <div className="@grid @grid-cols-2 @absolute  @z-10  @bg-bg-tertiary @outline-black @outline-2 @gap-2">
-              {armySchema._def.values.map((army, index) => {
+              {armySchema._def.values.map((army) => {
                 return (
                   <div
                     onClick={async () => {

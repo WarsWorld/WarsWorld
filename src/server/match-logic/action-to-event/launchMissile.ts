@@ -1,5 +1,5 @@
-import { SubActionToEvent } from "../../routers/action";
-import { LaunchMissileAction } from "../../schemas/action";
+import type { SubActionToEvent } from "../../routers/action";
+import type { LaunchMissileAction } from "../../schemas/action";
 import { badRequest } from "./trpc-error-manager";
 
 export const launchMissileActionToEvent: SubActionToEvent<

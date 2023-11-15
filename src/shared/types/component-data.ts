@@ -1,5 +1,5 @@
-import { MatchStatus } from "@prisma/client";
-import { PlayerInMatch } from "./server-match-state";
+import type { MatchStatus } from "@prisma/client";
+import type { PlayerInMatch } from "./server-match-state";
 
 export type FrontendMatch = {
   id: string;

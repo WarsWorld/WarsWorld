@@ -1,13 +1,13 @@
-import { CreatableMap, mapSchema } from "server/schemas/map";
+import type { CreatableMap } from "server/schemas/map";
+import { mapSchema } from "server/schemas/map";
+import type { Tile, TileType } from "server/schemas/tile";
 import {
-  Tile,
-  TileType,
   isNeutralProperty,
   isUnitProducingProperty,
 } from "server/schemas/tile";
 import { prisma } from "server/prisma/prisma-client";
 import { publicBaseProcedure, router } from "../trpc/trpc-setup";
-import { PlayerSlot } from "server/schemas/player-slot";
+import type { PlayerSlot } from "server/schemas/player-slot";
 
 export const getPlayerAmountOfMap = (map: CreatableMap) => {
   const seenPlayerSlots: PlayerSlot[] = [];

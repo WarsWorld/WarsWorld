@@ -1,4 +1,4 @@
-import { COProperties } from "../co";
+import type { COProperties } from "../co";
 
 export const lash: COProperties = {
   displayName: "Lash",

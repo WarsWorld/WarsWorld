@@ -1,7 +1,7 @@
 import { withType } from "server/schemas/algebraic-datatypes";
 import { ZodFirstPartyTypeKind, z } from "zod";
-import { PlayerSlot } from "./player-slot";
-import { Position } from "./position";
+import type { PlayerSlot } from "./player-slot";
+import type { Position } from "./position";
 import {
   withAmmoUnitStatsSchema,
   withHiddenSchema,

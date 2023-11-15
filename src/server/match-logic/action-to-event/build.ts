@@ -1,6 +1,6 @@
 import { unitPropertiesMap } from "../../../shared/match-logic/buildable-unit";
-import { MainActionToEvent } from "../../routers/action";
-import { BuildAction } from "../../schemas/action";
+import type { MainActionToEvent } from "../../routers/action";
+import type { BuildAction } from "../../schemas/action";
 import { isSamePosition } from "../../schemas/position";
 import { badRequest } from "./trpc-error-manager";
 
