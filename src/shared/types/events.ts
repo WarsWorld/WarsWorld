@@ -5,12 +5,13 @@ import {
   BuildAction,
   COPowerAction,
   LaunchMissileAction,
-  MoveAction,
   PassTurnAction,
   RepairAction,
   SuperCOPowerAction,
-  UnloadAction,
+  UnloadWaitAction,
+  UnloadNoWaitAction,
   WaitAction,
+  MoveAction,
 } from "server/schemas/action";
 import { CO } from "server/schemas/co";
 import { WWUnit } from "server/schemas/unit";
@@ -30,20 +31,25 @@ export type MatchEndEvent = {
   // TODO this type can probably be made a lot more fine-grained later on
 };
 
-export type MoveEvent = MoveAction & {
-  trap?: boolean;
-};
+export interface MoveEvent extends Omit<MoveAction, "subAction"> {
+  trap: boolean;
+  subEvent: WWEvent;
+}
 
 export type InvalidActionEvent = {
   type: "invalid-action";
   reason: string;
 };
 
-export type UnloadEvent = UnloadAction & {
+/*export interface UnloadWaitEvent extends UnloadWaitAction {
   unloadedUnit: WWUnit;
 };
 
-export type AttackEvent = AttackAction & {
+export interface UnloadNoWaitEvent extends UnloadNoWaitAction {
+  unloadedUnit: WWUnit;
+}*/ //why is unloaded unit specified?
+
+export interface AttackEvent extends AttackAction {
   /**
    * The new defender HP after the attack.
    * TODO: Consider sending just the luck roll(s) for the event,
@@ -58,7 +64,7 @@ export type AttackEvent = AttackAction & {
    *       and calculating HP later.
    */
   attackerHP?: number;
-};
+}
 
 export type COPowerEvent = COPowerAction & {
   rngRoll?: number;
@@ -112,11 +118,14 @@ export type BuildEvent = BuildAction;
 export type LaunchMissileEvent = LaunchMissileAction;
 export type RepairEvent = RepairAction;
 export type WaitEvent = WaitAction;
+export type UnloadNoWaitEvent = UnloadNoWaitAction;
+export type UnloadWaitEvent = UnloadWaitAction;
 
 export type WWEvent =
   | MatchStartEvent
   | MoveEvent
-  | UnloadEvent
+  | UnloadNoWaitEvent
+  | UnloadWaitEvent
   | AttackEvent
   | PlayerJoinedEvent
   | PlayerLeftEvent

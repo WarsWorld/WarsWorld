@@ -1,6 +1,7 @@
 import { PlayerSlot } from "server/schemas/player-slot";
 import { Position, isSamePosition } from "server/schemas/position";
 import { WWUnit } from "server/schemas/unit";
+import { getDistance } from "shared/match-logic/positions";
 
 export class UnitsWrapper {
   constructor(public data: WWUnit[]) {}
@@ -50,10 +51,30 @@ export class UnitsWrapper {
     });
   }
 
+  private damageUntil1HP(unit: WWUnit, damageAmount: number) {
+    unit.stats.hp = Math.max(1, unit.stats.hp - damageAmount);
+  }
+
   damageAllUntil1HP(damageAmount: number) {
     this.data.forEach((unit) => {
-      unit.stats.hp = Math.max(1, unit.stats.hp - damageAmount);
+      this.damageUntil1HP(unit, damageAmount);
     });
+  }
+
+  damageUntil1HPInRadius({
+    radius,
+    damageAmount,
+    epicenter,
+  }: {
+    radius: number;
+    damageAmount: number;
+    epicenter: Position;
+  }) {
+    this.data
+      .filter((unit) => getDistance(unit.position, epicenter) <= radius)
+      .forEach((unit) => {
+        this.damageUntil1HP(unit, damageAmount);
+      });
   }
 
   addUnit(unit: WWUnit) {

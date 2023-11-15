@@ -5,7 +5,7 @@ export const grit: COProperties = {
   displayName: "Grit",
   dayToDay: {
     description:
-      "Indirect units have +1 range and gain +20% attack. Direct units lose -20% attack (footsoldiers are normal).",
+      "Indirect units have +1 range and gain +20% attack.ts. Direct units lose -20% attack.ts (footsoldiers are normal).",
     hooks: {
       onAttackRange(value, { attackerData: currentPlayer }) {
         if (isIndirectAttackUnit(currentPlayer.unitType)) {
@@ -26,7 +26,7 @@ export const grit: COProperties = {
   powers: {
     COPower: {
       name: "Snipe Attack",
-      description: "Indirect units gain +1 range and +20% attack.",
+      description: "Indirect units gain +1 range and +20% attack.ts.",
       stars: 3,
       hooks: {
         onAttackRange(value, { attackerData: currentPlayer }) {
@@ -43,7 +43,7 @@ export const grit: COProperties = {
     },
     superCOPower: {
       name: "Super Snipe",
-      description: "Indirect units gain +2 range and +20% attack.",
+      description: "Indirect units gain +2 range and +20% attack.ts.",
       stars: 6,
       hooks: {
         onAttackRange(value, { attackerData: currentPlayerData }) {

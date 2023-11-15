@@ -1,6 +1,6 @@
 import { BuildAction } from "server/schemas/action";
 import { PlayerSlot } from "server/schemas/player-slot";
-import { WWUnit, unitTypeIsUnitWithAmmo } from "server/schemas/unit";
+import { WWUnit } from "server/schemas/unit";
 import { unitPropertiesMap } from "./buildable-unit";
 
 export const createUnitFromBuildAction = (

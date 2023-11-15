@@ -39,6 +39,9 @@ export class PlayerInMatchWrapper {
     return this.match.units.getPlayerUnits(this.data.slot);
   }
 
+  /**
+   * TODO Teams!
+   */
   getEnemyUnits() {
     return this.match.units.getEnemyUnits(this.data.slot);
   }
@@ -72,9 +75,9 @@ export class PlayerInMatchWrapper {
    * This function will both "fill up" all the gaps for undefined hooks
    * as well as return the input value when the hook returned `undefined` (= no changes).
    */
-  getCOHooks(unitPosition: Position) {
+  getCOHooksWithUnit(unitPosition: Position) {
     const COHooks = this.getMergedCOHooks();
-    const props = this.match.getCOHookProps(unitPosition);
+    const props = this.match.getCOHookPropsWithUnit(unitPosition);
 
     const withDefaults = (hook?: COHookAllowReturnUndefined) => {
       return (val: number) => hook?.(val, props) ?? val;
@@ -83,7 +86,7 @@ export class PlayerInMatchWrapper {
     return {
       onMovementRange: withDefaults(COHooks.onMovementRange),
       onMovementCost: withDefaults(COHooks.onMovementCost),
-      onCost: withDefaults(COHooks.onCost),
+      onBuildCost: withDefaults(COHooks.onBuildCost),
       onFuelDrain: withDefaults(COHooks.onFuelDrain),
       onFuelCost: withDefaults(COHooks.onFuelCost),
     };
@@ -104,7 +107,7 @@ export class PlayerInMatchWrapper {
     };
 
     return {
-      ...this.getCOHooks(attackerPosition),
+      ...this.getCOHooksWithUnit(attackerPosition),
       onAttackModifier: withDefaults(COHooks.onAttackModifier),
       onDefenseModifier: withDefaults(COHooks.onDefenseModifier),
       onGoodLuck: withDefaults(COHooks.onGoodLuck),
@@ -118,7 +121,7 @@ export class PlayerInMatchWrapper {
     const unitProperties = unitPropertiesMap[unit.type];
     const baseMovement = unitProperties.moveRange;
 
-    const movement = this.getCOHooks(unit.position).onMovementRange(
+    const movement = this.getCOHooksWithUnit(unit.position).onMovementRange(
       baseMovement
     );
 

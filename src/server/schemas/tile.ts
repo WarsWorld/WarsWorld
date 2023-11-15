@@ -48,7 +48,9 @@ export const tileSchema = z.discriminatedUnion("type", [
   ...invariableTileSchema.options,
   ...variableTileSchema.options,
 ]);
+
 export type Tile = z.infer<typeof tileSchema>;
+
 /**
  * Note: "broken pipe seam" does *not* currently have its own TileType
  *       and is considered to be a kind of `plains`.

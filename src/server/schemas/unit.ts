@@ -9,6 +9,7 @@ import {
   unitInMapSharedPropertiesSchema,
 } from "./unit-traits";
 
+//LAND UNITS:
 const creatableInfantrySchema = withNoAmmoUnitStatsSchema.extend(
   withType("infantry")
 );
@@ -26,20 +27,6 @@ const creatableAPCSchema = withNoAmmoUnitStatsSchema
     loadedUnit: z.nullable(creatableSoldierSchema),
   });
 
-const creatableTransportCopterSchema = withNoAmmoUnitStatsSchema
-  .extend(withType("transportCopter"))
-  .extend({
-    loadedUnit: z.nullable(creatableSoldierSchema),
-  });
-
-const creatableBattleCopterSchema = withAmmoUnitStatsSchema.extend(
-  withType("battleCopter")
-);
-
-const creatableBlackBombSchema = withNoAmmoUnitStatsSchema.extend(
-  withType("blackBomb")
-);
-
 const createReconSchema = withNoAmmoUnitStatsSchema.extend(withType("recon"));
 
 const creatableOtherLandUnitsWithAmmo = withAmmoUnitStatsSchema.extend({
@@ -55,42 +42,28 @@ const creatableOtherLandUnitsWithAmmo = withAmmoUnitStatsSchema.extend({
   ]),
 });
 
-const creatableBlackBoatSchema = withNoAmmoUnitStatsSchema
-  .extend(withType("blackBoat"))
+const creatableLandUnitSchema = z.discriminatedUnion("type", [
+  creatableInfantrySchema,
+  creatableMechSchema,
+  createReconSchema,
+  creatableAPCSchema,
+  creatableOtherLandUnitsWithAmmo,
+]);
+
+//AIR UNITS:
+const creatableTransportCopterSchema = withNoAmmoUnitStatsSchema
+  .extend(withType("transportCopter"))
   .extend({
-    loadedUnits: z.array(creatableSoldierSchema).min(0).max(2),
+    loadedUnit: z.nullable(creatableSoldierSchema),
   });
 
-const creatableLanderSchema = withNoAmmoUnitStatsSchema
-  .extend(withType("lander"))
-  .extend({
-    loadedUnits: z
-      .array(
-        z.discriminatedUnion("type", [
-          creatableInfantrySchema,
-          creatableMechSchema,
-          createReconSchema,
-          creatableAPCSchema,
-          creatableOtherLandUnitsWithAmmo,
-        ])
-      )
-      .min(0)
-      .max(2),
-  });
+const creatableBattleCopterSchema = withAmmoUnitStatsSchema.extend(
+  withType("battleCopter")
+);
 
-const creatableCruiserSchema = withAmmoUnitStatsSchema
-  .extend(withType("cruiser"))
-  .extend({
-    loadedUnits: z
-      .array(
-        z.discriminatedUnion("type", [
-          creatableTransportCopterSchema,
-          creatableBattleCopterSchema,
-        ])
-      )
-      .min(0)
-      .max(2),
-  });
+const creatableBlackBombSchema = withNoAmmoUnitStatsSchema.extend(
+  withType("blackBomb")
+);
 
 const creatableBomberAndFighterSchema = withAmmoUnitStatsSchema.extend({
   type: z.enum(["bomber", "fighter"]),
@@ -99,6 +72,46 @@ const creatableBomberAndFighterSchema = withAmmoUnitStatsSchema.extend({
 const creatableStealthSchema = withAmmoUnitStatsSchema
   .extend(withHiddenSchema.shape)
   .extend(withType("stealth"));
+
+const creatableAirUnitSchema = z.discriminatedUnion("type", [
+  creatableTransportCopterSchema,
+  creatableBattleCopterSchema,
+  creatableBlackBombSchema,
+  creatableBomberAndFighterSchema,
+  creatableStealthSchema,
+]);
+
+//SEA UNITS:
+const creatableBlackBoatSchema = withNoAmmoUnitStatsSchema
+  .extend(withType("blackBoat"))
+  .extend({
+    loadedUnit: z.nullable(creatableSoldierSchema),
+    loadedUnit2: z.nullable(creatableSoldierSchema),
+  });
+
+const creatableLanderSchema = withNoAmmoUnitStatsSchema
+  .extend(withType("lander"))
+  .extend({
+    loadedUnit: z.nullable(creatableLandUnitSchema),
+    loadedUnit2: z.nullable(creatableLandUnitSchema),
+  });
+
+const creatableCruiserSchema = withAmmoUnitStatsSchema
+  .extend(withType("cruiser"))
+  .extend({
+    loadedUnit: z.nullable(
+      z.discriminatedUnion("type", [
+        creatableTransportCopterSchema,
+        creatableBattleCopterSchema,
+      ])
+    ),
+    loadedUnit2: z.nullable(
+      z.discriminatedUnion("type", [
+        creatableTransportCopterSchema,
+        creatableBattleCopterSchema,
+      ])
+    ),
+  });
 
 const creatableBattleshipSchema = withAmmoUnitStatsSchema.extend(
   withType("battleship")
@@ -111,125 +124,38 @@ const creatableSubSchema = withAmmoUnitStatsSchema
 const creatableCarrierSchema = withAmmoUnitStatsSchema
   .extend(withType("carrier"))
   .extend({
-    loadedUnits: z
-      .array(
-        z.discriminatedUnion("type", [
-          creatableTransportCopterSchema,
-          creatableBattleCopterSchema,
-          creatableBomberAndFighterSchema,
-          creatableStealthSchema,
-        ])
-      )
-      .min(0)
-      .max(2),
+    loadedUnit: z.nullable(creatableAirUnitSchema),
+    loadedUnit2: z.nullable(creatableAirUnitSchema),
   });
 
+//PIPE? UNITS:
 const creatablePipeRunnerSchema = withAmmoUnitStatsSchema.extend(
   withType("pipeRunner")
 );
 
-export const creatableUnitSchema = z.discriminatedUnion("type", [
+const shared = unitInMapSharedPropertiesSchema;
+
+const creatableUnitSchema = z.discriminatedUnion("type", [
   // this can't be easily mapped
   // because it'd be pushing the limits of zod or typescript i think
-  unitInMapSharedPropertiesSchema.extend(creatableInfantrySchema.shape),
-  unitInMapSharedPropertiesSchema.extend(creatableMechSchema.shape),
-  unitInMapSharedPropertiesSchema.extend(createReconSchema.shape),
-  unitInMapSharedPropertiesSchema.extend(creatableAPCSchema.shape),
-  unitInMapSharedPropertiesSchema.extend(creatableOtherLandUnitsWithAmmo.shape),
-  unitInMapSharedPropertiesSchema.extend(creatableTransportCopterSchema.shape),
-  unitInMapSharedPropertiesSchema.extend(creatableBattleCopterSchema.shape),
-  unitInMapSharedPropertiesSchema.extend(creatableBlackBombSchema.shape),
-  unitInMapSharedPropertiesSchema.extend(creatableBlackBoatSchema.shape),
-  unitInMapSharedPropertiesSchema.extend(creatableLanderSchema.shape),
-  unitInMapSharedPropertiesSchema.extend(creatableCruiserSchema.shape),
-  unitInMapSharedPropertiesSchema.extend(creatableBomberAndFighterSchema.shape),
-  unitInMapSharedPropertiesSchema.extend(creatableStealthSchema.shape),
-  unitInMapSharedPropertiesSchema.extend(creatableBattleshipSchema.shape),
-  unitInMapSharedPropertiesSchema.extend(creatableSubSchema.shape),
-  unitInMapSharedPropertiesSchema.extend(creatableCarrierSchema.shape),
-  unitInMapSharedPropertiesSchema.extend(creatablePipeRunnerSchema.shape),
+  shared.extend(creatableInfantrySchema.shape),
+  shared.extend(creatableMechSchema.shape),
+  shared.extend(createReconSchema.shape),
+  shared.extend(creatableAPCSchema.shape),
+  shared.extend(creatableOtherLandUnitsWithAmmo.shape),
+  shared.extend(creatableTransportCopterSchema.shape),
+  shared.extend(creatableBattleCopterSchema.shape),
+  shared.extend(creatableBlackBombSchema.shape),
+  shared.extend(creatableBlackBoatSchema.shape),
+  shared.extend(creatableLanderSchema.shape),
+  shared.extend(creatableCruiserSchema.shape),
+  shared.extend(creatableBomberAndFighterSchema.shape),
+  shared.extend(creatableStealthSchema.shape),
+  shared.extend(creatableBattleshipSchema.shape),
+  shared.extend(creatableSubSchema.shape),
+  shared.extend(creatableCarrierSchema.shape),
+  shared.extend(creatablePipeRunnerSchema.shape),
 ]);
-
-/** These units have a weapon, and have finite ammo. */
-export const unitWithAmmoSchema = z.discriminatedUnion("type", [
-  creatableMechSchema,
-  creatableBattleCopterSchema,
-  creatableOtherLandUnitsWithAmmo,
-  creatableCruiserSchema,
-  creatableBomberAndFighterSchema,
-  creatableStealthSchema,
-  creatableBattleshipSchema,
-  creatableSubSchema,
-  creatableCarrierSchema,
-  creatablePipeRunnerSchema,
-]);
-
-/**
- * These units do *not* have a weapon.
- * Specifically, they have no "Attack" option.
- * Note: "Black Bomb" can "Explode", which deals damage but is not an attack.
- */
-export const unitWithoutWeaponSchema = z.discriminatedUnion("type", [
-  creatableAPCSchema,
-  creatableBlackBoatSchema,
-  creatableBlackBombSchema,
-  creatableLanderSchema,
-  creatableTransportCopterSchema,
-]);
-
-/** These units have a weapon, but the weapon has infinite ammo */
-export const unitWithoutAmmoSchema = z.discriminatedUnion("type", [
-  creatableInfantrySchema,
-  createReconSchema,
-]);
-
-const unitTypesWithAmmo: string[] = [
-  // TODO derive this from `unitWithAmmoSchema`
-  "mech",
-  "battleCopter",
-  "artillery",
-  "tank",
-  "antiAir",
-  "missile",
-  "rocket",
-  "mediumTank",
-  "neoTank",
-  "megaTank",
-  "cruiser",
-  "bomber",
-  "fighter",
-  "stealth",
-  "battleship",
-  "sub",
-  "carrier",
-  "pipeRunner",
-] satisfies UnitType[];
-
-export const unitTypeIsUnitWithAmmo = (
-  unitType: UnitType
-): unitType is WithAmmoUnitType => {
-  return unitTypesWithAmmo.includes(unitType);
-};
-
-const transportUnitTypes = [
-  "apc",
-  "transportCopter",
-  "blackBoat",
-  "lander",
-  "cruiser",
-  "carrier",
-] satisfies UnitType[];
-
-export const unitTypeIsTransport = (
-  unitType: UnitType
-): unitType is (typeof transportUnitTypes)[number] =>
-  (transportUnitTypes as string[]).includes(unitType);
-
-export type WithoutAmmoUnitType = z.infer<typeof unitWithoutAmmoSchema>["type"];
-export type WithoutWeaponUnitType = z.infer<
-  typeof unitWithoutWeaponSchema
->["type"];
-export type WithAmmoUnitType = z.infer<typeof unitWithAmmoSchema>["type"];
 
 export type WWUnit = z.infer<typeof creatableUnitSchema>;
 
@@ -271,5 +197,5 @@ export type WWHiddenUnit = {
 export type FrontendUnit = WWUnit | WWHiddenUnit;
 
 export const withUnit = z.object({
-  unit: z.optional(creatableUnitSchema),
+  unit: creatableUnitSchema.optional(),
 });

@@ -5,7 +5,7 @@ import {
   COHookPropsWithDefender,
 } from "shared/match-logic/co-hooks";
 import { createUnitFromBuildAction } from "shared/match-logic/create-unit-from-build-action";
-import { Weather } from "shared/match-logic/tiles";
+import { Weather, getBaseMovementCost } from "shared/match-logic/tiles";
 import { EmittableEvent } from "shared/types/events";
 import { ChangeableTile } from "shared/types/server-match-state";
 import { MapWrapper } from "./map";
@@ -14,6 +14,7 @@ import { UnitsWrapper } from "./units";
 import { PlayerInMatchWrapper } from "./player-in-match";
 import { PlayerSlot } from "server/schemas/player-slot";
 import { CO } from "server/schemas/co";
+import { MovementType } from "shared/match-logic/buildable-unit";
 
 /** TODO: Add favorites, possibly spectators, also a timer */
 export class MatchWrapper {
@@ -44,7 +45,7 @@ export class MatchWrapper {
     }
   }
 
-  getCOHookProps(unitPosition: Position): COHookProps {
+  getCOHookPropsWithUnit(unitPosition: Position): COHookProps {
     return {
       attackerData: this.players
         .getCurrentTurnPlayer() // TODO is this safe or are there cases where we should use the position to determine the player instead?
@@ -120,5 +121,38 @@ export class MatchWrapper {
         this
       )
     );
+  }
+
+  /**
+   * Every turn, units get a certain number of movement points
+   * which they can spend by moving.
+   * Every unit has exactly one "movement type",
+   * for example tanks have type "treads".
+   * See https://awbw.fandom.com/wiki/Units#Movement for more details.
+   *
+   * @param tileType The tile which the unit is trying to enter, e.g. 'plains'
+   * @param movementType The movement type of the unit, e.g. 'treads'
+   * @param weather The current weather
+   * @returns The amount of movement points which must be spent
+   *          to *enter* the tile
+   * (assuming the unit is already adjacent to the tile).
+   * `null` means impassible terrain.
+   */
+  getMovementCost(position: Position, movementType: MovementType) {
+    const tileType = this.getTile(position).type;
+    const baseMovementCost = getBaseMovementCost(
+      tileType,
+      movementType,
+      this.currentWeather
+    );
+
+    if (baseMovementCost === null) {
+      return null;
+    }
+
+    return this.players
+      .getCurrentTurnPlayer()
+      .getCOHooksWithUnit(position)
+      .onMovementCost(baseMovementCost);
   }
 }

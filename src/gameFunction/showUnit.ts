@@ -257,7 +257,7 @@ export function showUnits(
     }
     //unit is in the opposite team/is an enemy
     else {
-      //TODO: Allow to "hold" enemy attack range ala Fire Emblem style so we can keep the "safe range" for our units from certain units
+      //TODO: Allow to "hold" enemy attack.ts range ala Fire Emblem style so we can keep the "safe range" for our units from certain units
       // (like where is our Bcopter safe from two AA).
       let isNextAttack = false; //alternate between showing movement and attacking tiles
       unitSprite.on("pointerdown", async () => {

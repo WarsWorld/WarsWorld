@@ -5,9 +5,9 @@ import { COProperties } from "../co";
 export const colin: COProperties = {
   displayName: "Colin",
   dayToDay: {
-    description: "Units cost -20% less to build and lose -10% attack.",
+    description: "Units cost -20% less to build and lose -10% attack.ts.",
     hooks: {
-      onCost: (value) => value * 0.8,
+      onBuildCost: (value) => value * 0.8,
       onAttackModifier: (value) => value * 0.9,
     },
   },
@@ -23,7 +23,7 @@ export const colin: COProperties = {
     },
     superCOPower: {
       name: "Power of Money",
-      description: "All units gain 3% attack per 1000 funds.",
+      description: "All units gain 3% attack.ts per 1000 funds.",
       stars: 6,
       hooks: {
         onAttackModifier(value, { attackerData: currentPlayerData }) {
