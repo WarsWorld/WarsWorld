@@ -1,12 +1,10 @@
-import { LeagueType, MatchStatus, Player, WWMap } from "@prisma/client";
+import { Player } from "@prisma/client";
 import { Army } from "server/schemas/army";
 import { CO } from "server/schemas/co";
 import { PlayerSlot } from "server/schemas/player-slot";
 import { Position } from "server/schemas/position";
 import { PropertyTileType, UnusedSiloTileType } from "server/schemas/tile";
-import { WWUnit } from "server/schemas/unit";
 import { COPowerState } from "shared/match-logic/co-power-state";
-import { Weather } from "shared/match-logic/tiles";
 
 type WithPosition = {
   position: Position;
@@ -38,22 +36,4 @@ export type PlayerInMatch = {
   powerMeter: number;
   army: Army;
   COPowerState: COPowerState;
-};
-
-//TODO: Add favorites, possibly spectators, also a timer
-export type BackendMatchState = {
-  id: string;
-  rules: {
-    fogOfWar?: boolean;
-    fundsMultiplier?: number;
-    leagueType: LeagueType;
-  };
-  status: MatchStatus;
-  map: WWMap;
-  changeableTiles: ChangeableTile[];
-  units: WWUnit[];
-  turn: number;
-  players: PlayerInMatch[];
-  currentWeather: Weather;
-  weatherNextDay: Weather | null;
 };

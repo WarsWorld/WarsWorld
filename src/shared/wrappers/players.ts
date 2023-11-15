@@ -1,14 +1,9 @@
 import { Player } from "@prisma/client";
-import { CO } from "server/schemas/co";
 import { PlayerSlot } from "server/schemas/player-slot";
-import { MatchWrapper } from "./match";
 import { PlayerInMatchWrapper } from "./player-in-match";
 
 export class PlayersWrapper {
-  constructor(
-    public data: PlayerInMatchWrapper[],
-    public match: MatchWrapper
-  ) {}
+  constructor(public data: PlayerInMatchWrapper[]) {}
 
   getCurrentTurnPlayer() {
     const player = this.data.find((p) => p.data.hasCurrentTurn);
@@ -44,24 +39,6 @@ export class PlayersWrapper {
 
   leave(player: Player) {
     this.data = this.data.filter((p) => p.data.playerId !== player.id);
-  }
-
-  join(player: Player, slot: PlayerSlot, co: CO) {
-    this.data.push(
-      new PlayerInMatchWrapper(
-        {
-          playerId: player.id,
-          slot,
-          ready: false,
-          co,
-          funds: 0,
-          powerMeter: 0,
-          army: "orange-star",
-          COPowerState: "no-power",
-        },
-        this.match
-      )
-    );
   }
 
   setReady(player: Player, ready: boolean) {

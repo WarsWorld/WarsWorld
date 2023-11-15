@@ -2,20 +2,19 @@ import { TRPCError } from "@trpc/server";
 import { emitEvent } from "server/emitter/event-emitter";
 import { matchStore } from "server/match-logic/match-store";
 import { coSchema } from "server/schemas/co";
+import { MapWrapper } from "shared/wrappers/map";
 import { MatchWrapper } from "shared/wrappers/match";
+import { PlayersWrapper } from "shared/wrappers/players";
 import { z } from "zod";
 import { armySchema } from "../schemas/army";
 import {
   matchBaseProcedure,
   playerBaseProcedure,
-  playerInMatchProcedure,
+  playerInMatchBaseProcedure,
   publicBaseProcedure,
   router,
 } from "../trpc/trpc-setup";
 import { createMatchProcedure } from "./match/create";
-import { BackendMatchState } from "shared/types/server-match-state";
-import { MapWrapper } from "shared/wrappers/map";
-import { PlayersWrapper } from "shared/wrappers/players";
 
 const throwIfMatchNotInSetupState = (match: MatchWrapper) => {
   if (match.status !== "setup") {
@@ -55,7 +54,7 @@ export const matchRouter = router({
       .getMatchesOfPlayer(ctx.currentPlayer.id)
       .map(matchStateToFrontend)
   ),
-  full: matchBaseProcedure.query(({ ctx: { match } }): BackendMatchState => {
+  full: matchBaseProcedure.query(({ ctx: { match } }) => {
     // TODO: By default show no hidden units
     //       and FoW is completely dark and empty
     // TODO: If the user has a session and has a player in this match
@@ -88,11 +87,7 @@ export const matchRouter = router({
 
       const nextAvailablePlayerSlot = match.getNextAvailableSlot();
 
-      match.players.join(
-        currentPlayer,
-        nextAvailablePlayerSlot,
-        input.selectedCO
-      );
+      match.join(currentPlayer, nextAvailablePlayerSlot, input.selectedCO);
 
       emitEvent({
         type: "player-joined",
@@ -101,7 +96,7 @@ export const matchRouter = router({
         playerSlot: nextAvailablePlayerSlot,
       });
     }),
-  leave: playerInMatchProcedure.mutation(
+  leave: playerInMatchBaseProcedure.mutation(
     async ({ ctx: { match, currentPlayer } }) => {
       throwIfMatchNotInSetupState(match);
 
@@ -114,7 +109,7 @@ export const matchRouter = router({
       });
     }
   ),
-  setReady: playerInMatchProcedure
+  setReady: playerInMatchBaseProcedure
     .input(
       z.object({
         readyState: z.boolean(),
@@ -139,7 +134,7 @@ export const matchRouter = router({
         }
       }
     ),
-  switchCO: playerInMatchProcedure
+  switchCO: playerInMatchBaseProcedure
     .input(
       z.object({
         selectedCO: coSchema,
@@ -157,7 +152,7 @@ export const matchRouter = router({
         player: ctx.currentPlayer,
       });
     }),
-  switchArmy: playerInMatchProcedure
+  switchArmy: playerInMatchBaseProcedure
     .input(
       z.object({
         selectedArmy: armySchema,

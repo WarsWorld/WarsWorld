@@ -91,7 +91,7 @@ export class PlayerInMatchWrapper {
 
   getCOHooksWithDefender(
     attackerPosition: Position,
-    defenderPosition: Position
+    defenderPosition: Position /** TODO maybe pass players or slots instead instead of positions */
   ) {
     const COHooks = this.getMergedCOHooks();
     const props = this.match.getCOHookPropsWithDefender(

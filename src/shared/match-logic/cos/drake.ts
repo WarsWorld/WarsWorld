@@ -37,13 +37,7 @@ export const drake: COProperties = {
         enemyUnits.damageAllUntil1HP(10);
 
         enemyUnits.data.forEach((unit) => {
-          /**
-           * TODO
-           * "Any unit damaged by Drake's Tsunami or Typhoon
-           * will immediately lose half of their fuel, rounded down."
-           *                                           ^^^^^^^^^^^^^
-           */
-          unit.stats.fuel = Math.ceil(unit.stats.fuel / 2); // drain fuel till 1
+          unit.stats.fuel = Math.floor(unit.stats.fuel / 2); // half fuel till 0 and round down
         });
       },
     },
@@ -58,7 +52,7 @@ export const drake: COProperties = {
         enemyUnits.damageAllUntil1HP(20);
 
         enemyUnits.data.forEach((unit) => {
-          unit.stats.fuel = Math.ceil(unit.stats.fuel / 2); // drain fuel till 1
+          unit.stats.fuel = Math.floor(unit.stats.fuel / 2); // half fuel till 0 and round down
         });
 
         matchState.currentWeather = "rain";

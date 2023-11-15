@@ -45,6 +45,7 @@ export const calculateDamage = (
   const attackerUnit = matchState.units.getUnitOrThrow(attackerPosition);
   const defenderUnit = matchState.units.getUnitOrThrow(defenderPosition);
 
+  /** TODO remove this. */
   const COHookProps = matchState.getCOHookPropsWithDefender(
     attackerPosition,
     defenderPosition

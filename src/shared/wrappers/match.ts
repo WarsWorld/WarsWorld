@@ -1,5 +1,4 @@
-import { MatchStatus } from "@prisma/client";
-import { PlayerSlot } from "server/schemas/player-slot";
+import { LeagueType, MatchStatus, Player } from "@prisma/client";
 import { Position, isSamePosition } from "server/schemas/position";
 import {
   COHookProps,
@@ -8,18 +7,23 @@ import {
 import { createUnitFromBuildAction } from "shared/match-logic/create-unit-from-build-action";
 import { Weather } from "shared/match-logic/tiles";
 import { EmittableEvent } from "shared/types/events";
-import {
-  BackendMatchState,
-  ChangeableTile,
-} from "shared/types/server-match-state";
+import { ChangeableTile } from "shared/types/server-match-state";
 import { MapWrapper } from "./map";
 import { PlayersWrapper } from "./players";
 import { UnitsWrapper } from "./units";
+import { PlayerInMatchWrapper } from "./player-in-match";
+import { PlayerSlot } from "server/schemas/player-slot";
+import { CO } from "server/schemas/co";
 
+/** TODO: Add favorites, possibly spectators, also a timer */
 export class MatchWrapper {
   constructor(
     public id: string,
-    public rules: BackendMatchState["rules"],
+    public rules: {
+      fogOfWar?: boolean;
+      fundsMultiplier?: number;
+      leagueType: LeagueType;
+    },
     public status: MatchStatus,
     public map: MapWrapper,
     public changeableTiles: ChangeableTile[],
@@ -98,5 +102,23 @@ export class MatchWrapper {
     }
 
     return this.map.data.tiles[position[1]][position[0]];
+  }
+
+  join(player: Player, slot: PlayerSlot, co: CO) {
+    this.players.data.push(
+      new PlayerInMatchWrapper(
+        {
+          playerId: player.id,
+          slot,
+          ready: false,
+          co,
+          funds: 0,
+          powerMeter: 0,
+          army: "orange-star",
+          COPowerState: "no-power",
+        },
+        this
+      )
+    );
   }
 }

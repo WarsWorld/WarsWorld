@@ -6,6 +6,7 @@ import { mapMiddleware, withMapIdSchema } from "server/trpc/middleware/map";
 import { playerBaseProcedure } from "server/trpc/trpc-setup";
 import { getChangeableTilesFromMap } from "shared/match-logic/get-changeable-tile-from-map";
 import { PlayerInMatch } from "shared/types/server-match-state";
+import { MapWrapper } from "shared/wrappers/map";
 import { MatchWrapper } from "shared/wrappers/match";
 import { PlayersWrapper } from "shared/wrappers/players";
 import { UnitsWrapper } from "shared/wrappers/units";
@@ -52,7 +53,7 @@ export const createMatchProcedure = playerBaseProcedure
           leagueType: LeagueType.standard,
         },
         matchOnDB.status,
-        ctx.map,
+        new MapWrapper(ctx.map),
         getChangeableTilesFromMap(ctx.map),
         new UnitsWrapper([]),
         0,

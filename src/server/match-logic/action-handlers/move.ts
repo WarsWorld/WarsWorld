@@ -68,7 +68,8 @@ export const handleMoveAction: ActionHandler<MoveAction> = ({
     previousPosition = nextPosition;
   }
 
-  unit.stats.fuel -= action.path.length;
+  unit.stats.fuel -=
+    action.path.length * currentPlayer.getCOHooks(action.path[0]).onFuelCost(1);
 
   if (matchState.units.hasUnit(action.path.at(-1)!)) {
     throw new Error("There's already a unit on the final position");

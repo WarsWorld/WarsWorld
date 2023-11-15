@@ -1,6 +1,7 @@
 import { LeagueType } from "@prisma/client";
 import { prisma } from "server/prisma/prisma-client";
 import { getChangeableTilesFromMap } from "shared/match-logic/get-changeable-tile-from-map";
+import { MapWrapper } from "shared/wrappers/map";
 import { MatchWrapper } from "shared/wrappers/match";
 import { PlayersWrapper } from "shared/wrappers/players";
 import { UnitsWrapper } from "shared/wrappers/units";
@@ -43,7 +44,7 @@ class MatchStore {
             leagueType: LeagueType.standard,
           },
           match.status,
-          match.map,
+          new MapWrapper(match.map),
           initialChangeableTiles,
           new UnitsWrapper([]),
           0,
