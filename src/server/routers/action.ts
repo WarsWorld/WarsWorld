@@ -159,12 +159,8 @@ export const actionRouter = router({
         (p) => p.playerId === ctx.currentPlayer.id && p?.eliminated !== true
       );
 
-      //TODO is it trpc error or plain error?
       if (currentPlayer === undefined)
-        throw new TRPCError({
-          code: "BAD_REQUEST",
-          message: "You're not in this match or you've been eliminated",
-        });
+        throw new Error("You're not in this match or you've been eliminated");
 
       //TODO re-add this check, was unadded to test tRPC momentarily
       /*if (!currentPlayer.hasCurrentTurn) {
@@ -181,7 +177,7 @@ export const actionRouter = router({
         throw new Error("Event has not been created");
       }
 
-      applyMainEventToMatch(input.matchId, currentPlayer.slot, event);
+      applyMainEventToMatch(input.matchId, currentPlayer, event);
 
       if (input.type === "move" && event.type === "move") {
         if (!event.trap)
@@ -195,7 +191,7 @@ export const actionRouter = router({
         if (position === null) throw new Error("This should never happen");
         applySubEventToMatch(
           input.matchId,
-          currentPlayer.slot,
+          currentPlayer,
           event.subEvent,
           position
         );

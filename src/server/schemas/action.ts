@@ -33,7 +33,7 @@ const unloadWaitActionSchema = z.object({
     .array(
       // 1 allowed by default, 2 for DoR move+unload
       z.object({
-        loadedUnitIndex: z.number().int().nonnegative(), //0, 1
+        isSecondUnit: z.boolean(), //if the unloaded unit is "loadedUnit2"
         direction: directionSchema,
       })
     )
@@ -46,7 +46,7 @@ const unloadNoWaitActionSchema = z.object({
   type: z.literal("unload2"),
   transportPosition: positionSchema,
   unloads: z.object({
-    loadedUnitIndex: z.number().int().nonnegative(),
+    isSecondUnit: z.boolean(), //if the unloaded unit is "loadedUnit2"
     direction: directionSchema,
   }),
 });

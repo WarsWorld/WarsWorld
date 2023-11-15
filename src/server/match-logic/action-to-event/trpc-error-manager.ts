@@ -43,6 +43,3 @@ export const throwIfPositionsNotAdjacent = (
   }
 };
 
-export const throwIfNoUnload = (action: UnloadWaitAction) => {
-  if (action.unloads.length < 1) throwMessage("No unit specified to unload");
-};

@@ -6,12 +6,7 @@ import {
   isOutsideOfMap,
 } from "../../../shared/match-logic/positions";
 import { TRPCError } from "@trpc/server";
-import {
-  throwIfNoUnload,
-  throwIfUnitIsWaited,
-  throwIfUnitNotOwned,
-  throwMessage,
-} from "./trpc-error-manager";
+import { throwIfUnitNotOwned, throwMessage } from "./trpc-error-manager";
 import { getMovementCost } from "../../../shared/match-logic/tiles";
 import { unitPropertiesMap } from "../../../shared/match-logic/buildable-unit";
 
@@ -30,28 +25,96 @@ export const unloadWaitActionToEvent: SubActionToEvent<UnloadWaitAction> = ({
     });
   }
   throwIfUnitNotOwned(transportUnit, currentPlayer.slot);
-  throwIfNoUnload(action);
+  if (action.unloads.length < 1) throwMessage("No unit specified to unload");
 
-  if ("loadedUnit" in transportUnit) {
-    if (transportUnit.loadedUnit === null) {
+  if (!("loadedUnit" in transportUnit)) {
+    throw new TRPCError({
+      code: "BAD_REQUEST",
+      message: "Trying to unload from a unit that can't load units",
+    });
+  }
+
+  if (transportUnit.loadedUnit === null) {
+    throw new TRPCError({
+      code: "BAD_REQUEST",
+      message: "Transport doesn't currently have a loaded unit",
+    });
+  }
+
+  const unloadPosition = addDirection(
+    fromPosition,
+    action.unloads[0].direction
+  );
+  if (isOutsideOfMap(matchState.map, unloadPosition)) {
+    throwMessage("Unload position is outside of map");
+  }
+
+  if (action.unloads.length === 1) {
+    if (action.unloads[0].isSecondUnit) {
+      if (!("loadedUnit2" in transportUnit)) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Trying to unload 2nd unit from a unit only carries 1 unit",
+        });
+      }
+
+      if (transportUnit.loadedUnit2 === null) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Transport doesn't currently have a 2nd loaded unit",
+        });
+      }
+
+      if (
+        getMovementCost(
+          matchState.map.tiles[unloadPosition[0]][unloadPosition[1]].type,
+          unitPropertiesMap[transportUnit.loadedUnit2.type].movementType,
+          matchState.currentWeather
+        ) === null
+      )
+        throwMessage("Cannot unload unit in desired position");
+    } else {
+      if (
+        getMovementCost(
+          matchState.map.tiles[unloadPosition[0]][unloadPosition[1]].type,
+          unitPropertiesMap[transportUnit.loadedUnit.type].movementType,
+          matchState.currentWeather
+        ) === null
+      )
+        throwMessage("Cannot unload unit in desired position");
+    }
+  } else if (action.unloads.length === 2) {
+    if (!("loadedUnit2" in transportUnit)) {
       throw new TRPCError({
         code: "BAD_REQUEST",
-        message: "Transport doesn't currently have a loaded unit",
+        message:
+          "Tried to unload 2 units, but only one can be put in a transport",
+      });
+    }
+    if (transportUnit.loadedUnit2 === null) {
+      throw new TRPCError({
+        code: "BAD_REQUEST",
+        message: "Transport doesn't currently have a 2nd loaded unit",
       });
     }
 
-    if (action.unloads.length !== 1)
-      throwMessage(
-        "Tried to unload 2 or 0 units, but only one can be put in a transport"
-      );
-    if (action.unloads[0].loadedUnitIndex !== 0)
-      throwMessage("Trying to unload a unit with non valid index");
+    if (action.unloads[0].direction === action.unloads[1].direction)
+      throwMessage("Trying to unload both units in the same direction");
 
-    const unloadPosition = addDirection(
+    if (action.unloads[0].isSecondUnit === action.unloads[1].isSecondUnit)
+      throwMessage("Trying to unload the same unit twice");
+    if (action.unloads[0].isSecondUnit)
+      [action.unloads[0], action.unloads[1]] = [
+        action.unloads[1],
+        action.unloads[0],
+      ];
+    //I LOVE PRETTIER! IT MAKES ALL THINGS SO MUCH PRETTIER!! (^ it's just a swap btw, so first unload is for first unit)
+
+    const unloadPosition2 = addDirection(
       fromPosition,
-      action.unloads[0].direction
+      action.unloads[1].direction
     );
-    if (isOutsideOfMap(matchState.map, unloadPosition)) {
+    if (isOutsideOfMap(matchState.map, unloadPosition2)) {
       throwMessage("Unload position is outside of map");
     }
 
@@ -63,44 +126,18 @@ export const unloadWaitActionToEvent: SubActionToEvent<UnloadWaitAction> = ({
       ) === null
     )
       throwMessage("Cannot unload unit in desired position");
-  } else if ("loadedUnits" in transportUnit) {
-    //TODO: check that all errors are handled
-    const loadedUnitsCount = transportUnit.loadedUnits.length;
-    if (loadedUnitsCount === 0)
-      throwMessage("Transport doesn't have loaded units");
 
-    if (loadedUnitsCount > 1) {
-      if (action.unloads[0].direction === action.unloads[1].direction)
-        throwMessage("Trying to unload both units in the same direction");
-    }
-
-    for (let i = 0; i < action.unloads.length; ++i) {
-      if (
-        action.unloads[i].loadedUnitIndex < 0 ||
-        action.unloads[i].loadedUnitIndex >= loadedUnitsCount
-      )
-        throwMessage("Trying to unload a unit with non valid index");
-
-      const unloadPosition = addDirection(
-        fromPosition,
-        action.unloads[i].direction
-      );
-      if (isOutsideOfMap(matchState.map, unloadPosition)) {
-        throwMessage("Unload position is outside of map");
-      }
-
-      if (
-        getMovementCost(
-          matchState.map.tiles[unloadPosition[0]][unloadPosition[1]].type,
-          unitPropertiesMap[
-            transportUnit.loadedUnits[action.unloads[i].loadedUnitIndex].type
-          ].movementType,
-          matchState.currentWeather
-        ) === null
-      )
-        throwMessage("Cannot unload unit in desired position");
-    }
-  } else throwMessage("Specified unit is not a transport");
+    if (
+      getMovementCost(
+        matchState.map.tiles[unloadPosition[0]][unloadPosition[1]].type,
+        unitPropertiesMap[transportUnit.loadedUnit2.type].movementType,
+        matchState.currentWeather
+      ) === null
+    )
+      throwMessage("Cannot unload unit in desired position");
+  } else {
+    throwMessage("Trying to unload more than 2 units");
+  }
 
   return action;
 };
@@ -118,26 +155,52 @@ export const unloadNoWaitActionToEvent: MainActionToEvent<
   }
   throwIfUnitNotOwned(transportUnit, currentPlayer.slot);
 
+  if (!("loadedUnit" in transportUnit)) {
+    throw new TRPCError({
+      code: "BAD_REQUEST",
+      message: "Trying to unload from a unit that can't load units",
+    });
+  }
+
+  if (transportUnit.loadedUnit === null) {
+    throw new TRPCError({
+      code: "BAD_REQUEST",
+      message: "Transport doesn't currently have a loaded unit",
+    });
+  }
+
   const unloadPosition = addDirection(
     action.transportPosition,
     action.unloads.direction
   );
+  if (isOutsideOfMap(matchState.map, unloadPosition)) {
+    throwMessage("Unload position is outside of map");
+  }
 
-  if ("loadedUnit" in transportUnit) {
-    if (transportUnit.loadedUnit === null) {
+  if (action.unloads.isSecondUnit) {
+    if (!("loadedUnit2" in transportUnit)) {
       throw new TRPCError({
         code: "BAD_REQUEST",
-        message: "Transport doesn't currently have a loaded unit",
+        message: "Trying to unload 2nd unit from a unit only carries 1 unit",
       });
     }
 
-    if (action.unloads.loadedUnitIndex !== 0)
-      throwMessage("Trying to unload a unit with non valid index");
-
-    if (isOutsideOfMap(matchState.map, unloadPosition)) {
-      throwMessage("Unload position is outside of map");
+    if (transportUnit.loadedUnit2 === null) {
+      throw new TRPCError({
+        code: "BAD_REQUEST",
+        message: "Transport doesn't currently have a 2nd loaded unit",
+      });
     }
 
+    if (
+      getMovementCost(
+        matchState.map.tiles[unloadPosition[0]][unloadPosition[1]].type,
+        unitPropertiesMap[transportUnit.loadedUnit2.type].movementType,
+        matchState.currentWeather
+      ) === null
+    )
+      throwMessage("Cannot unload unit in desired position");
+  } else {
     if (
       getMovementCost(
         matchState.map.tiles[unloadPosition[0]][unloadPosition[1]].type,
@@ -146,33 +209,7 @@ export const unloadNoWaitActionToEvent: MainActionToEvent<
       ) === null
     )
       throwMessage("Cannot unload unit in desired position");
-  } else if ("loadedUnits" in transportUnit) {
-    //TODO: check that all errors are handled
-    const loadedUnitsCount = transportUnit.loadedUnits.length;
-    if (loadedUnitsCount === 0)
-      throwMessage("Transport doesn't have loaded units");
-
-    if (
-      action.unloads.loadedUnitIndex < 0 ||
-      action.unloads.loadedUnitIndex >= loadedUnitsCount
-    )
-      throwMessage("Trying to unload a unit with non valid index");
-
-    if (isOutsideOfMap(matchState.map, unloadPosition)) {
-      throwMessage("Unload position is outside of map");
-    }
-
-    if (
-      getMovementCost(
-        matchState.map.tiles[unloadPosition[0]][unloadPosition[1]].type,
-        unitPropertiesMap[
-          transportUnit.loadedUnits[action.unloads.loadedUnitIndex].type
-        ].movementType,
-        matchState.currentWeather
-      ) === null
-    )
-      throwMessage("Cannot unload unit in desired position");
-  } else throwMessage("Specified unit is not a transport");
+  }
 
   return action;
 };

@@ -4,13 +4,17 @@ import { unitTypeIsUnitWithAmmo, WWUnit } from "../schemas/unit";
 import { unitPropertiesMap } from "../../shared/match-logic/buildable-unit";
 import { serverMatchStates } from "./server-match-states";
 import {
+  addDirection,
   getDistance,
   getUnitAtPosition,
 } from "../../shared/match-logic/positions";
 import { isSamePosition, Position } from "../schemas/position";
+import { PlayerInMatch } from "../../shared/types/server-match-state";
+import { BuildAction } from "../schemas/action";
+import { allDirections, directionSchema } from "../schemas/direction";
 
 const createNewUnitFromBuildEvent = (
-  event: BuildEvent,
+  event: BuildAction,
   playerSlot: PlayerSlot
 ): WWUnit => {
   const { unitType } = event;
@@ -69,7 +73,8 @@ const createNewUnitFromBuildEvent = (
         return {
           type: unitType,
           ...partialUnitWithAmmo,
-          loadedUnits: [],
+          loadedUnit: null,
+          loadedUnit2: null,
         };
     }
   }
@@ -94,14 +99,27 @@ const createNewUnitFromBuildEvent = (
       return {
         type: unitType,
         ...partialUnit,
-        loadedUnits: [],
+        loadedUnit: null,
+        loadedUnit2: null,
       };
   }
+};
+const loadedUnitToWWUnit = (
+  loadedUnit: any,
+  playerSlot: number,
+  position: Position
+): WWUnit => {
+  return {
+    ...loadedUnit,
+    isReady: false,
+    playerSlot: playerSlot,
+    position: position,
+  };
 };
 
 export const applyMainEventToMatch = (
   matchId: string,
-  currentPlayerSlot: PlayerSlot,
+  currentPlayer: PlayerInMatch,
   event: WWEvent
 ) => {
   const match = serverMatchStates.get(matchId);
@@ -111,7 +129,7 @@ export const applyMainEventToMatch = (
 
   switch (event.type) {
     case "build": {
-      match.units.push(createNewUnitFromBuildEvent(event, currentPlayerSlot));
+      match.units.push(createNewUnitFromBuildEvent(event, currentPlayer.slot));
       break;
     }
     case "move": {
@@ -130,7 +148,7 @@ export const applyMainEventToMatch = (
 
 export const applySubEventToMatch = (
   matchId: string,
-  currentPlayerSlot: PlayerSlot,
+  currentPlayer: PlayerInMatch,
   event: WWEvent,
   fromPosition: Position
 ) => {
@@ -146,16 +164,38 @@ export const applySubEventToMatch = (
     case "wait":
       break;
     case "attack":
-      //get both units, substract hp
+      const attacker = getUnitAtPosition(match, fromPosition);
+      const defender = getUnitAtPosition(match, event.defenderPosition);
+      if (attacker === null || defender === null)
+        throw new Error("This should never happen");
+      if (
+        event.defenderHP === 0 //kill unit
+      );
+      else defender.stats.hp = event.defenderHP;
+      if (event.attackerHP !== undefined) {
+        if (
+          event.attackerHP === 0 //kill unit
+        );
+        else attacker.stats.hp = event.attackerHP;
+      }
       break;
     case "ability": {
       switch (unit.type) {
         case "infantry":
         case "mech":
-          //capture
+          //capture, with hooks
           break;
         case "apc":
           //supply
+          for (const dir of allDirections) {
+            const suppliedUnit = getUnitAtPosition(
+              match,
+              addDirection(fromPosition, dir)
+            );
+            if (suppliedUnit !== null)
+              suppliedUnit.stats.fuel =
+                unitPropertiesMap[suppliedUnit.type].initialFuel;
+          }
           break;
         case "blackBomb":
           //deal dmg
@@ -170,6 +210,7 @@ export const applySubEventToMatch = (
           break;
         case "stealth":
         case "sub":
+          //toggle hide
           if ("hidden" in unit) unit.hidden = !unit.hidden;
           break;
         default:
@@ -180,10 +221,49 @@ export const applySubEventToMatch = (
     case "unload1": {
       switch (event.unloads.length) {
         case 1:
-          //get unload index, unload
+          if (event.unloads[0].isSecondUnit && "loadedUnit2" in unit) {
+            match.units.push(
+              loadedUnitToWWUnit(
+                unit.loadedUnit2,
+                unit.playerSlot,
+                addDirection(fromPosition, event.unloads[0].direction)
+              )
+            );
+            unit.loadedUnit2 = null;
+          } else if (!event.unloads[0].isSecondUnit && "loadedUnit" in unit) {
+            match.units.push(
+              loadedUnitToWWUnit(
+                unit.loadedUnit,
+                unit.playerSlot,
+                addDirection(fromPosition, event.unloads[0].direction)
+              )
+            );
+            if ("loadedUnit2" in unit) {
+              unit.loadedUnit = unit.loadedUnit2;
+              unit.loadedUnit2 = null;
+            } else unit.loadedUnit = null;
+          }
           break;
         case 2:
-          //unload all
+          //unload all. unloads[0] refers to 1st unit, unloads[1] refers to 2nd unit
+          if ("loadedUnit" in unit && "loadedUnit2" in unit) {
+            match.units.push(
+              loadedUnitToWWUnit(
+                unit.loadedUnit,
+                unit.playerSlot,
+                addDirection(fromPosition, event.unloads[0].direction)
+              )
+            );
+            match.units.push(
+              loadedUnitToWWUnit(
+                unit.loadedUnit2,
+                unit.playerSlot,
+                addDirection(fromPosition, event.unloads[1].direction)
+              )
+            );
+            unit.loadedUnit = null;
+            unit.loadedUnit2 = null;
+          }
           break;
         default:
           break;
@@ -191,7 +271,23 @@ export const applySubEventToMatch = (
       break;
     }
     case "repair": {
-      //get repair unit, calc cost, determine if enough stonks for repair, repair
+      const repairedUnit = getUnitAtPosition(
+        match,
+        addDirection(fromPosition, event.direction)
+      );
+      if (repairedUnit === null) throw new Error("This should never happen");
+
+      repairedUnit.stats.fuel =
+        unitPropertiesMap[repairedUnit.type].initialFuel;
+      if (repairedUnit.stats.hp >= 90) repairedUnit.stats.hp = 99;
+      else {
+        const { cost } = unitPropertiesMap[repairedUnit.type];
+        // TODO hook: cost and facility modifiers based on powers etc.
+        if (cost * 0.1 <= currentPlayer.funds) {
+          repairedUnit.stats.hp += 10;
+          currentPlayer.funds -= cost * 0.1;
+        }
+      }
       break;
     }
     case "launchMissile": {
@@ -201,7 +297,6 @@ export const applySubEventToMatch = (
       }
       break;
     }
-    
   }
   unit.isReady = false;
 };

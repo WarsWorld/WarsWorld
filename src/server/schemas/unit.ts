@@ -58,38 +58,48 @@ const creatableOtherLandUnitsWithAmmo = withAmmoUnitStatsSchema.extend({
 const creatableBlackBoatSchema = withNoAmmoUnitStatsSchema
   .extend(withType("blackBoat"))
   .extend({
-    loadedUnits: z.array(creatableSoldierSchema).min(0).max(2),
+    loadedUnit: z.nullable(creatableSoldierSchema),
+    loadedUnit2: z.nullable(creatableSoldierSchema),
   });
 
 const creatableLanderSchema = withNoAmmoUnitStatsSchema
   .extend(withType("lander"))
   .extend({
-    loadedUnits: z
-      .array(
-        z.discriminatedUnion("type", [
-          creatableInfantrySchema,
-          creatableMechSchema,
-          createReconSchema,
-          creatableAPCSchema,
-          creatableOtherLandUnitsWithAmmo,
-        ])
-      )
-      .min(0)
-      .max(2),
+    loadedUnit: z.nullable(
+      z.discriminatedUnion("type", [
+        creatableInfantrySchema,
+        creatableMechSchema,
+        createReconSchema,
+        creatableAPCSchema,
+        creatableOtherLandUnitsWithAmmo,
+      ])
+    ),
+    loadedUnit2: z.nullable(
+      z.discriminatedUnion("type", [
+        creatableInfantrySchema,
+        creatableMechSchema,
+        createReconSchema,
+        creatableAPCSchema,
+        creatableOtherLandUnitsWithAmmo,
+      ])
+    ),
   });
 
 const creatableCruiserSchema = withAmmoUnitStatsSchema
   .extend(withType("cruiser"))
   .extend({
-    loadedUnits: z
-      .array(
-        z.discriminatedUnion("type", [
-          creatableTransportCopterSchema,
-          creatableBattleCopterSchema,
-        ])
-      )
-      .min(0)
-      .max(2),
+    loadedUnit: z.nullable(
+      z.discriminatedUnion("type", [
+        creatableTransportCopterSchema,
+        creatableBattleCopterSchema,
+      ])
+    ),
+    loadedUnit2: z.nullable(
+      z.discriminatedUnion("type", [
+        creatableTransportCopterSchema,
+        creatableBattleCopterSchema,
+      ])
+    ),
   });
 
 const creatableBomberAndFighterSchema = withAmmoUnitStatsSchema.extend({
@@ -111,17 +121,22 @@ const creatableSubSchema = withAmmoUnitStatsSchema
 const creatableCarrierSchema = withAmmoUnitStatsSchema
   .extend(withType("carrier"))
   .extend({
-    loadedUnits: z
-      .array(
-        z.discriminatedUnion("type", [
-          creatableTransportCopterSchema,
-          creatableBattleCopterSchema,
-          creatableBomberAndFighterSchema,
-          creatableStealthSchema,
-        ])
-      )
-      .min(0)
-      .max(2),
+    loadedUnit: z.nullable(
+      z.discriminatedUnion("type", [
+        creatableTransportCopterSchema,
+        creatableBattleCopterSchema,
+        creatableBomberAndFighterSchema,
+        creatableStealthSchema,
+      ])
+    ),
+    loadedUnit2: z.nullable(
+      z.discriminatedUnion("type", [
+        creatableTransportCopterSchema,
+        creatableBattleCopterSchema,
+        creatableBomberAndFighterSchema,
+        creatableStealthSchema,
+      ])
+    ),
   });
 
 const creatablePipeRunnerSchema = withAmmoUnitStatsSchema.extend(

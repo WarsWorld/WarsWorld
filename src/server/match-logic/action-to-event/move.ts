@@ -12,6 +12,7 @@ import { MoveEvent } from "../../../shared/types/events";
 import { TRPCError } from "@trpc/server";
 import { throwIfUnitIsWaited, throwIfUnitNotOwned, throwMessage } from "./trpc-error-manager";
 
+//TODO: check load!!!
 export const createNoMoveEvent: () => MoveEvent = () => {
   return {
     type: "move",
