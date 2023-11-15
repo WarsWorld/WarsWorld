@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { directionSchema } from "./direction";
-import { positionSchema } from "./position";
+import { pathSchema, positionSchema } from "./position";
 import { unitTypeSchema } from "./unit";
 
 const buildActionSchema = z.object({
@@ -73,7 +73,7 @@ const subActionSchema = z.discriminatedUnion("type", [
 
 const moveActionSchema = z.object({
   type: z.literal("move"),
-  path: z.array(positionSchema),
+  path: pathSchema,
   subAction: subActionSchema,
 });
 

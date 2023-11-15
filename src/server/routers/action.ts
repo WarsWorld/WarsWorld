@@ -1,32 +1,30 @@
 import { observable } from "@trpc/server/observable";
+import { emitEvent, subscribeToEvents } from "server/emitter/event-emitter";
+import { handleMoveAction } from "server/match-logic/action-handlers/move";
+import { matchStore } from "server/match-logic/match-store";
+import { prisma } from "server/prisma/prisma-client";
 import { Action, mainActionSchema } from "server/schemas/action";
 import { isSamePosition } from "server/schemas/position";
-import { emitEvent, subscribeToEvents } from "server/emitter/event-emitter";
-import { applyEventToMatch } from "server/match-logic/server-match-states";
-import { prisma } from "server/prisma/prisma-client";
 import { unitPropertiesMap } from "shared/match-logic/buildable-unit";
-import { EmittableEvent } from "shared/types/events";
+import { EmittableEvent, WWEvent } from "shared/types/events";
+import { MatchWrapper } from "shared/wrappers/match";
+import { PlayerInMatchWrapper } from "shared/wrappers/player-in-match";
 import { z } from "zod";
 import {
   matchBaseProcedure,
   publicBaseProcedure,
   router,
 } from "../trpc/trpc-setup";
-import {
-  BackendMatchState,
-  PlayerInMatch,
-} from "shared/types/server-match-state";
-import { handleMoveAction } from "server/match-logic/action-handlers/move";
 
-interface ActionHandlerProps<T extends Action> {
-  currentPlayer: PlayerInMatch;
+type ActionHandlerProps<T extends Action> = {
+  currentPlayer: PlayerInMatchWrapper;
   action: T;
-  matchState: BackendMatchState;
-}
+  matchState: MatchWrapper;
+};
 
 export type ActionHandler<T extends Action> = (
   props: ActionHandlerProps<T>
-) => unknown;
+) => WWEvent;
 
 // 1. validate shape (zod, .input())
 // 2. validate action
@@ -35,15 +33,14 @@ export type ActionHandler<T extends Action> = (
 const validateAction = (
   action: Action,
   playerId: string,
-  match: BackendMatchState
+  match: MatchWrapper
 ) => {
-  const actingPlayerInMatch = match.players.find(
-    (p) => p.playerId === playerId && p?.eliminated !== true
-  );
+  const player = match.players.getById(playerId);
 
-  if (actingPlayerInMatch === undefined) {
-    throw new Error("You're not in this match or you've been eliminated");
+  if (player === undefined || player.data.hasCurrentTurn !== true) {
+    throw new Error("You're not in this match or it's not your turn");
   }
+
   //TODO re-add this check, was unadded to test tRPC momentarily
   /*if (!actingPlayerInMatch.hasCurrentTurn) {
     throw new Error("It's not your turn");
@@ -54,13 +51,11 @@ const validateAction = (
       const { cost, facility } = unitPropertiesMap[action.unitType];
       // TODO hook: cost and facility modifiers based on powers etc.
 
-      if (cost > actingPlayerInMatch.funds) {
+      if (cost > player.data.funds) {
         throw new Error("You don't have enough funds to build this unit");
       }
 
-      if (
-        match.units.some((u) => isSamePosition(u.position, action.position))
-      ) {
+      if (match.units.hasUnit(action.position)) {
         throw new Error("Can't build where there's a unit already");
       }
 
@@ -69,7 +64,7 @@ const validateAction = (
           (t) =>
             isSamePosition(action.position, t.position) &&
             t.type === facility &&
-            t.ownerSlot === actingPlayerInMatch.slot
+            t.ownerSlot === player.data.slot
         )
       ) {
         throw new Error(
@@ -81,7 +76,7 @@ const validateAction = (
     }
     case "move": {
       handleMoveAction({
-        currentPlayer: actingPlayerInMatch,
+        currentPlayer: player,
         action,
         matchState: match,
       });
@@ -123,8 +118,7 @@ export const actionRouter = router({
         },
       });
 
-      applyEventToMatch(input.matchId, event);
-
+      matchStore.getOrThrow(input.matchId).applyEvent(event);
       emitEvent(event);
 
       return {

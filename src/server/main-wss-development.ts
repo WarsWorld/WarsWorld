@@ -1,8 +1,8 @@
 import { createTRPCwebSocketServer } from "./common-server";
-import { rebuildServerState } from "./match-logic/server-match-states";
+import { matchStore } from "./match-logic/match-store";
 
 (async () => {
-  await rebuildServerState();
+  await matchStore.rebuild();
 
   const wss = createTRPCwebSocketServer({
     port: 3001,

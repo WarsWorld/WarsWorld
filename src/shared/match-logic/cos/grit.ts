@@ -7,26 +7,19 @@ export const grit: COProperties = {
     description:
       "Indirect units have +1 range and gain +20% attack. Direct units lose -20% attack (footsoldiers are normal).",
     hooks: {
-      onAttackRange({ currentValue, currentPlayerData: currentPlayer }) {
+      onAttackRange(value, { attackerData: currentPlayer }) {
         if (isIndirectAttackUnit(currentPlayer.unitType)) {
-          return currentValue + 1;
+          return value + 1;
         }
-
-        return currentValue;
       },
-      onAttackModifier({ currentValue, currentPlayerData: currentPlayer }) {
-        if (isIndirectAttackUnit(currentPlayer.unitType)) {
-          return currentValue + 20;
+      onAttackModifier(value, { attackerData: { unitType } }) {
+        if (isIndirectAttackUnit(unitType)) {
+          return value + 20;
         }
 
-        if (
-          currentPlayer.unitType === "infantry" ||
-          currentPlayer.unitType === "mech"
-        ) {
-          return currentValue;
+        if (unitType !== "infantry" && unitType !== "mech") {
+          return value - 20;
         }
-
-        return currentValue - 20;
       },
     },
   },
@@ -36,19 +29,15 @@ export const grit: COProperties = {
       description: "Indirect units gain +1 range and +20% attack.",
       stars: 3,
       hooks: {
-        onAttackRange({ currentValue, currentPlayerData: currentPlayer }) {
+        onAttackRange(value, { attackerData: currentPlayer }) {
           if (isIndirectAttackUnit(currentPlayer.unitType)) {
-            return currentValue + 1;
+            return value + 1;
           }
-
-          return currentValue;
         },
-        onAttackModifier({ currentValue, currentPlayerData: currentPlayer }) {
+        onAttackModifier(value, { attackerData: currentPlayer }) {
           if (isIndirectAttackUnit(currentPlayer.unitType)) {
-            return currentValue + 20;
+            return value + 20;
           }
-
-          return currentValue;
         },
       },
     },
@@ -57,19 +46,15 @@ export const grit: COProperties = {
       description: "Indirect units gain +2 range and +20% attack.",
       stars: 6,
       hooks: {
-        onAttackRange({ currentValue, currentPlayerData: currentPlayer }) {
-          if (isIndirectAttackUnit(currentPlayer.unitType)) {
-            return currentValue + 2;
+        onAttackRange(value, { attackerData: currentPlayerData }) {
+          if (isIndirectAttackUnit(currentPlayerData.unitType)) {
+            return value + 2;
           }
-
-          return currentValue;
         },
-        onAttackModifier({ currentValue, currentPlayerData: currentPlayer }) {
-          if (isIndirectAttackUnit(currentPlayer.unitType)) {
-            return currentValue + 20;
+        onAttackModifier(value, { attackerData: currentPlayerData }) {
+          if (isIndirectAttackUnit(currentPlayerData.unitType)) {
+            return value + 20;
           }
-
-          return currentValue;
         },
       },
     },

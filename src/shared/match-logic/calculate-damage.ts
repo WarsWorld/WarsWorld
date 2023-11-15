@@ -1,13 +1,7 @@
 import { Position } from "server/schemas/position";
 import { UnitType, WWUnit } from "server/schemas/unit";
-import { BackendMatchState } from "shared/types/server-match-state";
-import { COCombatHookProps, getCOHooks as getCOHooks } from "./co-hooks";
-import { getCommtowerAttackBoost } from "./co-utilities";
-import { getCurrentTile } from "./get-current-tile";
-import { getPlayerBySlot } from "./players";
-import { getUnit } from "./positions";
+import { MatchWrapper } from "shared/wrappers/match";
 import { getTerrainDefenseStars } from "./tiles";
-import { getPlayerUnits } from "./units";
 
 const getBaseDamage = (
   attackerUnit: WWUnit,
@@ -41,62 +35,39 @@ const roundUpTo = (value: number, step: number) => {
  * @see https://awbw.fandom.com/wiki/Damage_Formula?so=search
  */
 export const calculateDamage = (
-  matchState: BackendMatchState,
+  matchState: MatchWrapper,
   attackerPosition: Position,
   defenderPosition: Position
 ) => {
-  const COHooks = getCOHooks(matchState);
-  const attackerUnit = getUnit(matchState, attackerPosition);
-  const defenderUnit = getUnit(matchState, defenderPosition);
+  const COHooks = matchState.players
+    .getCurrentTurnPlayer()
+    .getCOHooksWithDefender(attackerPosition, defenderPosition);
+  const attackerUnit = matchState.units.getUnitOrThrow(attackerPosition);
+  const defenderUnit = matchState.units.getUnitOrThrow(defenderPosition);
 
-  const COHookPropsWithoutValue: Omit<COCombatHookProps, "currentValue"> = {
-    currentPlayerData: {
-      getUnits: () => getPlayerUnits(matchState, attackerUnit.playerSlot),
-      player: getPlayerBySlot(matchState, attackerUnit.playerSlot),
-      tileType: getCurrentTile(matchState, attackerPosition).type,
-      unitType: attackerUnit.type,
-    },
-    defendingPlayerData: {
-      getUnits: () => getPlayerUnits(matchState, defenderUnit.playerSlot),
-      player: getPlayerBySlot(matchState, defenderUnit.playerSlot),
-      tileType: getCurrentTile(matchState, defenderPosition).type,
-      unitType: defenderUnit.type,
-    },
-    matchState,
-  };
+  const COHookProps = matchState.getCOHookPropsWithDefender(
+    attackerPosition,
+    defenderPosition
+  );
 
   const visualHPOfAttacker = getVisualHPfromHP(attackerUnit.stats.hp);
   const visualHPOfDefender = getVisualHPfromHP(defenderUnit.stats.hp);
 
   const attackModifier =
-    COHooks.onAttackModifier({
-      ...COHookPropsWithoutValue,
-      currentValue: 100,
-    }) + getCommtowerAttackBoost(matchState, attackerUnit.playerSlot);
+    COHooks.onAttackModifier(100) +
+    matchState.players.getCurrentTurnPlayer().getCommtowerAttackBoost();
 
-  const defenseModifier = COHooks.onDefenseModifier({
-    ...COHookPropsWithoutValue,
-    currentValue: 100,
-  });
+  /** TODO are you dense? these are ATTACKER hooks, not DEFENDER. */
+  const defenseModifier = COHooks.onDefenseModifier(100);
 
   // base luck: 0-9, whole numbers i think
-  const goodLuckValue = COHooks.onGoodLuck({
-    ...COHookPropsWithoutValue,
-    currentValue: Math.floor(Math.random() * 10),
-  });
-
-  const badLuckValue = COHooks.onBadLuck({
-    ...COHookPropsWithoutValue,
-    currentValue: 0,
-  });
+  const goodLuckValue = COHooks.onGoodLuck(Math.floor(Math.random() * 10));
+  const badLuckValue = COHooks.onBadLuck(0);
 
   // 0-4 (+ lash COP) whole numbers
-  const terrainStars = COHooks.onTerrainStars({
-    ...COHookPropsWithoutValue,
-    currentValue: getTerrainDefenseStars(
-      COHookPropsWithoutValue.defendingPlayerData.tileType
-    ),
-  });
+  const terrainStars = COHooks.onTerrainStars(
+    getTerrainDefenseStars(COHookProps.defenderData.tileType)
+  );
 
   // baseDamage: 1-100
   const baseDamage = getBaseDamage(attackerUnit, defenderUnit);
@@ -117,10 +88,10 @@ export const calculateDamage = (
 
 type DamageTable = Partial<Record<UnitType, number>>;
 
-interface Weaponry {
+type Weaponry = {
   primary: DamageTable;
   secondary?: DamageTable;
-}
+};
 
 type DamageMatrix = Partial<Record<UnitType, Weaponry>>;
 

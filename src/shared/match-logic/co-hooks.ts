@@ -1,86 +1,75 @@
 import { TileType } from "server/schemas/tile";
-import { WWUnit, UnitType } from "server/schemas/unit";
-import {
-  BackendMatchState,
-  PlayerInMatch,
-  getCurrentTurnPlayer,
-} from "shared/types/server-match-state";
-import { COPropertiesMap } from "./co";
+import { UnitType } from "server/schemas/unit";
+import { MatchWrapper } from "shared/wrappers/match";
+import { PlayerInMatchWrapper } from "shared/wrappers/player-in-match";
+import { Facility } from "./buildable-unit";
 
-export interface COHookPlayerProps {
-  player: PlayerInMatch;
+export type COHookPlayerProps = {
+  player: PlayerInMatchWrapper;
   unitType: UnitType;
+  unitFacility: Facility;
   tileType: TileType;
-  getUnits(): WWUnit[];
-}
-
-export interface COHookProps {
-  currentValue: number;
-  matchState: BackendMatchState;
-  currentPlayerData: COHookPlayerProps;
-}
-
-export interface COCombatHookProps extends COHookProps {
-  defendingPlayerData: COHookPlayerProps;
-}
-
-// TODO should we allow returning void/undefined which gets interpreted as "useCurrentValue"?
-// could make some code a bit shorter and easier to read, but less explicit.
-const defaultCOHook = ({ currentValue }: COHookProps) => currentValue;
-
-type COPacifistHook = typeof defaultCOHook;
-type COCombatHook = (props: COCombatHookProps) => number;
-
-type COPacifistHookNames =
-  | "onMovementRange"
-  | "onMovementCost"
-  | "onCost"
-  | "onFuelDrain";
-
-type COCombatHookNames =
-  | "onAttackModifier"
-  | "onDefenseModifier"
-  | "onGoodLuck"
-  | "onBadLuck"
-  | "onTerrainStars"
-  | "onAttackRange";
-
-export type COHooks = Record<COPacifistHookNames, COPacifistHook> &
-  Record<COCombatHookNames, COCombatHook>;
-
-export const getCOHooks = (matchState: BackendMatchState): COHooks => {
-  const currentPlayer = getCurrentTurnPlayer(matchState);
-
-  const CO = COPropertiesMap[currentPlayer.co];
-
-  const d2dHooks = getCOHooksWithDefaults(CO.dayToDay?.hooks ?? {});
-  const COPHooks = CO.powers.COPower?.hooks ?? {};
-  const SCOPHooks = CO.powers.superCOPower?.hooks ?? {};
-
-  switch (currentPlayer.COPowerState) {
-    case "no-power":
-      return d2dHooks;
-    case "co-power":
-      return { ...d2dHooks, ...COPHooks };
-    case "super-co-power":
-      return { ...d2dHooks, ...SCOPHooks };
-  }
 };
 
-const defaultCOHooks: COHooks = {
-  onAttackModifier: defaultCOHook,
-  onDefenseModifier: defaultCOHook,
-  onGoodLuck: defaultCOHook,
-  onBadLuck: defaultCOHook,
-  onTerrainStars: defaultCOHook,
-  onMovementRange: defaultCOHook,
-  onMovementCost: defaultCOHook,
-  onAttackRange: defaultCOHook,
-  onCost: defaultCOHook,
-  onFuelDrain: defaultCOHook,
+export type COHookProps = {
+  matchState: MatchWrapper;
+  attackerData: COHookPlayerProps;
 };
 
-export const getCOHooksWithDefaults = (COHooks: Partial<COHooks>): COHooks => ({
-  ...defaultCOHooks,
-  ...COHooks,
-});
+export type COHookPropsWithDefender = COHookProps & {
+  defenderData: COHookPlayerProps;
+};
+
+const defaultCOHook = (value: number, _props: COHookProps) => value;
+
+export type COHook = typeof defaultCOHook;
+export type COHookWithDefender = (
+  value: number,
+  props: COHookPropsWithDefender
+) => number;
+
+export type COHooks = {
+  onMovementRange: COHook;
+  onMovementCost: COHook;
+  onCost: COHook;
+  onFuelDrain: COHook;
+  onFuelCost: COHook;
+
+  onAttackModifier: COHookWithDefender;
+  onDefenseModifier: COHookWithDefender;
+  onGoodLuck: COHookWithDefender;
+  onBadLuck: COHookWithDefender;
+  onTerrainStars: COHookWithDefender;
+  onAttackRange: COHookWithDefender;
+};
+
+export type COHookAllowReturnUndefined = (
+  ...args: Parameters<COHook>
+) => number | undefined;
+export type COHookWithDefenderAllowReturnUndefined = (
+  ...args: Parameters<COHookWithDefender>
+) => number | undefined;
+
+/**
+ * This type makes CO definitions move convenient.
+ * Most of the code uses `COHooks` which
+ * expects all hooks to be present and always
+ * return a number, which would otherwise mean
+ * a lot of boilerplate and redundancy in each individual CO code.
+ * With this type, both of these properties
+ * are now optional.currentPlayer
+ */
+export type COHooksAllowReturnUndefined = {
+  onMovementRange?: COHookAllowReturnUndefined;
+  onMovementCost?: COHookAllowReturnUndefined;
+  onCost?: COHookAllowReturnUndefined;
+  onFuelDrain?: COHookAllowReturnUndefined;
+  onFuelCost?: COHookAllowReturnUndefined;
+
+  onAttackModifier?: COHookWithDefenderAllowReturnUndefined;
+  onDefenseModifier?: COHookWithDefenderAllowReturnUndefined;
+  onGoodLuck?: COHookWithDefenderAllowReturnUndefined;
+  onBadLuck?: COHookWithDefenderAllowReturnUndefined;
+  onTerrainStars?: COHookWithDefenderAllowReturnUndefined;
+  onAttackRange?: COHookWithDefenderAllowReturnUndefined;
+};

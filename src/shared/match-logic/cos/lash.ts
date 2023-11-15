@@ -8,8 +8,8 @@ export const lash: COProperties = {
       stars: 123, // TODO
       description: "TODO",
       hooks: {
-        onTerrainStars({ currentValue }) {
-          return currentValue * 2;
+        onTerrainStars(value) {
+          return value * 2;
         },
       },
     },

@@ -1,12 +1,14 @@
 import { COProperties } from "../co";
 
+/* TODO is any rounding needed here? */
+
 export const colin: COProperties = {
   displayName: "Colin",
   dayToDay: {
     description: "Units cost -20% less to build and lose -10% attack.",
     hooks: {
-      onCost: ({ currentValue }) => currentValue * 0.8,
-      onAttackModifier: ({ currentValue }) => currentValue * 0.9,
+      onCost: (value) => value * 0.8,
+      onAttackModifier: (value) => value * 0.9,
     },
   },
   powers: {
@@ -14,8 +16,9 @@ export const colin: COProperties = {
       name: "Gold Rush",
       description: "Funds are multiplied by 1.5x.",
       stars: 2,
-      instantEffect: ({ currentPlayerData }) => {
-        currentPlayerData.player.funds = currentPlayerData.player.funds * 1.5;
+      instantEffect: ({ attackerData: currentPlayerData }) => {
+        currentPlayerData.player.data.funds =
+          currentPlayerData.player.data.funds * 1.5;
       },
     },
     superCOPower: {
@@ -23,12 +26,12 @@ export const colin: COProperties = {
       description: "All units gain 3% attack per 1000 funds.",
       stars: 6,
       hooks: {
-        onAttackModifier({ currentPlayerData, currentValue }) {
+        onAttackModifier(value, { attackerData: currentPlayerData }) {
           const numberOf1000Funds = Math.floor(
-            currentPlayerData.player.funds / 1000
+            currentPlayerData.player.data.funds / 1000
           );
           const attackBonus = numberOf1000Funds * 3;
-          return currentValue + attackBonus;
+          return value + attackBonus;
         },
       },
     },
