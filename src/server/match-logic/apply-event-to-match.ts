@@ -1,6 +1,6 @@
-import { BuildEvent, WWEvent } from "../../shared/types/events";
+import { WWEvent } from "../../shared/types/events";
 import { PlayerSlot } from "../schemas/player-slot";
-import { LandUnitTypes, WWUnit } from "../schemas/unit";
+import { WWUnit } from "../schemas/unit";
 import { unitPropertiesMap } from "../../shared/match-logic/buildable-unit";
 import { serverMatchStates } from "./server-match-states";
 import {
@@ -11,7 +11,7 @@ import {
 import { isSamePosition, Position } from "../schemas/position";
 import { PlayerInMatch } from "../../shared/types/server-match-state";
 import { BuildAction } from "../schemas/action";
-import { allDirections, directionSchema } from "../schemas/direction";
+import { allDirections } from "../schemas/direction";
 
 const createNewUnitFromBuildEvent = (
   event: BuildAction,
@@ -104,8 +104,8 @@ const createNewUnitFromBuildEvent = (
       //should never happen
       return {
         type: "infantry",
-        ...partialUnit
-      }
+        ...partialUnit,
+      };
   }
 };
 const loadedUnitToWWUnit = (
@@ -121,10 +121,7 @@ const loadedUnitToWWUnit = (
   };
 };
 
-const loadUnitInto = (
-  unitToLoad: WWUnit,
-  transportUnit: WWUnit,
-): WWUnit => {
+const loadUnitInto = (unitToLoad: WWUnit, transportUnit: WWUnit) => {
   switch (transportUnit.type) {
     case "transportCopter":
     case "apc": {
@@ -141,14 +138,52 @@ const loadUnitInto = (
       break;
     }
     case "lander": {
-      if (unitToLoad.type in LandUnitTypes) {
+      if (
+        unitToLoad.type === "infantry" ||
+        unitToLoad.type === "mech" ||
+        unitToLoad.type === "recon" ||
+        unitToLoad.type === "apc" ||
+        unitToLoad.type === "artillery" ||
+        unitToLoad.type === "tank" ||
+        unitToLoad.type === "antiAir" ||
+        unitToLoad.type === "missile" ||
+        unitToLoad.type === "rocket" ||
+        unitToLoad.type === "mediumTank" ||
+        unitToLoad.type === "neoTank" ||
+        unitToLoad.type === "megaTank"
+      ) {
         if (transportUnit.loadedUnit === null) {
           transportUnit.loadedUnit = unitToLoad;
-        }
+        } else transportUnit.loadedUnit2 = unitToLoad;
+      }
+      break;
+    }
+    case "cruiser": {
+      if (
+        unitToLoad.type === "transportCopter" ||
+        unitToLoad.type === "battleCopter"
+      ) {
+        if (transportUnit.loadedUnit === null) {
+          transportUnit.loadedUnit = unitToLoad;
+        } else transportUnit.loadedUnit2 = unitToLoad;
+      }
+      break;
+    }
+    case "carrier": {
+      if (
+        unitToLoad.type === "transportCopter" ||
+        unitToLoad.type === "battleCopter" ||
+        unitToLoad.type === "fighter" ||
+        unitToLoad.type === "bomber" ||
+        unitToLoad.type === "blackBomb" ||
+        unitToLoad.type === "stealth"
+      ) {
+        if (transportUnit.loadedUnit === null) {
+          transportUnit.loadedUnit = unitToLoad;
+        } else transportUnit.loadedUnit2 = unitToLoad;
       }
     }
   }
-  return transportUnit;
 };
 
 export const applyMainEventToMatch = (
@@ -203,19 +238,48 @@ export const applyMainEventToMatch = (
           }
         } else {
           //load
-          if ("loadedUnit" in unitAtDestination) {
-            if (unitAtDestination.loadedUnit === null) {
-              unitAtDestination.loadedUnit = unit;
-
-            }
-
-          }
+          loadUnitInto(unit, unitAtDestination);
+          //delete unit
         }
       }
-
       break;
     }
-
+    case "unload2": {
+      const unit = getUnitAtPosition(match, event.transportPosition);
+      if (unit === null) throw new Error("This should never happen");
+      if (event.unloads.isSecondUnit && "loadedUnit2" in unit) {
+        match.units.push(
+          loadedUnitToWWUnit(
+            unit.loadedUnit2,
+            unit.playerSlot,
+            addDirection(event.transportPosition, event.unloads.direction)
+          )
+        );
+        unit.loadedUnit2 = null;
+      } else if (!event.unloads.isSecondUnit && "loadedUnit" in unit) {
+        match.units.push(
+          loadedUnitToWWUnit(
+            unit.loadedUnit,
+            unit.playerSlot,
+            addDirection(event.transportPosition, event.unloads.direction)
+          )
+        );
+        if ("loadedUnit2" in unit) {
+          unit.loadedUnit = unit.loadedUnit2;
+          unit.loadedUnit2 = null;
+        } else unit.loadedUnit = null;
+      }
+      break;
+    }
+    case "coPower": {
+      break;
+    }
+    case "superCOPower": {
+      break;
+    }
+    case "passTurn": {
+      break;
+    }
     default:
       throw new Error("Received an event that is not a main event");
   }

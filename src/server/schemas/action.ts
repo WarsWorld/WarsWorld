@@ -70,7 +70,7 @@ const superCOPowerActionSchema = z.object({
 });
 
 const passTurnActionSchema = z.object({
-  type: z.literal("endTurn"),
+  type: z.literal("passTurn"),
 });
 
 //subAction comes after a move action (which can also be "stand still")

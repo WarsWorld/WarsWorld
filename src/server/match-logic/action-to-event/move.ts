@@ -90,10 +90,54 @@ export const moveActionToEvent: MainActionToEvent<MoveAction> = ({
           if (!("loadedUnit" in unitInPosition)) {
             throw new TRPCError({
               code: "BAD_REQUEST",
-              message: "Move action ending position is overlapping with an allied unit",
+              message:
+                "Move action ending position is overlapping with an allied unit",
             });
           }
-          if (unitInPosition.loadedUnit)
+          if (unitInPosition.loadedUnit !== null) {
+            if (
+              !("loadedUnit2" in unitInPosition) ||
+              unitInPosition.loadedUnit2 !== null
+            ) {
+              throw new TRPCError({
+                code: "BAD_REQUEST",
+                message: "Transport already occupied",
+              });
+            }
+          }
+          if (unitInPosition.type === "cruiser") {
+            console.log("");
+          }
+          //check if unit can go into that transport
+          switch (unitInPosition.type) {
+            case "cruiser": {
+              if (unit.type !== "transportCopter" && unit.type !== "battleCopter")
+                throwMessage("Can't load non-copter in cruiser");
+              break;
+            }
+            case "carrier": {
+              if (unitPropertiesMap[unit.type].facility !== "airport")
+                throwMessage("Can't load non-land unit to lander");
+              break;
+            }
+            case "transportCopter":
+            case "apc":
+            case "blackBoat": {
+              if (unit.type !== "infantry" && unit.type !== "mech")
+                throwMessage("Can't load non-soldier in apc/transport/blackB");
+              break;
+            }
+            case "lander": {
+              if (unitPropertiesMap[unit.type].facility !== "base")
+                throwMessage("Can't load non-land unit to lander");
+              break;
+            }
+
+            default: {
+              unit;
+              throw new Error("xd");
+            }
+          }
         }
       }
     }

@@ -203,10 +203,6 @@ export type WithoutWeaponUnitType = z.infer<
 >["type"];
 export type WithAmmoUnitType = z.infer<typeof unitWithAmmoSchema>["type"];
 
-export type LandUnitTypes = z.infer<typeof creatableLandUnitSchema>["type"];
-export type WWAirUnit = z.infer<typeof creatableAirUnitSchema>;
-export type WWSeaUnit = z.infer<typeof creatableSeaUnitSchema>;
-
 export type WWUnit = z.infer<typeof creatableUnitSchema>;
 
 export type UnitType = WWUnit["type"];
