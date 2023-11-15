@@ -28,13 +28,13 @@ export default function LoginSignupModal({ isOpen, setIsOpen, width }: Props) {
     if (value)
       await router.replace("", {
         query: `authModalOpen&SignUpForm${
-          callbackUrl && "&callbackUrl=" + encodeURIComponent(callbackUrl)
+          callbackUrl ? "&callbackUrl=" + encodeURIComponent(callbackUrl) : ""
         }`,
       });
     else
       await router.replace("", {
         query: `authModalOpen${
-          callbackUrl && "&callbackUrl=" + encodeURIComponent(callbackUrl)
+          callbackUrl ? "&callbackUrl=" + encodeURIComponent(callbackUrl) : ""
         }`,
       });
   };
