@@ -4,7 +4,10 @@ import { WWUnit, unitTypeIsUnitWithAmmo } from "server/schemas/unit";
 import { prisma } from "server/prisma/prisma-client";
 import { unitPropertiesMap } from "shared/match-logic/buildable-unit";
 import { EmittableEvent } from "shared/types/events";
-import { BackendMatchState } from "shared/types/server-match-state";
+import {
+  BackendMatchState,
+  getCurrentTurnPlayer,
+} from "shared/types/server-match-state";
 import { getChangeableTilesFromMap } from "../../shared/match-logic/get-changeable-tile-from-map";
 import { LeagueType } from "@prisma/client";
 
@@ -168,14 +171,7 @@ export const applyEventToMatch = (matchId: string, event: EmittableEvent) => {
 
   switch (event.type) {
     case "build": {
-      const currentPlayerSlot = match.players.find(
-        (p) => p.hasCurrentTurn
-      )?.slot;
-
-      if (currentPlayerSlot === undefined) {
-        throw new Error("TODO?");
-      }
-
+      const currentPlayerSlot = getCurrentTurnPlayer(match).slot;
       const unit = createNewUnitFromBuildAction(event, currentPlayerSlot);
       match.map.tiles[event.position[0]][event.position[1]].unit = unit;
     }
