@@ -1,2 +1,3 @@
 - Black boat repair, if a unit has more than 89 hp (aka visual 10 hp), is free, and sets it to 99.
     Otherwise, it costs 1/10 of unit cost and repairs 10 hp.
+- Units can join, regardless of their visible hp

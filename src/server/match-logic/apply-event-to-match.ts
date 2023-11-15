@@ -1,6 +1,6 @@
 import { BuildEvent, WWEvent } from "../../shared/types/events";
 import { PlayerSlot } from "../schemas/player-slot";
-import { unitTypeIsUnitWithAmmo, WWUnit } from "../schemas/unit";
+import { LandUnitTypes, WWUnit } from "../schemas/unit";
 import { unitPropertiesMap } from "../../shared/match-logic/buildable-unit";
 import { serverMatchStates } from "./server-match-states";
 import {
@@ -31,14 +31,12 @@ const createNewUnitFromBuildEvent = (
     isReady: true,
   } satisfies Partial<WWUnit>;
 
-  if (unitTypeIsUnitWithAmmo(unitType)) {
-    const ammo = unitPropertiesMap[unitType].initialAmmo;
-
+  if ("initialAmmo" in unitProperties) {
     const partialUnitWithAmmo = {
       ...partialUnit,
       stats: {
         ...partialUnit.stats,
-        ammo,
+        ammo: unitProperties.initialAmmo,
       },
     } satisfies Partial<WWUnit>;
 
@@ -102,6 +100,12 @@ const createNewUnitFromBuildEvent = (
         loadedUnit: null,
         loadedUnit2: null,
       };
+    default:
+      //should never happen
+      return {
+        type: "infantry",
+        ...partialUnit
+      }
   }
 };
 const loadedUnitToWWUnit = (
@@ -115,6 +119,36 @@ const loadedUnitToWWUnit = (
     playerSlot: playerSlot,
     position: position,
   };
+};
+
+const loadUnitInto = (
+  unitToLoad: WWUnit,
+  transportUnit: WWUnit,
+): WWUnit => {
+  switch (transportUnit.type) {
+    case "transportCopter":
+    case "apc": {
+      if (unitToLoad.type === "infantry" || unitToLoad.type === "mech")
+        transportUnit.loadedUnit = unitToLoad;
+      break;
+    }
+    case "blackBoat": {
+      if (unitToLoad.type === "infantry" || unitToLoad.type === "mech") {
+        if (transportUnit.loadedUnit === null)
+          transportUnit.loadedUnit = unitToLoad;
+        else transportUnit.loadedUnit2 = unitToLoad;
+      }
+      break;
+    }
+    case "lander": {
+      if (unitToLoad.type in LandUnitTypes) {
+        if (transportUnit.loadedUnit === null) {
+          transportUnit.loadedUnit = unitToLoad;
+        }
+      }
+    }
+  }
+  return transportUnit;
 };
 
 export const applyMainEventToMatch = (
@@ -135,9 +169,50 @@ export const applyMainEventToMatch = (
     case "move": {
       const unit = getUnitAtPosition(match, event.path[0]);
       if (unit === null) throw new Error("This should never happen");
-      unit.position = event.path[event.path.length - 1];
+
       //TODO: does fuel consumption need hooks?
       unit.stats.fuel -= event.path.length - 1;
+
+      const unitAtDestination = getUnitAtPosition(
+        match,
+        event.path[event.path.length - 1]
+      );
+      if (unitAtDestination === null)
+        unit.position = event.path[event.path.length - 1];
+      else {
+        if (unit.type === unitAtDestination.type) {
+          //join (hp, fuel, ammo)
+          const unitProperties = unitPropertiesMap[unit.type];
+          unit.stats.fuel = Math.min(
+            unit.stats.fuel + unitAtDestination.stats.fuel,
+            unitProperties.initialFuel
+          );
+          unit.stats.hp = Math.min(
+            unit.stats.hp + unitAtDestination.stats.hp,
+            99
+          );
+          if (
+            "ammo" in unit.stats &&
+            "ammo" in unitAtDestination.stats &&
+            "initialAmmo" in unitProperties
+          ) {
+            unit.stats.ammo = Math.min(
+              unit.stats.ammo + unitAtDestination.stats.ammo,
+              unitProperties.initialAmmo
+            );
+          }
+        } else {
+          //load
+          if ("loadedUnit" in unitAtDestination) {
+            if (unitAtDestination.loadedUnit === null) {
+              unitAtDestination.loadedUnit = unit;
+
+            }
+
+          }
+        }
+      }
+
       break;
     }
 

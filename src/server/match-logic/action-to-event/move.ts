@@ -63,11 +63,9 @@ export const moveActionToEvent: MainActionToEvent<MoveAction> = ({
       });
     }
 
-    const unitInPosition = matchState.units.find((u) =>
-      isSamePosition(position, u.position)
-    );
+    const unitInPosition = getUnitAtPosition(matchState, position);
     if (
-      unitInPosition !== undefined &&
+      unitInPosition !== null &&
       unitInPosition.playerSlot !== unit.playerSlot
     ) {
       //throw new Error("Trying to move through an enemy occupied tile");
@@ -86,12 +84,16 @@ export const moveActionToEvent: MainActionToEvent<MoveAction> = ({
     }
 
     if (i === action.path.length - 1) {
-      if (unitInPosition !== undefined && unitInPosition !== null) {
-        //check if trying to join:
-        if (unitInPosition.type != unit.type || unitInPosition.stats.hp == 10) {
-          throwMessage(
-            "Move action ending position is overlapping with an allied unit"
-          );
+      if (unitInPosition !== null) {
+        //check if trying to join or load into transport:
+        if (unitInPosition.type !== unit.type) {
+          if (!("loadedUnit" in unitInPosition)) {
+            throw new TRPCError({
+              code: "BAD_REQUEST",
+              message: "Move action ending position is overlapping with an allied unit",
+            });
+          }
+          if (unitInPosition.loadedUnit)
         }
       }
     }
