@@ -56,3 +56,13 @@ export interface BackendMatchState {
   currentWeather: Weather;
   weatherNextDay: Weather | null;
 }
+
+export const getCurrentTurnPlayer = (matchState: BackendMatchState) => {
+  const player = matchState.players.find(p => p.hasCurrentTurn)
+
+  if (player === undefined) {
+    throw new Error("No player with current turn was found")
+  }
+
+  return player;
+}

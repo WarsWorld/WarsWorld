@@ -15,7 +15,7 @@ export interface COPower {
   description: string;
   stars: number;
   instantEffect?: (props: COHookProps) => void;
-  hooks?: COHooks;
+  hooks?: Partial<COHooks>;
 }
 
 // TODO general CO description, likes, dislikes, etc.
@@ -23,7 +23,7 @@ export interface COProperties {
   displayName: string;
   dayToDay?: {
     description: string;
-    hooks: COHooks;
+    hooks: Partial<COHooks>;
   };
   powers: {
     COPower?: COPower;
