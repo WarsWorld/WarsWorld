@@ -67,32 +67,23 @@ export class MatchWrapper {
   }
 
   getNextAvailableSlot() {
-    let nextAvailablePlayerSlot: PlayerSlot | null = null;
-
     for (let i = 0; i < this.map.data.numberOfPlayers; i++) {
       if (this.players.getBySlot(i) !== undefined) {
-        nextAvailablePlayerSlot = i;
-        break;
+        return i;
       }
     }
 
-    if (nextAvailablePlayerSlot === null) {
-      throw new Error("No player slots available (game full)");
-    }
-
-    return nextAvailablePlayerSlot;
+    throw new Error("No player slots available (game full)");
   }
 
   allSlotsReady() {
-    let ready = true;
-
     for (let i = 0; i < this.map.data.numberOfPlayers; i++) {
       if (this.players.getBySlot(i)?.data.ready !== true) {
-        ready = false;
+        return false;
       }
     }
 
-    return ready;
+    return true;
   }
 
   getTile(position: Position) {

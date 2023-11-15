@@ -122,6 +122,6 @@ export class PlayerInMatchWrapper {
       baseMovement
     );
 
-    return Math.min(movement, unit.stats.fuel);
+    return Math.min(movement, unit.stats.fuel); /** TODO checking fuel twice? */
   }
 }
