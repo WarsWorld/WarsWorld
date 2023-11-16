@@ -96,12 +96,20 @@ const validateMainActionAndToEvent = (
         position: action.path[action.path.length - 1],
       };
     }
+    case "coPower": {
+      //TODO function :)
+    }
+    case "superCOPower": {
+
+    }
+    case "passTurn": {
+
+    }
   }
 
   return { event: undefined, position: null };
 };
 
-//TODO: remember that when unit joins, it counts as a "wait" subaction. overrite it!
 //TODO: unload1 should "update" units discovered for up to 2 positions
 const validateSubActionAndToEvent = (
   action: Action,
@@ -174,13 +182,17 @@ export const actionRouter = router({
       applyMainEventToMatch(input.matchId, currentPlayer, event);
 
       if (input.type === "move" && event.type === "move") {
-        if (!event.trap)
-          event.subEvent = validateSubActionAndToEvent(
-            input.subAction,
-            currentPlayer,
-            match,
-            event.path[event.path.length - 1]
-          );
+        if (!event.trap) {
+          //check if unit joined/loaded (cause then sub-action = wait)
+          if (!match.units.hasUnit(event.path[event.path.length - 1])) {
+            event.subEvent = validateSubActionAndToEvent(
+              input.subAction,
+              currentPlayer,
+              match,
+              event.path[event.path.length - 1]
+            );
+          }
+        }
 
         if (position === null) throw new Error("This should never happen");
         applySubEventToMatch(
