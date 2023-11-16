@@ -88,7 +88,7 @@ Directions for Github Account:
 
 Directions for Discord Account:
 
-- Follow this guide to get the client and secret:[Discord Guide](https://support.heateor.com/discord-client-id-discord-client-secret/)
+- Follow this guide to get the client and secret: [Discord Guide](https://support.heateor.com/discord-client-id-discord-client-secret/)
 
 Directions for Google Account:
 

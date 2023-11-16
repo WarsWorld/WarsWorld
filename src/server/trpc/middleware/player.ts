@@ -14,16 +14,7 @@ export const withPlayerNameSchema = z.object({
 
 export const developmentPlayerNamePrefix = "[dev]";
 
-const getDevelopmentModeUserPlayers = () =>
-  prisma.player.findMany({
-    where: {
-      name: {
-        startsWith: developmentPlayerNamePrefix,
-      },
-    },
-  });
-
-const getProductionModeUserPlayers = (session: Session | null) => {
+const getLoggedInUserPlayers = (session: Session | null) => {
   if (typeof session?.user?.name !== "string") {
     return [];
   }
@@ -49,7 +40,7 @@ export const playerMiddleware = t.middleware(async ({ ctx, next, input }) => {
 
   const { playerId } = parseResult.data;
 
-  const ownedPlayers = await getProductionModeUserPlayers(ctx.session);
+  const ownedPlayers = await getLoggedInUserPlayers(ctx.session);
 
   const currentPlayer = ownedPlayers.find((p) => p.id === playerId);
 
@@ -71,7 +62,7 @@ export const playerMiddleware = t.middleware(async ({ ctx, next, input }) => {
 
 export const playerWithoutCurrentMiddleware = t.middleware(
   async ({ ctx, next }) => {
-    const ownedPlayers = await getProductionModeUserPlayers(ctx.session);
+    const ownedPlayers = await getLoggedInUserPlayers(ctx.session);
 
     return next({
       ctx: {

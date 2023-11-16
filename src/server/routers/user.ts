@@ -10,7 +10,7 @@ import {
 import { z } from "zod";
 import { signUpSchema } from "server/schemas/auth";
 import { TRPCError } from "@trpc/server";
-import hashPassword from "server/hashPassword";
+import { hashPassword } from "server/hashPassword";
 
 export const userRouter = router({
   me: publicBaseProcedure

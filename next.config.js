@@ -4,8 +4,3 @@ module.exports = {
   eslint: { ignoreDuringBuilds: !!process.env.CI },
   reactStrictMode: false,
 };
-module.exports = {
-  env: {
-    NEXTAUTH_URL: process.env.NEXTAUTH_URL,
-  },
-};
