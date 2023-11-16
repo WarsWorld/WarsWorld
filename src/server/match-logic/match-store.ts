@@ -1,4 +1,5 @@
 import { LeagueType } from "@prisma/client";
+/** TODO extract prisma dependency */
 import { prisma } from "server/prisma/prisma-client";
 import { getChangeableTilesFromMap } from "shared/match-logic/get-changeable-tile-from-map";
 import { MapWrapper } from "shared/wrappers/map";

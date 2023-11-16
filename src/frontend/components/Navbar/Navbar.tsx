@@ -21,8 +21,11 @@ export function Navbar() {
   };
 
   useEffect(() => {
-    if (windowWidth >= 1024) setIsMobileWidth(true);
-    else setIsMobileWidth(false);
+    if (windowWidth >= 1024) {
+      setIsMobileWidth(true);
+    } else {
+      setIsMobileWidth(false);
+    }
   }, [windowWidth]);
 
   return (

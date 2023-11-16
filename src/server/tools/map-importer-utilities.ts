@@ -40,11 +40,14 @@ export const convertAWBWMapToWWMap = (
   const col = tileData2DM.length;
 
   const parsedArray: Tile[][] = [];
+
   for (let i = 0; i < col; i++) {
     const emptyArray: Tile[] = [];
+
     for (let j = 0; j < row; j++) {
       emptyArray.push(awbwTileMapping[tileDataFlat[j + i * row]]);
     }
+
     parsedArray.push(emptyArray);
   }
 
