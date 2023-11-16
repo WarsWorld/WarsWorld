@@ -6,6 +6,7 @@ import type { WWUnit } from "../../schemas/unit";
 const dirsX = [-1, 1, 0, 0];
 const dirsY = [0, 0, -1, 1];
 
+//TODO: call for unloaded units
 export const getDiscoveredUnits = (
   matchState: MatchWrapper,
   position: Position

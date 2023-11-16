@@ -1,7 +1,6 @@
 import { unitPropertiesMap } from "../../../shared/match-logic/buildable-unit";
 import type { MainActionToEvent } from "../../routers/action";
 import type { BuildAction } from "../../schemas/action";
-import { isSamePosition } from "../../schemas/position";
 import { badRequest } from "./trpc-error-manager";
 
 export const buildActionToEvent: MainActionToEvent<BuildAction> = ({
@@ -22,17 +21,18 @@ export const buildActionToEvent: MainActionToEvent<BuildAction> = ({
     throw badRequest("Can't build where there's a unit already");
   }
 
-  if (
-    matchState.changeableTiles.find(
-      (t) =>
-        isSamePosition(action.position, t.position) &&
-        t.type === facility /* TODO check for hachi SCOP */ &&
-        t.ownerSlot === currentPlayer.data.slot
-    )
-  ) {
-    throw badRequest(
-      "Can't build here because the tile is missing the correct build facility or you don't own it"
-    );
+  const tile = matchState.getTile(action.position);
+  if (!("ownerSlot" in tile) || tile.ownerSlot !== currentPlayer.data.slot) {
+    throw badRequest("You don't own this tile or this tile cannot be owned");
+  }
+
+  const hachiScopLandUnit =
+    facility == "base" &&
+    currentPlayer.data.co === "hachi" &&
+    currentPlayer.data.COPowerState === "super-co-power";
+
+  if (tile.type !== facility && !(hachiScopLandUnit && tile.type === "city")) {
+    throw badRequest("You can't build this unit in this facility");
   }
 
   return {

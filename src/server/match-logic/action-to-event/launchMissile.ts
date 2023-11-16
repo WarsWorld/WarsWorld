@@ -17,5 +17,6 @@ export const launchMissileActionToEvent: SubActionToEvent<
   }
 
   matchState.map.throwIfOutOfBounds(action.targetPosition);
+
   return action;
 };

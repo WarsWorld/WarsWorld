@@ -37,6 +37,7 @@ export class MatchWrapper {
     public weatherNextDay: Weather | null
   ) {}
 
+  //TODO: procedure too long to put in here. better in apply-event-to-match.ts. remove this function?
   applyEvent(event: EmittableEvent) {
     switch (event.type) {
       case "build": {
@@ -93,20 +94,6 @@ export class MatchWrapper {
     return true;
   }
 
-  getTile(position: Position) {
-    this.map.throwIfOutOfBounds(position);
-
-    const foundChangeableTile = this.changeableTiles.find((t) =>
-      isSamePosition(t.position, position)
-    );
-
-    if (foundChangeableTile !== undefined) {
-      return foundChangeableTile;
-    }
-
-    return this.map.data.tiles[position[1]][position[0]];
-  }
-
   join(player: Player, slot: PlayerSlot, co: CO) {
     this.players.data.push(
       new PlayerInMatchWrapper(
@@ -125,19 +112,22 @@ export class MatchWrapper {
     );
   }
 
+  getTile(position: Position) {
+    this.map.throwIfOutOfBounds(position);
+
+    const foundChangeableTile = this.changeableTiles.find((t) =>
+      isSamePosition(t.position, position)
+    );
+
+    if (foundChangeableTile !== undefined) {
+      return foundChangeableTile;
+    }
+
+    return this.map.data.tiles[position[1]][position[0]];
+  }
+
   /**
-   * Every turn, units get a certain number of movement points
-   * which they can spend by moving.
-   * Every unit has exactly one "movement type",
-   * for example tanks have type "treads".
-   * See https://awbw.fandom.com/wiki/Units#Movement for more details.
-   *
-   * @param tileType The tile which the unit is trying to enter, e.g. 'plains'
-   * @param movementType The movement type of the unit, e.g. 'treads'
-   * @param weather The current weather
-   * @returns The amount of movement points which must be spent
-   *          to *enter* the tile
-   * (assuming the unit is already adjacent to the tile).
+   * returns the amount of movement points which must be spent to *enter* the tile
    * `null` means impassible terrain.
    */
   getMovementCost(position: Position, movementType: MovementType) {
@@ -156,5 +146,12 @@ export class MatchWrapper {
       .getCurrentTurnPlayer()
       .getCOHooksWithUnit(position)
       .onMovementCost(baseMovementCost);
+  }
+
+  //TODO: check function is correct
+  captureTile(position: Position) {
+    const tile = this.getTile(position);
+    if ("playerSlot" in tile)
+      tile.playerSlot = this.players.getCurrentTurnPlayer().data.slot;
   }
 }

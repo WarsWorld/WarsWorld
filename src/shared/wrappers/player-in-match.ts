@@ -89,6 +89,7 @@ export class PlayerInMatchWrapper {
       onBuildCost: withDefaults(COHooks.onBuildCost),
       onFuelDrain: withDefaults(COHooks.onFuelDrain),
       onFuelCost: withDefaults(COHooks.onFuelCost),
+      onCapture: withDefaults(COHooks.onCapture),
     };
   }
 
