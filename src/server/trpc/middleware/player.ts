@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { t } from "../trpc-init";
 import { prisma } from "server/prisma/prisma-client";
-import { Session } from "next-auth";
+import type { Session } from "next-auth";
 import { TRPCError } from "@trpc/server";
 
 export const withPlayerIdSchema = z.object({

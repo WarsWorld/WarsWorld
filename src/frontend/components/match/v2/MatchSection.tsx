@@ -1,7 +1,7 @@
 import PageTitle from "frontend/components/layout/PageTitle";
 import MatchCard from "./MatchCard";
-import { PlayerInMatch } from "shared/types/server-match-state";
-import { MatchStatus } from "@prisma/client";
+import type { PlayerInMatch } from "shared/types/server-match-state";
+import type { MatchStatus } from "@prisma/client";
 
 interface Props {
   matches:

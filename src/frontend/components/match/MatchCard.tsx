@@ -1,17 +1,14 @@
-import { MatchStatus, Player } from "@prisma/client";
+import type { MatchStatus, Player } from "@prisma/client";
 import { usePlayers } from "frontend/context/players";
 import {
   COEnum,
   MatchType,
   MatchTypeShort,
   SideEnum,
-  TurnStyleEnum,
-  TurnStyleString,
 } from "frontend/utils/enums";
-import React from "react";
-import { CO } from "server/schemas/co";
-import { MapBasic } from "shared/types/component-data";
-import { PlayerInMatch } from "shared/types/server-match-state";
+import type { CO } from "server/schemas/co";
+import type { MapBasic } from "shared/types/component-data";
+import type { PlayerInMatch } from "shared/types/server-match-state";
 import PlayerNameBar from "./PlayerNameBar";
 
 interface Props {
@@ -127,7 +124,6 @@ const LowerPlayerBar = ({
 export default function MatchCard({
   map,
   playersInMatch,
-  state,
   turn,
   spectators,
   favorites,

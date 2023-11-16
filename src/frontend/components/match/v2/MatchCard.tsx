@@ -1,8 +1,10 @@
 import MatchCardTop from "./MatchCardTop";
 import MatchPlayer from "./MatchPlayer";
-import { FrontendMatch } from "../../../../shared/types/component-data";
-import { CO, coSchema } from "../../../../server/schemas/co";
-import { Army, armySchema } from "../../../../server/schemas/army";
+import type { FrontendMatch } from "../../../../shared/types/component-data";
+import type { CO } from "../../../../server/schemas/co";
+import { coSchema } from "../../../../server/schemas/co";
+import type { Army } from "../../../../server/schemas/army";
+import { armySchema } from "../../../../server/schemas/army";
 import MatchCardSetup from "./MatchCardSetup";
 import React, { useState } from "react";
 import { usePlayers } from "../../../context/players";

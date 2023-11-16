@@ -1,11 +1,8 @@
-import { WWMap } from "@prisma/client";
-import { Position } from "server/schemas/position";
-import {
-  PropertyTile,
-  UnusedSiloTile,
-  willBeChangeableTile,
-} from "server/schemas/tile";
-import { ChangeableTile } from "shared/types/server-match-state";
+import type { WWMap } from "@prisma/client";
+import type { Position } from "server/schemas/position";
+import type { PropertyTile, UnusedSiloTile } from "server/schemas/tile";
+import { willBeChangeableTile } from "server/schemas/tile";
+import type { ChangeableTile } from "shared/types/server-match-state";
 
 const getChangeableTileFromTile = (
   tile: PropertyTile | UnusedSiloTile,

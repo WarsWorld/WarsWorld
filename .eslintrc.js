@@ -1,3 +1,5 @@
+const padded = ["if", "const", "let", "expression"];
+
 /** @type {import("eslint")} */
 module.exports = {
   parser: "@typescript-eslint/parser",
@@ -7,6 +9,7 @@ module.exports = {
     "plugin:react-hooks/recommended",
     "plugin:prettier/recommended",
   ],
+  plugins: ["@stylistic/ts"],
   parserOptions: {
     ecmaVersion: 2018,
     sourceType: "module",
@@ -19,8 +22,33 @@ module.exports = {
     },
   },
   rules: {
+    curly: "error",
+    "@stylistic/ts/padding-line-between-statements": [
+      "error",
+      { blankLine: "always", prev: padded, next: "block" },
+      {
+        blankLine: "always",
+        prev: "block",
+        next: padded,
+      },
+      { blankLine: "always", prev: padded, next: "block-like" },
+      {
+        blankLine: "always",
+        prev: "block-like",
+        next: padded,
+      },
+    ],
     "@typescript-eslint/explicit-function-return-type": "off",
+    "@typescript-eslint/no-unused-vars": [
+      "error",
+      {
+        varsIgnorePattern: "^_",
+        argsIgnorePattern: "^_",
+        caughtErrorsIgnorePattern: "^_",
+      },
+    ],
     "@typescript-eslint/explicit-module-boundary-types": "off",
+    "@typescript-eslint/consistent-type-imports": "error",
     "react/react-in-jsx-scope": "off",
     "react/prop-types": "off",
     "@typescript-eslint/no-explicit-any": "off",

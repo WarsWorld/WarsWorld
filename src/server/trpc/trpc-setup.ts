@@ -1,3 +1,4 @@
+import { TRPCError } from "@trpc/server";
 import { authMiddleware } from "./middleware/auth";
 import { matchMiddleware, withMatchIdSchema } from "./middleware/match";
 import { playerMiddleware, withPlayerIdSchema } from "./middleware/player";
@@ -14,3 +15,27 @@ export const playerBaseProcedure = t.procedure
 export const matchBaseProcedure = playerBaseProcedure
   .input(withMatchIdSchema)
   .use(matchMiddleware);
+
+export const playerInMatchBaseProcedure = matchBaseProcedure.use(
+  matchMiddleware
+    .unstable_pipe(playerMiddleware)
+    .unstable_pipe(({ ctx, next }) => {
+      const { match, currentPlayer } = ctx;
+
+      const playerInMatch = match.players.getById(currentPlayer.id);
+
+      if (playerInMatch === undefined) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: `Current player ${currentPlayer.id} not found in match ${match.id}`,
+        });
+      }
+
+      return next({
+        ctx: {
+          ...ctx,
+          playerInMatch,
+        },
+      });
+    })
+);

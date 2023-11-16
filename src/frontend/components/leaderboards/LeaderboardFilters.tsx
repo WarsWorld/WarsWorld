@@ -1,4 +1,5 @@
-import Select, { SelectOption } from "../layout/Select";
+import type { SelectOption } from "../layout/Select";
+import Select from "../layout/Select";
 
 const gamemodes = [
   { label: "All", value: 0 },

@@ -1,24 +1,29 @@
 import { TRPCError } from "@trpc/server";
-import { Direction } from "server/schemas/direction";
-import { PlayerSlot } from "server/schemas/player-slot";
-import { Position, isSamePosition } from "server/schemas/position";
-import { WWUnit, unitTypeIsTransport } from "server/schemas/unit";
-import { unitPropertiesMap } from "shared/match-logic/buildable-unit";
-import { COProperties, COPropertiesMap } from "shared/match-logic/co";
-import { COHookPlayerProps, COHookProps } from "shared/match-logic/co-hooks";
-import { COPowerState } from "shared/match-logic/co-utilities";
-import { getCurrentTile } from "shared/match-logic/get-current-tile";
-import { getPlayerUnits } from "shared/match-logic/units";
-import { Path } from "shared/types/path";
-import {
-  BackendMatchState,
-  PlayerInMatch,
-} from "shared/types/server-match-state";
+import type { Direction } from "server/schemas/direction";
+import type { Path, Position } from "server/schemas/position";
+import { isSamePosition } from "server/schemas/position";
+import type { WWUnit } from "server/schemas/unit";
+
+/**
+ * TODO
+ * most of this system is needlessly convoluted.
+ * it should be rewritten in a way where we don't use "deflated paths" for now
+ * and without any "pre-checks" like diagonal etc.
+ * and then just walk through the path positions one by one
+ * and on each position check if it's a neighbour from the previous one
+ * and it's not obstructed/off-grid and movement points aren't depleted.
+ *
+ * doing it this way will prevent jumps and we can add duplicate position checks easily later on
+ * but afaik AWBW doesn't check for running back and forth so neither do we need to, even though
+ * Advance Wars doesn't allow this (our frontend code won't allow to draw a path like that
+ * but it would be possible to submit a path like that).
+ */
 
 /**
  * Diagonal movement must be explicit, so there must not be changes to both X and Y between corner positions.
+ * @deprecated
  */
-const throwIfPathIsAmbiguous = (path: Path) => {
+const _throwIfPathIsAmbiguous = (path: Path) => {
   path.forEach((nextPosition, index) => {
     const previousPosition = path[index - 1];
 
@@ -39,8 +44,10 @@ const throwIfPathIsAmbiguous = (path: Path) => {
  *
  * TODO change this from "subsequent" to make sure all positions in the path are unique because
  * units can't cross their own path.
+ *
+ * @deprecated
  */
-const throwIfPathContainsDuplicatePositions = (path: Path) => {
+const _throwIfPathContainsDuplicatePositions = (path: Path) => {
   path.forEach((currentPosition, index) => {
     const previousPosition = path[index - 1];
 
@@ -53,15 +60,6 @@ const throwIfPathContainsDuplicatePositions = (path: Path) => {
       );
     }
   });
-};
-
-export const throwIfUnitNotOwned = (unit: WWUnit, playerSlot: PlayerSlot) => {
-  if (unit.playerSlot !== playerSlot) {
-    throw new TRPCError({
-      code: "BAD_REQUEST",
-      message: "You don't own this unit",
-    });
-  }
 };
 
 export const throwIfUnitIsWaited = (unit: WWUnit) => {
@@ -129,11 +127,11 @@ const getAllPositionsBetweenTwoPositions = (
   return positions.slice(0, -1); // last position is equal to positionB and we only want in-between
 };
 
-/** Fills the gaps between all path corners. */
-export const inflatePath = (path: Path): Path => {
-  throwIfPathIsAmbiguous(path);
-  throwIfPathContainsDuplicatePositions(path);
-
+/**
+ * Fills the gaps between all path corners.
+ * @deprecated
+ */
+const _inflatePath = (path: Path): Path => {
   return path.reduce<Path>((previousPositions, currentPosition, index) => {
     const nextPosition = path[index + 1]; // can be undefined (last position), then positionsBetween will be empty
     const positionsBetween = getAllPositionsBetweenTwoPositions(
@@ -142,68 +140,4 @@ export const inflatePath = (path: Path): Path => {
     );
     return [...previousPositions, currentPosition, ...positionsBetween];
   }, []);
-};
-
-export const deflatePath = (path: Path): Path => {
-  /* TODO stub, reversal of inflatePath ("compression") */
-  return path;
-};
-
-const applyCOPowerHooksForMovementRange = (
-  COHookProps: COHookProps,
-  COPowerState: COPowerState,
-  COProperties: COProperties
-) => {
-  switch (COPowerState) {
-    case "co-power":
-      return (
-        COProperties.powers.COPower?.hooks?.onMovementRange?.(COHookProps) ??
-        COHookProps.currentValue
-      );
-    case "super-co-power":
-      return (
-        COProperties.powers.superCOPower.hooks?.onMovementRange?.(
-          COHookProps
-        ) ?? COHookProps.currentValue
-      );
-    default:
-      return COHookProps.currentValue;
-  }
-};
-
-export const getMovementRange = (
-  unit: WWUnit,
-  matchState: BackendMatchState,
-  player: PlayerInMatch
-) => {
-  const COProperties = COPropertiesMap[player.co];
-
-  const unitProperties = unitPropertiesMap[unit.type];
-  const baseMovement = unitProperties.moveRange;
-
-  const currentPlayerData: COHookPlayerProps = {
-    getUnits: () => getPlayerUnits(matchState, player.slot),
-    player,
-    tileType: getCurrentTile(matchState, unit.position).type,
-    unitType: unit.type,
-  };
-
-  const d2dMovementRange =
-    COProperties.dayToDay?.hooks.onMovementRange?.({
-      currentPlayerData,
-      currentValue: baseMovement,
-      matchState,
-    }) ?? baseMovement; // TODO probably better if there's some wrapper function with a passthrough default
-
-  const powerMovementRange = applyCOPowerHooksForMovementRange(
-    {
-      currentValue: d2dMovementRange,
-      currentPlayerData,
-      matchState,
-    },
-    player.COPowerState,
-    COProperties
-  );
-
-  return Math.min(powerMovementRange, unit.stats.fuel);
 };

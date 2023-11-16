@@ -3,18 +3,19 @@
 // https://tanstack.com/table/v8/docs/guide/introduction
 
 import { useState, useEffect } from "react";
+import type { Table } from "@tanstack/react-table";
 import {
   getCoreRowModel,
   getPaginationRowModel,
   useReactTable,
-  Table,
 } from "@tanstack/react-table";
-import getLeaderboardData, { PlayerLeaderboard } from "./LeaderboardData";
+import type { PlayerLeaderboard } from "./LeaderboardData";
+import getLeaderboardData from "./LeaderboardData";
 import { columns } from "./LeaderboardColumns";
 import { useWindowWidth } from "@react-hook/window-size";
 import DataTable from "../layout/DataTable";
 import TablePagination from "../layout/TablePagination";
-import { SelectOption } from "../layout/Select";
+import type { SelectOption } from "../layout/Select";
 
 function hideColumns(table: Table<PlayerLeaderboard>, screenWidth: number) {
   const columnsToHide = ["Games", "Win Rate", "Streak"];

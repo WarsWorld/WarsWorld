@@ -1,5 +1,5 @@
 import { matchMock } from "frontend/utils/mocks/matchDataMock";
-import { FrontendMatch } from "shared/types/component-data";
+import type { FrontendMatch } from "shared/types/component-data";
 import TitleColorBox from "../layout/TitleColorBox";
 import MatchCard from "./MatchCard";
 interface Props {

@@ -1,4 +1,4 @@
-import { COProperties } from "../co";
+import type { COProperties } from "../co";
 
 export const adder: COProperties = {
   displayName: "Adder",
@@ -8,7 +8,7 @@ export const adder: COProperties = {
       description: "",
       stars: 2,
       hooks: {
-        onMovementRange: ({ currentValue }) => currentValue + 1,
+        onMovementRange: (value) => value + 1,
       },
     },
     superCOPower: {
@@ -16,7 +16,7 @@ export const adder: COProperties = {
       description: "",
       stars: 5,
       hooks: {
-        onMovementRange: ({ currentValue }) => currentValue + 2,
+        onMovementRange: (value) => value + 2,
       },
     },
   },

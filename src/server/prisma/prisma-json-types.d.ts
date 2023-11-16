@@ -1,7 +1,7 @@
-import { Preferences } from "server/schemas/preferences";
-import { Tile } from "server/schemas/tile";
-import { PlayerInMatch } from "server/match-logic/server-match-states";
-import { WWEvent } from "shared/types/events";
+import type { Preferences } from "server/schemas/preferences";
+import type { Tile } from "server/schemas/tile";
+import type { PlayerInMatch } from "server/match-logic/server-match-states";
+import type { WWEvent } from "shared/types/events";
 
 // TODO rename file extension from .d.ts to .ts and use ES2015 syntax instead of namespaces maybe?
 

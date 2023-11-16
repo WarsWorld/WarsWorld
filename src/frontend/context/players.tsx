@@ -1,13 +1,8 @@
-import { Player } from "@prisma/client";
-import {
-  ReactNode,
-  createContext,
-  useContext,
-  useState,
-  useEffect,
-} from "react";
-import { useLocalStorage } from "frontend/utils/use-local-storage";
+import type { Player } from "@prisma/client";
 import { trpc } from "frontend/utils/trpc-client";
+import { useLocalStorage } from "frontend/utils/use-local-storage";
+import type { ReactNode } from "react";
+import { createContext, useContext } from "react";
 
 const playersContext = createContext<Player[] | undefined>(undefined);
 

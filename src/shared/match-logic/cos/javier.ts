@@ -1,5 +1,4 @@
-import { COProperties } from "../co";
-import { getCommtowerAttackBoost } from "../co-utilities";
+import type { COProperties } from "../co";
 import { isIndirectAttackUnit } from "../units";
 
 export const javier: COProperties = {
@@ -8,19 +7,18 @@ export const javier: COProperties = {
     description:
       "Units gain +20% defense against indirect units. Comm Towers grant all units additional +10% defense.",
     hooks: {
-      onDefenseModifier({ currentValue, matchState, currentPlayerData }) {
-        const commTowerBonus = getCommtowerAttackBoost(
-          matchState,
-          currentPlayerData.player.slot
-        );
-
+      onDefenseModifier(value, { attackerData: currentPlayerData }) {
         const bonusFromIndirectAttacks = isIndirectAttackUnit(
           currentPlayerData.unitType
         )
           ? 20
           : 0;
 
-        return currentValue + commTowerBonus + bonusFromIndirectAttacks;
+        return (
+          value +
+          currentPlayerData.player.getCommtowerAttackBoost() +
+          bonusFromIndirectAttacks
+        );
       },
     },
   },
@@ -31,31 +29,24 @@ export const javier: COProperties = {
       description:
         "Indirect defense is increased to +40%. Comm Tower bonuses are doubled.",
       hooks: {
-        onDefenseModifier({
-          matchState,
-          currentValue,
-          currentPlayerData,
-          defendingPlayerData,
-        }) {
-          const commTowerBonus = getCommtowerAttackBoost(
-            matchState,
-            defendingPlayerData.player.slot
-          );
-
+        onDefenseModifier(
+          value,
+          { attackerData: currentPlayerData, defenderData: defendingPlayerData }
+        ) {
           const bonusFromIndirectAttacks = isIndirectAttackUnit(
-            currentPlayerData.unitType
+            defendingPlayerData.unitType
           )
             ? 20 // 40 with d2d
             : 0;
 
-          return currentValue + commTowerBonus + bonusFromIndirectAttacks;
-        },
-        onAttackModifier({ matchState, currentValue, currentPlayerData }) {
-          const commTowerBonus = getCommtowerAttackBoost(
-            matchState,
-            currentPlayerData.player.slot
+          return (
+            value +
+            currentPlayerData.player.getCommtowerAttackBoost() +
+            bonusFromIndirectAttacks
           );
-          return currentValue + commTowerBonus;
+        },
+        onAttackModifier(value, { attackerData: currentPlayerData }) {
+          return value + currentPlayerData.player.getCommtowerAttackBoost();
         },
       },
     },
@@ -65,31 +56,24 @@ export const javier: COProperties = {
       description:
         "Indirect defense is increased to +80%. Comm Tower bonuses are tripled.",
       hooks: {
-        onDefenseModifier({
-          matchState,
-          currentValue,
-          currentPlayerData,
-          defendingPlayerData,
-        }) {
-          const commTowerBonus = getCommtowerAttackBoost(
-            matchState,
-            defendingPlayerData.player.slot
-          );
-
+        onDefenseModifier(value, { defenderData: defendingPlayerData }) {
           const bonusFromIndirectAttacks = isIndirectAttackUnit(
-            currentPlayerData.unitType
+            defendingPlayerData.unitType
           )
             ? 60 // 80 with d2d
             : 0;
 
-          return currentValue + commTowerBonus * 2 + bonusFromIndirectAttacks;
-        },
-        onAttackModifier({ matchState, currentValue, currentPlayerData }) {
-          const commTowerBonus = getCommtowerAttackBoost(
-            matchState,
-            currentPlayerData.player.slot
+          return (
+            value +
+            defendingPlayerData.player.getCommtowerAttackBoost() * 2 +
+            bonusFromIndirectAttacks
           );
-          return currentValue + commTowerBonus * 2;
+        },
+        onAttackModifier(currentValue, { attackerData: currentPlayerData }) {
+          return (
+            currentValue +
+            currentPlayerData.player.getCommtowerAttackBoost() * 2
+          );
         },
       },
     },

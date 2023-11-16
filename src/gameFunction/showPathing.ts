@@ -2,16 +2,15 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
 
-import { Container, Texture, Sprite, BaseTexture, Spritesheet } from "pixi.js";
-import {
-  MovementType,
-  unitPropertiesMap,
-} from "../shared/match-logic/buildable-unit";
-import { getMovementCost } from "../shared/match-logic/tiles";
-import { Tile, Weather } from "../server/schemas/tile.ts";
-import { WWUnit } from "../server/schemas/unit";
-import { Position } from "../server/schemas/position";
+import type { Spritesheet } from "pixi.js";
+import { Container, Sprite } from "pixi.js";
+import type { MovementType } from "../shared/match-logic/buildable-unit";
+import { unitPropertiesMap } from "../shared/match-logic/buildable-unit";
+import type { Tile, Weather } from "../server/schemas/tile.ts";
+import type { WWUnit } from "../server/schemas/unit";
+import type { Position } from "../server/schemas/position";
 import { tileConstructor } from "./spriteConstructor";
+import type { MatchWrapper } from "shared/wrappers/match";
 export type PathNode = {
   //saves distance from origin and parent (to retrieve the shortest path)
   pos: Position;
@@ -26,7 +25,8 @@ export function getAccessibleNodes( //TODO: save result of function? _ (Sturm d2
   movePoints: number,
   moveType: MovementType,
   x: number,
-  y: number
+  y: number,
+  match: MatchWrapper
 ): Map<Position, PathNode> {
   const accessibleTiles: Map<Position, PathNode> = new Map(); //return variable
 
@@ -90,17 +90,27 @@ export function getAccessibleNodes( //TODO: save result of function? _ (Sturm d2
     for (let i = 0; i < 4; ++i) {
       if (isValidTile(xpositionSchemas[i], ypositionSchemas[i])) {
         //if one adjacent tile is valid
-        const movementCost = getMovementCost(
+
+        const movementCost = match.getMovementCost(
           mapData[xpositionSchemas[i]][ypositionSchemas[i]].type,
-          moveType,
-          weather
+          moveType
         );
-        if (movementCost === null || movementCost < 0) continue; //skip if unit can't move there
+
+        if (movementCost === null || movementCost < 0) {
+          continue;
+        } //skip if unit can't move there
 
         let nodeDist;
-        if (currNode != undefined) nodeDist = currNode.dist + movementCost;
+
+        if (currNode != undefined) {
+          nodeDist = currNode.dist + movementCost;
+        }
+
         if (nodeDist != undefined && nodeDist <= movePoints) {
-          while (queues.length <= nodeDist) queues.push([]); //increase queues size until new node can be added
+          while (queues.length <= nodeDist) {
+            queues.push([]);
+          } //increase queues size until new node can be added
+
           queues[nodeDist].push({
             pos: [xpositionSchemas[i], ypositionSchemas[i]],
             dist: nodeDist,
@@ -185,7 +195,7 @@ export function getAttackableTiles(
   }
 
   const attackpositionSchemas: Position[] = [];
-  for (const [pos, node] of accessibleNodes.entries()) {
+  for (const [pos] of accessibleNodes.entries()) {
     const xpositionSchemas = [pos[0] - 1, pos[0] + 1, pos[0], pos[0]];
     const ypositionSchemas = [pos[1], pos[1], pos[1] - 1, pos[1] + 1];
     for (let i = 0; i < 4; ++i) {
@@ -257,7 +267,7 @@ export async function showAttackableTiles(
 
 export function updatePath(
   mapData: Tile[][],
-  weather: Weather,
+  match: MatchWrapper,
   movePoints: number,
   moveType: MovementType,
   accessibleNodes: Map<Position, PathNode>,
@@ -283,11 +293,11 @@ export function updatePath(
         Math.abs(lastNode.pos[1] - newPos[1]) ==
       1
     ) {
-      const tileDist = getMovementCost(
+      const tileDist = match.getMovementCost(
         mapData[newPos[0]][newPos[1]].type,
-        moveType,
-        weather
+        moveType
       );
+
       //if it doesn't surpass movement restrictions, update current path
       if (tileDist !== null && tileDist + lastNode.dist <= movePoints) {
         path.push({

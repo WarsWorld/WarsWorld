@@ -1,5 +1,5 @@
-import { TileType } from "server/schemas/tile";
-import { MovementType } from "shared/match-logic/buildable-unit";
+import type { TileType } from "server/schemas/tile";
+import type { MovementType } from "shared/match-logic/buildable-unit";
 import { tsIncludes } from "shared/utils/typesafe-includes";
 
 /**
@@ -8,14 +8,14 @@ import { tsIncludes } from "shared/utils/typesafe-includes";
  */
 type TileMovementCosts = Record<MovementType, number | null>;
 
-interface TileProperties {
+type TileProperties = {
   movementCosts: TileMovementCosts;
   /**
    * An integer from 0 to 4 which modifies the amount of damage
    * a unit on this tile takes from attacks.
    */
   defenseStars: number;
-}
+};
 
 /** All ocean tiles are impassible for land units. */
 const commonOceanMovementCosts = {
@@ -225,26 +225,11 @@ export const getUnitTerrainDefense = (hp: number, tileType: TileType) => {
   return tileProperties[tileType].defenseStars * visualHp;
 };
 
-/**
- * Every turn, units get a certain number of movement points
- * which they can spend by moving.
- * Every unit has exactly one "movement type",
- * for example tanks have type "treads".
- * See https://awbw.fandom.com/wiki/Units#Movement for more details.
- *
- * @param tileType The tile which the unit is trying to enter, e.g. 'plains'
- * @param movementType The movement type of the unit, e.g. 'treads'
- * @param weather The current weather
- * @returns The amount of movement points which must be spent
- *          to *enter* the tile
- * (assuming the unit is already adjacent to the tile).
- * `null` means impassible terrain.
- */
-export const getMovementCost = (
+export const getBaseMovementCost = (
   tileType: TileType,
   movementType: MovementType,
   weather: Weather
-): number | null => {
+) => {
   const clearMovementCost =
     tileProperties[tileType].movementCosts[movementType];
 

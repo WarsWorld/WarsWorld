@@ -1,4 +1,5 @@
-import { flexRender, Table } from "@tanstack/react-table";
+import type { Table } from "@tanstack/react-table";
+import { flexRender } from "@tanstack/react-table";
 
 interface Props {
   table: Table<any>;

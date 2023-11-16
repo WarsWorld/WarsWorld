@@ -1,12 +1,12 @@
 import { prisma } from "../prisma/prisma-client";
-import { Tile } from "../schemas/tile";
-import { WWMap } from "@prisma/client";
+import type { Tile } from "../schemas/tile";
+import type { WWMap } from "@prisma/client";
 
-export interface AWBWMapImportSchema {
+export type AWBWMapImportSchema = {
   name: string;
   tileDataString: string;
   numberOfPlayers: 2;
-}
+};
 
 export const importAWBWMap = (data: AWBWMapImportSchema) =>
   prisma.wWMap
@@ -40,11 +40,14 @@ export const convertAWBWMapToWWMap = (
   const col = tileData2DM.length;
 
   const parsedArray: Tile[][] = [];
+
   for (let i = 0; i < col; i++) {
     const emptyArray: Tile[] = [];
+
     for (let j = 0; j < row; j++) {
       emptyArray.push(awbwTileMapping[tileDataFlat[j + i * row]]);
     }
+
     parsedArray.push(emptyArray);
   }
 

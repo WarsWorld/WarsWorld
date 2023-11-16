@@ -3,26 +3,21 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
 
-import {
-  AnimatedSprite,
-  Container,
-  DisplayObject,
-  Spritesheet,
-  Texture,
-} from "pixi.js";
-import { WWUnit } from "../server/schemas/unit";
-import { Tile } from "../server/schemas/tile";
+import type { AnimatedSprite, Spritesheet } from "pixi.js";
+import { Container, Texture } from "pixi.js";
+import { isSamePosition } from "../server/schemas/position";
+import type { Tile } from "../server/schemas/tile";
+import type { WWUnit } from "../server/schemas/unit";
+import { unitPropertiesMap } from "../shared/match-logic/buildable-unit";
+import type { PathNode } from "./showPathing";
 import {
   getAccessibleNodes,
   getAttackableTiles,
-  PathNode,
   showAttackableTiles,
   showPassableTiles,
   showPath,
   updatePath,
 } from "./showPathing";
-import { unitPropertiesMap } from "../shared/match-logic/buildable-unit";
-import { isSamePosition } from "../server/schemas/position";
 import {
   animatedSpriteConstructor,
   spriteConstructor,
@@ -257,7 +252,7 @@ export function showUnits(
     }
     //unit is in the opposite team/is an enemy
     else {
-      //TODO: Allow to "hold" enemy attack range ala Fire Emblem style so we can keep the "safe range" for our units from certain units
+      //TODO: Allow to "hold" enemy attack.ts range ala Fire Emblem style so we can keep the "safe range" for our units from certain units
       // (like where is our Bcopter safe from two AA).
       let isNextAttack = false; //alternate between showing movement and attacking tiles
       unitSprite.on("pointerdown", async () => {

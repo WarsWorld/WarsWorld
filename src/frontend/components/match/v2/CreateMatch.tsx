@@ -1,5 +1,6 @@
-import { Player } from "@prisma/client";
-import Select, { SelectOption } from "frontend/components/layout/Select";
+import type { Player } from "@prisma/client";
+import type { SelectOption } from "frontend/components/layout/Select";
+import Select from "frontend/components/layout/Select";
 import SquareButton from "frontend/components/layout/SquareButton";
 import { usePlayers } from "frontend/context/players";
 import { trpc } from "frontend/utils/trpc-client";

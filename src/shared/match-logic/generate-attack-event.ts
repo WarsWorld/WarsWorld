@@ -1,25 +1,17 @@
-import { AttackAction, MoveAction } from "server/schemas/action";
-import { isSamePosition } from "server/schemas/position";
-import { AttackEvent } from "shared/types/events";
-import {
-  BackendMatchState,
-  getCurrentTurnPlayer,
-} from "shared/types/server-match-state";
+import type { AttackAction, MoveAction } from "server/schemas/action";
+import type { AttackEvent } from "shared/types/events";
+import type { MatchWrapper } from "shared/wrappers/match";
 
 // checked: is player's turn
 export const generateAttackEvent = (
   moveAction: MoveAction,
   attackAction: AttackAction,
-  matchState: BackendMatchState
+  matchState: MatchWrapper
 ): AttackEvent => {
-  const _currentPlayerInMatch = getCurrentTurnPlayer(matchState);
+  const _currentPlayerInMatch = matchState.players.getCurrentTurnPlayer();
 
-  const attacker = matchState.units.find((u) =>
-    isSamePosition(moveAction.path.at(-1)!, u.position)
-  );
-  const defender = matchState.units.find((u) =>
-    isSamePosition(attackAction.defenderPosition, u.position)
-  );
+  const attacker = matchState.units.getUnit(moveAction.path.at(-1)!);
+  const defender = matchState.units.getUnit(attackAction.defenderPosition);
 
   if (defender === undefined) {
     throw new Error("Defending unit not found");

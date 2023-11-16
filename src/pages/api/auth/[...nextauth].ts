@@ -1,5 +1,5 @@
 import NextAuth from "next-auth";
-import { AppProviders } from "next-auth/providers";
+import type { AppProviders } from "next-auth/providers";
 import DiscordProvider from "next-auth/providers/discord";
 
 const providers: AppProviders = [];

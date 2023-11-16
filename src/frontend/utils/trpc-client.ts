@@ -3,7 +3,7 @@ import { loggerLink } from "@trpc/client/links/loggerLink";
 import { createWSClient, wsLink } from "@trpc/client/links/wsLink";
 import { createTRPCNext } from "@trpc/next";
 import type { inferProcedureOutput } from "@trpc/server";
-import { NextPageContext } from "next";
+import type { NextPageContext } from "next";
 import type { AppRouter } from "server/routers/app";
 import superjson from "superjson";
 
