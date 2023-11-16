@@ -34,6 +34,7 @@ export type COHooks = {
   onBuildCost: COHook;
   onFuelDrain: COHook;
   onFuelCost: COHook;
+  onCapture: COHook;
 
   onAttackModifier: COHookWithDefender;
   onDefenseModifier: COHookWithDefender;
@@ -65,6 +66,7 @@ export type COHooksAllowReturnUndefined = {
   onBuildCost?: COHookAllowReturnUndefined;
   onFuelDrain?: COHookAllowReturnUndefined;
   onFuelCost?: COHookAllowReturnUndefined;
+  onCapture?: COHookAllowReturnUndefined;
 
   onAttackModifier?: COHookWithDefenderAllowReturnUndefined;
   onDefenseModifier?: COHookWithDefenderAllowReturnUndefined;

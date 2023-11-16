@@ -45,12 +45,6 @@ export const calculateDamage = (
   const attackerUnit = matchState.units.getUnitOrThrow(attackerPosition);
   const defenderUnit = matchState.units.getUnitOrThrow(defenderPosition);
 
-  /** TODO remove this. */
-  const COHookProps = matchState.getCOHookPropsWithDefender(
-    attackerPosition,
-    defenderPosition
-  );
-
   const visualHPOfAttacker = getVisualHPfromHP(attackerUnit.stats.hp);
   const visualHPOfDefender = getVisualHPfromHP(defenderUnit.stats.hp);
 
@@ -67,7 +61,7 @@ export const calculateDamage = (
 
   // 0-4 (+ lash COP) whole numbers
   const terrainStars = COHooks.onTerrainStars(
-    getTerrainDefenseStars(COHookProps.defenderData.tileType)
+    getTerrainDefenseStars(matchState.getTile(defenderPosition).type)
   );
 
   // baseDamage: 1-100

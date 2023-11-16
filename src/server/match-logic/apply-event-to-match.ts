@@ -8,6 +8,7 @@ import type { PlayerSlot } from "../schemas/player-slot";
 import type { Position } from "../schemas/position";
 import type { WWUnit } from "../schemas/unit";
 import { matchStore } from "./match-store";
+import { isSamePosition } from "../schemas/position";
 
 const createNewUnitFromBuildEvent = (
   event: BuildAction,
@@ -24,7 +25,7 @@ const createNewUnitFromBuildEvent = (
       fuel: unitProperties.initialFuel,
       hp: 100,
     },
-    isReady: true,
+    isReady: false,
   } satisfies Partial<WWUnit>;
 
   if ("initialAmmo" in unitProperties) {
@@ -182,6 +183,7 @@ const loadUnitInto = (unitToLoad: WWUnit, transportUnit: WWUnit) => {
   }
 };
 
+//TODO: call subevents from move case? or different?
 export const applyMainEventToMatch = (
   matchId: string,
   currentPlayer: PlayerInMatchWrapper,
@@ -197,10 +199,17 @@ export const applyMainEventToMatch = (
       break;
     }
     case "move": {
+      //check if unit is moving or just standing still
+      if (event.path.length <= 1) break;
+
       const unit = match.units.getUnitOrThrow(event.path[0]);
 
-      //TODO: does fuel consumption need hooks?
-      unit.stats.fuel -= event.path.length - 1;
+      //if unit was capturing, interrupt capture
+      if ("currentCapturePoints" in unit) unit.currentCapturePoints = undefined;
+
+      unit.stats.fuel -=
+        (event.path.length - 1) *
+        currentPlayer.getCOHooksWithUnit(event.path[0]).onFuelCost(1);
 
       const unitAtDestination = match.units.getUnit(
         event.path[event.path.length - 1]
@@ -210,13 +219,13 @@ export const applyMainEventToMatch = (
         unit.position = event.path[event.path.length - 1];
       } else {
         if (unit.type === unitAtDestination.type) {
-          //join (hp, fuel, ammo)
+          //join (hp, fuel, ammo, (keep capture points))
           const unitProperties = unitPropertiesMap[unit.type];
-          unit.stats.fuel = Math.min(
+          unitAtDestination.stats.fuel = Math.min(
             unit.stats.fuel + unitAtDestination.stats.fuel,
             unitProperties.initialFuel
           );
-          unit.stats.hp = Math.min(
+          unitAtDestination.stats.hp = Math.min(
             unit.stats.hp + unitAtDestination.stats.hp,
             99
           );
@@ -225,15 +234,16 @@ export const applyMainEventToMatch = (
             "ammo" in unitAtDestination.stats &&
             "initialAmmo" in unitProperties
           ) {
-            unit.stats.ammo = Math.min(
+            unitAtDestination.stats.ammo = Math.min(
               unit.stats.ammo + unitAtDestination.stats.ammo,
               unitProperties.initialAmmo
             );
           }
+          match.units.removeUnit(unit);
         } else {
           //load
           loadUnitInto(unit, unitAtDestination);
-          //delete unit
+          match.units.removeUnit(unit);
         }
       }
       break;
@@ -290,33 +300,42 @@ export const applySubEventToMatch = (
   switch (event.type) {
     case "wait":
       break;
-    case "attack":
+    case "attack": {
       const attacker = match.units.getUnitOrThrow(fromPosition);
       const defender = match.units.getUnitOrThrow(event.defenderPosition);
-      if (
-        event.defenderHP === 0 //kill unit
-      ) {
+      if (event.defenderHP === 0) {
         match.units.removeUnit(defender);
       } else {
         defender.stats.hp = event.defenderHP;
       }
       if (event.attackerHP !== undefined) {
-        if (
-          event.attackerHP === 0 //kill unit
-        ) {
+        if (event.attackerHP === 0) {
           match.units.removeUnit(attacker);
         } else {
           attacker.stats.hp = event.attackerHP;
         }
       }
       break;
+    }
     case "ability": {
       switch (unit.type) {
         case "infantry":
-        case "mech":
-          //capture, with hooks
+        case "mech": {
+          //capture tile
+          if (unit.currentCapturePoints === undefined) {
+            unit.currentCapturePoints = 20;
+          }
+          unit.currentCapturePoints -= currentPlayer
+            .getCOHooksWithUnit(unit.position)
+            .onCapture(unit.stats.hp);
+
+          if (unit.currentCapturePoints <= 0) {
+            unit.currentCapturePoints = undefined;
+            match.captureTile(unit.position);
+          }
           break;
-        case "apc":
+        }
+        case "apc": {
           //supply
           for (const dir of allDirections) {
             const suppliedUnit = match.units.getUnit(
@@ -329,22 +348,22 @@ export const applySubEventToMatch = (
             }
           }
           break;
-        case "blackBomb":
+        }
+        case "blackBomb": {
           match.units.damageUntil1HPInRadius({
             radius: 3,
             damageAmount: 50,
             epicenter: unit.position,
           });
-
           match.units.removeUnit(unit);
           break;
+        }
         case "stealth":
-        case "sub":
+        case "sub": {
           //toggle hide
           if ("hidden" in unit) unit.hidden = !unit.hidden;
           break;
-        default:
-          break;
+        }
       }
       break;
     }
@@ -407,13 +426,19 @@ export const applySubEventToMatch = (
 
       repairedUnit.stats.fuel =
         unitPropertiesMap[repairedUnit.type].initialFuel;
+
+      //heal for free if visible hp is 10
       if (repairedUnit.stats.hp >= 90) repairedUnit.stats.hp = 99;
       else {
-        const { cost } = unitPropertiesMap[repairedUnit.type];
-        // TODO hook: cost and facility modifiers based on powers etc.
-        if (cost * 0.1 <= currentPlayer.data.funds) {
+        //check if enough funds for heal, and heal if it's the case
+        const unitCost = unitPropertiesMap[repairedUnit.type].cost;
+        const repairEffectiveCost =
+          currentPlayer
+            .getCOHooksWithUnit(addDirection(fromPosition, event.direction))
+            .onBuildCost(unitCost) * 0.1;
+        if (repairEffectiveCost <= currentPlayer.data.funds) {
           repairedUnit.stats.hp += 10;
-          currentPlayer.data.funds -= cost * 0.1;
+          currentPlayer.data.funds -= repairEffectiveCost;
         }
       }
       break;

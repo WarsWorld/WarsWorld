@@ -1,15 +1,10 @@
-import { TRPCError } from "@trpc/server";
 import type { MainActionToEvent } from "server/routers/action";
 import type { MoveAction } from "server/schemas/action";
 import { unitPropertiesMap } from "shared/match-logic/buildable-unit";
 import type { MoveEvent } from "../../../shared/types/events";
-import {
-  badRequest,
-  throwIfUnitIsWaited,
-  throwMessage,
-} from "./trpc-error-manager";
+import { badRequest } from "./trpc-error-manager";
+import { isSamePosition } from "../../schemas/position";
 
-//TODO: check load!!!
 export const createNoMoveEvent = (): MoveEvent => ({
   type: "move",
   path: [],
@@ -23,14 +18,16 @@ export const moveActionToEvent: MainActionToEvent<MoveAction> = ({
   matchState,
 }) => {
   const unit = currentPlayer.getUnits().getUnitOrThrow(action.path[0]);
-  throwIfUnitIsWaited(unit);
+  if (!unit.isReady) {
+    throw badRequest("Trying to move a waited unit");
+  }
 
   const result = createNoMoveEvent();
 
   let remainingMovePoints = currentPlayer.getMovementPoints(unit);
 
   const fuelNeeded =
-    action.path.length *
+    (action.path.length - 1) *
     currentPlayer.getCOHooksWithUnit(action.path[0]).onFuelCost(1);
 
   if (unit.stats.fuel < fuelNeeded) {
@@ -51,6 +48,10 @@ export const moveActionToEvent: MainActionToEvent<MoveAction> = ({
       throw badRequest("Cannot move to a desired position");
     }
 
+    if (result.path.find((pos) => isSamePosition(pos, position))) {
+      throw badRequest("The given path passes through the same position twice");
+    }
+
     const unitInPosition = matchState.units.getUnit(position);
 
     if (unitInPosition?.playerSlot === unit.playerSlot) {
@@ -61,24 +62,19 @@ export const moveActionToEvent: MainActionToEvent<MoveAction> = ({
     if (moveCost > remainingMovePoints) {
       throw badRequest("Using more move points than available");
     }
-
     remainingMovePoints -= moveCost;
 
-    const isFinalPosition = i === action.path.length - 1;
-
     if (
-      isFinalPosition &&
+      i === action.path.length - 1 &&
       unitInPosition !== undefined &&
       unitInPosition.type !== unit.type
     ) {
-      //check if trying to join or load into transport:
+      //check if trying to join (same unit type) or load into transport:
       if (unitInPosition.type !== unit.type) {
         if (!("loadedUnit" in unitInPosition)) {
-          throw new TRPCError({
-            code: "BAD_REQUEST",
-            message:
-              "Move action ending position is overlapping with an allied unit",
-          });
+          throw badRequest(
+            "Move action ending position is overlapping with an allied unit"
+          );
         }
 
         if (unitInPosition.loadedUnit !== null) {
@@ -86,45 +82,42 @@ export const moveActionToEvent: MainActionToEvent<MoveAction> = ({
             !("loadedUnit2" in unitInPosition) ||
             unitInPosition.loadedUnit2 !== null
           ) {
-            throw new TRPCError({
-              code: "BAD_REQUEST",
-              message: "Transport already occupied",
-            });
+            throw badRequest("Transport already occupied");
           }
-        }
-
-        if (unitInPosition.type === "cruiser") {
-          console.log("");
         }
 
         //check if unit can go into that transport
         switch (unitInPosition.type) {
-          case "cruiser": {
-            if (unit.type !== "transportCopter" && unit.type !== "battleCopter")
-              throwMessage("Can't load non-copter in cruiser");
-            break;
-          }
-          case "carrier": {
-            if (unitPropertiesMap[unit.type].facility !== "airport")
-              throwMessage("Can't load non-land unit to lander");
-            break;
-          }
           case "transportCopter":
           case "apc":
           case "blackBoat": {
-            if (unit.type !== "infantry" && unit.type !== "mech")
-              throwMessage("Can't load non-soldier in apc/transport/blackB");
+            if (unit.type !== "infantry" && unit.type !== "mech") {
+              throw badRequest(
+                "Can't load non-soldier in apc / transport / black boat"
+              );
+            }
             break;
           }
           case "lander": {
-            if (unitPropertiesMap[unit.type].facility !== "base")
-              throwMessage("Can't load non-land unit to lander");
+            if (unitPropertiesMap[unit.type].facility !== "base") {
+              throw badRequest("Can't load non-land unit to lander");
+            }
             break;
           }
-
-          default: {
-            unit;
-            throw new Error("xd");
+          case "cruiser": {
+            if (
+              unit.type !== "transportCopter" &&
+              unit.type !== "battleCopter"
+            ) {
+              throw badRequest("Can't load non-copter in cruiser");
+            }
+            break;
+          }
+          case "carrier": {
+            if (unitPropertiesMap[unit.type].facility !== "airport") {
+              throw badRequest("Can't load non-land unit to lander");
+            }
+            break;
           }
         }
       }

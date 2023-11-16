@@ -10,11 +10,17 @@ import {
 } from "./unit-traits";
 
 //LAND UNITS:
-const creatableInfantrySchema = withNoAmmoUnitStatsSchema.extend(
-  withType("infantry")
-);
+const creatableInfantrySchema = withNoAmmoUnitStatsSchema
+  .extend(withType("infantry"))
+  .extend({
+    currentCapturePoints: z.number().positive().optional(),
+  });
 
-const creatableMechSchema = withAmmoUnitStatsSchema.extend(withType("mech"));
+const creatableMechSchema = withAmmoUnitStatsSchema
+  .extend(withType("mech"))
+  .extend({
+    currentCapturePoints: z.number().positive().optional(),
+  });
 
 const creatableSoldierSchema = z.discriminatedUnion("type", [
   creatableInfantrySchema,
