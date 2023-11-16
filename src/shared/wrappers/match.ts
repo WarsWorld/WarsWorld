@@ -20,6 +20,8 @@ import type { MovementType } from "shared/match-logic/buildable-unit";
 
 /** TODO: Add favorites, possibly spectators, also a timer */
 export class MatchWrapper {
+  public playerToRemoveWeatherEffect?: PlayerInMatchWrapper;
+
   constructor(
     public id: string,
     public rules: {
@@ -33,8 +35,7 @@ export class MatchWrapper {
     public units: UnitsWrapper,
     public turn: number,
     public players: PlayersWrapper,
-    public currentWeather: Weather,
-    public weatherNextDay: Weather | null
+    public currentWeather: Weather
   ) {}
 
   applyEvent(event: EmittableEvent) {
@@ -156,5 +157,13 @@ export class MatchWrapper {
       .getCurrentTurnPlayer()
       .getCOHooksWithUnit(position)
       .onMovementCost(baseMovementCost);
+  }
+
+  eliminatePlayer(player: PlayerInMatchWrapper) {
+    player.data.eliminated = true;
+
+    if (this.playerToRemoveWeatherEffect === player) {
+      this.playerToRemoveWeatherEffect = player.getNextAlivePlayer();
+    }
   }
 }

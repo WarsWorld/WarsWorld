@@ -69,7 +69,6 @@ export const matchRouter = router({
       status: match.status,
       turn: match.turn,
       units: match.units.data,
-      weatherNextDay: match.weatherNextDay,
     };
   }),
   join: matchBaseProcedure

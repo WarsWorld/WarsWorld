@@ -58,8 +58,7 @@ export const createMatchProcedure = playerBaseProcedure
         new UnitsWrapper([]),
         0,
         new PlayersWrapper(matchOnDB.playerState),
-        "clear",
-        null
+        "clear"
       )
     );
 

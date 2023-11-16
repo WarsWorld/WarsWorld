@@ -127,4 +127,21 @@ export class PlayerInMatchWrapper {
 
     return Math.min(movement, unit.stats.fuel); /** TODO checking fuel twice? */
   }
+
+  getNextAlivePlayer() {
+    const nextSlot = (n: number) =>
+      (n + 1) % this.match.map.data.numberOfPlayers;
+
+    for (
+      let i = nextSlot(this.data.slot);
+      i !== this.data.slot;
+      i = nextSlot(i)
+    ) {
+      const player = this.match.players.getBySlot(i);
+
+      if (player?.data.eliminated === true) {
+        return player;
+      }
+    }
+  }
 }

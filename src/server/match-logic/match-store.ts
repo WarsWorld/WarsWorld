@@ -8,11 +8,7 @@ import { UnitsWrapper } from "shared/wrappers/units";
 
 class MatchStore {
   /** Maps from match ids to match wrappers */
-  private matchMap: Map<string, MatchWrapper>;
-
-  constructor() {
-    this.matchMap = new Map();
-  }
+  private matchMap: Map<string, MatchWrapper> = new Map();
 
   set(id: string, matchState: MatchWrapper) {
     this.matchMap.set(id, matchState);
@@ -49,8 +45,7 @@ class MatchStore {
           new UnitsWrapper([]),
           0,
           new PlayersWrapper(match.playerState),
-          "clear",
-          null
+          "clear"
         )
       );
 
