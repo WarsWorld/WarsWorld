@@ -12,6 +12,7 @@ export const getDiscoveredUnits = (
   position: Position
 ) => {
   const units: WWUnit[] = [];
+
   for (let i = 0; i < 4; ++i) {
     const position1: Position = [
       position[0] + dirsX[i],
@@ -35,5 +36,6 @@ export const getDiscoveredUnits = (
       units.push(adjacentUnit);
     }
   }
+
   return units;
 };

@@ -15,8 +15,11 @@ export const abilityActionToEvent: SubActionToEvent<AbilityAction> = ({
     case "infantry":
     case "mech": {
       const tile = matchState.getTile(fromPosition);
-      if (!("playerSlot" in tile) || tile.playerSlot === unit.playerSlot)
+
+      if (!("playerSlot" in tile) || tile.playerSlot === unit.playerSlot) {
         throw badRequest("This tile can not be captured");
+      }
+
       break;
     }
     case "apc":

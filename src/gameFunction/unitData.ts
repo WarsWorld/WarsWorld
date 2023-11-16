@@ -247,12 +247,21 @@ export default function unitData(
       facility: "port",
     },
   ];
+
   //if we specify a unit index, we just get the unit.
   if (unitIndex >= 0) {
-    if (returnData === "base") return [landData[unitIndex]];
-    else if (returnData === "airport") return [airData[unitIndex]];
-    else return [seaData[unitIndex]];
-  } else if (returnData === "base") return landData;
-  else if (returnData === "airport") return airData;
-  else return seaData;
+    if (returnData === "base") {
+      return [landData[unitIndex]];
+    } else if (returnData === "airport") {
+      return [airData[unitIndex]];
+    } else {
+      return [seaData[unitIndex]];
+    }
+  } else if (returnData === "base") {
+    return landData;
+  } else if (returnData === "airport") {
+    return airData;
+  } else {
+    return seaData;
+  }
 }

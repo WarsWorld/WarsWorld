@@ -56,7 +56,7 @@ export const drake: COProperties = {
         });
 
         matchState.currentWeather = "rain";
-        matchState.weatherNextDay = "clear";
+        matchState.playerToRemoveWeatherEffect = currentPlayerData.player;
       },
     },
   },

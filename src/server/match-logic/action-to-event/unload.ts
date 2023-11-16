@@ -70,6 +70,7 @@ export const unloadWaitActionToEvent: SubActionToEvent<UnloadWaitAction> = ({
         "Tried to unload 2 units, but only one can be put in a transport"
       );
     }
+
     if (transportUnit.loadedUnit2 === null) {
       throw badRequest("Transport doesn't currently have a 2nd loaded unit");
     }

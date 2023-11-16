@@ -28,10 +28,14 @@ export default async function showMenu(
   const menuContainer = new Container();
   menuContainer.eventMode = "static";
   menuContainer.sortableChildren = true;
+
   if (x > mapWidth / 2) {
     console.log();
     menuContainer.x = x * 16 + 16 - 100;
-  } else menuContainer.x = x * 16 + 16;
+  } else {
+    menuContainer.x = x * 16 + 16;
+  }
+
   //the name lets us find the menu easily with getChildByName for easy removal
   menuContainer.name = "menu";
 
@@ -46,6 +50,7 @@ export default async function showMenu(
     // menu element is 67.5% of a tile, so we only move that much
     y = y - Math.abs(spaceLeft - unitInfo.length * 0.675);
   }
+
   menuContainer.y = y * 16;
 
   //lets load our font

@@ -30,6 +30,7 @@ export default function MatchCard({ match, inMatch }: matchData) {
       }
     });
   }
+
   if (firstPlayer === undefined) {
     firstPlayer = match.players[0];
     secondPlayer = match.players[1];
@@ -45,13 +46,24 @@ export default function MatchCard({ match, inMatch }: matchData) {
   const [ready, setReady] = useState(firstPlayer.ready);
 
   function changeCO(newCO: CO, army: Army, status: boolean) {
-    if (newCO) setPlayerCO(newCO);
-    if (army) setArmy(army);
-    if (status != null) setReady(status);
+    if (newCO) {
+      setPlayerCO(newCO);
+    }
+
+    if (army) {
+      setArmy(army);
+    }
+
+    if (status != null) {
+      setReady(status);
+    }
   }
 
   let twoPlayerCheck = false;
-  if (secondPlayer) twoPlayerCheck = true;
+
+  if (secondPlayer) {
+    twoPlayerCheck = true;
+  }
 
   return (
     <div className="@grid @bg-bg-primary @relative">

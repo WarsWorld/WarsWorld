@@ -32,11 +32,13 @@ export async function getStaticProps({ params }) {
 export default function Articles({ postData }) {
   //Lets make sure we have our parameters/data
   // before loading so we dont cause any errors
-  if (typeof postData === "undefined") return <h1>Loading...</h1>;
-  else {
+  if (typeof postData === "undefined") {
+    return <h1>Loading...</h1>;
+  } else {
     //Get headers for index table
     let theHTML: any = postData.contentHtml;
     const headers = [...theHTML.matchAll(/<h1+>(.*?)<\/h1*>/gm)];
+
     //Put IDs on headers so /articleName#header links to the header
     for (let i = 0; i < headers.length; i++) {
       theHTML = theHTML.replace(

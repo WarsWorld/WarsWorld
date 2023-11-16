@@ -100,10 +100,8 @@ const validateMainActionAndToEvent = (
       //TODO function :)
     }
     case "superCOPower": {
-
     }
     case "passTurn": {
-
     }
   }
 
@@ -194,7 +192,10 @@ export const actionRouter = router({
           }
         }
 
-        if (position === null) throw new Error("This should never happen");
+        if (position === null) {
+          throw new Error("This should never happen");
+        }
+
         applySubEventToMatch(
           input.matchId,
           currentPlayer,

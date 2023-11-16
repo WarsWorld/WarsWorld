@@ -51,6 +51,7 @@ export function showUnits(
   returnContainer.eventMode = "static";
   //Check to see if same unit is clicked twice on the same spot
   let secondTimeClickingUnit = false;
+
   for (const unit of units) {
     const unitSprite = getUnitSprite(spriteSheets[unit.playerSlot], unit);
     returnContainer.addChild(unitSprite);
@@ -71,14 +72,20 @@ export function showUnits(
           const layerName = returnContainer.getChildByName(
             "arrowAndSquaresContainer"
           );
-          if (layerName !== null) returnContainer.removeChild(layerName);
+
+          if (layerName !== null) {
+            returnContainer.removeChild(layerName);
+          }
         }
         //First time clicking this unit, calculate the path and everything
         else {
           unitSprite.zIndex = 10;
           const enemyUnits: WWUnit[] = [];
+
           for (const unit of units) {
-            if (unit.playerSlot != 0) enemyUnits.push(unit); //push if not same team}
+            if (unit.playerSlot != 0) {
+              enemyUnits.push(unit);
+            } //push if not same team}
           }
 
           //path display initialization
@@ -118,7 +125,10 @@ export function showUnits(
           const layerName = returnContainer.getChildByName(
             "arrowAndSquaresContainer"
           );
-          if (layerName !== null) returnContainer.removeChild(layerName);
+
+          if (layerName !== null) {
+            returnContainer.removeChild(layerName);
+          }
 
           //the container holding arrow/path and other squareContainer and interactiveSqUAREScONTAINER
           const arrowAndSquaresContainer = new Container();
@@ -184,8 +194,10 @@ export function showUnits(
               //lets cleanup previous arrows.
               const arrowName =
                 arrowAndSquaresContainer.getChildByName("arrows");
-              if (arrowName !== null)
+
+              if (arrowName !== null) {
                 arrowAndSquaresContainer.removeChild(arrowName);
+              }
 
               arrowAndSquaresContainer.addChild(currentPathDisplay);
             });
@@ -197,8 +209,10 @@ export function showUnits(
           //if we hover over the unit, delete all arrows (since there is no movement).
           unitSprite.on("pointerenter", () => {
             const arrowName = arrowAndSquaresContainer.getChildByName("arrows");
-            if (arrowName !== null)
+
+            if (arrowName !== null) {
               arrowAndSquaresContainer.removeChild(arrowName);
+            }
           });
 
           //Lets create the red squares for enemy units!
@@ -257,14 +271,21 @@ export function showUnits(
       let isNextAttack = false; //alternate between showing movement and attacking tiles
       unitSprite.on("pointerdown", async () => {
         const enemyUnits: WWUnit[] = [];
-        for (const unit of units)
-          if (unit.playerSlot === 0) enemyUnits.push(unit); //not true, need to get playerSlot and not equal
+
+        for (const unit of units) {
+          if (unit.playerSlot === 0) {
+            enemyUnits.push(unit);
+          }
+        } //not true, need to get playerSlot and not equal
+
         let tilesShown: Container;
+
         if (isNextAttack) {
           tilesShown = await showAttackableTiles(mapData, unit, enemyUnits);
         } else {
           tilesShown = await showPassableTiles(mapData, unit, enemyUnits);
         }
+
         isNextAttack = !isNextAttack;
         tilesShown.zIndex = 10;
         returnContainer.addChild(tilesShown);

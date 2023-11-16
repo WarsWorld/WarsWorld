@@ -16,9 +16,19 @@ export function spriteConstructor(
   sprite.y = y;
   sprite.width = width;
   sprite.height = height;
-  if (zIndex) sprite.zIndex = zIndex;
-  if (eventMode) sprite.eventMode = eventMode;
-  if (tint) sprite.tint = tint;
+
+  if (zIndex) {
+    sprite.zIndex = zIndex;
+  }
+
+  if (eventMode) {
+    sprite.eventMode = eventMode;
+  }
+
+  if (tint) {
+    sprite.tint = tint;
+  }
+
   return sprite;
 }
 
@@ -38,9 +48,19 @@ export function animatedSpriteConstructor(
   sprite.y = y;
   sprite.width = width;
   sprite.height = height;
-  if (zIndex) sprite.zIndex = zIndex;
-  if (eventMode) sprite.eventMode = eventMode;
-  if (tint) sprite.tint = tint;
+
+  if (zIndex) {
+    sprite.zIndex = zIndex;
+  }
+
+  if (eventMode) {
+    sprite.eventMode = eventMode;
+  }
+
+  if (tint) {
+    sprite.tint = tint;
+  }
+
   sprite.anchor.set(1, 1);
   sprite.animationSpeed = animationSpeed;
   sprite.play();

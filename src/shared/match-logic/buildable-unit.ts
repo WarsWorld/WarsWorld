@@ -13,6 +13,7 @@ export const getDailyFuelUsage = (unit: WWUnit): number => {
     } else if (unit.type === "stealth" && unit.hidden) {
       return 8;
     }
+
     return 5;
   }
 

@@ -92,5 +92,9 @@ export const createUnitFromBuildAction = (
         loadedUnit: null,
         loadedUnit2: null,
       };
+    default: {
+      /** TODO only so that typescript doesn't error / break CI, but still a TODO */
+      throw new Error("TODO :)");
+    }
   }
 };

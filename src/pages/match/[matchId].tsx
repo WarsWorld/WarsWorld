@@ -54,12 +54,15 @@ const Match = ({ spriteData }: SpriteData) => {
     {
       enabled: currentPlayer !== undefined,
       onSuccess(data) {
-        if (data === null) throw new Error(`Match ${matchId} not found!`);
+        if (data === null) {
+          throw new Error(`Match ${matchId} not found!`);
+        }
 
-        if (data.status != "playing")
+        if (data.status != "playing") {
           throw new Error(
             `This match hasn't started yet. make sure to ready up!`
           );
+        }
 
         if (!players) {
           setPlayers(data.players);
@@ -124,6 +127,7 @@ const Match = ({ spriteData }: SpriteData) => {
         mapData.forEach((col, colIndex) => {
           mapData[colIndex].forEach((row, rowIndex) => {
             const type = row.type;
+
             //ITS A PROPERTY
             if (row.hasOwnProperty("playerSlot")) {
               const slot: number = row.playerSlot;
@@ -134,6 +138,7 @@ const Match = ({ spriteData }: SpriteData) => {
                 //NOT NEUTRAL
               } else {
                 tile = new AnimatedSprite(spriteSheets[slot].animations[type]);
+
                 //if our building is able to produce units, it has a menu!
                 if (type !== "hq" && type !== "lab" && type !== "city") {
                   tile.eventMode = "static";
@@ -152,8 +157,10 @@ const Match = ({ spriteData }: SpriteData) => {
 
                     //if there is a menu already out, lets remove it
                     const menuContainer = mapContainer.getChildByName("menu");
-                    if (menuContainer !== null)
+
+                    if (menuContainer !== null) {
                       mapContainer.removeChild(menuContainer);
+                    }
 
                     //lets create a transparent screen that covers everything.
                     // if we click on it, we will delete the menu
@@ -187,15 +194,17 @@ const Match = ({ spriteData }: SpriteData) => {
 
               //NOT A PROPERTY
             } else {
-              if (row.hasOwnProperty("variant"))
+              if (row.hasOwnProperty("variant")) {
                 tile = new Sprite(
                   spriteSheets[2].textures[
                     row.type + "-" + row.variant + ".png"
                   ]
                 );
-              else
+              } else {
                 tile = new Sprite(spriteSheets[2].textures[row.type + ".png"]);
+              }
             }
+
             //makes our sprites render at the bottom, not from the top.
             tile.anchor.set(1, 1);
             tile.x = (rowIndex + 1) * 16;
@@ -212,6 +221,7 @@ const Match = ({ spriteData }: SpriteData) => {
       console.log("Below is the mapData");
       console.log(mapData);
       console.log(players);
+
       return () => {
         app.stop();
       };
@@ -219,8 +229,9 @@ const Match = ({ spriteData }: SpriteData) => {
   }, [pixiCanvasRef, mapData, spriteData, scale]);
 
   //Actual return statement for react function
-  if (!spriteData) return <h1>Loading...</h1>;
-  else {
+  if (!spriteData) {
+    return <h1>Loading...</h1>;
+  } else {
     return (
       <div className="@grid @grid-cols-12 @text-center @my-20 @mx-2">
         <div className="@col-span-12 @p-2">

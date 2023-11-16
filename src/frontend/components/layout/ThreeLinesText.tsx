@@ -14,6 +14,7 @@ export default function ThreeLinesText(props: {
 }) {
   const router = useRouter();
   const buttonArray: React.ReactElement[] = [];
+
   if (props.button) {
     props.button.forEach((buttonItem: buttonData) =>
       buttonArray.push(

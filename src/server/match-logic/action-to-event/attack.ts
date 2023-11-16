@@ -18,10 +18,13 @@ export const attackActionToEvent: SubActionToEvent<AttackAction> = ({
 
   //check if unit is in range
   const attackerProperties = unitPropertiesMap[attacker.type];
+
   if (!("attackRange" in attackerProperties)) {
     throw badRequest("Unit cannot attack");
   }
+
   const attackDistance = getDistance(attacker.position, defender.position);
+
   if (
     attackerProperties.attackRange[0] > attackDistance ||
     attackDistance > attackerProperties.attackRange[1]
@@ -34,6 +37,7 @@ export const attackActionToEvent: SubActionToEvent<AttackAction> = ({
     attacker.position,
     defender.position
   );
+
   if (damageAttackDone === null) {
     throw badRequest("This unit cannot attack specified enemy unit");
   }
@@ -49,6 +53,7 @@ export const attackActionToEvent: SubActionToEvent<AttackAction> = ({
   //check if defender can counterattack
   if (attackDistance === 1) {
     const defenderProperties = unitPropertiesMap[defender.type];
+
     if (
       "attackRange" in defenderProperties &&
       defenderProperties.attackRange[1] === 1

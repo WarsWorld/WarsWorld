@@ -52,17 +52,20 @@ export default function CreateMatch({
   );
 
   useEffect(() => {
-    if (currentPlayer)
+    if (currentPlayer) {
       setSelectPlayer({
         label: currentPlayer.name,
         value: currentPlayer.id,
       });
+    }
   }, [currentPlayer]);
 
   const createMatchHandler = async () => {
     const mapId = currentMapId;
 
-    if (!mapId || !currentPlayer) return;
+    if (!mapId || !currentPlayer) {
+      return;
+    }
 
     await createMutation.mutateAsync({
       selectedCO: "lash",
@@ -75,11 +78,16 @@ export default function CreateMatch({
   };
 
   const selectPlayerHandler = (o: SelectOption | undefined) => {
-    if (!ownedPlayers) return;
+    if (!ownedPlayers) {
+      return;
+    }
 
     setSelectPlayer(o);
     const newCurrentPlayer = ownedPlayers.find((p) => p.id === o?.value);
-    if (newCurrentPlayer) setCurrentPlayer(newCurrentPlayer);
+
+    if (newCurrentPlayer) {
+      setCurrentPlayer(newCurrentPlayer);
+    }
   };
 
   const selectMapHandler = (o: SelectOption | undefined) => {

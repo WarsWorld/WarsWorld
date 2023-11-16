@@ -36,9 +36,11 @@ export function getAccessibleNodes( //TODO: save result of function? _ (Sturm d2
   queues[0].push({ pos: [x, y], dist: 0, parent: null }); //queues[0] has the origin node, initially
 
   const visited: boolean[][] = [];
+
   // Initialize visited matrix
   for (let i = 0; i < mapData.length; i++) {
     visited[i] = [];
+
     for (let j = 0; j < mapData[i].length; j++) {
       visited[i][j] = false;
     }
@@ -56,6 +58,7 @@ export function getAccessibleNodes( //TODO: save result of function? _ (Sturm d2
   }
 
   let currentDist = 0; //will check from closest to furthest, to find the shortest path
+
   while (currentDist < queues.length) {
     if (queues[currentDist].length == 0) {
       //increase currentDist if all nodes within that distance have been processed
@@ -66,9 +69,15 @@ export function getAccessibleNodes( //TODO: save result of function? _ (Sturm d2
     const currNode = queues[currentDist].pop();
 
     let currPos;
-    if (currNode?.pos !== null) currPos = currNode?.pos;
 
-    if (currPos === undefined || visited[currPos[0]][currPos[1]]) continue;
+    if (currNode?.pos !== null) {
+      currPos = currNode?.pos;
+    }
+
+    if (currPos === undefined || visited[currPos[0]][currPos[1]]) {
+      continue;
+    }
+
     //update variables to mark as visited and add to result
     visited[currPos[0]][currPos[1]] = true;
     accessibleTiles.set(currPos, <PathNode>currNode);
@@ -153,6 +162,7 @@ export async function showPassableTiles(
     const square = tileConstructor(pos, "#43d9e4");
     markedTiles.addChild(square);
   }
+
   return markedTiles;
 }
 
@@ -186,21 +196,25 @@ export function getAttackableTiles(
   }
 
   const visited: boolean[][] = [];
+
   // Initialize visited matrix
   for (let i = 0; i < mapData.length; i++) {
     visited[i] = [];
+
     for (let j = 0; j < mapData[i].length; j++) {
       visited[i][j] = false;
     }
   }
 
   const attackpositionSchemas: Position[] = [];
+
   for (const [pos] of accessibleNodes.entries()) {
     const xpositionSchemas = [pos[0] - 1, pos[0] + 1, pos[0], pos[0]];
     const ypositionSchemas = [pos[1], pos[1], pos[1] - 1, pos[1] + 1];
+
     for (let i = 0; i < 4; ++i) {
       //all positions adjacent to tiles where the unit can move to are attacking tiles
-      if (isValidTile(xpositionSchemas[i], ypositionSchemas[i]))
+      if (isValidTile(xpositionSchemas[i], ypositionSchemas[i])) {
         if (!visited[xpositionSchemas[i]][ypositionSchemas[i]]) {
           attackpositionSchemas.push([
             xpositionSchemas[i],
@@ -208,6 +222,7 @@ export function getAttackableTiles(
           ]);
           visited[xpositionSchemas[i]][ypositionSchemas[i]] = true;
         }
+      }
     }
   }
 
@@ -232,6 +247,7 @@ export async function showAttackableTiles(
         for (let j = 0; j < mapData[0].length; ++j) {
           const distance =
             Math.abs(i - unit.position[0]) + Math.abs(j - unit.position[1]); //untested, maybe swapped
+
           if (
             distance <= unitProperties.attackRange[1] &&
             distance >= unitProperties.attackRange[0]
@@ -241,6 +257,7 @@ export async function showAttackableTiles(
           }
         }
       }
+
       return markedTiles;
     }
   }
@@ -274,15 +291,20 @@ export function updatePath(
   path: PathNode[],
   newPos: Position
 ): PathNode[] {
-  if (newPos === undefined || newPos === null || !accessibleNodes.has(newPos))
+  if (newPos === undefined || newPos === null || !accessibleNodes.has(newPos)) {
     throw new Error("Trying to add an unreachable position!");
+  }
+
   if (path.length !== 0) {
     const lastNode = path[path.length - 1];
 
     for (const node of path) {
       if (node.pos === newPos) {
         //the "new" node is part of the current path, so delete all nodes after that one
-        while (node !== path[path.length - 1]) path.pop();
+        while (node !== path[path.length - 1]) {
+          path.pop();
+        }
+
         return path;
       }
     }
@@ -313,18 +335,23 @@ export function updatePath(
   //if the new position can't be added to the current path, recreate the entire path
   const newPath: PathNode[] = [];
   let currentPos: [number, number] | null = newPos;
+
   while (currentPos !== null) {
     const accessibleNodesPath = accessibleNodes.get(currentPos);
+
     if (accessibleNodesPath !== undefined) {
       newPath.push(accessibleNodesPath);
       currentPos = accessibleNodesPath.parent;
     }
   }
+
   return newPath.reverse();
 }
 
 export function showPath(spriteSheet: Spritesheet, path: PathNode[]) {
-  if (path.length < 1) throw new Error("Empty path!");
+  if (path.length < 1) {
+    throw new Error("Empty path!");
+  }
 
   const arrowContainer = new Container();
   arrowContainer.eventMode = "static";
@@ -333,32 +360,68 @@ export function showPath(spriteSheet: Spritesheet, path: PathNode[]) {
     //path from a to b to c, the sprite is the one displayed in b (middle node)
     const dify = Math.abs(a[1] - c[1]);
     const difx = Math.abs(a[0] - c[0]);
+
     if (dify + difx === 2) {
       //not start nor end
-      if (dify === 2) return "ew";
-      if (difx === 2) return "ns";
+      if (dify === 2) {
+        return "ew";
+      }
+
+      if (difx === 2) {
+        return "ns";
+      }
 
       let ans: string;
-      if (a[0] > b[0] || c[0] > b[0]) ans = "s";
-      else ans = "n";
-      if (a[1] > b[1] || c[1] > b[1]) ans += "e";
-      else ans += "w";
+
+      if (a[0] > b[0] || c[0] > b[0]) {
+        ans = "s";
+      } else {
+        ans = "n";
+      }
+
+      if (a[1] > b[1] || c[1] > b[1]) {
+        ans += "e";
+      } else {
+        ans += "w";
+      }
+
       return ans;
     }
+
     if (a[1] === b[1] && a[0] === b[0]) {
       //starting node
-      if (c[1] === b[1] && c[0] === b[0])
+      if (c[1] === b[1] && c[0] === b[0]) {
         //AND ending node
         return "od";
-      if (c[1] < b[1]) return "ow";
-      if (c[1] > b[1]) return "oe";
-      if (c[0] > b[0]) return "os";
+      }
+
+      if (c[1] < b[1]) {
+        return "ow";
+      }
+
+      if (c[1] > b[1]) {
+        return "oe";
+      }
+
+      if (c[0] > b[0]) {
+        return "os";
+      }
+
       return "on";
     } else {
       //ending node
-      if (a[1] < b[1]) return "wd";
-      if (a[1] > b[1]) return "ed";
-      if (a[0] < b[0]) return "nd";
+      if (a[1] < b[1]) {
+        return "wd";
+      }
+
+      if (a[1] > b[1]) {
+        return "ed";
+      }
+
+      if (a[0] < b[0]) {
+        return "nd";
+      }
+
       return "sd";
     }
   }
@@ -369,15 +432,17 @@ export function showPath(spriteSheet: Spritesheet, path: PathNode[]) {
 
   for (let i = 0; i < len; ++i) {
     let spriteName: string;
-    if (i === 0)
+
+    if (i === 0) {
       //special case for original node
       spriteName = getSpriteName(path2[0].pos, path2[i].pos, path2[i + 1].pos);
-    else
+    } else {
       spriteName = getSpriteName(
         path2[i - 1].pos,
         path2[i].pos,
         path2[i + 1].pos
       );
+    }
 
     const nodeSprite = new Sprite(spriteSheet.textures[spriteName + ".png"]);
     nodeSprite.anchor.set(1, 1);
@@ -385,6 +450,7 @@ export function showPath(spriteSheet: Spritesheet, path: PathNode[]) {
     nodeSprite.y = (path2[i].pos[0] + 1) * 16;
     arrowContainer.addChild(nodeSprite);
   }
+
   //this name will let us easily remove arrows later
   arrowContainer.name = "arrows";
   return arrowContainer;

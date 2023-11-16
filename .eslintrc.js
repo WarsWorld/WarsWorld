@@ -1,9 +1,10 @@
-const padded = ["if", "const", "let", "expression"];
+const padded = ["if", "const", "let", "expression", "return", "break"];
 
 /** @type {import("eslint")} */
 module.exports = {
   parser: "@typescript-eslint/parser",
   extends: [
+    "plugin:@next/next/recommended",
     "plugin:@typescript-eslint/recommended",
     "plugin:react/recommended",
     "plugin:react-hooks/recommended",
@@ -40,7 +41,7 @@ module.exports = {
     ],
     "@typescript-eslint/explicit-function-return-type": "off",
     "@typescript-eslint/no-unused-vars": [
-      "error",
+      "warn",
       {
         varsIgnorePattern: "^_",
         argsIgnorePattern: "^_",

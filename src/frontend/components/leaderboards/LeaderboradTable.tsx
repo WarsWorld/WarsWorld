@@ -19,6 +19,7 @@ import type { SelectOption } from "../layout/Select";
 
 function hideColumns(table: Table<PlayerLeaderboard>, screenWidth: number) {
   const columnsToHide = ["Games", "Win Rate", "Streak"];
+
   if (screenWidth <= 768) {
     table
       .getAllLeafColumns()

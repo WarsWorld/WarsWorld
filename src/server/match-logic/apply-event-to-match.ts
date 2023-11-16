@@ -8,7 +8,6 @@ import type { PlayerSlot } from "../schemas/player-slot";
 import type { Position } from "../schemas/position";
 import type { WWUnit } from "../schemas/unit";
 import { matchStore } from "./match-store";
-import { isSamePosition } from "../schemas/position";
 
 const createNewUnitFromBuildEvent = (
   event: BuildAction,
@@ -105,6 +104,7 @@ const createNewUnitFromBuildEvent = (
       };
   }
 };
+
 const loadedUnitToWWUnit = (
   loadedUnit: any,
   playerSlot: number,
@@ -122,16 +122,21 @@ const loadUnitInto = (unitToLoad: WWUnit, transportUnit: WWUnit) => {
   switch (transportUnit.type) {
     case "transportCopter":
     case "apc": {
-      if (unitToLoad.type === "infantry" || unitToLoad.type === "mech")
+      if (unitToLoad.type === "infantry" || unitToLoad.type === "mech") {
         transportUnit.loadedUnit = unitToLoad;
+      }
+
       break;
     }
     case "blackBoat": {
       if (unitToLoad.type === "infantry" || unitToLoad.type === "mech") {
-        if (transportUnit.loadedUnit === null)
+        if (transportUnit.loadedUnit === null) {
           transportUnit.loadedUnit = unitToLoad;
-        else transportUnit.loadedUnit2 = unitToLoad;
+        } else {
+          transportUnit.loadedUnit2 = unitToLoad;
+        }
       }
+
       break;
     }
     case "lander": {
@@ -151,8 +156,11 @@ const loadUnitInto = (unitToLoad: WWUnit, transportUnit: WWUnit) => {
       ) {
         if (transportUnit.loadedUnit === null) {
           transportUnit.loadedUnit = unitToLoad;
-        } else transportUnit.loadedUnit2 = unitToLoad;
+        } else {
+          transportUnit.loadedUnit2 = unitToLoad;
+        }
       }
+
       break;
     }
     case "cruiser": {
@@ -162,8 +170,11 @@ const loadUnitInto = (unitToLoad: WWUnit, transportUnit: WWUnit) => {
       ) {
         if (transportUnit.loadedUnit === null) {
           transportUnit.loadedUnit = unitToLoad;
-        } else transportUnit.loadedUnit2 = unitToLoad;
+        } else {
+          transportUnit.loadedUnit2 = unitToLoad;
+        }
       }
+
       break;
     }
     case "carrier": {
@@ -177,7 +188,9 @@ const loadUnitInto = (unitToLoad: WWUnit, transportUnit: WWUnit) => {
       ) {
         if (transportUnit.loadedUnit === null) {
           transportUnit.loadedUnit = unitToLoad;
-        } else transportUnit.loadedUnit2 = unitToLoad;
+        } else {
+          transportUnit.loadedUnit2 = unitToLoad;
+        }
       }
     }
   }
@@ -200,12 +213,16 @@ export const applyMainEventToMatch = (
     }
     case "move": {
       //check if unit is moving or just standing still
-      if (event.path.length <= 1) break;
+      if (event.path.length <= 1) {
+        break;
+      }
 
       const unit = match.units.getUnitOrThrow(event.path[0]);
 
       //if unit was capturing, interrupt capture
-      if ("currentCapturePoints" in unit) unit.currentCapturePoints = undefined;
+      if ("currentCapturePoints" in unit) {
+        unit.currentCapturePoints = undefined;
+      }
 
       unit.stats.fuel -=
         (event.path.length - 1) *
@@ -229,6 +246,7 @@ export const applyMainEventToMatch = (
             unit.stats.hp + unitAtDestination.stats.hp,
             99
           );
+
           if (
             "ammo" in unit.stats &&
             "ammo" in unitAtDestination.stats &&
@@ -239,6 +257,7 @@ export const applyMainEventToMatch = (
               unitProperties.initialAmmo
             );
           }
+
           match.units.removeUnit(unit);
         } else {
           //load
@@ -246,10 +265,12 @@ export const applyMainEventToMatch = (
           match.units.removeUnit(unit);
         }
       }
+
       break;
     }
     case "unload2": {
       const unit = match.units.getUnitOrThrow(event.transportPosition);
+
       if (event.unloads.isSecondUnit && "loadedUnit2" in unit) {
         match.units.addUnit(
           loadedUnitToWWUnit(
@@ -267,11 +288,15 @@ export const applyMainEventToMatch = (
             addDirection(event.transportPosition, event.unloads.direction)
           )
         );
+
         if ("loadedUnit2" in unit) {
           unit.loadedUnit = unit.loadedUnit2;
           unit.loadedUnit2 = null;
-        } else unit.loadedUnit = null;
+        } else {
+          unit.loadedUnit = null;
+        }
       }
+
       break;
     }
     case "coPower": {
@@ -303,11 +328,13 @@ export const applySubEventToMatch = (
     case "attack": {
       const attacker = match.units.getUnitOrThrow(fromPosition);
       const defender = match.units.getUnitOrThrow(event.defenderPosition);
+
       if (event.defenderHP === 0) {
         match.units.removeUnit(defender);
       } else {
         defender.stats.hp = event.defenderHP;
       }
+
       if (event.attackerHP !== undefined) {
         if (event.attackerHP === 0) {
           match.units.removeUnit(attacker);
@@ -315,6 +342,7 @@ export const applySubEventToMatch = (
           attacker.stats.hp = event.attackerHP;
         }
       }
+
       break;
     }
     case "ability": {
@@ -325,6 +353,7 @@ export const applySubEventToMatch = (
           if (unit.currentCapturePoints === undefined) {
             unit.currentCapturePoints = 20;
           }
+
           unit.currentCapturePoints -= currentPlayer
             .getCOHooksWithUnit(unit.position)
             .onCapture(unit.stats.hp);
@@ -333,6 +362,7 @@ export const applySubEventToMatch = (
             unit.currentCapturePoints = undefined;
             match.captureTile(unit.position);
           }
+
           break;
         }
         case "apc": {
@@ -347,6 +377,7 @@ export const applySubEventToMatch = (
                 unitPropertiesMap[suppliedUnit.type].initialFuel;
             }
           }
+
           break;
         }
         case "blackBomb": {
@@ -361,10 +392,14 @@ export const applySubEventToMatch = (
         case "stealth":
         case "sub": {
           //toggle hide
-          if ("hidden" in unit) unit.hidden = !unit.hidden;
+          if ("hidden" in unit) {
+            unit.hidden = !unit.hidden;
+          }
+
           break;
         }
       }
+
       break;
     }
     case "unload1": {
@@ -387,11 +422,15 @@ export const applySubEventToMatch = (
                 addDirection(fromPosition, event.unloads[0].direction)
               )
             );
+
             if ("loadedUnit2" in unit) {
               unit.loadedUnit = unit.loadedUnit2;
               unit.loadedUnit2 = null;
-            } else unit.loadedUnit = null;
+            } else {
+              unit.loadedUnit = null;
+            }
           }
+
           break;
         case 2:
           //unload all. unloads[0] refers to 1st unit, unloads[1] refers to 2nd unit
@@ -413,10 +452,12 @@ export const applySubEventToMatch = (
             unit.loadedUnit = null;
             unit.loadedUnit2 = null;
           }
+
           break;
         default:
           break;
       }
+
       break;
     }
     case "repair": {
@@ -428,19 +469,22 @@ export const applySubEventToMatch = (
         unitPropertiesMap[repairedUnit.type].initialFuel;
 
       //heal for free if visible hp is 10
-      if (repairedUnit.stats.hp >= 90) repairedUnit.stats.hp = 99;
-      else {
+      if (repairedUnit.stats.hp >= 90) {
+        repairedUnit.stats.hp = 99;
+      } else {
         //check if enough funds for heal, and heal if it's the case
         const unitCost = unitPropertiesMap[repairedUnit.type].cost;
         const repairEffectiveCost =
           currentPlayer
             .getCOHooksWithUnit(addDirection(fromPosition, event.direction))
             .onBuildCost(unitCost) * 0.1;
+
         if (repairEffectiveCost <= currentPlayer.data.funds) {
           repairedUnit.stats.hp += 10;
           currentPlayer.data.funds -= repairEffectiveCost;
         }
       }
+
       break;
     }
     case "launchMissile": {
@@ -452,5 +496,6 @@ export const applySubEventToMatch = (
       break;
     }
   }
+
   unit.isReady = false;
 };

@@ -18,6 +18,7 @@ export const moveActionToEvent: MainActionToEvent<MoveAction> = ({
   matchState,
 }) => {
   const unit = currentPlayer.getUnits().getUnitOrThrow(action.path[0]);
+
   if (!unit.isReady) {
     throw badRequest("Trying to move a waited unit");
   }
@@ -62,6 +63,7 @@ export const moveActionToEvent: MainActionToEvent<MoveAction> = ({
     if (moveCost > remainingMovePoints) {
       throw badRequest("Using more move points than available");
     }
+
     remainingMovePoints -= moveCost;
 
     if (
@@ -96,12 +98,14 @@ export const moveActionToEvent: MainActionToEvent<MoveAction> = ({
                 "Can't load non-soldier in apc / transport / black boat"
               );
             }
+
             break;
           }
           case "lander": {
             if (unitPropertiesMap[unit.type].facility !== "base") {
               throw badRequest("Can't load non-land unit to lander");
             }
+
             break;
           }
           case "cruiser": {
@@ -111,12 +115,14 @@ export const moveActionToEvent: MainActionToEvent<MoveAction> = ({
             ) {
               throw badRequest("Can't load non-copter in cruiser");
             }
+
             break;
           }
           case "carrier": {
             if (unitPropertiesMap[unit.type].facility !== "airport") {
               throw badRequest("Can't load non-land unit to lander");
             }
+
             break;
           }
         }

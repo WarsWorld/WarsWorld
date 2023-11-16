@@ -94,7 +94,10 @@ export default function getLeaderboardData(
   amount: number
 ): PlayerLeaderboard[] {
   const data: Player[] = [];
-  for (let i = 0; i < amount; i++) data.push(newPlayer());
+
+  for (let i = 0; i < amount; i++) {
+    data.push(newPlayer());
+  }
 
   const transformedData = transformData(data);
 

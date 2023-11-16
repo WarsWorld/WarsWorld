@@ -8,6 +8,7 @@ export default async function getJSON(countryNames: string[]) {
 
   const jsonDirectory = path.join(process.cwd(), "public/img/spriteSheet");
   const spriteSheets: { [key: string]: string[] } = { countries: [] };
+
   for (const country of countryNames) {
     //Read the json data file data.json
     const fileData = await fs.readFile(
@@ -18,6 +19,7 @@ export default async function getJSON(countryNames: string[]) {
     spriteSheets[country] = JSON.parse(fileData);
     spriteSheets.countries.push(country);
   }
+
   const fileData = await fs.readFile(jsonDirectory + `/neutral.json`, "utf8");
   spriteSheets["neutral"] = JSON.parse(fileData);
   spriteSheets.countries.push("neutral");

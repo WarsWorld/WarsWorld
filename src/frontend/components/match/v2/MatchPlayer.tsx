@@ -20,7 +20,7 @@ export default function MatchPlayer({
   playerReady,
 }: matchData) {
   //it might be the other player AND an unpicked spot (a greyed out opponent)
-  if (flipCO)
+  if (flipCO) {
     return (
       <div className={"@truncate @text-right"}>
         <div
@@ -48,8 +48,9 @@ export default function MatchPlayer({
         </div>
       </div>
     );
+  }
   //it is a regular player
-  else
+  else {
     return (
       <div className={"@truncate @text-left"}>
         <div
@@ -70,4 +71,5 @@ export default function MatchPlayer({
         </div>
       </div>
     );
+  }
 }

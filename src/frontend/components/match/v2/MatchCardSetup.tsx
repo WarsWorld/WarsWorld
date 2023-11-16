@@ -25,7 +25,7 @@ export default function MatchCardSetup({
   const [showCO, setShowCO] = useState(false);
   const [showArmy, setShowArmy] = useState(false);
 
-  if (inMatch)
+  if (inMatch) {
     return (
       <div className="@flex  ">
         <div>
@@ -129,8 +129,9 @@ export default function MatchCardSetup({
         </div>
       </div>
     );
+  }
   // Not part of the game, can't change CO or Army or Ready
-  else
+  else {
     return (
       <div className="@flex  ">
         <div>
@@ -151,4 +152,5 @@ export default function MatchCardSetup({
         </div>
       </div>
     );
+  }
 }
