@@ -1,28 +1,28 @@
 import { observable } from "@trpc/server/observable";
 import { emitEvent, subscribeToEvents } from "server/emitter/event-emitter";
-import { moveActionToEvent } from "server/match-logic/action-to-event/move";
+import { moveActionToEvent } from "shared/match-logic/action-to-event/move";
 import { prisma } from "server/prisma/prisma-client";
-import type { Action } from "server/schemas/action";
-import { mainActionSchema } from "server/schemas/action";
-import type { Position } from "server/schemas/position";
+import type { Action } from "shared/schemas/action";
+import { mainActionSchema } from "shared/schemas/action";
+import type { Position } from "shared/schemas/position";
 import type { EmittableEvent, WWEvent } from "shared/types/events";
 import type { MatchWrapper } from "shared/wrappers/match";
 import { z } from "zod";
-import { addDirection } from "../../shared/match-logic/positions";
-import { abilityActionToEvent } from "../match-logic/action-to-event/ability";
-import { attackActionToEvent } from "../match-logic/action-to-event/attack";
-import { buildActionToEvent } from "../match-logic/action-to-event/build";
-import { getDiscoveredUnits } from "../match-logic/action-to-event/get-discovered-units";
-import { launchMissileActionToEvent } from "../match-logic/action-to-event/launchMissile";
-import { repairActionToEvent } from "../match-logic/action-to-event/repair";
+import { addDirection } from "shared/match-logic/positions";
+import { abilityActionToEvent } from "shared/match-logic/action-to-event/ability";
+import { attackActionToEvent } from "shared/match-logic/action-to-event/attack";
+import { buildActionToEvent } from "shared/match-logic/action-to-event/build";
+import { getDiscoveredUnits } from "shared/match-logic/action-to-event/get-discovered-units";
+import { launchMissileActionToEvent } from "shared/match-logic/action-to-event/launchMissile";
+import { repairActionToEvent } from "shared/match-logic/action-to-event/repair";
 import {
   unloadNoWaitActionToEvent,
   unloadWaitActionToEvent,
-} from "../match-logic/action-to-event/unload";
+} from "shared/match-logic/action-to-event/unload";
 import {
   applyMainEventToMatch,
   applySubEventToMatch,
-} from "../match-logic/apply-event-to-match";
+} from "shared/match-logic/apply-event-to-match";
 import {
   playerInMatchBaseProcedure,
   publicBaseProcedure,
@@ -139,7 +139,7 @@ export const actionRouter = router({
           throw new Error("This should never happen");
         }
 
-        applySubEventToMatch(input.matchId, event.subEvent, position);
+        applySubEventToMatch(match, event.subEvent, position);
       }
 
       await prisma.event.create({

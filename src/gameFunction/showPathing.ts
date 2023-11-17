@@ -4,11 +4,11 @@
 
 import type { Spritesheet } from "pixi.js";
 import { Container, Sprite } from "pixi.js";
-import type { MovementType } from "../shared/match-logic/buildable-unit";
-import { unitPropertiesMap } from "../shared/match-logic/buildable-unit";
-import type { Tile, Weather } from "../server/schemas/tile.ts";
-import type { WWUnit } from "../server/schemas/unit";
-import type { Position } from "../server/schemas/position";
+import type { MovementType } from "shared/match-logic/buildable-unit";
+import { unitPropertiesMap } from "shared/match-logic/buildable-unit";
+import type { Tile, Weather } from "shared/schemas/tile.ts";
+import type { WWUnit } from "shared/schemas/unit";
+import type { Position } from "shared/schemas/position";
 import { tileConstructor } from "./spriteConstructor";
 import type { MatchWrapper } from "shared/wrappers/match";
 export type PathNode = {

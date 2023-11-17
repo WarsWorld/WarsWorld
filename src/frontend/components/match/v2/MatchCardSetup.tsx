@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { armySchema } from "../../../../server/schemas/army";
-import { coSchema } from "../../../../server/schemas/co";
-import { trpc } from "../../../utils/trpc-client";
+import { armySchema } from "shared/schemas/army";
+import { coSchema } from "shared/schemas/co";
+import { trpc } from "frontend/utils/trpc-client";
 import type { Match, Player } from "@prisma/client";
 
 interface matchData {

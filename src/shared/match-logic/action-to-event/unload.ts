@@ -1,11 +1,14 @@
-import { unitPropertiesMap } from "../../../shared/match-logic/buildable-unit";
-import { addDirection } from "../../../shared/match-logic/positions";
-import type { MainActionToEvent, SubActionToEvent } from "../../routers/action";
+import { DispatchableError } from "shared/DispatchedError";
 import type {
   UnloadNoWaitAction,
   UnloadWaitAction,
-} from "../../schemas/action";
-import { badRequest } from "./trpc-error-manager";
+} from "shared/schemas/action";
+import type {
+  MainActionToEvent,
+  SubActionToEvent,
+} from "server/routers/action";
+import { unitPropertiesMap } from "../buildable-unit";
+import { addDirection } from "../positions";
 
 export const unloadWaitActionToEvent: SubActionToEvent<UnloadWaitAction> = (
   match,
@@ -16,15 +19,19 @@ export const unloadWaitActionToEvent: SubActionToEvent<UnloadWaitAction> = (
   const transportUnit = player.getUnits().getUnitOrThrow(fromPosition);
 
   if (action.unloads.length < 1) {
-    throw badRequest("No unit specified to unload");
+    throw new DispatchableError("No unit specified to unload");
   }
 
   if (!("loadedUnit" in transportUnit)) {
-    throw badRequest("Trying to unload from a unit that can't load units");
+    throw new DispatchableError(
+      "Trying to unload from a unit that can't load units"
+    );
   }
 
   if (transportUnit.loadedUnit === null) {
-    throw badRequest("Transport doesn't currently have a loaded unit");
+    throw new DispatchableError(
+      "Transport doesn't currently have a loaded unit"
+    );
   }
 
   const unloadPosition = addDirection(
@@ -37,13 +44,15 @@ export const unloadWaitActionToEvent: SubActionToEvent<UnloadWaitAction> = (
   if (action.unloads.length === 1) {
     if (action.unloads[0].isSecondUnit) {
       if (!("loadedUnit2" in transportUnit)) {
-        throw badRequest(
+        throw new DispatchableError(
           "Trying to unload 2nd unit from a unit only carries 1 unit"
         );
       }
 
       if (transportUnit.loadedUnit2 === null) {
-        throw badRequest("Transport doesn't currently have a 2nd loaded unit");
+        throw new DispatchableError(
+          "Transport doesn't currently have a 2nd loaded unit"
+        );
       }
 
       if (
@@ -52,7 +61,7 @@ export const unloadWaitActionToEvent: SubActionToEvent<UnloadWaitAction> = (
           unitPropertiesMap[transportUnit.loadedUnit2.type].movementType
         ) === null
       ) {
-        throw badRequest("Cannot unload unit in desired position");
+        throw new DispatchableError("Cannot unload unit in desired position");
       }
     } else {
       if (
@@ -61,26 +70,30 @@ export const unloadWaitActionToEvent: SubActionToEvent<UnloadWaitAction> = (
           unitPropertiesMap[transportUnit.loadedUnit.type].movementType
         ) === null
       ) {
-        throw badRequest("Cannot unload unit in desired position");
+        throw new DispatchableError("Cannot unload unit in desired position");
       }
     }
   } else if (action.unloads.length === 2) {
     if (!("loadedUnit2" in transportUnit)) {
-      throw badRequest(
+      throw new DispatchableError(
         "Tried to unload 2 units, but only one can be put in a transport"
       );
     }
 
     if (transportUnit.loadedUnit2 === null) {
-      throw badRequest("Transport doesn't currently have a 2nd loaded unit");
+      throw new DispatchableError(
+        "Transport doesn't currently have a 2nd loaded unit"
+      );
     }
 
     if (action.unloads[0].direction === action.unloads[1].direction) {
-      throw badRequest("Trying to unload both units in the same direction");
+      throw new DispatchableError(
+        "Trying to unload both units in the same direction"
+      );
     }
 
     if (action.unloads[0].isSecondUnit === action.unloads[1].isSecondUnit) {
-      throw badRequest("Trying to unload the same unit twice");
+      throw new DispatchableError("Trying to unload the same unit twice");
     }
 
     if (action.unloads[0].isSecondUnit) {
@@ -104,7 +117,7 @@ export const unloadWaitActionToEvent: SubActionToEvent<UnloadWaitAction> = (
         unitPropertiesMap[transportUnit.loadedUnit.type].movementType
       ) === null
     ) {
-      throw badRequest("Cannot unload unit in desired position");
+      throw new DispatchableError("Cannot unload unit in desired position");
     }
 
     if (
@@ -113,10 +126,10 @@ export const unloadWaitActionToEvent: SubActionToEvent<UnloadWaitAction> = (
         unitPropertiesMap[transportUnit.loadedUnit2.type].movementType
       ) === null
     ) {
-      throw badRequest("Cannot unload unit in desired position");
+      throw new DispatchableError("Cannot unload unit in desired position");
     }
   } else {
-    throw badRequest("Trying to unload more than 2 units");
+    throw new DispatchableError("Trying to unload more than 2 units");
   }
 
   return action;
@@ -132,11 +145,15 @@ export const unloadNoWaitActionToEvent: MainActionToEvent<
     .getUnitOrThrow(action.transportPosition);
 
   if (!("loadedUnit" in transportUnit)) {
-    throw badRequest("Trying to unload from a unit that can't load units");
+    throw new DispatchableError(
+      "Trying to unload from a unit that can't load units"
+    );
   }
 
   if (transportUnit.loadedUnit === null) {
-    throw badRequest("Transport doesn't currently have a loaded unit");
+    throw new DispatchableError(
+      "Transport doesn't currently have a loaded unit"
+    );
   }
 
   const unloadPosition = addDirection(
@@ -148,13 +165,15 @@ export const unloadNoWaitActionToEvent: MainActionToEvent<
 
   if (action.unloads.isSecondUnit) {
     if (!("loadedUnit2" in transportUnit)) {
-      throw badRequest(
+      throw new DispatchableError(
         "Trying to unload 2nd unit from a unit only carries 1 unit"
       );
     }
 
     if (transportUnit.loadedUnit2 === null) {
-      throw badRequest("Transport doesn't currently have a 2nd loaded unit");
+      throw new DispatchableError(
+        "Transport doesn't currently have a 2nd loaded unit"
+      );
     }
 
     if (
@@ -163,7 +182,7 @@ export const unloadNoWaitActionToEvent: MainActionToEvent<
         unitPropertiesMap[transportUnit.loadedUnit2.type].movementType
       ) === null
     ) {
-      throw badRequest("Cannot unload unit in desired position");
+      throw new DispatchableError("Cannot unload unit in desired position");
     }
   } else {
     if (
@@ -172,7 +191,7 @@ export const unloadNoWaitActionToEvent: MainActionToEvent<
         unitPropertiesMap[transportUnit.loadedUnit.type].movementType
       ) === null
     ) {
-      throw badRequest("Cannot unload unit in desired position");
+      throw new DispatchableError("Cannot unload unit in desired position");
     }
   }
 

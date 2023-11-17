@@ -1,7 +1,7 @@
-import { addDirection } from "../../../shared/match-logic/positions";
-import type { SubActionToEvent } from "../../routers/action";
-import type { RepairAction } from "../../schemas/action";
-import { badRequest } from "./trpc-error-manager";
+import { DispatchableError } from "shared/DispatchedError";
+import type { RepairAction } from "shared/schemas/action";
+import type { SubActionToEvent } from "server/routers/action";
+import { addDirection } from "../positions";
 
 export const repairActionToEvent: SubActionToEvent<RepairAction> = (
   match,
@@ -12,7 +12,9 @@ export const repairActionToEvent: SubActionToEvent<RepairAction> = (
   const unit = player.getUnits().getUnitOrThrow(fromPosition);
 
   if (unit.type !== "blackBoat") {
-    throw badRequest("Trying to repair with a unit that is not a black boat");
+    throw new DispatchableError(
+      "Trying to repair with a unit that is not a black boat"
+    );
   }
 
   const repairPosition = addDirection(fromPosition, action.direction);

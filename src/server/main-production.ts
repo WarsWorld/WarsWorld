@@ -2,7 +2,7 @@ import http from "http";
 import next from "next";
 import { parse } from "url";
 import { createTRPCwebSocketServer } from "./common-server";
-import { matchStore } from "./match-logic/match-store";
+import { matchStore } from "./match-store";
 
 const port = parseInt(process.env.PORT || "3000", 10);
 const app = next({ dev: false });

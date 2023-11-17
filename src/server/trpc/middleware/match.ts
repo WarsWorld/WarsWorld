@@ -1,7 +1,7 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { t } from "../trpc-init";
-import { matchStore } from "server/match-logic/match-store";
+import { matchStore } from "server/match-store";
 
 export const withMatchIdSchema = z.object({
   matchId: z.string(),

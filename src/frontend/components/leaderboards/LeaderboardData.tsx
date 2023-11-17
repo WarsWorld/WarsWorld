@@ -1,8 +1,6 @@
 import { faker } from "@faker-js/faker";
-import type { CO } from "server/schemas/co";
-import { coSchema } from "server/schemas/co";
-import type { Army } from "server/schemas/army";
-import { armySchema } from "server/schemas/army";
+import { type Army, armySchema } from "shared/schemas/army";
+import { type CO, coSchema } from "shared/schemas/co";
 
 export type Player = {
   id: string;

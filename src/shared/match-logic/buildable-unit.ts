@@ -1,4 +1,4 @@
-import type { WWUnit } from "server/schemas/unit";
+import type { WWUnit } from "shared/schemas/unit";
 
 export const getDailyFuelUsage = (unit: WWUnit): number => {
   const { movementType } = unitPropertiesMap[unit.type];

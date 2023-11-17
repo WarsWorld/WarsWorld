@@ -1,4 +1,4 @@
-import type { PropertyTile } from "server/schemas/tile";
+import type { PropertyTile } from "shared/schemas/tile";
 import type { MovementType } from "shared/match-logic/buildable-unit";
 
 type PropertyProperties = {

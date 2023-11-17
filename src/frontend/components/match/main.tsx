@@ -5,7 +5,7 @@ import { useRouter } from "next/router";
 import type { Texture } from "pixi.js";
 import { Application, Assets, BaseTexture, SCALE_MODES, Sprite } from "pixi.js";
 import { useEffect, useRef, useState } from "react";
-import type { Tile } from "server/schemas/tile";
+import type { Tile } from "shared/schemas/tile";
 import type { PlayerInMatch } from "shared/types/server-match-state";
 import { PlayerBox } from "./PlayerBox";
 

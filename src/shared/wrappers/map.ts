@@ -1,5 +1,5 @@
 import type { WWMap } from "@prisma/client";
-import type { Position } from "server/schemas/position";
+import type { Position } from "shared/schemas/position";
 
 export class MapWrapper {
   constructor(public data: WWMap) {}

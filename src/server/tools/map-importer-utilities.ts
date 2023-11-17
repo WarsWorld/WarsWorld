@@ -1,5 +1,5 @@
 import { prisma } from "../prisma/prisma-client";
-import type { Tile } from "../schemas/tile";
+import type { Tile } from "shared/schemas/tile";
 import type { WWMap } from "@prisma/client";
 
 export type AWBWMapImportSchema = {

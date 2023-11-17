@@ -1,4 +1,4 @@
-import type { CO } from "server/schemas/co";
+import type { CO } from "shared/schemas/co";
 import type { COHookProps, COHooksAllowReturnUndefined } from "./co-hooks";
 import { adder } from "./cos/adder";
 import { andy } from "./cos/andy";

@@ -75,4 +75,32 @@ module.exports = {
       },
     ],
   },
+  overrides: [
+    {
+      files: ["src/shared/**/*.ts"],
+      rules: {
+        "@typescript-eslint/no-restricted-imports": [
+          "error",
+          {
+            // These imports can break the code on the server or frontend
+            // e.g. importing prisma will immediately break on frontend
+            // and using DOM APIs or React on backend will too.
+            patterns: [
+              {
+                group: ["**/server/**", "**/frontend/**"],
+                message:
+                  "Don't import non-type server or frontend code into shared",
+                allowTypeImports: true,
+              },
+              {
+                group: ["@prisma*"],
+                message: "Don't import non-type prisma / DB stuff into shared",
+                allowTypeImports: true,
+              },
+            ],
+          },
+        ],
+      },
+    },
+  ],
 };

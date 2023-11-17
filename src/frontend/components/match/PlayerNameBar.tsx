@@ -1,7 +1,7 @@
 import { NationEnum, SideEnum } from "frontend/utils/enums";
 import React from "react";
-import type { Army } from "server/schemas/army";
-import type { CO } from "server/schemas/co";
+import type { Army } from "shared/schemas/army";
+import type { CO } from "shared/schemas/co";
 
 interface Props {
   name: string | undefined;

@@ -5,10 +5,10 @@
 
 import type { AnimatedSprite, Spritesheet } from "pixi.js";
 import { Container, Texture } from "pixi.js";
-import { isSamePosition } from "../server/schemas/position";
-import type { Tile } from "../server/schemas/tile";
-import type { WWUnit } from "../server/schemas/unit";
-import { unitPropertiesMap } from "../shared/match-logic/buildable-unit";
+import { isSamePosition } from "shared/schemas/position";
+import type { Tile } from "shared/schemas/tile";
+import type { WWUnit } from "shared/schemas/unit";
+import { unitPropertiesMap } from "shared/match-logic/buildable-unit";
 import type { PathNode } from "./showPathing";
 import {
   getAccessibleNodes,

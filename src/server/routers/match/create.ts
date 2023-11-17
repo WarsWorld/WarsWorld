@@ -1,6 +1,6 @@
-import { matchStore } from "server/match-logic/match-store";
+import { matchStore } from "server/match-store";
 import { prisma } from "server/prisma/prisma-client";
-import { coSchema } from "server/schemas/co";
+import { coSchema } from "shared/schemas/co";
 import { mapMiddleware, withMapIdSchema } from "server/trpc/middleware/map";
 import { playerBaseProcedure } from "server/trpc/trpc-setup";
 import type { PlayerInMatch } from "shared/types/server-match-state";

@@ -1,4 +1,4 @@
-import type { Position } from "server/schemas/position";
+import type { Position } from "shared/schemas/position";
 import { unitPropertiesMap } from "shared/match-logic/buildable-unit";
 import { COPropertiesMap } from "shared/match-logic/co";
 import type {
@@ -8,7 +8,7 @@ import type {
 } from "shared/match-logic/co-hooks";
 import type { PlayerInMatch } from "shared/types/server-match-state";
 import type { MatchWrapper } from "./match";
-import type { WWUnit } from "server/schemas/unit";
+import type { WWUnit } from "shared/schemas/unit";
 
 export class PlayerInMatchWrapper {
   constructor(public data: PlayerInMatch, public match: MatchWrapper) {}

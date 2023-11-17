@@ -1,5 +1,5 @@
 import { createTRPCwebSocketServer } from "./common-server";
-import { matchStore } from "./match-logic/match-store";
+import { matchStore } from "./match-store";
 
 (async () => {
   await matchStore.rebuild();

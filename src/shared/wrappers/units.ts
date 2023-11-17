@@ -1,6 +1,6 @@
-import type { PlayerSlot } from "server/schemas/player-slot";
-import type { WWUnit } from "server/schemas/unit";
-import { type Position, isSamePosition } from "server/schemas/position";
+import type { PlayerSlot } from "shared/schemas/player-slot";
+import type { WWUnit } from "shared/schemas/unit";
+import { type Position, isSamePosition } from "shared/schemas/position";
 import { getDistance } from "shared/match-logic/positions";
 
 export class UnitsWrapper {

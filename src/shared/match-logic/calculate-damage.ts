@@ -1,5 +1,5 @@
-import type { Position } from "server/schemas/position";
-import type { UnitType, WWUnit } from "server/schemas/unit";
+import type { Position } from "shared/schemas/position";
+import type { UnitType, WWUnit } from "shared/schemas/unit";
 import type { MatchWrapper } from "shared/wrappers/match";
 import { getTerrainDefenseStars } from "./tiles";
 

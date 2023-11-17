@@ -1,9 +1,9 @@
 import type { MainActionToEvent } from "server/routers/action";
-import type { MoveAction } from "server/schemas/action";
+import type { MoveAction } from "shared/schemas/action";
 import { unitPropertiesMap } from "shared/match-logic/buildable-unit";
-import type { MoveEvent } from "../../../shared/types/events";
-import { badRequest } from "./trpc-error-manager";
-import { isSamePosition } from "../../schemas/position";
+import type { MoveEvent } from "shared/types/events";
+import { isSamePosition } from "shared/schemas/position";
+import { DispatchableError } from "shared/DispatchedError";
 
 export const createNoMoveEvent = (): MoveEvent => ({
   type: "move",
@@ -20,7 +20,7 @@ export const moveActionToEvent: MainActionToEvent<MoveAction> = (
   const unit = player.getUnits().getUnitOrThrow(action.path[0]);
 
   if (!unit.isReady) {
-    throw badRequest("Trying to move a waited unit");
+    throw new DispatchableError("Trying to move a waited unit");
   }
 
   const result = createNoMoveEvent();
@@ -32,7 +32,7 @@ export const moveActionToEvent: MainActionToEvent<MoveAction> = (
     player.getCOHooksWithUnit(action.path[0]).onFuelCost(1);
 
   if (unit.stats.fuel < fuelNeeded) {
-    throw badRequest("Not enough fuel for this move");
+    throw new DispatchableError("Not enough fuel for this move");
   }
 
   for (let i = 0; i < action.path.length; ++i) {
@@ -46,11 +46,13 @@ export const moveActionToEvent: MainActionToEvent<MoveAction> = (
     );
 
     if (moveCost === null) {
-      throw badRequest("Cannot move to a desired position");
+      throw new DispatchableError("Cannot move to a desired position");
     }
 
     if (result.path.find((pos) => isSamePosition(pos, position))) {
-      throw badRequest("The given path passes through the same position twice");
+      throw new DispatchableError(
+        "The given path passes through the same position twice"
+      );
     }
 
     const unitInPosition = match.units.getUnit(position);
@@ -61,7 +63,7 @@ export const moveActionToEvent: MainActionToEvent<MoveAction> = (
     }
 
     if (moveCost > remainingMovePoints) {
-      throw badRequest("Using more move points than available");
+      throw new DispatchableError("Using more move points than available");
     }
 
     remainingMovePoints -= moveCost;
@@ -74,7 +76,7 @@ export const moveActionToEvent: MainActionToEvent<MoveAction> = (
       //check if trying to join (same unit type) or load into transport:
       if (unitInPosition.type !== unit.type) {
         if (!("loadedUnit" in unitInPosition)) {
-          throw badRequest(
+          throw new DispatchableError(
             "Move action ending position is overlapping with an allied unit"
           );
         }
@@ -84,7 +86,7 @@ export const moveActionToEvent: MainActionToEvent<MoveAction> = (
             !("loadedUnit2" in unitInPosition) ||
             unitInPosition.loadedUnit2 !== null
           ) {
-            throw badRequest("Transport already occupied");
+            throw new DispatchableError("Transport already occupied");
           }
         }
 
@@ -94,7 +96,7 @@ export const moveActionToEvent: MainActionToEvent<MoveAction> = (
           case "apc":
           case "blackBoat": {
             if (unit.type !== "infantry" && unit.type !== "mech") {
-              throw badRequest(
+              throw new DispatchableError(
                 "Can't load non-soldier in apc / transport / black boat"
               );
             }
@@ -103,7 +105,7 @@ export const moveActionToEvent: MainActionToEvent<MoveAction> = (
           }
           case "lander": {
             if (unitPropertiesMap[unit.type].facility !== "base") {
-              throw badRequest("Can't load non-land unit to lander");
+              throw new DispatchableError("Can't load non-land unit to lander");
             }
 
             break;
@@ -113,14 +115,14 @@ export const moveActionToEvent: MainActionToEvent<MoveAction> = (
               unit.type !== "transportCopter" &&
               unit.type !== "battleCopter"
             ) {
-              throw badRequest("Can't load non-copter in cruiser");
+              throw new DispatchableError("Can't load non-copter in cruiser");
             }
 
             break;
           }
           case "carrier": {
             if (unitPropertiesMap[unit.type].facility !== "airport") {
-              throw badRequest("Can't load non-land unit to lander");
+              throw new DispatchableError("Can't load non-land unit to lander");
             }
 
             break;

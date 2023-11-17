@@ -12,11 +12,11 @@ import type {
   UnloadNoWaitAction,
   WaitAction,
   MoveAction,
-} from "server/schemas/action";
-import type { CO } from "server/schemas/co";
-import type { WWUnit } from "server/schemas/unit";
+} from "shared/schemas/action";
+import type { CO } from "shared/schemas/co";
+import type { WWUnit } from "shared/schemas/unit";
 import type { Weather } from "shared/match-logic/tiles";
-import type { Army } from "../../server/schemas/army";
+import type { Army } from "shared/schemas/army";
 
 // TODO: Maybe add who's player's turn it is or which army starts?
 export type MatchStartEvent = {

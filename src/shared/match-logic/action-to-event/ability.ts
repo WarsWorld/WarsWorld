@@ -1,6 +1,6 @@
-import type { SubActionToEvent } from "../../routers/action";
-import type { AbilityAction } from "../../schemas/action";
-import { badRequest } from "./trpc-error-manager";
+import { DispatchableError } from "shared/DispatchedError";
+import type { AbilityAction } from "shared/schemas/action";
+import type { SubActionToEvent } from "server/routers/action";
 
 //Capture, APC supply, black bomb explosion, toggle stealth/sub hide.
 export const abilityActionToEvent: SubActionToEvent<AbilityAction> = (
@@ -17,7 +17,7 @@ export const abilityActionToEvent: SubActionToEvent<AbilityAction> = (
       const tile = match.getTile(fromPosition);
 
       if (!("playerSlot" in tile) || tile.playerSlot === unit.playerSlot) {
-        throw badRequest("This tile can not be captured");
+        throw new DispatchableError("This tile can not be captured");
       }
 
       break;
@@ -28,7 +28,7 @@ export const abilityActionToEvent: SubActionToEvent<AbilityAction> = (
     case "sub":
       break;
     default:
-      throw badRequest("This unit does not have an ability");
+      throw new DispatchableError("This unit does not have an ability");
   }
 
   return action;

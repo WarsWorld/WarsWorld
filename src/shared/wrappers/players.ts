@@ -1,5 +1,5 @@
 import type { Player } from "@prisma/client";
-import type { PlayerSlot } from "server/schemas/player-slot";
+import type { PlayerSlot } from "shared/schemas/player-slot";
 import type { PlayerInMatchWrapper } from "./player-in-match";
 
 export class PlayersWrapper {

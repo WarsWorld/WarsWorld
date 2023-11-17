@@ -1,7 +1,7 @@
-import { unitPropertiesMap } from "../../../shared/match-logic/buildable-unit";
-import type { MainActionToEvent } from "../../routers/action";
-import type { BuildAction } from "../../schemas/action";
-import { badRequest } from "./trpc-error-manager";
+import { DispatchableError } from "shared/DispatchedError";
+import type { BuildAction } from "shared/schemas/action";
+import type { MainActionToEvent } from "server/routers/action";
+import { unitPropertiesMap } from "../buildable-unit";
 
 export const buildActionToEvent: MainActionToEvent<BuildAction> = (
   match,
@@ -15,17 +15,21 @@ export const buildActionToEvent: MainActionToEvent<BuildAction> = (
     .onBuildCost(cost);
 
   if (effectiveCost > player.data.funds) {
-    throw badRequest("You don't have enough funds to build this unit");
+    throw new DispatchableError(
+      "You don't have enough funds to build this unit"
+    );
   }
 
   if (match.units.hasUnit(action.position)) {
-    throw badRequest("Can't build where there's a unit already");
+    throw new DispatchableError("Can't build where there's a unit already");
   }
 
   const tile = match.getTile(action.position);
 
   if (!("ownerSlot" in tile) || tile.ownerSlot !== player.data.slot) {
-    throw badRequest("You don't own this tile or this tile cannot be owned");
+    throw new DispatchableError(
+      "You don't own this tile or this tile cannot be owned"
+    );
   }
 
   const hachiScopLandUnit =
@@ -34,7 +38,7 @@ export const buildActionToEvent: MainActionToEvent<BuildAction> = (
     player.data.COPowerState === "super-co-power";
 
   if (tile.type !== facility && !(hachiScopLandUnit && tile.type === "city")) {
-    throw badRequest("You can't build this unit in this facility");
+    throw new DispatchableError("You can't build this unit in this facility");
   }
 
   return {

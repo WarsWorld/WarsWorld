@@ -1,9 +1,9 @@
-import { calculateDamage } from "../../../shared/match-logic/calculate-damage";
-import type { SubActionToEvent } from "../../routers/action";
-import type { AttackAction } from "../../schemas/action";
-import { badRequest } from "./trpc-error-manager";
-import { getDistance } from "../../../shared/match-logic/positions";
-import { unitPropertiesMap } from "../../../shared/match-logic/buildable-unit";
+import { DispatchableError } from "shared/DispatchedError";
+import type { AttackAction } from "shared/schemas/action";
+import type { SubActionToEvent } from "server/routers/action";
+import { unitPropertiesMap } from "../buildable-unit";
+import { calculateDamage } from "../calculate-damage";
+import { getDistance } from "../positions";
 
 export const attackActionToEvent: SubActionToEvent<AttackAction> = (
   match,
@@ -20,7 +20,7 @@ export const attackActionToEvent: SubActionToEvent<AttackAction> = (
   const attackerProperties = unitPropertiesMap[attacker.type];
 
   if (!("attackRange" in attackerProperties)) {
-    throw badRequest("Unit cannot attack");
+    throw new DispatchableError("Unit cannot attack");
   }
 
   const attackDistance = getDistance(attacker.position, defender.position);
@@ -29,7 +29,7 @@ export const attackActionToEvent: SubActionToEvent<AttackAction> = (
     attackerProperties.attackRange[0] > attackDistance ||
     attackDistance > attackerProperties.attackRange[1]
   ) {
-    throw badRequest("Unit is not in range to attack");
+    throw new DispatchableError("Unit is not in range to attack");
   }
 
   const damageAttackDone = calculateDamage(
@@ -39,7 +39,7 @@ export const attackActionToEvent: SubActionToEvent<AttackAction> = (
   );
 
   if (damageAttackDone === null) {
-    throw badRequest("This unit cannot attack specified enemy unit");
+    throw new DispatchableError("This unit cannot attack specified enemy unit");
   }
 
   //check if ded

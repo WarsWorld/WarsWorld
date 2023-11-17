@@ -1,7 +1,7 @@
 import SquareButton from "frontend/components/layout/SquareButton";
-import Banner from "../../frontend/components/layout/Banner";
-import SmallContainer from "../../frontend/components/layout/SmallContainer";
-import ThreeLinesText from "../../frontend/components/layout/ThreeLinesText";
+import Banner from "frontend/components/layout/Banner";
+import SmallContainer from "frontend/components/layout/SmallContainer";
+import ThreeLinesText from "frontend/components/layout/ThreeLinesText";
 
 const homePageCards = [
   {

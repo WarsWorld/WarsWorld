@@ -1,5 +1,5 @@
 import Head from "next/head";
-import LeaderboardTable from "../frontend/components/leaderboards/LeaderboradTable";
+import LeaderboardTable from "frontend/components/leaderboards/LeaderboradTable";
 import type { SelectOption } from "frontend/components/layout/Select";
 import { useState } from "react";
 import BestPlayersSection from "frontend/components/leaderboards/BestPlayersSection";

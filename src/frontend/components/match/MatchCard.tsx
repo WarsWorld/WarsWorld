@@ -6,7 +6,7 @@ import {
   MatchTypeShort,
   SideEnum,
 } from "frontend/utils/enums";
-import type { CO } from "server/schemas/co";
+import type { CO } from "shared/schemas/co";
 import type { MapBasic } from "shared/types/component-data";
 import type { PlayerInMatch } from "shared/types/server-match-state";
 import PlayerNameBar from "./PlayerNameBar";

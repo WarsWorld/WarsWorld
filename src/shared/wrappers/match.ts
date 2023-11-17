@@ -1,9 +1,9 @@
 import type { LeagueType, Match, MatchStatus, Player } from "@prisma/client";
-import { applyMainEventToMatch } from "server/match-logic/apply-event-to-match";
-import type { CO } from "server/schemas/co";
-import type { PlayerSlot } from "server/schemas/player-slot";
-import type { Position } from "server/schemas/position";
-import { isSamePosition } from "server/schemas/position";
+import { applyMainEventToMatch } from "shared/match-logic/apply-event-to-match";
+import type { CO } from "shared/schemas/co";
+import type { PlayerSlot } from "shared/schemas/player-slot";
+import type { Position } from "shared/schemas/position";
+import { isSamePosition } from "shared/schemas/position";
 import type { MovementType } from "shared/match-logic/buildable-unit";
 import type {
   COHookProps,

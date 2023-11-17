@@ -1,5 +1,6 @@
 import Link from "next/link";
-import type { Army } from "server/schemas/army";
+import type { Army } from "shared/schemas/army";
+
 interface Props {
   rank: number;
   name: string;

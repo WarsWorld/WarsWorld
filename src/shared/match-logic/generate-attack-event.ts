@@ -1,4 +1,4 @@
-import type { AttackAction, MoveAction } from "server/schemas/action";
+import type { AttackAction, MoveAction } from "shared/schemas/action";
 import type { AttackEvent } from "shared/types/events";
 import type { MatchWrapper } from "shared/wrappers/match";
 

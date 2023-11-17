@@ -7,7 +7,7 @@
 // @ts-nocheck
 
 import { usePlayers } from "frontend/context/players";
-import type { Tile } from "server/schemas/tile";
+import type { Tile } from "shared/schemas/tile";
 import { useRouter } from "next/router";
 import {
   AnimatedSprite,
@@ -23,12 +23,12 @@ import { useEffect, useRef, useState } from "react";
 import type { PlayerInMatch } from "shared/types/server-match-state";
 
 import { trpc } from "frontend/utils/trpc-client";
-import { showUnits } from "../../gameFunction/showUnit";
-import { demoUnits } from "../../gameFunction/demoUnitList";
-import getJSON from "../../gameFunction/getJSON";
-import showMenu from "../../gameFunction/showMenu";
-import { spriteConstructor } from "../../gameFunction/spriteConstructor";
-import MatchPlayer from "../../frontend/components/match/v2/MatchPlayer";
+import { showUnits } from "gameFunction/showUnit";
+import { demoUnits } from "gameFunction/demoUnitList";
+import getJSON from "gameFunction/getJSON";
+import showMenu from "gameFunction/showMenu";
+import { spriteConstructor } from "gameFunction/spriteConstructor";
+import MatchPlayer from "frontend/components/match/v2/MatchPlayer";
 
 BaseTexture.defaultOptions.scaleMode = SCALE_MODES.NEAREST;
 

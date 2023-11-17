@@ -1,9 +1,6 @@
-import {
-  getArticleData,
-  getArticleIds,
-} from "../../frontend/utils/articleScript";
-import Banner from "../../frontend/components/layout/Banner";
-import styles from "../../frontend/styles/pages/articles.module.scss";
+import { getArticleData, getArticleIds } from "frontend/utils/articleScript";
+import Banner from "frontend/components/layout/Banner";
+import styles from "frontend/styles/pages/articles.module.scss";
 
 export async function getStaticPaths() {
   const paths = getArticleIds();

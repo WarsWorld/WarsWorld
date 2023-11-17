@@ -1,4 +1,4 @@
-import type { TileType } from "server/schemas/tile";
+import type { TileType } from "shared/schemas/tile";
 import type { MovementType } from "shared/match-logic/buildable-unit";
 import { tsIncludes } from "shared/utils/typesafe-includes";
 

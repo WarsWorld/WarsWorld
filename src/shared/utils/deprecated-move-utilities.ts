@@ -1,8 +1,8 @@
 import { TRPCError } from "@trpc/server";
-import type { Direction } from "server/schemas/direction";
-import type { Path, Position } from "server/schemas/position";
-import { isSamePosition } from "server/schemas/position";
-import type { WWUnit } from "server/schemas/unit";
+import type { Direction } from "shared/schemas/direction";
+import type { Path, Position } from "shared/schemas/position";
+import { isSamePosition } from "shared/schemas/position";
+import type { WWUnit } from "shared/schemas/unit";
 
 /**
  * I've kept this code around because we might want to use these algorithms at some point

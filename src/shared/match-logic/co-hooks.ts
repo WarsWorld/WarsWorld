@@ -1,5 +1,5 @@
-import type { TileType } from "server/schemas/tile";
-import type { UnitType } from "server/schemas/unit";
+import type { TileType } from "shared/schemas/tile";
+import type { UnitType } from "shared/schemas/unit";
 import type { MatchWrapper } from "shared/wrappers/match";
 import type { PlayerInMatchWrapper } from "shared/wrappers/player-in-match";
 import type { Facility } from "./buildable-unit";

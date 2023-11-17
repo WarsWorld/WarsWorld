@@ -1,13 +1,11 @@
-import type { PlayerSlot } from "server/schemas/player-slot";
+import { allDirections } from "shared/schemas/direction";
+import type { PlayerSlot } from "shared/schemas/player-slot";
+import type { Position } from "shared/schemas/position";
+import type { WWUnit } from "shared/schemas/unit";
 import type { MatchWrapper } from "shared/wrappers/match";
-import { unitPropertiesMap } from "../../shared/match-logic/buildable-unit";
-import { addDirection } from "../../shared/match-logic/positions";
-import type { BuildEvent, WWEvent } from "../../shared/types/events";
-import { allDirections } from "../schemas/direction";
-import type { Position } from "../schemas/position";
-import type { WWUnit } from "../schemas/unit";
-import { matchStore } from "./match-store";
-import type { Match } from "@prisma/client";
+import type { BuildEvent, WWEvent } from "../types/events";
+import { unitPropertiesMap } from "./buildable-unit";
+import { addDirection } from "./positions";
 
 const createNewUnitFromBuildEvent = (
   event: BuildEvent,
@@ -319,11 +317,10 @@ export const applyMainEventToMatch = (match: MatchWrapper, event: WWEvent) => {
 };
 
 export const applySubEventToMatch = (
-  matchId: Match["id"],
+  match: MatchWrapper,
   event: WWEvent,
   fromPosition: Position
 ) => {
-  const match = matchStore.getOrThrow(matchId);
   const unit = match.units.getUnitOrThrow(fromPosition);
 
   switch (event.type) {
