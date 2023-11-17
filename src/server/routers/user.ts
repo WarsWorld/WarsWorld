@@ -55,11 +55,7 @@ export const userRouter = router({
           message: "There is already a user with that email in the database",
         });
 
-      if (input.password !== input.confirmPassword)
-        throw new TRPCError({
-          code: "BAD_REQUEST",
-          message: "Passwords do not match",
-        });
+      // TODO: Password validation
 
       const hashedPassword = await hashPassword(input.password);
 

@@ -22,6 +22,8 @@ export default function SignupForm({
     confirmPassword: "",
   });
 
+  const [doPasswordsMatch, setDoPasswordsMatch] = useState(true);
+
   const {
     mutateAsync: registerAsync,
     isError,
@@ -38,12 +40,18 @@ export default function SignupForm({
   const onSubmitSignupForm = async (event: FormEvent) => {
     event.preventDefault();
 
+    if (signupData.confirmPassword !== signupData.password) {
+      setDoPasswordsMatch(false);
+      throw "Passwords do not match";
+    }
+
+    setDoPasswordsMatch(true);
+
     try {
       await registerAsync({
         email: signupData.email,
         username: signupData.user,
         password: signupData.password,
-        confirmPassword: signupData.confirmPassword,
       });
     } catch (e) {
       return e;
@@ -54,13 +62,14 @@ export default function SignupForm({
   };
 
   const defineErrorMessage = () => {
+    if (!doPasswordsMatch) return "Passwords do not match";
     if (error?.data?.zodError) return "Data validation error";
     if (error) return error.message;
   };
 
   return (
     <>
-      {isError && (
+      {(!doPasswordsMatch || isError) && (
         <ErrorSuccessBlock
           isError
           title="Couldn't sign up"
