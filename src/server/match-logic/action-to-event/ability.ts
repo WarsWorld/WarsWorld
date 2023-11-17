@@ -31,8 +31,5 @@ export const abilityActionToEvent: SubActionToEvent<AbilityAction> = (
       throw badRequest("This unit does not have an ability");
   }
 
-  return {
-    ...action,
-    playerSlot: player.data.slot,
-  };
+  return action;
 };
