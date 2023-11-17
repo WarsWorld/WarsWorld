@@ -35,7 +35,7 @@ const mapToFrontend = (map: MapWrapper) => ({
 const playersToFrontend = (players: PlayersWrapper) =>
   players.data.map((pimw) => pimw.data);
 
-const matchStateToFrontend = (match: MatchWrapper) => ({
+export const matchStateToFrontend = (match: MatchWrapper) => ({
   id: match.id,
   map: mapToFrontend(match.map),
   players: playersToFrontend(match.players),
@@ -91,8 +91,7 @@ export const matchRouter = router({
       emitEvent({
         type: "player-joined",
         matchId: match.id,
-        player: currentPlayer,
-        playerSlot: nextAvailablePlayerSlot,
+        playerId: currentPlayer.id,
       });
     }),
   leave: playerInMatchBaseProcedure.mutation(
@@ -104,7 +103,7 @@ export const matchRouter = router({
       emitEvent({
         matchId: match.id,
         type: "player-left",
-        player: currentPlayer,
+        playerId: currentPlayer.id,
       });
     }
   ),
@@ -123,7 +122,7 @@ export const matchRouter = router({
         emitEvent({
           type: "player-changed-ready-status",
           matchId: match.id,
-          player: currentPlayer,
+          playerId: currentPlayer.id,
           ready: input.readyState,
         });
 
@@ -148,7 +147,7 @@ export const matchRouter = router({
         type: "player-picked-co",
         co: input.selectedCO,
         matchId: ctx.match.id,
-        player: ctx.currentPlayer,
+        playerId: ctx.currentPlayer.id,
       });
     }),
   switchArmy: playerInMatchBaseProcedure
@@ -166,7 +165,7 @@ export const matchRouter = router({
         type: "player-picked-army",
         army: input.selectedArmy,
         matchId: ctx.match.id,
-        player: ctx.currentPlayer,
+        playerId: ctx.currentPlayer.id,
       });
     }),
 });

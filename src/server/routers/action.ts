@@ -7,7 +7,6 @@ import { mainActionSchema } from "server/schemas/action";
 import type { Position } from "server/schemas/position";
 import type { EmittableEvent, WWEvent } from "shared/types/events";
 import type { MatchWrapper } from "shared/wrappers/match";
-import type { PlayerInMatchWrapper } from "shared/wrappers/player-in-match";
 import { z } from "zod";
 import { addDirection } from "../../shared/match-logic/positions";
 import { abilityActionToEvent } from "../match-logic/action-to-event/ability";
@@ -30,25 +29,15 @@ import {
   router,
 } from "../trpc/trpc-setup";
 
-interface MainActionHandlerProps<T extends Action> {
-  currentPlayer: PlayerInMatchWrapper;
-  action: T;
-  matchState: MatchWrapper;
-}
-
-interface SubActionHandlerProps<T extends Action> {
-  currentPlayer: PlayerInMatchWrapper;
-  action: T;
-  matchState: MatchWrapper;
-  fromPosition: Position;
-}
-
 export type MainActionToEvent<T extends Action> = (
-  props: MainActionHandlerProps<T>
+  match: MatchWrapper,
+  action: T
 ) => WWEvent;
 
 export type SubActionToEvent<T extends Action> = (
-  props: SubActionHandlerProps<T>
+  match: MatchWrapper,
+  action: T,
+  fromPosition: Position
 ) => WWEvent;
 
 // 1. validate shape (zod, .input())
@@ -57,29 +46,20 @@ export type SubActionToEvent<T extends Action> = (
 
 //TODO: COP, SCOP, pass turn events
 const validateMainActionAndToEvent = (
-  action: Action,
-  actingPlayerInMatch: PlayerInMatchWrapper,
-  match: MatchWrapper
+  match: MatchWrapper,
+  action: Action
 ): { event: WWEvent | undefined; position: Position | null } => {
   switch (action.type) {
     case "build": {
       return {
-        event: buildActionToEvent({
-          currentPlayer: actingPlayerInMatch,
-          action,
-          matchState: match,
-        }),
+        event: buildActionToEvent(match, action),
         position: action.position,
       };
     }
     case "unload2": {
       //unload no wait
       return {
-        event: unloadNoWaitActionToEvent({
-          currentPlayer: actingPlayerInMatch,
-          action,
-          matchState: match,
-        }),
+        event: unloadNoWaitActionToEvent(match, action),
         position: addDirection(
           action.transportPosition,
           action.unloads.direction
@@ -88,11 +68,7 @@ const validateMainActionAndToEvent = (
     }
     case "move": {
       return {
-        event: moveActionToEvent({
-          currentPlayer: actingPlayerInMatch,
-          action,
-          matchState: match,
-        }),
+        event: moveActionToEvent(match, action),
         position: action.path[action.path.length - 1],
       };
     }
@@ -110,47 +86,21 @@ const validateMainActionAndToEvent = (
 
 //TODO: unload1 should "update" units discovered for up to 2 positions
 const validateSubActionAndToEvent = (
-  action: Action,
-  actingPlayerInMatch: PlayerInMatchWrapper,
   match: MatchWrapper,
+  action: Action,
   unitPosition: Position
 ): WWEvent => {
   switch (action.type) {
     case "attack":
-      return attackActionToEvent({
-        currentPlayer: actingPlayerInMatch,
-        action,
-        matchState: match,
-        fromPosition: unitPosition,
-      });
+      return attackActionToEvent(match, action, unitPosition);
     case "ability":
-      return abilityActionToEvent({
-        currentPlayer: actingPlayerInMatch,
-        action,
-        matchState: match,
-        fromPosition: unitPosition,
-      });
+      return abilityActionToEvent(match, action, unitPosition);
     case "unload1":
-      return unloadWaitActionToEvent({
-        currentPlayer: actingPlayerInMatch,
-        action,
-        matchState: match,
-        fromPosition: unitPosition,
-      });
+      return unloadWaitActionToEvent(match, action, unitPosition);
     case "repair":
-      return repairActionToEvent({
-        currentPlayer: actingPlayerInMatch,
-        action,
-        matchState: match,
-        fromPosition: unitPosition,
-      });
+      return repairActionToEvent(match, action, unitPosition);
     case "launchMissile":
-      return launchMissileActionToEvent({
-        currentPlayer: actingPlayerInMatch,
-        action,
-        matchState: match,
-        fromPosition: unitPosition,
-      });
+      return launchMissileActionToEvent(match, action, unitPosition);
     default:
       return { type: "wait" };
   }
@@ -165,28 +115,21 @@ export const actionRouter = router({
         throw new Error("It's not your turn");
       }*/
 
-      const currentPlayer = match.players.getCurrentTurnPlayer();
-
-      const { event, position } = validateMainActionAndToEvent(
-        input,
-        currentPlayer,
-        match
-      );
+      const { event, position } = validateMainActionAndToEvent(match, input);
 
       if (event === undefined) {
         throw new Error("Event has not been created");
       }
 
-      applyMainEventToMatch(input.matchId, currentPlayer, event);
+      applyMainEventToMatch(match, event);
 
       if (input.type === "move" && event.type === "move") {
         if (!event.trap) {
           //check if unit joined/loaded (cause then sub-action = wait)
           if (!match.units.hasUnit(event.path[event.path.length - 1])) {
             event.subEvent = validateSubActionAndToEvent(
-              input.subAction,
-              currentPlayer,
               match,
+              input.subAction,
               event.path[event.path.length - 1]
             );
           }
@@ -196,12 +139,7 @@ export const actionRouter = router({
           throw new Error("This should never happen");
         }
 
-        applySubEventToMatch(
-          input.matchId,
-          currentPlayer,
-          event.subEvent,
-          position
-        );
+        applySubEventToMatch(input.matchId, event.subEvent, position);
       }
 
       await prisma.event.create({

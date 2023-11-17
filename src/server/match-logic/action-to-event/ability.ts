@@ -3,18 +3,18 @@ import type { AbilityAction } from "../../schemas/action";
 import { badRequest } from "./trpc-error-manager";
 
 //Capture, APC supply, black bomb explosion, toggle stealth/sub hide.
-export const abilityActionToEvent: SubActionToEvent<AbilityAction> = ({
-  currentPlayer,
+export const abilityActionToEvent: SubActionToEvent<AbilityAction> = (
+  match,
   action,
-  matchState,
-  fromPosition,
-}) => {
-  const unit = currentPlayer.getUnits().getUnitOrThrow(fromPosition);
+  fromPosition
+) => {
+  const player = match.players.getCurrentTurnPlayer();
+  const unit = player.getUnits().getUnitOrThrow(fromPosition);
 
   switch (unit.type) {
     case "infantry":
     case "mech": {
-      const tile = matchState.getTile(fromPosition);
+      const tile = match.getTile(fromPosition);
 
       if (!("playerSlot" in tile) || tile.playerSlot === unit.playerSlot) {
         throw badRequest("This tile can not be captured");
@@ -31,5 +31,8 @@ export const abilityActionToEvent: SubActionToEvent<AbilityAction> = ({
       throw badRequest("This unit does not have an ability");
   }
 
-  return action;
+  return {
+    ...action,
+    playerSlot: player.data.slot,
+  };
 };

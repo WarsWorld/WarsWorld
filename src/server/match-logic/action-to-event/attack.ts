@@ -5,14 +5,14 @@ import { badRequest } from "./trpc-error-manager";
 import { getDistance } from "../../../shared/match-logic/positions";
 import { unitPropertiesMap } from "../../../shared/match-logic/buildable-unit";
 
-export const attackActionToEvent: SubActionToEvent<AttackAction> = ({
-  currentPlayer,
+export const attackActionToEvent: SubActionToEvent<AttackAction> = (
+  match,
   action,
-  matchState,
-  fromPosition,
-}) => {
-  const attacker = currentPlayer.getUnits().getUnitOrThrow(fromPosition);
-  const defender = currentPlayer
+  fromPosition
+) => {
+  const player = match.players.getCurrentTurnPlayer();
+  const attacker = player.getUnits().getUnitOrThrow(fromPosition);
+  const defender = player
     .getEnemyUnits()
     .getUnitOrThrow(action.defenderPosition);
 
@@ -33,7 +33,7 @@ export const attackActionToEvent: SubActionToEvent<AttackAction> = ({
   }
 
   const damageAttackDone = calculateDamage(
-    matchState,
+    match,
     attacker.position,
     defender.position
   );
@@ -62,7 +62,7 @@ export const attackActionToEvent: SubActionToEvent<AttackAction> = ({
       //temporarily substract hp to calculate counter dmg
       defender.stats.hp -= damageAttackDone;
       const damageDefendDone = calculateDamage(
-        matchState,
+        match,
         defender.position,
         attacker.position
       );

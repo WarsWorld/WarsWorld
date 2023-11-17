@@ -1,16 +1,16 @@
-import type { PlayerInMatchWrapper } from "shared/wrappers/player-in-match";
+import type { PlayerSlot } from "server/schemas/player-slot";
+import type { MatchWrapper } from "shared/wrappers/match";
 import { unitPropertiesMap } from "../../shared/match-logic/buildable-unit";
 import { addDirection } from "../../shared/match-logic/positions";
-import type { WWEvent } from "../../shared/types/events";
-import type { BuildAction } from "../schemas/action";
+import type { BuildEvent, WWEvent } from "../../shared/types/events";
 import { allDirections } from "../schemas/direction";
-import type { PlayerSlot } from "../schemas/player-slot";
 import type { Position } from "../schemas/position";
 import type { WWUnit } from "../schemas/unit";
 import { matchStore } from "./match-store";
+import type { Match } from "@prisma/client";
 
 const createNewUnitFromBuildEvent = (
-  event: BuildAction,
+  event: BuildEvent,
   playerSlot: PlayerSlot
 ): WWUnit => {
   const { unitType } = event;
@@ -197,21 +197,20 @@ const loadUnitInto = (unitToLoad: WWUnit, transportUnit: WWUnit) => {
 };
 
 //TODO: call subevents from move case? or different?
-export const applyMainEventToMatch = (
-  matchId: string,
-  currentPlayer: PlayerInMatchWrapper,
-  event: WWEvent
-) => {
-  const match = matchStore.getOrThrow(matchId);
-
+export const applyMainEventToMatch = (match: MatchWrapper, event: WWEvent) => {
   switch (event.type) {
     case "build": {
       match.units.addUnit(
-        createNewUnitFromBuildEvent(event, currentPlayer.data.slot)
+        createNewUnitFromBuildEvent(
+          event,
+          match.players.getCurrentTurnPlayer().data.slot
+        )
       );
       break;
     }
     case "move": {
+      const player = match.players.getCurrentTurnPlayer();
+
       //check if unit is moving or just standing still
       if (event.path.length <= 1) {
         break;
@@ -226,7 +225,7 @@ export const applyMainEventToMatch = (
 
       unit.stats.fuel -=
         (event.path.length - 1) *
-        currentPlayer.getCOHooksWithUnit(event.path[0]).onFuelCost(1);
+        player.getCOHooksWithUnit(event.path[0]).onFuelCost(1);
 
       const unitAtDestination = match.units.getUnit(
         event.path[event.path.length - 1]
@@ -308,14 +307,19 @@ export const applyMainEventToMatch = (
     case "passTurn": {
       break;
     }
-    default:
+    case "player-picked-co": {
+      const player = match.players.getByIdOrThrow(event.playerId);
+      player.data.co = event.co;
+      break;
+    }
+    default: {
       throw new Error("Received an event that is not a main event");
+    }
   }
 };
 
 export const applySubEventToMatch = (
-  matchId: string,
-  currentPlayer: PlayerInMatchWrapper,
+  matchId: Match["id"],
   event: WWEvent,
   fromPosition: Position
 ) => {
@@ -346,6 +350,8 @@ export const applySubEventToMatch = (
       break;
     }
     case "ability": {
+      const player = match.players.getCurrentTurnPlayer();
+
       switch (unit.type) {
         case "infantry":
         case "mech": {
@@ -354,7 +360,7 @@ export const applySubEventToMatch = (
             unit.currentCapturePoints = 20;
           }
 
-          unit.currentCapturePoints -= currentPlayer
+          unit.currentCapturePoints -= player
             .getCOHooksWithUnit(unit.position)
             .onCapture(unit.stats.hp);
 
@@ -461,6 +467,8 @@ export const applySubEventToMatch = (
       break;
     }
     case "repair": {
+      const player = match.players.getCurrentTurnPlayer();
+
       const repairedUnit = match.units.getUnitOrThrow(
         addDirection(fromPosition, event.direction)
       );
@@ -475,13 +483,13 @@ export const applySubEventToMatch = (
         //check if enough funds for heal, and heal if it's the case
         const unitCost = unitPropertiesMap[repairedUnit.type].cost;
         const repairEffectiveCost =
-          currentPlayer
+          player
             .getCOHooksWithUnit(addDirection(fromPosition, event.direction))
             .onBuildCost(unitCost) * 0.1;
 
-        if (repairEffectiveCost <= currentPlayer.data.funds) {
+        if (repairEffectiveCost <= player.data.funds) {
           repairedUnit.stats.hp += 10;
-          currentPlayer.data.funds -= repairEffectiveCost;
+          player.data.funds -= repairEffectiveCost;
         }
       }
 

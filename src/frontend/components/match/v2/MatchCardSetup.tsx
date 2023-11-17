@@ -2,10 +2,11 @@ import { useState } from "react";
 import { armySchema } from "../../../../server/schemas/army";
 import { coSchema } from "../../../../server/schemas/co";
 import { trpc } from "../../../utils/trpc-client";
+import type { Match, Player } from "@prisma/client";
 
 interface matchData {
-  playerID: string;
-  matchID: string;
+  playerID: Player["id"];
+  matchID: Match["id"];
   functionCO: any;
   inMatch: boolean;
   readyStatus: boolean;

@@ -4,9 +4,10 @@ import { badRequest } from "./trpc-error-manager";
 
 export const launchMissileActionToEvent: SubActionToEvent<
   LaunchMissileAction
-> = ({ currentPlayer, action, matchState, fromPosition }) => {
-  const unit = currentPlayer.getUnits().getUnitOrThrow(fromPosition);
-  const tile = matchState.getTile(fromPosition);
+> = (match, action, fromPosition) => {
+  const player = match.players.getCurrentTurnPlayer();
+  const unit = player.getUnits().getUnitOrThrow(fromPosition);
+  const tile = match.getTile(fromPosition);
 
   if (tile.type !== "unusedSilo") {
     throw badRequest("This tile is not an unused missile silo");
@@ -16,7 +17,7 @@ export const launchMissileActionToEvent: SubActionToEvent<
     throw badRequest("Trying to launch a missile with a non valid unit type");
   }
 
-  matchState.map.throwIfOutOfBounds(action.targetPosition);
+  match.map.throwIfOutOfBounds(action.targetPosition);
 
   return action;
 };

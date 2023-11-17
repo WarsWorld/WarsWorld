@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "engines": {
-    "node": "^18.15.0"
+    "node": "^21.0.0"
   },
   "scripts": {
     "initialise": "npm run db:up && prisma db push && prisma db seed",
@@ -15,7 +15,7 @@
     "prisma:generate-once": "prisma generate",
     "prisma:generate-watch": "prisma generate --watch",
     "prisma:studio": "prisma studio",
-    "dev:wss": "cross-env PORT=3001 tsx watch src/server/main-wss-development.ts --tsconfig tsconfig.server.json ",
+    "dev:wss": "cross-env PORT=3001 tsx watch src/server/main-wss-development.ts --tsconfig tsconfig.server.json",
     "dev:next": "next dev",
     "dev": "npm run prisma:push && concurrently \"npm:dev:*\"",
     "lint:eslint": "eslint src --ext \".js,.ts,.tsx\" --cache --report-unused-disable-directives",
@@ -37,7 +37,7 @@
     "endOfLine": "auto"
   },
   "dependencies": {
-    "@prisma/client": "^4.12.0",
+    "@prisma/client": "^4.16.2",
     "@react-hook/window-size": "^3.1.1",
     "@tanstack/react-table": "^8.9.2",
     "@trpc/client": "^10.19.1",

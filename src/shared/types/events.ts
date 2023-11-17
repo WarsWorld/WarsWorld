@@ -1,4 +1,4 @@
-import type { Player } from "@prisma/client";
+import type { Match, Player } from "@prisma/client";
 import type {
   AbilityAction,
   AttackAction,
@@ -75,12 +75,11 @@ export type SuperCOPowerEvent = SuperCOPowerAction & {
 };
 
 type WithPlayer = {
-  player: Player;
+  playerId: Player["id"];
 };
 
 export type PlayerJoinedEvent = WithPlayer & {
   type: "player-joined";
-  playerSlot: number;
 };
 
 export type PlayerLeftEvent = WithPlayer & {
@@ -143,6 +142,6 @@ export type WWEvent =
   | WaitEvent;
 
 export type EmittableEvent = WWEvent & {
-  matchId: string;
+  matchId: Match["id"];
   discoveredUnits?: WWUnit[];
 };

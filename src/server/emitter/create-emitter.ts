@@ -1,27 +1,29 @@
+import type { Match } from "@prisma/client";
+
 /**
  * Read up on JavaScript event emitters.
  * The code here is a typesafe implementation of the same principal.
  * You can subscribe to events with a callback function
  * that will be called when those events occur.
  */
-export const createEmitter = <D extends { matchId: string }>() => {
+export const createEmitter = <D extends { matchId: Match["id"] }>() => {
   type Listener = (dispatched: D) => void;
-  const listenerMap = new Map<string, Listener[]>();
+  const listenerMap = new Map<Match["id"], Listener[]>();
 
-  const unsubscribe = (id: string, listenerToUnsub: Listener) => {
+  const unsubscribe = (matchId: Match["id"], listenerToUnsub: Listener) => {
     listenerMap.set(
-      id,
-      listenerMap.get(id)?.filter((l) => l !== listenerToUnsub) ?? []
+      matchId,
+      listenerMap.get(matchId)?.filter((l) => l !== listenerToUnsub) ?? []
     );
   };
 
   return {
-    subscribe: (id: string, listenerToSubscribe: Listener) => {
-      const listeners = listenerMap.get(id);
+    subscribe: (matchId: Match["id"], listenerToSubscribe: Listener) => {
+      const listeners = listenerMap.get(matchId);
 
-      listenerMap.set(id, [...(listeners ?? []), listenerToSubscribe]);
+      listenerMap.set(matchId, [...(listeners ?? []), listenerToSubscribe]);
 
-      return () => unsubscribe(id, listenerToSubscribe);
+      return () => unsubscribe(matchId, listenerToSubscribe);
     },
     unsubscribe,
     emit: (dispatched: D) => {

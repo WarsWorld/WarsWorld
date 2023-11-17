@@ -15,8 +15,18 @@ export class PlayersWrapper {
     return player;
   }
 
-  getById(playerId: string) {
+  getById(playerId: Player["id"]) {
     return this.data.find((p) => p.data.playerId === playerId);
+  }
+
+  getByIdOrThrow(playerId: Player["id"]) {
+    const player = this.getById(playerId);
+
+    if (player === undefined) {
+      throw new Error(`Could not find player by id ${playerId}`);
+    }
+
+    return player;
   }
 
   getBySlot(playerSlot: PlayerSlot) {
@@ -33,7 +43,7 @@ export class PlayersWrapper {
     return player;
   }
 
-  hasById(playerId: string) {
+  hasById(playerId: Player["id"]) {
     return this.getById(playerId) !== undefined;
   }
 

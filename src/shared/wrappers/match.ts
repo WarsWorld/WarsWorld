@@ -1,29 +1,35 @@
-import type { LeagueType, MatchStatus, Player } from "@prisma/client";
+import type { LeagueType, Match, MatchStatus, Player } from "@prisma/client";
+import { applyMainEventToMatch } from "server/match-logic/apply-event-to-match";
+import type { CO } from "server/schemas/co";
+import type { PlayerSlot } from "server/schemas/player-slot";
 import type { Position } from "server/schemas/position";
 import { isSamePosition } from "server/schemas/position";
+import type { MovementType } from "shared/match-logic/buildable-unit";
 import type {
   COHookProps,
   COHookPropsWithDefender,
 } from "shared/match-logic/co-hooks";
-import { createUnitFromBuildAction } from "shared/match-logic/create-unit-from-build-action";
+import { getChangeableTilesFromMap } from "shared/match-logic/get-changeable-tile-from-map";
 import type { Weather } from "shared/match-logic/tiles";
 import { getBaseMovementCost } from "shared/match-logic/tiles";
-import type { EmittableEvent } from "shared/types/events";
-import type { ChangeableTile } from "shared/types/server-match-state";
+import type { WWEvent } from "shared/types/events";
+import type {
+  ChangeableTile,
+  PlayerInMatch,
+} from "shared/types/server-match-state";
 import type { MapWrapper } from "./map";
-import type { PlayersWrapper } from "./players";
-import type { UnitsWrapper } from "./units";
 import { PlayerInMatchWrapper } from "./player-in-match";
-import type { PlayerSlot } from "server/schemas/player-slot";
-import type { CO } from "server/schemas/co";
-import type { MovementType } from "shared/match-logic/buildable-unit";
+import { PlayersWrapper } from "./players";
+import type { UnitsWrapper } from "./units";
 
 /** TODO: Add favorites, possibly spectators, also a timer */
 export class MatchWrapper {
   public playerToRemoveWeatherEffect?: PlayerInMatchWrapper;
+  public changeableTiles: ChangeableTile[];
+  public players = new PlayersWrapper([]);
 
   constructor(
-    public id: string,
+    public id: Match["id"],
     public rules: {
       fogOfWar?: boolean;
       fundsMultiplier?: number;
@@ -31,22 +37,19 @@ export class MatchWrapper {
     },
     public status: MatchStatus,
     public map: MapWrapper,
-    public changeableTiles: ChangeableTile[],
     public units: UnitsWrapper,
     public turn: number,
-    public players: PlayersWrapper,
     public currentWeather: Weather
-  ) {}
+  ) {
+    this.changeableTiles = getChangeableTilesFromMap(map.data);
+  }
 
-  //TODO: procedure too long to put in here. better in apply-event-to-match.ts. remove this function?
-  applyEvent(event: EmittableEvent) {
-    switch (event.type) {
-      case "build": {
-        const currentPlayerSlot = this.players.getCurrentTurnPlayer().data.slot;
-        const unit = createUnitFromBuildAction(event, currentPlayerSlot);
-        this.units.addUnit(unit);
-      }
-    }
+  addUnwrappedPlayer(player: PlayerInMatch) {
+    this.players.data.push(new PlayerInMatchWrapper(player, this));
+  }
+
+  applyEvent(event: WWEvent) {
+    applyMainEventToMatch(this, event);
   }
 
   getCOHookPropsWithUnit(unitPosition: Position): COHookProps {

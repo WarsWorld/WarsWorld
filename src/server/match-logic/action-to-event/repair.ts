@@ -3,21 +3,21 @@ import type { SubActionToEvent } from "../../routers/action";
 import type { RepairAction } from "../../schemas/action";
 import { badRequest } from "./trpc-error-manager";
 
-export const repairActionToEvent: SubActionToEvent<RepairAction> = ({
-  currentPlayer,
+export const repairActionToEvent: SubActionToEvent<RepairAction> = (
+  match,
   action,
-  matchState,
-  fromPosition,
-}) => {
-  const unit = currentPlayer.getUnits().getUnitOrThrow(fromPosition);
+  fromPosition
+) => {
+  const player = match.players.getCurrentTurnPlayer();
+  const unit = player.getUnits().getUnitOrThrow(fromPosition);
 
   if (unit.type !== "blackBoat") {
     throw badRequest("Trying to repair with a unit that is not a black boat");
   }
 
   const repairPosition = addDirection(fromPosition, action.direction);
-  matchState.map.throwIfOutOfBounds(repairPosition);
-  currentPlayer.getUnits().getUnitOrThrow(repairPosition);
+  match.map.throwIfOutOfBounds(repairPosition);
+  player.getUnits().getUnitOrThrow(repairPosition);
 
   return action;
 };

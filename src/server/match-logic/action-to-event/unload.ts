@@ -7,13 +7,13 @@ import type {
 } from "../../schemas/action";
 import { badRequest } from "./trpc-error-manager";
 
-export const unloadWaitActionToEvent: SubActionToEvent<UnloadWaitAction> = ({
-  currentPlayer,
+export const unloadWaitActionToEvent: SubActionToEvent<UnloadWaitAction> = (
+  match,
   action,
-  matchState,
-  fromPosition,
-}) => {
-  const transportUnit = currentPlayer.getUnits().getUnitOrThrow(fromPosition);
+  fromPosition
+) => {
+  const player = match.players.getCurrentTurnPlayer();
+  const transportUnit = player.getUnits().getUnitOrThrow(fromPosition);
 
   if (action.unloads.length < 1) {
     throw badRequest("No unit specified to unload");
@@ -32,7 +32,7 @@ export const unloadWaitActionToEvent: SubActionToEvent<UnloadWaitAction> = ({
     action.unloads[0].direction
   );
 
-  matchState.map.throwIfOutOfBounds(unloadPosition);
+  match.map.throwIfOutOfBounds(unloadPosition);
 
   if (action.unloads.length === 1) {
     if (action.unloads[0].isSecondUnit) {
@@ -47,7 +47,7 @@ export const unloadWaitActionToEvent: SubActionToEvent<UnloadWaitAction> = ({
       }
 
       if (
-        matchState.getMovementCost(
+        match.getMovementCost(
           unloadPosition,
           unitPropertiesMap[transportUnit.loadedUnit2.type].movementType
         ) === null
@@ -56,7 +56,7 @@ export const unloadWaitActionToEvent: SubActionToEvent<UnloadWaitAction> = ({
       }
     } else {
       if (
-        matchState.getMovementCost(
+        match.getMovementCost(
           unloadPosition,
           unitPropertiesMap[transportUnit.loadedUnit.type].movementType
         ) === null
@@ -96,10 +96,10 @@ export const unloadWaitActionToEvent: SubActionToEvent<UnloadWaitAction> = ({
       action.unloads[1].direction
     );
 
-    matchState.map.throwIfOutOfBounds(unloadPosition2);
+    match.map.throwIfOutOfBounds(unloadPosition2);
 
     if (
-      matchState.getMovementCost(
+      match.getMovementCost(
         unloadPosition,
         unitPropertiesMap[transportUnit.loadedUnit.type].movementType
       ) === null
@@ -108,7 +108,7 @@ export const unloadWaitActionToEvent: SubActionToEvent<UnloadWaitAction> = ({
     }
 
     if (
-      matchState.getMovementCost(
+      match.getMovementCost(
         unloadPosition,
         unitPropertiesMap[transportUnit.loadedUnit2.type].movementType
       ) === null
@@ -124,8 +124,10 @@ export const unloadWaitActionToEvent: SubActionToEvent<UnloadWaitAction> = ({
 
 export const unloadNoWaitActionToEvent: MainActionToEvent<
   UnloadNoWaitAction
-> = ({ currentPlayer, action, matchState }) => {
-  const transportUnit = currentPlayer
+> = (match, action) => {
+  const player = match.players.getCurrentTurnPlayer();
+
+  const transportUnit = player
     .getUnits()
     .getUnitOrThrow(action.transportPosition);
 
@@ -142,7 +144,7 @@ export const unloadNoWaitActionToEvent: MainActionToEvent<
     action.unloads.direction
   );
 
-  matchState.map.throwIfOutOfBounds(unloadPosition);
+  match.map.throwIfOutOfBounds(unloadPosition);
 
   if (action.unloads.isSecondUnit) {
     if (!("loadedUnit2" in transportUnit)) {
@@ -156,7 +158,7 @@ export const unloadNoWaitActionToEvent: MainActionToEvent<
     }
 
     if (
-      matchState.getMovementCost(
+      match.getMovementCost(
         unloadPosition,
         unitPropertiesMap[transportUnit.loadedUnit2.type].movementType
       ) === null
@@ -165,7 +167,7 @@ export const unloadNoWaitActionToEvent: MainActionToEvent<
     }
   } else {
     if (
-      matchState.getMovementCost(
+      match.getMovementCost(
         unloadPosition,
         unitPropertiesMap[transportUnit.loadedUnit.type].movementType
       ) === null

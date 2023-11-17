@@ -1,15 +1,10 @@
-import { LeagueType } from "@prisma/client";
 import { matchStore } from "server/match-logic/match-store";
 import { prisma } from "server/prisma/prisma-client";
 import { coSchema } from "server/schemas/co";
 import { mapMiddleware, withMapIdSchema } from "server/trpc/middleware/map";
 import { playerBaseProcedure } from "server/trpc/trpc-setup";
-import { getChangeableTilesFromMap } from "shared/match-logic/get-changeable-tile-from-map";
 import type { PlayerInMatch } from "shared/types/server-match-state";
-import { MapWrapper } from "shared/wrappers/map";
-import { MatchWrapper } from "shared/wrappers/match";
-import { PlayersWrapper } from "shared/wrappers/players";
-import { UnitsWrapper } from "shared/wrappers/units";
+import { matchStateToFrontend } from "../match";
 
 export const createMatchProcedure = playerBaseProcedure
   .input(
@@ -45,33 +40,17 @@ export const createMatchProcedure = playerBaseProcedure
       },
     });
 
-    matchStore.set(
-      matchOnDB.id,
-      new MatchWrapper(
-        matchOnDB.id,
-        {
-          leagueType: LeagueType.standard,
-        },
-        matchOnDB.status,
-        new MapWrapper(ctx.map),
-        getChangeableTilesFromMap(ctx.map),
-        new UnitsWrapper([]),
-        0,
-        new PlayersWrapper(matchOnDB.playerState),
-        "clear"
-      )
-    );
-
     await prisma.event.create({
       data: {
         matchId: matchOnDB.id,
         content: {
           type: "player-picked-co",
           co: input.selectedCO,
-          player: ctx.currentPlayer,
+          playerId: ctx.currentPlayer.id,
         },
       },
     });
 
-    return matchStore.get(matchOnDB.id);
+    const match = matchStore.createMatchAndStore(matchOnDB, ctx.map);
+    return matchStateToFrontend(match);
   });

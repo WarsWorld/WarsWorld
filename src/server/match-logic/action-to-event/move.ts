@@ -12,12 +12,12 @@ export const createNoMoveEvent = (): MoveEvent => ({
   subEvent: { type: "wait" },
 });
 
-export const moveActionToEvent: MainActionToEvent<MoveAction> = ({
-  currentPlayer,
-  action,
-  matchState,
-}) => {
-  const unit = currentPlayer.getUnits().getUnitOrThrow(action.path[0]);
+export const moveActionToEvent: MainActionToEvent<MoveAction> = (
+  match,
+  action
+) => {
+  const player = match.players.getCurrentTurnPlayer();
+  const unit = player.getUnits().getUnitOrThrow(action.path[0]);
 
   if (!unit.isReady) {
     throw badRequest("Trying to move a waited unit");
@@ -25,11 +25,11 @@ export const moveActionToEvent: MainActionToEvent<MoveAction> = ({
 
   const result = createNoMoveEvent();
 
-  let remainingMovePoints = currentPlayer.getMovementPoints(unit);
+  let remainingMovePoints = player.getMovementPoints(unit);
 
   const fuelNeeded =
     (action.path.length - 1) *
-    currentPlayer.getCOHooksWithUnit(action.path[0]).onFuelCost(1);
+    player.getCOHooksWithUnit(action.path[0]).onFuelCost(1);
 
   if (unit.stats.fuel < fuelNeeded) {
     throw badRequest("Not enough fuel for this move");
@@ -38,9 +38,9 @@ export const moveActionToEvent: MainActionToEvent<MoveAction> = ({
   for (let i = 0; i < action.path.length; ++i) {
     const position = action.path[i];
 
-    matchState.map.throwIfOutOfBounds(position);
+    match.map.throwIfOutOfBounds(position);
 
-    const moveCost = matchState.getMovementCost(
+    const moveCost = match.getMovementCost(
       position,
       unitPropertiesMap[unit.type].movementType
     );
@@ -53,7 +53,7 @@ export const moveActionToEvent: MainActionToEvent<MoveAction> = ({
       throw badRequest("The given path passes through the same position twice");
     }
 
-    const unitInPosition = matchState.units.getUnit(position);
+    const unitInPosition = match.units.getUnit(position);
 
     if (unitInPosition?.playerSlot === unit.playerSlot) {
       result.trap = true;
