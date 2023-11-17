@@ -22,7 +22,10 @@ export default function SignupForm({
     confirmPassword: "",
   });
 
-  const [doPasswordsMatch, setDoPasswordsMatch] = useState(true);
+  const doPasswordsMatch =
+    signupData.password === signupData.confirmPassword ||
+    signupData.password === "" ||
+    signupData.confirmPassword === "";
 
   const {
     mutateAsync: registerAsync,
@@ -41,11 +44,8 @@ export default function SignupForm({
     event.preventDefault();
 
     if (signupData.confirmPassword !== signupData.password) {
-      setDoPasswordsMatch(false);
       throw "Passwords do not match";
     }
-
-    setDoPasswordsMatch(true);
 
     try {
       await registerAsync({
@@ -72,7 +72,7 @@ export default function SignupForm({
       {(!doPasswordsMatch || isError) && (
         <ErrorSuccessBlock
           isError
-          title="Couldn't sign up"
+          title={!doPasswordsMatch ? "Warning" : "Couldn't sign up"}
           message={defineErrorMessage()}
         />
       )}
