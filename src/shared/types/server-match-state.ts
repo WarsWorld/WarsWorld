@@ -58,11 +58,11 @@ export interface BackendMatchState {
 }
 
 export const getCurrentTurnPlayer = (matchState: BackendMatchState) => {
-  const player = matchState.players.find(p => p.hasCurrentTurn)
+  const player = matchState.players.find((p) => p.hasCurrentTurn);
 
   if (player === undefined) {
-    throw new Error("No player with current turn was found")
+    throw new Error("No player with current turn was found");
   }
 
   return player;
-}
+};

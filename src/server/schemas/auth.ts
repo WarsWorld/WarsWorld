@@ -4,12 +4,12 @@ import { z } from "zod";
 
 export const loginSchema = z.object({
   username: z.string().min(1),
-  password: z.string().min(4).max(20),
+  password: z.string().min(4).max(40),
 });
 
 export const signUpSchema = loginSchema.extend({
   email: z.string().email(),
-  confirmPassword: z.string().min(4).max(20),
+  confirmPassword: z.string().min(4).max(40),
 });
 
 export type ILogin = z.infer<typeof loginSchema>;

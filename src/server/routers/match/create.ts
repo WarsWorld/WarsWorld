@@ -6,7 +6,6 @@ import { prisma } from "server/prisma/prisma-client";
 import { mapMiddleware, withMapIdSchema } from "server/trpc/middleware/map";
 import { playerBaseProcedure } from "server/trpc/trpc-setup";
 import { PlayerInMatch } from "shared/types/server-match-state";
-import { withPlayerNameSchema } from "server/trpc/middleware/player";
 
 export const createMatchProcedure = playerBaseProcedure
   .input(
@@ -14,7 +13,6 @@ export const createMatchProcedure = playerBaseProcedure
       selectedCO: coSchema,
     })
   )
-  .input(withPlayerNameSchema)
   .use(mapMiddleware)
   .mutation(async ({ input, ctx }) => {
     const initialPlayerState: PlayerInMatch[] = [

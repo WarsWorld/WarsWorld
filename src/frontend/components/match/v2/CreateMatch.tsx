@@ -68,7 +68,6 @@ export default function CreateMatch({
       selectedCO: "lash",
       mapId,
       playerId: currentPlayer.id,
-      name: currentPlayer.name,
     });
 
     refecthAllMatches();
