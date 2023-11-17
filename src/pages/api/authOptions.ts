@@ -36,8 +36,9 @@ export const authOptions: NextAuthOptions = {
         },
       },
       async authorize(credentials) {
-        if (!credentials || !credentials.name || !credentials.password)
+        if (!credentials || !credentials.name || !credentials.password) {
           return null;
+        }
 
         const creds = await loginSchema.parseAsync({
           username: credentials.name,
@@ -48,11 +49,16 @@ export const authOptions: NextAuthOptions = {
           where: { name: creds.username },
         });
 
-        if (
-          dbUser &&
-          dbUser.password &&
-          (await compare(credentials.password, dbUser.password))
-        ) {
+        if (!dbUser || !dbUser.password) {
+          return null;
+        }
+
+        const doPasswordsMatch = await compare(
+          credentials.password,
+          dbUser.password
+        );
+
+        if (doPasswordsMatch) {
           const dbUserWithoutPassword = {
             name: dbUser.name,
             email: dbUser.email,

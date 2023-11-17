@@ -2,7 +2,8 @@ import { z } from "zod";
 
 export const loginSchema = z.object({
   username: z.string().min(1),
-  password: z.string().min(8).max(40),
+  // TODO: change in prod min from 4 to 8 because I love making passwords called test
+  password: z.string().min(4).max(40),
 });
 
 export const signUpSchema = loginSchema.extend({
