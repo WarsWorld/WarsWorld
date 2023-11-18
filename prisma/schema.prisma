@@ -113,7 +113,7 @@ model Player {
   secret      Boolean       @default(false) // secret = true means that parent user is hidden on profile
   ChatMessage ChatMessage[]
 
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user   User   @relation(fields: [userId], references: [id])
   userId String
 
   Post Post[]

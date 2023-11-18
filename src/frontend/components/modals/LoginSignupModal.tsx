@@ -68,7 +68,6 @@ export default function LoginSignupModal({ isOpen, setIsOpen, width }: Props) {
 
   const renderProviders = () => {
     const posibleProviders = ["github", "discord", "google"];
-    console.log(currentProviders);
 
     return posibleProviders.map((socialMedia) => {
       let isSetUp = false;
