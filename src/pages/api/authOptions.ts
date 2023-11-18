@@ -13,66 +13,101 @@ import { Adapter } from "next-auth/adapters";
 import { prisma } from "server/prisma/prisma-client";
 import WarsWorldAdapter from "./WarsWorldAdapter";
 import { compare } from "bcrypt";
+import { Provider } from "next-auth/providers";
+import { z } from "zod";
 
 const adapter = WarsWorldAdapter(prisma) as Adapter;
 
-export const authOptions: NextAuthOptions = {
-  secret: process.env.NEXTAUTH_SECRET,
-  adapter: adapter,
-  debug: true,
-  providers: [
-    CredentialsProvider({
-      credentials: {
-        // TODO: Change name to a unique identifier, maybe for email or both idk.
-        name: {
-          label: "Username",
-          type: "username",
-          placeholder: "Username",
-        },
-        password: {
-          label: "Password",
-          type: "password",
-          placeholder: "Password",
-        },
+const envCredential = z.string().trim().min(1);
+
+const githubEnvSchema = z.object({
+  GITHUB_CLIENT_ID: envCredential,
+  GITHUB_CLIENT_SECRET: envCredential,
+});
+
+const googleEnvSchema = z.object({
+  GOOGLE_CLIENT_ID: envCredential,
+  GOOGLE_CLIENT_SECRET: envCredential,
+});
+
+const discordEnvSchema = z.object({
+  DISCORD_CLIENT_ID: envCredential,
+  DISCORD_CLIENT_SECRET: envCredential,
+});
+
+const githubEnvParsed = githubEnvSchema.safeParse(process.env);
+const googleEnvParsed = googleEnvSchema.safeParse(process.env);
+const discordEnvParsed = discordEnvSchema.safeParse(process.env);
+
+const providers: Provider[] = [
+  CredentialsProvider({
+    credentials: {
+      // TODO: Change name to a unique identifier, maybe for email or both idk.
+      name: {
+        label: "Username",
+        type: "username",
+        placeholder: "Username",
       },
-      async authorize(credentials) {
-        if (!credentials || !credentials.name || !credentials.password) {
-          return null;
-        }
-
-        const creds = await loginSchema.parseAsync({
-          username: credentials.name,
-          password: credentials.password,
-        });
-
-        const dbUser = await prisma.user.findFirst({
-          where: { name: creds.username },
-        });
-
-        if (!dbUser || !dbUser.password) {
-          return null;
-        }
-
-        const doPasswordsMatch = await compare(
-          credentials.password,
-          dbUser.password
-        );
-
-        if (doPasswordsMatch) {
-          const dbUserWithoutPassword = {
-            name: dbUser.name,
-            email: dbUser.email,
-          };
-          return dbUserWithoutPassword as User;
-        }
-
+      password: {
+        label: "Password",
+        type: "password",
+        placeholder: "Password",
+      },
+    },
+    async authorize(credentials) {
+      if (!credentials || !credentials.name || !credentials.password) {
         return null;
-      },
-    }),
+      }
+
+      const creds = await loginSchema.parseAsync({
+        username: credentials.name,
+        password: credentials.password,
+      });
+
+      const dbUser = await prisma.user.findFirst({
+        where: { name: creds.username },
+      });
+
+      if (!dbUser || !dbUser.password) {
+        return null;
+      }
+
+      const doPasswordsMatch = await compare(
+        credentials.password,
+        dbUser.password
+      );
+
+      if (doPasswordsMatch) {
+        const dbUserWithoutPassword = {
+          name: dbUser.name,
+          email: dbUser.email,
+        };
+        return dbUserWithoutPassword as User;
+      }
+
+      return null;
+    },
+  }),
+];
+
+if (githubEnvParsed.success)
+  providers.push(
     GithubProvider({
       clientId: process.env.GITHUB_CLIENT_ID as string,
       clientSecret: process.env.GITHUB_CLIENT_SECRET as string,
-    }),
+    })
+  );
+
+if (googleEnvParsed.success)
+  providers.push(
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID as string,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+    })
+  );
+
+if (discordEnvParsed.success)
+  providers.push(
     DiscordProvider({
       clientId: process.env.DISCORD_CLIENT_ID as string,
       clientSecret: process.env.DISCORD_CLIENT_SECRET as string,
@@ -90,12 +125,14 @@ export const authOptions: NextAuthOptions = {
           emailVerified: null,
         };
       },
-    }),
-    GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID as string,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
-    }),
-  ],
+    })
+  );
+
+export const authOptions: NextAuthOptions = {
+  secret: process.env.NEXTAUTH_SECRET,
+  adapter: adapter,
+  debug: true,
+  providers,
   pages: {
     signIn: "/?authModalOpen",
   },

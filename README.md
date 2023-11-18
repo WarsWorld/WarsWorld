@@ -62,6 +62,8 @@ If you can't see it, it might be due to your Docker Desktop not working/not bein
 
 ## How to use accounts and login to WarsWorld as a dev
 
+The following steps are optional, and it's only useful if you want to help with authentication/authorization or you just want to try to login with Discord, GitHub or Google. You also don't need to set up every provider, if you just want to try to login with discord, just follow the directions to setup discord authentication, same with the others. Furthermore you can still login and register users with email and password authentication without following the next steps.
+
 If you want to login with GitHub, Discord or Google you should follow the next steps:
 
 Directions for Github Account:

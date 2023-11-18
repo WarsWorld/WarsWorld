@@ -36,7 +36,10 @@ const SocialMedia = [
 ];
 
 export default function SocialMediaSignInButton({ disabled, name }: Props) {
-  const socialMedia = SocialMedia.find((x) => x.name === name);
+  const socialMedia = SocialMedia.find(
+    (x) => x.name.toLowerCase() === name.toLowerCase()
+  );
+  const displayName = socialMedia?.name ?? "";
   const imgSrc = socialMedia?.imgSrc ?? "";
   const imgAlt = socialMedia?.imgAlt ?? "";
   const color = socialMedia?.color ?? "";
@@ -50,19 +53,25 @@ export default function SocialMediaSignInButton({ disabled, name }: Props) {
 
   return (
     <button
-      className={`@flex @justify-center @align-middle @text-center @rounded @w-full @h-full @py-2 @px-3 cellphone:@px-4 @gap-4 @text-inherit ${font} @shadow-black/50 @shadow-md ${color} ${
-        !disabled && "hover:@scale-[1.025] active:@scale-105"
-      }`}
+      className={`@flex @justify-center @align-middle @text-center @rounded @w-full @h-full @py-2 @px-3 cellphone:@px-4 @gap-4 @text-inherit ${font} @shadow-black/50 @shadow-md ${
+        disabled ? "@bg-gray-500" : color
+      } ${!disabled && "hover:@scale-[1.025] active:@scale-105"}`}
       onClick={onClickSocialMediaHandler}
       disabled={disabled}
     >
       <div className="@h-full @flex @align-middle @justify-center">
-        <img className="@h-full" src={imgSrc} alt={imgAlt} />
+        <img
+          className={`@h-full ${disabled ? "@grayscale" : ""}`}
+          src={imgSrc}
+          alt={imgAlt}
+        />
       </div>
       <div
-        className={`@flex @flex-col @justify-center @align-middle @text-center @h-full ${text_color}`}
+        className={`@flex @flex-col @justify-center @align-middle @text-center @h-full ${
+          disabled ? "@text-gray-300" : text_color
+        }`}
       >
-        {name}
+        {displayName}
       </div>
     </button>
   );

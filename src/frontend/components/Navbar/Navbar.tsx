@@ -17,6 +17,7 @@ export function Navbar() {
   const [showMatchLinks, setShowMatchLinks] = useState(false);
   const [isMobileWidth, setIsMobileWidth] = useState(false);
   const isOpen = searchParams.has("authModalOpen");
+
   const setIsOpen = async (value: boolean, callbackUrl?: string) => {
     if (value)
       await router.replace("", {
