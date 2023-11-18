@@ -23,14 +23,17 @@ interface Props {
 }
 
 export default function LoginSignupModal({ isOpen, setIsOpen, width }: Props) {
-  const searchParams = useSearchParams();
-  const router = useRouter();
-
-  const [didSignUp, setDidSignUp] = useState(false);
+  const posibleProviders = ["github", "discord", "google"];
   const [currentProviders, setCurrentProviders] = useState<Record<
     LiteralUnion<BuiltInProviderType, string>,
     ClientSafeProvider
   > | null>();
+
+  const searchParams = useSearchParams();
+  const router = useRouter();
+
+  const [didSignUp, setDidSignUp] = useState(false);
+
   const isSignupForm = searchParams.has("SignUpForm");
   const callbackUrl = searchParams.get("callbackUrl");
 
@@ -66,25 +69,20 @@ export default function LoginSignupModal({ isOpen, setIsOpen, width }: Props) {
 
   const onClose = async () => await setIsOpen(false);
 
-  const renderProviders = () => {
-    const posibleProviders = ["github", "discord", "google"];
-
-    return posibleProviders.map((socialMedia) => {
-      let isSetUp = false;
-      if (currentProviders && currentProviders[socialMedia]) {
-        isSetUp = true;
-      }
-
+  const renderProviders = () =>
+    posibleProviders.map((socialMedia) => {
       return (
         <div
           key={socialMedia}
           className="@h-14 @text-2xl large_monitor:@text-3xl @w-[75vw] smallscreen:@w-48 large_monitor:@w-56"
         >
-          <SocialMediaSignInButton name={socialMedia} disabled={!isSetUp} />
+          <SocialMediaSignInButton
+            name={socialMedia}
+            disabled={!(currentProviders && currentProviders[socialMedia])}
+          />
         </div>
       );
     });
-  };
 
   return (
     <>
