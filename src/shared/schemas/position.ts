@@ -23,3 +23,10 @@ export const positionsAreNeighbours = (
 
   return xDiff + yDiff <= 1;
 };
+
+export const getNeighbourPositions = (p: Position): Position[] => [
+  [p[0] + 1, p[1]],
+  [p[0] - 1, p[1]],
+  [p[0], p[1] + 1],
+  [p[0], p[1] - 1],
+];

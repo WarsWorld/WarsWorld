@@ -198,7 +198,7 @@ const loadUnitInto = (unitToLoad: WWUnit, transportUnit: WWUnit) => {
 export const applyMainEventToMatch = (match: MatchWrapper, event: WWEvent) => {
   switch (event.type) {
     case "build": {
-      match.units.addUnit(
+      match.addUnwrappedUnit(
         createNewUnitFromBuildEvent(
           event,
           match.players.getCurrentTurnPlayer().data.slot
@@ -221,7 +221,7 @@ export const applyMainEventToMatch = (match: MatchWrapper, event: WWEvent) => {
         unit.currentCapturePoints = undefined;
       }
 
-      unit.stats.fuel -=
+      unit.data.stats.fuel -=
         (event.path.length - 1) *
         player.getCOHooksWithUnit(event.path[0]).onFuelCost(1);
 
@@ -230,27 +230,27 @@ export const applyMainEventToMatch = (match: MatchWrapper, event: WWEvent) => {
       );
 
       if (unitAtDestination === undefined) {
-        unit.position = event.path[event.path.length - 1];
+        unit.data.position = event.path[event.path.length - 1];
       } else {
-        if (unit.type === unitAtDestination.type) {
+        if (unit.data.type === unitAtDestination.data.type) {
           //join (hp, fuel, ammo, (keep capture points))
-          const unitProperties = unitPropertiesMap[unit.type];
-          unitAtDestination.stats.fuel = Math.min(
-            unit.stats.fuel + unitAtDestination.stats.fuel,
+          const unitProperties = unitPropertiesMap[unit.data.type];
+          unitAtDestination.data.stats.fuel = Math.min(
+            unit.data.stats.fuel + unitAtDestination.data.stats.fuel,
             unitProperties.initialFuel
           );
-          unitAtDestination.stats.hp = Math.min(
-            unit.stats.hp + unitAtDestination.stats.hp,
+          unitAtDestination.data.stats.hp = Math.min(
+            unit.data.stats.hp + unitAtDestination.data.stats.hp,
             99
           );
 
           if (
-            "ammo" in unit.stats &&
-            "ammo" in unitAtDestination.stats &&
+            "ammo" in unit.data.stats &&
+            "ammo" in unitAtDestination.data.stats &&
             "initialAmmo" in unitProperties
           ) {
-            unitAtDestination.stats.ammo = Math.min(
-              unit.stats.ammo + unitAtDestination.stats.ammo,
+            unitAtDestination.data.stats.ammo = Math.min(
+              unit.data.stats.ammo + unitAtDestination.data.stats.ammo,
               unitProperties.initialAmmo
             );
           }
@@ -258,7 +258,7 @@ export const applyMainEventToMatch = (match: MatchWrapper, event: WWEvent) => {
           match.units.removeUnit(unit);
         } else {
           //load
-          loadUnitInto(unit, unitAtDestination);
+          loadUnitInto(unit.data, unitAtDestination.data);
           match.units.removeUnit(unit);
         }
       }
@@ -268,35 +268,37 @@ export const applyMainEventToMatch = (match: MatchWrapper, event: WWEvent) => {
     case "unload2": {
       const unit = match.units.getUnitOrThrow(event.transportPosition);
 
-      if (event.unloads.isSecondUnit && "loadedUnit2" in unit) {
-        match.units.addUnit(
+      if (event.unloads.isSecondUnit && "loadedUnit2" in unit.data) {
+        match.addUnwrappedUnit(
           loadedUnitToWWUnit(
-            unit.loadedUnit2,
-            unit.playerSlot,
+            unit.data.loadedUnit2,
+            unit.data.playerSlot,
             addDirection(event.transportPosition, event.unloads.direction)
           )
         );
-        unit.loadedUnit2 = null;
-      } else if (!event.unloads.isSecondUnit && "loadedUnit" in unit) {
-        match.units.addUnit(
+        unit.data.loadedUnit2 = null;
+      } else if (!event.unloads.isSecondUnit && "loadedUnit" in unit.data) {
+        match.addUnwrappedUnit(
           loadedUnitToWWUnit(
-            unit.loadedUnit,
-            unit.playerSlot,
+            unit.data.loadedUnit,
+            unit.data.playerSlot,
             addDirection(event.transportPosition, event.unloads.direction)
           )
         );
 
-        if ("loadedUnit2" in unit) {
-          unit.loadedUnit = unit.loadedUnit2;
-          unit.loadedUnit2 = null;
+        if ("loadedUnit2" in unit.data) {
+          unit.data.loadedUnit = unit.data.loadedUnit2;
+          unit.data.loadedUnit2 = null;
         } else {
-          unit.loadedUnit = null;
+          unit.data.loadedUnit = null;
         }
       }
 
       break;
     }
     case "coPower": {
+      const player = match.players.getCurrentTurnPlayer();
+
       break;
     }
     case "superCOPower": {
@@ -333,14 +335,14 @@ export const applySubEventToMatch = (
       if (event.defenderHP === 0) {
         match.units.removeUnit(defender);
       } else {
-        defender.stats.hp = event.defenderHP;
+        defender.data.stats.hp = event.defenderHP;
       }
 
       if (event.attackerHP !== undefined) {
         if (event.attackerHP === 0) {
           match.units.removeUnit(attacker);
         } else {
-          attacker.stats.hp = event.attackerHP;
+          attacker.data.stats.hp = event.attackerHP;
         }
       }
 
@@ -349,21 +351,21 @@ export const applySubEventToMatch = (
     case "ability": {
       const player = match.players.getCurrentTurnPlayer();
 
-      switch (unit.type) {
+      switch (unit.data.type) {
         case "infantry":
         case "mech": {
           //capture tile
-          if (unit.currentCapturePoints === undefined) {
-            unit.currentCapturePoints = 20;
+          if (unit.data.currentCapturePoints === undefined) {
+            unit.data.currentCapturePoints = 20;
           }
 
-          unit.currentCapturePoints -= player
-            .getCOHooksWithUnit(unit.position)
-            .onCapture(unit.stats.hp);
+          unit.data.currentCapturePoints -= player
+            .getCOHooksWithUnit(unit.data.position)
+            .onCapture(unit.data.stats.hp);
 
-          if (unit.currentCapturePoints <= 0) {
-            unit.currentCapturePoints = undefined;
-            match.captureTile(unit.position);
+          if (unit.data.currentCapturePoints <= 0) {
+            unit.data.currentCapturePoints = undefined;
+            match.captureTile(unit.data.position);
           }
 
           break;
@@ -376,8 +378,8 @@ export const applySubEventToMatch = (
             );
 
             if (suppliedUnit !== undefined) {
-              suppliedUnit.stats.fuel =
-                unitPropertiesMap[suppliedUnit.type].initialFuel;
+              suppliedUnit.data.stats.fuel =
+                unitPropertiesMap[suppliedUnit.data.type].initialFuel;
             }
           }
 
@@ -387,7 +389,7 @@ export const applySubEventToMatch = (
           match.units.damageUntil1HPInRadius({
             radius: 3,
             damageAmount: 50,
-            epicenter: unit.position,
+            epicenter: unit.data.position,
           });
           match.units.removeUnit(unit);
           break;
@@ -408,52 +410,55 @@ export const applySubEventToMatch = (
     case "unload1": {
       switch (event.unloads.length) {
         case 1:
-          if (event.unloads[0].isSecondUnit && "loadedUnit2" in unit) {
-            match.units.addUnit(
+          if (event.unloads[0].isSecondUnit && "loadedUnit2" in unit.data) {
+            match.addUnwrappedUnit(
               loadedUnitToWWUnit(
-                unit.loadedUnit2,
-                unit.playerSlot,
+                unit.data.loadedUnit2,
+                unit.data.playerSlot,
                 addDirection(fromPosition, event.unloads[0].direction)
               )
             );
-            unit.loadedUnit2 = null;
-          } else if (!event.unloads[0].isSecondUnit && "loadedUnit" in unit) {
-            match.units.addUnit(
+            unit.data.loadedUnit2 = null;
+          } else if (
+            !event.unloads[0].isSecondUnit &&
+            "loadedUnit" in unit.data
+          ) {
+            match.addUnwrappedUnit(
               loadedUnitToWWUnit(
-                unit.loadedUnit,
-                unit.playerSlot,
+                unit.data.loadedUnit,
+                unit.data.playerSlot,
                 addDirection(fromPosition, event.unloads[0].direction)
               )
             );
 
-            if ("loadedUnit2" in unit) {
-              unit.loadedUnit = unit.loadedUnit2;
-              unit.loadedUnit2 = null;
+            if ("loadedUnit2" in unit.data) {
+              unit.data.loadedUnit = unit.data.loadedUnit2;
+              unit.data.loadedUnit2 = null;
             } else {
-              unit.loadedUnit = null;
+              unit.data.loadedUnit = null;
             }
           }
 
           break;
         case 2:
           //unload all. unloads[0] refers to 1st unit, unloads[1] refers to 2nd unit
-          if ("loadedUnit" in unit && "loadedUnit2" in unit) {
-            match.units.addUnit(
+          if ("loadedUnit" in unit && "loadedUnit2" in unit.data) {
+            match.addUnwrappedUnit(
               loadedUnitToWWUnit(
-                unit.loadedUnit,
-                unit.playerSlot,
+                unit.data.loadedUnit,
+                unit.data.playerSlot,
                 addDirection(fromPosition, event.unloads[0].direction)
               )
             );
-            match.units.addUnit(
+            match.addUnwrappedUnit(
               loadedUnitToWWUnit(
-                unit.loadedUnit2,
-                unit.playerSlot,
+                unit.data.loadedUnit2,
+                unit.data.playerSlot,
                 addDirection(fromPosition, event.unloads[1].direction)
               )
             );
-            unit.loadedUnit = null;
-            unit.loadedUnit2 = null;
+            unit.data.loadedUnit = null;
+            unit.data.loadedUnit2 = null;
           }
 
           break;
@@ -470,22 +475,22 @@ export const applySubEventToMatch = (
         addDirection(fromPosition, event.direction)
       );
 
-      repairedUnit.stats.fuel =
-        unitPropertiesMap[repairedUnit.type].initialFuel;
+      repairedUnit.data.stats.fuel =
+        unitPropertiesMap[repairedUnit.data.type].initialFuel;
 
       //heal for free if visible hp is 10
-      if (repairedUnit.stats.hp >= 90) {
-        repairedUnit.stats.hp = 99;
+      if (repairedUnit.data.stats.hp >= 90) {
+        repairedUnit.data.stats.hp = 99;
       } else {
         //check if enough funds for heal, and heal if it's the case
-        const unitCost = unitPropertiesMap[repairedUnit.type].cost;
+        const unitCost = unitPropertiesMap[repairedUnit.data.type].cost;
         const repairEffectiveCost =
           player
             .getCOHooksWithUnit(addDirection(fromPosition, event.direction))
             .onBuildCost(unitCost) * 0.1;
 
         if (repairEffectiveCost <= player.data.funds) {
-          repairedUnit.stats.hp += 10;
+          repairedUnit.data.stats.hp += 10;
           player.data.funds -= repairEffectiveCost;
         }
       }
@@ -502,5 +507,5 @@ export const applySubEventToMatch = (
     }
   }
 
-  unit.isReady = false;
+  unit.data.isReady = false;
 };

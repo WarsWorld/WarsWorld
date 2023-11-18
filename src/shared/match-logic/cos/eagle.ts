@@ -49,14 +49,14 @@ export const eagle: COProperties = {
       description:
         "Air units gain +5% attack.ts and +10% defense. All non-footsoldier units may move and fire again, even if built this turn.",
       stars: 9,
-      instantEffect({ attackerData: currentPlayerData }) {
-        currentPlayerData.player
+      instantEffect({ player }) {
+        player
           .getUnits()
           .data.filter(
-            (unit) => unit.type !== "infantry" && unit.type !== "mech"
+            (unit) => unit.data.type !== "infantry" && unit.data.type !== "mech"
           )
           .forEach((unit) => {
-            unit.isReady = true;
+            unit.data.isReady = true;
           });
       },
       hooks: {

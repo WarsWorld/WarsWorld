@@ -1,28 +1,26 @@
 import { observable } from "@trpc/server/observable";
 import { emitEvent, subscribeToEvents } from "server/emitter/event-emitter";
-import { moveActionToEvent } from "shared/match-logic/action-to-event/move";
 import { prisma } from "server/prisma/prisma-client";
+import { DispatchableError } from "shared/DispatchedError";
+import { abilityActionToEvent } from "shared/match-logic/action-to-event/ability";
+import { attackActionToEvent } from "shared/match-logic/action-to-event/attack";
+import { buildActionToEvent } from "shared/match-logic/action-to-event/build";
+import { coPowerActionToEvent } from "shared/match-logic/action-to-event/co-power";
+import { launchMissileActionToEvent } from "shared/match-logic/action-to-event/launchMissile";
+import { moveActionToEvent } from "shared/match-logic/action-to-event/move";
+import { passTurnActionToEvent } from "shared/match-logic/action-to-event/pass-turn";
+import { repairActionToEvent } from "shared/match-logic/action-to-event/repair";
+import {
+  unloadNoWaitActionToEvent,
+  unloadWaitActionToEvent,
+} from "shared/match-logic/action-to-event/unload";
+import { applySubEventToMatch } from "shared/match-logic/apply-event-to-match";
 import type { Action } from "shared/schemas/action";
 import { mainActionSchema } from "shared/schemas/action";
 import type { Position } from "shared/schemas/position";
 import type { EmittableEvent, WWEvent } from "shared/types/events";
 import type { MatchWrapper } from "shared/wrappers/match";
 import { z } from "zod";
-import { addDirection } from "shared/match-logic/positions";
-import { abilityActionToEvent } from "shared/match-logic/action-to-event/ability";
-import { attackActionToEvent } from "shared/match-logic/action-to-event/attack";
-import { buildActionToEvent } from "shared/match-logic/action-to-event/build";
-import { getDiscoveredUnits } from "shared/match-logic/action-to-event/get-discovered-units";
-import { launchMissileActionToEvent } from "shared/match-logic/action-to-event/launchMissile";
-import { repairActionToEvent } from "shared/match-logic/action-to-event/repair";
-import {
-  unloadNoWaitActionToEvent,
-  unloadWaitActionToEvent,
-} from "shared/match-logic/action-to-event/unload";
-import {
-  applyMainEventToMatch,
-  applySubEventToMatch,
-} from "shared/match-logic/apply-event-to-match";
 import {
   playerInMatchBaseProcedure,
   publicBaseProcedure,
@@ -48,40 +46,24 @@ export type SubActionToEvent<T extends Action> = (
 const validateMainActionAndToEvent = (
   match: MatchWrapper,
   action: Action
-): { event: WWEvent | undefined; position: Position | null } => {
+): WWEvent => {
   switch (action.type) {
-    case "build": {
-      return {
-        event: buildActionToEvent(match, action),
-        position: action.position,
-      };
-    }
-    case "unload2": {
+    case "build":
+      return buildActionToEvent(match, action);
+    case "unload2":
       //unload no wait
-      return {
-        event: unloadNoWaitActionToEvent(match, action),
-        position: addDirection(
-          action.transportPosition,
-          action.unloads.direction
-        ),
-      };
-    }
-    case "move": {
-      return {
-        event: moveActionToEvent(match, action),
-        position: action.path[action.path.length - 1],
-      };
-    }
-    case "coPower": {
-      //TODO function :)
-    }
-    case "superCOPower": {
-    }
-    case "passTurn": {
+      return unloadNoWaitActionToEvent(match, action);
+    case "move":
+      return moveActionToEvent(match, action);
+    case "coPower":
+    case "superCOPower":
+      return coPowerActionToEvent(match, action);
+    case "passTurn":
+      return passTurnActionToEvent(match, action);
+    default: {
+      throw new DispatchableError(`Can't handle action type ${action.type}`);
     }
   }
-
-  return { event: undefined, position: null };
 };
 
 //TODO: unload1 should "update" units discovered for up to 2 positions
@@ -101,8 +83,10 @@ const validateSubActionAndToEvent = (
       return repairActionToEvent(match, action, unitPosition);
     case "launchMissile":
       return launchMissileActionToEvent(match, action, unitPosition);
+    case "wait":
+      return { type: "wait" }; /* TODO which unit..? */
     default:
-      return { type: "wait" };
+      throw new DispatchableError(`Unsupported action type: ${action.type}`);
   }
 };
 
@@ -110,36 +94,34 @@ export const actionRouter = router({
   send: playerInMatchBaseProcedure
     .input(mainActionSchema)
     .mutation(async ({ input, ctx: { match } }) => {
-      //TODO re-add this check, was unadded to test tRPC momentarily
-      /*if (!currentPlayer.hasCurrentTurn) {
-        throw new Error("It's not your turn");
-      }*/
-
-      const { event, position } = validateMainActionAndToEvent(match, input);
+      const event = validateMainActionAndToEvent(match, input);
 
       if (event === undefined) {
         throw new Error("Event has not been created");
       }
 
-      applyMainEventToMatch(match, event);
+      match.applyEvent(event);
 
-      if (input.type === "move" && event.type === "move") {
+      if (event.type === "move") {
         if (!event.trap) {
           //check if unit joined/loaded (cause then sub-action = wait)
           if (!match.units.hasUnit(event.path[event.path.length - 1])) {
-            event.subEvent = validateSubActionAndToEvent(
-              match,
-              input.subAction,
-              event.path[event.path.length - 1]
-            );
+            /** TODO i think because of the architecture, this logic must be moved inside of validateMainActionAndToEvent */
+            // event.subEvent = validateSubActionAndToEvent(
+            //   match,
+            //   input.subAction,
+            //   event.path[event.path.length - 1]
+            // );
           }
         }
 
-        if (position === null) {
+        const lastPosition = event.path.at(-1);
+
+        if (lastPosition === undefined) {
           throw new Error("This should never happen");
         }
 
-        applySubEventToMatch(match, event.subEvent, position);
+        applySubEventToMatch(match, event.subEvent, lastPosition);
       }
 
       await prisma.event.create({
@@ -154,10 +136,11 @@ export const actionRouter = router({
         matchId: input.matchId,
       };
 
-      if (position !== null) {
-        emittableEvent.discoveredUnits = getDiscoveredUnits(match, position);
-      }
-
+      emittableEvent.discoveredUnits = match.players
+        .getCurrentTurnPlayer()
+        .getEnemyUnitsInVision()
+        .map((u) => u.data);
+      /* TODO hide stats from hidden or sonya units */
       emitEvent(emittableEvent);
 
       return {

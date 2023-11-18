@@ -11,7 +11,7 @@ export const repairActionToEvent: SubActionToEvent<RepairAction> = (
   const player = match.players.getCurrentTurnPlayer();
   const unit = player.getUnits().getUnitOrThrow(fromPosition);
 
-  if (unit.type !== "blackBoat") {
+  if (unit.data.type !== "blackBoat") {
     throw new DispatchableError(
       "Trying to repair with a unit that is not a black boat"
     );

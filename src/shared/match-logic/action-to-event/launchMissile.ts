@@ -13,7 +13,7 @@ export const launchMissileActionToEvent: SubActionToEvent<
     throw new DispatchableError("This tile is not an unused missile silo");
   }
 
-  if (unit.type !== "infantry" && unit.type !== "mech") {
+  if (unit.data.type !== "infantry" && unit.data.type !== "mech") {
     throw new DispatchableError(
       "Trying to launch a missile with a non valid unit type"
     );

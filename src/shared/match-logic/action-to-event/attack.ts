@@ -1,9 +1,8 @@
+import type { SubActionToEvent } from "server/routers/action";
 import { DispatchableError } from "shared/DispatchedError";
 import type { AttackAction } from "shared/schemas/action";
-import type { SubActionToEvent } from "server/routers/action";
 import { unitPropertiesMap } from "../buildable-unit";
 import { calculateDamage } from "../calculate-damage";
-import { getDistance } from "../positions";
 
 export const attackActionToEvent: SubActionToEvent<AttackAction> = (
   match,
@@ -17,13 +16,13 @@ export const attackActionToEvent: SubActionToEvent<AttackAction> = (
     .getUnitOrThrow(action.defenderPosition);
 
   //check if unit is in range
-  const attackerProperties = unitPropertiesMap[attacker.type];
+  const attackerProperties = unitPropertiesMap[attacker.data.type];
 
   if (!("attackRange" in attackerProperties)) {
     throw new DispatchableError("Unit cannot attack");
   }
 
-  const attackDistance = getDistance(attacker.position, defender.position);
+  const attackDistance = attacker.getDistance(defender.data.position);
 
   if (
     attackerProperties.attackRange[0] > attackDistance ||
@@ -34,8 +33,8 @@ export const attackActionToEvent: SubActionToEvent<AttackAction> = (
 
   const damageAttackDone = calculateDamage(
     match,
-    attacker.position,
-    defender.position
+    attacker.data.position,
+    defender.data.position
   );
 
   if (damageAttackDone === null) {
@@ -43,7 +42,7 @@ export const attackActionToEvent: SubActionToEvent<AttackAction> = (
   }
 
   //check if ded
-  if (damageAttackDone >= defender.stats.hp) {
+  if (damageAttackDone >= defender.data.stats.hp) {
     return {
       ...action,
       defenderHP: 0,
@@ -52,7 +51,7 @@ export const attackActionToEvent: SubActionToEvent<AttackAction> = (
 
   //check if defender can counterattack
   if (attackDistance === 1) {
-    const defenderProperties = unitPropertiesMap[defender.type];
+    const defenderProperties = unitPropertiesMap[defender.data.type];
 
     if (
       "attackRange" in defenderProperties &&
@@ -60,20 +59,20 @@ export const attackActionToEvent: SubActionToEvent<AttackAction> = (
     ) {
       //defender is melee, can counterattack?
       //temporarily substract hp to calculate counter dmg
-      defender.stats.hp -= damageAttackDone;
+      defender.data.stats.hp -= damageAttackDone;
       const damageDefendDone = calculateDamage(
         match,
-        defender.position,
-        attacker.position
+        defender.data.position,
+        attacker.data.position
       );
-      defender.stats.hp += damageAttackDone;
+      defender.data.stats.hp += damageAttackDone;
 
       if (damageDefendDone !== null) {
         //return event with counter-attack
         return {
           ...action,
-          defenderHP: defender.stats.hp - damageAttackDone,
-          attackerHP: Math.max(0, attacker.stats.hp - damageDefendDone),
+          defenderHP: defender.data.stats.hp - damageAttackDone,
+          attackerHP: Math.max(0, attacker.data.stats.hp - damageDefendDone),
         };
       }
     }
@@ -81,6 +80,6 @@ export const attackActionToEvent: SubActionToEvent<AttackAction> = (
 
   return {
     ...action,
-    defenderHP: defender.stats.hp - damageAttackDone,
+    defenderHP: defender.data.stats.hp - damageAttackDone,
   };
 };

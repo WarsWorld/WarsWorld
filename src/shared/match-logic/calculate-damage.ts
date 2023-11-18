@@ -45,8 +45,8 @@ export const calculateDamage = (
   const attackerUnit = matchState.units.getUnitOrThrow(attackerPosition);
   const defenderUnit = matchState.units.getUnitOrThrow(defenderPosition);
 
-  const visualHPOfAttacker = getVisualHPfromHP(attackerUnit.stats.hp);
-  const visualHPOfDefender = getVisualHPfromHP(defenderUnit.stats.hp);
+  const visualHPOfAttacker = getVisualHPfromHP(attackerUnit.data.stats.hp);
+  const visualHPOfDefender = getVisualHPfromHP(defenderUnit.data.stats.hp);
 
   const attackModifier =
     COHooks.onAttackModifier(100) +
@@ -65,7 +65,7 @@ export const calculateDamage = (
   );
 
   // baseDamage: 1-100
-  const baseDamage = getBaseDamage(attackerUnit, defenderUnit);
+  const baseDamage = getBaseDamage(attackerUnit.data, defenderUnit.data);
 
   if (baseDamage === null) {
     return null;

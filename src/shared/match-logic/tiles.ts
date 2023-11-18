@@ -1,6 +1,7 @@
-import type { TileType } from "shared/schemas/tile";
+import type { Tile, TileType } from "shared/schemas/tile";
 import type { MovementType } from "shared/match-logic/buildable-unit";
 import { tsIncludes } from "shared/utils/typesafe-includes";
+import type { ChangeableTile } from "shared/types/server-match-state";
 
 /**
  * A nonzero integer (or null for impassible)
@@ -284,4 +285,8 @@ export const getBaseMovementCost = (
       return clearMovementCost;
     }
   }
+};
+
+export const isHiddenTile = (tile: Tile | ChangeableTile) => {
+  return tile.type === "forest" || tile.type === "reef";
 };

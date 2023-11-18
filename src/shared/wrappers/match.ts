@@ -21,6 +21,9 @@ import type { MapWrapper } from "./map";
 import { PlayerInMatchWrapper } from "./player-in-match";
 import { PlayersWrapper } from "./players";
 import type { UnitsWrapper } from "./units";
+import type { Tile } from "shared/schemas/tile";
+import { UnitWrapper } from "./unit";
+import type { WWUnit } from "shared/schemas/unit";
 
 /** TODO: Add favorites, possibly spectators, also a timer */
 export class MatchWrapper {
@@ -68,8 +71,12 @@ export class MatchWrapper {
     const attackerUnit = this.units.getUnitOrThrow(attackerPosition);
     const defenderUnit = this.units.getUnitOrThrow(defenderPosition);
 
-    const attacker = this.players.getBySlotOrThrow(attackerUnit.playerSlot);
-    const defender = this.players.getBySlotOrThrow(defenderUnit.playerSlot);
+    const attacker = this.players.getBySlotOrThrow(
+      attackerUnit.data.playerSlot
+    );
+    const defender = this.players.getBySlotOrThrow(
+      defenderUnit.data.playerSlot
+    );
 
     return {
       attackerData: attacker.getCOHookPlayerProps(attackerPosition),
@@ -116,7 +123,7 @@ export class MatchWrapper {
     );
   }
 
-  getTile(position: Position) {
+  getTile(position: Position): Tile | ChangeableTile {
     this.map.throwIfOutOfBounds(position);
 
     const foundChangeableTile = this.changeableTiles.find((t) =>
@@ -128,6 +135,16 @@ export class MatchWrapper {
     }
 
     return this.map.data.tiles[position[1]][position[0]];
+  }
+
+  getTileOrThrow(position: Position) {
+    const tile = this.getTile(position);
+
+    if (tile === undefined) {
+      throw new Error(`Could not get tile at ${JSON.stringify(position)}`);
+    }
+
+    return tile;
   }
 
   /**
@@ -167,5 +184,9 @@ export class MatchWrapper {
     if ("playerSlot" in tile) {
       tile.playerSlot = this.players.getCurrentTurnPlayer().data.slot;
     }
+  }
+
+  addUnwrappedUnit(unit: WWUnit) {
+    this.units.data.push(new UnitWrapper(unit, this));
   }
 }

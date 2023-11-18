@@ -33,7 +33,7 @@ export const getDiscoveredUnits = (
     }
 
     if ("hidden" in adjacentUnit && adjacentUnit.hidden) {
-      units.push(adjacentUnit);
+      units.push(adjacentUnit.data);
     }
   }
 

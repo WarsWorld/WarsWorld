@@ -19,19 +19,19 @@ export const moveActionToEvent: MainActionToEvent<MoveAction> = (
   const player = match.players.getCurrentTurnPlayer();
   const unit = player.getUnits().getUnitOrThrow(action.path[0]);
 
-  if (!unit.isReady) {
+  if (!unit.data.isReady) {
     throw new DispatchableError("Trying to move a waited unit");
   }
 
   const result = createNoMoveEvent();
 
-  let remainingMovePoints = player.getMovementPoints(unit);
+  let remainingMovePoints = player.getMovementPoints(unit.data);
 
   const fuelNeeded =
     (action.path.length - 1) *
     player.getCOHooksWithUnit(action.path[0]).onFuelCost(1);
 
-  if (unit.stats.fuel < fuelNeeded) {
+  if (unit.data.stats.fuel < fuelNeeded) {
     throw new DispatchableError("Not enough fuel for this move");
   }
 
@@ -42,7 +42,7 @@ export const moveActionToEvent: MainActionToEvent<MoveAction> = (
 
     const moveCost = match.getMovementCost(
       position,
-      unitPropertiesMap[unit.type].movementType
+      unitPropertiesMap[unit.data.type].movementType
     );
 
     if (moveCost === null) {
@@ -57,7 +57,7 @@ export const moveActionToEvent: MainActionToEvent<MoveAction> = (
 
     const unitInPosition = match.units.getUnit(position);
 
-    if (unitInPosition?.playerSlot === unit.playerSlot) {
+    if (unitInPosition?.data.playerSlot === unit.data.playerSlot) {
       result.trap = true;
       break;
     }
@@ -71,10 +71,10 @@ export const moveActionToEvent: MainActionToEvent<MoveAction> = (
     if (
       i === action.path.length - 1 &&
       unitInPosition !== undefined &&
-      unitInPosition.type !== unit.type
+      unitInPosition.data.type !== unit.data.type
     ) {
       //check if trying to join (same unit type) or load into transport:
-      if (unitInPosition.type !== unit.type) {
+      if (unitInPosition.data.type !== unit.data.type) {
         if (!("loadedUnit" in unitInPosition)) {
           throw new DispatchableError(
             "Move action ending position is overlapping with an allied unit"
@@ -91,11 +91,11 @@ export const moveActionToEvent: MainActionToEvent<MoveAction> = (
         }
 
         //check if unit can go into that transport
-        switch (unitInPosition.type) {
+        switch (unitInPosition.data.type) {
           case "transportCopter":
           case "apc":
           case "blackBoat": {
-            if (unit.type !== "infantry" && unit.type !== "mech") {
+            if (unit.data.type !== "infantry" && unit.data.type !== "mech") {
               throw new DispatchableError(
                 "Can't load non-soldier in apc / transport / black boat"
               );
@@ -104,7 +104,7 @@ export const moveActionToEvent: MainActionToEvent<MoveAction> = (
             break;
           }
           case "lander": {
-            if (unitPropertiesMap[unit.type].facility !== "base") {
+            if (unitPropertiesMap[unit.data.type].facility !== "base") {
               throw new DispatchableError("Can't load non-land unit to lander");
             }
 
@@ -112,8 +112,8 @@ export const moveActionToEvent: MainActionToEvent<MoveAction> = (
           }
           case "cruiser": {
             if (
-              unit.type !== "transportCopter" &&
-              unit.type !== "battleCopter"
+              unit.data.type !== "transportCopter" &&
+              unit.data.type !== "battleCopter"
             ) {
               throw new DispatchableError("Can't load non-copter in cruiser");
             }
@@ -121,7 +121,7 @@ export const moveActionToEvent: MainActionToEvent<MoveAction> = (
             break;
           }
           case "carrier": {
-            if (unitPropertiesMap[unit.type].facility !== "airport") {
+            if (unitPropertiesMap[unit.data.type].facility !== "airport") {
               throw new DispatchableError("Can't load non-land unit to lander");
             }
 

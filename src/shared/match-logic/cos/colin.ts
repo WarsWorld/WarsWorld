@@ -16,9 +16,8 @@ export const colin: COProperties = {
       name: "Gold Rush",
       description: "Funds are multiplied by 1.5x.",
       stars: 2,
-      instantEffect: ({ attackerData: currentPlayerData }) => {
-        currentPlayerData.player.data.funds =
-          currentPlayerData.player.data.funds * 1.5;
+      instantEffect: ({ player }) => {
+        player.data.funds = player.data.funds * 1.5;
       },
     },
     superCOPower: {

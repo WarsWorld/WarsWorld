@@ -22,13 +22,13 @@ export const unloadWaitActionToEvent: SubActionToEvent<UnloadWaitAction> = (
     throw new DispatchableError("No unit specified to unload");
   }
 
-  if (!("loadedUnit" in transportUnit)) {
+  if (!("loadedUnit" in transportUnit.data)) {
     throw new DispatchableError(
       "Trying to unload from a unit that can't load units"
     );
   }
 
-  if (transportUnit.loadedUnit === null) {
+  if (transportUnit.data.loadedUnit === null) {
     throw new DispatchableError(
       "Transport doesn't currently have a loaded unit"
     );
@@ -43,13 +43,13 @@ export const unloadWaitActionToEvent: SubActionToEvent<UnloadWaitAction> = (
 
   if (action.unloads.length === 1) {
     if (action.unloads[0].isSecondUnit) {
-      if (!("loadedUnit2" in transportUnit)) {
+      if (!("loadedUnit2" in transportUnit.data)) {
         throw new DispatchableError(
           "Trying to unload 2nd unit from a unit only carries 1 unit"
         );
       }
 
-      if (transportUnit.loadedUnit2 === null) {
+      if (transportUnit.data.loadedUnit2 === null) {
         throw new DispatchableError(
           "Transport doesn't currently have a 2nd loaded unit"
         );
@@ -58,7 +58,7 @@ export const unloadWaitActionToEvent: SubActionToEvent<UnloadWaitAction> = (
       if (
         match.getMovementCost(
           unloadPosition,
-          unitPropertiesMap[transportUnit.loadedUnit2.type].movementType
+          unitPropertiesMap[transportUnit.data.loadedUnit2.type].movementType
         ) === null
       ) {
         throw new DispatchableError("Cannot unload unit in desired position");
@@ -67,20 +67,20 @@ export const unloadWaitActionToEvent: SubActionToEvent<UnloadWaitAction> = (
       if (
         match.getMovementCost(
           unloadPosition,
-          unitPropertiesMap[transportUnit.loadedUnit.type].movementType
+          unitPropertiesMap[transportUnit.data.loadedUnit.type].movementType
         ) === null
       ) {
         throw new DispatchableError("Cannot unload unit in desired position");
       }
     }
   } else if (action.unloads.length === 2) {
-    if (!("loadedUnit2" in transportUnit)) {
+    if (!("loadedUnit2" in transportUnit.data)) {
       throw new DispatchableError(
         "Tried to unload 2 units, but only one can be put in a transport"
       );
     }
 
-    if (transportUnit.loadedUnit2 === null) {
+    if (transportUnit.data.loadedUnit2 === null) {
       throw new DispatchableError(
         "Transport doesn't currently have a 2nd loaded unit"
       );
@@ -114,7 +114,7 @@ export const unloadWaitActionToEvent: SubActionToEvent<UnloadWaitAction> = (
     if (
       match.getMovementCost(
         unloadPosition,
-        unitPropertiesMap[transportUnit.loadedUnit.type].movementType
+        unitPropertiesMap[transportUnit.data.loadedUnit.type].movementType
       ) === null
     ) {
       throw new DispatchableError("Cannot unload unit in desired position");
@@ -123,7 +123,7 @@ export const unloadWaitActionToEvent: SubActionToEvent<UnloadWaitAction> = (
     if (
       match.getMovementCost(
         unloadPosition,
-        unitPropertiesMap[transportUnit.loadedUnit2.type].movementType
+        unitPropertiesMap[transportUnit.data.loadedUnit2.type].movementType
       ) === null
     ) {
       throw new DispatchableError("Cannot unload unit in desired position");
@@ -144,13 +144,13 @@ export const unloadNoWaitActionToEvent: MainActionToEvent<
     .getUnits()
     .getUnitOrThrow(action.transportPosition);
 
-  if (!("loadedUnit" in transportUnit)) {
+  if (!("loadedUnit" in transportUnit.data)) {
     throw new DispatchableError(
       "Trying to unload from a unit that can't load units"
     );
   }
 
-  if (transportUnit.loadedUnit === null) {
+  if (transportUnit.data.loadedUnit === null) {
     throw new DispatchableError(
       "Transport doesn't currently have a loaded unit"
     );
@@ -164,13 +164,13 @@ export const unloadNoWaitActionToEvent: MainActionToEvent<
   match.map.throwIfOutOfBounds(unloadPosition);
 
   if (action.unloads.isSecondUnit) {
-    if (!("loadedUnit2" in transportUnit)) {
+    if (!("loadedUnit2" in transportUnit.data)) {
       throw new DispatchableError(
         "Trying to unload 2nd unit from a unit only carries 1 unit"
       );
     }
 
-    if (transportUnit.loadedUnit2 === null) {
+    if (transportUnit.data.loadedUnit2 === null) {
       throw new DispatchableError(
         "Transport doesn't currently have a 2nd loaded unit"
       );
@@ -179,7 +179,7 @@ export const unloadNoWaitActionToEvent: MainActionToEvent<
     if (
       match.getMovementCost(
         unloadPosition,
-        unitPropertiesMap[transportUnit.loadedUnit2.type].movementType
+        unitPropertiesMap[transportUnit.data.loadedUnit2.type].movementType
       ) === null
     ) {
       throw new DispatchableError("Cannot unload unit in desired position");
@@ -188,7 +188,7 @@ export const unloadNoWaitActionToEvent: MainActionToEvent<
     if (
       match.getMovementCost(
         unloadPosition,
-        unitPropertiesMap[transportUnit.loadedUnit.type].movementType
+        unitPropertiesMap[transportUnit.data.loadedUnit.type].movementType
       ) === null
     ) {
       throw new DispatchableError("Cannot unload unit in desired position");

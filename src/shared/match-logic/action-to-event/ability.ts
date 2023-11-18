@@ -11,12 +11,12 @@ export const abilityActionToEvent: SubActionToEvent<AbilityAction> = (
   const player = match.players.getCurrentTurnPlayer();
   const unit = player.getUnits().getUnitOrThrow(fromPosition);
 
-  switch (unit.type) {
+  switch (unit.data.type) {
     case "infantry":
     case "mech": {
       const tile = match.getTile(fromPosition);
 
-      if (!("playerSlot" in tile) || tile.playerSlot === unit.playerSlot) {
+      if (!("playerSlot" in tile) || tile.playerSlot === unit.data.playerSlot) {
         throw new DispatchableError("This tile can not be captured");
       }
 

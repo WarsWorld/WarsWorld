@@ -31,13 +31,13 @@ export const drake: COProperties = {
       description:
         "All enemy units lose 1 HP (to a minimum of 0.1HP) and half their fuel.",
       stars: 4,
-      instantEffect({ attackerData: currentPlayerData }) {
-        const enemyUnits = currentPlayerData.player.getEnemyUnits();
+      instantEffect({ player }) {
+        const enemyUnits = player.getEnemyUnits();
 
         enemyUnits.damageAllUntil1HP(10);
 
         enemyUnits.data.forEach((unit) => {
-          unit.stats.fuel = Math.floor(unit.stats.fuel / 2); // half fuel till 0 and round down
+          unit.data.stats.fuel = Math.floor(unit.data.stats.fuel / 2); // half fuel till 0 and round down
         });
       },
     },
@@ -46,17 +46,17 @@ export const drake: COProperties = {
       description:
         "All enemy units lose 2 HP (to a minimum of 0.1HP) and half their fuel. Weather changes to Rain for 1 day.",
       stars: 7,
-      instantEffect({ matchState, attackerData: currentPlayerData }) {
-        const enemyUnits = currentPlayerData.player.getEnemyUnits();
+      instantEffect({ match, player }) {
+        const enemyUnits = player.getEnemyUnits();
 
         enemyUnits.damageAllUntil1HP(20);
 
         enemyUnits.data.forEach((unit) => {
-          unit.stats.fuel = Math.floor(unit.stats.fuel / 2); // half fuel till 0 and round down
+          unit.data.stats.fuel = Math.floor(unit.data.stats.fuel / 2); // half fuel till 0 and round down
         });
 
-        matchState.currentWeather = "rain";
-        matchState.playerToRemoveWeatherEffect = currentPlayerData.player;
+        match.currentWeather = "rain";
+        match.playerToRemoveWeatherEffect = player;
       },
     },
   },

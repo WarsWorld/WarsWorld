@@ -14,9 +14,9 @@ export const hawke: COProperties = {
       stars: 5,
       description:
         "All units gain +1HP, and all enemy units lose -1HP (to a minimum of 0.1HP).",
-      instantEffect({ attackerData: currentPlayerData }) {
-        currentPlayerData.player.getUnits().healAll(10);
-        currentPlayerData.player.getEnemyUnits().damageAllUntil1HP(10);
+      instantEffect({ player }) {
+        player.getUnits().healAll(10);
+        player.getEnemyUnits().damageAllUntil1HP(10);
       },
     },
     superCOPower: {
@@ -24,9 +24,9 @@ export const hawke: COProperties = {
       stars: 9,
       description:
         "All units gain +2HP, and all enemy units lose -2HP (to a minimum of 0.1HP).",
-      instantEffect({ attackerData: currentPlayerData }) {
-        currentPlayerData.player.getUnits().healAll(20);
-        currentPlayerData.player.getEnemyUnits().damageAllUntil1HP(20);
+      instantEffect({ player }) {
+        player.getUnits().healAll(20);
+        player.getEnemyUnits().damageAllUntil1HP(20);
       },
     },
   },

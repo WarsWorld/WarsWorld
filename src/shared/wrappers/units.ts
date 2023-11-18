@@ -1,13 +1,14 @@
 import type { PlayerSlot } from "shared/schemas/player-slot";
+import { isSamePosition, type Position } from "shared/schemas/position";
+import { UnitWrapper } from "./unit";
 import type { WWUnit } from "shared/schemas/unit";
-import { type Position, isSamePosition } from "shared/schemas/position";
-import { getDistance } from "shared/match-logic/positions";
+import type { MatchWrapper } from "./match";
 
 export class UnitsWrapper {
-  constructor(public data: WWUnit[]) {}
+  constructor(public data: UnitWrapper[]) {}
 
   getUnit(position: Position) {
-    return this.data.find((u) => isSamePosition(u.position, position));
+    return this.data.find((u) => isSamePosition(u.data.position, position));
   }
 
   getUnitOrThrow(position: Position) {
@@ -24,15 +25,13 @@ export class UnitsWrapper {
     return this.getUnit(position) !== undefined;
   }
 
-  removeUnit(unit: WWUnit) {
-    this.data = this.data.filter(
-      (u) => !isSamePosition(u.position, unit.position)
-    );
+  removeUnit(unit: UnitWrapper) {
+    this.data = this.data.filter((u) => u.isAtPosition(unit.data.position));
   }
 
   getPlayerUnits(playerSlot: PlayerSlot) {
     return new UnitsWrapper(
-      this.data.filter((u) => u.playerSlot === playerSlot)
+      this.data.filter((u) => u.data.playerSlot === playerSlot)
     );
   }
 
@@ -41,24 +40,18 @@ export class UnitsWrapper {
    */
   getEnemyUnits(playerSlot: PlayerSlot) {
     return new UnitsWrapper(
-      this.data.filter((u) => u.playerSlot !== playerSlot)
+      this.data.filter((u) => u.data.playerSlot !== playerSlot)
     );
   }
 
   healAll(healingAmount: number) {
     this.data.forEach((unit) => {
-      unit.stats.hp = Math.min(100, unit.stats.hp + healingAmount);
+      unit.data.stats.hp = Math.min(100, unit.data.stats.hp + healingAmount);
     });
-  }
-
-  private damageUntil1HP(unit: WWUnit, damageAmount: number) {
-    unit.stats.hp = Math.max(1, unit.stats.hp - damageAmount);
   }
 
   damageAllUntil1HP(damageAmount: number) {
-    this.data.forEach((unit) => {
-      this.damageUntil1HP(unit, damageAmount);
-    });
+    this.data.forEach((unit) => unit.damageUntil1HP(damageAmount));
   }
 
   damageUntil1HPInRadius({
@@ -71,13 +64,11 @@ export class UnitsWrapper {
     epicenter: Position;
   }) {
     this.data
-      .filter((unit) => getDistance(unit.position, epicenter) <= radius)
-      .forEach((unit) => {
-        this.damageUntil1HP(unit, damageAmount);
-      });
+      .filter((unit) => unit.getDistance(epicenter) <= radius)
+      .forEach((unit) => unit.damageUntil1HP(damageAmount));
   }
 
-  addUnit(unit: WWUnit) {
-    this.data.push(unit);
+  addUnwrappedUnit(unit: WWUnit, match: MatchWrapper) {
+    this.data.push(new UnitWrapper(unit, match));
   }
 }

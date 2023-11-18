@@ -1,14 +1,16 @@
-import type { Position } from "shared/schemas/position";
+import { isSamePosition, type Position } from "shared/schemas/position";
 import { unitPropertiesMap } from "shared/match-logic/buildable-unit";
 import { COPropertiesMap } from "shared/match-logic/co";
 import type {
   COHookAllowReturnUndefined,
   COHookPlayerProps,
   COHookWithDefenderAllowReturnUndefined,
+  COHooks,
 } from "shared/match-logic/co-hooks";
 import type { PlayerInMatch } from "shared/types/server-match-state";
 import type { MatchWrapper } from "./match";
 import type { WWUnit } from "shared/schemas/unit";
+import { isHiddenTile } from "shared/match-logic/tiles";
 
 export class PlayerInMatchWrapper {
   constructor(public data: PlayerInMatch, public match: MatchWrapper) {}
@@ -18,10 +20,10 @@ export class PlayerInMatchWrapper {
 
     return {
       player: this,
-      unitFacility: unitPropertiesMap[attackingUnit.type].facility,
+      unitFacility: unitPropertiesMap[attackingUnit.data.type].facility,
       tileType:
         this.match.map.data.tiles[unitPosition[0]][unitPosition[1]].type,
-      unitType: attackingUnit.type,
+      unitType: attackingUnit.data.type,
     };
   }
 
@@ -90,6 +92,7 @@ export class PlayerInMatchWrapper {
       onFuelDrain: withDefaults(COHooks.onFuelDrain),
       onFuelCost: withDefaults(COHooks.onFuelCost),
       onCapture: withDefaults(COHooks.onCapture),
+      onVision: withDefaults(COHooks.onVision),
     };
   }
 
@@ -144,5 +147,47 @@ export class PlayerInMatchWrapper {
         return player;
       }
     }
+  }
+
+  getVision(): Position[] {
+    const playerVisionPositions: Position[] = [];
+
+    /** a bit ugly and idk if this can be made faster */
+    for (const unit of this.getUnits().data) {
+      for (const unitVisionPosition of unit.getVision()) {
+        for (const existingVisionPosition of playerVisionPositions) {
+          if (!isSamePosition(existingVisionPosition, unitVisionPosition)) {
+            playerVisionPositions.push(unitVisionPosition);
+          }
+        }
+      }
+    }
+
+    return playerVisionPositions;
+  }
+
+  /**
+   * This might be suboptimal - especially considering clear-weather matches,
+   * but it should cover discovering hidden units as well as fog of war
+   * without too much complexity.
+   */
+  getEnemyUnitsInVision() {
+    const vision = this.match.rules.fogOfWar ? this.getVision() : null;
+
+    return this.getEnemyUnits().data.filter((enemy) => {
+      if (enemy.isHiddenFromPlayerThroughHiddenPropertyOrTile(this)) {
+        return false;
+      }
+
+      if (vision === null) {
+        return true;
+      }
+
+      return vision.some((p) => enemy.isAtPosition(p));
+    });
+  }
+
+  gainFunds() {
+    // TODO get all owned properties + check if high funds mode + ?
   }
 }

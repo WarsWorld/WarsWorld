@@ -66,13 +66,9 @@ export interface AttackEvent extends AttackAction {
   attackerHP?: number;
 }
 
-export type COPowerEvent = COPowerAction & {
-  rngRoll?: number;
-};
+export type COPowerEvent = COPowerAction;
 
-export type SuperCOPowerEvent = SuperCOPowerAction & {
-  rngRoll?: number;
-};
+export type SuperCOPowerEvent = SuperCOPowerAction;
 
 type WithPlayer = {
   playerId: Player["id"];
