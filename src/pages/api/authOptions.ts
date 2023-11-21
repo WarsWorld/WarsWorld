@@ -59,17 +59,16 @@ const providers: Provider[] = [
         return null;
       }
 
-      const loginParse = loginSchema.safeParse({
-        username: credentials.name,
-        password: credentials.password,
-      });
+      console.log(credentials);
+
+      const loginParse = loginSchema.safeParse(credentials);
 
       if (!loginParse.success) {
         return null;
       }
 
       const dbUser = await prisma.user.findFirst({
-        where: { name: loginParse.data.username },
+        where: { name: loginParse.data.name },
       });
 
       if (!dbUser || !dbUser.password) {

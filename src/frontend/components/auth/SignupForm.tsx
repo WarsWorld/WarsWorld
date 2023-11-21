@@ -50,7 +50,7 @@ export default function SignupForm({
     try {
       await registerAsync({
         email: signupData.email,
-        username: signupData.user,
+        name: signupData.user,
         password: signupData.password,
       });
     } catch (e) {

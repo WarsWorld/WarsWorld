@@ -62,7 +62,7 @@ export const userRouter = router({
       // Write user to the database
       const user = await prisma.user.create({
         data: {
-          name: input.username,
+          name: input.name,
           password: hashedPassword,
           email: input.email,
         },
@@ -70,7 +70,7 @@ export const userRouter = router({
 
       await prisma.player.create({
         data: {
-          name: input.username,
+          name: input.name,
           user: {
             connect: {
               id: user.id,
