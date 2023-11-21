@@ -59,8 +59,6 @@ const providers: Provider[] = [
         return null;
       }
 
-      console.log(credentials);
-
       const loginParse = loginSchema.safeParse(credentials);
 
       if (!loginParse.success) {

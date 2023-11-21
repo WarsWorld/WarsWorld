@@ -23,9 +23,8 @@ export default function SignupForm({
   });
 
   const doPasswordsMatch =
-    signupData.password === signupData.confirmPassword ||
-    signupData.password === "" ||
-    signupData.confirmPassword === "";
+    signupData.password === signupData.confirmPassword &&
+    signupData.password.trim() !== "";
 
   const {
     mutateAsync: registerAsync,
@@ -43,8 +42,8 @@ export default function SignupForm({
   const onSubmitSignupForm = async (event: FormEvent) => {
     event.preventDefault();
 
-    if (signupData.confirmPassword !== signupData.password) {
-      throw "Passwords do not match";
+    if (!doPasswordsMatch) {
+      return;
     }
 
     try {
@@ -62,14 +61,15 @@ export default function SignupForm({
   };
 
   const defineErrorMessage = () => {
-    if (!doPasswordsMatch) return "Passwords do not match";
     if (error?.data?.zodError) return "Data validation error";
     if (error) return error.message;
+    if (!doPasswordsMatch) return "Passwords do not match";
   };
 
   return (
     <>
-      {(!doPasswordsMatch || isError) && (
+      {((!doPasswordsMatch && signupData.confirmPassword.trim() !== "") ||
+        isError) && (
         <ErrorSuccessBlock
           isError
           title={!doPasswordsMatch ? "Warning" : "Couldn't sign up"}
