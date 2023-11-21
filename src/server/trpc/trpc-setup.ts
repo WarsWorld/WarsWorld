@@ -1,4 +1,3 @@
-import { TRPCError } from "@trpc/server";
 import { authMiddleware } from "./middleware/auth";
 import { matchMiddleware, withMatchIdSchema } from "./middleware/match";
 import { playerMiddleware, withPlayerIdSchema } from "./middleware/player";

@@ -1,22 +1,22 @@
-import type { Match, Player } from "@prisma/client";
+import type { Player } from "@prisma/client";
+import type { WithMatchId } from "server/trpc/middleware/match";
+import type { Weather } from "shared/match-logic/tiles";
 import type {
   AbilityAction,
   AttackAction,
   BuildAction,
   COPowerAction,
   LaunchMissileAction,
+  MoveAction,
   PassTurnAction,
   RepairAction,
-  SuperCOPowerAction,
-  UnloadWaitAction,
   UnloadNoWaitAction,
+  UnloadWaitAction,
   WaitAction,
-  MoveAction,
 } from "shared/schemas/action";
+import type { Army } from "shared/schemas/army";
 import type { CO } from "shared/schemas/co";
 import type { WWUnit } from "shared/schemas/unit";
-import type { Weather } from "shared/match-logic/tiles";
-import type { Army } from "shared/schemas/army";
 
 // TODO: Maybe add who's player's turn it is or which army starts?
 export type MatchStartEvent = {
@@ -26,28 +26,14 @@ export type MatchStartEvent = {
 
 export type MatchEndEvent = {
   type: "match-end";
-  condition: string;
   winningTeamPlayerIds: string[] | null; // null = draw
   // TODO this type can probably be made a lot more fine-grained later on
 };
 
 export interface MoveEvent extends Omit<MoveAction, "subAction"> {
   trap: boolean;
-  subEvent: WWEvent;
+  subEvent: SubEvent;
 }
-
-export type InvalidActionEvent = {
-  type: "invalid-action";
-  reason: string;
-};
-
-/*export interface UnloadWaitEvent extends UnloadWaitAction {
-  unloadedUnit: WWUnit;
-};
-
-export interface UnloadNoWaitEvent extends UnloadNoWaitAction {
-  unloadedUnit: WWUnit;
-}*/ //why is unloaded unit specified?
 
 export interface AttackEvent extends AttackAction {
   /**
@@ -68,37 +54,13 @@ export interface AttackEvent extends AttackAction {
 
 export type COPowerEvent = COPowerAction;
 
-export type SuperCOPowerEvent = SuperCOPowerAction;
-
 type WithPlayer = {
   playerId: Player["id"];
 };
 
-export type PlayerJoinedEvent = WithPlayer & {
-  type: "player-joined";
-};
-
-export type PlayerLeftEvent = WithPlayer & {
-  type: "player-left";
-};
-
-export type PlayerChangedReadyStatusEvent = WithPlayer & {
-  type: "player-changed-ready-status";
-  ready: boolean;
-};
-
-export type PlayerPickedCOEvent = WithPlayer & {
-  type: "player-picked-co";
-  co: CO;
-};
-
-export type PlayerPickedArmyEvent = WithPlayer & {
-  type: "player-picked-army";
-  army: Army;
-};
-
 export type PlayerEliminated = WithPlayer & {
   type: "player-eliminated";
+  condition: string;
 };
 
 // TODO maybe add the turn/day number
@@ -116,28 +78,56 @@ export type WaitEvent = WaitAction;
 export type UnloadNoWaitEvent = UnloadNoWaitAction;
 export type UnloadWaitEvent = UnloadWaitAction;
 
-export type WWEvent =
+export type MainEvent =
   | MatchStartEvent
   | MoveEvent
   | UnloadNoWaitEvent
-  | UnloadWaitEvent
-  | AttackEvent
-  | PlayerJoinedEvent
-  | PlayerLeftEvent
-  | PlayerChangedReadyStatusEvent
-  | PlayerPickedCOEvent
-  | PlayerPickedArmyEvent
   | PlayerEliminated
   | COPowerEvent
-  | SuperCOPowerEvent
   | PassTurnEvent
-  | AbilityEvent
   | BuildEvent
-  | LaunchMissileEvent
-  | RepairEvent
-  | WaitEvent;
+  | MatchEndEvent;
 
-export type EmittableEvent = WWEvent & {
-  matchId: Match["id"];
-  discoveredUnits?: WWUnit[];
-};
+export type SubEvent =
+  | AbilityEvent
+  | WaitEvent
+  | RepairEvent
+  | LaunchMissileEvent
+  | UnloadWaitEvent
+  | AttackEvent;
+
+/**
+ * TODO to handle non-stored things like player-join etc.
+ * maybe just make a different kind of "event" called "change" or something?
+ * or "loggedevent" vs. "nonloggedevent" ? probably way too verbose.
+ */
+
+export type EmittableEvent = MainEvent &
+  WithMatchId & {
+    discoveredUnits?: WWUnit[];
+  };
+
+export type NonStoredEvent = WithPlayer &
+  WithMatchId &
+  (
+    | {
+        type: "player-joined";
+      }
+    | {
+        type: "player-picked-co";
+        co: CO;
+      }
+    | {
+        type: "player-picked-army";
+        army: Army;
+      }
+    | {
+        type: "player-left";
+      }
+    | {
+        type: "player-changed-ready-status";
+        ready: boolean;
+      }
+  );
+
+export type Emittable = EmittableEvent | NonStoredEvent;

@@ -1,5 +1,4 @@
 import type { Match, Player, WWMap } from "@prisma/client";
-import { LeagueType } from "@prisma/client";
 import { prisma } from "server/prisma/prisma-client";
 import { MapWrapper } from "shared/wrappers/map";
 import { MatchWrapper } from "shared/wrappers/match";
@@ -12,9 +11,8 @@ class MatchStore {
   createMatchAndStore(rawMatch: Match, rawMap: WWMap) {
     const matchWrapper = new MatchWrapper(
       rawMatch.id,
-      {
-        leagueType: LeagueType.standard,
-      },
+      rawMatch.leagueType,
+      rawMatch.rules,
       rawMatch.status,
       new MapWrapper(rawMap),
       new UnitsWrapper([]),
@@ -44,7 +42,9 @@ class MatchStore {
 
     rawMatches.forEach((rawMatch) => {
       const match = this.createMatchAndStore(rawMatch, rawMatch.map);
-      rawMatch.Event.forEach((dbEvent) => match.applyEvent(dbEvent.content));
+      rawMatch.Event.forEach((dbEvent) =>
+        match.applyMainEvent(dbEvent.content)
+      );
     });
 
     console.log("Rebuilding server state done.");

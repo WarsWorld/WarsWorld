@@ -1,7 +1,7 @@
+import { unitPropertiesMap } from "shared/match-logic/buildable-unit";
 import type { BuildAction } from "shared/schemas/action";
 import type { PlayerSlot } from "shared/schemas/player-slot";
 import type { WWUnit } from "shared/schemas/unit";
-import { unitPropertiesMap } from "./buildable-unit";
 
 export const createUnitFromBuildAction = (
   event: BuildAction,

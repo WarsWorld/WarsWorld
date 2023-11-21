@@ -117,6 +117,9 @@ model WWMap {
   matches         Match[]
   createdAt       DateTime @default(now())
 
+  // TODO maps should have different sets of captureLimits and bannedUnitTypes
+  // per league type.
+
   @@map("Map")
 }
 
@@ -171,9 +174,12 @@ model MMR {
 }
 
 model Match {
-  id         String      @id @default(cuid())
+  id         String     @id @default(cuid())
   leagueType LeagueType
-  status     MatchStatus
+
+  /// [PrismaMatchRules]
+  rules  Json
+  status MatchStatus
 
   map   WWMap  @relation(fields: [mapId], references: [id])
   mapId String

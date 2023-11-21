@@ -9,6 +9,7 @@ import {
 import type { WWUnit } from "shared/schemas/unit";
 import type { MatchWrapper } from "./match";
 import type { PlayerInMatchWrapper } from "./player-in-match";
+import { getVisualHPfromHP } from "shared/match-logic/calculate-damage";
 
 export class UnitWrapper {
   public player: PlayerInMatchWrapper;
@@ -25,11 +26,6 @@ export class UnitWrapper {
     return getDistance(this.data.position, position);
   }
 
-  /** TODO might not be used */
-  isNextTo(unit: UnitWrapper) {
-    return getDistance(this.data.position, unit.data.position) === 1;
-  }
-
   isAtPosition(position: Position) {
     return isSamePosition(this.data.position, position);
   }
@@ -42,45 +38,66 @@ export class UnitWrapper {
     );
   }
 
-  /** ignores forests/reefs because they get checked separately */
-  getVision(): Position[] {
-    const baseVision = unitPropertiesMap[this.data.type].vision;
-
-    /* TODO rain! */
-    const visionRange = this.player
-      .getCOHooksWithUnit(this.data.position)
-      .onVision(baseVision);
-
-    const visionPositions: Position[] = [];
-    const [x, y] = this.data.position;
-
-    for (let i = 1; i <= visionRange; i++) {
-      visionPositions.push([x + i, y], [x - i, y], [x, y + 1], [x, y - 1]);
-    }
-
-    return visionPositions.filter((p) => !this.match.map.isOutOfBounds(p));
-  }
-
   /** sub, stealth */
-  private isHiddenThroughHiddenProperty() {
+  isHiddenThroughHiddenProperty() {
     return "hidden" in this.data && this.data.hidden;
   }
 
-  private isOnHiddenTile() {
+  isOnHiddenTile() {
     return isHiddenTile(this.match.getTileOrThrow(this.data.position));
   }
 
-  isHiddenFromPlayerThroughHiddenPropertyOrTile(player: PlayerInMatchWrapper) {
-    if (this.isHiddenThroughHiddenProperty() || this.isOnHiddenTile()) {
-      return this.getNeighbouringUnits().some(
-        (u) => u.data.playerSlot === player.data.slot
-      );
-    }
-
-    return false;
+  getTileOrThrow() {
+    return this.match.getTileOrThrow(this.data.position);
   }
 
-  getTile() {
-    return this.match.getTileOrThrow(this.data.position);
+  getMovementPoints() {
+    const unitProperties = unitPropertiesMap[this.data.type];
+    const baseMovement = unitProperties.moveRange;
+
+    const movement = this.player
+      .getCOHooksWithUnit(this.data.position)
+      .onMovementRange(baseMovement);
+
+    return Math.min(
+      movement,
+      this.data.stats.fuel
+    ); /** TODO checking fuel twice? */
+  }
+
+  getCost() {
+    /** TODO we really need a get-co-hooks thing that doesn't need a position! */
+    const COHooks = this.player.getCOHooksWithUnit([0, 0]);
+    const { cost: baseCost } = unitPropertiesMap[this.data.type];
+    return COHooks.onBuildCost(baseCost);
+  }
+
+  getPowerMeterChangesWhenAttacking(
+    defender: this,
+    attackerHPAfterAttack: number | undefined,
+    defenderHPAfterAttack: number
+  ) {
+    const previousAttackerHP = this.data.stats.hp;
+    const previousDefenderHP = defender.data.stats.hp;
+
+    const attackerUnitCost = this.getCost();
+    const defenderUnitCost = defender.getCost();
+
+    const lostAttackerVisualHP =
+      getVisualHPfromHP(previousAttackerHP) -
+      getVisualHPfromHP(attackerHPAfterAttack ?? previousAttackerHP);
+
+    const lostDefenderVisualHP =
+      getVisualHPfromHP(previousDefenderHP) -
+      getVisualHPfromHP(defenderHPAfterAttack);
+
+    return {
+      attackingPlayerGain:
+        lostAttackerVisualHP * attackerUnitCost +
+        lostDefenderVisualHP * defenderUnitCost * 0.5,
+      defendingPlayerGain:
+        lostDefenderVisualHP * defenderUnitCost +
+        lostAttackerVisualHP * attackerUnitCost * 0.5,
+    };
   }
 }

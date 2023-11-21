@@ -28,7 +28,7 @@ const launchMissileActionSchema = z.object({
 
 //AW2 behaviour, sub-action (comes after a move action)
 const unloadWaitActionSchema = z.object({
-  type: z.literal("unload1"),
+  type: z.literal("unloadWait"),
   unloads: z
     .array(
       // 1 allowed by default, 2 for DoR move+unload
@@ -43,7 +43,7 @@ const unloadWaitActionSchema = z.object({
 
 //AWBW behaviour, main action (needs position of transport, cause it's a main action)
 const unloadNoWaitActionSchema = z.object({
-  type: z.literal("unload2"),
+  type: z.literal("unloadNoWait"),
   transportPosition: positionSchema,
   unloads: z.object({
     isSecondUnit: z.boolean(), //if the unloaded unit is "loadedUnit2"
@@ -63,10 +63,7 @@ const repairActionSchema = z.object({
 
 const coPowerActionSchema = z.object({
   type: z.literal("coPower"),
-});
-
-const superCOPowerActionSchema = z.object({
-  type: z.literal("superCOPower"),
+  isSuper: z.boolean(),
 });
 
 const passTurnActionSchema = z.object({
@@ -96,7 +93,6 @@ export const mainActionSchema = z.discriminatedUnion("type", [
   // only as a subaction of move - Function
   unloadNoWaitActionSchema,
   coPowerActionSchema,
-  superCOPowerActionSchema,
   passTurnActionSchema,
 ]);
 
@@ -115,5 +111,4 @@ export type UnloadNoWaitAction = z.infer<typeof unloadNoWaitActionSchema>;
 export type AttackAction = z.infer<typeof attackActionSchema>;
 export type RepairAction = z.infer<typeof repairActionSchema>;
 export type COPowerAction = z.infer<typeof coPowerActionSchema>;
-export type SuperCOPowerAction = z.infer<typeof superCOPowerActionSchema>;
 export type PassTurnAction = z.infer<typeof passTurnActionSchema>;

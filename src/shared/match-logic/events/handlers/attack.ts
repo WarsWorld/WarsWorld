@@ -1,8 +1,11 @@
-import type { SubActionToEvent } from "server/routers/action";
 import { DispatchableError } from "shared/DispatchedError";
 import type { AttackAction } from "shared/schemas/action";
-import { unitPropertiesMap } from "../buildable-unit";
-import { calculateDamage } from "../calculate-damage";
+import { unitPropertiesMap } from "../../buildable-unit";
+import { calculateDamage } from "../../calculate-damage";
+import type { MatchWrapper } from "shared/wrappers/match";
+import type { Position } from "shared/schemas/position";
+import type { AttackEvent } from "shared/types/events";
+import type { SubActionToEvent } from "../handler-types";
 
 export const attackActionToEvent: SubActionToEvent<AttackAction> = (
   match,
@@ -82,4 +85,44 @@ export const attackActionToEvent: SubActionToEvent<AttackAction> = (
     ...action,
     defenderHP: defender.data.stats.hp - damageAttackDone,
   };
+};
+
+export const applyAttackEvent = (
+  match: MatchWrapper,
+  event: AttackEvent,
+  position: Position
+) => {
+  const attacker = match.units.getUnitOrThrow(position);
+  const defender = match.units.getUnitOrThrow(event.defenderPosition);
+
+  const attackingPlayer = match.players.getBySlotOrThrow(
+    attacker.data.playerSlot
+  );
+  const defendingPlayer = match.players.getBySlotOrThrow(
+    defender.data.playerSlot
+  );
+
+  const { attackingPlayerGain, defendingPlayerGain } =
+    attacker.getPowerMeterChangesWhenAttacking(
+      defender,
+      event.attackerHP,
+      event.defenderHP
+    );
+
+  attackingPlayer.increasePowerMeter(attackingPlayerGain);
+  defendingPlayer.increasePowerMeter(defendingPlayerGain);
+
+  if (event.defenderHP === 0) {
+    match.units.removeUnit(defender);
+  } else {
+    defender.data.stats.hp = event.defenderHP;
+  }
+
+  if (event.attackerHP !== undefined) {
+    if (event.attackerHP === 0) {
+      match.units.removeUnit(attacker);
+    } else {
+      attacker.data.stats.hp = event.attackerHP;
+    }
+  }
 };

@@ -1,8 +1,5 @@
-import type { PlayerSlot } from "shared/schemas/player-slot";
 import { isSamePosition, type Position } from "shared/schemas/position";
-import { UnitWrapper } from "./unit";
-import type { WWUnit } from "shared/schemas/unit";
-import type { MatchWrapper } from "./match";
+import type { UnitWrapper } from "./unit";
 
 export class UnitsWrapper {
   constructor(public data: UnitWrapper[]) {}
@@ -27,21 +24,7 @@ export class UnitsWrapper {
 
   removeUnit(unit: UnitWrapper) {
     this.data = this.data.filter((u) => u.isAtPosition(unit.data.position));
-  }
-
-  getPlayerUnits(playerSlot: PlayerSlot) {
-    return new UnitsWrapper(
-      this.data.filter((u) => u.data.playerSlot === playerSlot)
-    );
-  }
-
-  /**
-   * TODO will currently affect allies!
-   */
-  getEnemyUnits(playerSlot: PlayerSlot) {
-    return new UnitsWrapper(
-      this.data.filter((u) => u.data.playerSlot !== playerSlot)
-    );
+    /* TODO check if player is eliminated, then create and send appropriate event */
   }
 
   healAll(healingAmount: number) {
@@ -66,9 +49,5 @@ export class UnitsWrapper {
     this.data
       .filter((unit) => unit.getDistance(epicenter) <= radius)
       .forEach((unit) => unit.damageUntil1HP(damageAmount));
-  }
-
-  addUnwrappedUnit(unit: WWUnit, match: MatchWrapper) {
-    this.data.push(new UnitWrapper(unit, match));
   }
 }

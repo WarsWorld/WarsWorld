@@ -15,6 +15,7 @@ export default function YourMatches() {
         enabled: currentPlayer !== undefined,
       }
     );
+
   const { data: allMatchesQuery, refetch: refecthAllMatches } =
     trpc.match.getAll.useQuery();
 

@@ -1,5 +1,4 @@
 import type { LeagueType, Match, MatchStatus, Player } from "@prisma/client";
-import { applyMainEventToMatch } from "shared/match-logic/apply-event-to-match";
 import type { CO } from "shared/schemas/co";
 import type { PlayerSlot } from "shared/schemas/player-slot";
 import type { Position } from "shared/schemas/position";
@@ -12,7 +11,6 @@ import type {
 import { getChangeableTilesFromMap } from "shared/match-logic/get-changeable-tile-from-map";
 import type { Weather } from "shared/match-logic/tiles";
 import { getBaseMovementCost } from "shared/match-logic/tiles";
-import type { WWEvent } from "shared/types/events";
 import type {
   ChangeableTile,
   PlayerInMatch,
@@ -24,20 +22,20 @@ import type { UnitsWrapper } from "./units";
 import type { Tile } from "shared/schemas/tile";
 import { UnitWrapper } from "./unit";
 import type { WWUnit } from "shared/schemas/unit";
+import type { MatchRules } from "shared/schemas/match-rules";
+import type { MainEvent } from "shared/types/events";
+import { applyMainEventToMatch } from "shared/match-logic/events/apply-event-to-match";
 
 /** TODO: Add favorites, possibly spectators, also a timer */
 export class MatchWrapper {
-  public playerToRemoveWeatherEffect?: PlayerInMatchWrapper;
+  public playerToRemoveWeatherEffect: PlayerInMatchWrapper | null = null;
   public changeableTiles: ChangeableTile[];
   public players = new PlayersWrapper([]);
 
   constructor(
     public id: Match["id"],
-    public rules: {
-      fogOfWar?: boolean;
-      fundsMultiplier?: number;
-      leagueType: LeagueType;
-    },
+    public leagueType: LeagueType,
+    public rules: MatchRules,
     public status: MatchStatus,
     public map: MapWrapper,
     public units: UnitsWrapper,
@@ -51,7 +49,7 @@ export class MatchWrapper {
     this.players.data.push(new PlayerInMatchWrapper(player, this));
   }
 
-  applyEvent(event: WWEvent) {
+  applyMainEvent(event: MainEvent) {
     applyMainEventToMatch(this, event);
   }
 
@@ -114,6 +112,7 @@ export class MatchWrapper {
           ready: false,
           co,
           funds: 0,
+          timesPowerUsed: 0,
           powerMeter: 0,
           army: "orange-star",
           COPowerState: "no-power",

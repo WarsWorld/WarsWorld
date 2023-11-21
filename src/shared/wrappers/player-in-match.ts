@@ -1,16 +1,17 @@
-import { isSamePosition, type Position } from "shared/schemas/position";
 import { unitPropertiesMap } from "shared/match-logic/buildable-unit";
 import { COPropertiesMap } from "shared/match-logic/co";
 import type {
   COHookAllowReturnUndefined,
   COHookPlayerProps,
   COHookWithDefenderAllowReturnUndefined,
-  COHooks,
 } from "shared/match-logic/co-hooks";
+import { type Position } from "shared/schemas/position";
+import type { UnitType } from "shared/schemas/unit";
 import type { PlayerInMatch } from "shared/types/server-match-state";
 import type { MatchWrapper } from "./match";
-import type { WWUnit } from "shared/schemas/unit";
-import { isHiddenTile } from "shared/match-logic/tiles";
+import type { UnitWrapper } from "./unit";
+import { Vision } from "./vision";
+import { UnitsWrapper } from "./units";
 
 export class PlayerInMatchWrapper {
   constructor(public data: PlayerInMatch, public match: MatchWrapper) {}
@@ -38,14 +39,18 @@ export class PlayerInMatchWrapper {
   }
 
   getUnits() {
-    return this.match.units.getPlayerUnits(this.data.slot);
+    return new UnitsWrapper(
+      this.match.units.data.filter((u) => u.data.playerSlot === this.data.slot)
+    );
   }
 
   /**
-   * TODO Teams!
+   * TODO Teams/Allies!
    */
   getEnemyUnits() {
-    return this.match.units.getEnemyUnits(this.data.slot);
+    return new UnitsWrapper(
+      this.match.units.data.filter((u) => u.data.playerSlot !== this.data.slot)
+    );
   }
 
   isTilePassable(position: Position) {
@@ -121,18 +126,11 @@ export class PlayerInMatchWrapper {
     };
   }
 
-  getMovementPoints(unit: WWUnit) {
-    const unitProperties = unitPropertiesMap[unit.type];
-    const baseMovement = unitProperties.moveRange;
-
-    const movement = this.getCOHooksWithUnit(unit.position).onMovementRange(
-      baseMovement
-    );
-
-    return Math.min(movement, unit.stats.fuel); /** TODO checking fuel twice? */
-  }
-
-  getNextAlivePlayer() {
+  /**
+   * gets the next player, looping back around to index 0
+   * if needed until current player slot.
+   */
+  getNextAlivePlayer(): PlayerInMatchWrapper | null {
     const nextSlot = (n: number) =>
       (n + 1) % this.match.map.data.numberOfPlayers;
 
@@ -147,23 +145,8 @@ export class PlayerInMatchWrapper {
         return player;
       }
     }
-  }
 
-  getVision(): Position[] {
-    const playerVisionPositions: Position[] = [];
-
-    /** a bit ugly and idk if this can be made faster */
-    for (const unit of this.getUnits().data) {
-      for (const unitVisionPosition of unit.getVision()) {
-        for (const existingVisionPosition of playerVisionPositions) {
-          if (!isSamePosition(existingVisionPosition, unitVisionPosition)) {
-            playerVisionPositions.push(unitVisionPosition);
-          }
-        }
-      }
-    }
-
-    return playerVisionPositions;
+    return null;
   }
 
   /**
@@ -172,22 +155,52 @@ export class PlayerInMatchWrapper {
    * without too much complexity.
    */
   getEnemyUnitsInVision() {
-    const vision = this.match.rules.fogOfWar ? this.getVision() : null;
+    const vision = this.match.rules.fogOfWar ? new Vision(this) : null;
 
     return this.getEnemyUnits().data.filter((enemy) => {
-      if (enemy.isHiddenFromPlayerThroughHiddenPropertyOrTile(this)) {
-        return false;
+      if (enemy.isHiddenThroughHiddenProperty()) {
+        return enemy.getNeighbouringUnits().some((u) => this.ownsUnit(u));
       }
 
       if (vision === null) {
         return true;
       }
 
-      return vision.some((p) => enemy.isAtPosition(p));
+      const isSonjaAndPower =
+        this.data.co === "sonja" && this.data.COPowerState !== "no-power";
+
+      if (!isSonjaAndPower && enemy.isOnHiddenTile()) {
+        return enemy.getNeighbouringUnits().some((u) => this.ownsUnit(u));
+      }
+
+      return vision.isPositionVisible(enemy.data.position);
     });
   }
 
   gainFunds() {
     // TODO get all owned properties + check if high funds mode + ?
+  }
+
+  getPowerStarCost() {
+    return 9000 * (1 + 0.2 * Math.min(this.data.timesPowerUsed, 10));
+  }
+
+  increasePowerMeter(amount: number) {
+    if (this.data.COPowerState !== "no-power") {
+      return;
+    }
+
+    const maxPowerMeter =
+      COPropertiesMap[this.data.co].powers.superCOPower.stars *
+      this.getPowerStarCost();
+
+    this.data.powerMeter = Math.min(
+      this.data.powerMeter + amount,
+      maxPowerMeter
+    );
+  }
+
+  ownsUnit(unit: UnitWrapper) {
+    return unit.data.playerSlot === this.data.slot;
   }
 }

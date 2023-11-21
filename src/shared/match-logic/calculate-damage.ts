@@ -42,6 +42,7 @@ export const calculateDamage = (
   const COHooks = matchState.players
     .getCurrentTurnPlayer()
     .getCOHooksWithDefender(attackerPosition, defenderPosition);
+
   const attackerUnit = matchState.units.getUnitOrThrow(attackerPosition);
   const defenderUnit = matchState.units.getUnitOrThrow(defenderPosition);
 

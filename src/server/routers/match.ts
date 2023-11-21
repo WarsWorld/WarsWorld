@@ -1,5 +1,5 @@
 import { TRPCError } from "@trpc/server";
-import { emitEvent } from "server/emitter/event-emitter";
+import { emit } from "server/emitter/event-emitter";
 import { matchStore } from "server/match-store";
 import { coSchema } from "shared/schemas/co";
 import type { MapWrapper } from "shared/wrappers/map";
@@ -54,13 +54,15 @@ export const matchRouter = router({
       .getMatchesOfPlayer(ctx.currentPlayer.id)
       .map(matchStateToFrontend)
   ),
-  full: matchBaseProcedure.query(({ ctx: { match } }) => {
+  full: matchBaseProcedure.query(({ ctx: { match, currentPlayer } }) => {
     // TODO: By default show no hidden units
     //       and FoW is completely dark and empty
     // TODO: If the user has a session and has a player in this match
     //       it needs to be checked and some information revealed accordingly
+
     return {
       id: match.id,
+      leagueType: match.leagueType,
       changeableTiles: match.changeableTiles,
       currentWeather: match.currentWeather,
       map: match.map.data,
@@ -68,7 +70,8 @@ export const matchRouter = router({
       rules: match.rules,
       status: match.status,
       turn: match.turn,
-      units: match.units.data,
+      units:
+        match.players.getById(currentPlayer.id)?.getEnemyUnitsInVision() ?? [],
     };
   }),
   join: matchBaseProcedure
@@ -88,7 +91,7 @@ export const matchRouter = router({
 
       match.join(currentPlayer, nextAvailablePlayerSlot, input.selectedCO);
 
-      emitEvent({
+      emit({
         type: "player-joined",
         matchId: match.id,
         playerId: currentPlayer.id,
@@ -100,7 +103,7 @@ export const matchRouter = router({
 
       match.players.leave(currentPlayer);
 
-      emitEvent({
+      emit({
         matchId: match.id,
         type: "player-left",
         playerId: currentPlayer.id,
@@ -119,7 +122,7 @@ export const matchRouter = router({
 
         playerInMatch.data.ready = input.readyState;
 
-        emitEvent({
+        emit({
           type: "player-changed-ready-status",
           matchId: match.id,
           playerId: currentPlayer.id,
@@ -143,7 +146,7 @@ export const matchRouter = router({
 
       ctx.playerInMatch.data.co = input.selectedCO;
 
-      emitEvent({
+      emit({
         type: "player-picked-co",
         co: input.selectedCO,
         matchId: ctx.match.id,
@@ -161,7 +164,7 @@ export const matchRouter = router({
 
       ctx.playerInMatch.data.army = input.selectedArmy;
 
-      emitEvent({
+      emit({
         type: "player-picked-army",
         army: input.selectedArmy,
         matchId: ctx.match.id,

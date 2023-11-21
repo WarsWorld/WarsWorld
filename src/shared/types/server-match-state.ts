@@ -34,6 +34,7 @@ export type PlayerInMatch = {
   eliminated?: boolean;
   funds: number;
   powerMeter: number;
+  timesPowerUsed: number;
   army: Army;
   COPowerState: COPowerState;
 };

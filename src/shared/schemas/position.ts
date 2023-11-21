@@ -11,6 +11,17 @@ export const pathSchema = z.array(positionSchema);
 
 export type Path = z.infer<typeof pathSchema>;
 
+/** throws if no final position */
+export const getFinalPositionSafe = (path: Path) => {
+  const finalPosition = path.at(-1);
+
+  if (finalPosition === undefined) {
+    throw new Error("Could not get final position of empty path");
+  }
+
+  return finalPosition;
+};
+
 export const isSamePosition = (positionA: Position, positionB: Position) =>
   positionA[0] === positionB[0] && positionA[1] === positionB[1];
 

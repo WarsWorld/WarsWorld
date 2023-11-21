@@ -1,14 +1,12 @@
 import { DispatchableError } from "shared/DispatchedError";
-import type {
-  UnloadNoWaitAction,
-  UnloadWaitAction,
-} from "shared/schemas/action";
-import type {
-  MainActionToEvent,
-  SubActionToEvent,
-} from "server/routers/action";
-import { unitPropertiesMap } from "../buildable-unit";
-import { addDirection } from "../positions";
+import type { UnloadWaitAction } from "shared/schemas/action";
+import type { Position } from "shared/schemas/position";
+import type { UnloadWaitEvent } from "shared/types/events";
+import type { MatchWrapper } from "shared/wrappers/match";
+import { unitPropertiesMap } from "../../buildable-unit";
+import { addDirection } from "../../positions";
+import { loadedUnitToWWUnit } from "./unloadNoWait";
+import type { SubActionToEvent } from "../handler-types";
 
 export const unloadWaitActionToEvent: SubActionToEvent<UnloadWaitAction> = (
   match,
@@ -135,65 +133,63 @@ export const unloadWaitActionToEvent: SubActionToEvent<UnloadWaitAction> = (
   return action;
 };
 
-export const unloadNoWaitActionToEvent: MainActionToEvent<
-  UnloadNoWaitAction
-> = (match, action) => {
-  const player = match.players.getCurrentTurnPlayer();
+export const applyUnloadWaitEvent = (
+  match: MatchWrapper,
+  event: UnloadWaitEvent,
+  transportPosition: Position
+) => {
+  const unit = match.units.getUnitOrThrow(transportPosition);
 
-  const transportUnit = player
-    .getUnits()
-    .getUnitOrThrow(action.transportPosition);
-
-  if (!("loadedUnit" in transportUnit.data)) {
-    throw new DispatchableError(
-      "Trying to unload from a unit that can't load units"
-    );
-  }
-
-  if (transportUnit.data.loadedUnit === null) {
-    throw new DispatchableError(
-      "Transport doesn't currently have a loaded unit"
-    );
-  }
-
-  const unloadPosition = addDirection(
-    action.transportPosition,
-    action.unloads.direction
-  );
-
-  match.map.throwIfOutOfBounds(unloadPosition);
-
-  if (action.unloads.isSecondUnit) {
-    if (!("loadedUnit2" in transportUnit.data)) {
-      throw new DispatchableError(
-        "Trying to unload 2nd unit from a unit only carries 1 unit"
+  if (event.unloads.length === 1) {
+    if (event.unloads[0].isSecondUnit && "loadedUnit2" in unit.data) {
+      match.addUnwrappedUnit(
+        loadedUnitToWWUnit(
+          unit.data.loadedUnit2,
+          unit.data.playerSlot,
+          addDirection(transportPosition, event.unloads[0].direction)
+        )
       );
-    }
 
-    if (transportUnit.data.loadedUnit2 === null) {
-      throw new DispatchableError(
-        "Transport doesn't currently have a 2nd loaded unit"
+      unit.data.loadedUnit2 = null;
+    } else if (!event.unloads[0].isSecondUnit && "loadedUnit" in unit.data) {
+      match.addUnwrappedUnit(
+        loadedUnitToWWUnit(
+          unit.data.loadedUnit,
+          unit.data.playerSlot,
+          addDirection(transportPosition, event.unloads[0].direction)
+        )
       );
-    }
 
-    if (
-      match.getMovementCost(
-        unloadPosition,
-        unitPropertiesMap[transportUnit.data.loadedUnit2.type].movementType
-      ) === null
-    ) {
-      throw new DispatchableError("Cannot unload unit in desired position");
-    }
-  } else {
-    if (
-      match.getMovementCost(
-        unloadPosition,
-        unitPropertiesMap[transportUnit.data.loadedUnit.type].movementType
-      ) === null
-    ) {
-      throw new DispatchableError("Cannot unload unit in desired position");
+      if ("loadedUnit2" in unit.data) {
+        unit.data.loadedUnit = unit.data.loadedUnit2;
+        unit.data.loadedUnit2 = null;
+      } else {
+        unit.data.loadedUnit = null;
+      }
     }
   }
 
-  return action;
+  if (event.unloads.length === 2) {
+    //unload all. unloads[0] refers to 1st unit, unloads[1] refers to 2nd unit
+    if ("loadedUnit" in unit && "loadedUnit2" in unit.data) {
+      match.addUnwrappedUnit(
+        loadedUnitToWWUnit(
+          unit.data.loadedUnit,
+          unit.data.playerSlot,
+          addDirection(transportPosition, event.unloads[0].direction)
+        )
+      );
+
+      match.addUnwrappedUnit(
+        loadedUnitToWWUnit(
+          unit.data.loadedUnit2,
+          unit.data.playerSlot,
+          addDirection(transportPosition, event.unloads[1].direction)
+        )
+      );
+
+      unit.data.loadedUnit = null;
+      unit.data.loadedUnit2 = null;
+    }
+  }
 };

@@ -1,8 +1,9 @@
-import type { MainActionToEvent } from "server/routers/action";
-import type { PassTurnAction } from "shared/schemas/action";
+import type { PassTurnEvent } from "shared/types/events";
+import type { MatchWrapper } from "shared/wrappers/match";
 
-export const passTurnActionToEvent: MainActionToEvent<PassTurnAction> = (
-  match
+export const applyPassTurnEvent = (
+  match: MatchWrapper,
+  _event: PassTurnEvent
 ) => {
   /**
    * Things that probably need to be done here (ordered by best effort)
@@ -27,7 +28,7 @@ export const passTurnActionToEvent: MainActionToEvent<PassTurnAction> = (
 
   const nextTurnPlayer = lastTurnPlayer.getNextAlivePlayer();
 
-  if (nextTurnPlayer === undefined) {
+  if (nextTurnPlayer === null) {
     throw new Error("No next alive player");
   }
 
@@ -44,7 +45,7 @@ export const passTurnActionToEvent: MainActionToEvent<PassTurnAction> = (
   nextTurnPlayer.gainFunds();
 
   for (const unit of nextTurnPlayer.getUnits().data) {
-    const tile = unit.getTile();
+    const tile = unit.getTileOrThrow();
 
     // TODO if is property and is owned by us then repair with special effects
     // i think kindle repairs 3HP or something?
@@ -53,6 +54,4 @@ export const passTurnActionToEvent: MainActionToEvent<PassTurnAction> = (
 
     // fuel drain
   }
-
-  return { type: "passTurn" };
 };

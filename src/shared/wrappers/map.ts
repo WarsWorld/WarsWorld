@@ -2,22 +2,21 @@ import type { WWMap } from "@prisma/client";
 import type { Position } from "shared/schemas/position";
 
 export class MapWrapper {
-  constructor(public data: WWMap) {}
+  public width: number;
+  public height: number;
 
-  isOutOfBounds(position: Position) {
-    const width = this.data.tiles[0].length;
-    const height = this.data.tiles.length;
-
-    return (
-      position[0] < 0 ||
-      position[0] >= width ||
-      position[1] < 0 ||
-      position[1] >= height
-    );
+  constructor(public data: WWMap) {
+    this.width = this.data.tiles[0].length;
+    this.height = this.data.tiles.length;
   }
 
   throwIfOutOfBounds(position: Position) {
-    if (this.isOutOfBounds(position)) {
+    if (
+      position[0] < 0 ||
+      position[0] >= this.width ||
+      position[1] < 0 ||
+      position[1] >= this.height
+    ) {
       throw new Error(
         `Out of bounds position ${JSON.stringify(position)} for map ${
           this.data.name

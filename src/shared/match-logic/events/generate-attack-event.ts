@@ -1,4 +1,5 @@
 import type { AttackAction, MoveAction } from "shared/schemas/action";
+import { getFinalPositionSafe } from "shared/schemas/position";
 import type { AttackEvent } from "shared/types/events";
 import type { MatchWrapper } from "shared/wrappers/match";
 
@@ -10,7 +11,10 @@ export const generateAttackEvent = (
 ): AttackEvent => {
   const _currentPlayerInMatch = matchState.players.getCurrentTurnPlayer();
 
-  const attacker = matchState.units.getUnit(moveAction.path.at(-1)!);
+  const attacker = matchState.units.getUnit(
+    getFinalPositionSafe(moveAction.path)
+  );
+
   const defender = matchState.units.getUnit(attackAction.defenderPosition);
 
   if (defender === undefined) {

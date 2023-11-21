@@ -2,10 +2,13 @@ import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { t } from "../trpc-init";
 import { matchStore } from "server/match-store";
+import type { Match } from "@prisma/client";
 
-export const withMatchIdSchema = z.object({
+export const withMatchIdSchema = z.object<{ matchId: z.ZodType<Match["id"]> }>({
   matchId: z.string(),
 });
+
+export type WithMatchId = z.infer<typeof withMatchIdSchema>;
 
 export const matchMiddleware = t.middleware(async ({ ctx, input, next }) => {
   const parseResult = withMatchIdSchema.safeParse(input);

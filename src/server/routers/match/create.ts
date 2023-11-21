@@ -24,6 +24,7 @@ export const createMatchProcedure = playerBaseProcedure
         powerMeter: 0,
         army: "orange-star",
         COPowerState: "no-power",
+        timesPowerUsed: 0,
       },
     ];
 
@@ -37,16 +38,14 @@ export const createMatchProcedure = playerBaseProcedure
             id: ctx.map.id,
           },
         },
-      },
-    });
-
-    await prisma.event.create({
-      data: {
-        matchId: matchOnDB.id,
-        content: {
-          type: "player-picked-co",
-          co: input.selectedCO,
-          playerId: ctx.currentPlayer.id,
+        rules: {
+          /* TODO */
+          bannedUnitTypes: [],
+          captureLimit: 100,
+          dayLimit: 100,
+          fogOfWar: false,
+          fundsPerProperty: 1000,
+          unitCapPerPlayer: 50,
         },
       },
     });

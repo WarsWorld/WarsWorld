@@ -11,6 +11,7 @@ export const playerInMatch1: PlayerInMatch = {
   powerMeter: 3000,
   army: "black-hole",
   COPowerState: "no-power",
+  timesPowerUsed: 0,
 };
 
 export const playerInMatch2: PlayerInMatch = {
@@ -24,4 +25,5 @@ export const playerInMatch2: PlayerInMatch = {
   powerMeter: 5000,
   army: "orange-star",
   COPowerState: "no-power",
+  timesPowerUsed: 0,
 };
