@@ -9,12 +9,9 @@ import SocialMediaSignInButton from "../layout/SocialMediaSignInButton";
 import ErrorSuccessBlock from "../layout/ErrorSuccessBlock";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/router";
-import {
-  ClientSafeProvider,
-  LiteralUnion,
-  getProviders,
-} from "next-auth/react";
-import { BuiltInProviderType } from "next-auth/providers";
+import { getProviders } from "next-auth/react";
+
+const possibleProviders = ["github", "discord", "google"];
 
 interface Props {
   width?: string;
@@ -23,11 +20,8 @@ interface Props {
 }
 
 export default function LoginSignupModal({ isOpen, setIsOpen, width }: Props) {
-  const posibleProviders = ["github", "discord", "google"];
-  const [currentProviders, setCurrentProviders] = useState<Record<
-    LiteralUnion<BuiltInProviderType, string>,
-    ClientSafeProvider
-  > | null>();
+  const [currentProviders, setCurrentProviders] =
+    useState<Awaited<ReturnType<typeof getProviders>>>();
 
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -38,12 +32,7 @@ export default function LoginSignupModal({ isOpen, setIsOpen, width }: Props) {
   const callbackUrl = searchParams.get("callbackUrl");
 
   useEffect(() => {
-    const setProviders = async () => {
-      const provs = await getProviders();
-      setCurrentProviders(provs);
-    };
-
-    setProviders();
+    getProviders().then((providers) => setCurrentProviders(providers));
   }, []);
 
   const setIsSignupForm = async (value: boolean, callbackUrl?: string) => {
@@ -68,21 +57,6 @@ export default function LoginSignupModal({ isOpen, setIsOpen, width }: Props) {
     );
 
   const onClose = async () => await setIsOpen(false);
-
-  const renderProviders = () =>
-    posibleProviders.map((socialMedia) => {
-      return (
-        <div
-          key={socialMedia}
-          className="@h-14 @text-2xl large_monitor:@text-3xl @w-[75vw] smallscreen:@w-48 large_monitor:@w-56"
-        >
-          <SocialMediaSignInButton
-            name={socialMedia}
-            disabled={!(currentProviders && currentProviders[socialMedia])}
-          />
-        </div>
-      );
-    });
 
   return (
     <>
@@ -140,7 +114,19 @@ export default function LoginSignupModal({ isOpen, setIsOpen, width }: Props) {
                   You can also sign in with:
                 </p>
                 <div className="@flex @flex-wrap @justify-center @w-full @gap-4">
-                  {renderProviders()}
+                  {possibleProviders.map((socialMedia) => (
+                    <div
+                      key={socialMedia}
+                      className="@h-14 @text-2xl large_monitor:@text-3xl @w-[75vw] smallscreen:@w-48 large_monitor:@w-56"
+                    >
+                      <SocialMediaSignInButton
+                        name={socialMedia}
+                        disabled={
+                          !(currentProviders && currentProviders[socialMedia])
+                        }
+                      />
+                    </div>
+                  ))}
                 </div>
                 <p className="@pt-6 @text-lg smallscreen:@text @text-center">
                   Developer note: If you want to sign in with one of these

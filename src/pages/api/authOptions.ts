@@ -55,17 +55,21 @@ const providers: Provider[] = [
       },
     },
     async authorize(credentials) {
-      if (!credentials || !credentials.name || !credentials.password) {
+      if (!credentials) {
         return null;
       }
 
-      const creds = await loginSchema.parseAsync({
+      const loginParse = loginSchema.safeParse({
         username: credentials.name,
         password: credentials.password,
       });
 
+      if (!loginParse.success) {
+        return null;
+      }
+
       const dbUser = await prisma.user.findFirst({
-        where: { name: creds.username },
+        where: { name: loginParse.data.username },
       });
 
       if (!dbUser || !dbUser.password) {
@@ -73,19 +77,18 @@ const providers: Provider[] = [
       }
 
       const doPasswordsMatch = await compare(
-        credentials.password,
+        loginParse.data.password,
         dbUser.password
       );
 
-      if (doPasswordsMatch) {
-        const dbUserWithoutPassword = {
-          name: dbUser.name,
-          email: dbUser.email,
-        };
-        return dbUserWithoutPassword as User;
+      if (!doPasswordsMatch) {
+        return null;
       }
 
-      return null;
+      return {
+        name: dbUser.name,
+        email: dbUser.email,
+      } as User;
     },
   }),
 ];
@@ -131,7 +134,7 @@ if (discordEnvParsed.success)
 export const authOptions: NextAuthOptions = {
   secret: process.env.NEXTAUTH_SECRET,
   adapter: adapter,
-  debug: true,
+  debug: process.env.NODE_ENV == "development",
   providers,
   pages: {
     signIn: "/?authModalOpen",
