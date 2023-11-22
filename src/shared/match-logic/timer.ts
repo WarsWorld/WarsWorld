@@ -17,3 +17,7 @@
  *  }
  * }
  */
+
+// TODO this empty export is to allow the code to compile because
+// this file isn't a module otherwise.
+export {};

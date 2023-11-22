@@ -1,6 +1,8 @@
 import { observable } from "@trpc/server/observable";
 import { emit, subscribe } from "server/emitter/event-emitter";
 import { prisma } from "server/prisma/prisma-client";
+import { validateMainActionAndToEvent } from "shared/match-logic/events/action-to-event";
+import { applySubEventToMatch } from "shared/match-logic/events/apply-event-to-match";
 import { mainActionSchema } from "shared/schemas/action";
 import type { Emittable, EmittableEvent } from "shared/types/events";
 import { z } from "zod";
@@ -9,9 +11,6 @@ import {
   publicBaseProcedure,
   router,
 } from "../trpc/trpc-setup";
-import { validateMainActionAndToEvent } from "shared/match-logic/events/action-to-event";
-import { getFinalPositionSafe } from "shared/schemas/position";
-import { applySubEventToMatch } from "shared/match-logic/events/apply-event-to-match";
 
 export const actionRouter = router({
   send: playerInMatchBaseProcedure
@@ -37,14 +36,10 @@ export const actionRouter = router({
         }
 
         /** TODO shouldn't this be the job of applyMoveEvent? */
-        applySubEventToMatch(
-          match,
-          event.subEvent,
-          getFinalPositionSafe(event.path)
-        );
+        applySubEventToMatch(match, event);
       }
 
-      await prisma.event.create({
+      const eventOnDB = await prisma.event.create({
         data: {
           matchId: input.matchId,
           content: event,
@@ -54,19 +49,14 @@ export const actionRouter = router({
       const emittableEvent: EmittableEvent = {
         ...event,
         matchId: input.matchId,
+        eventIndex: eventOnDB.index,
       };
 
       emittableEvent.discoveredUnits = match.players
         .getCurrentTurnPlayer()
-        .getEnemyUnitsInVision()
-        .map((u) => u.data);
+        .getEnemyUnitsInVision();
 
-      /* TODO hide stats from hidden or sonja units */
       emit(emittableEvent);
-
-      return {
-        status: "ok", // TODO not necessary?
-      };
     }),
   onEvent: publicBaseProcedure.input(z.string()).subscription(({ input }) =>
     observable<Emittable>((emit) => {

@@ -11,12 +11,17 @@ export const applyPassTurnEvent = (
    * - day limit tracking if the turns have looped back around (= "next day") and maybe ending the match
    * - (done) unwait all current player units
    * - (done) disable other player CO powers
-   * - random weather or d2d weather influence
+   * - random weather or d2d weather influence (use getRandomWeather!!)
    * - (done) active power weather removal
    * - (done) funds
    * - repairs
    * - refuel (property + apc/blackboat)
    * - fuel drain
+   *      if (eagle) {
+  *         if (currentPlayerData.unitFacility === "airport") {
+              return fuelDrain - 2;
+            }
+   *      }
    */
 
   const lastTurnPlayer = match.players.getCurrentTurnPlayer();
@@ -38,8 +43,9 @@ export const applyPassTurnEvent = (
   if (
     match.playerToRemoveWeatherEffect?.data.slot === nextTurnPlayer.data.slot
   ) {
-    match.currentWeather =
-      "clear"; /* TODO random / custom weather  and d2d effects */
+    // after non-clear weather, clear weather is always forced for at least one turn
+    // (no random weather on the turn we're passing to, unless that player uses a power)
+    match.currentWeather = "clear";
   }
 
   nextTurnPlayer.gainFunds();

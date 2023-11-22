@@ -4,15 +4,12 @@ import type { PropertyTile, UnusedSiloTile } from "shared/schemas/tile";
 import { willBeChangeableTile } from "shared/schemas/tile";
 import type { ChangeableTile } from "shared/types/server-match-state";
 
-const getChangeableTileFromTile = (
-  tile: PropertyTile | UnusedSiloTile,
-  position: Position
-): ChangeableTile => {
+const getChangeableTileFromTile = (tile: PropertyTile | UnusedSiloTile, position: Position): ChangeableTile => {
   if (tile.type === "unusedSilo") {
     return {
       type: tile.type,
       position,
-      fired: false,
+      fired: false
     };
   }
 
@@ -20,26 +17,21 @@ const getChangeableTileFromTile = (
     type: tile.type,
     position,
     hp: 20,
-    ownerSlot: tile.playerSlot,
+    ownerSlot: tile.playerSlot
   };
 };
 
 export const getChangeableTilesFromMap = (map: WWMap): ChangeableTile[] => {
   const changeableTiles: ChangeableTile[] = [];
 
-  for (const y in map.tiles) {
+  for (let y = 0; y < map.tiles.length; y++) {
     const row = map.tiles[y];
 
-    for (const x in row) {
+    for (let x = 0; x < row.length; x++) {
       const tile = row[x];
 
       if (willBeChangeableTile(tile)) {
-        const position: Position = [
-          Number.parseInt(x, 10),
-          Number.parseInt(y, 10),
-        ];
-
-        changeableTiles.push(getChangeableTileFromTile(tile, position));
+        changeableTiles.push(getChangeableTileFromTile(tile, [x, y]));
       }
     }
   }

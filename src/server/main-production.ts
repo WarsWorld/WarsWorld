@@ -4,19 +4,27 @@ import { parse } from "url";
 import { createTRPCwebSocketServer } from "./common-server";
 import { matchStore } from "./match-store";
 
-const port = parseInt(process.env.PORT || "3000", 10);
+const port = parseInt(process.env.PORT ?? "3000", 10);
 const app = next({ dev: false });
 const handler = app.getRequestHandler();
 
-(async () => {
+void (async () => {
   await matchStore.rebuild();
   await app.prepare();
 
   const server = http.createServer((req, res) => {
+    if (req.url === undefined) {
+      throw new Error("Request url is undefined");
+    }
+
     if (req.headers["x-forwarded-proto"] === "http") {
+      if (req.headers.host === undefined || typeof req.headers.url !== "string") {
+        throw new Error("Headers are incorrect");
+      }
+
       // redirect to ssl
       res.writeHead(303, {
-        location: `https://` + req.headers.host + (req.headers.url ?? ""),
+        location: `https://` + req.headers.host + req.headers.url
       });
       res.end();
 
@@ -35,8 +43,7 @@ const handler = app.getRequestHandler();
     // prevents cross origin script loading
     res.setHeader("Referrer-Policy", "same-origin");
 
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const parsedUrl = parse(req.url!, true);
+    const parsedUrl = parse(req.url, true);
     void handler(req, res, parsedUrl);
   });
 

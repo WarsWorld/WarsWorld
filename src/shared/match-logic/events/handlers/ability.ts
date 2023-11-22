@@ -10,11 +10,7 @@ import type { SubActionToEvent } from "../handler-types";
 /* TODO transfer property ownership on HQ capture */
 
 //Capture, APC supply, black bomb explosion, toggle stealth/sub hide.
-export const abilityActionToEvent: SubActionToEvent<AbilityAction> = (
-  match,
-  action,
-  fromPosition
-) => {
+export const abilityActionToEvent: SubActionToEvent<AbilityAction> = (match, action, fromPosition) => {
   const player = match.players.getCurrentTurnPlayer();
   const unit = player.getUnits().getUnitOrThrow(fromPosition);
 
@@ -42,8 +38,6 @@ export const abilityActionToEvent: SubActionToEvent<AbilityAction> = (
 };
 
 export const applyAbilityEvent = (match: MatchWrapper, unit: UnitWrapper) => {
-  const player = match.players.getCurrentTurnPlayer();
-
   switch (unit.data.type) {
     case "infantry":
     case "mech": {
@@ -52,13 +46,18 @@ export const applyAbilityEvent = (match: MatchWrapper, unit: UnitWrapper) => {
         unit.data.currentCapturePoints = 20;
       }
 
-      unit.data.currentCapturePoints -= player
-        .getCOHooksWithUnit(unit.data.position)
-        .onCapture(unit.data.stats.hp);
+      unit.data.currentCapturePoints -= unit.data.stats.hp;
 
       if (unit.data.currentCapturePoints <= 0) {
         unit.data.currentCapturePoints = undefined;
-        match.captureTile(unit.data.position);
+
+        const tile = unit.getTileOrThrow();
+
+        if (!("playerSlot" in tile)) {
+          throw new Error(`Could not capture tile at ${JSON.stringify(unit.data.position)}: no playerSlot property! (Not changeable tile?)`);
+        }
+
+        tile.playerSlot = unit.data.playerSlot;
       }
 
       break;
@@ -66,13 +65,10 @@ export const applyAbilityEvent = (match: MatchWrapper, unit: UnitWrapper) => {
     case "apc": {
       //supply
       for (const dir of allDirections) {
-        const suppliedUnit = match.units.getUnit(
-          addDirection(unit.data.position, dir)
-        );
+        const suppliedUnit = match.units.getUnit(addDirection(unit.data.position, dir));
 
         if (suppliedUnit !== undefined) {
-          suppliedUnit.data.stats.fuel =
-            unitPropertiesMap[suppliedUnit.data.type].initialFuel;
+          suppliedUnit.data.stats.fuel = unitPropertiesMap[suppliedUnit.data.type].initialFuel;
         }
       }
 
@@ -82,9 +78,9 @@ export const applyAbilityEvent = (match: MatchWrapper, unit: UnitWrapper) => {
       match.units.damageUntil1HPInRadius({
         radius: 3,
         damageAmount: 50,
-        epicenter: unit.data.position,
+        epicenter: unit.data.position
       });
-      match.units.removeUnit(unit);
+      unit.remove();
       break;
     }
     case "stealth":

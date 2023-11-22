@@ -7,6 +7,7 @@ import type { MatchWrapper } from "shared/wrappers/match";
 import type { WWUnit } from "shared/schemas/unit";
 import { validateSubActionAndToEvent } from "../action-to-event";
 import type { MainActionToEvent } from "../handler-types";
+import { applySubEventToMatch } from "../apply-event-to-match";
 
 export const createNoMoveEvent = (): MoveEvent => ({
   type: "move",
@@ -30,9 +31,7 @@ export const moveActionToEvent: MainActionToEvent<MoveAction> = (
 
   let remainingMovePoints = unit.getMovementPoints();
 
-  const fuelNeeded =
-    (action.path.length - 1) *
-    player.getCOHooksWithUnit(action.path[0]).onFuelCost(1);
+  const fuelNeeded = action.path.length - 1;
 
   if (unit.data.stats.fuel < fuelNeeded) {
     throw new DispatchableError("Not enough fuel for this move");
@@ -45,7 +44,7 @@ export const moveActionToEvent: MainActionToEvent<MoveAction> = (
 
     const moveCost = match.getMovementCost(
       position,
-      unitPropertiesMap[unit.data.type].movementType
+      unit.properties().movementType
     );
 
     if (moveCost === null) {
@@ -226,10 +225,9 @@ const loadUnitInto = (unitToLoad: WWUnit, transportUnit: WWUnit) => {
 };
 
 export const applyMoveEvent = (match: MatchWrapper, event: MoveEvent) => {
-  const player = match.players.getCurrentTurnPlayer();
-
   //check if unit is moving or just standing still
   if (event.path.length <= 1) {
+    applySubEventToMatch(match, event);
     return;
   }
 
@@ -240,16 +238,14 @@ export const applyMoveEvent = (match: MatchWrapper, event: MoveEvent) => {
     unit.currentCapturePoints = undefined;
   }
 
-  unit.data.stats.fuel -=
-    (event.path.length - 1) *
-    player.getCOHooksWithUnit(event.path[0]).onFuelCost(1);
+  unit.data.stats.fuel -= event.path.length - 1;
 
   const unitAtDestination = match.units.getUnit(
-    event.path[event.path.length - 1]
+    getFinalPositionSafe(event.path)
   );
 
   if (unitAtDestination === undefined) {
-    unit.data.position = event.path[event.path.length - 1];
+    unit.data.position = getFinalPositionSafe(event.path);
   } else {
     if (unit.data.type === unitAtDestination.data.type) {
       //join (hp, fuel, ammo, (keep capture points))
@@ -273,12 +269,12 @@ export const applyMoveEvent = (match: MatchWrapper, event: MoveEvent) => {
           unitProperties.initialAmmo
         );
       }
-
-      match.units.removeUnit(unit);
     } else {
-      //load
       loadUnitInto(unit.data, unitAtDestination.data);
-      match.units.removeUnit(unit);
     }
+
+    unit.remove();
   }
+
+  applySubEventToMatch(match, event);
 };

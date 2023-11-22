@@ -1,0 +1,2 @@
+would it make sense to use an arraybuffer for the position system and
+wrap it in a class?

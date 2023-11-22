@@ -1,24 +1,21 @@
 import { useState } from "react";
+import type { Army } from "shared/schemas/army";
 import { armySchema } from "shared/schemas/army";
+import type { CO } from "shared/schemas/co";
 import { coSchema } from "shared/schemas/co";
 import { trpc } from "frontend/utils/trpc-client";
 import type { Match, Player } from "@prisma/client";
+import Image from "next/image";
 
-interface matchData {
+type matchData = {
   playerID: Player["id"];
   matchID: Match["id"];
-  functionCO: any;
+  functionCO: (co: CO | null, army?: Army, status?: boolean) => void;
   inMatch: boolean;
   readyStatus: boolean;
-}
+};
 
-export default function MatchCardSetup({
-  playerID,
-  matchID,
-  functionCO,
-  inMatch,
-  readyStatus,
-}: matchData) {
+export default function MatchCardSetup({ playerID, matchID, functionCO, inMatch, readyStatus }: matchData) {
   const switchCO = trpc.match.switchCO.useMutation();
   const switchArmy = trpc.match.switchArmy.useMutation();
   const joinMatch = trpc.match.join.useMutation();
@@ -44,23 +41,23 @@ export default function MatchCardSetup({
               {coSchema._def.values.map((co) => {
                 return (
                   <div
-                    onClick={async () => {
-                      await switchCO.mutateAsync({
-                        selectedCO: co,
-                        matchId: matchID,
-                        playerId: playerID,
-                      });
-                      functionCO(co);
-                      setShowCO(false);
+                    onClick={() => {
+                      const selectedCO = co;
+                      void switchCO
+                        .mutateAsync({
+                          selectedCO,
+                          matchId: matchID,
+                          playerId: playerID
+                        })
+                        .then(() => {
+                          functionCO(selectedCO);
+                          setShowCO(false);
+                        });
                     }}
                     key={co}
                     className={`@flex @items-center @p-1 @bg-bg-primary hover:@bg-primary @cursor-pointer @duration-300`}
                   >
-                    <img
-                      src={`/img/CO/pixelated/${co}-small.png`}
-                      className="[image-rendering:pixelated]"
-                      alt=""
-                    />
+                    <img src={`/img/CO/pixelated/${co}-small.png`} className="[image-rendering:pixelated]" alt="" />
                     <p className="@capitalize @text-xs @px-1">{co}</p>
                   </div>
                 );
@@ -86,23 +83,22 @@ export default function MatchCardSetup({
               {armySchema._def.values.map((army) => {
                 return (
                   <div
-                    onClick={async () => {
-                      await switchArmy.mutateAsync({
-                        matchId: matchID,
-                        playerId: playerID,
-                        selectedArmy: army,
-                      });
-                      functionCO(null, army);
-                      setShowArmy(false);
+                    onClick={() => {
+                      void switchArmy
+                        .mutateAsync({
+                          matchId: matchID,
+                          playerId: playerID,
+                          selectedArmy: army
+                        })
+                        .then(() => {
+                          functionCO(null, army);
+                          setShowArmy(false);
+                        });
                     }}
                     key={army}
                     className={`@flex @items-center @p-1 @bg-bg-primary hover:@bg-primary @cursor-pointer @duration-300`}
                   >
-                    <img
-                      src={`/img/nations/${army}.gif`}
-                      className="[image-rendering:pixelated]"
-                      alt=""
-                    />
+                    <Image src={`/img/nations/${army}.gif`} className="[image-rendering:pixelated]" alt="" />
                     <p className="@capitalize @text-xs @px-1">{army}</p>
                   </div>
                 );
@@ -115,14 +111,17 @@ export default function MatchCardSetup({
         <div>
           <button
             className=" btnMenu"
-            onClick={async () => {
-              await readyMatch.mutateAsync({
-                matchId: matchID,
-                playerId: playerID,
-                readyState: !readyStatus,
-              });
-              functionCO(null, null, !readyStatus);
-              location.href = location.href;
+            onClick={() => {
+              void readyMatch
+                .mutateAsync({
+                  matchId: matchID,
+                  playerId: playerID,
+                  readyState: !readyStatus
+                })
+                .then(() => {
+                  functionCO(null, undefined, !readyStatus);
+                  location.href = location.href;
+                });
             }}
           >
             {readyStatus ? "Unready" : "Ready up"}
@@ -138,14 +137,17 @@ export default function MatchCardSetup({
         <div>
           <button
             className=" btnMenu"
-            onClick={async () => {
-              await joinMatch.mutateAsync({
-                matchId: matchID,
-                playerId: playerID,
-                selectedCO: "sami",
-              });
-              //lets reload the page
-              location.href = location.href;
+            onClick={() => {
+              void joinMatch
+                .mutateAsync({
+                  matchId: matchID,
+                  playerId: playerID,
+                  selectedCO: "sami"
+                })
+                .then(() => {
+                  //lets reload the page
+                  location.href = location.href;
+                });
             }}
           >
             Join Game

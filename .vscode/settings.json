@@ -11,5 +11,6 @@
     "editor.defaultFormatter": "Prisma.prisma"
   },
   "typescript.tsserver.experimental.enableProjectDiagnostics": true,
-  "typescript.referencesCodeLens.enabled": true
+  "typescript.referencesCodeLens.enabled": true,
+  "editor.rulers": [80]
 }

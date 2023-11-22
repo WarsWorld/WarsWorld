@@ -1,17 +1,12 @@
 import SquareButton from "./SquareButton";
 import { useRouter } from "next/router";
 
-interface buttonData {
+type buttonData = {
   text: string;
   link: string;
 }
 
-export default function ThreeLinesText(props: {
-  subtitle: string;
-  title: string;
-  text: string;
-  button?: buttonData[];
-}) {
+export default function ThreeLinesText(props: { subtitle: string; title: string; text: string; button?: buttonData[] }) {
   const router = useRouter();
   const buttonArray: React.ReactElement[] = [];
 
@@ -19,9 +14,7 @@ export default function ThreeLinesText(props: {
     props.button.forEach((buttonItem: buttonData) =>
       buttonArray.push(
         <div className="" key={buttonItem.text}>
-          <SquareButton onClick={() => router.push(buttonItem.link)}>
-            {buttonItem.text}
-          </SquareButton>
+          <SquareButton onClick={() => void router.push(buttonItem.link)}>{buttonItem.text}</SquareButton>
         </div>
       )
     );

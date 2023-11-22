@@ -24,7 +24,7 @@ export const playerInMatchBaseProcedure = matchBaseProcedure.use(
 
       const player = match.players.getCurrentTurnPlayer();
 
-      if (player.data.playerId !== currentPlayer.id) {
+      if (player.data.id !== currentPlayer.id) {
         throw new DispatchableError("It's not your turn");
       }
 

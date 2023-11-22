@@ -8,21 +8,15 @@ import type { MatchWrapper } from "shared/wrappers/match";
 import type { PlayerSlot } from "shared/schemas/player-slot";
 import type { MainActionToEvent } from "../../handler-types";
 
-export const buildActionToEvent: MainActionToEvent<BuildAction> = (
-  match,
-  action
-) => {
+export const buildActionToEvent: MainActionToEvent<BuildAction> = (match, action) => {
   const player = match.players.getCurrentTurnPlayer();
 
   const { cost, facility } = unitPropertiesMap[action.unitType];
-  const effectiveCost = player
-    .getCOHooksWithUnit(action.position)
-    .onBuildCost(cost);
+  const modifiedCost = player.getHook("buildCost")?.(cost, match);
+  const effectiveCost = modifiedCost ?? cost;
 
   if (effectiveCost > player.data.funds) {
-    throw new DispatchableError(
-      "You don't have enough funds to build this unit"
-    );
+    throw new DispatchableError("You don't have enough funds to build this unit");
   }
 
   if (match.units.hasUnit(action.position)) {
@@ -32,15 +26,10 @@ export const buildActionToEvent: MainActionToEvent<BuildAction> = (
   const tile = match.getTile(action.position);
 
   if (!("ownerSlot" in tile) || tile.ownerSlot !== player.data.slot) {
-    throw new DispatchableError(
-      "You don't own this tile or this tile cannot be owned"
-    );
+    throw new DispatchableError("You don't own this tile or this tile cannot be owned");
   }
 
-  const hachiScopLandUnit =
-    facility == "base" &&
-    player.data.co === "hachi" &&
-    player.data.COPowerState === "super-co-power";
+  const hachiScopLandUnit = facility == "base" && player.data.co === "hachi" && player.data.COPowerState === "super-co-power";
 
   if (tile.type !== facility && !(hachiScopLandUnit && tile.type === "city")) {
     throw new DispatchableError("You can't build this unit in this facility");
@@ -49,14 +38,11 @@ export const buildActionToEvent: MainActionToEvent<BuildAction> = (
   return {
     type: "build",
     unitType: action.unitType,
-    position: action.position,
+    position: action.position
   };
 };
 
-const createNewUnitFromBuildEvent = (
-  playerSlot: PlayerSlot,
-  event: BuildEvent
-): WWUnit => {
+const createNewUnitFromBuildEvent = (playerSlot: PlayerSlot, event: BuildEvent): WWUnit => {
   const { unitType } = event;
 
   const unitProperties = unitPropertiesMap[unitType];
@@ -66,9 +52,9 @@ const createNewUnitFromBuildEvent = (
     position: event.position,
     stats: {
       fuel: unitProperties.initialFuel,
-      hp: 100,
+      hp: 100
     },
-    isReady: false,
+    isReady: false
   } satisfies Partial<WWUnit>;
 
   if ("initialAmmo" in unitProperties) {
@@ -76,8 +62,8 @@ const createNewUnitFromBuildEvent = (
       ...partialUnit,
       stats: {
         ...partialUnit.stats,
-        ammo: unitProperties.initialAmmo,
-      },
+        ammo: unitProperties.initialAmmo
+      }
     } satisfies Partial<WWUnit>;
 
     switch (unitType) {
@@ -97,14 +83,14 @@ const createNewUnitFromBuildEvent = (
       case "antiAir":
         return {
           type: unitType,
-          ...partialUnitWithAmmo,
+          ...partialUnitWithAmmo
         };
       case "stealth":
       case "sub":
         return {
           type: unitType,
           ...partialUnitWithAmmo,
-          hidden: false,
+          hidden: false
         };
       case "carrier":
       case "cruiser":
@@ -112,7 +98,7 @@ const createNewUnitFromBuildEvent = (
           type: unitType,
           ...partialUnitWithAmmo,
           loadedUnit: null,
-          loadedUnit2: null,
+          loadedUnit2: null
         };
     }
   }
@@ -123,14 +109,14 @@ const createNewUnitFromBuildEvent = (
     case "blackBomb":
       return {
         type: unitType,
-        ...partialUnit,
+        ...partialUnit
       };
     case "apc":
     case "transportCopter":
       return {
         type: unitType,
         ...partialUnit,
-        loadedUnit: null,
+        loadedUnit: null
       };
     case "blackBoat":
     case "lander":
@@ -138,22 +124,16 @@ const createNewUnitFromBuildEvent = (
         type: unitType,
         ...partialUnit,
         loadedUnit: null,
-        loadedUnit2: null,
+        loadedUnit2: null
       };
     default:
       //should never happen
       return {
         type: "infantry",
-        ...partialUnit,
+        ...partialUnit
       };
   }
 };
 
-export const applyBuildEvent = (match: MatchWrapper, event: BuildEvent) => {
-  match.addUnwrappedUnit(
-    createNewUnitFromBuildEvent(
-      match.players.getCurrentTurnPlayer().data.slot,
-      event
-    )
-  );
-};
+export const applyBuildEvent = (match: MatchWrapper, event: BuildEvent) =>
+  match.players.getCurrentTurnPlayer().addUnwrappedUnit(createNewUnitFromBuildEvent(match.players.getCurrentTurnPlayer().data.slot, event));

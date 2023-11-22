@@ -4,11 +4,7 @@
 
 import { useState, useEffect } from "react";
 import type { Table } from "@tanstack/react-table";
-import {
-  getCoreRowModel,
-  getPaginationRowModel,
-  useReactTable,
-} from "@tanstack/react-table";
+import { getCoreRowModel, getPaginationRowModel, useReactTable } from "@tanstack/react-table";
 import type { PlayerLeaderboard } from "./LeaderboardData";
 import getLeaderboardData from "./LeaderboardData";
 import { columns } from "./LeaderboardColumns";
@@ -37,7 +33,7 @@ function hideColumns(table: Table<PlayerLeaderboard>, screenWidth: number) {
   }
 }
 
-interface Props {
+type Props = {
   setBestPlayers: React.Dispatch<React.SetStateAction<PlayerLeaderboard[]>>;
   gamemode: SelectOption | undefined;
   timeMode: SelectOption | undefined;
@@ -55,11 +51,11 @@ export default function LeaderboardTable({ setBestPlayers }: Props) {
     data,
     columns,
     state: {
-      columnVisibility,
+      columnVisibility
     },
     onColumnVisibilityChange: setColumnVisibility,
     getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
+    getPaginationRowModel: getPaginationRowModel()
   });
 
   useEffect(() => {

@@ -1,5 +1,4 @@
 import type { COProperties } from "../co";
-import { isIndirectAttackUnit } from "../units";
 
 export const grit: COProperties = {
   displayName: "Grit",
@@ -7,17 +6,17 @@ export const grit: COProperties = {
     description:
       "Indirect units have +1 range and gain +20% attack.ts. Direct units lose -20% attack.ts (footsoldiers are normal).",
     hooks: {
-      onAttackRange(value, { attackerData: currentPlayer }) {
-        if (isIndirectAttackUnit(currentPlayer.unitType)) {
+      attackRange(value, { attacker }) {
+        if (attacker.isIndirect()) {
           return value + 1;
         }
       },
-      onAttackModifier(value, { attackerData: { unitType } }) {
-        if (isIndirectAttackUnit(unitType)) {
+      attack(value, { attacker }) {
+        if (attacker.isIndirect()) {
           return value + 20;
         }
 
-        if (unitType !== "infantry" && unitType !== "mech") {
+        if (attacker.properties().movementType !== "foot") {
           return value - 20;
         }
       },
@@ -29,13 +28,13 @@ export const grit: COProperties = {
       description: "Indirect units gain +1 range and +20% attack.ts.",
       stars: 3,
       hooks: {
-        onAttackRange(value, { attackerData: currentPlayer }) {
-          if (isIndirectAttackUnit(currentPlayer.unitType)) {
+        attackRange(value, { attacker }) {
+          if (attacker.isIndirect()) {
             return value + 1;
           }
         },
-        onAttackModifier(value, { attackerData: currentPlayer }) {
-          if (isIndirectAttackUnit(currentPlayer.unitType)) {
+        attack(value, { attacker }) {
+          if (attacker.isIndirect()) {
             return value + 20;
           }
         },
@@ -46,13 +45,13 @@ export const grit: COProperties = {
       description: "Indirect units gain +2 range and +20% attack.ts.",
       stars: 6,
       hooks: {
-        onAttackRange(value, { attackerData: currentPlayerData }) {
-          if (isIndirectAttackUnit(currentPlayerData.unitType)) {
+        attackRange(value, { attacker }) {
+          if (attacker.isIndirect()) {
             return value + 2;
           }
         },
-        onAttackModifier(value, { attackerData: currentPlayerData }) {
-          if (isIndirectAttackUnit(currentPlayerData.unitType)) {
+        attack(value, { attacker }) {
+          if (attacker.isIndirect()) {
             return value + 20;
           }
         },

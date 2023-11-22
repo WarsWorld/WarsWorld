@@ -6,20 +6,18 @@ export const drake: COProperties = {
     description:
       "Naval units gain +1 movement and +25% defense. Air units lose -20% attack.ts. Unaffected by rain (except vision), and has a higher chance of rain in random weather.",
     hooks: {
-      // TODO higher chance of rain in random weather (idk if we implement random weather)
-      // TODO drake's movement is not affected by rain
-      onMovementRange: (value, { attackerData: currentPlayerData }) => {
-        if (currentPlayerData.unitFacility === "port") {
+      movementRange: (value, unit) => {
+        if (unit.properties().facility === "port") {
           return value + 1;
         }
       },
-      onDefenseModifier: (value, { attackerData: currentPlayerData }) => {
-        if (currentPlayerData.unitFacility === "port") {
+      defense: (value, { attacker }) => {
+        if (attacker.properties().facility === "port") {
           return value + 25;
         }
       },
-      onAttackModifier: (value, { attackerData: currentPlayerData }) => {
-        if (currentPlayerData.unitFacility === "airport") {
+      attack: (value, { attacker }) => {
+        if (attacker.properties().facility === "airport") {
           return value - 20;
         }
       },

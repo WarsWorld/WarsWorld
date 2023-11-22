@@ -1,7 +1,7 @@
 import { DispatchableError } from "shared/DispatchedError";
-import type { Position } from "shared/schemas/position";
+import { getFinalPositionSafe } from "shared/schemas/position";
 import type { MatchWrapper } from "shared/wrappers/match";
-import type { MainEvent, SubEvent } from "../../types/events";
+import type { MainEvent, MoveEvent, SubEvent } from "../../types/events";
 import { applyAbilityEvent } from "./handlers/ability";
 import { applyAttackEvent } from "./handlers/attack";
 import { applyBuildEvent } from "./handlers/build/build";
@@ -17,18 +17,28 @@ import { applyUnloadWaitEvent } from "./handlers/unloadWait";
 export const applyMainEventToMatch = (
   match: MatchWrapper,
   event: MainEvent
-) => {
+): void => {
   switch (event.type) {
-    case "build":
-      return applyBuildEvent(match, event);
-    case "move":
-      return applyMoveEvent(match, event);
-    case "unloadNoWait":
-      return applyUnloadNoWaitEvent(match, event);
-    case "coPower":
-      return applyCOPowerEvent(match, event);
-    case "passTurn":
-      return applyPassTurnEvent(match, event);
+    case "build": {
+      applyBuildEvent(match, event);
+      break;
+    }
+    case "move": {
+      applyMoveEvent(match, event);
+      break;
+    }
+    case "unloadNoWait": {
+      applyUnloadNoWaitEvent(match, event);
+      break;
+    }
+    case "coPower": {
+      applyCOPowerEvent(match, event);
+      break;
+    }
+    case "passTurn": {
+      applyPassTurnEvent(match, event);
+      break;
+    }
     default: {
       throw new DispatchableError(`Can't apply main event type ${event.type}`);
     }
@@ -37,16 +47,17 @@ export const applyMainEventToMatch = (
 
 export const applySubEventToMatch = (
   match: MatchWrapper,
-  event: SubEvent,
-  fromPosition: Position
+  { subEvent, path }: MoveEvent
 ) => {
+  const fromPosition = getFinalPositionSafe(path);
   const unit = match.units.getUnitOrThrow(fromPosition);
 
-  switch (event.type) {
-    case "wait":
+  switch (subEvent.type) {
+    case "wait": {
       break;
+    }
     case "attack": {
-      applyAttackEvent(match, event, fromPosition);
+      applyAttackEvent(match, subEvent, fromPosition);
       break;
     }
     case "ability": {
@@ -54,15 +65,15 @@ export const applySubEventToMatch = (
       break;
     }
     case "unloadWait": {
-      applyUnloadWaitEvent(match, event, fromPosition);
+      applyUnloadWaitEvent(match, subEvent, fromPosition);
       break;
     }
     case "repair": {
-      applyRepairEvent(match, event, fromPosition);
+      applyRepairEvent(match, subEvent, fromPosition);
       break;
     }
     case "launchMissile": {
-      applyLaunchMissileEvent(match, event);
+      applyLaunchMissileEvent(match, subEvent);
       break;
     }
     default: {
@@ -75,7 +86,7 @@ export const applySubEventToMatch = (
        * the exhaustiveness is the reason for `as SubEvent` because otherwise `event` is `never`.
        */
       throw new DispatchableError(
-        `Can't apply sub event type ${(event as SubEvent).type}`
+        `Can't apply sub event type ${(subEvent as SubEvent).type}`
       );
     }
   }

@@ -28,7 +28,7 @@
     "./tailwind.config.js",
     "./postcss.config.js"
   ],
-  "exclude": ["node_modules"],
+  "exclude": ["node_modules", "dist"],
   "ts-node": {
     "transpileOnly": true,
     "compilerOptions": {

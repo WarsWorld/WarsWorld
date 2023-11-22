@@ -2,10 +2,10 @@ import React from "react";
 import { Navbar } from "./Navbar";
 import { Footer } from "./Footer";
 
-interface Props {
+type Props = {
   footer?: boolean;
   children: React.ReactElement | React.ReactElement[];
-}
+};
 
 export function Layout({ footer, children }: Props) {
   return (

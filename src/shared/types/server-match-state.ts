@@ -28,7 +28,7 @@ export type ChangeableTile = CapturableTile | LaunchableSiloTile;
 export type PlayerInMatch = {
   slot: PlayerSlot;
   hasCurrentTurn?: boolean;
-  playerId: Player["id"];
+  id: Player["id"];
   ready?: boolean;
   co: CO;
   eliminated?: boolean;

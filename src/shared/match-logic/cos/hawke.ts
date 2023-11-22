@@ -5,7 +5,7 @@ export const hawke: COProperties = {
   dayToDay: {
     description: "Units gain +10% attack.ts.",
     hooks: {
-      onAttackModifier: (value) => value + 10,
+      attack: (value) => value + 10,
     },
   },
   powers: {

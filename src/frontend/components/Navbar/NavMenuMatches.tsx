@@ -1,6 +1,6 @@
 import { NavItem } from "./NavItem";
 
-interface Props {
+type Props = {
   showMatchLinks: boolean;
   handleBurgerMenu?: () => void;
 }
@@ -9,7 +9,7 @@ const navItemObject = [
   { text: "YOUR GAMES", location: "/your-matches" },
   { text: "CURRENT GAMES", location: "/your-matches#currentGames" },
   { text: "COMPLETED GAMES", location: "/your-matches#completedGames" },
-  { text: "SAMPLE MATCHES", location: "/sample-matches" },
+  { text: "SAMPLE MATCHES", location: "/sample-matches" }
 ];
 
 export function NavMenuMatches({ showMatchLinks, handleBurgerMenu }: Props) {
@@ -20,15 +20,8 @@ export function NavMenuMatches({ showMatchLinks, handleBurgerMenu }: Props) {
           ${showMatchLinks ? "@max-h-96" : "@max-h-0"}`}
     >
       {navItemObject.map((option) => (
-        <li
-          key={option.text}
-          className={`@py-3 @px-4 large_monitor:@py-4 @cursor-pointer @border-primary-dark @border-b-[1px]`}
-        >
-          <NavItem
-            text={option.text}
-            location={option.location}
-            handleBurgerMenu={handleBurgerMenu}
-          />
+        <li key={option.text} className={`@py-3 @px-4 large_monitor:@py-4 @cursor-pointer @border-primary-dark @border-b-[1px]`}>
+          <NavItem text={option.text} location={option.location} handleBurgerMenu={handleBurgerMenu} />
         </li>
       ))}
     </ul>

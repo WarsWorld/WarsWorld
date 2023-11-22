@@ -1,6 +1,5 @@
 import type { Player } from "@prisma/client";
 import type { WithMatchId } from "server/trpc/middleware/match";
-import type { Weather } from "shared/match-logic/tiles";
 import type {
   AbilityAction,
   AttackAction,
@@ -12,13 +11,14 @@ import type {
   RepairAction,
   UnloadNoWaitAction,
   UnloadWaitAction,
-  WaitAction,
+  WaitAction
 } from "shared/schemas/action";
 import type { Army } from "shared/schemas/army";
 import type { CO } from "shared/schemas/co";
-import type { WWUnit } from "shared/schemas/unit";
+import type { FrontendUnit } from "shared/schemas/unit";
+import type { Weather } from "shared/schemas/weather";
 
-// TODO: Maybe add who's player's turn it is or which army starts?
+/** player slot 0 implicity starts */
 export type MatchStartEvent = {
   type: "match-start";
   weather: Weather;
@@ -30,27 +30,23 @@ export type MatchEndEvent = {
   // TODO this type can probably be made a lot more fine-grained later on
 };
 
-export interface MoveEvent extends Omit<MoveAction, "subAction"> {
+export type MoveEvent = {
   trap: boolean;
   subEvent: SubEvent;
-}
+} & Omit<MoveAction, "subAction">
 
-export interface AttackEvent extends AttackAction {
+export type AttackEvent = {
   /**
    * The new defender HP after the attack.
-   * TODO: Consider sending just the luck roll(s) for the event,
-   *       and calculating HP later.
    */
   defenderHP: number;
   /**
    * The new attacker HP after the attack.
    * If undefined, that means HP is unchanged
    * because there was no counter-attack.
-   * TODO: Consider sending just the luck roll(s) for the event,
-   *       and calculating HP later.
    */
   attackerHP?: number;
-}
+} & AttackAction
 
 export type COPowerEvent = COPowerAction;
 
@@ -88,23 +84,12 @@ export type MainEvent =
   | BuildEvent
   | MatchEndEvent;
 
-export type SubEvent =
-  | AbilityEvent
-  | WaitEvent
-  | RepairEvent
-  | LaunchMissileEvent
-  | UnloadWaitEvent
-  | AttackEvent;
-
-/**
- * TODO to handle non-stored things like player-join etc.
- * maybe just make a different kind of "event" called "change" or something?
- * or "loggedevent" vs. "nonloggedevent" ? probably way too verbose.
- */
+export type SubEvent = AbilityEvent | WaitEvent | RepairEvent | LaunchMissileEvent | UnloadWaitEvent | AttackEvent;
 
 export type EmittableEvent = MainEvent &
   WithMatchId & {
-    discoveredUnits?: WWUnit[];
+    discoveredUnits?: FrontendUnit[];
+    eventIndex: number;
   };
 
 export type NonStoredEvent = WithPlayer &

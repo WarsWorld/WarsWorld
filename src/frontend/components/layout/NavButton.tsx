@@ -1,8 +1,8 @@
 import type { ReactNode } from "react";
 
-interface Props {
+type Props = {
   children: ReactNode;
-}
+};
 
 export default function NavButton({ children }: Props) {
   return (

@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 
-export interface ICardInfo {
+export type ICardInfo = {
   imgSrc: string;
   imgAlt: string;
   heading: string;
@@ -10,11 +10,11 @@ export interface ICardInfo {
   imgWidth?: number;
   imgHeight?: number;
   key?: string;
-}
+};
 
-interface Props {
+type Props = {
   cardInfo: ICardInfo;
-}
+};
 
 export default function LinkCard({ cardInfo }: Props) {
   return (

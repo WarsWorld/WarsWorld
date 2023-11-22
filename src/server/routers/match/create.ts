@@ -4,7 +4,7 @@ import { coSchema } from "shared/schemas/co";
 import { mapMiddleware, withMapIdSchema } from "server/trpc/middleware/map";
 import { playerBaseProcedure } from "server/trpc/trpc-setup";
 import type { PlayerInMatch } from "shared/types/server-match-state";
-import { matchStateToFrontend } from "../match";
+import { matchToFrontend } from "./util";
 
 export const createMatchProcedure = playerBaseProcedure
   .input(
@@ -16,7 +16,7 @@ export const createMatchProcedure = playerBaseProcedure
   .mutation(async ({ input, ctx }) => {
     const initialPlayerState: PlayerInMatch[] = [
       {
-        playerId: ctx.currentPlayer.id,
+        id: ctx.currentPlayer.id,
         ready: false,
         slot: 0,
         co: input.selectedCO,
@@ -39,17 +39,18 @@ export const createMatchProcedure = playerBaseProcedure
           },
         },
         rules: {
-          /* TODO */
+          /* TODO good default values or user input values or enforce league rules or whatever */
           bannedUnitTypes: [],
           captureLimit: 100,
           dayLimit: 100,
           fogOfWar: false,
           fundsPerProperty: 1000,
           unitCapPerPlayer: 50,
+          weatherSetting: "clear",
         },
       },
     });
 
-    const match = matchStore.createMatchAndStore(matchOnDB, ctx.map);
-    return matchStateToFrontend(match);
+    const match = matchStore.createMatchAndIndex(matchOnDB, ctx.map);
+    return matchToFrontend(match);
   });

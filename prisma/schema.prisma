@@ -194,19 +194,21 @@ model Match {
   createdAt DateTime @default(now())
   Notes     Notes[]
   Event     Event[]
-  Player    Player?  @relation(fields: [playerId], references: [id]) // for notes relationship?
-  playerId  String? // to-do maybe shouldn't exist..?
+  Player    Player[]
 }
 
 model Event {
-  id      String @id @default(cuid())
-  // todo eventCounter or sorts (per match obviously)
   match   Match  @relation(fields: [matchId], references: [id])
   matchId String
+
+  /// the index describes the order of events. they are not universally unique, but unique per match.
+  index Int @default(autoincrement()) @map("eventIndex")
 
   /// [PrismaEvent]
   content   Json
   createdAt DateTime @default(now())
+
+  @@id([matchId, index])
 }
 
 // 2. move/map data structures

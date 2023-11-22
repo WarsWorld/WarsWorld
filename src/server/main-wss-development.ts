@@ -1,11 +1,11 @@
 import { createTRPCwebSocketServer } from "./common-server";
 import { matchStore } from "./match-store";
 
-(async () => {
+void (async () => {
   await matchStore.rebuild();
 
   const wss = createTRPCwebSocketServer({
-    port: 3001,
+    port: 3001
   });
 
   wss.on("connection", (ws) => {

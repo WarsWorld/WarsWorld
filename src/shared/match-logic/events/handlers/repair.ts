@@ -48,10 +48,8 @@ export const applyRepairEvent = (
   } else {
     //check if enough funds for heal, and heal if it's the case
     const unitCost = unitPropertiesMap[repairedUnit.data.type].cost;
-    const repairEffectiveCost =
-      player
-        .getCOHooksWithUnit(addDirection(fromPosition, event.direction))
-        .onBuildCost(unitCost) * 0.1;
+    const modifiedCost = player.getHook("buildCost")?.(unitCost, match);
+    const repairEffectiveCost = (modifiedCost ?? unitCost) * 0.1;
 
     if (repairEffectiveCost <= player.data.funds) {
       repairedUnit.data.stats.hp += 10;

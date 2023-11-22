@@ -1,9 +1,13 @@
 import type { Player } from "@prisma/client";
 import type { PlayerSlot } from "shared/schemas/player-slot";
 import type { PlayerInMatchWrapper } from "./player-in-match";
+import type { MatchWrapper } from "./match";
 
 export class PlayersWrapper {
-  constructor(public data: PlayerInMatchWrapper[]) {}
+  constructor(
+    public data: PlayerInMatchWrapper[],
+    public match: MatchWrapper
+  ) {}
 
   getCurrentTurnPlayer() {
     const player = this.data.find((p) => p.data.hasCurrentTurn);
@@ -16,7 +20,7 @@ export class PlayersWrapper {
   }
 
   getById(playerId: Player["id"]) {
-    return this.data.find((p) => p.data.playerId === playerId);
+    return this.data.find((p) => p.data.id === playerId);
   }
 
   getByIdOrThrow(playerId: Player["id"]) {
@@ -41,25 +45,5 @@ export class PlayersWrapper {
     }
 
     return player;
-  }
-
-  hasById(playerId: Player["id"]) {
-    return this.getById(playerId) !== undefined;
-  }
-
-  leave(player: Player) {
-    this.data = this.data.filter((p) => p.data.playerId !== player.id);
-  }
-
-  setReady(player: Player, ready: boolean) {
-    const pimw = this.getById(player.id);
-
-    if (pimw === undefined) {
-      throw new Error(
-        `Can't set ready for playerId ${player.id}: Not found in match`
-      );
-    }
-
-    pimw.data.ready = ready;
   }
 }

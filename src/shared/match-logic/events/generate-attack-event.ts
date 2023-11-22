@@ -3,19 +3,16 @@ import { getFinalPositionSafe } from "shared/schemas/position";
 import type { AttackEvent } from "shared/types/events";
 import type { MatchWrapper } from "shared/wrappers/match";
 
-// checked: is player's turn
 export const generateAttackEvent = (
   moveAction: MoveAction,
   attackAction: AttackAction,
-  matchState: MatchWrapper
+  match: MatchWrapper
 ): AttackEvent => {
-  const _currentPlayerInMatch = matchState.players.getCurrentTurnPlayer();
+  const _currentPlayerInMatch = match.players.getCurrentTurnPlayer();
 
-  const attacker = matchState.units.getUnit(
-    getFinalPositionSafe(moveAction.path)
-  );
+  const attacker = match.units.getUnit(getFinalPositionSafe(moveAction.path));
 
-  const defender = matchState.units.getUnit(attackAction.defenderPosition);
+  const defender = match.units.getUnit(attackAction.defenderPosition);
 
   if (defender === undefined) {
     throw new Error("Defending unit not found");

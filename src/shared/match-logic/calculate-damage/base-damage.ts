@@ -1,85 +1,18 @@
-import type { Position } from "shared/schemas/position";
-import type { UnitType, WWUnit } from "shared/schemas/unit";
-import type { MatchWrapper } from "shared/wrappers/match";
-import { getTerrainDefenseStars } from "./tiles";
+import type { UnitType } from "shared/schemas/unit";
+import type { UnitWrapper } from "shared/wrappers/unit";
 
-const getBaseDamage = (
-  attackerUnit: WWUnit,
-  defenderUnit: WWUnit
-): number | null => {
-  const damageTable = damageMatrix[attackerUnit.type];
+export const getBaseDamage = (attackerUnit: UnitWrapper, defenderUnit: UnitWrapper): number | null => {
+  const damageTable = damageMatrix[attackerUnit.data.type];
 
   if (damageTable === undefined) {
     return null;
   }
 
-  const primaryDamage = damageTable.primary[defenderUnit.type] ?? null;
-  const secondaryDamage = damageTable.secondary?.[defenderUnit.type] ?? null;
-  const cantUsePrimaryWeapon =
-    "ammo" in attackerUnit.stats && attackerUnit.stats.ammo === 0;
+  const primaryDamage = damageTable.primary[defenderUnit.data.type] ?? null;
+  const secondaryDamage = damageTable.secondary?.[defenderUnit.data.type] ?? null;
+  const cantUsePrimaryWeapon = "ammo" in attackerUnit.data.stats && attackerUnit.data.stats.ammo === 0;
 
-  return cantUsePrimaryWeapon
-    ? secondaryDamage
-    : primaryDamage ?? secondaryDamage;
-};
-
-/** @returns 1-10, whole numbers */
-export const getVisualHPfromHP = (hp: number) => Math.ceil(hp / 10);
-
-const roundUpTo = (value: number, step: number) => {
-  const scalingFactor = 1 / step;
-  return Math.ceil(value * scalingFactor) / scalingFactor;
-};
-
-/**
- * @see https://awbw.fandom.com/wiki/Damage_Formula?so=search
- */
-export const calculateDamage = (
-  matchState: MatchWrapper,
-  attackerPosition: Position,
-  defenderPosition: Position
-) => {
-  const COHooks = matchState.players
-    .getCurrentTurnPlayer()
-    .getCOHooksWithDefender(attackerPosition, defenderPosition);
-
-  const attackerUnit = matchState.units.getUnitOrThrow(attackerPosition);
-  const defenderUnit = matchState.units.getUnitOrThrow(defenderPosition);
-
-  const visualHPOfAttacker = getVisualHPfromHP(attackerUnit.data.stats.hp);
-  const visualHPOfDefender = getVisualHPfromHP(defenderUnit.data.stats.hp);
-
-  const attackModifier =
-    COHooks.onAttackModifier(100) +
-    matchState.players.getCurrentTurnPlayer().getCommtowerAttackBoost();
-
-  /** TODO are you dense? these are ATTACKER hooks, not DEFENDER. */
-  const defenseModifier = COHooks.onDefenseModifier(100);
-
-  // base luck: 0-9, whole numbers i think
-  const goodLuckValue = COHooks.onGoodLuck(Math.floor(Math.random() * 10));
-  const badLuckValue = COHooks.onBadLuck(0);
-
-  // 0-4 (+ lash COP) whole numbers
-  const terrainStars = COHooks.onTerrainStars(
-    getTerrainDefenseStars(matchState.getTile(defenderPosition).type)
-  );
-
-  // baseDamage: 1-100
-  const baseDamage = getBaseDamage(attackerUnit.data, defenderUnit.data);
-
-  if (baseDamage === null) {
-    return null;
-  }
-
-  const luckModifier = goodLuckValue - badLuckValue;
-  const attackFactor = (baseDamage * attackModifier) / 100 + luckModifier;
-  const defenseFactor =
-    (200 - (defenseModifier + terrainStars * visualHPOfDefender)) / 100;
-
-  const dirtyDamageAsPercentage =
-    attackFactor * (visualHPOfAttacker / 10) * defenseFactor;
-  return Math.floor(roundUpTo(dirtyDamageAsPercentage, 0.05));
+  return cantUsePrimaryWeapon ? secondaryDamage : primaryDamage ?? secondaryDamage;
 };
 
 type DamageTable = Partial<Record<UnitType, number>>;
@@ -104,7 +37,7 @@ const damageMatrix: DamageMatrix = {
       rocket: 85,
       antiAir: 65,
       missile: 85,
-      pipeRunner: 55,
+      pipeRunner: 55
     },
     secondary: {
       infantry: 65,
@@ -121,8 +54,8 @@ const damageMatrix: DamageMatrix = {
       missile: 35,
       pipeRunner: 6,
       battleCopter: 9,
-      transportCopter: 35,
-    },
+      transportCopter: 35
+    }
   },
   artillery: {
     primary: {
@@ -144,8 +77,8 @@ const damageMatrix: DamageMatrix = {
       sub: 60,
       battleship: 40,
       carrier: 45,
-      blackBoat: 55,
-    },
+      blackBoat: 55
+    }
   },
   tank: {
     primary: {
@@ -165,7 +98,7 @@ const damageMatrix: DamageMatrix = {
       sub: 1,
       battleship: 1,
       carrier: 1,
-      blackBoat: 10,
+      blackBoat: 10
     },
     secondary: {
       infantry: 75,
@@ -182,8 +115,8 @@ const damageMatrix: DamageMatrix = {
       missile: 30,
       pipeRunner: 6,
       battleCopter: 10,
-      transportCopter: 40,
-    },
+      transportCopter: 40
+    }
   },
   antiAir: {
     primary: {
@@ -205,8 +138,8 @@ const damageMatrix: DamageMatrix = {
       fighter: 65,
       bomber: 75,
       stealth: 75,
-      blackBomb: 120,
-    },
+      blackBomb: 120
+    }
   },
   missile: {
     primary: {
@@ -215,8 +148,8 @@ const damageMatrix: DamageMatrix = {
       fighter: 100,
       bomber: 100,
       stealth: 100,
-      blackBomb: 120,
-    },
+      blackBomb: 120
+    }
   },
   rocket: {
     primary: {
@@ -238,8 +171,8 @@ const damageMatrix: DamageMatrix = {
       sub: 85,
       battleship: 55,
       carrier: 60,
-      blackBoat: 60,
-    },
+      blackBoat: 60
+    }
   },
   mediumTank: {
     primary: {
@@ -259,7 +192,7 @@ const damageMatrix: DamageMatrix = {
       sub: 10,
       battleship: 10,
       carrier: 10,
-      blackBoat: 35,
+      blackBoat: 35
     },
     secondary: {
       infantry: 105,
@@ -276,8 +209,8 @@ const damageMatrix: DamageMatrix = {
       missile: 35,
       pipeRunner: 7,
       battleCopter: 12,
-      transportCopter: 45,
-    },
+      transportCopter: 45
+    }
   },
   pipeRunner: {
     primary: {
@@ -305,8 +238,8 @@ const damageMatrix: DamageMatrix = {
       sub: 85,
       battleship: 55,
       carrier: 60,
-      blackBoat: 60,
-    },
+      blackBoat: 60
+    }
   },
   neoTank: {
     primary: {
@@ -326,7 +259,7 @@ const damageMatrix: DamageMatrix = {
       sub: 15,
       battleship: 15,
       carrier: 15,
-      blackBoat: 40,
+      blackBoat: 40
     },
     secondary: {
       infantry: 125,
@@ -343,8 +276,8 @@ const damageMatrix: DamageMatrix = {
       missile: 55,
       pipeRunner: 17,
       battleCopter: 22,
-      transportCopter: 55,
-    },
+      transportCopter: 55
+    }
   },
   megaTank: {
     primary: {
@@ -364,7 +297,7 @@ const damageMatrix: DamageMatrix = {
       sub: 45,
       battleship: 45,
       carrier: 45,
-      blackBoat: 105,
+      blackBoat: 105
     },
     secondary: {
       infantry: 135,
@@ -381,8 +314,8 @@ const damageMatrix: DamageMatrix = {
       missile: 55,
       pipeRunner: 17,
       battleCopter: 22,
-      transportCopter: 55,
-    },
+      transportCopter: 55
+    }
   },
   battleCopter: {
     primary: {
@@ -402,7 +335,7 @@ const damageMatrix: DamageMatrix = {
       sub: 25,
       battleship: 25,
       carrier: 25,
-      blackBoat: 25,
+      blackBoat: 25
     },
     secondary: {
       infantry: 75,
@@ -419,8 +352,8 @@ const damageMatrix: DamageMatrix = {
       missile: 35,
       pipeRunner: 6,
       battleCopter: 65,
-      transportCopter: 95,
-    },
+      transportCopter: 95
+    }
   },
   fighter: {
     primary: {
@@ -429,8 +362,8 @@ const damageMatrix: DamageMatrix = {
       fighter: 55,
       bomber: 100,
       stealth: 85,
-      blackBomb: 120,
-    },
+      blackBomb: 120
+    }
   },
   bomber: {
     primary: {
@@ -452,8 +385,8 @@ const damageMatrix: DamageMatrix = {
       sub: 95,
       battleship: 75,
       carrier: 75,
-      blackBoat: 105,
-    },
+      blackBoat: 105
+    }
   },
   stealth: {
     primary: {
@@ -481,8 +414,8 @@ const damageMatrix: DamageMatrix = {
       sub: 55,
       battleship: 45,
       carrier: 45,
-      blackBoat: 65,
-    },
+      blackBoat: 65
+    }
   },
   cruiser: {
     primary: {
@@ -491,7 +424,7 @@ const damageMatrix: DamageMatrix = {
       sub: 90,
       battleship: 5,
       carrier: 5,
-      blackBoat: 25,
+      blackBoat: 25
     },
     secondary: {
       battleCopter: 105,
@@ -499,8 +432,8 @@ const damageMatrix: DamageMatrix = {
       fighter: 85,
       bomber: 100,
       stealth: 100,
-      blackBomb: 120,
-    },
+      blackBomb: 120
+    }
   },
   sub: {
     primary: {
@@ -509,8 +442,8 @@ const damageMatrix: DamageMatrix = {
       sub: 55,
       battleship: 65,
       carrier: 75,
-      blackBoat: 95,
-    },
+      blackBoat: 95
+    }
   },
   battleship: {
     primary: {
@@ -532,8 +465,8 @@ const damageMatrix: DamageMatrix = {
       sub: 95,
       battleship: 50,
       carrier: 60,
-      blackBoat: 95,
-    },
+      blackBoat: 95
+    }
   },
   carrier: {
     primary: {
@@ -542,8 +475,8 @@ const damageMatrix: DamageMatrix = {
       fighter: 100,
       bomber: 100,
       stealth: 100,
-      blackBomb: 120,
-    },
+      blackBomb: 120
+    }
   },
   infantry: {
     primary: {
@@ -561,8 +494,8 @@ const damageMatrix: DamageMatrix = {
       missile: 25,
       pipeRunner: 5,
       battleCopter: 7,
-      transportCopter: 30,
-    },
+      transportCopter: 30
+    }
   },
   recon: {
     primary: {
@@ -580,7 +513,7 @@ const damageMatrix: DamageMatrix = {
       missile: 28,
       pipeRunner: 6,
       battleCopter: 10,
-      transportCopter: 35,
-    },
-  },
+      transportCopter: 35
+    }
+  }
 };

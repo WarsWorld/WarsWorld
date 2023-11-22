@@ -16,12 +16,12 @@ import {
   showAttackableTiles,
   showPassableTiles,
   showPath,
-  updatePath,
+  updatePath
 } from "./showPathing";
 import {
   animatedSpriteConstructor,
   spriteConstructor,
-  tileConstructor,
+  tileConstructor
 } from "./spriteConstructor";
 
 // Creates the sprite of an unit
@@ -61,7 +61,7 @@ export function showUnits(
       //TODO: own team's unit checker
       // check if waited or not
       // if ready, then start the create path procedure TODO: (supposing now that all are ready)
-      unitSprite.on("pointerdown", async () => {
+      unitSprite.on("pointerdown", () => {
         //Is this the first time we are clicking this unit? if not,
         // then display the menu where they are
         // because it means we want to activate the unit where its sitting.
@@ -94,7 +94,7 @@ export function showUnits(
             //original node
             pos: [unit.position[0], unit.position[1]],
             dist: 0,
-            parent: null,
+            parent: null
           });
           let currentPathDisplay = showPath(
             spriteSheets[spriteSheets.length - 1],
@@ -145,7 +145,7 @@ export function showUnits(
           arrowAndSquaresContainer.addChild(interactiveSquaresContainer);
 
           //create the visual passable tiles layer and the unit sprite layer
-          const tilesShown = await showPassableTiles(
+          const tilesShown = showPassableTiles(
             mapData,
             unit,
             enemyUnits,
@@ -226,10 +226,10 @@ export function showUnits(
                 "#932f2f"
               );
 
-              enemySquare.on("pointerover", async () => {
+              enemySquare.on("pointerover", () => {
                 //TODO: show dmg forecast/preview/%s checking current units and current terrains
               });
-              enemySquare.on("pointerdown", async () => {
+              enemySquare.on("pointerdown", () => {
                 unitSprite.zIndex = 0;
                 //TODO This means an enemy unit has been clicked, if clicked again, initiate combat from "current" / "last" arrow/tile position.
                 console.log("unit attacked");
@@ -252,7 +252,7 @@ export function showUnits(
           );
           outsideOfPath.alpha = 0;
           outsideOfPath.zIndex = -1;
-          outsideOfPath.on("pointerdown", async () => {
+          outsideOfPath.on("pointerdown", () => {
             unitSprite.zIndex = 0;
             secondTimeClickingUnit = false;
             console.log("invisible rectangle clicked, eliminating layers");
@@ -269,7 +269,7 @@ export function showUnits(
       //TODO: Allow to "hold" enemy attack.ts range ala Fire Emblem style so we can keep the "safe range" for our units from certain units
       // (like where is our Bcopter safe from two AA).
       let isNextAttack = false; //alternate between showing movement and attacking tiles
-      unitSprite.on("pointerdown", async () => {
+      unitSprite.on("pointerdown", () => {
         const enemyUnits: WWUnit[] = [];
 
         for (const unit of units) {
@@ -281,9 +281,9 @@ export function showUnits(
         let tilesShown: Container;
 
         if (isNextAttack) {
-          tilesShown = await showAttackableTiles(mapData, unit, enemyUnits);
+          tilesShown = showAttackableTiles(mapData, unit, enemyUnits);
         } else {
-          tilesShown = await showPassableTiles(mapData, unit, enemyUnits);
+          tilesShown = showPassableTiles(mapData, unit, enemyUnits);
         }
 
         isNextAttack = !isNextAttack;

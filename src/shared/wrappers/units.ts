@@ -22,11 +22,6 @@ export class UnitsWrapper {
     return this.getUnit(position) !== undefined;
   }
 
-  removeUnit(unit: UnitWrapper) {
-    this.data = this.data.filter((u) => u.isAtPosition(unit.data.position));
-    /* TODO check if player is eliminated, then create and send appropriate event */
-  }
-
   healAll(healingAmount: number) {
     this.data.forEach((unit) => {
       unit.data.stats.hp = Math.min(100, unit.data.stats.hp + healingAmount);

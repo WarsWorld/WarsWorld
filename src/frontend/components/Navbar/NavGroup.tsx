@@ -3,7 +3,7 @@ import { NavItem } from "./NavItem";
 import { NavMenuMatches } from "./NavMenuMatches";
 import NavButton from "../layout/NavButton";
 
-interface Props {
+type Props = {
   showMatchLinks: boolean;
   handleMatchLinks: () => void;
   setShowLinks: Dispatch<SetStateAction<boolean>>;
@@ -15,29 +15,29 @@ const navItemObject = [
     location: "/",
     iconPath: "/img/layout/NeoTank_MSide-0.png",
     iconAlt: "Teal Galaxy Neo Tank",
-    flip: true,
+    flip: true
   },
   {
     text: "NEWS",
     location: "/news",
     iconPath: "/img/layout/Sub-0.png",
     iconAlt: "Yellow Comet Sub",
-    flip: false,
+    flip: false
   },
   {
     text: "HOW TO PLAY",
     location: "/howtoplay",
     iconPath: "/img/layout/APC_MSide-0.png",
     iconAlt: "Jade Sun APC",
-    flip: true,
+    flip: true
   },
   {
     text: "COMMUNITY",
     location: "/",
     iconPath: "/img/layout/Cruiser-0.png",
     iconAlt: "Blue Moon Cruiser",
-    flip: false,
-  },
+    flip: false
+  }
 ];
 
 export function NavGroup({ showMatchLinks, handleMatchLinks }: Props) {

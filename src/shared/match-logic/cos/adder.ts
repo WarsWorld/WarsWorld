@@ -8,7 +8,7 @@ export const adder: COProperties = {
       description: "",
       stars: 2,
       hooks: {
-        onMovementRange: (value) => value + 1,
+        movementRange: (value) => value + 1,
       },
     },
     superCOPower: {
@@ -16,7 +16,7 @@ export const adder: COProperties = {
       description: "",
       stars: 5,
       hooks: {
-        onMovementRange: (value) => value + 2,
+        movementRange: (value) => value + 2,
       },
     },
   },

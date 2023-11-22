@@ -1,6 +1,7 @@
 import type { CO } from "shared/schemas/co";
 import type { MatchWrapper } from "shared/wrappers/match";
-import type { COHooksAllowReturnUndefined } from "./co-hooks";
+import type { PlayerInMatchWrapper } from "shared/wrappers/player-in-match";
+import type { Hooks } from "./co-hooks";
 import { adder } from "./cos/adder";
 import { andy } from "./cos/andy";
 import { colin } from "./cos/colin";
@@ -10,7 +11,6 @@ import { grit } from "./cos/grit";
 import { hawke } from "./cos/hawke";
 import { javier } from "./cos/javier";
 import { lash } from "./cos/lash";
-import type { PlayerInMatchWrapper } from "shared/wrappers/player-in-match";
 
 type InstantEffectProps = {
   match: MatchWrapper;
@@ -22,7 +22,7 @@ type COPower = {
   description: string;
   stars: number;
   instantEffect?: (props: InstantEffectProps) => void;
-  hooks?: COHooksAllowReturnUndefined;
+  hooks?: Partial<Hooks>;
 };
 
 // TODO general CO description, likes, dislikes, etc.
@@ -30,7 +30,7 @@ export type COProperties = {
   displayName: string;
   dayToDay?: {
     description: string;
-    hooks: COHooksAllowReturnUndefined;
+    hooks: Partial<Hooks>;
   };
   powers: {
     COPower?: COPower;
@@ -48,5 +48,5 @@ export const COPropertiesMap: Record<CO, COProperties> = {
   hawke,
   javier,
   lash,
-  colin,
+  colin
 };

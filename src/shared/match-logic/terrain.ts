@@ -1,6 +1,5 @@
-import type { Tile, TileType } from "shared/schemas/tile";
 import type { MovementType } from "shared/match-logic/buildable-unit";
-import { tsIncludes } from "shared/utils/typesafe-includes";
+import type { Tile, TileType } from "shared/schemas/tile";
 import type { ChangeableTile } from "shared/types/server-match-state";
 
 /**
@@ -25,7 +24,7 @@ const commonOceanMovementCosts = {
   treads: null,
   tires: null,
   air: 1,
-  pipe: null,
+  pipe: null
 } satisfies Partial<TileMovementCosts>;
 
 /**
@@ -39,7 +38,7 @@ const commonLandMovementCosts = {
   air: 1,
   pipe: null,
   sea: null,
-  lander: null,
+  lander: null
 } satisfies Partial<TileMovementCosts>;
 
 /**
@@ -55,13 +54,13 @@ const manMadeMovementCosts: TileMovementCosts = {
   ...commonLandMovementCosts,
   foot: 1,
   treads: 1,
-  tires: 1,
+  tires: 1
 };
 
 const buildingTileProperties: TileProperties = {
   /** All buildings provide 3 defense, except for the HQ which provides 4. */
   defenseStars: 3,
-  movementCosts: manMadeMovementCosts,
+  movementCosts: manMadeMovementCosts
 };
 
 /** Pipes and (unbroken) pipe seams are exactly the same */
@@ -75,8 +74,8 @@ const pipeTileProperties: TileProperties = {
     air: null,
     pipe: 1,
     sea: null,
-    lander: null,
-  },
+    lander: null
+  }
 };
 
 /**
@@ -89,15 +88,15 @@ const pipeTileProperties: TileProperties = {
  * to *enter* each type of tile, for each "movement type".
  * `null` means impassible terrain.
  */
-const tileProperties: Record<TileType, TileProperties> = {
+export const terrainProperties: Record<TileType, TileProperties> = {
   plain: {
     defenseStars: 1,
     movementCosts: {
       ...commonLandMovementCosts,
       foot: 1,
       treads: 1,
-      tires: 2,
-    },
+      tires: 2
+    }
   },
   forest: {
     defenseStars: 2,
@@ -105,8 +104,8 @@ const tileProperties: Record<TileType, TileProperties> = {
       ...commonLandMovementCosts,
       foot: 1,
       treads: 2,
-      tires: 3,
-    },
+      tires: 3
+    }
   },
   mountain: {
     defenseStars: 4,
@@ -114,8 +113,8 @@ const tileProperties: Record<TileType, TileProperties> = {
       ...commonLandMovementCosts,
       foot: 2,
       treads: null,
-      tires: null,
-    },
+      tires: null
+    }
   },
   river: {
     defenseStars: 0,
@@ -123,20 +122,20 @@ const tileProperties: Record<TileType, TileProperties> = {
       ...commonLandMovementCosts,
       foot: 2,
       treads: null,
-      tires: null,
-    },
+      tires: null
+    }
   },
   road: {
     defenseStars: 0,
-    movementCosts: manMadeMovementCosts,
+    movementCosts: manMadeMovementCosts
   },
   sea: {
     defenseStars: 0,
     movementCosts: {
       ...commonOceanMovementCosts,
       sea: 1,
-      lander: 1,
-    },
+      lander: 1
+    }
   },
   shoal: {
     defenseStars: 0,
@@ -147,16 +146,16 @@ const tileProperties: Record<TileType, TileProperties> = {
       tires: 1,
       // This is a beach, so navy *transports* can go here
       // but no other navy units!
-      lander: 1,
-    },
+      lander: 1
+    }
   },
   reef: {
     defenseStars: 1,
     movementCosts: {
       ...commonOceanMovementCosts,
       sea: 2,
-      lander: 2,
-    },
+      lander: 2
+    }
   },
   pipe: pipeTileProperties,
   pipeSeam: pipeTileProperties,
@@ -167,8 +166,8 @@ const tileProperties: Record<TileType, TileProperties> = {
       // Any building which *could have* produced a unit has
       // a movement cost of 1 for that unit.
       // Bases build piperunners.
-      pipe: 1,
-    },
+      pipe: 1
+    }
   },
   port: {
     defenseStars: buildingTileProperties.defenseStars,
@@ -178,34 +177,31 @@ const tileProperties: Record<TileType, TileProperties> = {
       // a movement cost of 1 for that unit.
       // Ports build ships.
       sea: 1,
-      lander: 1,
-    },
+      lander: 1
+    }
   },
   airport: buildingTileProperties,
   city: buildingTileProperties,
   hq: {
     defenseStars: 4,
-    movementCosts: manMadeMovementCosts,
+    movementCosts: manMadeMovementCosts
   },
   bridge: {
     defenseStars: 0,
-    movementCosts: manMadeMovementCosts,
+    movementCosts: manMadeMovementCosts
   },
   lab: buildingTileProperties,
   commtower: buildingTileProperties,
   unusedSilo: buildingTileProperties,
-  usedSilo: buildingTileProperties,
+  usedSilo: buildingTileProperties
 };
-
-export type Weather = "clear" | "rain" | "snow";
 
 /**
  * Every type of map tile has some number of "defense stars",
  * an integer between 0 and 4 which modifies the amount of damage
  * a unit on that tile takes from attacks.
  */
-export const getTerrainDefenseStars = (tileType: TileType) =>
-  tileProperties[tileType].defenseStars;
+export const getTerrainDefenseStars = (tileType: TileType) => terrainProperties[tileType].defenseStars;
 
 /**
  * Calculate the defense of a unit.
@@ -223,68 +219,7 @@ export const getUnitTerrainDefense = (hp: number, tileType: TileType) => {
    * The damage formula is based this "visual health".
    */
   const visualHp = Math.ceil(hp / 10);
-  return tileProperties[tileType].defenseStars * visualHp;
-};
-
-export const getBaseMovementCost = (
-  tileType: TileType,
-  movementType: MovementType,
-  weather: Weather
-) => {
-  const clearMovementCost =
-    tileProperties[tileType].movementCosts[movementType];
-
-  // impassible terrain remains impassible regardless of weather
-  if (clearMovementCost === null) {
-    return null;
-  }
-
-  switch (weather) {
-    case "clear":
-      return clearMovementCost;
-    case "rain": {
-      if (
-        tsIncludes(tileType, ["plain", "forest"]) &&
-        tsIncludes(movementType, ["treads", "tires"])
-      ) {
-        return clearMovementCost + 1;
-      }
-
-      return clearMovementCost;
-    }
-    case "snow": {
-      if (movementType === "air") {
-        return clearMovementCost * 2;
-      }
-
-      if (
-        tileType === "plain" &&
-        tsIncludes(movementType, ["foot", "tires", "treads"])
-      ) {
-        return clearMovementCost + 1;
-      }
-
-      if (tileType === "forest" && movementType === "foot") {
-        return clearMovementCost + 1;
-      }
-
-      if (
-        tileType === "mountain" &&
-        tsIncludes(movementType, ["foot", "boots"])
-      ) {
-        return clearMovementCost * 2;
-      }
-
-      if (
-        tsIncludes(tileType, ["sea", "port"]) &&
-        tsIncludes(movementType, ["sea", "lander"])
-      ) {
-        return clearMovementCost + 1;
-      }
-
-      return clearMovementCost;
-    }
-  }
+  return terrainProperties[tileType].defenseStars * visualHp;
 };
 
 export const isHiddenTile = (tile: Tile | ChangeableTile) => {

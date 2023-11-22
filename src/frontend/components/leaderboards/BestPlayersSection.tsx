@@ -1,7 +1,7 @@
 import PlayerCard from "./PlayerCard";
 import type { PlayerLeaderboard } from "./LeaderboardData";
 
-interface Props {
+type Props = {
   bestPlayers: PlayerLeaderboard[];
 }
 

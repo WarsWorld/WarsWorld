@@ -5,8 +5,8 @@ export const sturm: COProperties = {
   dayToDay: {
     description: "walky fasty",
     hooks: {
-      onMovementCost: (_value, { matchState }) => {
-        if (matchState.currentWeather !== "snow") {
+      movementCost: (_value, match) => {
+        if (match.currentWeather !== "snow") {
           return 1;
         }
       },
@@ -21,8 +21,8 @@ export const sturm: COProperties = {
         // stub
       },
       hooks: {
-        onMovementRange: (value) => value + 1,
-        onAttackModifier: (value) => value + 10,
+        movementRange: (value) => value + 1,
+        attack: (value) => value + 10,
       },
     },
   },

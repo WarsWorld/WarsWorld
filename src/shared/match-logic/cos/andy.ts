@@ -20,8 +20,8 @@ export const andy: COProperties = {
         player.getUnits().healAll(50);
       },
       hooks: {
-        onMovementRange: (value) => value + 1,
-        onAttackModifier: (value) => value + 10,
+        movementRange: (value) => value + 1,
+        attack: (value) => value + 10,
       },
     },
   },

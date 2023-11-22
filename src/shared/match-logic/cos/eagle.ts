@@ -6,22 +6,17 @@ export const eagle: COProperties = {
     description:
       "Air units gain +15% attack.ts and +10% defense, and consume -2 fuel per day. Naval units lose -30% attack.ts.",
     hooks: {
-      onAttackModifier(value, { attackerData: currentPlayerData }) {
-        switch (currentPlayerData.unitFacility) {
+      attack(value, { attacker }) {
+        switch (attacker.properties().facility) {
           case "airport":
             return value + 15;
           case "port":
             return value - 30;
         }
       },
-      onDefenseModifier(value, { attackerData: currentPlayerData }) {
-        if (currentPlayerData.unitFacility === "airport") {
+      defense(value, { attacker }) {
+        if (attacker.properties().facility === "airport") {
           return value + 10;
-        }
-      },
-      onFuelDrain(value, { attackerData: currentPlayerData }) {
-        if (currentPlayerData.unitFacility === "airport") {
-          return value - 2;
         }
       },
     },
@@ -32,13 +27,13 @@ export const eagle: COProperties = {
       stars: 3,
       description: "Air units gain +5% attack.ts and +10% defense.",
       hooks: {
-        onAttackModifier(value, { attackerData: currentPlayerData }) {
-          if (currentPlayerData.unitFacility === "airport") {
+        attack(value, { attacker }) {
+          if (attacker.properties().facility === "airport") {
             return value + 5;
           }
         },
-        onDefenseModifier(value, { attackerData: currentPlayerData }) {
-          if (currentPlayerData.unitFacility === "airport") {
+        defense(value, { attacker }) {
+          if (attacker.properties().facility === "airport") {
             return value + 10;
           }
         },
@@ -60,13 +55,13 @@ export const eagle: COProperties = {
           });
       },
       hooks: {
-        onAttackModifier(value, { attackerData: currentPlayerData }) {
-          if (currentPlayerData.unitFacility === "airport") {
+        attack(value, { attacker }) {
+          if (attacker.properties().facility === "airport") {
             return value + 5;
           }
         },
-        onDefenseModifier(value, { attackerData: currentPlayerData }) {
-          if (currentPlayerData.unitFacility === "airport") {
+        defense(value, { attacker }) {
+          if (attacker.properties().facility === "airport") {
             return value + 10;
           }
         },

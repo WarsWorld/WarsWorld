@@ -10,10 +10,10 @@ import React, { useState } from "react";
 import { usePlayers } from "frontend/context/players";
 import Link from "next/link";
 
-interface matchData {
+type matchData = {
   match: FrontendMatch;
   inMatch: boolean;
-}
+};
 
 export default function MatchCard({ match, inMatch }: matchData) {
   const { currentPlayer } = usePlayers();
@@ -24,7 +24,7 @@ export default function MatchCard({ match, inMatch }: matchData) {
 
   if (currentPlayer != undefined) {
     match.players.forEach((player, index) => {
-      if (player.playerId == currentPlayer.id) {
+      if (player.id == currentPlayer.id) {
         firstPlayer = player;
         playerIndex = index;
       }
@@ -35,9 +35,7 @@ export default function MatchCard({ match, inMatch }: matchData) {
     firstPlayer = match.players[0];
     secondPlayer = match.players[1];
   } else {
-    playerIndex === 0
-      ? (secondPlayer = match.players[1])
-      : (secondPlayer = match.players[0]);
+    playerIndex === 0 ? (secondPlayer = match.players[1]) : (secondPlayer = match.players[0]);
   }
 
   const [playerCO, setPlayerCO] = useState(firstPlayer.co);
@@ -45,8 +43,8 @@ export default function MatchCard({ match, inMatch }: matchData) {
 
   const [ready, setReady] = useState(firstPlayer.ready);
 
-  function changeCO(newCO: CO, army: Army, status: boolean) {
-    if (newCO) {
+  function changeCO(newCO: CO | null, army?: Army, status?: boolean) {
+    if (newCO !== null) {
       setPlayerCO(newCO);
     }
 
@@ -67,42 +65,16 @@ export default function MatchCard({ match, inMatch }: matchData) {
 
   return (
     <div className="@grid @bg-bg-primary @relative">
-      <MatchCardTop
-        mapName={match.map.name}
-        day={match.turn}
-        state={match.state}
-        favorites={0}
-        spectators={0}
-        time={0.15}
-      />
+      <MatchCardTop mapName={match.map.name} day={match.turn} state={match.state} favorites={0} spectators={0} time={0.15} />
       <div className="@grid @grid-cols-2 @gap-3">
-        <MatchPlayer
-          name={firstPlayer.playerId}
-          co={playerCO}
-          country={army}
-          playerReady={ready}
-        />
+        <MatchPlayer name={firstPlayer.id} co={playerCO} country={army} playerReady={ready} />
         {twoPlayerCheck ? (
-          <MatchPlayer
-            name={secondPlayer.playerId}
-            co={secondPlayer.co}
-            country={secondPlayer.army}
-            flipCO={true}
-            playerReady={secondPlayer.ready}
-          />
+          <MatchPlayer name={secondPlayer.id} co={secondPlayer.co} country={secondPlayer.army} flipCO={true} playerReady={secondPlayer.ready} />
         ) : (
           <MatchPlayer
             name={"Opponent"}
-            co={
-              coSchema._def.values[
-                Math.floor(Math.random() * coSchema._def.values.length)
-              ]
-            }
-            country={
-              armySchema._def.values[
-                Math.floor(Math.random() * armySchema._def.values.length)
-              ]
-            }
+            co={coSchema._def.values[Math.floor(Math.random() * coSchema._def.values.length)]}
+            country={armySchema._def.values[Math.floor(Math.random() * armySchema._def.values.length)]}
             flipCO={true}
             opponent={true}
             playerReady={true}

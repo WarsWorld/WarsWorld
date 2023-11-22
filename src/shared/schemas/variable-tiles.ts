@@ -53,6 +53,7 @@ export const plainTileSchema = withUnit.extend({
 export const riverTileSchema = withUnit.extend({
   type: z.literal("river"),
   // TODO rivers have MANY more variants with flow direction and all
+  // the question is: do we want to support them for map creation?
   variant: twoWayConnectionsSchema
     .or(threeWayConnectionSchema)
     .or(fourWayConnectionSchema),

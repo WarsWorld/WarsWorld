@@ -5,12 +5,11 @@ export const lash: COProperties = {
   powers: {
     superCOPower: {
       name: "Prime Tactics",
-      stars: 123, // TODO
-      description: "TODO",
+      stars: 8,
+      description: "", // TODO
       hooks: {
-        onTerrainStars(value) {
-          return value * 2;
-        },
+        terrainStars: (v) => v * 2,
+        movementCost: () => 1,
       },
     },
   },

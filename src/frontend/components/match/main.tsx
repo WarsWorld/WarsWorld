@@ -18,7 +18,7 @@ const spriteURLMap: Record<string, string> = {
   ro: "roads",
   se: "sea",
   sh: "shoal",
-  si: "silo",
+  si: "silo"
 };
 
 const numberMapping: Record<string, string> = {
@@ -27,7 +27,7 @@ const numberMapping: Record<string, string> = {
   2: "base",
   3: "airport",
   4: "port",
-  5: "commtower",
+  5: "commtower"
 };
 
 const getSpriteURL = (terrainImage: string) => {
@@ -48,9 +48,7 @@ const getSpriteURL = (terrainImage: string) => {
 
 export const PixiMatch = () => {
   const { currentPlayer } = usePlayers();
-  const [players, setPlayers] = useState<PlayerInMatch[] | null | undefined>(
-    null
-  );
+  const [players, setPlayers] = useState<PlayerInMatch[] | null | undefined>(null);
   const [segments] = useState<Tile[][] | null | undefined>(null);
   const pixiCanvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -75,7 +73,7 @@ export const PixiMatch = () => {
         if (!segments) {
           // setSegments(data.map.tiles);
         }
-      },
+      }
     }
   );
 
@@ -86,26 +84,22 @@ export const PixiMatch = () => {
 
     const pixiApp = new Application({
       view: pixiCanvasRef.current,
-      resolution: 2,
+      resolution: 2
     });
 
     pixiApp.stage.position.set(200, 0);
 
-    (async () => {
-      for (const indexStringY in segments) {
-        for (const indexStringX in segments) {
-          const seg = segments[indexStringY][indexStringX];
-          const indexX = Number.parseInt(indexStringX, 10);
-          const indexY = Number.parseInt(indexStringY, 10);
+    void (async () => {
+      for (let y = 0; y < segments.length; y++) {
+        for (let x = 0; x < segments[y].length; x++) {
+          const seg = segments[y][x];
 
-          const texture = await Assets.load<Texture>(
-            `/img/mapTiles/${getSpriteURL(seg.type)}.webp`
-          );
+          const texture = await Assets.load<Texture>(`/img/mapTiles/${getSpriteURL(seg.type)}.webp`);
 
           const forestSprite = Sprite.from(texture);
 
-          forestSprite.x = indexX * 16;
-          forestSprite.y = indexY * 16 - (forestSprite.height - 16);
+          forestSprite.x = x * 16;
+          forestSprite.y = y * 16 - (forestSprite.height - 16);
           pixiApp.stage.addChild(forestSprite);
         }
       }
@@ -137,21 +131,16 @@ export const PixiMatch = () => {
         <div className="@flex @flex-col @items-center @justify-center @gap-1 gameInnerBox">
           <canvas
             style={{
-              imageRendering: "pixelated",
+              imageRendering: "pixelated"
             }}
             ref={pixiCanvasRef}
           ></canvas>
         </div>
-        {notSmallScreen && (
-          <PlayerBox playerTurn={!turn} playerInMatch={players?.[1]} />
-        )}
+        {notSmallScreen && <PlayerBox playerTurn={!turn} playerInMatch={players?.[1]} />}
       </div>
       <div className="@flex @items-center @justify-center gameTime">
         <p className="@py-2">00:00:00</p>
-        <button
-          className="@text-black @rounded-lg @bg-stone-200"
-          onClick={passTurn}
-        >
+        <button className="@text-black @rounded-lg @bg-stone-200" onClick={passTurn}>
           Pass turn
         </button>
       </div>

@@ -1,7 +1,7 @@
 import { DispatchableError } from "shared/DispatchedError";
 import type { AttackAction } from "shared/schemas/action";
 import { unitPropertiesMap } from "../../buildable-unit";
-import { calculateDamage } from "../../calculate-damage";
+import { calculateDamage } from "../../calculate-damage/calculate-damage";
 import type { MatchWrapper } from "shared/wrappers/match";
 import type { Position } from "shared/schemas/position";
 import type { AttackEvent } from "shared/types/events";
@@ -113,14 +113,14 @@ export const applyAttackEvent = (
   defendingPlayer.increasePowerMeter(defendingPlayerGain);
 
   if (event.defenderHP === 0) {
-    match.units.removeUnit(defender);
+    defender.remove();
   } else {
     defender.data.stats.hp = event.defenderHP;
   }
 
   if (event.attackerHP !== undefined) {
     if (event.attackerHP === 0) {
-      match.units.removeUnit(attacker);
+      attacker.remove();
     } else {
       attacker.data.stats.hp = event.attackerHP;
     }
