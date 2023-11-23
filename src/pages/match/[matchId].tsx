@@ -118,9 +118,8 @@ const Match = ({ spriteData }: Props) => {
       spriteData.countries.forEach((country: string) => {
         const texture = BaseTexture.from(spriteData[country].meta.image);
         const sheet = new Spritesheet(texture, spriteData[country]);
-        void sheet.parse().then(() => {
-          spriteSheets.push(sheet);
-        });
+        void sheet.parse();
+        spriteSheets.push(sheet);
       });
 
       //Lets render our map!

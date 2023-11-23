@@ -29,7 +29,7 @@ export default function MatchPlayer({ name, co, country, flipCO, opponent, playe
           className={`@flex @flex-row-reverse
       ${opponent ? "@bg-gray-600" : `@bg-${country}`}`}
         >
-          <Image
+          <img
             src={opponent ? `/img/nations/black-hole.gif` : `/img/nations/${country}.gif`}
             className="@h-7 [image-rendering:pixelated]"
             alt="opponent chosen CO"
@@ -50,7 +50,7 @@ export default function MatchPlayer({ name, co, country, flipCO, opponent, playe
           className={`@h-[200px] [image-rendering:pixelated] @bg-cover @scale-x-[-1] ${playerReady ? "@contrast-[1]" : "@contrast-[0.5]"}`}
         ></div>
         <div className={`@flex @bg-${country}`}>
-          <Image src={`/img/nations/${country}.gif`} className="@h-7 [image-rendering:pixelated]" alt="opponent chosen CO" />
+          <img src={`/img/nations/${country}.gif`} className="@h-7 [image-rendering:pixelated]" alt="opponent chosen CO" />
           <p className="@truncate @px-0.5 @text-sm">{name}</p>
         </div>
       </div>

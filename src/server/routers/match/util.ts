@@ -34,6 +34,7 @@ export const matchToFrontend = (match: MatchWrapper) => ({
 });
 
 export function allMatchSlotsReady(match: MatchWrapper) {
+
   for (let i = 0; i < match.map.data.numberOfPlayers; i++) {
     if (match.players.getBySlot(i)?.data.ready !== true) {
       return false;
@@ -64,6 +65,7 @@ export function joinMatchAndGetPlayer(
     new PlayerInMatchWrapper(
       {
         id: player.id,
+        name: player.name,
         slot,
         ready: false,
         co,

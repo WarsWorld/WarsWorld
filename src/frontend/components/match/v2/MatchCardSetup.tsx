@@ -5,7 +5,6 @@ import type { CO } from "shared/schemas/co";
 import { coSchema } from "shared/schemas/co";
 import { trpc } from "frontend/utils/trpc-client";
 import type { Match, Player } from "@prisma/client";
-import Image from "next/image";
 
 type matchData = {
   playerID: Player["id"];
@@ -98,7 +97,7 @@ export default function MatchCardSetup({ playerID, matchID, functionCO, inMatch,
                     key={army}
                     className={`@flex @items-center @p-1 @bg-bg-primary hover:@bg-primary @cursor-pointer @duration-300`}
                   >
-                    <Image src={`/img/nations/${army}.gif`} className="[image-rendering:pixelated]" alt="" />
+                    <img src={`/img/nations/${army}.gif`} className="[image-rendering:pixelated]" alt="" />
                     <p className="@capitalize @text-xs @px-1">{army}</p>
                   </div>
                 );

@@ -8,7 +8,7 @@ import {
   router,
 } from "server/trpc/trpc-setup";
 import { z } from "zod";
-import { signUpSchema } from "server/schemas/auth";
+import { signUpSchema } from "shared/schemas/auth";
 import { TRPCError } from "@trpc/server";
 import { hashPassword } from "server/hashPassword";
 
@@ -49,12 +49,12 @@ export const userRouter = router({
         where: { email: input.email },
       });
 
-      if (isUserInDB && isUserInDB > 0)
+      if (isUserInDB && isUserInDB > 0) {
         throw new TRPCError({
           code: "CONFLICT",
           message: "There is already a user with that email in the database",
         });
-
+      }
       // TODO: Password validation
 
       const hashedPassword = await hashPassword(input.password);
