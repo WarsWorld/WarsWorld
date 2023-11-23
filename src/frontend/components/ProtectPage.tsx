@@ -1,13 +1,13 @@
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
-import { ReactNode } from "react";
+import type { ReactNode } from "react";
 
 export const ProtectPage = ({ children }: { children: ReactNode }) => {
   const router = useRouter();
   const { status } = useSession({
     required: true,
     onUnauthenticated() {
-      router.push(".", {
+      void router.push(".", {
         query: `authModalOpen&error=ProtectedPage&callbackUrl=${encodeURIComponent(
           window.location.href
         )}`,

@@ -4,7 +4,7 @@ import { useSession } from "next-auth/react";
 import { signOut } from "next-auth/react";
 import { usePlayers } from "frontend/context/players";
 
-interface Props {
+type Props = {
   setIsOpen: (value: boolean, callbackUrl?: string) => Promise<void>;
   isOpen: boolean;
   width?: string;
@@ -20,7 +20,11 @@ export default function NavLoginLogout({ isOpen, setIsOpen, width }: Props) {
         {!session && (
           <>
             <div className="@w-32">
-              <SquareButton onClick={() => setIsOpen(true)}>LOGIN</SquareButton>
+              <SquareButton onClick={() => {
+                void setIsOpen(true)
+              }}>
+                LOGIN
+              </SquareButton>
             </div>
             <LoginSignupModal
               isOpen={isOpen}
@@ -36,7 +40,7 @@ export default function NavLoginLogout({ isOpen, setIsOpen, width }: Props) {
               className="hover:@scale-[1.02] @text-lg @cursor-pointer @text-primary-light hover:@text-primary"
               onClick={() => {
                 clearLSCurrentPlayer();
-                signOut();
+                void signOut();
               }}
             >
               LOGOUT

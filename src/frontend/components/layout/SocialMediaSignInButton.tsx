@@ -1,6 +1,6 @@
 import { signIn } from "next-auth/react";
 
-interface Props {
+type Props = {
   disabled?: boolean;
   name: string;
 }
@@ -47,8 +47,8 @@ export default function SocialMediaSignInButton({ disabled, name }: Props) {
   const font = socialMedia?.font ?? "";
   const signInHandler = socialMedia?.signinHandler ?? (() => undefined);
 
-  const onClickSocialMediaHandler = async () => {
-    await signInHandler();
+  const onClickSocialMediaHandler = () => {
+    void signInHandler();
   };
 
   return (

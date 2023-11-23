@@ -13,7 +13,7 @@ import { getProviders } from "next-auth/react";
 
 const possibleProviders = ["github", "discord", "google"];
 
-interface Props {
+type Props = {
   width?: string;
   isOpen: boolean;
   setIsOpen: (value: boolean, callbackUrl?: string) => Promise<void>;
@@ -32,22 +32,26 @@ export default function LoginSignupModal({ isOpen, setIsOpen, width }: Props) {
   const callbackUrl = searchParams.get("callbackUrl");
 
   useEffect(() => {
-    getProviders().then((providers) => setCurrentProviders(providers));
+    void getProviders().then((providers) => setCurrentProviders(providers));
   }, []);
 
-  const setIsSignupForm = async (value: boolean, callbackUrl?: string) => {
-    if (value)
+  const setIsSignupForm = async (value: boolean, callbackUrl?: string | null) => {
+    if (value) 
+    {
       await router.replace("", {
         query: `authModalOpen&SignUpForm${
           callbackUrl ? "&callbackUrl=" + encodeURIComponent(callbackUrl) : ""
         }`,
       });
+    } 
     else
+    {
       await router.replace("", {
         query: `authModalOpen${
           callbackUrl ? "&callbackUrl=" + encodeURIComponent(callbackUrl) : ""
         }`,
       });
+    }
   };
 
   const onLoginSuccess = async () =>
@@ -56,7 +60,9 @@ export default function LoginSignupModal({ isOpen, setIsOpen, width }: Props) {
       callbackUrl === null ? undefined : decodeURIComponent(callbackUrl)
     );
 
-  const onClose = async () => await setIsOpen(false);
+  const onClose = () => {
+    void setIsOpen(false);
+  }
 
   return (
     <>
@@ -81,10 +87,7 @@ export default function LoginSignupModal({ isOpen, setIsOpen, width }: Props) {
                 <div className="@my-2 @w-[80vw] smallscreen:@w-80 @h-14 @text-2xl">
                   <SquareButton
                     onClick={() =>
-                      setIsSignupForm(
-                        false,
-                        callbackUrl == null ? undefined : callbackUrl
-                      )
+                      void setIsSignupForm(false, callbackUrl)
                     }
                   >
                     Login
@@ -122,7 +125,7 @@ export default function LoginSignupModal({ isOpen, setIsOpen, width }: Props) {
                       <SocialMediaSignInButton
                         name={socialMedia}
                         disabled={
-                          !(currentProviders && currentProviders[socialMedia])
+                          !currentProviders?.[socialMedia]
                         }
                       />
                     </div>
@@ -140,10 +143,7 @@ export default function LoginSignupModal({ isOpen, setIsOpen, width }: Props) {
                 <div className="@my-2 @w-[80vw] smallscreen:@w-80 @h-20 cellphone:@h-14 @text-2xl">
                   <SquareButton
                     onClick={() =>
-                      setIsSignupForm(
-                        true,
-                        callbackUrl == null ? undefined : callbackUrl
-                      )
+                      void setIsSignupForm(true, callbackUrl)
                     }
                   >
                     Create New Account

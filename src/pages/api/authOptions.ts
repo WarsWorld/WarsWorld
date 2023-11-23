@@ -2,17 +2,18 @@
   NOTE: If you try to register or first login with two providers that have the same email, the second provider will fail.
   The first provider will register the first email and so the second cannot be registered.
 */
-import { NextAuthOptions } from "next-auth";
-import DiscordProvider, { DiscordProfile } from "next-auth/providers/discord";
+import type { NextAuthOptions } from "next-auth";
+import DiscordProvider from "next-auth/providers/discord";
+import type { DiscordProfile } from "next-auth/providers/discord";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GithubProvider from "next-auth/providers/github";
 import GoogleProvider from "next-auth/providers/google";
-import { loginSchema } from "server/schemas/auth";
-import { Adapter } from "next-auth/adapters";
+import { loginSchema } from "shared/schemas/auth";
+import type { Adapter } from "next-auth/adapters";
 import { prisma } from "server/prisma/prisma-client";
 import WarsWorldAdapter from "./WarsWorldAdapter";
 import { compare } from "bcrypt";
-import { Provider } from "next-auth/providers";
+import type { Provider } from "next-auth/providers";
 import { z } from "zod";
 
 const adapter = WarsWorldAdapter(prisma) as Adapter;
@@ -68,7 +69,7 @@ const providers: Provider[] = [
         where: { name: loginParse.data.name },
       });
 
-      if (!dbUser || !dbUser.password) {
+      if (!dbUser?.password) {
         return null;
       }
 
@@ -90,28 +91,30 @@ const providers: Provider[] = [
   }),
 ];
 
-if (githubEnvParsed.success)
+if (githubEnvParsed.success) {
   providers.push(
     GithubProvider({
-      clientId: process.env.GITHUB_CLIENT_ID as string,
-      clientSecret: process.env.GITHUB_CLIENT_SECRET as string,
+      clientId: process.env.GITHUB_CLIENT_ID!,
+      clientSecret: process.env.GITHUB_CLIENT_SECRET!,
     })
   );
+}
 
-if (googleEnvParsed.success)
+if (googleEnvParsed.success) {
   providers.push(
     GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID as string,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+      clientId: process.env.GOOGLE_CLIENT_ID!,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
     })
   );
+}
 
-if (discordEnvParsed.success)
+if (discordEnvParsed.success) {
   providers.push(
     DiscordProvider({
-      clientId: process.env.DISCORD_CLIENT_ID as string,
-      clientSecret: process.env.DISCORD_CLIENT_SECRET as string,
-      async profile(profile: DiscordProfile) {
+      clientId: process.env.DISCORD_CLIENT_ID!,
+      clientSecret: process.env.DISCORD_CLIENT_SECRET!,
+      profile(profile: DiscordProfile) {
         /* 
           For some reason Discord provider doesn't send the user's data properly.
           It probably expects another type of squema.
@@ -127,6 +130,8 @@ if (discordEnvParsed.success)
       },
     })
   );
+}
+  
 
 export const authOptions: NextAuthOptions = {
   secret: process.env.NEXTAUTH_SECRET,
@@ -140,15 +145,22 @@ export const authOptions: NextAuthOptions = {
     strategy: "jwt",
   },
   callbacks: {
-    async redirect({ url, baseUrl }) {
-      if (url.startsWith("/")) return `${baseUrl}${url}`;
-      else if (new URL(url).origin === baseUrl) return url;
+    redirect({ url, baseUrl }) {
+      if (url.startsWith("/")) {
+        return `${baseUrl}${url}`;
+      }
+      
+      else if (new URL(url).origin === baseUrl) {
+        return url;
+      }
+
       return baseUrl; // redirect callback
     },
-    async jwt({ token, user }) {
+    jwt({ token, user }) {
       if (user) {
         token.id = user.id;
       }
+      
       token.userRole = "admin";
       return token;
     },

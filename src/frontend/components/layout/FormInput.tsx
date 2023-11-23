@@ -1,6 +1,6 @@
-import { ChangeEventHandler } from "react";
+import type { ChangeEventHandler } from "react";
 
-interface Props {
+type Props = {
   text: string;
   isError?: boolean;
   errorMessage?: string;

@@ -1,4 +1,4 @@
-interface Props {
+type Props = {
   isError?: boolean;
   title: string;
   message?: string;

@@ -1,11 +1,12 @@
 import SquareButton from "../layout/SquareButton";
 import FormInput from "../layout/FormInput";
-import { Dispatch, FormEvent, SetStateAction, useState } from "react";
+import { useState } from "react";
+import type { Dispatch, FormEvent, SetStateAction } from "react";
 import { trpc } from "frontend/utils/trpc-client";
 import ErrorSuccessBlock from "../layout/ErrorSuccessBlock";
 
-interface Props {
-  setIsSignupForm: (value: boolean, callbackUrl?: string) => Promise<void>;
+type Props = {
+  setIsSignupForm: (value: boolean, callbackUrl?: string | null) => Promise<void>;
   setDidSignUp: Dispatch<SetStateAction<boolean>>;
   callbackUrl: string | null;
 }
@@ -59,14 +60,22 @@ export default function SignupForm({
       return e;
     }
 
-    setIsSignupForm(false, callbackUrl == null ? undefined : callbackUrl);
+    void setIsSignupForm(false, callbackUrl);
     setDidSignUp(true);
   };
 
   const defineErrorMessage = () => {
-    if (error?.data?.zodError) return "Data validation error";
-    if (error) return error.message;
-    if (showPasswordsDoNotMatch) return "Passwords do not match";
+    if (error?.data?.zodError) {
+      return "Data validation error";
+    }
+
+    if (error) {
+      return error.message;
+    }
+    
+    if (showPasswordsDoNotMatch) {
+      return "Passwords do not match";
+    }
   };
 
   return (
@@ -138,7 +147,9 @@ export default function SignupForm({
                 signupData.password !== signupData.confirmPassword ||
                 !areInputsFilled
               }
-              onClick={onSubmitSignupForm}
+              onClick={(event: FormEvent) => {
+                void onSubmitSignupForm(event);
+              }}
             >
               Signup
             </SquareButton>

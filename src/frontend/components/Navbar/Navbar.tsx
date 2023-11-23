@@ -19,11 +19,14 @@ export function Navbar() {
   const isOpen = searchParams.has("authModalOpen");
 
   const setIsOpen = async (value: boolean, callbackUrl?: string) => {
-    if (value)
+    if (value) {
       await router.replace("", {
         query: "authModalOpen",
       });
-    else await router.replace(callbackUrl ? callbackUrl : "");
+    }  
+    else {
+      await router.replace(callbackUrl ?? "");
+    }
   };
 
   const handleBurgerMenu = () => {

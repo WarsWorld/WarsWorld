@@ -1,8 +1,10 @@
 import Link from "next/link";
 
+/*
 const rLogoPath = "/img/layout/Reddit.png";
 const dLogoPath = "/img/layout/Discord.png";
 const gLogoPath = "/img/layout/GitHub.png";
+*/
 
 const footerLinks1 = [
   { text: "About us", href: "/about" },

@@ -1,12 +1,13 @@
 import SquareButton from "../layout/SquareButton";
 import FormInput from "../layout/FormInput";
-import { FormEvent, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import type { FormEvent } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/router";
 import ErrorSuccessBlock from "../layout/ErrorSuccessBlock";
 import { useSearchParams } from "next/navigation";
 
-interface Props {
+type Props = {
   onLoginSuccess: () => Promise<void>;
 }
 
@@ -27,23 +28,28 @@ export default function LoginForm({ onLoginSuccess }: Props) {
   const isOAuthAccountNotLinked = errorParam == "OAuthAccountNotLinked";
 
   useEffect(() => {
-    if (isProviderCallback)
+    if (isProviderCallback) {
       setError({
         isError: true,
         message: "Error trying to login with that provider.",
       });
+    }
+      
 
-    if (isOAuthAccountNotLinked)
+    if (isOAuthAccountNotLinked) {
       setError({
         isError: true,
         message: "There is already an user with that email",
       });
-
-    if (isProtectionError)
+    }
+      
+    if (isProtectionError) {
       setError({
         isError: true,
         message: "You must be logged in to access this page.",
       });
+    }
+      
   }, [isOAuthAccountNotLinked, isProviderCallback, isProtectionError]);
 
   const onChangeGenericHandler = (identifier: string, value: string) => {
@@ -55,6 +61,7 @@ export default function LoginForm({ onLoginSuccess }: Props) {
 
   const onSubmitLoginForm = async (event: FormEvent) => {
     event.preventDefault();
+
     try {
       const loginResponse = await signIn("credentials", {
         name: loginData.user,
@@ -62,32 +69,34 @@ export default function LoginForm({ onLoginSuccess }: Props) {
         redirect: false,
       });
 
-      if (!loginResponse)
-        throw {
-          title: "Couldn't connect to the server.",
-          statusCode: null,
-        };
+      if (!loginResponse) {
+        setError({
+          isError: true,
+          message: "Couldn't connect to the server.",
+        });
+        throw "Couldn't connect to the server.";
+      }
 
-      if (loginResponse.status === 401)
-        throw {
-          title: "User or password are incorrect",
-          statusCode: loginResponse.status,
-        };
-
+      if (loginResponse.status === 401) {
+        setError({
+          isError: true,
+          message: "User or password are incorrect",
+        });
+        throw "User or password are incorrect";
+      }
+        
       if (loginResponse.ok) {
         setError({
           isError: false,
           message: "",
         });
-        onLoginSuccess().then(() => {
+
+        void onLoginSuccess().then(() => {
           router.reload();
         });
       }
-    } catch (e: any) {
-      setError({
-        isError: true,
-        message: e.title,
-      });
+    } catch (e: unknown) {
+      
     }
   };
 
@@ -96,7 +105,9 @@ export default function LoginForm({ onLoginSuccess }: Props) {
       {error.isError && <ErrorSuccessBlock isError title={error.message} />}
 
       <form
-        onSubmit={onSubmitLoginForm}
+        onSubmit={(event: FormEvent) => {
+          void onSubmitLoginForm(event);
+        }}
         className="@flex @flex-col @gap-2 smallscreen:@gap-6"
       >
         <FormInput

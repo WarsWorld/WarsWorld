@@ -1,4 +1,4 @@
-import { Player } from "@prisma/client";
+import type { Player } from "@prisma/client";
 import { createContext, useContext, useState } from "react";
 import { useLocalStorage } from "frontend/utils/use-local-storage";
 import type { ReactNode } from "react";
@@ -18,12 +18,10 @@ export const ProvidePlayers = ({ children }: { children: ReactNode }) => {
   const { data } = trpc.user.me.useQuery(undefined, {
     onSuccess: (newUser) => {
       setUser(newUser);
-      if (
-        newUser.ownedPlayers &&
-        newUser.ownedPlayers[0] &&
-        currentPlayerId === ""
-      )
+
+      if (newUser.ownedPlayers?.[0] && currentPlayerId === "") {
         setCurrentPlayerId(newUser.ownedPlayers[0].id);
+      }
     },
   });
   const [user, setUser] = useState(data);
@@ -52,11 +50,17 @@ export const usePlayers = () => {
   const setCurrentPlayerId = user?.setCurrentPlayerId;
 
   const currentPlayer = ownedPlayers?.find((p) => p.id === currentPlayerId);
+
   const setCurrentPlayer = (player: Player) => {
-    if (setCurrentPlayerId) setCurrentPlayerId(player.id);
+    if (setCurrentPlayerId) {
+      setCurrentPlayerId(player.id);
+    }
   };
+
   const clearLSCurrentPlayer = () => {
-    if (setCurrentPlayerId) setCurrentPlayerId("");
+    if (setCurrentPlayerId) {
+      setCurrentPlayerId("");
+    }
   };
 
   return {

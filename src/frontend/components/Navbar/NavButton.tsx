@@ -1,5 +1,5 @@
-import { ReactNode } from "react";
-interface Props {
+import type { ReactNode } from "react";
+type Props = {
   children: ReactNode;
   hasArrow?: boolean;
   isOpen?: boolean;
