@@ -7,7 +7,6 @@ import DiscordProvider, { DiscordProfile } from "next-auth/providers/discord";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GithubProvider from "next-auth/providers/github";
 import GoogleProvider from "next-auth/providers/google";
-import { User } from "@prisma/client";
 import { loginSchema } from "server/schemas/auth";
 import { Adapter } from "next-auth/adapters";
 import { prisma } from "server/prisma/prisma-client";
@@ -83,9 +82,10 @@ const providers: Provider[] = [
       }
 
       return {
+        id: dbUser.id,
         name: dbUser.name,
         email: dbUser.email,
-      } as User;
+      };
     },
   }),
 ];

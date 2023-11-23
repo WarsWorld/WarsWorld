@@ -22,9 +22,16 @@ export default function SignupForm({
     confirmPassword: "",
   });
 
-  const doPasswordsMatch =
-    signupData.password === signupData.confirmPassword &&
-    signupData.password.trim() !== "";
+  const areInputsFilled =
+    signupData.password.trim() !== "" &&
+    signupData.confirmPassword.trim() !== "" &&
+    signupData.email.trim() !== "" &&
+    signupData.user.trim() !== "";
+
+  const showPasswordsDoNotMatch =
+    signupData.password !== signupData.confirmPassword &&
+    signupData.password.trim() !== "" &&
+    signupData.confirmPassword.trim() !== "";
 
   const {
     mutateAsync: registerAsync,
@@ -41,10 +48,6 @@ export default function SignupForm({
 
   const onSubmitSignupForm = async (event: FormEvent) => {
     event.preventDefault();
-
-    if (!doPasswordsMatch) {
-      return;
-    }
 
     try {
       await registerAsync({
@@ -63,16 +66,15 @@ export default function SignupForm({
   const defineErrorMessage = () => {
     if (error?.data?.zodError) return "Data validation error";
     if (error) return error.message;
-    if (!doPasswordsMatch) return "Passwords do not match";
+    if (showPasswordsDoNotMatch) return "Passwords do not match";
   };
 
   return (
     <>
-      {((!doPasswordsMatch && signupData.confirmPassword.trim() !== "") ||
-        isError) && (
+      {(showPasswordsDoNotMatch || isError) && (
         <ErrorSuccessBlock
           isError
-          title={!doPasswordsMatch ? "Warning" : "Couldn't sign up"}
+          title={showPasswordsDoNotMatch ? "Warning" : "Couldn't sign up"}
           message={defineErrorMessage()}
         />
       )}
@@ -131,7 +133,15 @@ export default function SignupForm({
         />
         <div className="@flex @flex-col @items-center @justify-center @py-4 @px-10">
           <div className="@w-[80vw] smallscreen:@w-96 @h-16 @text-3xl @my-2">
-            <SquareButton onClick={onSubmitSignupForm}>Signup</SquareButton>
+            <SquareButton
+              disabled={
+                signupData.password !== signupData.confirmPassword ||
+                !areInputsFilled
+              }
+              onClick={onSubmitSignupForm}
+            >
+              Signup
+            </SquareButton>
           </div>
         </div>
       </form>
