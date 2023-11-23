@@ -3,30 +3,25 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
 
-import {
-  AnimatedSprite,
-  Container,
-  DisplayObject,
-  Spritesheet,
-  Texture,
-} from "pixi.js";
-import { WWUnit } from "../server/schemas/unit";
-import { Tile } from "../server/schemas/tile";
+import type { AnimatedSprite, Spritesheet } from "pixi.js";
+import { Container, Texture } from "pixi.js";
+import { isSamePosition } from "shared/schemas/position";
+import type { Tile } from "shared/schemas/tile";
+import type { WWUnit } from "shared/schemas/unit";
+import { unitPropertiesMap } from "shared/match-logic/buildable-unit";
+import type { PathNode } from "./showPathing";
 import {
   getAccessibleNodes,
   getAttackableTiles,
-  PathNode,
   showAttackableTiles,
   showPassableTiles,
   showPath,
-  updatePath,
+  updatePath
 } from "./showPathing";
-import { unitPropertiesMap } from "../shared/match-logic/buildable-unit";
-import { isSamePosition } from "../server/schemas/position";
 import {
   animatedSpriteConstructor,
   spriteConstructor,
-  tileConstructor,
+  tileConstructor
 } from "./spriteConstructor";
 
 // Creates the sprite of an unit
@@ -56,6 +51,7 @@ export function showUnits(
   returnContainer.eventMode = "static";
   //Check to see if same unit is clicked twice on the same spot
   let secondTimeClickingUnit = false;
+
   for (const unit of units) {
     const unitSprite = getUnitSprite(spriteSheets[unit.playerSlot], unit);
     returnContainer.addChild(unitSprite);
@@ -65,7 +61,7 @@ export function showUnits(
       //TODO: own team's unit checker
       // check if waited or not
       // if ready, then start the create path procedure TODO: (supposing now that all are ready)
-      unitSprite.on("pointerdown", async () => {
+      unitSprite.on("pointerdown", () => {
         //Is this the first time we are clicking this unit? if not,
         // then display the menu where they are
         // because it means we want to activate the unit where its sitting.
@@ -76,14 +72,20 @@ export function showUnits(
           const layerName = returnContainer.getChildByName(
             "arrowAndSquaresContainer"
           );
-          if (layerName !== null) returnContainer.removeChild(layerName);
+
+          if (layerName !== null) {
+            returnContainer.removeChild(layerName);
+          }
         }
         //First time clicking this unit, calculate the path and everything
         else {
           unitSprite.zIndex = 10;
           const enemyUnits: WWUnit[] = [];
+
           for (const unit of units) {
-            if (unit.playerSlot != 0) enemyUnits.push(unit); //push if not same team}
+            if (unit.playerSlot != 0) {
+              enemyUnits.push(unit);
+            } //push if not same team}
           }
 
           //path display initialization
@@ -92,7 +94,7 @@ export function showUnits(
             //original node
             pos: [unit.position[0], unit.position[1]],
             dist: 0,
-            parent: null,
+            parent: null
           });
           let currentPathDisplay = showPath(
             spriteSheets[spriteSheets.length - 1],
@@ -123,7 +125,10 @@ export function showUnits(
           const layerName = returnContainer.getChildByName(
             "arrowAndSquaresContainer"
           );
-          if (layerName !== null) returnContainer.removeChild(layerName);
+
+          if (layerName !== null) {
+            returnContainer.removeChild(layerName);
+          }
 
           //the container holding arrow/path and other squareContainer and interactiveSqUAREScONTAINER
           const arrowAndSquaresContainer = new Container();
@@ -140,7 +145,7 @@ export function showUnits(
           arrowAndSquaresContainer.addChild(interactiveSquaresContainer);
 
           //create the visual passable tiles layer and the unit sprite layer
-          const tilesShown = await showPassableTiles(
+          const tilesShown = showPassableTiles(
             mapData,
             unit,
             enemyUnits,
@@ -189,8 +194,10 @@ export function showUnits(
               //lets cleanup previous arrows.
               const arrowName =
                 arrowAndSquaresContainer.getChildByName("arrows");
-              if (arrowName !== null)
+
+              if (arrowName !== null) {
                 arrowAndSquaresContainer.removeChild(arrowName);
+              }
 
               arrowAndSquaresContainer.addChild(currentPathDisplay);
             });
@@ -202,8 +209,10 @@ export function showUnits(
           //if we hover over the unit, delete all arrows (since there is no movement).
           unitSprite.on("pointerenter", () => {
             const arrowName = arrowAndSquaresContainer.getChildByName("arrows");
-            if (arrowName !== null)
+
+            if (arrowName !== null) {
               arrowAndSquaresContainer.removeChild(arrowName);
+            }
           });
 
           //Lets create the red squares for enemy units!
@@ -217,10 +226,10 @@ export function showUnits(
                 "#932f2f"
               );
 
-              enemySquare.on("pointerover", async () => {
+              enemySquare.on("pointerover", () => {
                 //TODO: show dmg forecast/preview/%s checking current units and current terrains
               });
-              enemySquare.on("pointerdown", async () => {
+              enemySquare.on("pointerdown", () => {
                 unitSprite.zIndex = 0;
                 //TODO This means an enemy unit has been clicked, if clicked again, initiate combat from "current" / "last" arrow/tile position.
                 console.log("unit attacked");
@@ -243,7 +252,7 @@ export function showUnits(
           );
           outsideOfPath.alpha = 0;
           outsideOfPath.zIndex = -1;
-          outsideOfPath.on("pointerdown", async () => {
+          outsideOfPath.on("pointerdown", () => {
             unitSprite.zIndex = 0;
             secondTimeClickingUnit = false;
             console.log("invisible rectangle clicked, eliminating layers");
@@ -257,19 +266,26 @@ export function showUnits(
     }
     //unit is in the opposite team/is an enemy
     else {
-      //TODO: Allow to "hold" enemy attack range ala Fire Emblem style so we can keep the "safe range" for our units from certain units
+      //TODO: Allow to "hold" enemy attack.ts range ala Fire Emblem style so we can keep the "safe range" for our units from certain units
       // (like where is our Bcopter safe from two AA).
       let isNextAttack = false; //alternate between showing movement and attacking tiles
-      unitSprite.on("pointerdown", async () => {
+      unitSprite.on("pointerdown", () => {
         const enemyUnits: WWUnit[] = [];
-        for (const unit of units)
-          if (unit.playerSlot === 0) enemyUnits.push(unit); //not true, need to get playerSlot and not equal
+
+        for (const unit of units) {
+          if (unit.playerSlot === 0) {
+            enemyUnits.push(unit);
+          }
+        } //not true, need to get playerSlot and not equal
+
         let tilesShown: Container;
+
         if (isNextAttack) {
-          tilesShown = await showAttackableTiles(mapData, unit, enemyUnits);
+          tilesShown = showAttackableTiles(mapData, unit, enemyUnits);
         } else {
-          tilesShown = await showPassableTiles(mapData, unit, enemyUnits);
+          tilesShown = showPassableTiles(mapData, unit, enemyUnits);
         }
+
         isNextAttack = !isNextAttack;
         tilesShown.zIndex = 10;
         returnContainer.addChild(tilesShown);

@@ -1,12 +1,14 @@
 import { TRPCError } from "@trpc/server";
-import { getMatchState } from "server/match-logic/server-match-states";
 import { z } from "zod";
 import { t } from "../trpc-init";
-import { BackendMatchState } from "shared/types/server-match-state";
+import { matchStore } from "server/match-store";
+import type { Match } from "@prisma/client";
 
-export const withMatchIdSchema = z.object({
+export const withMatchIdSchema = z.object<{ matchId: z.ZodType<Match["id"]> }>({
   matchId: z.string(),
 });
+
+export type WithMatchId = z.infer<typeof withMatchIdSchema>;
 
 export const matchMiddleware = t.middleware(async ({ ctx, input, next }) => {
   const parseResult = withMatchIdSchema.safeParse(input);
@@ -20,11 +22,9 @@ export const matchMiddleware = t.middleware(async ({ ctx, input, next }) => {
 
   const { matchId } = parseResult.data;
 
-  let match: BackendMatchState | null = null;
+  const match = matchStore.get(matchId);
 
-  try {
-    match = getMatchState(matchId);
-  } catch (error) {
+  if (match === undefined) {
     throw new TRPCError({
       code: "NOT_FOUND",
       message: `Match with id ${matchId} not found`,

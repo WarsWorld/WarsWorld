@@ -1,6 +1,6 @@
 import { faker } from "@faker-js/faker";
-import { CO, coSchema } from "server/schemas/co";
-import { Army, armySchema } from "server/schemas/army";
+import { type Army, armySchema } from "shared/schemas/army";
+import { type CO, coSchema } from "shared/schemas/co";
 
 export type Player = {
   id: string;
@@ -92,7 +92,10 @@ export default function getLeaderboardData(
   amount: number
 ): PlayerLeaderboard[] {
   const data: Player[] = [];
-  for (let i = 0; i < amount; i++) data.push(newPlayer());
+
+  for (let i = 0; i < amount; i++) {
+    data.push(newPlayer());
+  }
 
   const transformedData = transformData(data);
 

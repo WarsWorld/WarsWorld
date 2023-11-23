@@ -1,19 +1,15 @@
-import LinkCard, { ICardInfo } from "./LinkCard";
+import type { ICardInfo } from "./LinkCard";
+import LinkCard from "./LinkCard";
 import TitleColorBox from "./TitleColorBox";
 
-interface Props {
+type Props = {
   title: string;
   description: string;
   tailwind_color?: string;
   articles: ICardInfo[];
-}
+};
 
-export default function ArticleSection({
-  title,
-  description,
-  tailwind_color,
-  articles,
-}: Props) {
+export default function ArticleSection({ title, description, tailwind_color, articles }: Props) {
   return (
     <section>
       <div className="@flex @flex-col @py-2 monitor:@flex-row @items-center monitor:@space-x-8">

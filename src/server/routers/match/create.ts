@@ -1,11 +1,10 @@
-import { LeagueType } from "@prisma/client";
-import { coSchema } from "server/schemas/co";
-import { getChangeableTilesFromMap } from "shared/match-logic/get-changeable-tile-from-map";
-import { serverMatchStates } from "server/match-logic/server-match-states";
+import { matchStore } from "server/match-store";
 import { prisma } from "server/prisma/prisma-client";
+import { coSchema } from "shared/schemas/co";
 import { mapMiddleware, withMapIdSchema } from "server/trpc/middleware/map";
 import { playerBaseProcedure } from "server/trpc/trpc-setup";
-import { PlayerInMatch } from "shared/types/server-match-state";
+import type { PlayerInMatch } from "shared/types/server-match-state";
+import { matchToFrontend } from "./util";
 
 export const createMatchProcedure = playerBaseProcedure
   .input(
@@ -17,7 +16,7 @@ export const createMatchProcedure = playerBaseProcedure
   .mutation(async ({ input, ctx }) => {
     const initialPlayerState: PlayerInMatch[] = [
       {
-        playerId: ctx.currentPlayer.id,
+        id: ctx.currentPlayer.id,
         name: ctx.currentPlayer.name,
         ready: false,
         slot: 0,
@@ -26,6 +25,7 @@ export const createMatchProcedure = playerBaseProcedure
         powerMeter: 0,
         army: "orange-star",
         COPowerState: "no-power",
+        timesPowerUsed: 0,
       },
     ];
 
@@ -39,34 +39,19 @@ export const createMatchProcedure = playerBaseProcedure
             id: ctx.map.id,
           },
         },
-      },
-    });
-
-    serverMatchStates.set(matchOnDB.id, {
-      id: matchOnDB.id,
-      map: ctx.map,
-      turn: 0,
-      rules: {
-        leagueType: LeagueType.standard,
-      },
-      status: matchOnDB.status,
-      changeableTiles: getChangeableTilesFromMap(ctx.map),
-      players: initialPlayerState,
-      units: [],
-      currentWeather: "clear",
-      weatherNextDay: null,
-    });
-
-    await prisma.event.create({
-      data: {
-        matchId: matchOnDB.id,
-        content: {
-          type: "player-picked-co",
-          co: input.selectedCO,
-          player: ctx.currentPlayer,
+        rules: {
+          /* TODO good default values or user input values or enforce league rules or whatever */
+          bannedUnitTypes: [],
+          captureLimit: 100,
+          dayLimit: 100,
+          fogOfWar: false,
+          fundsPerProperty: 1000,
+          unitCapPerPlayer: 50,
+          weatherSetting: "clear",
         },
       },
     });
 
-    return serverMatchStates.get(matchOnDB.id);
+    const match = matchStore.createMatchAndIndex(matchOnDB, ctx.map);
+    return matchToFrontend(match);
   });

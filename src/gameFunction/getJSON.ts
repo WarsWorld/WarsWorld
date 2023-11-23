@@ -7,7 +7,8 @@ export default async function getJSON(countryNames: string[]) {
   //Find the absolute path of the json directory
 
   const jsonDirectory = path.join(process.cwd(), "public/img/spriteSheet");
-  const spriteSheets: { [key: string]: string[] } = { countries: [] };
+  const spriteSheets: Record<string, string[]> = { countries: [] };
+
   for (const country of countryNames) {
     //Read the json data file data.json
     const fileData = await fs.readFile(
@@ -15,16 +16,19 @@ export default async function getJSON(countryNames: string[]) {
       "utf8"
     );
     //lets parse our data and send it in
-    spriteSheets[country] = JSON.parse(fileData);
+    spriteSheets[country] = JSON.parse(fileData) as string[];
     spriteSheets.countries.push(country);
   }
+
   const fileData = await fs.readFile(jsonDirectory + `/neutral.json`, "utf8");
-  spriteSheets["neutral"] = JSON.parse(fileData);
+  spriteSheets.neutral = JSON.parse(fileData) as string[];
   spriteSheets.countries.push("neutral");
 
   const arrowData = await fs.readFile(jsonDirectory + `/arrow.json`, "utf8");
-  spriteSheets["arrow"] = JSON.parse(arrowData); //considering arrows as a "country" as well
+  spriteSheets.arrow = JSON.parse(arrowData) as string[]; //considering arrows as a "country" as well
   spriteSheets.countries.push("arrow");
   //Return the content of the data file in json format
   return spriteSheets;
 }
+
+export type TheJson = Awaited<ReturnType<typeof getJSON>>;

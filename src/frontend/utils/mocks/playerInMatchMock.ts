@@ -1,9 +1,9 @@
-import { PlayerInMatch } from "shared/types/server-match-state";
+import type { PlayerInMatch } from "shared/types/server-match-state";
 
 export const playerInMatch1: PlayerInMatch = {
   slot: 0,
   hasCurrentTurn: true,
-  playerId: "111",
+  id: "111",
   name: "Hello",
   ready: true,
   co: "adder",
@@ -12,12 +12,13 @@ export const playerInMatch1: PlayerInMatch = {
   powerMeter: 3000,
   army: "black-hole",
   COPowerState: "no-power",
+  timesPowerUsed: 0,
 };
 
 export const playerInMatch2: PlayerInMatch = {
   slot: 1,
   hasCurrentTurn: false,
-  playerId: "222",
+  id: "222",
   name: "World",
   ready: false,
   co: "sami",
@@ -26,4 +27,5 @@ export const playerInMatch2: PlayerInMatch = {
   powerMeter: 5000,
   army: "orange-star",
   COPowerState: "no-power",
+  timesPowerUsed: 0,
 };

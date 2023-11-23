@@ -1,31 +1,29 @@
 import { prisma } from "../prisma/prisma-client";
-import { Tile } from "../schemas/tile";
-import { WWMap } from "@prisma/client";
+import type { Tile } from "shared/schemas/tile";
+import type { WWMap } from "@prisma/client";
 
-export interface AWBWMapImportSchema {
+export type AWBWMapImportSchema = {
   name: string;
   tileDataString: string;
   numberOfPlayers: 2;
-}
+};
 
-export const importAWBWMap = (data: AWBWMapImportSchema) =>
-  prisma.wWMap
-    .create({
+export const importAWBWMap = async (data: AWBWMapImportSchema) => {
+  try {
+    return await prisma.wWMap.create({
       data: {
         name: data.name,
         numberOfPlayers: data.numberOfPlayers,
-        tiles: convertAWBWMapToWWMap(data.tileDataString),
-      },
-    })
-    .then(() => console.log("Imported!"))
-    .catch((error) => {
-      console.error("An error occurred while importing the map");
-      console.error(error);
+        tiles: convertAWBWMapToWWMap(data.tileDataString)
+      }
     });
+  } catch (error) {
+    console.error("An error occurred while importing the map");
+    throw error;
+  }
+};
 
-export const convertAWBWMapToWWMap = (
-  tileDataString: string
-): WWMap["tiles"] => {
+export const convertAWBWMapToWWMap = (tileDataString: string): WWMap["tiles"] => {
   const tileData2DM = tileDataString
     .trim()
     .split("\n")
@@ -40,11 +38,14 @@ export const convertAWBWMapToWWMap = (
   const col = tileData2DM.length;
 
   const parsedArray: Tile[][] = [];
+
   for (let i = 0; i < col; i++) {
     const emptyArray: Tile[] = [];
+
     for (let j = 0; j < row; j++) {
       emptyArray.push(awbwTileMapping[tileDataFlat[j + i * row]]);
     }
+
     parsedArray.push(emptyArray);
   }
 
@@ -218,5 +219,5 @@ const awbwTileMapping: Record<string, Tile> = {
   "191": { type: "commtower", playerSlot: 15 },
   "192": { type: "hq", playerSlot: 15 },
   "193": { type: "lab", playerSlot: 15 },
-  "194": { type: "port", playerSlot: 15 },
+  "194": { type: "port", playerSlot: 15 }
 };

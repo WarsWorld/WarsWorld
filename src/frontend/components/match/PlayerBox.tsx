@@ -1,21 +1,22 @@
 import { IngameInfo } from "frontend/components/IngameInfo";
-import { PlayerInMatch } from "shared/types/server-match-state";
+import Image from "next/image";
+import type { PlayerInMatch } from "shared/types/server-match-state";
 
-interface Props {
+type Props = {
   playerTurn: boolean;
   playerInMatch: PlayerInMatch | undefined;
-}
+};
 
 const nationColorGradients: Record<string, string> = {
   blueMoon: "@bg-gradient-to-l @from-blue-400",
   orangeStar: "@bg-gradient-to-l @from-orange-400",
   greenEarth: "@bg-gradient-to-l @from-green-400",
   yellowComet: "@bg-gradient-to-l @from-yellow-400",
-  neutral: "@bg-gradient-to-l @from-gray-400",
+  neutral: "@bg-gradient-to-l @from-gray-400"
 };
 
 const kebabToCamel = (str: string) => {
-  return str.replace(/-([a-z])/, function (_match, letter) {
+  return str.replace(/-([a-z])/, function (_match, letter: string) {
     return letter.toUpperCase();
   });
 };
@@ -25,7 +26,7 @@ export const PlayerBox = ({ playerTurn, playerInMatch }: Props) => {
   const playerGradient = nationColorGradients[army ?? "neutral"];
   const playerCO = playerInMatch?.co ?? "Neutral";
   const playerNation = army ?? "neutral";
-  const playerId = playerInMatch?.playerId ?? "Awaiting player...";
+  const playerId = playerInMatch?.id ?? "Awaiting player...";
   const playerUnit = army ?? "neutral";
 
   return (
@@ -34,15 +35,17 @@ export const PlayerBox = ({ playerTurn, playerInMatch }: Props) => {
         <div
           className={`@relative @h-[100px] @aspect-square @outline @outline-2 @outline-black ${playerGradient} playerCOBox`}
         >
-          <img
+          <Image
             className={`@absolute @bottom-0 @h-[120px] @w-full @aspect-square @object-none @object-left-top playerCOIcon ${
               playerTurn ? "" : "isNotPlayerTurn"
             }`}
             src={`/img/CO/${playerCO}-Full.png`}
+            alt={playerCO}
           />
-          <img
+          <Image
             className="@absolute @h-8 @top-1 @right-1 @aspect-square @bg-slate-200"
             src={`/img/nations/${playerNation}.webp`}
+            alt={playerNation}
           />
         </div>
         <div className="@text-white @w-full playerNationBox">

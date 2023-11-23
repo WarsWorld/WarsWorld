@@ -16,22 +16,21 @@ export default function YourMatches() {
         enabled: currentPlayer !== undefined,
       }
     );
+
   const { data: allMatchesQuery, refetch: refecthAllMatches } =
-    trpc.match.getAll.useQuery();
+    trpc.match.getAll.useQuery({ pageNumber: 0 });
 
   const joinableMatchesQuery = allMatchesQuery?.filter(
     (match) =>
       match.players.filter(
-        (player) =>
-          player.playerId == currentPlayer?.id || match.players.length == 2
+        (player) => player.id == currentPlayer?.id || match.players.length == 2
       ).length == 0
   );
 
   const spectateableMatches = allMatchesQuery?.filter(
     (match) =>
       match.players.filter(
-        (player) =>
-          player.playerId == currentPlayer?.id || match.players.length != 2
+        (player) => player.id == currentPlayer?.id || match.players.length != 2
       ).length == 0
   );
 

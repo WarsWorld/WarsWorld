@@ -1,6 +1,6 @@
 import PageTitle from "frontend/components/layout/PageTitle";
-import HowToPlaySection from "../frontend/components/layout/ArticleSection";
-import ThreeLinesText from "../frontend/components/layout/ThreeLinesText";
+import HowToPlaySection from "frontend/components/layout/ArticleSection";
+import ThreeLinesText from "frontend/components/layout/ThreeLinesText";
 import Head from "next/head";
 
 export default function Howtoplay() {

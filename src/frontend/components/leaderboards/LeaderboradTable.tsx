@@ -3,21 +3,19 @@
 // https://tanstack.com/table/v8/docs/guide/introduction
 
 import { useState, useEffect } from "react";
-import {
-  getCoreRowModel,
-  getPaginationRowModel,
-  useReactTable,
-  Table,
-} from "@tanstack/react-table";
-import getLeaderboardData, { PlayerLeaderboard } from "./LeaderboardData";
+import type { Table } from "@tanstack/react-table";
+import { getCoreRowModel, getPaginationRowModel, useReactTable } from "@tanstack/react-table";
+import type { PlayerLeaderboard } from "./LeaderboardData";
+import getLeaderboardData from "./LeaderboardData";
 import { columns } from "./LeaderboardColumns";
 import { useWindowWidth } from "@react-hook/window-size";
 import DataTable from "../layout/DataTable";
 import TablePagination from "../layout/TablePagination";
-import { SelectOption } from "../layout/Select";
+import type { SelectOption } from "../layout/Select";
 
 function hideColumns(table: Table<PlayerLeaderboard>, screenWidth: number) {
   const columnsToHide = ["Games", "Win Rate", "Streak"];
+
   if (screenWidth <= 768) {
     table
       .getAllLeafColumns()
@@ -35,7 +33,7 @@ function hideColumns(table: Table<PlayerLeaderboard>, screenWidth: number) {
   }
 }
 
-interface Props {
+type Props = {
   setBestPlayers: React.Dispatch<React.SetStateAction<PlayerLeaderboard[]>>;
   gamemode: SelectOption | undefined;
   timeMode: SelectOption | undefined;
@@ -53,11 +51,11 @@ export default function LeaderboardTable({ setBestPlayers }: Props) {
     data,
     columns,
     state: {
-      columnVisibility,
+      columnVisibility
     },
     onColumnVisibilityChange: setColumnVisibility,
     getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
+    getPaginationRowModel: getPaginationRowModel()
   });
 
   useEffect(() => {

@@ -3,6 +3,7 @@ import * as fs from "fs";
 import matter from "gray-matter";
 import { remark } from "remark";
 import html from "remark-html";
+import { z } from "zod";
 
 // Creates a path from the cwd/current working directory to /article
 const articleDir = path.join(process.cwd(), "src/frontend/utils/articles");
@@ -20,7 +21,7 @@ export function getSortedArticles() {
     const metaData = matter(fileContents);
 
     return {
-      ...metaData.data,
+      ...metaData.data
     };
   });
   //sort articleData by date
@@ -41,11 +42,20 @@ export function getArticleIds() {
     return {
       params: {
         //take out md so its just the id
-        id: articleName.replace(/\.md$/, ""),
-      },
+        id: articleName.replace(/\.md$/, "")
+      }
     };
   });
 }
+
+const metaDataSchema = z.object({
+  title: z.string(),
+  subtitle: z.string(),
+  date: z.string(),
+  type: z.string(),
+  category: z.string(),
+  image: z.string()
+});
 
 export async function getArticleData(id: string) {
   const fileContents = fs.readFileSync(`${articleDir}/${id}.md`, "utf-8");
@@ -60,6 +70,8 @@ export async function getArticleData(id: string) {
   return {
     id,
     contentHtml,
-    ...metaData.data,
+    metaData: metaDataSchema.parse(metaData.data)
   };
 }
+
+export type ArticleData = Awaited<ReturnType<typeof getArticleData>>;

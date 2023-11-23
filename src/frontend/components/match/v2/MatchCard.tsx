@@ -1,17 +1,19 @@
 import MatchCardTop from "./MatchCardTop";
 import MatchPlayer from "./MatchPlayer";
-import { FrontendMatch } from "../../../../shared/types/component-data";
-import { CO, coSchema } from "../../../../server/schemas/co";
-import { Army, armySchema } from "../../../../server/schemas/army";
+import type { FrontendMatch } from "shared/types/component-data";
+import type { CO } from "shared/schemas/co";
+import { coSchema } from "shared/schemas/co";
+import type { Army } from "shared/schemas/army";
+import { armySchema } from "shared/schemas/army";
 import MatchCardSetup from "./MatchCardSetup";
 import React, { useState } from "react";
-import { usePlayers } from "../../../context/players";
+import { usePlayers } from "frontend/context/players";
 import Link from "next/link";
 
-interface matchData {
+type matchData = {
   match: FrontendMatch;
   inMatch: boolean;
-}
+};
 
 export default function MatchCard({ match, inMatch }: matchData) {
   const { currentPlayer } = usePlayers();
@@ -22,19 +24,18 @@ export default function MatchCard({ match, inMatch }: matchData) {
 
   if (currentPlayer != undefined) {
     match.players.forEach((player, index) => {
-      if (player.playerId == currentPlayer.id) {
+      if (player.id == currentPlayer.id) {
         firstPlayer = player;
         playerIndex = index;
       }
     });
   }
+
   if (firstPlayer === undefined) {
     firstPlayer = match.players[0];
     secondPlayer = match.players[1];
   } else {
-    playerIndex === 0
-      ? (secondPlayer = match.players[1])
-      : (secondPlayer = match.players[0]);
+    playerIndex === 0 ? (secondPlayer = match.players[1]) : (secondPlayer = match.players[0]);
   }
 
   const [playerCO, setPlayerCO] = useState(firstPlayer.co);
@@ -42,25 +43,29 @@ export default function MatchCard({ match, inMatch }: matchData) {
 
   const [ready, setReady] = useState(firstPlayer.ready);
 
-  function changeCO(newCO: CO, army: Army, status: boolean) {
-    if (newCO) setPlayerCO(newCO);
-    if (army) setArmy(army);
-    if (status != null) setReady(status);
+  function changeCO(newCO: CO | null, army?: Army, status?: boolean) {
+    if (newCO !== null) {
+      setPlayerCO(newCO);
+    }
+
+    if (army) {
+      setArmy(army);
+    }
+
+    if (status != null) {
+      setReady(status);
+    }
   }
 
   let twoPlayerCheck = false;
-  if (secondPlayer) twoPlayerCheck = true;
+
+  if (secondPlayer) {
+    twoPlayerCheck = true;
+  }
 
   return (
     <div className="@grid @bg-bg-primary @relative">
-      <MatchCardTop
-        mapName={match.map.name}
-        day={match.turn}
-        state={match.state}
-        favorites={0}
-        spectators={0}
-        time={0.15}
-      />
+      <MatchCardTop mapName={match.map.name} day={match.turn} state={match.state} favorites={0} spectators={0} time={0.15} />
       <div className="@grid @grid-cols-2 @gap-3">
         <MatchPlayer
           name={firstPlayer.name}
@@ -79,16 +84,8 @@ export default function MatchCard({ match, inMatch }: matchData) {
         ) : (
           <MatchPlayer
             name={"Opponent"}
-            co={
-              coSchema._def.values[
-                Math.floor(Math.random() * coSchema._def.values.length)
-              ]
-            }
-            country={
-              armySchema._def.values[
-                Math.floor(Math.random() * armySchema._def.values.length)
-              ]
-            }
+            co={coSchema._def.values[Math.floor(Math.random() * coSchema._def.values.length)]}
+            country={armySchema._def.values[Math.floor(Math.random() * armySchema._def.values.length)]}
             flipCO={true}
             opponent={true}
             playerReady={true}

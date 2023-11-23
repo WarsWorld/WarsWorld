@@ -5,7 +5,7 @@ export type SelectOption = {
   value: string | number;
 };
 
-interface Props {
+type Props = {
   options: SelectOption[];
   value?: SelectOption;
   onChange: (value: SelectOption | undefined) => void;
@@ -35,13 +35,7 @@ export default function Select({ value, onChange, options }: Props) {
     >
       <span className="@grow @text-white @pl-2">{value?.label}</span>
       <div className="@bg-bg-secondary @w-0.5 @self-stretch"></div>
-      <div
-        className={`@font-mono @text-lg @duration-300 @px-1 ${
-          isOpen && "@rotate-180"
-        }`}
-      >
-        &#x25BC;
-      </div>
+      <div className={`@font-mono @text-lg @duration-300 @px-1 ${isOpen && "@rotate-180"}`}>&#x25BC;</div>
       <ul
         className={`@absolute @m-0 @p-0 @list-none @overflow-y-auto no-scrollbar @shadow-black @shadow-lg @rounded @w-full @left-0 @top-[calc(100%_+_0.5em)] 
           @bg-bg-tertiary @z-50 @duration-500

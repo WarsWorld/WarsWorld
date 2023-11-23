@@ -1,6 +1,4 @@
-import { COProperties } from "../co";
-import { getCommtowerAttackBoost } from "../co-utilities";
-import { isIndirectAttackUnit } from "../units";
+import type { COProperties } from "../co";
 
 export const javier: COProperties = {
   displayName: "Javier",
@@ -8,19 +6,14 @@ export const javier: COProperties = {
     description:
       "Units gain +20% defense against indirect units. Comm Towers grant all units additional +10% defense.",
     hooks: {
-      onDefenseModifier({ currentValue, matchState, currentPlayerData }) {
-        const commTowerBonus = getCommtowerAttackBoost(
-          matchState,
-          currentPlayerData.player.slot
+      defense(value, { attacker }) {
+        const bonusFromIndirectAttacks = attacker.isIndirect() ? 20 : 0;
+
+        return (
+          value +
+          attacker.player.getCommtowerAttackBoost() +
+          bonusFromIndirectAttacks
         );
-
-        const bonusFromIndirectAttacks = isIndirectAttackUnit(
-          currentPlayerData.unitType
-        )
-          ? 20
-          : 0;
-
-        return currentValue + commTowerBonus + bonusFromIndirectAttacks;
       },
     },
   },
@@ -31,31 +24,19 @@ export const javier: COProperties = {
       description:
         "Indirect defense is increased to +40%. Comm Tower bonuses are doubled.",
       hooks: {
-        onDefenseModifier({
-          matchState,
-          currentValue,
-          currentPlayerData,
-          defendingPlayerData,
-        }) {
-          const commTowerBonus = getCommtowerAttackBoost(
-            matchState,
-            defendingPlayerData.player.slot
-          );
-
-          const bonusFromIndirectAttacks = isIndirectAttackUnit(
-            currentPlayerData.unitType
-          )
+        defense(value, { defender }) {
+          const bonusFromIndirectAttacks = defender.isIndirect()
             ? 20 // 40 with d2d
             : 0;
 
-          return currentValue + commTowerBonus + bonusFromIndirectAttacks;
-        },
-        onAttackModifier({ matchState, currentValue, currentPlayerData }) {
-          const commTowerBonus = getCommtowerAttackBoost(
-            matchState,
-            currentPlayerData.player.slot
+          return (
+            value +
+            defender.player.getCommtowerAttackBoost() +
+            bonusFromIndirectAttacks
           );
-          return currentValue + commTowerBonus;
+        },
+        attack(value, { attacker }) {
+          return value + attacker.player.getCommtowerAttackBoost();
         },
       },
     },
@@ -65,31 +46,19 @@ export const javier: COProperties = {
       description:
         "Indirect defense is increased to +80%. Comm Tower bonuses are tripled.",
       hooks: {
-        onDefenseModifier({
-          matchState,
-          currentValue,
-          currentPlayerData,
-          defendingPlayerData,
-        }) {
-          const commTowerBonus = getCommtowerAttackBoost(
-            matchState,
-            defendingPlayerData.player.slot
-          );
-
-          const bonusFromIndirectAttacks = isIndirectAttackUnit(
-            currentPlayerData.unitType
-          )
+        defense(value, { defender }) {
+          const bonusFromIndirectAttacks = defender.isIndirect()
             ? 60 // 80 with d2d
             : 0;
 
-          return currentValue + commTowerBonus * 2 + bonusFromIndirectAttacks;
-        },
-        onAttackModifier({ matchState, currentValue, currentPlayerData }) {
-          const commTowerBonus = getCommtowerAttackBoost(
-            matchState,
-            currentPlayerData.player.slot
+          return (
+            value +
+            defender.player.getCommtowerAttackBoost() * 2 +
+            bonusFromIndirectAttacks
           );
-          return currentValue + commTowerBonus * 2;
+        },
+        attack(currentValue, { attacker }) {
+          return currentValue + attacker.player.getCommtowerAttackBoost() * 2;
         },
       },
     },

@@ -1,47 +1,49 @@
-import {
-  getArticleData,
-  getArticleIds,
-} from "../../frontend/utils/articleScript";
-import Banner from "../../frontend/components/layout/Banner";
-import styles from "../../frontend/styles/pages/articles.module.scss";
+import type { ArticleData } from "frontend/utils/articleScript";
+import { getArticleData, getArticleIds } from "frontend/utils/articleScript";
+import Banner from "frontend/components/layout/Banner";
+import styles from "frontend/styles/pages/articles.module.scss";
+import type { GetStaticProps } from "next";
 
-export async function getStaticPaths() {
+export function getStaticPaths() {
   const paths = getArticleIds();
   return {
     paths,
-    fallback: false,
+    fallback: false
   };
 }
-// eslint-disable-next-line
-// @ts-ignore
-//one of you type safety gurus
-//can find out how to solve the getStaticProps
-//params type issue, I could not, so, good luck!
-export async function getStaticProps({ params }) {
+
+type Props = {
+  postData: ArticleData;
+};
+
+export const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
+  if (typeof params?.id !== "string") {
+    throw new Error("params id is not of type string");
+  }
+
   const postData = await getArticleData(params.id);
   return {
     props: {
-      postData,
-    },
+      postData
+    }
   };
-}
-// eslint-disable-next-line
-// @ts-ignore
-//same issue here, dont know how to
-//appease the TS gods
-export default function Articles({ postData }) {
+};
+
+export default function Articles({ postData }: Props) {
   //Lets make sure we have our parameters/data
   // before loading so we dont cause any errors
-  if (typeof postData === "undefined") return <h1>Loading...</h1>;
-  else {
+  if (typeof postData === "undefined") {
+    return <h1>Loading...</h1>;
+  } else {
     //Get headers for index table
-    let theHTML: any = postData.contentHtml;
+    let theHTML = postData.contentHtml;
     const headers = [...theHTML.matchAll(/<h1+>(.*?)<\/h1*>/gm)];
+
     //Put IDs on headers so /articleName#header links to the header
-    for (let i = 0; i < headers.length; i++) {
+    for (const header of headers) {
       theHTML = theHTML.replace(
         /<h1>/,
-        `<h1 id="${headers[i][1].replace(/\s/g, "-")}">`
+        `<h1 id="${header[1].replace(/\s/g, "-")}">`
       );
     }
 
@@ -51,16 +53,16 @@ export default function Articles({ postData }) {
           title={
             <div>
               <h2 className="@bg-secondary @inline-block @p-2 @text-black @font-[500]">
-                {postData.type.toUpperCase()}
+                {postData.metaData.type.toUpperCase()}
               </h2>
               <h2 className="@bg-white @inline-block @p-2 @text-black @font-[500]">
-                {postData.category.toUpperCase()}
+                {postData.metaData.category.toUpperCase()}
               </h2>
-              <h1>{postData.title}</h1>
-              <p>{postData.subtitle}</p>
+              <h1>{postData.metaData.title}</h1>
+              <p>{postData.metaData.subtitle}</p>
             </div>
           }
-          backgroundURL={postData.image}
+          backgroundURL={postData.metaData.image}
         />
 
         <div

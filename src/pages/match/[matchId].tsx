@@ -7,7 +7,7 @@
 // @ts-nocheck
 
 import { usePlayers } from "frontend/context/players";
-import { Tile } from "server/schemas/tile";
+import type { Tile } from "shared/schemas/tile";
 import { useRouter } from "next/router";
 import {
   AnimatedSprite,
@@ -17,26 +17,27 @@ import {
   SCALE_MODES,
   Sprite,
   Spritesheet,
-  Texture,
+  Texture
 } from "pixi.js";
 import { useEffect, useRef, useState } from "react";
-import { PlayerInMatch } from "shared/types/server-match-state";
+import type { PlayerInMatch } from "shared/types/server-match-state";
 
 import { trpc } from "frontend/utils/trpc-client";
-import { showUnits } from "../../gameFunction/showUnit";
-import { demoUnits } from "../../gameFunction/demoUnitList";
-import getJSON from "../../gameFunction/getJSON";
-import showMenu from "../../gameFunction/showMenu";
-import { spriteConstructor } from "../../gameFunction/spriteConstructor";
-import MatchPlayer from "../../frontend/components/match/v2/MatchPlayer";
+import { showUnits } from "gameFunction/showUnit";
+import { demoUnits } from "gameFunction/demoUnitList";
+import type { TheJson } from "gameFunction/getJSON";
+import getJSON from "gameFunction/getJSON";
+import type { OurSpriteSheetData } from "gameFunction/showMenu";
+import showMenu from "gameFunction/showMenu";
+import { spriteConstructor } from "gameFunction/spriteConstructor";
+import MatchPlayer from "frontend/components/match/v2/MatchPlayer";
+import type { GetServerSideProps } from "next";
 
 BaseTexture.defaultOptions.scaleMode = SCALE_MODES.NEAREST;
 
-interface SpriteData {
-  spriteData: any;
-}
+type Props = { spriteData: TheJson };
 
-const Match = ({ spriteData }: SpriteData) => {
+const Match = ({ spriteData }: Props) => {
   const mutation = trpc.action.send.useMutation();
   const { currentPlayer } = usePlayers();
   const [players, setPlayers] = useState<PlayerInMatch[] | null | undefined>(
@@ -54,12 +55,15 @@ const Match = ({ spriteData }: SpriteData) => {
     {
       enabled: currentPlayer !== undefined,
       onSuccess(data) {
-        if (data === null) throw new Error(`Match ${matchId} not found!`);
+        if (data === null) {
+          throw new Error(`Match ${matchId} not found!`);
+        }
 
-        if (data.status != "playing")
+        if (data.status != "playing") {
           throw new Error(
             `This match hasn't started yet. make sure to ready up!`
           );
+        }
 
         if (!players) {
           setPlayers(data.players);
@@ -68,7 +72,7 @@ const Match = ({ spriteData }: SpriteData) => {
         if (!mapData) {
           setMapData(data.map.tiles);
         }
-      },
+      }
     }
   );
 
@@ -82,13 +86,12 @@ const Match = ({ spriteData }: SpriteData) => {
       const mapScale = scale * 16;
       const mapMargin = scale * 32;
       const app = new Application({
-        view:
-          pixiCanvasRef.current === null ? undefined : pixiCanvasRef.current,
+        view: pixiCanvasRef.current ?? undefined,
         autoDensity: true,
         resolution: window.devicePixelRatio,
         backgroundColor: "#061838",
         width: mapData[0].length * mapScale + mapMargin,
-        height: mapData.length * mapScale + mapMargin,
+        height: mapData.length * mapScale + mapMargin
       });
       app.stage.position.set(0, 0);
       app.stage.sortableChildren = true;
@@ -96,7 +99,7 @@ const Match = ({ spriteData }: SpriteData) => {
       //let render our specific cursor
       //TODO: Cursor stops working on half screen on google chrome (works on firefox).
       app.renderer.events.cursorStyles.default = {
-        animation: "gameCursor 1200ms infinite",
+        animation: "gameCursor 1200ms infinite"
       } as CSSStyleDeclaration;
 
       //the container that holds the map
@@ -110,12 +113,14 @@ const Match = ({ spriteData }: SpriteData) => {
       app.stage.addChild(mapContainer);
 
       //Lets create our spritesheets/map the image with the json!
-      const spriteSheets: Spritesheet[] = [];
+      const spriteSheets: Spritesheet<OurSpriteSheetData>[] = [];
+
       spriteData.countries.forEach((country: string) => {
         const texture = BaseTexture.from(spriteData[country].meta.image);
         const sheet = new Spritesheet(texture, spriteData[country]);
-        sheet.parse();
-        spriteSheets.push(sheet);
+        void sheet.parse().then(() => {
+          spriteSheets.push(sheet);
+        });
       });
 
       //Lets render our map!
@@ -124,57 +129,66 @@ const Match = ({ spriteData }: SpriteData) => {
         mapData.forEach((col, colIndex) => {
           mapData[colIndex].forEach((row, rowIndex) => {
             const type = row.type;
+
             //ITS A PROPERTY
-            if (row.hasOwnProperty("playerSlot")) {
-              const slot: number = row.playerSlot;
+            if ("playerSlot" in row) {
+              const slot = row.playerSlot;
 
               //NEUTRAL
-              if (row.playerSlot === -1) {
+              if (slot === -1) {
                 tile = new Sprite(spriteSheets[2].textures[type + "-0.png"]);
                 //NOT NEUTRAL
               } else {
                 tile = new AnimatedSprite(spriteSheets[slot].animations[type]);
+
                 //if our building is able to produce units, it has a menu!
                 if (type !== "hq" && type !== "lab" && type !== "city") {
                   tile.eventMode = "static";
                   //Lets make menu appear
-                  tile.on("pointerdown", async () => {
-                    const menu = await showMenu(
-                      spriteSheets[slot],
-                      type,
-                      slot,
-                      rowIndex,
-                      colIndex,
-                      mapData.length - 1,
-                      mapData[0].length - 1,
-                      mutation
-                    );
+                  tile.on("pointerdown", () => {
+                    void (async () => {
+                      const menu = await showMenu(
+                        spriteSheets[slot],
+                        type,
+                        slot,
+                        rowIndex,
+                        colIndex,
+                        mapData.length - 1,
+                        mapData[0].length - 1,
+                        (input) => {
+                          void mutation.mutateAsync(input);
+                        }
+                      );
 
-                    //if there is a menu already out, lets remove it
-                    const menuContainer = mapContainer.getChildByName("menu");
-                    if (menuContainer !== null)
-                      mapContainer.removeChild(menuContainer);
+                      //if there is a menu already out, lets remove it
+                      const menuContainer = mapContainer.getChildByName("menu");
 
-                    //lets create a transparent screen that covers everything.
-                    // if we click on it, we will delete the menu
-                    // therefore, achieving a quick way to delete menu if we click out of it
-                    const emptyScreen = spriteConstructor(
-                      Texture.WHITE,
-                      0,
-                      0,
-                      app.stage.width,
-                      app.stage.height,
-                      "static",
-                      -1
-                    );
-                    emptyScreen.alpha = 0;
+                      if (menuContainer !== null) {
+                        mapContainer.removeChild(menuContainer);
+                      }
 
-                    emptyScreen.on("pointerdown", (event) => {
-                      mapContainer.removeChild(menu);
-                      mapContainer.removeChild(emptyScreen);
-                    });
-                    mapContainer.addChild(menu);
-                    mapContainer.addChild(emptyScreen);
+                      //lets create a transparent screen that covers everything.
+                      // if we click on it, we will delete the menu
+                      // therefore, achieving a quick way to delete menu if we click out of it
+                      const emptyScreen = spriteConstructor(
+                        Texture.WHITE,
+                        0,
+                        0,
+                        app.stage.width,
+                        app.stage.height,
+                        "static",
+                        -1
+                      );
+                      emptyScreen.alpha = 0;
+
+                      emptyScreen.on("pointerdown", () => {
+                        mapContainer.removeChild(menu);
+                        mapContainer.removeChild(emptyScreen);
+                      });
+
+                      mapContainer.addChild(menu);
+                      mapContainer.addChild(emptyScreen);
+                    })();
                   });
                 }
 
@@ -187,15 +201,17 @@ const Match = ({ spriteData }: SpriteData) => {
 
               //NOT A PROPERTY
             } else {
-              if (row.hasOwnProperty("variant"))
+              if ("variant" in row) {
                 tile = new Sprite(
                   spriteSheets[2].textures[
                     row.type + "-" + row.variant + ".png"
                   ]
                 );
-              else
+              } else {
                 tile = new Sprite(spriteSheets[2].textures[row.type + ".png"]);
+              }
             }
+
             //makes our sprites render at the bottom, not from the top.
             tile.anchor.set(1, 1);
             tile.x = (rowIndex + 1) * 16;
@@ -212,6 +228,7 @@ const Match = ({ spriteData }: SpriteData) => {
       console.log("Below is the mapData");
       console.log(mapData);
       console.log(players);
+
       return () => {
         app.stop();
       };
@@ -219,8 +236,9 @@ const Match = ({ spriteData }: SpriteData) => {
   }, [pixiCanvasRef, mapData, spriteData, scale]);
 
   //Actual return statement for react function
-  if (!spriteData) return <h1>Loading...</h1>;
-  else {
+  if (!spriteData) {
+    return <h1>Loading...</h1>;
+  } else {
     return (
       <div className="@grid @grid-cols-12 @text-center @my-20 @mx-2">
         <div className="@col-span-12 @p-2">
@@ -261,7 +279,7 @@ const Match = ({ spriteData }: SpriteData) => {
           <canvas
             className="@inline"
             style={{
-              imageRendering: "pixelated",
+              imageRendering: "pixelated"
             }}
             ref={pixiCanvasRef}
           ></canvas>
@@ -285,10 +303,10 @@ const Match = ({ spriteData }: SpriteData) => {
 };
 export default Match;
 
-export async function getServerSideProps() {
+export const getServerSideProps: GetServerSideProps<Props> = async () => {
   //TODO: Should we call all the spritesheets or just the ones the players will need?
   // Unsure how we would know which players are playing what before even loading the match
   // (which right now we do this call before the tRPC call that gets the match data...)
   const spriteData = await getJSON(["orange-star", "blue-moon"]);
   return { props: { spriteData } };
-}
+};

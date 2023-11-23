@@ -1,33 +1,33 @@
+import type { ISpritesheetData, Spritesheet } from "pixi.js";
 import {
-  Container,
-  Text,
-  Spritesheet,
   AnimatedSprite,
-  BitmapText,
-  TextStyle,
-  Texture,
-  Sprite,
-  BitmapFont,
   Assets,
+  BitmapText,
+  Container,
+  Sprite,
+  Texture
 } from "pixi.js";
 import unitData from "./unitData";
-import { trpc } from "frontend/utils/trpc-client";
-import { unitTypeSchema } from "../server/schemas/unit";
+import type { inferProcedureInput } from "@trpc/server";
+import type { AppRouter } from "server/routers/app";
 
+export type OurSpriteSheetData = ISpritesheetData & {
+  animations: Record<string, string[]>;
+  countries: Record<string, string[]>;
+};
 
 export default async function showMenu(
-  spriteSheet: Spritesheet,
+  spriteSheet: Spritesheet<OurSpriteSheetData>,
   type: string,
   slot: number,
   x: number,
   y: number,
   mapHeight: number,
   mapWidth: number,
-  trpcAction: any
+  buildMutation: (
+    input: inferProcedureInput<AppRouter["action"]["send"]>
+  ) => void
 ) {
-
-
-
   //TODO: Gotta add a "funds" value to our parameters
   // from there, include it here and any unit above our funds,
   // will be darkened out.
@@ -37,15 +37,19 @@ export default async function showMenu(
   const menuContainer = new Container();
   menuContainer.eventMode = "static";
   menuContainer.sortableChildren = true;
+
   if (x > mapWidth / 2) {
     console.log();
     menuContainer.x = x * 16 + 16 - 100;
-  } else menuContainer.x = x * 16 + 16;
+  } else {
+    menuContainer.x = x * 16 + 16;
+  }
+
   //the name lets us find the menu easily with getChildByName for easy removal
   menuContainer.name = "menu";
 
   //unitInfo brings back an array with all the data we need (such as infantry name, cost, etc).
-  const unitInfo = await unitData(-1, type);
+  const unitInfo = unitData(-1, type);
 
   //if our menu would appear below the middle of the map, we need to bring it up!
   // Otherwise, our user will have to scroll down to see all the units, which is a poor experience
@@ -55,6 +59,7 @@ export default async function showMenu(
     // menu element is 67.5% of a tile, so we only move that much
     y = y - Math.abs(spaceLeft - unitInfo.length * 0.675);
   }
+
   menuContainer.y = y * 16;
 
   //lets load our font
@@ -82,7 +87,7 @@ export default async function showMenu(
 
     const unitName = new BitmapText(`${unit.menuName}`, {
       fontName: "awFont",
-      fontSize: 12,
+      fontSize: 12
     });
     unitName.y = yValue;
     unitName.x = 15;
@@ -90,7 +95,7 @@ export default async function showMenu(
 
     const unitCost = new BitmapText(`${unit.cost}`, {
       fontName: "awFont",
-      fontSize: 10,
+      fontSize: 10
     });
     unitCost.y = yValue;
     unitCost.x = 60;
@@ -112,15 +117,15 @@ export default async function showMenu(
       unitBG.alpha = 1;
     });
 
-    menuElement.on("pointerdown", async () => {
-      await trpcAction.mutateAsync({
+    menuElement.on("pointerdown", () =>
+      buildMutation({
         type: "build",
         unitType: "infantry",
         position: [x, y],
         playerId: "cljvrs6nc0002js2wl5g3jo5m",
         matchId: "cljw16lea0000jscweoeop1ct"
-      });
-    });
+      })
+    );
 
     menuElement.on("pointerleave", () => {
       unitBG.alpha = 0.5;

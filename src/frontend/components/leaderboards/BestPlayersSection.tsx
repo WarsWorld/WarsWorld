@@ -1,7 +1,7 @@
 import PlayerCard from "./PlayerCard";
-import { PlayerLeaderboard } from "./LeaderboardData";
+import type { PlayerLeaderboard } from "./LeaderboardData";
 
-interface Props {
+type Props = {
   bestPlayers: PlayerLeaderboard[];
 }
 

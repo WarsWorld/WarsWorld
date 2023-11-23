@@ -1,75 +1,59 @@
-import { COProperties } from "../co";
-import { isIndirectAttackUnit } from "../units";
+import type { COProperties } from "../co";
 
 export const grit: COProperties = {
   displayName: "Grit",
   dayToDay: {
     description:
-      "Indirect units have +1 range and gain +20% attack. Direct units lose -20% attack (footsoldiers are normal).",
+      "Indirect units have +1 range and gain +20% attack.ts. Direct units lose -20% attack.ts (footsoldiers are normal).",
     hooks: {
-      onAttackRange({ currentValue, currentPlayerData: currentPlayer }) {
-        if (isIndirectAttackUnit(currentPlayer.unitType)) {
-          return currentValue + 1;
+      attackRange(value, { attacker }) {
+        if (attacker.isIndirect()) {
+          return value + 1;
         }
-
-        return currentValue;
       },
-      onAttackModifier({ currentValue, currentPlayerData: currentPlayer }) {
-        if (isIndirectAttackUnit(currentPlayer.unitType)) {
-          return currentValue + 20;
+      attack(value, { attacker }) {
+        if (attacker.isIndirect()) {
+          return value + 20;
         }
 
-        if (
-          currentPlayer.unitType === "infantry" ||
-          currentPlayer.unitType === "mech"
-        ) {
-          return currentValue;
+        if (attacker.properties().movementType !== "foot") {
+          return value - 20;
         }
-
-        return currentValue - 20;
       },
     },
   },
   powers: {
     COPower: {
       name: "Snipe Attack",
-      description: "Indirect units gain +1 range and +20% attack.",
+      description: "Indirect units gain +1 range and +20% attack.ts.",
       stars: 3,
       hooks: {
-        onAttackRange({ currentValue, currentPlayerData: currentPlayer }) {
-          if (isIndirectAttackUnit(currentPlayer.unitType)) {
-            return currentValue + 1;
+        attackRange(value, { attacker }) {
+          if (attacker.isIndirect()) {
+            return value + 1;
           }
-
-          return currentValue;
         },
-        onAttackModifier({ currentValue, currentPlayerData: currentPlayer }) {
-          if (isIndirectAttackUnit(currentPlayer.unitType)) {
-            return currentValue + 20;
+        attack(value, { attacker }) {
+          if (attacker.isIndirect()) {
+            return value + 20;
           }
-
-          return currentValue;
         },
       },
     },
     superCOPower: {
       name: "Super Snipe",
-      description: "Indirect units gain +2 range and +20% attack.",
+      description: "Indirect units gain +2 range and +20% attack.ts.",
       stars: 6,
       hooks: {
-        onAttackRange({ currentValue, currentPlayerData: currentPlayer }) {
-          if (isIndirectAttackUnit(currentPlayer.unitType)) {
-            return currentValue + 2;
+        attackRange(value, { attacker }) {
+          if (attacker.isIndirect()) {
+            return value + 2;
           }
-
-          return currentValue;
         },
-        onAttackModifier({ currentValue, currentPlayerData: currentPlayer }) {
-          if (isIndirectAttackUnit(currentPlayer.unitType)) {
-            return currentValue + 20;
+        attack(value, { attacker }) {
+          if (attacker.isIndirect()) {
+            return value + 20;
           }
-
-          return currentValue;
         },
       },
     },

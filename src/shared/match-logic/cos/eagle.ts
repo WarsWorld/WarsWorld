@@ -1,34 +1,23 @@
-import { unitPropertiesMap } from "../buildable-unit";
-import { COProperties } from "../co";
-import { getPlayerUnits } from "../units";
+import type { COProperties } from "../co";
 
 export const eagle: COProperties = {
   displayName: "Eagle",
   dayToDay: {
     description:
-      "Air units gain +15% attack and +10% defense, and consume -2 fuel per day. Naval units lose -30% attack.",
+      "Air units gain +15% attack.ts and +10% defense, and consume -2 fuel per day. Naval units lose -30% attack.ts.",
     hooks: {
-      onAttackModifier({ currentValue, currentPlayerData }) {
-        switch (unitPropertiesMap[currentPlayerData.unitType].facility) {
+      attack(value, { attacker }) {
+        switch (attacker.properties().facility) {
           case "airport":
-            return currentValue + 15;
+            return value + 15;
           case "port":
-            return currentValue - 30;
-          default:
-            return currentValue;
+            return value - 30;
         }
       },
-      onDefenseModifier({ currentValue, currentPlayerData }) {
-        return unitPropertiesMap[currentPlayerData.unitType].facility ===
-          "airport"
-          ? currentValue + 10
-          : currentValue;
-      },
-      onFuelDrain({ currentValue, currentPlayerData }) {
-        return unitPropertiesMap[currentPlayerData.unitType].facility ===
-          "airport"
-          ? currentValue - 2
-          : currentValue;
+      defense(value, { attacker }) {
+        if (attacker.properties().facility === "airport") {
+          return value + 10;
+        }
       },
     },
   },
@@ -36,44 +25,45 @@ export const eagle: COProperties = {
     COPower: {
       name: "Lightning Drive",
       stars: 3,
-      description: "Air units gain +5% attack and +10% defense.",
+      description: "Air units gain +5% attack.ts and +10% defense.",
       hooks: {
-        onAttackModifier({ currentValue, currentPlayerData }) {
-          return unitPropertiesMap[currentPlayerData.unitType].facility ===
-            "airport"
-            ? currentValue + 5
-            : currentValue;
+        attack(value, { attacker }) {
+          if (attacker.properties().facility === "airport") {
+            return value + 5;
+          }
         },
-        onDefenseModifier({ currentValue, currentPlayerData }) {
-          return unitPropertiesMap[currentPlayerData.unitType].facility ===
-            "airport"
-            ? currentValue + 10
-            : currentValue;
+        defense(value, { attacker }) {
+          if (attacker.properties().facility === "airport") {
+            return value + 10;
+          }
         },
       },
     },
     superCOPower: {
       name: "Lightning Strike",
       description:
-        "Air units gain +5% attack and +10% defense. All non-footsoldier units may move and fire again, even if built this turn.",
+        "Air units gain +5% attack.ts and +10% defense. All non-footsoldier units may move and fire again, even if built this turn.",
       stars: 9,
-      instantEffect({ matchState, currentPlayerData }) {
-        getPlayerUnits(matchState, currentPlayerData.player.slot)
-          .filter((unit) => unit.type !== "infantry" && unit.type !== "mech")
-          .forEach((unit) => unit.isReady);
+      instantEffect({ player }) {
+        player
+          .getUnits()
+          .data.filter(
+            (unit) => unit.data.type !== "infantry" && unit.data.type !== "mech"
+          )
+          .forEach((unit) => {
+            unit.data.isReady = true;
+          });
       },
       hooks: {
-        onAttackModifier({ currentValue, currentPlayerData }) {
-          return unitPropertiesMap[currentPlayerData.unitType].facility ===
-            "airport"
-            ? currentValue + 5
-            : currentValue;
+        attack(value, { attacker }) {
+          if (attacker.properties().facility === "airport") {
+            return value + 5;
+          }
         },
-        onDefenseModifier({ currentValue, currentPlayerData }) {
-          return unitPropertiesMap[currentPlayerData.unitType].facility ===
-            "airport"
-            ? currentValue + 10
-            : currentValue;
+        defense(value, { attacker }) {
+          if (attacker.properties().facility === "airport") {
+            return value + 10;
+          }
         },
       },
     },

@@ -1,16 +1,12 @@
-import { MatchStatus } from "@prisma/client";
-import { PlayerInMatch } from "./server-match-state";
+import type { Match, MatchStatus, WWMap } from "@prisma/client";
+import type { PlayerInMatch } from "./server-match-state";
 
-export interface FrontendMatch {
-  id: string;
+export type FrontendMatch = {
+  id: Match["id"];
   map: MapBasic;
   players: PlayerInMatch[];
   state: MatchStatus;
   turn: number;
-}
+};
 
-export interface MapBasic {
-  id: string;
-  name: string;
-  numberOfPlayers: number;
-}
+export type MapBasic = Pick<WWMap, "id" | "name" | "numberOfPlayers">;

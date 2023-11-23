@@ -1,18 +1,14 @@
 import { matchMock } from "frontend/utils/mocks/matchDataMock";
-import { FrontendMatch } from "shared/types/component-data";
+import type { FrontendMatch } from "shared/types/component-data";
 import TitleColorBox from "../layout/TitleColorBox";
 import MatchCard from "./MatchCard";
-interface Props {
+type Props = {
   title: string;
   description: string;
   tailwind_color?: string;
-}
+};
 
-export default function MatchSection({
-  title,
-  description,
-  tailwind_color,
-}: Props) {
+export default function MatchSection({ description, tailwind_color }: Props) {
   const matches: FrontendMatch[] = matchMock;
   const demoTitle = "Matches";
 

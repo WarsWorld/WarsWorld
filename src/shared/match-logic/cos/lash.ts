@@ -1,16 +1,15 @@
-import { COProperties } from "../co";
+import type { COProperties } from "../co";
 
 export const lash: COProperties = {
   displayName: "Lash",
   powers: {
     superCOPower: {
       name: "Prime Tactics",
-      stars: 123, // TODO
-      description: "TODO",
+      stars: 8,
+      description: "", // TODO
       hooks: {
-        onTerrainStars({ currentValue }) {
-          return currentValue * 2;
-        },
+        terrainStars: (v) => v * 2,
+        movementCost: () => 1,
       },
     },
   },

@@ -1,139 +1,66 @@
 import { observable } from "@trpc/server/observable";
-import { Action, mainActionSchema } from "server/schemas/action";
-import { isSamePosition } from "server/schemas/position";
-import { emitEvent, subscribeToEvents } from "server/emitter/event-emitter";
-import { applyEventToMatch } from "server/match-logic/server-match-states";
+import { emit, subscribe } from "server/emitter/event-emitter";
 import { prisma } from "server/prisma/prisma-client";
-import { unitPropertiesMap } from "shared/match-logic/buildable-unit";
-import { EmittableEvent } from "shared/types/events";
+import { validateMainActionAndToEvent } from "shared/match-logic/events/action-to-event";
+import { applySubEventToMatch } from "shared/match-logic/events/apply-event-to-match";
+import { mainActionSchema } from "shared/schemas/action";
+import type { Emittable, EmittableEvent } from "shared/types/events";
 import { z } from "zod";
 import {
-  matchBaseProcedure,
+  playerInMatchBaseProcedure,
   publicBaseProcedure,
   router,
 } from "../trpc/trpc-setup";
-import {
-  BackendMatchState,
-  PlayerInMatch,
-} from "shared/types/server-match-state";
-import { handleMoveAction } from "server/match-logic/action-handlers/move";
-
-interface ActionHandlerProps<T extends Action> {
-  currentPlayer: PlayerInMatch;
-  action: T;
-  matchState: BackendMatchState;
-}
-
-export type ActionHandler<T extends Action> = (
-  props: ActionHandlerProps<T>
-) => unknown;
-
-// 1. validate shape (zod, .input())
-// 2. validate action
-// 3. create event from action
-
-const validateAction = (
-  action: Action,
-  playerId: string,
-  match: BackendMatchState
-) => {
-  const actingPlayerInMatch = match.players.find(
-    (p) => p.playerId === playerId && p?.eliminated !== true
-  );
-
-  if (actingPlayerInMatch === undefined) {
-    throw new Error("You're not in this match or you've been eliminated");
-  }
-  //TODO re-add this check, was unadded to test tRPC momentarily
-  /*if (!actingPlayerInMatch.hasCurrentTurn) {
-    throw new Error("It's not your turn");
-  }*/
-
-  switch (action.type) {
-    case "build": {
-      const { cost, facility } = unitPropertiesMap[action.unitType];
-      // TODO hook: cost and facility modifiers based on powers etc.
-
-      if (cost > actingPlayerInMatch.funds) {
-        throw new Error("You don't have enough funds to build this unit");
-      }
-
-      if (
-        match.units.some((u) => isSamePosition(u.position, action.position))
-      ) {
-        throw new Error("Can't build where there's a unit already");
-      }
-
-      if (
-        match.changeableTiles.find(
-          (t) =>
-            isSamePosition(action.position, t.position) &&
-            t.type === facility &&
-            t.ownerSlot === actingPlayerInMatch.slot
-        )
-      ) {
-        throw new Error(
-          "Can't build here because the tile is missing the correct build facility or you don't own it"
-        );
-      }
-
-      break;
-    }
-    case "move": {
-      handleMoveAction({
-        currentPlayer: actingPlayerInMatch,
-        action,
-        matchState: match,
-      });
-    }
-  }
-};
-
-const actionToEvent = (matchId: string, action: Action): EmittableEvent => {
-  switch (action.type) {
-    case "build": {
-      return {
-        type: "build",
-        matchId,
-        position: action.position,
-        unitType: action.unitType,
-      };
-    }
-    default: {
-      throw new Error(`Unknown action type ${action.type}`);
-    }
-  }
-};
 
 export const actionRouter = router({
-  send: matchBaseProcedure
+  send: playerInMatchBaseProcedure
     .input(mainActionSchema)
-    .mutation(async ({ input, ctx }) => {
-      validateAction(input, ctx.currentPlayer.id, ctx.match);
+    .mutation(async ({ input, ctx: { match } }) => {
+      const event = validateMainActionAndToEvent(match, input);
 
-      // important: validate all actions first before changing server state
-      //            or persisting to DB
+      match.applyMainEvent(event);
 
-      const event = actionToEvent(input.matchId, input);
+      if (event.type === "move") {
+        /* TODO not sure this special handling for trap is necessary */
 
-      await prisma.event.create({
+        if (!event.trap) {
+          //check if unit joined/loaded (cause then sub-action = wait)
+          if (!match.units.hasUnit(event.path[event.path.length - 1])) {
+            /** TODO i think because of the architecture, this logic must be moved inside of validateMainActionAndToEvent */
+            // event.subEvent = validateSubActionAndToEvent(
+            //   match,
+            //   input.subAction,
+            //   event.path[event.path.length - 1]
+            // );
+          }
+        }
+
+        /** TODO shouldn't this be the job of applyMoveEvent? */
+        applySubEventToMatch(match, event);
+      }
+
+      const eventOnDB = await prisma.event.create({
         data: {
           matchId: input.matchId,
           content: event,
         },
       });
 
-      applyEventToMatch(input.matchId, event);
-
-      emitEvent(event);
-
-      return {
-        status: "ok", // TODO not necessary?
+      const emittableEvent: EmittableEvent = {
+        ...event,
+        matchId: input.matchId,
+        eventIndex: eventOnDB.index,
       };
+
+      emittableEvent.discoveredUnits = match.players
+        .getCurrentTurnPlayer()
+        .getEnemyUnitsInVision();
+
+      emit(emittableEvent);
     }),
   onEvent: publicBaseProcedure.input(z.string()).subscription(({ input }) =>
-    observable<EmittableEvent>((emit) => {
-      const unsubscribe = subscribeToEvents(input, emit.next);
+    observable<Emittable>((emit) => {
+      const unsubscribe = subscribe(input, emit.next);
       return () => unsubscribe();
     })
   ),

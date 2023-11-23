@@ -11,6 +11,7 @@ export const useMediaQuery = (query: string) => {
     const listener = () => {
       setMatches(media.matches);
     };
+
     media.addEventListener("change", listener);
 
     return () => {

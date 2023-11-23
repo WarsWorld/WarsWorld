@@ -1,30 +1,26 @@
-import { unitPropertiesMap } from "../buildable-unit";
-import { COProperties } from "../co";
-import { getEnemyUnits, damageUnitUntil1HP } from "../units";
+import type { COProperties } from "../co";
 
 export const drake: COProperties = {
   displayName: "Drake",
   dayToDay: {
     description:
-      "Naval units gain +1 movement and +25% defense. Air units lose -20% attack. Unaffected by rain (except vision), and has a higher chance of rain in random weather.",
+      "Naval units gain +1 movement and +25% defense. Air units lose -20% attack.ts. Unaffected by rain (except vision), and has a higher chance of rain in random weather.",
     hooks: {
-      // TODO higher chance of rain in random weather (idk if we implement random weather)
-      // TODO drake's movement is not affected by rain
-      onMovementRange: ({ currentValue, currentPlayerData }) =>
-        currentValue +
-        (unitPropertiesMap[currentPlayerData.unitType].facility === "port"
-          ? 1
-          : 0),
-      onDefenseModifier: ({ currentValue, currentPlayerData }) =>
-        currentValue +
-        (unitPropertiesMap[currentPlayerData.unitType].facility === "port"
-          ? 25
-          : 0),
-      onAttackModifier: ({ currentValue, currentPlayerData }) =>
-        currentValue +
-        (unitPropertiesMap[currentPlayerData.unitType].facility === "airport"
-          ? -20
-          : 0),
+      movementRange: (value, unit) => {
+        if (unit.properties().facility === "port") {
+          return value + 1;
+        }
+      },
+      defense: (value, { attacker }) => {
+        if (attacker.properties().facility === "port") {
+          return value + 25;
+        }
+      },
+      attack: (value, { attacker }) => {
+        if (attacker.properties().facility === "airport") {
+          return value - 20;
+        }
+      },
     },
   },
   powers: {
@@ -33,13 +29,14 @@ export const drake: COProperties = {
       description:
         "All enemy units lose 1 HP (to a minimum of 0.1HP) and half their fuel.",
       stars: 4,
-      instantEffect({ matchState, currentPlayerData }) {
-        getEnemyUnits(matchState, currentPlayerData.player.slot).forEach(
-          (unit) => {
-            damageUnitUntil1HP(unit, 1);
-            unit.stats.fuel = Math.ceil(unit.stats.fuel / 2); // drain fuel till 1
-          }
-        );
+      instantEffect({ player }) {
+        const enemyUnits = player.getEnemyUnits();
+
+        enemyUnits.damageAllUntil1HP(10);
+
+        enemyUnits.data.forEach((unit) => {
+          unit.data.stats.fuel = Math.floor(unit.data.stats.fuel / 2); // half fuel till 0 and round down
+        });
       },
     },
     superCOPower: {
@@ -47,16 +44,17 @@ export const drake: COProperties = {
       description:
         "All enemy units lose 2 HP (to a minimum of 0.1HP) and half their fuel. Weather changes to Rain for 1 day.",
       stars: 7,
-      instantEffect({ matchState, currentPlayerData }) {
-        getEnemyUnits(matchState, currentPlayerData.player.slot).forEach(
-          (unit) => {
-            damageUnitUntil1HP(unit, 2);
-            unit.stats.fuel = Math.ceil(unit.stats.fuel / 2); // drain fuel till 1
-          }
-        );
+      instantEffect({ match, player }) {
+        const enemyUnits = player.getEnemyUnits();
 
-        matchState.currentWeather = "rain";
-        matchState.weatherNextDay = "clear";
+        enemyUnits.damageAllUntil1HP(20);
+
+        enemyUnits.data.forEach((unit) => {
+          unit.data.stats.fuel = Math.floor(unit.data.stats.fuel / 2); // half fuel till 0 and round down
+        });
+
+        match.currentWeather = "rain";
+        match.playerToRemoveWeatherEffect = player;
       },
     },
   },

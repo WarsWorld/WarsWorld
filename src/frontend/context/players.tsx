@@ -1,6 +1,7 @@
 import { Player } from "@prisma/client";
-import { ReactNode, createContext, useContext, useState } from "react";
+import { createContext, useContext, useState } from "react";
 import { useLocalStorage } from "frontend/utils/use-local-storage";
+import type { ReactNode } from "react";
 import { trpc } from "frontend/utils/trpc-client";
 
 type UserContext =

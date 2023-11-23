@@ -1,4 +1,4 @@
-interface UnitData {
+type UnitData = {
   name: string;
   menuName: string;
   cost: number;
@@ -6,13 +6,12 @@ interface UnitData {
   moveType: string;
   range: number[];
   facility: string;
-}
+};
 
 export default function unitData(
   unitIndex: number,
   returnData: string
 ): UnitData[] {
-
   console.log(unitIndex);
   console.log(returnData);
   // Here are our units, their names, menu name, cost, move, move type, etc
@@ -248,12 +247,21 @@ export default function unitData(
       facility: "port",
     },
   ];
+
   //if we specify a unit index, we just get the unit.
   if (unitIndex >= 0) {
-    if (returnData === "base") return [landData[unitIndex]];
-    else if (returnData === "airport") return [airData[unitIndex]];
-    else return [seaData[unitIndex]];
-  } else if (returnData === "base") return landData;
-  else if (returnData === "airport") return airData;
-  else return seaData;
+    if (returnData === "base") {
+      return [landData[unitIndex]];
+    } else if (returnData === "airport") {
+      return [airData[unitIndex]];
+    } else {
+      return [seaData[unitIndex]];
+    }
+  } else if (returnData === "base") {
+    return landData;
+  } else if (returnData === "airport") {
+    return airData;
+  } else {
+    return seaData;
+  }
 }
