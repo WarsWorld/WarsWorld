@@ -285,10 +285,10 @@ const Match = ({ spriteData }: Props) => {
           -
         </button>
       </div>
-      <div className="@col-span-2 [image-rendering:pixelated]">
+      <div className="@mx-4 @w-48 @col-span-2 [image-rendering:pixelated]">
         {players ? (
           <MatchPlayer
-            name={players[0].id}
+            name={players[0].name}
             co={players[0].co}
             country={players[0].army}
             playerReady={true}
@@ -306,10 +306,10 @@ const Match = ({ spriteData }: Props) => {
           ref={pixiCanvasRef}
         ></canvas>
       </div>
-      <div className="@col-span-2">
+      <div className="@mx-4 @w-48 @col-span-2 [image-rendering:pixelated]">
         {players ? (
           <MatchPlayer
-            name={players[1].id}
+            name={players[1].name}
             co={players[1].co}
             country={players[1].army}
             playerReady={true}
