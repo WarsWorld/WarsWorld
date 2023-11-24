@@ -7,7 +7,7 @@ import { Container, Sprite } from "pixi.js";
 import type { MovementType } from "shared/match-logic/buildable-unit";
 import { unitPropertiesMap } from "shared/match-logic/buildable-unit";
 import type { Tile, Weather } from "shared/schemas/tile.ts";
-import type { WWUnit } from "shared/schemas/unit";
+import type { UnitWithVisibleStats } from "shared/schemas/unit";
 import type { Position } from "shared/schemas/position";
 import { tileConstructor } from "./spriteConstructor";
 import type { MatchWrapper } from "shared/wrappers/match";
@@ -20,7 +20,7 @@ export type PathNode = {
 
 export function getAccessibleNodes( //TODO: save result of function? _ (Sturm d2d?)
   mapData: Tile[][],
-  enemyUnits: WWUnit[],
+  enemyUnits: UnitWithVisibleStats[],
   weather: Weather,
   movePoints: number,
   moveType: MovementType,
@@ -52,7 +52,9 @@ export function getAccessibleNodes( //TODO: save result of function? _ (Sturm d2
 
   function isValidTile(row: number, col: number): boolean {
     //used to check out of boundaries
-    return row >= 0 && row < mapData.length && col >= 0 && col < mapData[row].length;
+    return (
+      row >= 0 && row < mapData.length && col >= 0 && col < mapData[row].length
+    );
   }
 
   let currentDist = 0; //will check from closest to furthest, to find the shortest path
@@ -81,14 +83,27 @@ export function getAccessibleNodes( //TODO: save result of function? _ (Sturm d2
     accessibleTiles.set(currPos, currNode!);
 
     //the 4 adjacent node's coordinates:
-    const xpositionSchemas = [currPos[0] - 1, currPos[0] + 1, currPos[0], currPos[0]];
-    const ypositionSchemas = [currPos[1], currPos[1], currPos[1] - 1, currPos[1] + 1];
+    const xpositionSchemas = [
+      currPos[0] - 1,
+      currPos[0] + 1,
+      currPos[0],
+      currPos[0]
+    ];
+    const ypositionSchemas = [
+      currPos[1],
+      currPos[1],
+      currPos[1] - 1,
+      currPos[1] + 1
+    ];
 
     for (let i = 0; i < 4; ++i) {
       if (isValidTile(xpositionSchemas[i], ypositionSchemas[i])) {
         //if one adjacent tile is valid
 
-        const movementCost = match.getMovementCost(mapData[xpositionSchemas[i]][ypositionSchemas[i]].type, moveType);
+        const movementCost = match.getMovementCost(
+          mapData[xpositionSchemas[i]][ypositionSchemas[i]].type,
+          moveType
+        );
 
         if (movementCost === null || movementCost < 0) {
           continue;
@@ -118,7 +133,12 @@ export function getAccessibleNodes( //TODO: save result of function? _ (Sturm d2
   return accessibleTiles;
 }
 
-export function showPassableTiles(mapData: Tile[][], unit: WWUnit, enemyUnits: WWUnit[], accessibleNodes?: Map<Position, PathNode>) {
+export function showPassableTiles(
+  mapData: Tile[][],
+  unit: UnitWithVisibleStats,
+  enemyUnits: UnitWithVisibleStats[],
+  accessibleNodes?: Map<Position, PathNode>
+) {
   const unitProperties = unitPropertiesMap[unit.type];
 
   const markedTiles = new Container();
@@ -148,7 +168,7 @@ export function showPassableTiles(mapData: Tile[][], unit: WWUnit, enemyUnits: W
 
 export function getAttackableTiles(
   mapData: Tile[][],
-  enemyUnits: WWUnit[],
+  enemyUnits: UnitWithVisibleStats[],
   weather: Weather,
   movePoints: number,
   moveType: MovementType,
@@ -157,12 +177,22 @@ export function getAttackableTiles(
   accessibleNodes?: Map<Position, PathNode>
 ): Position[] {
   if (accessibleNodes === undefined) {
-    accessibleNodes = getAccessibleNodes(mapData, enemyUnits, weather, movePoints, moveType, x, y);
+    accessibleNodes = getAccessibleNodes(
+      mapData,
+      enemyUnits,
+      weather,
+      movePoints,
+      moveType,
+      x,
+      y
+    );
   }
 
   function isValidTile(row: number, col: number): boolean {
     //used to check out of boundaries
-    return row >= 0 && row < mapData.length && col >= 0 && col < mapData[row].length;
+    return (
+      row >= 0 && row < mapData.length && col >= 0 && col < mapData[row].length
+    );
   }
 
   const visited: boolean[][] = [];
@@ -186,7 +216,10 @@ export function getAttackableTiles(
       //all positions adjacent to tiles where the unit can move to are attacking tiles
       if (isValidTile(xpositionSchemas[i], ypositionSchemas[i])) {
         if (!visited[xpositionSchemas[i]][ypositionSchemas[i]]) {
-          attackpositionSchemas.push([xpositionSchemas[i], ypositionSchemas[i]]);
+          attackpositionSchemas.push([
+            xpositionSchemas[i],
+            ypositionSchemas[i]
+          ]);
           visited[xpositionSchemas[i]][ypositionSchemas[i]] = true;
         }
       }
@@ -196,7 +229,12 @@ export function getAttackableTiles(
   return attackpositionSchemas;
 }
 
-export function showAttackableTiles(mapData: Tile[][], unit: WWUnit, enemyUnits: WWUnit[], attackableTiles?: Position[]) {
+export function showAttackableTiles(
+  mapData: Tile[][],
+  unit: UnitWithVisibleStats,
+  enemyUnits: UnitWithVisibleStats[],
+  attackableTiles?: Position[]
+) {
   const unitProperties = unitPropertiesMap[unit.type];
 
   const markedTiles = new Container();
@@ -207,9 +245,13 @@ export function showAttackableTiles(mapData: Tile[][], unit: WWUnit, enemyUnits:
       //ranged unit
       for (let i = 0; i < mapData.length; ++i) {
         for (let j = 0; j < mapData[0].length; ++j) {
-          const distance = Math.abs(i - unit.position[0]) + Math.abs(j - unit.position[1]); //untested, maybe swapped
+          const distance =
+            Math.abs(i - unit.position[0]) + Math.abs(j - unit.position[1]); //untested, maybe swapped
 
-          if (distance <= unitProperties.attackRange[1] && distance >= unitProperties.attackRange[0]) {
+          if (
+            distance <= unitProperties.attackRange[1] &&
+            distance >= unitProperties.attackRange[0]
+          ) {
             const square = tileConstructor([i, j], "#be1919");
             markedTiles.addChild(square);
           }
@@ -268,8 +310,15 @@ export function updatePath(
     }
 
     //check if new node is adjacent
-    if (Math.abs(lastNode.pos[0] - newPos[0]) + Math.abs(lastNode.pos[1] - newPos[1]) == 1) {
-      const tileDist = match.getMovementCost(mapData[newPos[0]][newPos[1]].type, moveType);
+    if (
+      Math.abs(lastNode.pos[0] - newPos[0]) +
+        Math.abs(lastNode.pos[1] - newPos[1]) ==
+      1
+    ) {
+      const tileDist = match.getMovementCost(
+        mapData[newPos[0]][newPos[1]].type,
+        moveType
+      );
 
       //if it doesn't surpass movement restrictions, update current path
       if (tileDist !== null && tileDist + lastNode.dist <= movePoints) {
@@ -388,7 +437,11 @@ export function showPath(spriteSheet: Spritesheet, path: PathNode[]) {
       //special case for original node
       spriteName = getSpriteName(path2[0].pos, path2[i].pos, path2[i + 1].pos);
     } else {
-      spriteName = getSpriteName(path2[i - 1].pos, path2[i].pos, path2[i + 1].pos);
+      spriteName = getSpriteName(
+        path2[i - 1].pos,
+        path2[i].pos,
+        path2[i + 1].pos
+      );
     }
 
     const nodeSprite = new Sprite(spriteSheet.textures[spriteName + ".png"]);

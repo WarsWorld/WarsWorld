@@ -7,7 +7,7 @@ import type { AnimatedSprite, Spritesheet } from "pixi.js";
 import { Container, Texture } from "pixi.js";
 import { isSamePosition } from "shared/schemas/position";
 import type { Tile } from "shared/schemas/tile";
-import type { WWUnit } from "shared/schemas/unit";
+import type { UnitWithVisibleStats } from "shared/schemas/unit";
 import { unitPropertiesMap } from "shared/match-logic/buildable-unit";
 import type { PathNode } from "./showPathing";
 import {
@@ -27,7 +27,7 @@ import {
 // Creates the sprite of an unit
 export function getUnitSprite(
   spriteSheet: Spritesheet,
-  unit: WWUnit
+  unit: UnitWithVisibleStats
 ): AnimatedSprite {
   return animatedSpriteConstructor(
     spriteSheet.animations[unit.type],
@@ -44,7 +44,7 @@ export function getUnitSprite(
 export function showUnits(
   spriteSheets: Spritesheet[],
   mapData: Tile[][],
-  units: WWUnit[]
+  units: UnitWithVisibleStats[]
 ): Container {
   const returnContainer = new Container();
   returnContainer.sortableChildren = true;
@@ -80,7 +80,7 @@ export function showUnits(
         //First time clicking this unit, calculate the path and everything
         else {
           unitSprite.zIndex = 10;
-          const enemyUnits: WWUnit[] = [];
+          const enemyUnits: UnitWithVisibleStats[] = [];
 
           for (const unit of units) {
             if (unit.playerSlot != 0) {
@@ -270,7 +270,7 @@ export function showUnits(
       // (like where is our Bcopter safe from two AA).
       let isNextAttack = false; //alternate between showing movement and attacking tiles
       unitSprite.on("pointerdown", () => {
-        const enemyUnits: WWUnit[] = [];
+        const enemyUnits: UnitWithVisibleStats[] = [];
 
         for (const unit of units) {
           if (unit.playerSlot === 0) {

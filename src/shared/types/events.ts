@@ -15,7 +15,10 @@ import type {
 } from "shared/schemas/action";
 import type { Army } from "shared/schemas/army";
 import type { CO } from "shared/schemas/co";
-import type { FrontendUnit } from "shared/schemas/unit";
+import type {
+  UnitWithHiddenStats,
+  UnitWithVisibleStats
+} from "shared/schemas/unit";
 import type { Weather } from "shared/schemas/weather";
 
 /** player slot 0 implicity starts */
@@ -33,7 +36,7 @@ export type MatchEndEvent = {
 export type MoveEvent = {
   trap: boolean;
   subEvent: SubEvent;
-} & Omit<MoveAction, "subAction">
+} & Omit<MoveAction, "subAction">;
 
 export type AttackEvent = {
   /**
@@ -46,7 +49,7 @@ export type AttackEvent = {
    * because there was no counter-attack.
    */
   attackerHP?: number;
-} & AttackAction
+} & AttackAction;
 
 export type COPowerEvent = COPowerAction;
 
@@ -84,11 +87,17 @@ export type MainEvent =
   | BuildEvent
   | MatchEndEvent;
 
-export type SubEvent = AbilityEvent | WaitEvent | RepairEvent | LaunchMissileEvent | UnloadWaitEvent | AttackEvent;
+export type SubEvent =
+  | AbilityEvent
+  | WaitEvent
+  | RepairEvent
+  | LaunchMissileEvent
+  | UnloadWaitEvent
+  | AttackEvent;
 
 export type EmittableEvent = MainEvent &
   WithMatchId & {
-    discoveredUnits?: FrontendUnit[];
+    discoveredUnits?: (UnitWithHiddenStats | UnitWithVisibleStats)[];
     eventIndex: number;
   };
 

@@ -6,6 +6,7 @@ import type { RepairEvent } from "shared/types/events";
 import type { Position } from "shared/schemas/position";
 import { unitPropertiesMap } from "../../buildable-unit";
 import type { SubActionToEvent } from "../handler-types";
+import { getVisualHPfromHP } from "shared/match-logic/calculate-damage/calculate-damage";
 
 export const repairActionToEvent: SubActionToEvent<RepairAction> = (
   match,
@@ -39,20 +40,22 @@ export const applyRepairEvent = (
     addDirection(fromPosition, event.direction)
   );
 
-  repairedUnit.data.stats.fuel =
-    unitPropertiesMap[repairedUnit.data.type].initialFuel;
+  repairedUnit.setStat(
+    "fuel",
+    unitPropertiesMap[repairedUnit.data.type].initialFuel
+  );
 
   //heal for free if visual hp is 10
-  if (repairedUnit.data.stats.hp >= 90) {
-    repairedUnit.data.stats.hp = 99;
+  if (getVisualHPfromHP(repairedUnit.getStat("hp")) === 10) {
+    repairedUnit.heal(1);
   } else {
     //check if enough funds for heal, and heal if it's the case
     const unitCost = unitPropertiesMap[repairedUnit.data.type].cost;
     const modifiedCost = player.getHook("buildCost")?.(unitCost, match);
-    const repairEffectiveCost = (modifiedCost ?? unitCost) * 0.1;
+    const repairEffectiveCost = (modifiedCost ?? unitCost) * 0.1; // TODO what does this 0.1 factor do?
 
     if (repairEffectiveCost <= player.data.funds) {
-      repairedUnit.data.stats.hp += 10;
+      repairedUnit.heal(1);
       player.data.funds -= repairEffectiveCost;
     }
   }

@@ -21,7 +21,6 @@ export const validateMainActionAndToEvent = (
     case "build":
       return buildActionToEvent(match, action);
     case "unloadNoWait":
-      //unload no wait
       return unloadNoWaitActionToEvent(match, action);
     case "move":
       return moveActionToEvent(match, action);
@@ -29,12 +28,11 @@ export const validateMainActionAndToEvent = (
       return coPowerActionToEvent(match, action);
     case "passTurn":
       return { type: "passTurn", newWeather: "clear" /* TODO  weather */ };
-    default: {
-      /** TODO this would only run for bad data from DB because of zod when validating user data */
+    default:
+      /** this would only run for bad data from DB because of zod when validating user data */
       throw new DispatchableError(
         `Can't handle action type ${(action as MainAction).type}`
       );
-    }
   }
 };
 
@@ -57,6 +55,8 @@ export const validateSubActionAndToEvent = (
     case "wait":
       return { type: "wait" };
     default:
+      /** TODO: the second line will only be valid once we've implemented all subAction types!
+       * this would only run for bad data from DB because of zod when validating user data */
       throw new DispatchableError(`Unsupported action type: ${action.type}`);
   }
 };

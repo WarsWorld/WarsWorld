@@ -1,6 +1,6 @@
-import type { WWUnit } from "shared/schemas/unit";
+import type { UnitWithVisibleStats } from "shared/schemas/unit";
 
-export const getDailyFuelUsage = (unit: WWUnit): number => {
+export const getDailyFuelUsage = (unit: UnitWithVisibleStats): number => {
   const { movementType } = unitPropertiesMap[unit.type];
 
   if (movementType === "sea" || movementType === "lander") {
@@ -20,7 +20,15 @@ export const getDailyFuelUsage = (unit: WWUnit): number => {
   return 0;
 };
 
-export type MovementType = "foot" | "boots" | "treads" | "tires" | "air" | "sea" | "lander" | "pipe";
+export type MovementType =
+  | "foot"
+  | "boots"
+  | "treads"
+  | "tires"
+  | "air"
+  | "sea"
+  | "lander"
+  | "pipe";
 
 export type Facility = "base" | "airport" | "port";
 

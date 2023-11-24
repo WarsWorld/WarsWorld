@@ -50,10 +50,12 @@ type MultiplayerInnerProps = {
 };
 
 const MultiplayerInner = ({ playersInMatch }: MultiplayerInnerProps) => {
-  const players: PlayerInMatch[] = new Array(Math.floor(Math.random() * 13) + 3)
+  const players: PlayerInMatch[] = Array.from({
+    length: Math.floor(Math.random() * 13) + 3
+  })
     .fill(playersInMatch[0])
-    .map((obj: PlayerInMatch) => ({
-      ...obj
+    .map((obj) => ({
+      ...(obj as PlayerInMatch)
     }));
 
   const playersTeam1 = players.slice(0, Math.floor(players.length / 2));
@@ -173,11 +175,7 @@ export default function MatchCard({
             </div>
             <div className="@flex @h-8">
               <div className="@flex @items-center @gap-2 @px-2 @bg-bg-secondary">
-                <Image
-                  className="@h-4"
-                  src="/img/matchCard/eye.png"
-                  alt="eye"
-                />
+                <img className="@h-4" src="/img/matchCard/eye.png" alt="eye" />
                 <p> {spectators}</p>
               </div>
               <div className="@flex @items-center @gap-2 @px-2 @bg-bg-primary">
@@ -189,7 +187,7 @@ export default function MatchCard({
                 <p> {favorites}</p>
               </div>
               <div className="@flex @items-center @flex-1 @gap-2 @px-2 @bg-bg-secondary">
-                <Image
+                <img
                   className="@h-4"
                   src="/img/matchCard/clock.png"
                   alt="clock"

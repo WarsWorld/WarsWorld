@@ -1,11 +1,9 @@
 import type { Match, WWMap } from "@prisma/client";
 import { prisma } from "server/prisma/prisma-client";
-import { MapWrapper } from "shared/wrappers/map";
+import { getChangeableTilesFromMap } from "shared/match-logic/get-changeable-tile-from-map";
 import { MatchWrapper } from "shared/wrappers/match";
-import { UnitsWrapper } from "shared/wrappers/units";
 import { pageMatchIndex } from "./page-match-index";
 import { playerMatchIndex } from "./player-match-index";
-import { PlayerInMatchWrapper } from "shared/wrappers/player-in-match";
 
 export class MatchStore {
   private index = new Map<Match["id"], MatchWrapper>();
@@ -14,14 +12,14 @@ export class MatchStore {
     const match = new MatchWrapper(
       rawMatch.id,
       rawMatch.leagueType,
+      getChangeableTilesFromMap(rawMap),
       rawMatch.rules,
       rawMatch.status,
-      new MapWrapper(rawMap),
-      new UnitsWrapper([]),
+      rawMap,
+      rawMatch.playerState,
+      rawMap.predeployedUnits,
       0
     );
-
-    match.players.data = rawMatch.playerState.map((p) => new PlayerInMatchWrapper(p, match));
 
     this.index.set(match.id, match);
 
@@ -51,7 +49,9 @@ export class MatchStore {
 
     rawMatches.forEach((rawMatch) => {
       const match = this.createMatchAndIndex(rawMatch, rawMatch.map);
-      rawMatch.Event.forEach((dbEvent) => match.applyMainEvent(dbEvent.content));
+      rawMatch.Event.forEach((dbEvent) =>
+        match.applyMainEvent(dbEvent.content)
+      );
     });
 
     console.log("Rebuilding server state done.");

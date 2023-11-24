@@ -1,13 +1,12 @@
 import { z } from "zod";
 import { playerSlotForPropertiesSchema } from "./player-slot";
 import { variableTileSchema } from "./variable-tiles";
-import { withUnit } from "./unit";
 
-export const isNeutralProperty = (propertyTile: PropertyTile) =>
-  propertyTile.playerSlot === -1;
+export const isNotNeutralProperty = (propertyTile: PropertyTile) =>
+  propertyTile.playerSlot !== -1;
 
 export const isUnitProducingProperty = (tile: Tile): tile is PropertyTile =>
-  tile.type === "base" || tile.type === "airport" || tile.type == "port";
+  tile.type === "base" || tile.type === "airport" || tile.type === "port";
 
 export const willBeChangeableTile = (
   tile: Tile
@@ -20,25 +19,25 @@ export const willBeChangeableTile = (
     "lab",
     "commtower",
     "hq",
-    "unusedSilo",
+    "unusedSilo"
   ].includes(tile.type);
 
-export const propertyTileSchema = withUnit.extend({
+export const propertyTileSchema = z.object({
   type: z.enum(["base", "airport", "port", "hq", "lab", "commtower", "city"]),
-  playerSlot: playerSlotForPropertiesSchema,
+  playerSlot: playerSlotForPropertiesSchema
 });
 export type PropertyTile = z.infer<typeof propertyTileSchema>;
 export type PropertyTileType = z.infer<typeof propertyTileSchema>["type"];
 
-export const unusedSiloTileSchema = withUnit.extend({
-  type: z.literal("unusedSilo"),
+export const unusedSiloTileSchema = z.object({
+  type: z.literal("unusedSilo")
 });
 export type UnusedSiloTile = z.infer<typeof unusedSiloTileSchema>;
 export type UnusedSiloTileType = z.infer<typeof unusedSiloTileSchema>["type"];
 
-export const invariableTileSchema = withUnit
-  .extend({
-    type: z.enum(["shoal", "sea", "forest", "mountain", "reef", "usedSilo"]),
+export const invariableTileSchema = z
+  .object({
+    type: z.enum(["shoal", "sea", "forest", "mountain", "reef", "usedSilo"])
   })
   .or(unusedSiloTileSchema);
 export type InvariableTile = z.infer<typeof invariableTileSchema>;
@@ -46,7 +45,7 @@ export type InvariableTile = z.infer<typeof invariableTileSchema>;
 export const tileSchema = z.discriminatedUnion("type", [
   propertyTileSchema,
   ...invariableTileSchema.options,
-  ...variableTileSchema.options,
+  ...variableTileSchema.options
 ]);
 
 export type Tile = z.infer<typeof tileSchema>;

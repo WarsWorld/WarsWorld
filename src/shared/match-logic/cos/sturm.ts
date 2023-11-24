@@ -9,8 +9,8 @@ export const sturm: COProperties = {
         if (match.currentWeather !== "snow") {
           return 1;
         }
-      },
-    },
+      }
+    }
   },
   powers: {
     superCOPower: {
@@ -22,8 +22,8 @@ export const sturm: COProperties = {
       },
       hooks: {
         movementRange: (value) => value + 1,
-        attack: (value) => value + 10,
-      },
-    },
-  },
+        attack: () => 110
+      }
+    }
+  }
 };

@@ -14,7 +14,8 @@ export const importAWBWMap = async (data: AWBWMapImportSchema) => {
       data: {
         name: data.name,
         numberOfPlayers: data.numberOfPlayers,
-        tiles: convertAWBWMapToWWMap(data.tileDataString)
+        tiles: convertAWBWMapToWWMap(data.tileDataString),
+        predeployedUnits: [] /* TODO ! */
       }
     });
   } catch (error) {
@@ -23,7 +24,9 @@ export const importAWBWMap = async (data: AWBWMapImportSchema) => {
   }
 };
 
-export const convertAWBWMapToWWMap = (tileDataString: string): WWMap["tiles"] => {
+export const convertAWBWMapToWWMap = (
+  tileDataString: string
+): WWMap["tiles"] => {
   const tileData2DM = tileDataString
     .trim()
     .split("\n")

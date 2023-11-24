@@ -1,8 +1,6 @@
-import type { Position } from "shared/schemas/position";
-import type { MatchWrapper } from "shared/wrappers/match";
+import type { CombatProps } from "../co-hooks";
 import { getTerrainDefenseStars } from "../terrain";
 import { getBaseDamage } from "./base-damage";
-import { getCombatHooks } from "./combat-hooks";
 
 /** @returns 1-10, whole numbers */
 export const getVisualHPfromHP = (hp: number) => Math.ceil(hp / 10);
@@ -15,34 +13,40 @@ const roundUpTo = (value: number, step: number) => {
 /**
  * @see https://awbw.fandom.com/wiki/Damage_Formula?so=search
  */
-export const calculateDamage = (
-  match: MatchWrapper,
-  attackerPosition: Position,
-  defenderPosition: Position
-) => {
-  const attacker = match.units.getUnitOrThrow(attackerPosition);
-  const defender = match.units.getUnitOrThrow(defenderPosition);
+export const calculateDamage = ({ attacker, defender }: CombatProps) => {
+  const visualHPOfAttacker = getVisualHPfromHP(attacker.getStat("hp"));
+  const visualHPOfDefender = getVisualHPfromHP(defender.getStat("hp"));
 
-  const hooks = getCombatHooks(attacker, defender);
+  const hookProps: CombatProps = { attacker, defender };
 
-  const visualHPOfAttacker = getVisualHPfromHP(attacker.data.stats.hp);
-  const visualHPOfDefender = getVisualHPfromHP(defender.data.stats.hp);
+  // TODO is this correct or needlessly complicated to start with a
+  // commtower-affected multiplier value?
+  const attackHook = attacker.player.getHook("attack");
+  const modifiedAttack = attackHook?.(hookProps) ?? 100;
 
   const attackModifier =
-    hooks.onAttackModifier(100) +
-    match.players.getCurrentTurnPlayer().getCommtowerAttackBoost();
+    modifiedAttack + attacker.player.getCommtowerAttackBoost();
 
-  /** TODO are you dense? these are ATTACKER hooks, not DEFENDER. */
-  const defenseModifier = hooks.onDefenseModifier(100);
+  const defenseHook = defender.player.getHook("defense");
+  const defenseModifier = defenseHook?.(hookProps) ?? 100;
 
   // base luck: 0-9, whole numbers i think
-  const goodLuckValue = hooks.onGoodLuck(Math.floor(Math.random() * 10));
-  const badLuckValue = hooks.onBadLuck(0);
+  const goodLuckRoll = Math.floor(Math.random() * 10);
+  const goodLuckHook = attacker.player.getHook("goodLuck");
+  const goodLuckValue = goodLuckHook?.(goodLuckRoll, hookProps) ?? goodLuckRoll;
+  const badLuckHook = attacker.player.getHook("badLuck");
+  const badLuckValue = badLuckHook?.(hookProps) ?? 0;
 
   // 0-4 (+ lash COP) whole numbers
-  const terrainStars = hooks.onTerrainStars(
-    getTerrainDefenseStars(match.getTile(defenderPosition).type)
+  const baseTerrainStars = getTerrainDefenseStars(
+    defender.getTileOrThrow().type
   );
+
+  const terrainStarsHook = attacker.player.getHook("terrainStars");
+  const terrainStars =
+    terrainStarsHook?.(baseTerrainStars, hookProps) ?? baseTerrainStars;
+
+  // TODO maybe the attack hook should be applied here instead?
 
   // baseDamage: 1-100
   const baseDamage = getBaseDamage(attacker, defender);

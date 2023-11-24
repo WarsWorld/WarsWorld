@@ -1,5 +1,6 @@
 import { isSamePosition, type Position } from "shared/schemas/position";
 import type { UnitWrapper } from "./unit";
+import { DispatchableError } from "shared/DispatchedError";
 
 export class UnitsWrapper {
   constructor(public data: UnitWrapper[]) {}
@@ -12,7 +13,9 @@ export class UnitsWrapper {
     const unit = this.getUnit(position);
 
     if (unit === undefined) {
-      throw new Error(`No unit found at ${JSON.stringify(position)}`);
+      throw new DispatchableError(
+        `No unit found at ${JSON.stringify(position)}`
+      );
     }
 
     return unit;
@@ -22,12 +25,6 @@ export class UnitsWrapper {
     return this.getUnit(position) !== undefined;
   }
 
-  healAll(healingAmount: number) {
-    this.data.forEach((unit) => {
-      unit.data.stats.hp = Math.min(100, unit.data.stats.hp + healingAmount);
-    });
-  }
-
   damageAllUntil1HP(damageAmount: number) {
     this.data.forEach((unit) => unit.damageUntil1HP(damageAmount));
   }
@@ -35,7 +32,7 @@ export class UnitsWrapper {
   damageUntil1HPInRadius({
     radius,
     damageAmount,
-    epicenter,
+    epicenter
   }: {
     radius: number;
     damageAmount: number;

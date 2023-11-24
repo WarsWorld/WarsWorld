@@ -1,32 +1,32 @@
+import { prisma } from "server/prisma/prisma-client";
 import type { CreatableMap } from "shared/schemas/map";
 import { mapSchema } from "shared/schemas/map";
+import type { PlayerSlot } from "shared/schemas/player-slot";
 import type { Tile, TileType } from "shared/schemas/tile";
 import {
-  isNeutralProperty,
-  isUnitProducingProperty,
+  isNotNeutralProperty,
+  isUnitProducingProperty
 } from "shared/schemas/tile";
-import { prisma } from "server/prisma/prisma-client";
 import { publicBaseProcedure, router } from "../trpc/trpc-setup";
-import type { PlayerSlot } from "shared/schemas/player-slot";
 
 export const getPlayerAmountOfMap = (map: CreatableMap) => {
   const seenPlayerSlots: PlayerSlot[] = [];
 
-  const addToPlayerSlotsIfNotAddedAlready = (playerSlot: PlayerSlot) => {
-    if (!seenPlayerSlots.includes(playerSlot)) {
-      seenPlayerSlots.push(playerSlot);
+  const addToPlayerSlotsIfNotAddedAlready = (item: {
+    playerSlot: PlayerSlot;
+  }) => {
+    if (!seenPlayerSlots.includes(item.playerSlot)) {
+      seenPlayerSlots.push(item.playerSlot);
     }
   };
 
-  for (const tile of map.tiles.flat()) {
-    if (isUnitProducingProperty(tile) && !isNeutralProperty(tile)) {
-      addToPlayerSlotsIfNotAddedAlready(tile.playerSlot);
-    }
+  map.tiles
+    .flat()
+    .filter(isUnitProducingProperty)
+    .filter(isNotNeutralProperty)
+    .forEach(addToPlayerSlotsIfNotAddedAlready);
 
-    if (tile.unit !== undefined) {
-      addToPlayerSlotsIfNotAddedAlready(tile.unit.playerSlot);
-    }
-  }
+  map.predeployedUnits.forEach(addToPlayerSlotsIfNotAddedAlready);
 
   return seenPlayerSlots.length;
 };
@@ -41,7 +41,7 @@ const propertyTileTypes = [
   "airport",
   "commtower",
   "lab",
-  "port",
+  "port"
 ] satisfies TileType[];
 
 type PropertyStatsType = Record<(typeof propertyTileTypes)[number], number>;
@@ -62,16 +62,16 @@ export const mapRouter = router({
         // TODO which armies exactly?
         size: {
           width: tiles[0].length,
-          height: tiles.length,
+          height: tiles.length
         },
         propertyStats: propertyTileTypes.reduce<PropertyStatsType>(
           (prev, cur) => ({
             ...prev,
-            [cur]: tilesFlat.filter((tile) => tile.type === cur).length,
+            [cur]: tilesFlat.filter((tile) => tile.type === cur).length
           }),
           {} as PropertyStatsType
         ),
-        created: map.createdAt,
+        created: map.createdAt
       };
     });
   }),
@@ -90,10 +90,9 @@ export const mapRouter = router({
 
     return prisma.wWMap.create({
       data: {
-        name: input.name,
-        tiles: input.tiles,
-        numberOfPlayers,
-      },
+        ...input,
+        numberOfPlayers
+      }
     });
-  }),
+  })
 });

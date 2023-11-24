@@ -1,5 +1,4 @@
 import { z } from "zod";
-import { withUnit } from "./unit";
 
 const axisConnectionsSchema = z.enum(["right-left", "top-bottom"]);
 
@@ -13,50 +12,50 @@ const threeWayConnectionSchema = z.enum([
   "right-bottom-left",
   "top-right-bottom",
   "top-bottom-left",
-  "top-right-left",
+  "top-right-left"
 ]);
 
 const fourWayConnectionSchema = z.literal("top-right-bottom-left");
 
-export const roadTileSchema = withUnit.extend({
+export const roadTileSchema = z.object({
   type: z.literal("road"),
   variant: twoWayConnectionsSchema
     .or(threeWayConnectionSchema)
-    .or(fourWayConnectionSchema),
+    .or(fourWayConnectionSchema)
 });
 
-export const bridgeTileSchema = withUnit.extend({
+export const bridgeTileSchema = z.object({
   type: z.literal("bridge"),
-  variant: axisConnectionsSchema,
+  variant: axisConnectionsSchema
 });
 
-export const pipeTileSchema = withUnit.extend({
+export const pipeTileSchema = z.object({
   type: z.literal("pipe"),
-  variant: oneWayConnectionsSchema.or(twoWayConnectionsSchema),
+  variant: oneWayConnectionsSchema.or(twoWayConnectionsSchema)
 });
 
-export const pipeSeamTileSchema = withUnit.extend({
+export const pipeSeamTileSchema = z.object({
   type: z.literal("pipeSeam"),
   variant: axisConnectionsSchema,
-  hp: z.number().int().min(1).max(100),
+  hp: z.number().int().min(1).max(100)
 });
 
-export const plainTileSchema = withUnit.extend({
+export const plainTileSchema = z.object({
   type: z.literal("plain"),
   variant: z.enum([
     "normal",
     "broken-pipe-right-left",
-    "broken-pipe-top-bottom",
-  ]),
+    "broken-pipe-top-bottom"
+  ])
 });
 
-export const riverTileSchema = withUnit.extend({
+export const riverTileSchema = z.object({
   type: z.literal("river"),
   // TODO rivers have MANY more variants with flow direction and all
   // the question is: do we want to support them for map creation?
   variant: twoWayConnectionsSchema
     .or(threeWayConnectionSchema)
-    .or(fourWayConnectionSchema),
+    .or(fourWayConnectionSchema)
 });
 
 export const variableTileSchema = z.discriminatedUnion("type", [
@@ -65,5 +64,5 @@ export const variableTileSchema = z.discriminatedUnion("type", [
   pipeSeamTileSchema,
   pipeTileSchema,
   riverTileSchema,
-  plainTileSchema,
+  plainTileSchema
 ]);

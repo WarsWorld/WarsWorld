@@ -64,13 +64,11 @@ export function Navbar() {
             />
           </>
         ) : (
-          <>
-            <NavGroup
-              showMatchLinks={showMatchLinks}
-              handleMatchLinks={handleMatchLinks}
-              setShowLinks={setShowLinks}
-            />
-          </>
+          <NavGroup
+            showMatchLinks={showMatchLinks}
+            handleMatchLinks={handleMatchLinks}
+            setShowLinks={setShowLinks}
+          />
         )}
       </nav>
       <div className="@h-1 @w-full @bg-gradient-to-r @from-primary-dark @from-10% @via-primary @to-primary-dark @to-90%" />

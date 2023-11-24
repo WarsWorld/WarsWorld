@@ -11,17 +11,17 @@ export const drake: COProperties = {
           return value + 1;
         }
       },
-      defense: (value, { attacker }) => {
+      defense: ({ attacker }) => {
         if (attacker.properties().facility === "port") {
-          return value + 25;
+          return 100 + 25;
         }
       },
-      attack: (value, { attacker }) => {
+      attack: ({ attacker }) => {
         if (attacker.properties().facility === "airport") {
-          return value - 20;
+          return 100 - 20;
         }
-      },
-    },
+      }
+    }
   },
   powers: {
     COPower: {
@@ -35,9 +35,9 @@ export const drake: COProperties = {
         enemyUnits.damageAllUntil1HP(10);
 
         enemyUnits.data.forEach((unit) => {
-          unit.data.stats.fuel = Math.floor(unit.data.stats.fuel / 2); // half fuel till 0 and round down
+          unit.drainFuel(Math.floor(unit.fuel() / 2)); // half fuel till 0 and round down
         });
-      },
+      }
     },
     superCOPower: {
       name: "Typhoon",
@@ -50,12 +50,12 @@ export const drake: COProperties = {
         enemyUnits.damageAllUntil1HP(20);
 
         enemyUnits.data.forEach((unit) => {
-          unit.data.stats.fuel = Math.floor(unit.data.stats.fuel / 2); // half fuel till 0 and round down
+          unit.drainFuel(Math.floor(unit.fuel() / 2)); // half fuel till 0 and round down
         });
 
         match.currentWeather = "rain";
         match.playerToRemoveWeatherEffect = player;
-      },
-    },
-  },
+      }
+    }
+  }
 };

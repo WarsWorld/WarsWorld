@@ -3,14 +3,17 @@ import type { AbilityAction } from "shared/schemas/action";
 import { allDirections } from "shared/schemas/direction";
 import type { MatchWrapper } from "shared/wrappers/match";
 import type { UnitWrapper } from "shared/wrappers/unit";
-import { unitPropertiesMap } from "../../buildable-unit";
 import { addDirection } from "../../positions";
 import type { SubActionToEvent } from "../handler-types";
 
 /* TODO transfer property ownership on HQ capture */
 
 //Capture, APC supply, black bomb explosion, toggle stealth/sub hide.
-export const abilityActionToEvent: SubActionToEvent<AbilityAction> = (match, action, fromPosition) => {
+export const abilityActionToEvent: SubActionToEvent<AbilityAction> = (
+  match,
+  action,
+  fromPosition
+) => {
   const player = match.players.getCurrentTurnPlayer();
   const unit = player.getUnits().getUnitOrThrow(fromPosition);
 
@@ -42,11 +45,20 @@ export const applyAbilityEvent = (match: MatchWrapper, unit: UnitWrapper) => {
     case "infantry":
     case "mech": {
       //capture tile
+
+      // TODO sami
+
+      if (!("currentCapturePoints" in unit.data)) {
+        // theoretically this check should never be positive, but
+        // TS has issues narrowing UnitWithHiddenStats
+        break;
+      }
+
       if (unit.data.currentCapturePoints === undefined) {
         unit.data.currentCapturePoints = 20;
       }
 
-      unit.data.currentCapturePoints -= unit.data.stats.hp;
+      unit.data.currentCapturePoints -= unit.hp();
 
       if (unit.data.currentCapturePoints <= 0) {
         unit.data.currentCapturePoints = undefined;
@@ -54,7 +66,11 @@ export const applyAbilityEvent = (match: MatchWrapper, unit: UnitWrapper) => {
         const tile = unit.getTileOrThrow();
 
         if (!("playerSlot" in tile)) {
-          throw new Error(`Could not capture tile at ${JSON.stringify(unit.data.position)}: no playerSlot property! (Not changeable tile?)`);
+          throw new Error(
+            `Could not capture tile at ${JSON.stringify(
+              unit.data.position
+            )}: no playerSlot property! (Not changeable tile?)`
+          );
         }
 
         tile.playerSlot = unit.data.playerSlot;
@@ -65,11 +81,7 @@ export const applyAbilityEvent = (match: MatchWrapper, unit: UnitWrapper) => {
     case "apc": {
       //supply
       for (const dir of allDirections) {
-        const suppliedUnit = match.units.getUnit(addDirection(unit.data.position, dir));
-
-        if (suppliedUnit !== undefined) {
-          suppliedUnit.data.stats.fuel = unitPropertiesMap[suppliedUnit.data.type].initialFuel;
-        }
+        match.units.getUnit(addDirection(unit.data.position, dir))?.refuel();
       }
 
       break;
@@ -86,8 +98,8 @@ export const applyAbilityEvent = (match: MatchWrapper, unit: UnitWrapper) => {
     case "stealth":
     case "sub": {
       //toggle hide
-      if ("hidden" in unit) {
-        unit.hidden = !unit.hidden;
+      if ("hidden" in unit.data) {
+        unit.data.hidden = !unit.data.hidden;
       }
 
       break;

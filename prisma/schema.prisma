@@ -112,10 +112,12 @@ model WWMap {
   name String
 
   /// [PrismaTiles]
-  tiles           Json
-  numberOfPlayers Int
-  matches         Match[]
-  createdAt       DateTime @default(now())
+  tiles            Json
+  /// [PrismaUnits]
+  predeployedUnits Json
+  numberOfPlayers  Int
+  matches          Match[]
+  createdAt        DateTime @default(now())
 
   // TODO maps should have different sets of captureLimits and bannedUnitTypes
   // per league type.
@@ -195,6 +197,8 @@ model Match {
   Notes     Notes[]
   Event     Event[]
   Player    Player[]
+
+  @@map("match")
 }
 
 model Event {

@@ -34,21 +34,24 @@ export const attackActionToEvent: SubActionToEvent<AttackAction> = (
     throw new DispatchableError("Unit is not in range to attack");
   }
 
-  const damageAttackDone = calculateDamage(
-    match,
-    attacker.data.position,
-    defender.data.position
-  );
+  const damageAttackDone = calculateDamage({
+    attacker,
+    defender
+  });
 
   if (damageAttackDone === null) {
     throw new DispatchableError("This unit cannot attack specified enemy unit");
   }
 
   //check if ded
-  if (damageAttackDone >= defender.data.stats.hp) {
+  if (damageAttackDone >= defender.hp()) {
+    /*
+     * TODO IMPORTANT i think we must have a "unit was destroyed" flag on an event
+     * bc a client can't tell on sonya units cuz they are effectively always full HP
+     */
     return {
       ...action,
-      defenderHP: 0,
+      defenderHP: 0
     };
   }
 
@@ -62,20 +65,22 @@ export const attackActionToEvent: SubActionToEvent<AttackAction> = (
     ) {
       //defender is melee, can counterattack?
       //temporarily substract hp to calculate counter dmg
-      defender.data.stats.hp -= damageAttackDone;
-      const damageDefendDone = calculateDamage(
-        match,
-        defender.data.position,
-        attacker.data.position
-      );
-      defender.data.stats.hp += damageAttackDone;
+      const originalHP = defender.hp();
+      defender.damage("precise", originalHP - damageAttackDone);
+
+      const damageDefendDone = calculateDamage({
+        attacker: defender,
+        defender: attacker
+      });
+
+      defender.setHp(originalHP);
 
       if (damageDefendDone !== null) {
         //return event with counter-attack
         return {
           ...action,
-          defenderHP: defender.data.stats.hp - damageAttackDone,
-          attackerHP: Math.max(0, attacker.data.stats.hp - damageDefendDone),
+          defenderHP: defender.hp() - damageAttackDone,
+          attackerHP: Math.max(0, attacker.hp() - damageDefendDone)
         };
       }
     }
@@ -83,7 +88,7 @@ export const attackActionToEvent: SubActionToEvent<AttackAction> = (
 
   return {
     ...action,
-    defenderHP: defender.data.stats.hp - damageAttackDone,
+    defenderHP: defender.hp() - damageAttackDone
   };
 };
 
@@ -115,14 +120,14 @@ export const applyAttackEvent = (
   if (event.defenderHP === 0) {
     defender.remove();
   } else {
-    defender.data.stats.hp = event.defenderHP;
+    defender.setHp(event.defenderHP);
   }
 
   if (event.attackerHP !== undefined) {
     if (event.attackerHP === 0) {
       attacker.remove();
     } else {
-      attacker.data.stats.hp = event.attackerHP;
+      attacker.setHp(event.attackerHP);
     }
   }
 };

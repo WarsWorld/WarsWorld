@@ -6,20 +6,20 @@ export const eagle: COProperties = {
     description:
       "Air units gain +15% attack.ts and +10% defense, and consume -2 fuel per day. Naval units lose -30% attack.ts.",
     hooks: {
-      attack(value, { attacker }) {
+      attack({ attacker }) {
         switch (attacker.properties().facility) {
           case "airport":
-            return value + 15;
+            return 100 + 15;
           case "port":
-            return value - 30;
+            return 100 - 30;
         }
       },
-      defense(value, { attacker }) {
+      defense({ attacker }) {
         if (attacker.properties().facility === "airport") {
-          return value + 10;
+          return 100 + 10;
         }
-      },
-    },
+      }
+    }
   },
   powers: {
     COPower: {
@@ -27,17 +27,17 @@ export const eagle: COProperties = {
       stars: 3,
       description: "Air units gain +5% attack.ts and +10% defense.",
       hooks: {
-        attack(value, { attacker }) {
+        attack({ attacker }) {
           if (attacker.properties().facility === "airport") {
-            return value + 5;
+            return 105;
           }
         },
-        defense(value, { attacker }) {
+        defense({ attacker }) {
           if (attacker.properties().facility === "airport") {
-            return value + 10;
+            return 110;
           }
-        },
-      },
+        }
+      }
     },
     superCOPower: {
       name: "Lightning Strike",
@@ -55,17 +55,17 @@ export const eagle: COProperties = {
           });
       },
       hooks: {
-        attack(value, { attacker }) {
+        attack({ attacker }) {
           if (attacker.properties().facility === "airport") {
-            return value + 5;
+            return 100 + 5;
           }
         },
-        defense(value, { attacker }) {
+        defense({ attacker }) {
           if (attacker.properties().facility === "airport") {
-            return value + 10;
+            return 100 + 10;
           }
-        },
-      },
-    },
-  },
+        }
+      }
+    }
+  }
 };
