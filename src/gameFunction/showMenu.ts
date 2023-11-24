@@ -1,3 +1,4 @@
+import type { inferProcedureInput } from "@trpc/server";
 import type { ISpritesheetData, Spritesheet } from "pixi.js";
 import {
   AnimatedSprite,
@@ -7,17 +8,11 @@ import {
   Sprite,
   Texture
 } from "pixi.js";
-import unitData from "./unitData";
-import type { inferProcedureInput } from "@trpc/server";
 import type { AppRouter } from "server/routers/app";
-
-export type OurSpriteSheetData = ISpritesheetData & {
-  animations: Record<string, string[]>;
-  countries: Record<string, string[]>;
-};
+import unitData from "./unitData";
 
 export default async function showMenu(
-  spriteSheet: Spritesheet<OurSpriteSheetData>,
+  spriteSheet: Spritesheet,
   type: string,
   slot: number,
   x: number,

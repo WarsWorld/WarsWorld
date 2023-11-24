@@ -11,16 +11,16 @@ export const grit: COProperties = {
           return value + 1;
         }
       },
-      attack(value, { attacker }) {
+      attack({ attacker }) {
         if (attacker.isIndirect()) {
-          return value + 20;
+          return 120;
         }
 
         if (attacker.properties().movementType !== "foot") {
-          return value - 20;
+          return 80;
         }
-      },
-    },
+      }
+    }
   },
   powers: {
     COPower: {
@@ -33,12 +33,12 @@ export const grit: COProperties = {
             return value + 1;
           }
         },
-        attack(value, { attacker }) {
+        attack({ attacker }) {
           if (attacker.isIndirect()) {
-            return value + 20;
+            return 120;
           }
-        },
-      },
+        }
+      }
     },
     superCOPower: {
       name: "Super Snipe",
@@ -50,12 +50,12 @@ export const grit: COProperties = {
             return value + 2;
           }
         },
-        attack(value, { attacker }) {
+        attack({ attacker }) {
           if (attacker.isIndirect()) {
-            return value + 20;
+            return 120;
           }
-        },
-      },
-    },
-  },
+        }
+      }
+    }
+  }
 };

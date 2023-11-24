@@ -6,16 +6,16 @@ export const javier: COProperties = {
     description:
       "Units gain +20% defense against indirect units. Comm Towers grant all units additional +10% defense.",
     hooks: {
-      defense(value, { attacker }) {
+      defense({ attacker }) {
         const bonusFromIndirectAttacks = attacker.isIndirect() ? 20 : 0;
 
         return (
-          value +
+          100 +
           attacker.player.getCommtowerAttackBoost() +
           bonusFromIndirectAttacks
         );
-      },
-    },
+      }
+    }
   },
   powers: {
     COPower: {
@@ -24,21 +24,21 @@ export const javier: COProperties = {
       description:
         "Indirect defense is increased to +40%. Comm Tower bonuses are doubled.",
       hooks: {
-        defense(value, { defender }) {
+        defense({ defender }) {
           const bonusFromIndirectAttacks = defender.isIndirect()
             ? 20 // 40 with d2d
             : 0;
 
           return (
-            value +
+            100 +
             defender.player.getCommtowerAttackBoost() +
             bonusFromIndirectAttacks
           );
         },
-        attack(value, { attacker }) {
-          return value + attacker.player.getCommtowerAttackBoost();
-        },
-      },
+        attack({ attacker }) {
+          return 100 + attacker.player.getCommtowerAttackBoost();
+        }
+      }
     },
     superCOPower: {
       name: "Tower of Power",
@@ -46,21 +46,21 @@ export const javier: COProperties = {
       description:
         "Indirect defense is increased to +80%. Comm Tower bonuses are tripled.",
       hooks: {
-        defense(value, { defender }) {
+        defense({ defender }) {
           const bonusFromIndirectAttacks = defender.isIndirect()
             ? 60 // 80 with d2d
             : 0;
 
           return (
-            value +
+            100 +
             defender.player.getCommtowerAttackBoost() * 2 +
             bonusFromIndirectAttacks
           );
         },
-        attack(currentValue, { attacker }) {
-          return currentValue + attacker.player.getCommtowerAttackBoost() * 2;
-        },
-      },
-    },
-  },
+        attack({ attacker }) {
+          return 100 + attacker.player.getCommtowerAttackBoost() * 2;
+        }
+      }
+    }
+  }
 };

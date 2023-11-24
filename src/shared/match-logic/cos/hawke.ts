@@ -5,8 +5,8 @@ export const hawke: COProperties = {
   dayToDay: {
     description: "Units gain +10% attack.ts.",
     hooks: {
-      attack: (value) => value + 10,
-    },
+      attack: () => 110
+    }
   },
   powers: {
     COPower: {
@@ -15,9 +15,9 @@ export const hawke: COProperties = {
       description:
         "All units gain +1HP, and all enemy units lose -1HP (to a minimum of 0.1HP).",
       instantEffect({ player }) {
-        player.getUnits().healAll(10);
+        player.getUnits().data.forEach((u) => u.heal(1));
         player.getEnemyUnits().damageAllUntil1HP(10);
-      },
+      }
     },
     superCOPower: {
       name: "Black Storm",
@@ -25,9 +25,9 @@ export const hawke: COProperties = {
       description:
         "All units gain +2HP, and all enemy units lose -2HP (to a minimum of 0.1HP).",
       instantEffect({ player }) {
-        player.getUnits().healAll(20);
+        player.getUnits().data.forEach((u) => u.heal(2));
         player.getEnemyUnits().damageAllUntil1HP(20);
-      },
-    },
-  },
+      }
+    }
+  }
 };

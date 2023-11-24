@@ -1,4 +1,4 @@
-const isProdEnvironment = process.env === "production";
+const isProdEnvironment = process.env.NODE_ENV === "production";
 const padded = ["if", "const", "let", "expression", "return", "break"];
 
 /** @type {import("eslint")} */
@@ -56,9 +56,10 @@ module.exports = {
     ],
     "@typescript-eslint/explicit-module-boundary-types": "off",
     "@typescript-eslint/consistent-type-imports": "error",
+    "@typescript-eslint/strict-boolean-expressions": "error",
     "react/react-in-jsx-scope": "off",
     "react/prop-types": "off",
-    "@typescript-eslint/no-explicit-any": "off",
+
     "max-len": [
       "error",
       {
@@ -79,7 +80,14 @@ module.exports = {
         // from package.json prettier config..? (es5 should be default value)
         trailingComma: "es5"
       }
-    ]
+    ],
+    /**
+     * TODO
+     * we haven't decided yet if we want to use next.js' <Image> or just
+     * go with <img> yet. when a conclusion is made, one or the other
+     * should be banned through linting.
+     */
+    "@next/next/no-img-element": "off"
   },
   overrides: [
     {
@@ -94,7 +102,8 @@ module.exports = {
             patterns: [
               {
                 group: ["**/server/**", "**/frontend/**"],
-                message: "Don't import non-type server or frontend code into shared",
+                message:
+                  "Don't import non-type server or frontend code into shared",
                 allowTypeImports: true
               },
               {

@@ -1,12 +1,13 @@
-import { unitPropertiesMap } from "shared/match-logic/buildable-unit";
-import type { BuildAction } from "shared/schemas/action";
-import type { PlayerSlot } from "shared/schemas/player-slot";
-import type { WWUnit } from "shared/schemas/unit";
+import { unitPropertiesMap } from "../../../buildable-unit";
 
-export const createUnitFromBuildAction = (
-  event: BuildAction,
-  playerSlot: PlayerSlot
-): WWUnit => {
+import type { PlayerSlot } from "shared/schemas/player-slot";
+import type { UnitWithVisibleStats } from "shared/schemas/unit";
+import type { BuildEvent } from "shared/types/events";
+
+export const createUnitFromBuildEvent = (
+  playerSlot: PlayerSlot,
+  event: BuildEvent
+): UnitWithVisibleStats => {
   const { unitType } = event;
 
   const unitProperties = unitPropertiesMap[unitType];
@@ -16,21 +17,19 @@ export const createUnitFromBuildAction = (
     position: event.position,
     stats: {
       fuel: unitProperties.initialFuel,
-      hp: 100,
+      hp: 100
     },
-    isReady: true,
-  } satisfies Partial<WWUnit>;
+    isReady: false
+  } satisfies Partial<UnitWithVisibleStats>;
 
   if ("initialAmmo" in unitProperties) {
-    const ammo = unitProperties.initialAmmo;
-
     const partialUnitWithAmmo = {
       ...partialUnit,
       stats: {
         ...partialUnit.stats,
-        ammo,
-      },
-    } satisfies Partial<WWUnit>;
+        ammo: unitProperties.initialAmmo
+      }
+    } satisfies Partial<UnitWithVisibleStats>;
 
     switch (unitType) {
       case "artillery":
@@ -49,14 +48,14 @@ export const createUnitFromBuildAction = (
       case "antiAir":
         return {
           type: unitType,
-          ...partialUnitWithAmmo,
+          ...partialUnitWithAmmo
         };
       case "stealth":
       case "sub":
         return {
           type: unitType,
           ...partialUnitWithAmmo,
-          hidden: false,
+          hidden: false
         };
       case "carrier":
       case "cruiser":
@@ -64,7 +63,7 @@ export const createUnitFromBuildAction = (
           type: unitType,
           ...partialUnitWithAmmo,
           loadedUnit: null,
-          loadedUnit2: null,
+          loadedUnit2: null
         };
     }
   }
@@ -75,14 +74,14 @@ export const createUnitFromBuildAction = (
     case "blackBomb":
       return {
         type: unitType,
-        ...partialUnit,
+        ...partialUnit
       };
     case "apc":
     case "transportCopter":
       return {
         type: unitType,
         ...partialUnit,
-        loadedUnit: null,
+        loadedUnit: null
       };
     case "blackBoat":
     case "lander":
@@ -90,11 +89,10 @@ export const createUnitFromBuildAction = (
         type: unitType,
         ...partialUnit,
         loadedUnit: null,
-        loadedUnit2: null,
+        loadedUnit2: null
       };
-    default: {
+    default:
       /** TODO only so that typescript doesn't error / break CI, but still a TODO */
       throw new Error("TODO :)");
-    }
   }
 };

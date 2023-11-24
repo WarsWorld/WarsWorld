@@ -1,5 +1,4 @@
 import { IngameInfo } from "frontend/components/IngameInfo";
-import Image from "next/image";
 import type { PlayerInMatch } from "shared/types/server-match-state";
 
 type Props = {
@@ -35,14 +34,14 @@ export const PlayerBox = ({ playerTurn, playerInMatch }: Props) => {
         <div
           className={`@relative @h-[100px] @aspect-square @outline @outline-2 @outline-black ${playerGradient} playerCOBox`}
         >
-          <Image
+          <img
             className={`@absolute @bottom-0 @h-[120px] @w-full @aspect-square @object-none @object-left-top playerCOIcon ${
               playerTurn ? "" : "isNotPlayerTurn"
             }`}
             src={`/img/CO/${playerCO}-Full.png`}
             alt={playerCO}
           />
-          <Image
+          <img
             className="@absolute @h-8 @top-1 @right-1 @aspect-square @bg-slate-200"
             src={`/img/nations/${playerNation}.webp`}
             alt={playerNation}

@@ -2,7 +2,7 @@ import { TRPCError } from "@trpc/server";
 import type { Direction } from "shared/schemas/direction";
 import type { Path, Position } from "shared/schemas/position";
 import { isSamePosition } from "shared/schemas/position";
-import type { WWUnit } from "shared/schemas/unit";
+import type { UnitWithVisibleStats } from "shared/schemas/unit";
 
 /**
  * I've kept this code around because we might want to use these algorithms at some point
@@ -52,11 +52,11 @@ const _throwIfPathContainsDuplicatePositions = (path: Path) => {
   });
 };
 
-const _throwIfUnitIsWaited = (unit: WWUnit) => {
+const _throwIfUnitIsWaited = (unit: UnitWithVisibleStats) => {
   if (!unit.isReady) {
     throw new TRPCError({
       code: "BAD_REQUEST",
-      message: "You can't move a waited unit",
+      message: "You can't move a waited unit"
     });
   }
 };

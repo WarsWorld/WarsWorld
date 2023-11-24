@@ -1,19 +1,23 @@
 import type { MatchWrapper } from "shared/wrappers/match";
 import type { UnitWrapper } from "shared/wrappers/unit";
 
-type Hook<Props> = (value: number, props: Props) => number | undefined;
+export type CombatProps = { attacker: UnitWrapper; defender: UnitWrapper };
 
-export type CombatHook = Hook<{ attacker: UnitWrapper; defender: UnitWrapper }>;
+type ReturnValue = number | undefined;
 
 export type Hooks = {
-  buildCost: Hook<MatchWrapper>;
-  movementCost: Hook<MatchWrapper>;
-  movementRange: Hook<UnitWrapper>;
-  vision: Hook<UnitWrapper>;
-  attack: CombatHook;
-  defense: CombatHook;
-  goodLuck: CombatHook;
-  badLuck: CombatHook;
-  terrainStars: CombatHook;
-  attackRange: CombatHook;
+  buildCost: (baseBuildCost: number, match: MatchWrapper) => ReturnValue;
+  movementCost: (baseMovementCost: number, match: MatchWrapper) => ReturnValue;
+  movementRange: (baseMovementRange: number, unit: UnitWrapper) => ReturnValue;
+  vision: (baseVisionRange: number, unit: UnitWrapper) => ReturnValue;
+  goodLuck: (goodLuckRoll: number, combatProps: CombatProps) => ReturnValue;
+  terrainStars: (
+    baseTerrainStars: number,
+    combatProps: CombatProps
+  ) => ReturnValue;
+  attackRange: (baseRange: number, combatProps: CombatProps) => ReturnValue;
+
+  attack: (combatProps: CombatProps) => ReturnValue;
+  defense: (combatProps: CombatProps) => ReturnValue;
+  badLuck: (combatProps: CombatProps) => ReturnValue;
 };

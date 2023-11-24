@@ -1,18 +1,23 @@
 import type { UnitType } from "shared/schemas/unit";
 import type { UnitWrapper } from "shared/wrappers/unit";
 
-export const getBaseDamage = (attackerUnit: UnitWrapper, defenderUnit: UnitWrapper): number | null => {
-  const damageTable = damageMatrix[attackerUnit.data.type];
+export const getBaseDamage = (
+  attacker: UnitWrapper,
+  defender: UnitWrapper
+): number | null => {
+  const damageTable = damageMatrix[attacker.data.type];
 
   if (damageTable === undefined) {
     return null;
   }
 
-  const primaryDamage = damageTable.primary[defenderUnit.data.type] ?? null;
-  const secondaryDamage = damageTable.secondary?.[defenderUnit.data.type] ?? null;
-  const cantUsePrimaryWeapon = "ammo" in attackerUnit.data.stats && attackerUnit.data.stats.ammo === 0;
+  const primaryDamage = damageTable.primary[defender.data.type] ?? null;
+  const secondaryDamage = damageTable.secondary?.[defender.data.type] ?? null;
+  const cantUsePrimaryWeapon = attacker.getStat("ammo") === 0;
 
-  return cantUsePrimaryWeapon ? secondaryDamage : primaryDamage ?? secondaryDamage;
+  return cantUsePrimaryWeapon
+    ? secondaryDamage
+    : primaryDamage ?? secondaryDamage;
 };
 
 type DamageTable = Partial<Record<UnitType, number>>;

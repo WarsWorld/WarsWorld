@@ -6,7 +6,6 @@
     "node": "^21.0.0"
   },
   "scripts": {
-    "initialise": "npm run db:up && prisma db push && prisma db seed",
     "db:up": "docker compose up -d",
     "db:destroy": "docker compose down --volumes --remove-orphans",
     "prisma:push": "prisma db push",
@@ -27,7 +26,8 @@
     "build:next": "cross-env NODE_ENV=production next build",
     "build:server": "tsc --project tsconfig.server.json",
     "build": "concurrently \"npm:build:*\"",
-    "start": "cross-env NODE_ENV=production node dist/server/main-production.js"
+    "start": "cross-env NODE_ENV=production node dist/server/main-production.js",
+    "jscpd": "npx jscpd --ignore node_modules,dist,public --reporters consoleFull ."
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"

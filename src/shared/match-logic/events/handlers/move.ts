@@ -1,19 +1,18 @@
-import type { MoveAction } from "shared/schemas/action";
-import { unitPropertiesMap } from "shared/match-logic/buildable-unit";
-import type { MoveEvent } from "shared/types/events";
-import { getFinalPositionSafe, isSamePosition } from "shared/schemas/position";
 import { DispatchableError } from "shared/DispatchedError";
+import { unitPropertiesMap } from "shared/match-logic/buildable-unit";
+import type { MoveAction } from "shared/schemas/action";
+import { getFinalPositionSafe, isSamePosition } from "shared/schemas/position";
+import type { UnitWithVisibleStats } from "shared/schemas/unit";
+import type { MoveEvent } from "shared/types/events";
 import type { MatchWrapper } from "shared/wrappers/match";
-import type { WWUnit } from "shared/schemas/unit";
-import { validateSubActionAndToEvent } from "../action-to-event";
-import type { MainActionToEvent } from "../handler-types";
 import { applySubEventToMatch } from "../apply-event-to-match";
+import type { MainActionToEvent } from "../handler-types";
 
 export const createNoMoveEvent = (): MoveEvent => ({
   type: "move",
   path: [],
   trap: false,
-  subEvent: { type: "wait" },
+  subEvent: { type: "wait" }
 });
 
 export const moveActionToEvent: MainActionToEvent<MoveAction> = (
@@ -33,12 +32,12 @@ export const moveActionToEvent: MainActionToEvent<MoveAction> = (
 
   const fuelNeeded = action.path.length - 1;
 
-  if (unit.data.stats.fuel < fuelNeeded) {
+  if (unit.fuel() < fuelNeeded) {
     throw new DispatchableError("Not enough fuel for this move");
   }
 
-  for (let i = 0; i < action.path.length; ++i) {
-    const position = action.path[i];
+  for (let pathIndex = 0; pathIndex < action.path.length; ++pathIndex) {
+    const position = action.path[pathIndex];
 
     match.map.throwIfOutOfBounds(position);
 
@@ -71,12 +70,15 @@ export const moveActionToEvent: MainActionToEvent<MoveAction> = (
     remainingMovePoints -= moveCost;
 
     if (
-      i === action.path.length - 1 &&
+      pathIndex === action.path.length - 1 &&
       unitInPosition !== undefined &&
-      unitInPosition.data.type !== unit.data.type
+      unitInPosition.data.playerSlot === unit.data.playerSlot
     ) {
-      //check if trying to join (same unit type) or load into transport:
-      if (unitInPosition.data.type !== unit.data.type) {
+      // if this is false, indicates join, which is always valid because then
+      // the final position unit is by the same player and unit type.
+      const indicateLoadingUnit = unitInPosition.data.type !== unit.data.type;
+
+      if (indicateLoadingUnit) {
         if (!("loadedUnit" in unitInPosition)) {
           throw new DispatchableError(
             "Move action ending position is overlapping with an allied unit"
@@ -133,20 +135,16 @@ export const moveActionToEvent: MainActionToEvent<MoveAction> = (
       }
     }
 
-    result.path.push(action.path[i]);
+    result.path.push(action.path[pathIndex]);
   }
-
-  /** TODO not sure if this is correct */
-  result.subEvent = validateSubActionAndToEvent(
-    match,
-    action.subAction,
-    getFinalPositionSafe(result.path)
-  );
 
   return result;
 };
 
-const loadUnitInto = (unitToLoad: WWUnit, transportUnit: WWUnit) => {
+const loadUnitInto = (
+  unitToLoad: UnitWithVisibleStats,
+  transportUnit: UnitWithVisibleStats
+) => {
   switch (transportUnit.type) {
     case "transportCopter":
     case "apc": {
@@ -235,10 +233,16 @@ export const applyMoveEvent = (match: MatchWrapper, event: MoveEvent) => {
 
   //if unit was capturing, interrupt capture
   if ("currentCapturePoints" in unit) {
+    const tile = unit.getTileOrThrow();
+
+    if ("captureHP" in tile) {
+      tile.captureHP = 20;
+    }
+
     unit.currentCapturePoints = undefined;
   }
 
-  unit.data.stats.fuel -= event.path.length - 1;
+  unit.drainFuel(event.path.length - 1);
 
   const unitAtDestination = match.units.getUnit(
     getFinalPositionSafe(event.path)
@@ -250,17 +254,20 @@ export const applyMoveEvent = (match: MatchWrapper, event: MoveEvent) => {
     if (unit.data.type === unitAtDestination.data.type) {
       //join (hp, fuel, ammo, (keep capture points))
       const unitProperties = unitPropertiesMap[unit.data.type];
-      unitAtDestination.data.stats.fuel = Math.min(
-        unit.data.stats.fuel + unitAtDestination.data.stats.fuel,
-        unitProperties.initialFuel
-      );
-      unitAtDestination.data.stats.hp = Math.min(
-        unit.data.stats.hp + unitAtDestination.data.stats.hp,
-        99
+
+      unitAtDestination.setFuel(
+        Math.min(
+          unit.fuel() + unitAtDestination.fuel(),
+          unitProperties.initialFuel
+        )
       );
 
+      unitAtDestination.setHp(Math.min(unit.hp() + unitAtDestination.hp(), 99));
+
       if (
+        unit.data.stats !== "hidden" &&
         "ammo" in unit.data.stats &&
+        unitAtDestination.data.stats !== "hidden" &&
         "ammo" in unitAtDestination.data.stats &&
         "initialAmmo" in unitProperties
       ) {
@@ -269,7 +276,10 @@ export const applyMoveEvent = (match: MatchWrapper, event: MoveEvent) => {
           unitProperties.initialAmmo
         );
       }
-    } else {
+    } else if (
+      unit.data.stats !== "hidden" &&
+      unitAtDestination.data.stats !== "hidden"
+    ) {
       loadUnitInto(unit.data, unitAtDestination.data);
     }
 

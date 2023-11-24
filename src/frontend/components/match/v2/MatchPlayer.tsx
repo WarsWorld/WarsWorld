@@ -1,7 +1,5 @@
-import React from "react";
-import type { CO } from "shared/schemas/co";
 import type { Army } from "shared/schemas/army";
-import Image from "next/image";
+import type { CO } from "shared/schemas/co";
 
 type matchData = {
   name: string;
@@ -12,7 +10,14 @@ type matchData = {
   playerReady?: boolean;
 };
 
-export default function MatchPlayer({ name, co, country, flipCO, opponent, playerReady }: matchData) {
+export default function MatchPlayer({
+  name,
+  co,
+  country,
+  flipCO,
+  opponent,
+  playerReady
+}: matchData) {
   //it might be the other player AND an unpicked spot (a greyed out opponent)
   if (flipCO) {
     return (
@@ -30,7 +35,11 @@ export default function MatchPlayer({ name, co, country, flipCO, opponent, playe
       ${opponent ? "@bg-gray-600" : `@bg-${country}`}`}
         >
           <img
-            src={opponent ? `/img/nations/black-hole.gif` : `/img/nations/${country}.gif`}
+            src={
+              opponent
+                ? `/img/nations/black-hole.gif`
+                : `/img/nations/${country}.gif`
+            }
             className="@h-7 [image-rendering:pixelated]"
             alt="opponent chosen CO"
           />
@@ -47,10 +56,16 @@ export default function MatchPlayer({ name, co, country, flipCO, opponent, playe
           style={{
             backgroundImage: `url("/img/CO/pixelated/${co}-full.png")`
           }}
-          className={`@h-[200px] [image-rendering:pixelated] @bg-cover @scale-x-[-1] ${playerReady ? "@contrast-[1]" : "@contrast-[0.5]"}`}
+          className={`@h-[200px] [image-rendering:pixelated] @bg-cover @scale-x-[-1] ${
+            playerReady ? "@contrast-[1]" : "@contrast-[0.5]"
+          }`}
         ></div>
         <div className={`@flex @bg-${country}`}>
-          <img src={`/img/nations/${country}.gif`} className="@h-7 [image-rendering:pixelated]" alt="opponent chosen CO" />
+          <img
+            src={`/img/nations/${country}.gif`}
+            className="@h-7 [image-rendering:pixelated]"
+            alt="opponent chosen CO"
+          />
           <p className="@truncate @px-0.5 @text-sm">{name}</p>
         </div>
       </div>

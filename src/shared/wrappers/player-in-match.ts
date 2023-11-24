@@ -1,6 +1,9 @@
 import { COPropertiesMap } from "shared/match-logic/co";
 import type { Hooks } from "shared/match-logic/co-hooks";
-import type { FrontendUnit, UnitWithHiddenStats, WWUnit } from "shared/schemas/unit";
+import type {
+  UnitWithHiddenStats,
+  UnitWithVisibleStats
+} from "shared/schemas/unit";
 import type { Weather } from "shared/schemas/weather";
 import type { PlayerInMatch } from "shared/types/server-match-state";
 import type { MatchWrapper } from "./match";
@@ -12,18 +15,28 @@ export class PlayerInMatchWrapper {
   constructor(public data: PlayerInMatch, public match: MatchWrapper) {}
 
   getCommtowerAttackBoost() {
-    return this.match.changeableTiles.reduce((prev, cur) => (cur.type === "commtower" && cur.ownerSlot === this.data.slot ? prev + 1 : prev), 0);
+    return this.match.changeableTiles.reduce(
+      (prev, cur) =>
+        cur.type === "commtower" && cur.ownerSlot === this.data.slot
+          ? prev + 1
+          : prev,
+      0
+    );
   }
 
   getUnits() {
-    return new UnitsWrapper(this.match.units.data.filter((u) => u.data.playerSlot === this.data.slot));
+    return new UnitsWrapper(
+      this.match.units.data.filter((u) => u.data.playerSlot === this.data.slot)
+    );
   }
 
   /**
    * TODO Teams/Allies!
    */
   getEnemyUnits() {
-    return new UnitsWrapper(this.match.units.data.filter((u) => u.data.playerSlot !== this.data.slot));
+    return new UnitsWrapper(
+      this.match.units.data.filter((u) => u.data.playerSlot !== this.data.slot)
+    );
   }
 
   getHook<HookType extends keyof Hooks>(hookType: HookType) {
@@ -44,9 +57,14 @@ export class PlayerInMatchWrapper {
    * if needed until current player slot.
    */
   getNextAlivePlayer(): PlayerInMatchWrapper | null {
-    const nextSlot = (n: number) => (n + 1) % this.match.map.data.numberOfPlayers;
+    const nextSlot = (n: number) =>
+      (n + 1) % this.match.map.data.numberOfPlayers;
 
-    for (let i = nextSlot(this.data.slot); i !== this.data.slot; i = nextSlot(i)) {
+    for (
+      let i = nextSlot(this.data.slot);
+      i !== this.data.slot;
+      i = nextSlot(i)
+    ) {
       const player = this.match.players.getBySlot(i);
 
       if (player?.data.eliminated === true) {
@@ -75,7 +93,8 @@ export class PlayerInMatchWrapper {
           return true;
         }
 
-        const isSonjaAndPower = this.data.co === "sonja" && this.data.COPowerState !== "no-power";
+        const isSonjaAndPower =
+          this.data.co === "sonja" && this.data.COPowerState !== "no-power";
 
         if (!isSonjaAndPower && enemy.isOnHiddenTile()) {
           return enemy.getNeighbouringUnits().some((u) => this.ownsUnit(u));
@@ -83,7 +102,7 @@ export class PlayerInMatchWrapper {
 
         return vision.isPositionVisible(enemy.data.position);
       })
-      .map<FrontendUnit>((visibleEnemyUnit) => {
+      .map<UnitWithVisibleStats | UnitWithHiddenStats>((visibleEnemyUnit) => {
         if (visibleEnemyUnit.player.data.co === "sonja") {
           const hiddenUnit: UnitWithHiddenStats = {
             ...visibleEnemyUnit.data,
@@ -110,16 +129,28 @@ export class PlayerInMatchWrapper {
       return;
     }
 
-    const maxPowerMeter = COPropertiesMap[this.data.co].powers.superCOPower.stars * this.getPowerStarCost();
+    const maxPowerMeter =
+      COPropertiesMap[this.data.co].powers.superCOPower.stars *
+      this.getPowerStarCost();
 
-    this.data.powerMeter = Math.min(this.data.powerMeter + amount, maxPowerMeter);
+    this.data.powerMeter = Math.min(
+      this.data.powerMeter + amount,
+      maxPowerMeter
+    );
   }
 
   ownsUnit(unit: UnitWrapper) {
     return unit.data.playerSlot === this.data.slot;
   }
 
-  getMovementWeather(): Weather {
+  /**
+   * some COs use the movement factors of different weather
+   * depending on the current weather (and their powers).
+   * e.g.: olaf has clear weather cost during snow.
+   *
+   * sturm is handled with a movementCost hook.
+   */
+  getWeatherSpecialMovement(): Weather {
     const weather = this.match.currentWeather;
 
     switch (this.data.co) {
@@ -127,6 +158,8 @@ export class PlayerInMatchWrapper {
         if (weather === "rain") {
           return "clear";
         }
+
+        return weather;
       }
       case "olaf": {
         if (weather === "rain") {
@@ -134,11 +167,15 @@ export class PlayerInMatchWrapper {
         } else if (weather === "snow") {
           return "clear";
         }
+
+        return weather;
       }
       case "lash": {
         if (weather !== "snow" && this.data.COPowerState !== "no-power") {
           return "clear";
         }
+
+        return weather;
       }
       default: {
         return weather;
@@ -146,7 +183,12 @@ export class PlayerInMatchWrapper {
     }
   }
 
-  addUnwrappedUnit(rawUnit: Omit<WWUnit, "playerSlot">) {
-    this.match.units.data.push(new UnitWrapper({ ...rawUnit, playerSlot: this.data.slot } as WWUnit, this.match));
+  addUnwrappedUnit(rawUnit: Omit<UnitWithVisibleStats, "playerSlot">) {
+    this.match.units.data.push(
+      new UnitWrapper(
+        { ...rawUnit, playerSlot: this.data.slot } as UnitWithVisibleStats,
+        this.match
+      )
+    );
   }
 }

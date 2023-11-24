@@ -1,10 +1,10 @@
+import type { Match, Player } from "@prisma/client";
+import { trpc } from "frontend/utils/trpc-client";
 import { useState } from "react";
 import type { Army } from "shared/schemas/army";
 import { armySchema } from "shared/schemas/army";
 import type { CO } from "shared/schemas/co";
 import { coSchema } from "shared/schemas/co";
-import { trpc } from "frontend/utils/trpc-client";
-import type { Match, Player } from "@prisma/client";
 
 type matchData = {
   playerID: Player["id"];
@@ -14,7 +14,13 @@ type matchData = {
   readyStatus: boolean;
 };
 
-export default function MatchCardSetup({ playerID, matchID, functionCO, inMatch, readyStatus }: matchData) {
+export default function MatchCardSetup({
+  playerID,
+  matchID,
+  functionCO,
+  inMatch,
+  readyStatus
+}: matchData) {
   const switchCO = trpc.match.switchCO.useMutation();
   const switchArmy = trpc.match.switchArmy.useMutation();
   const joinMatch = trpc.match.join.useMutation();
@@ -56,7 +62,11 @@ export default function MatchCardSetup({ playerID, matchID, functionCO, inMatch,
                     key={co}
                     className={`@flex @items-center @p-1 @bg-bg-primary hover:@bg-primary @cursor-pointer @duration-300`}
                   >
-                    <img src={`/img/CO/pixelated/${co}-small.png`} className="[image-rendering:pixelated]" alt="" />
+                    <img
+                      src={`/img/CO/pixelated/${co}-small.png`}
+                      className="[image-rendering:pixelated]"
+                      alt=""
+                    />
                     <p className="@capitalize @text-xs @px-1">{co}</p>
                   </div>
                 );
@@ -97,7 +107,11 @@ export default function MatchCardSetup({ playerID, matchID, functionCO, inMatch,
                     key={army}
                     className={`@flex @items-center @p-1 @bg-bg-primary hover:@bg-primary @cursor-pointer @duration-300`}
                   >
-                    <img src={`/img/nations/${army}.gif`} className="[image-rendering:pixelated]" alt="" />
+                    <img
+                      src={`/img/nations/${army}.gif`}
+                      className="[image-rendering:pixelated]"
+                      alt=""
+                    />
                     <p className="@capitalize @text-xs @px-1">{army}</p>
                   </div>
                 );
@@ -119,7 +133,7 @@ export default function MatchCardSetup({ playerID, matchID, functionCO, inMatch,
                 })
                 .then(() => {
                   functionCO(null, undefined, !readyStatus);
-                  location.href = location.href;
+                  location.reload();
                 });
             }}
           >
@@ -145,7 +159,7 @@ export default function MatchCardSetup({ playerID, matchID, functionCO, inMatch,
                 })
                 .then(() => {
                   //lets reload the page
-                  location.href = location.href;
+                  location.reload();
                 });
             }}
           >
