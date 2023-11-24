@@ -33,7 +33,7 @@ export default function MatchSection({ title, matches, inMatch = false, descript
       <div className="@flex @flex-col @align-middle @items-center">
         <div className="@w-[90vw]">
           <div className="@grid [grid-template-columns:repeat(auto-fill,minmax(300px,1fr))] @gap-10">
-            {matches === undefined && isLoading
+            {matches === undefined && (isLoading !== undefined && !isLoading)
               ? "Loading..."
               : matches?.map((match) => <MatchCard key={match.id} match={match} inMatch={inMatch} />)}
           </div>

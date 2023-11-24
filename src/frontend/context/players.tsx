@@ -19,7 +19,7 @@ export const ProvidePlayers = ({ children }: { children: ReactNode }) => {
     onSuccess: (newUser) => {
       setUser(newUser);
 
-      if (newUser.ownedPlayers?.[0] && currentPlayerId === "") {
+      if (newUser.ownedPlayers?.[0] != undefined && currentPlayerId === "") {
         setCurrentPlayerId(newUser.ownedPlayers[0].id);
       }
     },

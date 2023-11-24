@@ -59,7 +59,7 @@ export default function MatchCard({ match, inMatch }: matchData) {
 
   let twoPlayerCheck = false;
 
-  if (secondPlayer) {
+  if (secondPlayer !== undefined) {
     twoPlayerCheck = true;
   }
 
@@ -103,7 +103,7 @@ export default function MatchCard({ match, inMatch }: matchData) {
             // TODO: how can we handle if a player is undefined? for now I put an empty string
             playerID={currentPlayer ? currentPlayer.id : ""}
             inMatch={inMatch}
-            readyStatus={ready ? ready : false}
+            readyStatus={ready ?? false}
           />
         )
       }

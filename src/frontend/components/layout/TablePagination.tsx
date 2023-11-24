@@ -2,6 +2,9 @@ import SquareButton from "../layout/SquareButton";
 import type { Table } from "@tanstack/react-table";
 
 type Props = {
+  // Need any or another generic type to make this component work with any table
+  // regardless of what type the data has.
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   table: Table<any>;
 }
 

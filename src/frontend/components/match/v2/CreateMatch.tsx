@@ -8,9 +8,9 @@ import { useEffect, useState } from "react";
 
 type Props = {
   currentPlayer: Player | undefined;
-  refecthYourMatches: () => any;
-  refecthAllMatches: () => any;
-  setCurrentPlayer: (player: Player) => any;
+  refecthYourMatches: () => void;
+  refecthAllMatches: () => void;
+  setCurrentPlayer: (player: Player) => void;
 };
 
 export default function CreateMatch({
@@ -62,7 +62,7 @@ export default function CreateMatch({
   const createMatchHandler = async () => {
     const mapId = currentMapId;
 
-    if (!mapId || !currentPlayer) {
+    if (mapId == undefined || !currentPlayer) {
       return;
     }
 

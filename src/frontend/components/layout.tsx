@@ -16,7 +16,7 @@ export function Layout({ footer, children }: Props) {
           {children}
         </main>
       </div>
-      {!footer && <Footer />}
+      {(footer != undefined && footer) && <Footer />}
     </>
   );
 }

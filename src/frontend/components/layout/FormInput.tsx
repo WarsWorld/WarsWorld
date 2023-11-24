@@ -25,7 +25,7 @@ export default function FormInput({
         <label
           htmlFor={id ?? ""}
           className={`@text-xl smallscreen:@text-2xl ${
-            isError ? "@text-orange-star" : "@text-white"
+            isError == true ? "@text-orange-star" : "@text-white"
           }`}
         >
           {text}
@@ -38,10 +38,10 @@ export default function FormInput({
           onChange={onChange}
           value={value}
           className={`@text-black @border-[2.5px] @text-xl smallscreen:@text-2xl @w-full @p-3 @mt-2 @rounded-xl ${
-            isError ? "@border-orange-star" : "@border-primary"
+            isError == true ? "@border-orange-star" : "@border-primary"
           }`}
         />
-        {isError && <p className="@text-orange-star @pt-2">{errorMessage}</p>}
+        {isError == true && <p className="@text-orange-star @pt-2">{errorMessage}</p>}
       </div>
     </>
   );

@@ -35,12 +35,12 @@ export default function LoginSignupModal({ isOpen, setIsOpen, width }: Props) {
     void getProviders().then((providers) => setCurrentProviders(providers));
   }, []);
 
-  const setIsSignupForm = async (value: boolean, callbackUrl?: string | null) => {
+  const setIsSignupForm = async (value: boolean, callbackUrl: string | null) => {
     if (value) 
     {
       await router.replace("", {
         query: `authModalOpen&SignUpForm${
-          callbackUrl ? "&callbackUrl=" + encodeURIComponent(callbackUrl) : ""
+          callbackUrl !== null ? "&callbackUrl=" + encodeURIComponent(callbackUrl) : ""
         }`,
       });
     } 
@@ -48,7 +48,7 @@ export default function LoginSignupModal({ isOpen, setIsOpen, width }: Props) {
     {
       await router.replace("", {
         query: `authModalOpen${
-          callbackUrl ? "&callbackUrl=" + encodeURIComponent(callbackUrl) : ""
+          callbackUrl !== null ? "&callbackUrl=" + encodeURIComponent(callbackUrl) : ""
         }`,
       });
     }
