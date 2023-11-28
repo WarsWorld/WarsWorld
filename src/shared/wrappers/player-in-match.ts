@@ -52,7 +52,7 @@ export class PlayerInMatchWrapper {
       case "co-power":
         return COProperties.powers.COPower?.hooks?.[hookType];
       case "super-co-power":
-        return COProperties.powers.superCOPower.hooks?.[hookType];
+        return COProperties.powers.superCOPower?.hooks?.[hookType];
     }
   }
 
@@ -166,19 +166,29 @@ export class PlayerInMatchWrapper {
     return 9000 * (1 + 0.2 * Math.min(this.data.timesPowerUsed, 10));
   }
 
+  getMaxPowerMeter() {
+    const COPowers = getCOProperties(this.data.co).powers;
+
+    if (COPowers.superCOPower !== undefined) {
+      return COPowers.superCOPower.stars * this.getPowerStarCost();
+    }
+    else if (COPowers.COPower !== undefined) {
+      return COPowers.COPower.stars * this.getPowerStarCost();
+    }
+
+    return 0;
+  }
+
   increasePowerMeter(amount: number) {
     if (this.data.COPowerState !== "no-power") {
       return;
     }
 
-    const maxPowerMeter =
-      getCOProperties(this.data.co).powers.superCOPower.stars *
-      this.getPowerStarCost();
-
-    this.data.powerMeter = Math.min(
+    //max is because it accounts for negative increments (aka Sasha's COP)
+    this.data.powerMeter = Math.max(0, Math.min(
       this.data.powerMeter + amount,
-      maxPowerMeter
-    );
+      this.getMaxPowerMeter()
+    ));
   }
 
   owns(capturableTileOrUnit: CapturableTile | UnitWrapper) {

@@ -37,11 +37,14 @@ export const calculateDamage = (
   const defenseModifier = defenseHook?.(hookProps) ?? 100;
 
   // base luck: 0-9, whole numbers i think
-  const goodLuckRoll = Math.floor(luckValue * 10);
-  const goodLuckHook = attacker.player.getHook("goodLuck");
-  const goodLuckValue = goodLuckHook?.(goodLuckRoll, hookProps) ?? goodLuckRoll;
-  const badLuckHook = attacker.player.getHook("badLuck");
-  const badLuckValue = badLuckHook?.(hookProps) ?? 0;
+  //const goodLuckRoll = Math.floor(luckValue * 10);
+  const goodLuckHook = attacker.player.getHook("maxGoodLuck");
+  const maxGoodLuck = goodLuckHook?.(hookProps) ?? 10; // TODO this 10 should be inside match rules
+  const badLuckHook = attacker.player.getHook("maxBadLuck");
+  const maxBadLuck = badLuckHook?.(hookProps) ?? 0;
+
+  const goodLuckValue = luckValue * maxGoodLuck;
+  const badLuckValue = 1 * maxBadLuck; // TODO this function should get goodLuckRoll and badLuckRoll (also change name of param)
 
   // 0-4 (+ lash COP) whole numbers
   const baseTerrainStars = getTerrainDefenseStars(

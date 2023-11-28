@@ -44,7 +44,7 @@ export const applyRepairEvent = (
 
   //heal for free if visual hp is 10
   if (getVisualHPfromHP(repairedUnit.getHP()) === 10) {
-    repairedUnit.heal(1);
+    repairedUnit.heal(10);
   } else {
     //check if enough funds for heal, and heal if it's the case
     const unitCost = unitPropertiesMap[repairedUnit.data.type].cost;
@@ -52,7 +52,7 @@ export const applyRepairEvent = (
     const repairEffectiveCost = (modifiedCost ?? unitCost) * 0.1; // TODO what does this 0.1 factor do?
 
     if (repairEffectiveCost <= player.data.funds) {
-      repairedUnit.heal(1);
+      repairedUnit.heal(10);
       player.data.funds -= repairEffectiveCost;
     }
   }

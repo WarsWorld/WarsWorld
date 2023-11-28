@@ -30,6 +30,8 @@ export class UnitWrapper {
     this.properties2 = unitPropertiesMap[data.type];
   }
 
+  // add getCurrentUnitValue, for later (match stats?)
+
   getFuel() {
     if (this.data.stats === "hidden") {
       return this.properties2.initialFuel;
@@ -48,10 +50,14 @@ export class UnitWrapper {
 
   getHP() {
     if (this.data.stats === "hidden") {
-      return 10;
+      return 100;
     }
 
     return this.data.stats.hp;
+  }
+
+  getVisualHP() {
+    return Math.ceil(this.getHP() / 10);
   }
 
   damageUntil1HP(damageAmount: number) {
@@ -62,12 +68,13 @@ export class UnitWrapper {
     this.data.stats.hp = Math.max(1, this.data.stats.hp - damageAmount);
   }
 
-  heal(visualHealAmount: number) {
+  //heal 1 visual hp = heal(10)
+  heal(preciseHealAmount: number) {
     if (this.data.stats === "hidden") {
       return;
     }
 
-    this.data.stats.hp = Math.min(visualHealAmount * 10, 100); // TODO is max 99 or 100?
+    this.data.stats.hp = Math.min(this.data.stats.hp + preciseHealAmount, 99);
   }
 
   setHp(newPreciseHp: number) {
@@ -105,19 +112,11 @@ export class UnitWrapper {
     this.data.stats.fuel = this.properties2.initialFuel;
   }
 
-  getDistance(position: Position) {
-    return getDistance(this.data.position, position);
-  }
-
-  isAtPosition(position: Position) {
-    return isSamePosition(this.data.position, position);
-  }
-
   getNeighbouringUnits() {
     const neighbourPositions = getNeighbourPositions(this.data.position);
 
     return this.match.units.data.filter((u) =>
-      neighbourPositions.some((p) => u.isAtPosition(p))
+      neighbourPositions.some((p) => isSamePosition(u.data.position, p))
     );
   }
 
@@ -185,7 +184,7 @@ export class UnitWrapper {
 
   remove() {
     this.match.units.data = this.match.units.data.filter((u) =>
-      u.isAtPosition(this.data.position)
+      isSamePosition(u.data.position, this.data.position)
     );
 
     const tile = this.getTileOrThrow();

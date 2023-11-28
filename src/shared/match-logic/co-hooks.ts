@@ -10,7 +10,7 @@ export type Hooks = {
   movementCost: (baseMovementCost: number, match: MatchWrapper) => ReturnValue;
   movementRange: (baseMovementRange: number, unit: UnitWrapper) => ReturnValue;
   vision: (baseVisionRange: number, unit: UnitWrapper) => ReturnValue;
-  goodLuck: (goodLuckRoll: number, combatProps: CombatProps) => ReturnValue;
+
   terrainStars: (
     baseTerrainStars: number,
     combatProps: CombatProps
@@ -19,5 +19,7 @@ export type Hooks = {
 
   attack: (combatProps: CombatProps) => ReturnValue;
   defense: (combatProps: CombatProps) => ReturnValue;
-  badLuck: (combatProps: CombatProps) => ReturnValue;
+
+  maxGoodLuck: (combatProps: CombatProps) => ReturnValue;
+  maxBadLuck: (combatProps: CombatProps) => ReturnValue;
 };

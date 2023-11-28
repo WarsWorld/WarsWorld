@@ -1,6 +1,7 @@
 import { isSamePosition, type Position } from "shared/schemas/position";
 import type { UnitWrapper } from "./unit";
 import { DispatchableError } from "shared/DispatchedError";
+import { getDistance } from "../match-logic/positions";
 
 export class UnitsWrapper {
   constructor(public data: UnitWrapper[]) {}
@@ -39,7 +40,7 @@ export class UnitsWrapper {
     epicenter: Position;
   }) {
     this.data
-      .filter((unit) => unit.getDistance(epicenter) <= radius)
+      .filter((unit) => getDistance(unit.data.position, epicenter) <= radius)
       .forEach((unit) => unit.damageUntil1HP(damageAmount));
   }
 }

@@ -6,6 +6,7 @@ import type { MatchWrapper } from "shared/wrappers/match";
 import type { Position } from "shared/schemas/position";
 import type { AttackEvent } from "shared/types/events";
 import type { SubActionToEvent } from "../handler-types";
+import { getDistance } from "../../positions";
 
 type Params = [
   ...Parameters<SubActionToEvent<AttackAction>>,
@@ -33,7 +34,7 @@ export const attackActionToEvent: (...params: Params) => AttackEvent = (
     throw new DispatchableError("Unit cannot attack");
   }
 
-  const attackDistance = attacker.getDistance(defender.data.position);
+  const attackDistance = getDistance(attacker.data.position, defender.data.position);
 
   if (
     attackerProperties.attackRange[0] > attackDistance ||

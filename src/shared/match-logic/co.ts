@@ -2,25 +2,17 @@ import type { CO } from "shared/schemas/co";
 import type { MatchWrapper } from "shared/wrappers/match";
 import type { PlayerInMatchWrapper } from "shared/wrappers/player-in-match";
 import type { Hooks } from "./co-hooks";
-import { adder } from "./cos/adder";
-import { andy } from "./cos/andy";
-import { colin } from "./cos/colin";
-import { drake } from "./cos/drake";
-import { eagle } from "./cos/eagle";
-import { grit } from "./cos/grit";
-import { hawke } from "./cos/hawke";
-import { javier } from "./cos/javier";
-import { lash } from "./cos/lash";
-
 type InstantEffectProps = {
   match: MatchWrapper;
   player: PlayerInMatchWrapper;
 };
 
+const GameVersions = ["AW1", "AW2", "AWDS"] as const;
+
 type COPower = {
   name: string;
   description: string;
-  stars: number;
+  stars: number; //Stars are 9k value for AW2 and AWDS, 10k value for AW1
   instantEffect?: (props: InstantEffectProps) => void;
   hooks?: Partial<Hooks>;
 };
@@ -28,26 +20,26 @@ type COPower = {
 // TODO general CO description, likes, dislikes, etc.
 export type COProperties = {
   displayName: string;
+  gameVersion: typeof GameVersions[number];
   dayToDay?: {
     description: string;
     hooks: Partial<Hooks>;
   };
   powers: {
     COPower?: COPower;
-    superCOPower: COPower;
+    superCOPower?: COPower;
   };
 };
 
 const COPropertiesMap = {
-  andy,
-  adder,
+  /*andy,
   drake,
   eagle,
   grit,
   hawke,
   javier,
   lash,
-  colin
+  colin*/
 } satisfies Partial<Record<CO, COProperties>>;
 
 export function getCOProperties(co: CO): COProperties {
