@@ -642,27 +642,24 @@ const damageMatrixAWDS: DamageMatrix = {
   sub: subWeaponryAWDS,
   battleship: battleshipWeaponryAWDS,
   carrier: carrierWeaponry
-}
+};
 
 const damageMatrixAW2: DamageMatrix = { //including more units than the game has cause whatever
-  infantry: infantryWeaponry,
-  mech: mechWeaponry,
-  recon: reconWeaponry,
-  tank: tankWeaponry,
+  ...damageMatrixAWDS,
   mediumTank: mediumTankWeaponryAW2,
   neoTank: neoTankWeaponryAW2,
-  megaTank: megaTankWeaponry,
   artillery: artilleryWeaponryAW2,
   rocket: rocketWeaponryAW2,
   antiAir: antiAirWeaponryAW2,
-  missile: missileWeaponry,
-  pipeRunner: pipeRunnerWeaponry,
   battleCopter: battleCopterWeaponryAW2,
   fighter: fighterWeaponryAW2,
   bomber: bomberWeaponryAW2,
-  stealth: stealthWeaponry,
   cruiser: cruiserWeaponryAW2,
   sub: subWeaponryAW2,
   battleship: battleshipWeaponryAW2,
-  carrier: carrierWeaponry
-}
+};
+
+const damageMatrixAW1: DamageMatrix = { //including more units than the game has cause whatever
+  ...damageMatrixAW2,
+  mediumTank: mediumTankWeaponryAW1
+};
