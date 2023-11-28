@@ -88,6 +88,16 @@ export class PlayerInMatchWrapper {
         const isHiddenThroughAbility =
           "hidden" in enemy.data && enemy.data.hidden;
 
+        /**
+         * TODO -_-
+         * for when we have the data/properties for different match versions (AW1/2/DS)
+         *
+         * Enigami — Today at 02:14
+         * AWDS behavior: subs/stealths are revealed if they are on properties you own
+         * AW2 behavior: subs are revealed if they are on ports you own
+         *
+         */
+
         if (isHiddenThroughAbility) {
           return enemy.getNeighbouringUnits().some((unit) => this.owns(unit));
         }
