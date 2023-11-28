@@ -7,10 +7,18 @@ import type { Position } from "shared/schemas/position";
 import type { AttackEvent } from "shared/types/events";
 import type { SubActionToEvent } from "../handler-types";
 
-export const attackActionToEvent: SubActionToEvent<AttackAction> = (
+type Params = [
+  ...Parameters<SubActionToEvent<AttackAction>>,
+  attackerLuck: number,
+  defenderLuck: number
+];
+
+export const attackActionToEvent: (...params: Params) => AttackEvent = (
   match,
   action,
-  fromPosition
+  fromPosition,
+  attackerLuck,
+  defenderLuck
 ) => {
   const player = match.players.getCurrentTurnPlayer();
   const attacker = player.getUnits().getUnitOrThrow(fromPosition);
@@ -34,17 +42,21 @@ export const attackActionToEvent: SubActionToEvent<AttackAction> = (
     throw new DispatchableError("Unit is not in range to attack");
   }
 
-  const damageAttackDone = calculateDamage({
-    attacker,
-    defender
-  });
+  // TODO better name: damageByAttacker
+  const damageAttackDone = calculateDamage(
+    {
+      attacker,
+      defender
+    },
+    attackerLuck
+  );
 
   if (damageAttackDone === null) {
     throw new DispatchableError("This unit cannot attack specified enemy unit");
   }
 
   //check if ded
-  if (damageAttackDone >= defender.hp()) {
+  if (damageAttackDone >= defender.getHP()) {
     /*
      * TODO IMPORTANT i think we must have a "unit was destroyed" flag on an event
      * bc a client can't tell on sonya units cuz they are effectively always full HP
@@ -65,13 +77,17 @@ export const attackActionToEvent: SubActionToEvent<AttackAction> = (
     ) {
       //defender is melee, can counterattack?
       //temporarily substract hp to calculate counter dmg
-      const originalHP = defender.hp();
-      defender.damage("precise", originalHP - damageAttackDone);
+      const originalHP = defender.getHP();
+      defender.damage(damageAttackDone);
 
-      const damageDefendDone = calculateDamage({
-        attacker: defender,
-        defender: attacker
-      });
+      // TODO better name: damageByDefender
+      const damageDefendDone = calculateDamage(
+        {
+          attacker: defender,
+          defender: attacker
+        },
+        defenderLuck
+      );
 
       defender.setHp(originalHP);
 
@@ -79,8 +95,8 @@ export const attackActionToEvent: SubActionToEvent<AttackAction> = (
         //return event with counter-attack
         return {
           ...action,
-          defenderHP: defender.hp() - damageAttackDone,
-          attackerHP: Math.max(0, attacker.hp() - damageDefendDone)
+          defenderHP: defender.getHP() - damageAttackDone,
+          attackerHP: Math.max(0, attacker.getHP() - damageDefendDone)
         };
       }
     }
@@ -88,7 +104,7 @@ export const attackActionToEvent: SubActionToEvent<AttackAction> = (
 
   return {
     ...action,
-    defenderHP: defender.hp() - damageAttackDone
+    defenderHP: defender.getHP() - damageAttackDone
   };
 };
 
@@ -108,7 +124,7 @@ export const applyAttackEvent = (
   );
 
   const { attackingPlayerGain, defendingPlayerGain } =
-    attacker.getPowerMeterChangesWhenAttacking(
+    attacker.getPowerMeterGainsWhenAttacking(
       defender,
       event.attackerHP,
       event.defenderHP

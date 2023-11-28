@@ -40,13 +40,10 @@ export const applyRepairEvent = (
     addDirection(fromPosition, event.direction)
   );
 
-  repairedUnit.setStat(
-    "fuel",
-    unitPropertiesMap[repairedUnit.data.type].initialFuel
-  );
+  repairedUnit.setFuel(unitPropertiesMap[repairedUnit.data.type].initialFuel);
 
   //heal for free if visual hp is 10
-  if (getVisualHPfromHP(repairedUnit.getStat("hp")) === 10) {
+  if (getVisualHPfromHP(repairedUnit.getHP()) === 10) {
     repairedUnit.heal(1);
   } else {
     //check if enough funds for heal, and heal if it's the case

@@ -13,7 +13,7 @@ export const getBaseDamage = (
 
   const primaryDamage = damageTable.primary[defender.data.type] ?? null;
   const secondaryDamage = damageTable.secondary?.[defender.data.type] ?? null;
-  const cantUsePrimaryWeapon = attacker.getStat("ammo") === 0;
+  const cantUsePrimaryWeapon = attacker.getAmmo() === 0;
 
   return cantUsePrimaryWeapon
     ? secondaryDamage

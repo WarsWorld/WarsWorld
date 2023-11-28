@@ -53,6 +53,11 @@ type UnitPropertiesWithAmmo = UnitPropertiesWithoutAmmo & {
   initialAmmo: number;
 };
 
+export type UnitProperties =
+  | UnitPropertiesWithAmmo
+  | UnitPropertiesWithoutAmmo
+  | UnitPropertiesWithoutWeapon;
+
 const infantry: UnitPropertiesWithoutAmmo = {
   cost: 1000,
   facility: "base",

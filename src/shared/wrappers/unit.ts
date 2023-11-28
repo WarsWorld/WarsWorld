@@ -1,7 +1,7 @@
+import type { UnitProperties } from "shared/match-logic/buildable-unit";
 import { unitPropertiesMap } from "shared/match-logic/buildable-unit";
 import { getVisualHPfromHP } from "shared/match-logic/calculate-damage/calculate-damage";
 import { getDistance } from "shared/match-logic/positions";
-import { isHiddenTile } from "shared/match-logic/terrain";
 import {
   getNeighbourPositions,
   isSamePosition,
@@ -11,50 +11,31 @@ import type {
   UnitWithHiddenStats,
   UnitWithVisibleStats
 } from "shared/schemas/unit";
-import type { StatsKey } from "shared/schemas/unit-traits";
 import type { MatchWrapper } from "./match";
 import type { PlayerInMatchWrapper } from "./player-in-match";
 
 export class UnitWrapper {
   public player: PlayerInMatchWrapper;
 
+  // TODO will replace this.properties() with next update for access
+  // outside of this file as well because it's apparent that the tradeoff
+  // between memory and lookup time is worth storing the reference in memory.
+  public properties2: UnitProperties;
+
   constructor(
     public data: UnitWithHiddenStats | UnitWithVisibleStats,
     public match: MatchWrapper
   ) {
     this.player = match.players.getBySlotOrThrow(data.playerSlot);
+    this.properties2 = unitPropertiesMap[data.type];
   }
 
-  /**
-   * for handling hidden units on the frontend like sonja.
-   * i wrote `StatsKey` which includes `ammo`, hopefully not gonna hurt anywhere
-   * but it will enable you to check ammo of transports for example.
-   * theoretically this could be handled more elegantly by making UnitWrapper
-   * into a generic class.
-   */
-  getStat(key: StatsKey): number {
+  getFuel() {
     if (this.data.stats === "hidden") {
-      const properties = this.properties();
-
-      switch (key) {
-        case "ammo":
-          return "initialAmmo" in properties ? properties.initialAmmo : 0;
-        case "fuel":
-          return properties.initialFuel;
-        case "hp":
-          return 100;
-      }
+      return this.properties2.initialFuel;
     }
 
-    if (key in this.data.stats) {
-      return this.data.stats[key as keyof typeof this.data.stats]; // TS / Zod weirdness
-    }
-
-    return 0;
-  }
-
-  fuel() {
-    return this.getStat("fuel");
+    return this.data.stats.fuel;
   }
 
   setFuel(newFuel: number) {
@@ -65,20 +46,12 @@ export class UnitWrapper {
     this.data.stats.fuel = newFuel;
   }
 
-  hp() {
-    return this.getStat("hp");
-  }
-
-  visualHP() {
-    return getVisualHPfromHP(this.hp());
-  }
-
-  setStat(key: StatsKey, value: number) {
-    if (this.data.stats === "hidden" || !(key in this.data.stats)) {
-      return;
+  getHP() {
+    if (this.data.stats === "hidden") {
+      return 10;
     }
 
-    this.data.stats[key as keyof typeof this.data.stats] = value;
+    return this.data.stats.hp;
   }
 
   damageUntil1HP(damageAmount: number) {
@@ -105,21 +78,14 @@ export class UnitWrapper {
     this.data.stats.hp = newPreciseHp;
   }
 
-  /**
-   * TODO i think it's a rule that any precise damage is destructive and
-   * any damage calculated "visually" like black bomb and powers etc. can never
-   * destroy units. so maybe we can ditch "visual" mode here because of "damageUntil1HP".
-   */
-  damage(amountMode: "visual" | "precise", damageAmount: number) {
+  damage(damageAmount: number) {
     if (this.data.stats === "hidden") {
       return;
     }
 
-    const actualDamageAmount =
-      amountMode === "visual" ? damageAmount * 10 : damageAmount;
-    this.data.stats.hp = Math.max(this.data.stats.hp - actualDamageAmount, 0);
+    this.data.stats.hp = Math.max(this.data.stats.hp - damageAmount, 0);
     // there is no automatic `this.remove()` here
-    // because this code won't fully run on hidden-stats (sonja) units
+    // because if it's sonja-hidden, we don't know if it gets destroyed.
     // so removal must be handled separately.
   }
 
@@ -136,7 +102,7 @@ export class UnitWrapper {
       return;
     }
 
-    this.data.stats.fuel = this.properties().initialFuel;
+    this.data.stats.fuel = this.properties2.initialFuel;
   }
 
   getDistance(position: Position) {
@@ -155,15 +121,6 @@ export class UnitWrapper {
     );
   }
 
-  /** sub, stealth */
-  isHiddenThroughHiddenProperty() {
-    return "hidden" in this.data && this.data.hidden;
-  }
-
-  isOnHiddenTile() {
-    return isHiddenTile(this.getTileOrThrow());
-  }
-
   getTileOrThrow() {
     const tile = this.match.getTile(this.data.position);
 
@@ -178,7 +135,7 @@ export class UnitWrapper {
 
   /** TODO checking fuel twice? */
   getMovementPoints() {
-    const { moveRange, initialFuel } = this.properties();
+    const { moveRange, initialFuel } = this.properties2;
 
     const movementRangeHook = this.player.getHook("movementRange");
     const modifiedMovement = movementRangeHook?.(moveRange, this) ?? moveRange;
@@ -190,13 +147,13 @@ export class UnitWrapper {
   }
 
   getCost(): number {
-    const { cost: baseCost } = this.properties();
+    const { cost: baseCost } = this.properties2;
     const hook = this.player.getHook("buildCost");
     return hook?.(baseCost, this.match) ?? baseCost;
   }
 
-  getPowerMeterChangesWhenAttacking(
-    defender: this,
+  getPowerMeterGainsWhenAttacking(
+    defender: UnitWrapper,
     attackerHPAfterAttack: number | undefined,
     defenderHPAfterAttack: number
   ) {
@@ -233,6 +190,7 @@ export class UnitWrapper {
 
     const tile = this.getTileOrThrow();
 
+    // TODO remove this and if applicable modify current CapturableTile HP
     if ("captureHP" in tile) {
       tile.captureHP = 20;
     }
@@ -240,17 +198,41 @@ export class UnitWrapper {
     /* TODO check if player is eliminated, then create and send appropriate event */
   }
 
+  // TODO remove this method from the CO files. not doing it right now to reduce changes at once.
   properties() {
-    return unitPropertiesMap[this.data.type];
+    return this.properties2;
   }
 
   isIndirect() {
-    const unitProperties = this.properties();
-
-    if (!("attackRange" in unitProperties)) {
+    if (!("attackRange" in this.properties2)) {
       return false;
     }
 
-    return unitProperties.attackRange[1] > 1;
+    return this.properties2.attackRange[1] > 1;
+  }
+
+  /**
+   * returning `null` means this unit doesn't use ammo
+   */
+  getAmmo() {
+    if (this.data.stats === "hidden") {
+      return "initialAmmo" in this.properties2
+        ? this.properties2.initialAmmo
+        : null;
+    }
+
+    if (!("ammo" in this.data.stats)) {
+      return null;
+    }
+
+    return this.data.stats.ammo;
+  }
+
+  setAmmo(newAmmo: number) {
+    if (this.data.stats === "hidden" || !("ammo" in this.data.stats)) {
+      return;
+    }
+
+    this.data.stats.ammo = newAmmo;
   }
 }

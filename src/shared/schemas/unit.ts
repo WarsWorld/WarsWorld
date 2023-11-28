@@ -14,6 +14,7 @@ const infantrySchema = withNoAmmoUnitStatsSchema
     currentCapturePoints: z.number().positive().optional()
   });
 
+// TODO replace unit capture points with tile HP
 const mechSchema = withAmmoUnitStatsSchema.extend(withType("mech")).extend({
   currentCapturePoints: z.number().positive().optional()
 });

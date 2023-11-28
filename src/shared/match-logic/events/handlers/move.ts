@@ -32,7 +32,7 @@ export const moveActionToEvent: MainActionToEvent<MoveAction> = (
 
   const fuelNeeded = action.path.length - 1;
 
-  if (unit.fuel() < fuelNeeded) {
+  if (unit.getFuel() < fuelNeeded) {
     throw new DispatchableError("Not enough fuel for this move");
   }
 
@@ -255,27 +255,23 @@ export const applyMoveEvent = (match: MatchWrapper, event: MoveEvent) => {
       //join (hp, fuel, ammo, (keep capture points))
       const unitProperties = unitPropertiesMap[unit.data.type];
 
+      // TODO calculate fund gains when joined HP would have been above 10
+
       unitAtDestination.setFuel(
         Math.min(
-          unit.fuel() + unitAtDestination.fuel(),
+          unit.getFuel() + unitAtDestination.getFuel(),
           unitProperties.initialFuel
         )
       );
 
-      unitAtDestination.setHp(Math.min(unit.hp() + unitAtDestination.hp(), 99));
+      unitAtDestination.setHp(
+        Math.min(unit.getHP() + unitAtDestination.getHP(), 99)
+      );
 
-      if (
-        unit.data.stats !== "hidden" &&
-        "ammo" in unit.data.stats &&
-        unitAtDestination.data.stats !== "hidden" &&
-        "ammo" in unitAtDestination.data.stats &&
-        "initialAmmo" in unitProperties
-      ) {
-        unitAtDestination.data.stats.ammo = Math.min(
-          unit.data.stats.ammo + unitAtDestination.data.stats.ammo,
-          unitProperties.initialAmmo
-        );
-      }
+      const newAmmo =
+        (unit.getAmmo() ?? 0) + (unitAtDestination.getAmmo() ?? 0);
+
+      unitAtDestination.setAmmo(newAmmo);
     } else if (
       unit.data.stats !== "hidden" &&
       unitAtDestination.data.stats !== "hidden"

@@ -1,9 +1,9 @@
 import { DispatchableError } from "shared/DispatchedError";
 import type { COPowerAction } from "shared/schemas/action";
-import type { COProperties } from "../../co";
-import { COPropertiesMap } from "../../co";
-import type { MatchWrapper } from "shared/wrappers/match";
 import type { COPowerEvent } from "shared/types/events";
+import type { MatchWrapper } from "shared/wrappers/match";
+import type { COProperties } from "../../co";
+import { getCOProperties } from "../../co";
 import type { MainActionToEvent } from "../handler-types";
 
 export const coPowerActionToEvent: MainActionToEvent<COPowerAction> = (
@@ -21,7 +21,7 @@ export const coPowerActionToEvent: MainActionToEvent<COPowerAction> = (
     );
   }
 
-  const coProperties = COPropertiesMap[player.data.co];
+  const coProperties = getCOProperties(player.data.co);
   const power = coProperties.powers[powerType];
 
   if (power === undefined) {
@@ -41,7 +41,7 @@ export const coPowerActionToEvent: MainActionToEvent<COPowerAction> = (
 
 export const applyCOPowerEvent = (match: MatchWrapper, event: COPowerEvent) => {
   const player = match.players.getCurrentTurnPlayer();
-  const COProperties = COPropertiesMap[player.data.co];
+  const COProperties = getCOProperties(player.data.co);
   const powerType: keyof COProperties["powers"] = event.isSuper
     ? "superCOPower"
     : "COPower";
@@ -57,6 +57,6 @@ export const applyCOPowerEvent = (match: MatchWrapper, event: COPowerEvent) => {
 
   power.instantEffect?.({
     match,
-    player,
+    player
   });
 };

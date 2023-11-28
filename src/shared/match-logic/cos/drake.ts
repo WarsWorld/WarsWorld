@@ -35,7 +35,7 @@ export const drake: COProperties = {
         enemyUnits.damageAllUntil1HP(10);
 
         enemyUnits.data.forEach((unit) => {
-          unit.drainFuel(Math.floor(unit.fuel() / 2)); // half fuel till 0 and round down
+          unit.drainFuel(Math.floor(unit.getFuel() / 2)); // half fuel till 0 and round down
         });
       }
     },
@@ -50,7 +50,7 @@ export const drake: COProperties = {
         enemyUnits.damageAllUntil1HP(20);
 
         enemyUnits.data.forEach((unit) => {
-          unit.drainFuel(Math.floor(unit.fuel() / 2)); // half fuel till 0 and round down
+          unit.drainFuel(Math.floor(unit.getFuel() / 2)); // half fuel till 0 and round down
         });
 
         match.currentWeather = "rain";

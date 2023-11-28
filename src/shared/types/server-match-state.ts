@@ -10,7 +10,7 @@ type WithPosition = {
   position: Position;
 };
 
-type CapturableTile = WithPosition & {
+export type CapturableTile = WithPosition & {
   type: PropertyTileType;
   hp: number;
   ownerSlot: PlayerSlot;

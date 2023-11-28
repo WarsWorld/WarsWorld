@@ -11,11 +11,17 @@ const roundUpTo = (value: number, step: number) => {
 };
 
 /**
+ * @param {number} luckValue number between 0 and 1, will be rounded down by 0.1
+ * (0.0, 0.1, ... 0.9, 1.0)
+ *
  * @see https://awbw.fandom.com/wiki/Damage_Formula?so=search
  */
-export const calculateDamage = ({ attacker, defender }: CombatProps) => {
-  const visualHPOfAttacker = getVisualHPfromHP(attacker.getStat("hp"));
-  const visualHPOfDefender = getVisualHPfromHP(defender.getStat("hp"));
+export const calculateDamage = (
+  { attacker, defender }: CombatProps,
+  luckValue: number
+) => {
+  const visualHPOfAttacker = getVisualHPfromHP(attacker.getHP());
+  const visualHPOfDefender = getVisualHPfromHP(defender.getHP());
 
   const hookProps: CombatProps = { attacker, defender };
 
@@ -31,7 +37,7 @@ export const calculateDamage = ({ attacker, defender }: CombatProps) => {
   const defenseModifier = defenseHook?.(hookProps) ?? 100;
 
   // base luck: 0-9, whole numbers i think
-  const goodLuckRoll = Math.floor(Math.random() * 10);
+  const goodLuckRoll = Math.floor(luckValue * 10);
   const goodLuckHook = attacker.player.getHook("goodLuck");
   const goodLuckValue = goodLuckHook?.(goodLuckRoll, hookProps) ?? goodLuckRoll;
   const badLuckHook = attacker.player.getHook("badLuck");
@@ -54,6 +60,8 @@ export const calculateDamage = ({ attacker, defender }: CombatProps) => {
   if (baseDamage === null) {
     return null;
   }
+
+  // TODO explain magic values
 
   const luckModifier = goodLuckValue - badLuckValue;
   const attackFactor = (baseDamage * attackModifier) / 100 + luckModifier;

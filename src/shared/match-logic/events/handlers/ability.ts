@@ -58,7 +58,7 @@ export const applyAbilityEvent = (match: MatchWrapper, unit: UnitWrapper) => {
         unit.data.currentCapturePoints = 20;
       }
 
-      unit.data.currentCapturePoints -= unit.hp();
+      unit.data.currentCapturePoints -= unit.getHP();
 
       if (unit.data.currentCapturePoints <= 0) {
         unit.data.currentCapturePoints = undefined;

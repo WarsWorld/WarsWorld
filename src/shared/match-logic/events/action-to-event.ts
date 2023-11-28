@@ -43,7 +43,13 @@ export const validateSubActionAndToEvent = (
 ): SubEvent => {
   switch (action.type) {
     case "attack":
-      return attackActionToEvent(match, action, unitPosition);
+      return attackActionToEvent(
+        match,
+        action,
+        unitPosition,
+        Math.random(),
+        Math.random()
+      );
     case "ability":
       return abilityActionToEvent(match, action, unitPosition);
     case "unloadWait":

@@ -38,8 +38,7 @@ export type COProperties = {
   };
 };
 
-// @ts-expect-error: Working on the other CO's i think
-export const COPropertiesMap: Record<CO, COProperties> = {
+const COPropertiesMap = {
   andy,
   adder,
   drake,
@@ -49,4 +48,14 @@ export const COPropertiesMap: Record<CO, COProperties> = {
   javier,
   lash,
   colin
-};
+} satisfies Partial<Record<CO, COProperties>>;
+
+export function getCOProperties(co: CO): COProperties {
+  if (co in COPropertiesMap) {
+    return COPropertiesMap[co as keyof typeof COPropertiesMap];
+  }
+
+  throw new Error(
+    `CO ${co} is not in the COPropertiesMap. (e.g. not implemented)`
+  );
+}
