@@ -4,9 +4,11 @@ export const sonjaAWDS: COProperties = {
   displayName: "Sonja",
   gameVersion: "AWDS",
   dayToDay: {
-    description: "Units have 1 additional vision range (during FOW), their stats are hidden to the enemies and have 5% bad luck. Enemy terrain stars are reduced by 1 (for a minimum of 0).",
+    description:
+      "Units have 1 additional vision range (during FOW), their stats are hidden to the enemies and have 5% bad luck. Enemy terrain stars are reduced by 1 (for a minimum of 0).",
     hooks: {
-      // TODO terrain stars hook has to be implemented for enemies
+      // terrain stars are implemented directly in calculate-damage.ts because
+      // these affect from the attacker side, terrainStars hook wouldn't work
       maxBadLuck: () => 5,
       vision: (value) => value + 1
     }
@@ -14,7 +16,8 @@ export const sonjaAWDS: COProperties = {
   powers: {
     COPower: {
       name: "Enhanced Vision",
-      description: "Units gain +1 additional vision range (for a total of +2), and all woods and reefs inside vision range are revealed. Enemy terrain stars are reduced by 2 instead.",
+      description:
+        "Units gain +1 additional vision range (for a total of +2), and all woods and reefs inside vision range are revealed. Enemy terrain stars are reduced by 2 instead.",
       stars: 3,
       hooks: {
         vision: (value) => value + 2
@@ -22,7 +25,8 @@ export const sonjaAWDS: COProperties = {
     },
     superCOPower: {
       name: "Counter Break",
-      description: "Units gain +1 additional vision range (for a total of +2), and all woods and reefs inside vision range are revealed. Enemy terrain stars are reduced by 3 instead. Units attack first when being attacked.",
+      description:
+        "Units gain +1 additional vision range (for a total of +2), and all woods and reefs inside vision range are revealed. Enemy terrain stars are reduced by 3 instead. Units attack first when being attacked.",
       stars: 5,
       hooks: {
         vision: (value) => value + 2

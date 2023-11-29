@@ -51,9 +51,18 @@ export const calculateDamage = (
     defender.getTileOrThrow().type
   );
 
-  const terrainStarsHook = attacker.player.getHook("terrainStars");
-  const terrainStars =
-    terrainStarsHook?.(baseTerrainStars, hookProps) ?? baseTerrainStars;
+  const terrainStarsDefenderHook = defender.player.getHook("terrainStars");
+  const terrainStarsModifiedByDefender =
+    terrainStarsDefenderHook?.(baseTerrainStars, hookProps) ?? baseTerrainStars;
+
+  const isDualStrikeSonja =
+    attacker.player.data.co === "sonja" &&
+    attacker.player.data.coVersion === "AWDS";
+
+  const terrainStarsForDefense = Math.max(
+    terrainStarsModifiedByDefender - (isDualStrikeSonja ? 1 : 0),
+    0
+  );
 
   // TODO maybe the attack hook should be applied here instead?
 
@@ -69,7 +78,8 @@ export const calculateDamage = (
   const luckModifier = goodLuckValue - badLuckValue;
   const attackFactor = (baseDamage * attackModifier) / 100 + luckModifier;
   const defenseFactor =
-    (200 - (defenseModifier + terrainStars * visualHPOfDefender)) / 100;
+    (200 - (defenseModifier + terrainStarsForDefense * visualHPOfDefender)) /
+    100;
 
   const dirtyDamageAsPercentage =
     attackFactor * (visualHPOfAttacker / 10) * defenseFactor;
