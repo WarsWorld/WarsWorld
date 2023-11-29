@@ -264,9 +264,7 @@ export const applyMoveEvent = (match: MatchWrapper, event: MoveEvent) => {
         )
       );
 
-      unitAtDestination.setHp(
-        Math.min(unit.getHP() + unitAtDestination.getHP(), 99)
-      );
+      unitAtDestination.setHp(unit.getHP() + unitAtDestination.getHP());
 
       const newAmmo =
         (unit.getAmmo() ?? 0) + (unitAtDestination.getAmmo() ?? 0);

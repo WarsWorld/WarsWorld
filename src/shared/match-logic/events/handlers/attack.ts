@@ -91,7 +91,7 @@ export const attackActionToEvent: (...params: Params) => AttackEvent = (
       //defender is melee, can counterattack?
       //temporarily substract hp to calculate counter dmg
       const originalHP = defender.getHP();
-      defender.damage(damageAttackDone);
+      defender.setHp(originalHP - damageAttackDone);
 
       // TODO better name: damageByDefender
       const damageDefendDone = calculateDamage(

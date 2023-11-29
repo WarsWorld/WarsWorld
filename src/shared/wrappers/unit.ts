@@ -1,16 +1,12 @@
 import type { UnitProperties } from "shared/match-logic/buildable-unit";
 import { unitPropertiesMap } from "shared/match-logic/buildable-unit";
 import { getVisualHPfromHP } from "shared/match-logic/calculate-damage/calculate-damage";
-import { getDistance } from "shared/match-logic/positions";
-import {
-  getNeighbourPositions,
-  isSamePosition,
-  type Position
-} from "shared/schemas/position";
+import { getNeighbourPositions, isSamePosition } from "shared/schemas/position";
 import type {
   UnitWithHiddenStats,
   UnitWithVisibleStats
 } from "shared/schemas/unit";
+import { clamp } from "shared/utils/clamp";
 import type { MatchWrapper } from "./match";
 import type { PlayerInMatchWrapper } from "./player-in-match";
 
@@ -40,6 +36,7 @@ export class UnitWrapper {
     return this.data.stats.fuel;
   }
 
+  // TODO inside the method, remove any clamping from outside
   setFuel(newFuel: number) {
     if (this.data.stats === "hidden") {
       return;
@@ -82,18 +79,7 @@ export class UnitWrapper {
       return;
     }
 
-    this.data.stats.hp = newPreciseHp;
-  }
-
-  damage(damageAmount: number) {
-    if (this.data.stats === "hidden") {
-      return;
-    }
-
-    this.data.stats.hp = Math.max(this.data.stats.hp - damageAmount, 0);
-    // there is no automatic `this.remove()` here
-    // because if it's sonja-hidden, we don't know if it gets destroyed.
-    // so removal must be handled separately.
+    this.data.stats.hp = clamp(newPreciseHp, 0, 99);
   }
 
   drainFuel(fuelAmount: number) {
@@ -221,6 +207,7 @@ export class UnitWrapper {
     return this.data.stats.ammo;
   }
 
+  // TODO inside the method, remove any clamping from outside
   setAmmo(newAmmo: number) {
     if (this.data.stats === "hidden" || !("ammo" in this.data.stats)) {
       return;
