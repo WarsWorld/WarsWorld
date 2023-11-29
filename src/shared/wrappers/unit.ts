@@ -225,4 +225,13 @@ export class UnitWrapper {
       this.setAmmo(properties.initialAmmo);
     }
   }
+
+  /**
+   * this method doesn't narrow the type of `unit`,
+   * which is why sometimes `unit.data.type` must be used.
+   * this could be fixed at some point by making `UnitWrapper` generic.
+   */
+  isInfantryOrMech() {
+    return this.data.type === "infantry" || this.data.type === "mech";
+  }
 }

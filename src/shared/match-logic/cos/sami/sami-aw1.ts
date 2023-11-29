@@ -13,7 +13,7 @@ export const samiAW1: COProperties = {
         }
       },
       attack: ({ attacker }) => {
-        if (attacker.data.type === "infantry" || attacker.data.type === "mech") {
+        if (attacker.isInfantryOrMech()) {
           return 120;
         }
 
@@ -22,7 +22,7 @@ export const samiAW1: COProperties = {
         }
       },
       defense: ({ attacker }) => {
-        if (attacker.data.type === "infantry" || attacker.data.type === "mech") {
+        if (attacker.isInfantryOrMech()) {
           return 110;
         }
       }
@@ -39,7 +39,7 @@ export const samiAW1: COProperties = {
             return range + 1;
           }
 
-          if (unit.data.type === "infantry" || unit.data.type === "mech"){
+          if (unit.isInfantryOrMech()){
             return range + 1;
           }
         },
@@ -49,7 +49,7 @@ export const samiAW1: COProperties = {
           }
         },
         attack: ({ attacker }) => {
-          if (attacker.data.type === "infantry" || attacker.data.type === "mech") {
+          if (attacker.isInfantryOrMech()) {
             return 140;
           }
 
@@ -58,7 +58,7 @@ export const samiAW1: COProperties = {
           }
         },
         defense: ({ attacker }) => {
-          if (attacker.data.type === "infantry" || attacker.data.type === "mech") {
+          if (attacker.isInfantryOrMech()) {
             return 120;
           }
         }

@@ -8,7 +8,7 @@ export const senseiAWDS: COProperties = {
     description: "Footsoldiers have +10% firepower, B-Copters have +50% firepower, and transport units have +1 movement. Naval units have -10% firepower.",
     hooks: {
       attack: ( {attacker} ) => {
-        if (attacker.data.type === "infantry" || attacker.data.type === "mech") {
+        if (attacker.isInfantryOrMech()) {
           return 110;
         }
 
@@ -56,7 +56,7 @@ export const senseiAWDS: COProperties = {
       },
       hooks: {
         attack: ( {attacker} ) => {
-          if (attacker.data.type === "infantry" || attacker.data.type === "mech") {
+          if (attacker.isInfantryOrMech()) {
             return 110;
           }
 
@@ -99,7 +99,7 @@ export const senseiAWDS: COProperties = {
       },
       hooks: {
         attack: ( {attacker} ) => {
-          if (attacker.data.type === "infantry" || attacker.data.type === "mech") {
+          if (attacker.isInfantryOrMech()) {
             return 110;
           }
 

@@ -10,7 +10,7 @@ export const samiAWDS: COProperties = {
     hooks: {
       // TODO if i remember correctly capture is an edge case handled somewhere else
       attack: ({ attacker }) => {
-        if (attacker.data.type === "infantry" || attacker.data.type === "mech") {
+        if (attacker.isInfantryOrMech()) {
           return 120;
         }
 
@@ -28,12 +28,12 @@ export const samiAWDS: COProperties = {
       stars: 3,
       hooks: {
         movementRange: (range, unit) => {
-          if (unit.data.type === "infantry" || unit.data.type === "mech") {
+          if (unit.isInfantryOrMech()) {
             return range + 1;
           }
         },
         attack: ({ attacker }) => {
-          if (attacker.data.type === "infantry" || attacker.data.type === "mech") {
+          if (attacker.isInfantryOrMech()) {
             return 140;
           }
 
@@ -50,12 +50,12 @@ export const samiAWDS: COProperties = {
       hooks: {
         //TODO again, i think this is handled in a capture edge case somewhere else
         movementRange: (range, unit) => {
-          if (unit.data.type === "infantry" || unit.data.type === "mech") {
+          if (unit.isInfantryOrMech()) {
             return range + 2;
           }
         },
         attack: ({ attacker }) => {
-          if (attacker.data.type === "infantry" || attacker.data.type === "mech") {
+          if (attacker.isInfantryOrMech()) {
             return 180;
           }
 

@@ -12,10 +12,8 @@ const getUnitVisionRangeCache = (player: PlayerInMatchWrapper) =>
     const { type, position } = unit.data;
     const { vision: baseVision } = unitPropertiesMap[type];
 
-    const isInfantryOrMech = type === "infantry" || type === "mech"
-
     const hasMountainBonus =
-      isInfantryOrMech && unit.getTileOrThrow().type === "mountain";
+      unit.isInfantryOrMech() && unit.getTileOrThrow().type === "mountain";
 
     const modifiedVision = player.getHook("vision")?.(baseVision, unit);
 
