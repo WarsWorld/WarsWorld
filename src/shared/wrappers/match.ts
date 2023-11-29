@@ -1,5 +1,5 @@
 import type { LeagueType, Match, MatchStatus, WWMap } from "@prisma/client";
-import type { MovementType } from "shared/match-logic/buildable-unit";
+import { unitPropertiesMap } from "shared/match-logic/buildable-unit";
 import { applyMainEventToMatch } from "shared/match-logic/events/apply-event-to-match";
 import { getBaseMovementCost } from "shared/match-logic/movement-cost";
 import type { MatchRules } from "shared/schemas/match-rules";
@@ -7,6 +7,7 @@ import type { Position } from "shared/schemas/position";
 import { isSamePosition } from "shared/schemas/position";
 import type { Tile } from "shared/schemas/tile";
 import type {
+  UnitType,
   UnitWithHiddenStats,
   UnitWithVisibleStats
 } from "shared/schemas/unit";
@@ -75,14 +76,11 @@ export class MatchWrapper {
    * returns the amount of movement points which must be spent to *enter* the tile
    * `null` means impassible terrain.
    */
-  getMovementCost(
-    position: Position,
-    movementType: MovementType
-  ): number | null {
+  getMovementCost(position: Position, unitType: UnitType): number | null {
     const player = this.players.getCurrentTurnPlayer();
 
     const baseMovementCost = getBaseMovementCost(
-      movementType,
+      unitPropertiesMap[unitType].movementType,
       player.getWeatherSpecialMovement(),
       this.getTile(position).type
     );
@@ -93,8 +91,10 @@ export class MatchWrapper {
 
     /** TODO we might need to add a position to the movementCost hook later on */
     return (
-      player.getHook("movementCost")?.(baseMovementCost, player.match) ??
-      baseMovementCost
+      player.getHook("movementCost")?.(baseMovementCost, {
+        match: this,
+        unitType
+      }) ?? baseMovementCost
     );
   }
 }

@@ -102,7 +102,6 @@ export function getAccessibleNodes( //TODO: save result of function? _ (Sturm d2
 
         const movementCost = match.getMovementCost(
           mapData[xpositionSchemas[i]][ypositionSchemas[i]].type,
-          moveType
         );
 
         if (movementCost === null || movementCost < 0) {
@@ -317,7 +316,6 @@ export function updatePath(
     ) {
       const tileDist = match.getMovementCost(
         mapData[newPos[0]][newPos[1]].type,
-        moveType
       );
 
       //if it doesn't surpass movement restrictions, update current path

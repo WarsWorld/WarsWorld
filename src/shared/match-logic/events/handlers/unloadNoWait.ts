@@ -2,7 +2,6 @@ import { DispatchableError } from "shared/DispatchedError";
 import type { UnloadNoWaitAction } from "shared/schemas/action";
 import type { UnloadNoWaitEvent } from "shared/types/events";
 import type { MatchWrapper } from "shared/wrappers/match";
-import { unitPropertiesMap } from "../../buildable-unit";
 import { addDirection } from "../../positions";
 import type { MainActionToEvent } from "../handler-types";
 
@@ -32,11 +31,11 @@ export const unloadNoWaitActionToEvent: MainActionToEvent<UnloadNoWaitAction> = 
       throw new DispatchableError("Transport doesn't currently have a 2nd loaded unit");
     }
 
-    if (match.getMovementCost(unloadPosition, unitPropertiesMap[transportUnit.data.loadedUnit2.type].movementType) === null) {
+    if (match.getMovementCost(unloadPosition, transportUnit.data.loadedUnit2.type) === null) {
       throw new DispatchableError("Cannot unload unit in desired position");
     }
   } else {
-    if (match.getMovementCost(unloadPosition, unitPropertiesMap[transportUnit.data.loadedUnit.type].movementType) === null) {
+    if (match.getMovementCost(unloadPosition, transportUnit.data.loadedUnit.type) === null) {
       throw new DispatchableError("Cannot unload unit in desired position");
     }
   }

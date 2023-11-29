@@ -41,10 +41,7 @@ export const moveActionToEvent: MainActionToEvent<MoveAction> = (
 
     match.map.throwIfOutOfBounds(position);
 
-    const moveCost = match.getMovementCost(
-      position,
-      unit.properties().movementType
-    );
+    const moveCost = match.getMovementCost(position, unit.data.type);
 
     if (moveCost === null) {
       throw new DispatchableError("Cannot move to a desired position");

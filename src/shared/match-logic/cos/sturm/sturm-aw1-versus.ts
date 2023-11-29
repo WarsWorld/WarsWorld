@@ -7,7 +7,7 @@ export const sturmAW1Versus: COProperties = { // TODO make a way to differenciat
   dayToDay: {
     description: "Units have -20% firepower and +20% defense. All terrain movement cost is reduced to 1 (doesn't apply in snow).",
     hooks: {
-      movementCost: (_value, match) => {
+      movementCost: (_value, {match}) => {
         if (match.currentWeather !== "snow") {
           return 1;
         }

@@ -3,7 +3,6 @@ import type { UnloadWaitAction } from "shared/schemas/action";
 import type { Position } from "shared/schemas/position";
 import type { UnloadWaitEvent } from "shared/types/events";
 import type { MatchWrapper } from "shared/wrappers/match";
-import { unitPropertiesMap } from "../../buildable-unit";
 import { addDirection } from "../../positions";
 import type { SubActionToEvent } from "../handler-types";
 
@@ -37,11 +36,11 @@ export const unloadWaitActionToEvent: SubActionToEvent<UnloadWaitAction> = (matc
         throw new DispatchableError("Transport doesn't currently have a 2nd loaded unit");
       }
 
-      if (match.getMovementCost(unloadPosition, unitPropertiesMap[transportUnit.loadedUnit2.type].movementType) === null) {
+      if (match.getMovementCost(unloadPosition, transportUnit.loadedUnit2.type) === null) {
         throw new DispatchableError("Cannot unload unit in desired position");
       }
     } else {
-      if (match.getMovementCost(unloadPosition, unitPropertiesMap[transportUnit.loadedUnit.type].movementType) === null) {
+      if (match.getMovementCost(unloadPosition, transportUnit.loadedUnit.type) === null) {
         throw new DispatchableError("Cannot unload unit in desired position");
       }
     }
@@ -71,11 +70,11 @@ export const unloadWaitActionToEvent: SubActionToEvent<UnloadWaitAction> = (matc
 
     match.map.throwIfOutOfBounds(unloadPosition2);
 
-    if (match.getMovementCost(unloadPosition, unitPropertiesMap[transportUnit.loadedUnit.type].movementType) === null) {
+    if (match.getMovementCost(unloadPosition, transportUnit.loadedUnit.type) === null) {
       throw new DispatchableError("Cannot unload unit in desired position");
     }
 
-    if (match.getMovementCost(unloadPosition, unitPropertiesMap[transportUnit.loadedUnit2.type].movementType) === null) {
+    if (match.getMovementCost(unloadPosition, transportUnit.loadedUnit2.type) === null) {
       throw new DispatchableError("Cannot unload unit in desired position");
     }
   } else {

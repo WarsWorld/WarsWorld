@@ -76,7 +76,7 @@ export function getAccessibleNodes( //TODO: save result of function? _ (Sturm d2
 
       const movementCost = match.getMovementCost(
         pos,
-        unitPropertiesMap[unit.data.type].movementType
+        unit.data.type
       );
 
       if (movementCost === null) {
@@ -223,7 +223,7 @@ export function updatePath(
     if (positionsAreNeighbours(lastNode.pos, newPos)) {
       const moveCost = match.getMovementCost(
         newPos,
-        unitPropertiesMap[unit.data.type].movementType
+        unit.data.type
       );
 
       //if it doesn't surpass movement restrictions, update current path

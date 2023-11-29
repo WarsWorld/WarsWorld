@@ -43,8 +43,8 @@ export const samiAW1: COProperties = {
             return range + 1;
           }
         },
-        movementCost: (_value, match) => { // TODO AAAAAAAAAAAAAAA this needs a unit/ unittype
-          if (unit.data.type === "infantry" || unit.data.type === "mech") {
+        movementCost: (_value, {unitType}) => {
+          if (unitType === "infantry" || unitType === "mech") {
             return 1;
           }
         },
