@@ -29,8 +29,7 @@ export const maxAW2: COProperties = {
       stars: 3,
       hooks: {
         movementRange: (value, unit) => {
-          // TODO the range in properties is to check that this unit attacks, idk if it can be done better
-          if (!unit.isIndirect() && unit.data.type !== "infantry" && unit.data.type !== "mech" && "range" in unit.properties()) {
+          if (!unit.isIndirect() && unit.data.type !== "infantry" && unit.data.type !== "mech" && "attackRange" in unit.properties()) {
             return value + 1;
           }
         },
@@ -51,8 +50,7 @@ export const maxAW2: COProperties = {
       stars: 6,
       hooks: {
         movementRange: (value, unit) => {
-          // TODO the range in properties is to check that this unit attacks, idk if it can be done better
-          if (!unit.isIndirect() && unit.data.type !== "infantry" && unit.data.type !== "mech" && "range" in unit.properties()) {
+          if (!unit.isIndirect() && unit.data.type !== "infantry" && unit.data.type !== "mech" && "attackRange" in unit.properties()) {
             return value + 2;
           }
         },
