@@ -43,7 +43,7 @@ export const attackActionToEvent: (...params: Params) => AttackEvent = (
 
   // we'll need this logic to prevent e.g. Max from having [2, 1] attack range
   // in sandstorms.
-  const maximumAttackRange = Math.min(
+  const maximumAttackRange = Math.max(
     attackerProperties.attackRange[0],
     attackerProperties.attackRange[1]
   );
