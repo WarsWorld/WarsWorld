@@ -81,7 +81,7 @@ export const applyAbilityEvent = (match: MatchWrapper, unit: UnitWrapper) => {
     case "apc": {
       //supply
       for (const dir of allDirections) {
-        match.units.getUnit(addDirection(unit.data.position, dir))?.refuel();
+        match.units.getUnit(addDirection(unit.data.position, dir))?.resupply();
       }
 
       break;

@@ -104,14 +104,6 @@ export class UnitWrapper {
     this.data.stats.fuel = Math.max(fuelAmount, 0);
   }
 
-  refuel() {
-    if (this.data.stats === "hidden") {
-      return;
-    }
-
-    this.data.stats.fuel = this.properties2.initialFuel;
-  }
-
   getNeighbouringUnits() {
     const neighbourPositions = getNeighbourPositions(this.data.position);
 
@@ -235,5 +227,15 @@ export class UnitWrapper {
     }
 
     this.data.stats.ammo = newAmmo;
+  }
+
+  resupply() {
+    const properties = this.properties();
+
+    this.setFuel(properties.initialFuel);
+
+    if ("initialAmmo" in properties) {
+      this.setAmmo(properties.initialAmmo);
+    }
   }
 }
