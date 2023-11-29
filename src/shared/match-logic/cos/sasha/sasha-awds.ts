@@ -23,7 +23,7 @@ export const sashaAWDS: COProperties = {
             continue; //not an enemy
           }
 
-          enemy.increasePowerMeter(- powerMeterDecrease * enemy.getPowerStarCost() * enemy.getMaxPowerMeter());
+          enemy.setPowerMeter(enemy.data.powerMeter - (powerMeterDecrease * enemy.getPowerStarCost() * enemy.getMaxPowerMeter()));
         }
       }
     },

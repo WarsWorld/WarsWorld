@@ -14,6 +14,7 @@ import type { MatchWrapper } from "./match";
 import { UnitWrapper } from "./unit";
 import { UnitsWrapper } from "./units";
 import { Vision } from "./vision";
+import { clamp } from "shared/utils/clamp";
 
 export class PlayerInMatchWrapper {
   constructor(public data: PlayerInMatch, public match: MatchWrapper) {}
@@ -179,16 +180,12 @@ export class PlayerInMatchWrapper {
     return 0;
   }
 
-  increasePowerMeter(amount: number) {
+  setPowerMeter(value: number) {
     if (this.data.COPowerState !== "no-power") {
       return;
     }
 
-    //max is because it accounts for negative increments (aka Sasha's COP)
-    this.data.powerMeter = Math.max(0, Math.min(
-      this.data.powerMeter + amount,
-      this.getMaxPowerMeter()
-    ));
+    this.data.powerMeter = clamp(value, 0, this.getMaxPowerMeter());
   }
 
   owns(capturableTileOrUnit: CapturableTile | UnitWrapper) {

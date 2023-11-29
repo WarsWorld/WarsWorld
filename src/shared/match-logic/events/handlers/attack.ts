@@ -143,8 +143,8 @@ export const applyAttackEvent = (
       event.defenderHP
     );
 
-  attackingPlayer.increasePowerMeter(attackingPlayerGain);
-  defendingPlayer.increasePowerMeter(defendingPlayerGain);
+  attackingPlayer.setPowerMeter(attackingPlayer.data.powerMeter + attackingPlayerGain);
+  defendingPlayer.setPowerMeter(defendingPlayer.data.powerMeter + defendingPlayerGain);
 
   if (event.defenderHP === 0) {
     defender.remove();
