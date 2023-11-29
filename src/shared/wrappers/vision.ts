@@ -10,10 +10,12 @@ import type { TeamWrapper } from "./team";
 const getUnitVisionRangeCache = (player: PlayerInMatchWrapper) =>
   player.getUnits().data.map((unit) => {
     const { type, position } = unit.data;
-    const { vision: baseVision, movementType } = unitPropertiesMap[type];
+    const { vision: baseVision } = unitPropertiesMap[type];
+
+    const isInfantryOrMech = type === "infantry" || type === "mech"
 
     const hasMountainBonus =
-      movementType === "foot" && unit.getTileOrThrow().type === "mountain";
+      isInfantryOrMech && unit.getTileOrThrow().type === "mountain";
 
     const modifiedVision = player.getHook("vision")?.(baseVision, unit);
 
