@@ -4,28 +4,33 @@ export const jakeAWDS: COProperties = {
   displayName: "Jake",
   gameVersion: "AWDS",
   dayToDay: {
-    description: "Units have +10% firepower on top of plains (air units included).",
+    description:
+      "Units have +10% firepower on top of plains (air units included).",
     hooks: {
-      attack: ( {attacker} ) => {
+      attack: ({ attacker }) => {
         if (attacker.getTileOrThrow().type === "plain") {
           return 110;
         }
-      },
+      }
     }
   },
   powers: {
     COPower: {
       name: "Beat Down",
-      description: "Units gain +10% more firepower on top of plains, and ground indirects gain +1 range.",
+      description:
+        "Units gain +10% more firepower on top of plains, and ground indirects gain +1 range.",
       stars: 3,
       hooks: {
-        attack: ( {attacker} ) => {
+        attack: ({ attacker }) => {
           if (attacker.getTileOrThrow().type === "plain") {
             return 120;
           }
         },
-        attackRange: (range, {attacker} ) => {
-          if (attacker.properties().facility === "base") {
+        attackRange: (range, { attacker }) => {
+          if (
+            attacker.properties().facility === "base" &&
+            attacker.isIndirect()
+          ) {
             return range + 1;
           }
         }
@@ -33,21 +38,29 @@ export const jakeAWDS: COProperties = {
     },
     superCOPower: {
       name: "Block Rock",
-      description: "Units gain +30% more firepower on top of plains, ground indirects gain +1 range and ground vehicles gain +2 movement.",
+      description:
+        "Units gain +30% more firepower on top of plains, ground indirects gain +1 range and ground vehicles gain +2 movement.",
       stars: 6,
       hooks: {
-        attack: ( {attacker} ) => {
+        attack: ({ attacker }) => {
           if (attacker.getTileOrThrow().type === "plain") {
             return 140;
           }
         },
-        attackRange: (range, {attacker} ) => {
-          if (attacker.properties().facility === "base") {
+        attackRange: (range, { attacker }) => {
+          if (
+            attacker.properties().facility === "base" &&
+            attacker.isIndirect()
+          ) {
             return range + 1;
           }
         },
         movementRange: (range, unit) => {
-          if (unit.properties().facility === "base" && unit.data.type !== "infantry" && unit.data.type !== "mech") {
+          if (
+            unit.properties().facility === "base" &&
+            unit.data.type !== "infantry" &&
+            unit.data.type !== "mech"
+          ) {
             return range + 2;
           }
         }
