@@ -34,11 +34,23 @@ export const attackActionToEvent: (...params: Params) => AttackEvent = (
     throw new DispatchableError("Unit cannot attack");
   }
 
-  const attackDistance = getDistance(attacker.data.position, defender.data.position);
+  const attackDistance = getDistance(
+    attacker.data.position,
+    defender.data.position
+  );
+
+  // TODO apply CO hooks and weather and what else might be missing
+
+  // we'll need this logic to prevent e.g. Max from having [2, 1] attack range
+  // in sandstorms.
+  const maximumAttackRange = Math.min(
+    attackerProperties.attackRange[0],
+    attackerProperties.attackRange[1]
+  );
 
   if (
     attackerProperties.attackRange[0] > attackDistance ||
-    attackDistance > attackerProperties.attackRange[1]
+    attackDistance > maximumAttackRange
   ) {
     throw new DispatchableError("Unit is not in range to attack");
   }
