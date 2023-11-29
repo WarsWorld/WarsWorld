@@ -6,12 +6,7 @@ import type { Direction } from "shared/schemas/direction";
 // AWBW and probably AW too starts "x: 0, y: 0" in the top-left corner.
 // So going down means y increases.
 
-export const addPositions = (
-  position1: Position,
-  position2: Position
-): Position => {
-  return [position1[0] + position2[0], position1[1] + position2[1]];
-};
+// TODO move these to position schema maybe?
 
 export const addDirection = (
   position: Position,
@@ -30,11 +25,11 @@ export const addDirection = (
 };
 
 export const getDistance = (
-  position1: Position,
-  position2: Position
+  positionA: Position,
+  positionB: Position
 ): number => {
   return (
-    Math.abs(position1[0] - position2[0]) +
-    Math.abs(position1[1] - position2[1])
+    Math.abs(positionA[0] - positionB[0]) +
+    Math.abs(positionA[1] - positionB[1])
   );
 };
