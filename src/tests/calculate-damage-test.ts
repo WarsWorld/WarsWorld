@@ -4,6 +4,16 @@ import type { PlayerInMatch } from "shared/types/server-match-state";
 import { MatchWrapper } from "shared/wrappers/match";
 
 /**
+ * TODO add memory usage readouts by reading memory used by process
+ * before creating the match, before generating the event, and after
+ * generating the event, and then printing the total mem used as well as
+ * the differences between these points.
+ *
+ * also add processing time readouts by taking the time at the same 3 stages
+ * and just printing the differences.
+ */
+
+/**
  * this is a test scenario to fully simulate an attack event
  * and output the previous and resulting HP values to the console.
  * it's a standalone script that can be run with `npx tsx file.ts`.

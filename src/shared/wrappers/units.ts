@@ -3,6 +3,12 @@ import type { UnitWrapper } from "./unit";
 import { DispatchableError } from "shared/DispatchedError";
 import { getDistance } from "../match-logic/positions";
 
+/**
+ * TODO
+ *
+ * this units wrapper is a candidate for ArrayBuffer / IntArray optimization
+ * just like Vision currently has.
+ */
 export class UnitsWrapper {
   constructor(public data: UnitWrapper[]) {}
 

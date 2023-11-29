@@ -120,6 +120,8 @@ export class UnitWrapper {
     );
   }
 
+  // TODO rename to `getTile`, the `OrThrow` suffix is from old code
+  // that had versions with and without throwing. `tile` is now never undefined.
   getTileOrThrow() {
     const tile = this.match.getTile(this.data.position);
 

@@ -66,6 +66,8 @@ export class MatchWrapper {
       return foundChangeableTile;
     }
 
+    // TODO `getTile` will be called very often. map data is a candidate for
+    // the same ArrayBuffer / IntArray optimization like exists for vision.
     return this.map.data.tiles[position[1]][position[0]];
   }
 
