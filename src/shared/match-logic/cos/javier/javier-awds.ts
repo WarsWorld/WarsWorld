@@ -7,12 +7,12 @@ export const javierAWDS: COProperties = {
     description:
       "Units have +20% defense against indirect units. Comm Towers grant all units additional +10% defense.",
     hooks: {
-      defense({ attacker }) {
+      defense({ attacker, defender }) {
         const bonusFromIndirectAttacks = attacker.isIndirect() ? 20 : 0;
 
         return (
           100 +
-          attacker.player.getCommtowerAttackBoost() +
+          defender.player.getCommtowerAttackBoost() +
           bonusFromIndirectAttacks
         );
       }
@@ -23,12 +23,10 @@ export const javierAWDS: COProperties = {
       name: "Tower Shield",
       stars: 3,
       description:
-        "Indirect defense is increased to +40%. Comm Tower bonuses are doubled.",
+        "Defense from indirect attacks is increased to +40%. Comm Tower bonuses are doubled.",
       hooks: {
-        defense({ defender }) {
-          const bonusFromIndirectAttacks = defender.isIndirect()
-            ? 40
-            : 0;
+        defense({ attacker, defender }) {
+          const bonusFromIndirectAttacks = attacker.isIndirect() ? 40 : 0;
 
           return (
             100 +
@@ -45,12 +43,10 @@ export const javierAWDS: COProperties = {
       name: "Tower of Power",
       stars: 6,
       description:
-        "Indirect defense is increased to +60%. Comm Tower bonuses are tripled.",
+        "Defense from indirect attacks is increased to +60%. Comm Tower bonuses are tripled.",
       hooks: {
-        defense({ defender }) {
-          const bonusFromIndirectAttacks = defender.isIndirect()
-            ? 60
-            : 0;
+        defense({ attacker, defender }) {
+          const bonusFromIndirectAttacks = attacker.isIndirect() ? 60 : 0;
 
           return (
             100 +
