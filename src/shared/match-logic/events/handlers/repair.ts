@@ -16,6 +16,9 @@ export const repairActionToEvent: SubActionToEvent<RepairAction> = (
   const player = match.players.getCurrentTurnPlayer();
   const unit = player.getUnits().getUnitOrThrow(fromPosition);
 
+  // TODO if the player does not have the funds, he is unable to repair
+  // taken from https://advancewars.fandom.com/wiki/Black_Boat
+
   if (unit.data.type !== "blackBoat") {
     throw new DispatchableError(
       "Trying to repair with a unit that is not a black boat"
@@ -40,7 +43,7 @@ export const applyRepairEvent = (
     addDirection(fromPosition, event.direction)
   );
 
-  repairedUnit.setFuel(unitPropertiesMap[repairedUnit.data.type].initialFuel);
+  repairedUnit.resupply();
 
   //heal for free if visual hp is 10
   if (getVisualHPfromHP(repairedUnit.getHP()) === 10) {
