@@ -8,14 +8,15 @@ export const olafAW2: COProperties = {
     ...olafAW1.powers,
     superCOPower: {
       name: "Winter fury",
-      description: "All enemy units lose 2 HP, and causes it to snow until next turn.",
+      description:
+        "All enemy units lose 2 HP, and causes it to snow until next turn.",
       stars: 6,
-      instantEffect( {match, player} ) {
-        player.getEnemyUnits().damageAllUntil1HP(20);
+      instantEffect({ match, player }) {
+        player.team.getEnemyUnits().forEach((unit) => unit.damageUntil1HP(20));
 
         match.currentWeather = "snow";
         match.playerToRemoveWeatherEffect = player;
       }
     }
   }
-}
+};

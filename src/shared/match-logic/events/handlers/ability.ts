@@ -1,9 +1,8 @@
 import { DispatchableError } from "shared/DispatchedError";
 import type { AbilityAction } from "shared/schemas/action";
-import { allDirections } from "shared/schemas/position";
+import { addDirection, allDirections } from "shared/schemas/position";
 import type { MatchWrapper } from "shared/wrappers/match";
 import type { UnitWrapper } from "shared/wrappers/unit";
-import { addDirection } from "shared/schemas/position";
 import type { SubActionToEvent } from "../handler-types";
 
 /* TODO transfer property ownership on HQ capture */
@@ -14,8 +13,12 @@ export const abilityActionToEvent: SubActionToEvent<AbilityAction> = (
   action,
   fromPosition
 ) => {
-  const player = match.players.getCurrentTurnPlayer();
-  const unit = player.getUnits().getUnitOrThrow(fromPosition);
+  const player = match.getCurrentTurnPlayer();
+  const unit = match.getUnitOrThrow(fromPosition);
+
+  if (unit.data.playerSlot !== player.data.slot) {
+    throw new DispatchableError("You don't own this unit");
+  }
 
   switch (unit.data.type) {
     case "infantry":
@@ -81,13 +84,13 @@ export const applyAbilityEvent = (match: MatchWrapper, unit: UnitWrapper) => {
     case "apc": {
       //supply
       for (const dir of allDirections) {
-        match.units.getUnit(addDirection(unit.data.position, dir))?.resupply();
+        match.getUnit(addDirection(unit.data.position, dir))?.resupply();
       }
 
       break;
     }
     case "blackBomb": {
-      match.units.damageUntil1HPInRadius({
+      match.damageUntil1HPInRadius({
         radius: 3,
         damageAmount: 50,
         epicenter: unit.data.position

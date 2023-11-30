@@ -19,8 +19,12 @@ export const moveActionToEvent: MainActionToEvent<MoveAction> = (
   match,
   action
 ) => {
-  const player = match.players.getCurrentTurnPlayer();
-  const unit = player.getUnits().getUnitOrThrow(action.path[0]);
+  const player = match.getCurrentTurnPlayer();
+  const unit = match.getUnitOrThrow(action.path[0]);
+
+  if (!player.owns(unit)) {
+    throw new DispatchableError("You don't own this unit")
+  }
 
   if (!unit.data.isReady) {
     throw new DispatchableError("Trying to move a waited unit");
@@ -53,7 +57,7 @@ export const moveActionToEvent: MainActionToEvent<MoveAction> = (
       );
     }
 
-    const unitInPosition = match.units.getUnit(position);
+    const unitInPosition = match.getUnit(position);
 
     if (unitInPosition?.data.playerSlot === unit.data.playerSlot) {
       result.trap = true;
@@ -226,7 +230,7 @@ export const applyMoveEvent = (match: MatchWrapper, event: MoveEvent) => {
     return;
   }
 
-  const unit = match.units.getUnitOrThrow(event.path[0]);
+  const unit = match.getUnitOrThrow(event.path[0]);
 
   //if unit was capturing, interrupt capture
   if ("currentCapturePoints" in unit) {
@@ -241,7 +245,7 @@ export const applyMoveEvent = (match: MatchWrapper, event: MoveEvent) => {
 
   unit.drainFuel(event.path.length - 1);
 
-  const unitAtDestination = match.units.getUnit(
+  const unitAtDestination = match.getUnit(
     getFinalPositionSafe(event.path)
   );
 

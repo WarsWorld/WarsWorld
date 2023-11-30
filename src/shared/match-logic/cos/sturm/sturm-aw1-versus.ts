@@ -22,7 +22,7 @@ export const sturmAW1Versus: COProperties = { // TODO make a way to differenciat
       description: "Deals 4 HP of damage to all units at a distance less or equal than 2 from the chosen position, centered on a unit. The meteor prioritises the most unit value in damages (allied units are dealt damage as well, and contribute negatively to the unit value calculation).",
       stars: 5,
       instantEffect( {match, player} ) {
-        match.units.damageUntil1HPInRadius({
+        match.damageUntil1HPInRadius({
           radius: 2,
           damageAmount: 8,
           epicenter: getBestPositionMeteor(match, player)

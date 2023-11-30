@@ -11,7 +11,7 @@ export const buildActionToEvent: MainActionToEvent<BuildAction> = (
   match,
   action
 ) => {
-  const player = match.players.getCurrentTurnPlayer();
+  const player = match.getCurrentTurnPlayer();
 
   const { cost, facility } = unitPropertiesMap[action.unitType];
   const modifiedCost = player.getHook("buildCost")?.(cost, match);
@@ -23,7 +23,7 @@ export const buildActionToEvent: MainActionToEvent<BuildAction> = (
     );
   }
 
-  if (match.units.hasUnit(action.position)) {
+  if (match.hasUnit(action.position)) {
     throw new DispatchableError("Can't build where there's a unit already");
   }
 
@@ -51,12 +51,10 @@ export const buildActionToEvent: MainActionToEvent<BuildAction> = (
   };
 };
 
-export const applyBuildEvent = (match: MatchWrapper, event: BuildEvent) =>
-  match.players
-    .getCurrentTurnPlayer()
-    .addUnwrappedUnit(
-      createUnitFromBuildEvent(
-        match.players.getCurrentTurnPlayer().data.slot,
-        event
-      )
-    );
+export const applyBuildEvent = (match: MatchWrapper, event: BuildEvent) => {
+  const player = match.getCurrentTurnPlayer();
+
+  return player.addUnwrappedUnit(
+    createUnitFromBuildEvent(player.data.slot, event)
+  );
+};

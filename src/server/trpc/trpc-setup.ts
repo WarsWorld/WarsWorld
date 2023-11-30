@@ -22,7 +22,7 @@ export const playerInMatchBaseProcedure = matchBaseProcedure.use(
     .unstable_pipe(({ ctx, next }) => {
       const { match, currentPlayer } = ctx;
 
-      const player = match.players.getCurrentTurnPlayer();
+      const player = match.getCurrentTurnPlayer();
 
       if (player.data.id !== currentPlayer.id) {
         throw new DispatchableError("It's not your turn");
@@ -31,7 +31,7 @@ export const playerInMatchBaseProcedure = matchBaseProcedure.use(
       return next({
         ctx: {
           ...ctx,
-          playerInMatch: player,
+          playerInMatch: player, // TODO rename this property to player
         },
       });
     })

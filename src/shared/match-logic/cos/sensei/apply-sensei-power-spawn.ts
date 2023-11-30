@@ -9,8 +9,8 @@ export function applySenseiPowerSpawn(
   const { match } = player;
 
   // it's faster to track the unitCount with a variable here than
-  // scanning player.getUnits().data.length on every iteration
-  let unitCount = player.getUnits().data.length;
+  // scanning player.getUnits().length on every iteration
+  let unitCount = player.getUnits().length;
 
   // we're not looping through match.changeableTiles because
   // sensei power spawns are supposed to start top left (0, 0), then go x+ (right), then y+ (down).
@@ -30,7 +30,7 @@ export function applySenseiPowerSpawn(
         tile.type !== "city" ||
         !("ownerSlot" in tile) ||
         !player.owns(tile) ||
-        match.units.getUnit(position) !== undefined
+        match.getUnit(position) !== undefined
       ) {
         continue;
       }

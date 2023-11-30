@@ -31,7 +31,7 @@ export const eagleAW1: COProperties = {
       instantEffect({ player }) {
         player
           .getUnits()
-          .data.filter(
+          .filter(
           (unit) => unit.data.type !== "infantry" && unit.data.type !== "mech"
         )
           .forEach((unit) => {
@@ -53,6 +53,7 @@ export const eagleAW1: COProperties = {
           if (attacker.properties().facility === "airport") {
             return 80;
           }
+
           return 60;
         }
       }

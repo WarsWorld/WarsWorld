@@ -24,8 +24,9 @@ export const applyPassTurnEvent = (
    *      }
    */
 
-  const lastTurnPlayer = match.players.getCurrentTurnPlayer();
-  lastTurnPlayer.getUnits().data.forEach((u) => {
+  const lastTurnPlayer = match.getCurrentTurnPlayer();
+
+  lastTurnPlayer.getUnits().forEach((u) => {
     u.data.isReady = true;
   });
 
@@ -50,7 +51,7 @@ export const applyPassTurnEvent = (
 
   nextTurnPlayer.gainFunds();
 
-  for (const unit of nextTurnPlayer.getUnits().data) {
+  for (const unit of nextTurnPlayer.getUnits()) {
     const tile = unit.getTile();
 
     // TODO if is property and is owned by us then repair with special effects

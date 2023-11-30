@@ -1,8 +1,8 @@
 import type { Weather } from "shared/schemas/weather";
-import type { PlayersWrapper } from "shared/wrappers/players";
+import type { MatchWrapper } from "shared/wrappers/match";
 
-function getBaseChanceOfRainOrSnow(players: PlayersWrapper): number {
-  switch (players.data.length) {
+function getBaseChanceOfRainOrSnow(match: MatchWrapper): number {
+  switch (match.getAllPlayers().length) {
     case 2:
       return 4;
     case 3:
@@ -12,23 +12,23 @@ function getBaseChanceOfRainOrSnow(players: PlayersWrapper): number {
   }
 }
 
-function getChanceOfRain(players: PlayersWrapper) {
-  const numberOfDrakes = players.data.filter(
-    (p) => p.data.coId.name === "drake"
-  ).length;
+function getChanceOfRain(match: MatchWrapper) {
+  const numberOfDrakes = match
+    .getAllPlayers()
+    .filter((p) => p.data.coId.name === "drake").length;
 
-  return getBaseChanceOfRainOrSnow(players) + numberOfDrakes * 7;
+  return getBaseChanceOfRainOrSnow(match) + numberOfDrakes * 7;
 }
 
 /**
  * TODO we don't handle sandstorm yet.
  * do we ever even want to..?
  */
-export function getRandomWeather(players: PlayersWrapper): Weather {
+export function getRandomWeather(match: MatchWrapper): Weather {
   const roll = Math.random() * 100;
 
-  const snowThreshold = getBaseChanceOfRainOrSnow(players);
-  const rainThreshold = getChanceOfRain(players) + snowThreshold;
+  const snowThreshold = getBaseChanceOfRainOrSnow(match);
+  const rainThreshold = getChanceOfRain(match) + snowThreshold;
 
   if (roll < snowThreshold) {
     return "snow";

@@ -19,7 +19,7 @@ import { getFinalPositionSafe } from "shared/schemas/position";
 export const actionRouter = router({
   send: playerInMatchBaseProcedure
     .input(mainActionSchema)
-    .mutation(async ({ input, ctx: { match } }) => {
+    .mutation(async ({ input, ctx: { match, playerInMatch } }) => {
       const event = validateMainActionAndToEvent(match, input);
 
       // IMPORTANT @FUNCTION IDIOT: we MUST apply the main event before validateSubActionAndToEvent
@@ -29,7 +29,7 @@ export const actionRouter = router({
       if (event.type === "move" && input.type === "move") {
         // second condition is only needed for type-gating input event
 
-        const isJoinOrLoad = match.units.hasUnit(
+        const isJoinOrLoad = match.hasUnit(
           getFinalPositionSafe(event.path)
         );
 
@@ -59,9 +59,8 @@ export const actionRouter = router({
         eventIndex: eventOnDB.index
       };
 
-      emittableEvent.discoveredUnits = match.players
-        .getCurrentTurnPlayer()
-        .getEnemyUnitsInVision();
+      
+      emittableEvent.discoveredUnits = playerInMatch.team.getEnemyUnitsInVision()
 
       emit(emittableEvent);
     }),

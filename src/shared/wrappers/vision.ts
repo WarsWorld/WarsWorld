@@ -1,50 +1,46 @@
 import { unitPropertiesMap } from "shared/match-logic/buildable-unit";
-import { getDistance } from "shared/schemas/position";
 import type { Position } from "shared/schemas/position";
-import type { PlayerInMatchWrapper } from "./player-in-match";
+import { getDistance } from "shared/schemas/position";
 import type { TeamWrapper } from "./team";
 
-/**
- * TODO doesn't account for teams
- */
-const getUnitVisionRangeCache = (player: PlayerInMatchWrapper) =>
-  player.getUnits().data.map((unit) => {
+const getUnitVisionRangeCache = (team: TeamWrapper) =>
+  team.getUnits().map((unit) => {
     const { type, position } = unit.data;
     const { vision: baseVision } = unitPropertiesMap[type];
 
     const hasMountainBonus =
       unit.isInfantryOrMech() && unit.getTile().type === "mountain";
 
-    const modifiedVision = player.getHook("vision")?.(baseVision, unit);
+    const modifiedVision = unit.player.getHook("vision")?.(baseVision, unit);
 
     const coVisionRange =
       (modifiedVision ?? baseVision) + (hasMountainBonus ? 3 : 0);
 
     const weatherVisionRange =
-      player.match.currentWeather === "rain"
+      team.match.currentWeather === "rain"
         ? coVisionRange - 1
         : coVisionRange;
 
+    const activeSonjaPower =
+      unit.player.data.coId.name === "sonja" && unit.player.data.COPowerState !== "no-power";
+
     return {
       position,
-      visionRange: Math.max(weatherVisionRange, 1),
+      canLookInsideForestsAndReefs: activeSonjaPower,
+      visionRange: Math.max(weatherVisionRange, 0),
     };
   });
-
-/** WIP / Unused */
-const _getUnitVisionRangeCache_ForTeams = (team: TeamWrapper) =>
-  team.players.flatMap(getUnitVisionRangeCache);
 
 export class Vision {
   private visionArray: Uint8Array;
   private mapWidth: number;
 
-  constructor(player: PlayerInMatchWrapper) {
-    const { map } = player.match;
+  constructor(team: TeamWrapper) {
+    const { map } = team.match;
     this.mapWidth = map.width;
     const visionArraySize = this.mapWidth * map.height;
     this.visionArray = new Uint8Array(visionArraySize);
-    const unitVisionRangeCache = getUnitVisionRangeCache(player);
+    const unitVisionRangeCache = getUnitVisionRangeCache(team);
 
     for (let y = 0; y < map.height; y++) {
       for (let x = 0; x < this.mapWidth; x++) {
@@ -52,8 +48,19 @@ export class Vision {
 
         unitLoop: for (const unit of unitVisionRangeCache) {
           const distance = getDistance([x, y], unit.position);
+          let isVisible = distance <= unit.visionRange
 
-          if (distance <= unit.visionRange) {
+          const tileType = map.data.tiles[y][x].type
+
+          if (
+            (tileType === "forest" || tileType === "reef")
+            && distance > 1 // no team unit next to tile
+            && !unit.canLookInsideForestsAndReefs
+          ) {
+            isVisible = false
+          }
+
+          if (isVisible) {
             const visionIndex = x * rowOffset;
             this.visionArray[visionIndex] = 1;
             break unitLoop;

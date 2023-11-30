@@ -21,11 +21,19 @@ export const attackActionToEvent: (...params: Params) => AttackEvent = (
   attackerLuck,
   defenderLuck
 ) => {
-  const player = match.players.getCurrentTurnPlayer();
-  const attacker = player.getUnits().getUnitOrThrow(fromPosition);
-  const defender = player
-    .getEnemyUnits()
-    .getUnitOrThrow(action.defenderPosition);
+  const player = match.getCurrentTurnPlayer();
+
+  const attacker = match.getUnitOrThrow(fromPosition);
+
+  if (attacker.data.playerSlot !== player.data.slot) {
+    throw new DispatchableError("You don't own this unit")
+  }
+
+  const defender = match.getUnitOrThrow(action.defenderPosition);
+  
+  if (defender.player.team.index === player.team.index) {
+    throw new DispatchableError("The target unit is from your own team")
+  }
 
   //check if unit is in range
   const attackerProperties = unitPropertiesMap[attacker.data.type];
@@ -126,13 +134,13 @@ export const applyAttackEvent = (
   event: AttackEvent,
   position: Position
 ) => {
-  const attacker = match.units.getUnitOrThrow(position);
-  const defender = match.units.getUnitOrThrow(event.defenderPosition);
+  const attacker = match.getUnitOrThrow(position);
+  const defender = match.getUnitOrThrow(event.defenderPosition);
 
-  const attackingPlayer = match.players.getBySlotOrThrow(
+  const attackingPlayer = match.getBySlotOrThrow(
     attacker.data.playerSlot
   );
-  const defendingPlayer = match.players.getBySlotOrThrow(
+  const defendingPlayer = match.getBySlotOrThrow(
     defender.data.playerSlot
   );
 

@@ -7,7 +7,7 @@ export function createMatchStartEvent(match: MatchWrapper): MatchStartEvent {
     type: "match-start",
     weather:
       match.rules.weatherSetting === "random"
-        ? getRandomWeather(match.players)
+        ? getRandomWeather(match)
         : match.rules.weatherSetting,
   };
 }

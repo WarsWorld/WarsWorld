@@ -23,7 +23,7 @@ export class MatchStore {
 
     this.index.set(match.id, match);
 
-    for (const player of match.players.data) {
+    for (const player of match.getAllPlayers()) {
       playerMatchIndex.onPlayerJoin(player, match);
     }
 

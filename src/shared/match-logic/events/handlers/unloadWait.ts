@@ -21,18 +21,23 @@ export function throwIfUnitCantBeUnloadedToTile(unit: { type: UnitType }, tile: 
 }
 
 export const unloadWaitActionToEvent: SubActionToEvent<UnloadWaitAction> = (match, action, fromPosition) => {
-  const player = match.players.getCurrentTurnPlayer();
-  const { data: transportUnit } = player.getUnits().getUnitOrThrow(fromPosition);
+  const player = match.getCurrentTurnPlayer();
+
+  const transportUnit = match.getUnitOrThrow(fromPosition);
+
+  if (!player.owns(transportUnit)) {
+    throw new DispatchableError("You don't own this unit")
+  }
 
   if (action.unloads.length < 1) {
     throw new DispatchableError("No unit specified to unload");
   }
 
-  if (!("loadedUnit" in transportUnit)) {
+  if (!("loadedUnit" in transportUnit.data)) {
     throw new DispatchableError("Trying to unload from a unit that can't load units");
   }
 
-  if (transportUnit.loadedUnit === null) {
+  if (transportUnit.data.loadedUnit === null) {
     throw new DispatchableError("Transport doesn't currently have a loaded unit");
   }
 
@@ -42,24 +47,24 @@ export const unloadWaitActionToEvent: SubActionToEvent<UnloadWaitAction> = (matc
 
   if (action.unloads.length === 1) {
     if (action.unloads[0].isSecondUnit) {
-      if (!("loadedUnit2" in transportUnit)) {
+      if (!("loadedUnit2" in transportUnit.data)) {
         throw new DispatchableError("Trying to unload 2nd unit from a unit only carries 1 unit");
       }
 
-      if (transportUnit.loadedUnit2 === null) {
+      if (transportUnit.data.loadedUnit2 === null) {
         throw new DispatchableError("Transport doesn't currently have a 2nd loaded unit");
       }
 
-      throwIfUnitCantBeUnloadedToTile(transportUnit.loadedUnit2, match.getTile(unloadPosition))
+      throwIfUnitCantBeUnloadedToTile(transportUnit.data.loadedUnit2, match.getTile(unloadPosition))
     } else {
-      throwIfUnitCantBeUnloadedToTile(transportUnit.loadedUnit, match.getTile(unloadPosition))
+      throwIfUnitCantBeUnloadedToTile(transportUnit.data.loadedUnit, match.getTile(unloadPosition))
     }
   } else if (action.unloads.length === 2) {
-    if (!("loadedUnit2" in transportUnit)) {
+    if (!("loadedUnit2" in transportUnit.data)) {
       throw new DispatchableError("Tried to unload 2 units, but only one can be put in a transport");
     }
 
-    if (transportUnit.loadedUnit2 === null) {
+    if (transportUnit.data.loadedUnit2 === null) {
       throw new DispatchableError("Transport doesn't currently have a 2nd loaded unit");
     }
 
@@ -80,8 +85,8 @@ export const unloadWaitActionToEvent: SubActionToEvent<UnloadWaitAction> = (matc
 
     match.map.throwIfOutOfBounds(unloadPosition2);
 
-    throwIfUnitCantBeUnloadedToTile(transportUnit.loadedUnit, match.getTile(unloadPosition))
-    throwIfUnitCantBeUnloadedToTile(transportUnit.loadedUnit2, match.getTile(unloadPosition2))
+    throwIfUnitCantBeUnloadedToTile(transportUnit.data.loadedUnit, match.getTile(unloadPosition))
+    throwIfUnitCantBeUnloadedToTile(transportUnit.data.loadedUnit2, match.getTile(unloadPosition2))
   } else {
     throw new DispatchableError("Trying to unload more than 2 units");
   }
@@ -90,7 +95,7 @@ export const unloadWaitActionToEvent: SubActionToEvent<UnloadWaitAction> = (matc
 };
 
 export const applyUnloadWaitEvent = (match: MatchWrapper, event: UnloadWaitEvent, transportPosition: Position) => {
-  const unit = match.units.getUnitOrThrow(transportPosition);
+  const unit = match.getUnitOrThrow(transportPosition);
 
   if (event.unloads.length === 1) {
     if (event.unloads[0].isSecondUnit && "loadedUnit2" in unit.data) {

@@ -22,15 +22,11 @@ export const vonBoltAWDS: COProperties = {
       stars: 10,
       instantEffect( {match, player} ) {
         const center = getBestPositionBolt(match, player);
-        match.units.damageUntil1HPInRadius({
-          radius: 2,
-          damageAmount: 3,
-          epicenter: center
-        });
-        
-        for (const unit of player.getEnemyUnits().data) {
+
+        for (const unit of player.team.getEnemyUnits()) {
           if (getDistance(unit.data.position, center) <= 2) {
             unit.data.isReady = false;
+            unit.damageUntil1HP(3)
           }
         }
       }
@@ -46,7 +42,7 @@ export const getBestPositionBolt = (
   let bestValue = -100000;
 
   //ts says this variable is redundant, but wouldnt it get called a lot of times if it was inside the double for?
-  const enemyUnits = vbPlayer.getEnemyUnits().data;
+  const enemyUnits = vbPlayer.team.getEnemyUnits();
 
   for (let i = 0; i < match.map.width; ++i) { // TODO idk if it's the other way
     for (let j = 0; j < match.map.height; ++j) {

@@ -221,7 +221,3 @@ export const getUnitTerrainDefense = (hp: number, tileType: TileType) => {
   const visualHp = Math.ceil(hp / 10);
   return terrainProperties[tileType].defenseStars * visualHp;
 };
-
-export const isHiddenTile = (tile: Tile | ChangeableTile) => {
-  return tile.type === "forest" || tile.type === "reef";
-};

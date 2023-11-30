@@ -1,8 +1,6 @@
 import { getCOProperties } from "shared/match-logic/co";
 import type { Hooks } from "shared/match-logic/co-hooks";
-import { isHiddenTile } from "shared/match-logic/terrain";
 import type {
-  UnitWithHiddenStats,
   UnitWithVisibleStats
 } from "shared/schemas/unit";
 import type { Weather } from "shared/schemas/weather";
@@ -10,14 +8,17 @@ import type {
   CapturableTile,
   PlayerInMatch
 } from "shared/types/server-match-state";
-import type { MatchWrapper } from "./match";
-import { UnitWrapper } from "./unit";
-import { UnitsWrapper } from "./units";
-import { Vision } from "./vision";
 import { clamp } from "shared/utils/clamp";
+import type { MatchWrapper } from "./match";
+import type { TeamWrapper } from "./team";
+import { UnitWrapper } from "./unit";
 
 export class PlayerInMatchWrapper {
-  constructor(public data: PlayerInMatch, public match: MatchWrapper) {}
+  public match: MatchWrapper;
+
+  constructor(public data: PlayerInMatch, public team: TeamWrapper) {
+    this.match = team.match;
+  }
 
   getCommtowerAttackBoost() {
     return this.match.changeableTiles.reduce(
@@ -30,18 +31,7 @@ export class PlayerInMatchWrapper {
   }
 
   getUnits() {
-    return new UnitsWrapper(
-      this.match.units.data.filter((u) => u.data.playerSlot === this.data.slot)
-    );
-  }
-
-  /**
-   * TODO Teams/Allies!
-   */
-  getEnemyUnits() {
-    return new UnitsWrapper(
-      this.match.units.data.filter((u) => u.data.playerSlot !== this.data.slot)
-    );
+    return this.match.units.filter((u) => u.data.playerSlot === this.data.slot)
   }
 
   getHook<HookType extends keyof Hooks>(hookType: HookType) {
@@ -70,7 +60,7 @@ export class PlayerInMatchWrapper {
       i !== this.data.slot;
       i = nextSlot(i)
     ) {
-      const player = this.match.players.getBySlot(i);
+      const player = this.match.getBySlot(i);
 
       if (player?.data.eliminated === true) {
         return player;
@@ -78,62 +68,6 @@ export class PlayerInMatchWrapper {
     }
 
     return null;
-  }
-
-  getEnemyUnitsInVision() {
-    const vision = this.match.rules.fogOfWar ? new Vision(this) : null;
-
-    return this.getEnemyUnits()
-      .data.filter((enemy) => {
-        // sub or stealth ability
-        const isHiddenThroughAbility =
-          "hidden" in enemy.data && enemy.data.hidden;
-
-        /**
-         * TODO -_-
-         * for when we have the data/properties for different match versions (AW1/2/DS)
-         *
-         * Enigami — Today at 02:14
-         * AWDS behavior: subs/stealths are revealed if they are on properties you own
-         * AW2 behavior: subs are revealed if they are on ports you own
-         *
-         */
-
-        if (isHiddenThroughAbility) {
-          return enemy.getNeighbouringUnits().some((unit) => this.owns(unit));
-        }
-
-        if (vision === null) {
-          return true;
-        }
-
-        const tile = enemy.getTile();
-
-        if ("ownerSlot" in tile && this.owns(tile)) {
-          return true;
-        }
-
-        const activeSonjaPower =
-          this.data.coId.name === "sonja" && this.data.COPowerState !== "no-power";
-
-        if (isHiddenTile(tile) && !activeSonjaPower) {
-          return enemy.getNeighbouringUnits().some((unit) => this.owns(unit));
-        }
-
-        return vision.isPositionVisible(enemy.data.position);
-      })
-      .map<UnitWithVisibleStats | UnitWithHiddenStats>((visibleEnemyUnit) => {
-        if (visibleEnemyUnit.player.data.coId.name === "sonja") {
-          const hiddenUnit: UnitWithHiddenStats = {
-            ...visibleEnemyUnit.data,
-            stats: "hidden"
-          };
-
-          return hiddenUnit;
-        }
-
-        return visibleEnemyUnit.data;
-      });
   }
 
   gainFunds() {
@@ -172,8 +106,7 @@ export class PlayerInMatchWrapper {
 
     if (COPowers.superCOPower !== undefined) {
       return COPowers.superCOPower.stars * this.getPowerStarCost();
-    }
-    else if (COPowers.COPower !== undefined) {
+    } else if (COPowers.COPower !== undefined) {
       return COPowers.COPower.stars * this.getPowerStarCost();
     }
 
@@ -245,7 +178,7 @@ export class PlayerInMatchWrapper {
       this.match
     );
 
-    this.match.units.data.push(unit);
+    this.match.units.push(unit);
 
     return unit;
   }

@@ -19,7 +19,7 @@ export const kindleAWDS: COProperties = {
       description: "Units gain +40% more firepower on top of properties. Enemy units on top of a property lose 3 HP.",
       stars: 3,
       instantEffect( {player} ) {
-        for (const unit of player.getEnemyUnits().data) {
+        for (const unit of player.team.getEnemyUnits()) {
           if ("ownerSlot" in unit.getTile()) {
             unit.damageUntil1HP(3);
           }

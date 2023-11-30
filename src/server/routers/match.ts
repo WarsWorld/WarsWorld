@@ -3,6 +3,7 @@ import { matchStore } from "server/match-store";
 import { pageMatchIndex } from "server/page-match-index";
 import { playerMatchIndex } from "server/player-match-index";
 import { prisma } from "server/prisma/prisma-client";
+import { DispatchableError } from "shared/DispatchedError";
 import { createMatchStartEvent } from "shared/match-logic/events/handlers/match-start";
 import { armySchema } from "shared/schemas/army";
 import { coIdSchema } from "shared/schemas/co";
@@ -17,9 +18,7 @@ import {
 import { createMatchProcedure } from "./match/create";
 import {
   allMatchSlotsReady,
-  joinMatchAndGetPlayer,
   matchToFrontend,
-  playersToFrontend,
   throwIfMatchNotInSetupState
 } from "./match/util";
 
@@ -42,30 +41,50 @@ export const matchRouter = router({
     changeableTiles: match.changeableTiles,
     currentWeather: match.currentWeather,
     map: match.map.data,
-    players: playersToFrontend(match.players),
+    players: match.getAllPlayers().map(player => player.data),
     rules: match.rules,
     status: match.status,
     turn: match.turn,
     units:
-      match.players.getById(currentPlayer.id)?.getEnemyUnitsInVision() ?? [] // TODO and also the player/teams units LOL
+      match.getById(currentPlayer.id)?.team.getEnemyUnitsInVision() ?? []
   })),
   join: matchBaseProcedure
     .input(
       z.object({
-        selectedCO: coIdSchema
+        selectedCO: coIdSchema,
+        playerSlot: z.number().int().nonnegative()
       })
     )
     .mutation(({ input, ctx: { currentPlayer, match } }) => {
       throwIfMatchNotInSetupState(match);
 
-      if (match.players.getById(currentPlayer.id) !== undefined) {
+      if (match.getById(currentPlayer.id) !== undefined) {
         throw new Error("You've already joined this match!");
       }
 
-      // TODO check if selectedCO is allowed for tier/league/match-blacklist
-      joinMatchAndGetPlayer(currentPlayer, match, input.selectedCO);
+      if (match.map.data.numberOfPlayers >= input.playerSlot) {
+        throw new DispatchableError("Invalid player slot given")
+      }
+      
+      if (match.getBySlot(input.playerSlot) !== undefined) {
+        throw new DispatchableError("Player slot is occupied")
+      }
 
-      const player = match.players.getByIdOrThrow(currentPlayer.id);
+      // TODO check if selectedCO is allowed for tier/league/match-blacklist
+
+      match.addUnwrappedPlayer({
+        id: currentPlayer.id,
+        slot: input.playerSlot,
+        ready: false,
+        coId: input.selectedCO,
+        funds: 0,
+        timesPowerUsed: 0,
+        powerMeter: 0,
+        army: "orange-star",
+        COPowerState: "no-power"
+      });
+
+      const player = match.getByIdOrThrow(currentPlayer.id);
 
       playerMatchIndex.onPlayerJoin(player, match);
 
@@ -79,16 +98,16 @@ export const matchRouter = router({
     ({ ctx: { match, playerInMatch } }) => {
       throwIfMatchNotInSetupState(match);
 
-      match.players.data = match.players.data.filter(
-        (p) => p.data.id !== playerInMatch.data.id
-      );
+      const { team: teamToRemoveFrom } = playerInMatch
+      teamToRemoveFrom.players = teamToRemoveFrom.players.filter(player => player.data.slot === playerInMatch.data.slot)
+  
+      if (teamToRemoveFrom.players.length === 0) {
+        match.teams = match.teams.filter(team2 => team2 === teamToRemoveFrom)
+      }
 
-      playerMatchIndex.onPlayerLeave(
-        match.players.getByIdOrThrow(playerInMatch.data.id),
-        match
-      );
+      playerMatchIndex.onPlayerLeave(playerInMatch, match);
 
-      if (match.players.data.length === 0) {
+      if (match.teams.length === 0) {
         pageMatchIndex.removeMatch(match);
         matchStore.removeMatchFromIndex(match);
         return;

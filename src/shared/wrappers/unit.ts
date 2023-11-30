@@ -22,7 +22,7 @@ export class UnitWrapper {
     public data: UnitWithHiddenStats | UnitWithVisibleStats,
     public match: MatchWrapper
   ) {
-    this.player = match.players.getBySlotOrThrow(data.playerSlot);
+    this.player = match.getBySlotOrThrow(data.playerSlot);
     this.properties2 = unitPropertiesMap[data.type];
   }
 
@@ -93,8 +93,8 @@ export class UnitWrapper {
   getNeighbouringUnits() {
     const neighbourPositions = getNeighbourPositions(this.data.position);
 
-    return this.match.units.data.filter((u) =>
-      neighbourPositions.some((p) => isSamePosition(u.data.position, p))
+    return this.match.units.filter((unit) =>
+      neighbourPositions.some((p) => isSamePosition(unit.data.position, p))
     );
   }
 
@@ -161,7 +161,7 @@ export class UnitWrapper {
   }
 
   remove() {
-    this.match.units.data = this.match.units.data.filter((u) =>
+    this.match.units = this.match.units.filter((u) =>
       isSamePosition(u.data.position, this.data.position)
     );
 

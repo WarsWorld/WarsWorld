@@ -7,9 +7,13 @@ import type { MainActionToEvent } from "../handler-types";
 import { throwIfUnitCantBeUnloadedToTile } from "./unloadWait";
 
 export const unloadNoWaitActionToEvent: MainActionToEvent<UnloadNoWaitAction> = (match, action) => {
-  const player = match.players.getCurrentTurnPlayer();
+  const player = match.getCurrentTurnPlayer();
 
-  const transportUnit = player.getUnits().getUnitOrThrow(action.transportPosition);
+  const transportUnit = match.getUnitOrThrow(action.transportPosition);
+
+  if (!player.owns(transportUnit)) {
+    throw new DispatchableError("You don't own this unit")
+  }
 
   if (!("loadedUnit" in transportUnit.data)) {
     throw new DispatchableError("Trying to unload from a unit that can't load units");
@@ -41,7 +45,7 @@ export const unloadNoWaitActionToEvent: MainActionToEvent<UnloadNoWaitAction> = 
 };
 
 export const applyUnloadNoWaitEvent = (match: MatchWrapper, event: UnloadNoWaitEvent) => {
-  const unit = match.units.getUnitOrThrow(event.transportPosition);
+  const unit = match.getUnitOrThrow(event.transportPosition);
 
   if (event.unloads.isSecondUnit && "loadedUnit2" in unit.data) {
     if (unit.data.loadedUnit2 === null) {

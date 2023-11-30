@@ -13,8 +13,12 @@ export const repairActionToEvent: SubActionToEvent<RepairAction> = (
   action,
   fromPosition
 ) => {
-  const player = match.players.getCurrentTurnPlayer();
-  const unit = player.getUnits().getUnitOrThrow(fromPosition);
+  const player = match.getCurrentTurnPlayer();
+  const unit = match.getUnitOrThrow(fromPosition);
+
+  if (!player.owns(unit)) {
+    throw new DispatchableError("You don't own this unit")
+  }
 
   // TODO if the player does not have the funds, he is unable to repair
   // taken from https://advancewars.fandom.com/wiki/Black_Boat
@@ -27,7 +31,12 @@ export const repairActionToEvent: SubActionToEvent<RepairAction> = (
 
   const repairPosition = addDirection(fromPosition, action.direction);
   match.map.throwIfOutOfBounds(repairPosition);
-  player.getUnits().getUnitOrThrow(repairPosition);
+
+  const repairedUnit = match.getUnitOrThrow(repairPosition);
+
+  if (!player.owns(repairedUnit)) {
+    throw new DispatchableError("You don't own the repaired unit")
+  }
 
   return action;
 };
@@ -37,9 +46,9 @@ export const applyRepairEvent = (
   event: RepairEvent,
   fromPosition: Position
 ) => {
-  const player = match.players.getCurrentTurnPlayer();
+  const player = match.getCurrentTurnPlayer();
 
-  const repairedUnit = match.units.getUnitOrThrow(
+  const repairedUnit = match.getUnitOrThrow(
     addDirection(fromPosition, event.direction)
   );
 

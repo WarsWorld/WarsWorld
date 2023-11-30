@@ -17,7 +17,7 @@ export const sashaAWDS: COProperties = {
       instantEffect( {match, player} ) {
         const powerMeterDecrease = player.data.funds / 50000;
 
-        for (const enemy of match.players.data) {
+        for (const enemy of match.getAllPlayers()) {
           // TODO team stuff
           if (enemy.data.slot === player.data.slot) {
             continue; //not an enemy
