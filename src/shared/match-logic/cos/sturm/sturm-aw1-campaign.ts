@@ -6,7 +6,7 @@ import type { PlayerInMatchWrapper } from "../../../wrappers/player-in-match";
 import { unitPropertiesMap } from "../../buildable-unit";
 
 export const sturmAW1Campaign: COProperties = {
-  displayName: "Sturm",
+  displayName: "Sturm (Campaign)",
   gameVersion: "AW1",
   dayToDay: {
     description: "Units have +30% firepower and -20% defense. All terrain movement cost is reduced to 1 (doesn't apply in snow).",

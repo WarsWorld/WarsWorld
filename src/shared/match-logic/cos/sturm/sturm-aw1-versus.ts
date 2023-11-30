@@ -2,7 +2,7 @@ import type { COProperties } from "../../co";
 import { getBestPositionMeteor } from "./sturm-aw1-campaign";
 
 export const sturmAW1Versus: COProperties = { // TODO make a way to differenciate between the 2 versions?
-  displayName: "Sturm",
+  displayName: "Sturm (Versus)",
   gameVersion: "AW1",
   dayToDay: {
     description: "Units have -20% firepower and +20% defense. All terrain movement cost is reduced to 1 (doesn't apply in snow).",
