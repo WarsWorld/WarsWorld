@@ -75,6 +75,8 @@ export class MatchWrapper {
   /**
    * returns the amount of movement points which must be spent to *enter* the tile
    * `null` means impassible terrain.
+   * 
+   * TODO maybe put this on unit wrapper?
    */
   getMovementCost(position: Position, unitType: UnitType): number | null {
     const player = this.players.getCurrentTurnPlayer();
