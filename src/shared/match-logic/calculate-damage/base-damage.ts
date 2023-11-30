@@ -30,6 +30,7 @@ type Weaponry = {
   secondary?: DamageTable;
 };
 
+// TODO maybe rename to DamageChart because that's the commonly used term by the community.
 type DamageMatrix = Partial<Record<UnitType, Weaponry>>;
 
 // TODO idk what u think about this, but things like this, CO descriptions, etc, should go to a "game values"? directory or similar
