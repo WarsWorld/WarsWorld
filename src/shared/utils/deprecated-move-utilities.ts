@@ -1,5 +1,5 @@
 import { TRPCError } from "@trpc/server";
-import type { Direction } from "shared/schemas/direction";
+import type { Direction } from "shared/schemas/position";
 import type { Path, Position } from "shared/schemas/position";
 import { isSamePosition } from "shared/schemas/position";
 import type { UnitWithVisibleStats } from "shared/schemas/unit";

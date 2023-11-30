@@ -1,7 +1,7 @@
 import type { COProperties } from "../../co";
 import type { MatchWrapper } from "../../../wrappers/match";
 import type { PlayerInMatchWrapper } from "../../../wrappers/player-in-match";
-import { getDistance } from "../../positions";
+import { getDistance } from "shared/schemas/position";
 import { unitPropertiesMap } from "../../buildable-unit";
 import type { Position } from "../../../schemas/position";
 

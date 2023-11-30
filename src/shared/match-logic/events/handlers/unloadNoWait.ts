@@ -2,7 +2,7 @@ import { DispatchableError } from "shared/DispatchedError";
 import type { UnloadNoWaitAction } from "shared/schemas/action";
 import type { UnloadNoWaitEvent } from "shared/types/events";
 import type { MatchWrapper } from "shared/wrappers/match";
-import { addDirection } from "../../positions";
+import { addDirection } from "shared/schemas/position";
 import type { MainActionToEvent } from "../handler-types";
 import { throwIfUnitCantBeUnloadedToTile } from "./unloadWait";
 

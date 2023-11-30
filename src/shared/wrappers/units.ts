@@ -1,7 +1,7 @@
 import { isSamePosition, type Position } from "shared/schemas/position";
 import type { UnitWrapper } from "./unit";
 import { DispatchableError } from "shared/DispatchedError";
-import { getDistance } from "../match-logic/positions";
+import { getDistance } from "shared/schemas/position";
 
 /**
  * TODO

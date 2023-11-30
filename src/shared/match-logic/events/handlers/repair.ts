@@ -1,6 +1,6 @@
 import { DispatchableError } from "shared/DispatchedError";
 import type { RepairAction } from "shared/schemas/action";
-import { addDirection } from "../../positions";
+import { addDirection } from "shared/schemas/position";
 import type { MatchWrapper } from "shared/wrappers/match";
 import type { RepairEvent } from "shared/types/events";
 import type { Position } from "shared/schemas/position";

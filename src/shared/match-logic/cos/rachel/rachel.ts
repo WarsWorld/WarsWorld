@@ -1,6 +1,6 @@
 import type { COProperties } from "../../co";
 import type { Position } from "../../../schemas/position";
-import { getDistance } from "../../positions";
+import { getDistance } from "shared/schemas/position";
 import { unitPropertiesMap } from "../../buildable-unit";
 
 export const rachelAWDS: COProperties = {

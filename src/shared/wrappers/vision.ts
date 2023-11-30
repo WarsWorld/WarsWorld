@@ -1,5 +1,5 @@
 import { unitPropertiesMap } from "shared/match-logic/buildable-unit";
-import { getDistance } from "shared/match-logic/positions";
+import { getDistance } from "shared/schemas/position";
 import type { Position } from "shared/schemas/position";
 import type { PlayerInMatchWrapper } from "./player-in-match";
 import type { TeamWrapper } from "./team";

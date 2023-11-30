@@ -10,7 +10,7 @@ import {
   positionsAreNeighbours,
 } from "shared/schemas/position";
 import type { UnitWrapper } from "../shared/wrappers/unit";
-import { getDistance } from "../shared/match-logic/positions";
+import { getDistance } from "shared/schemas/position";
 export type PathNode = {
   //saves distance from origin and parent (to retrieve the shortest path)
   pos: Position;

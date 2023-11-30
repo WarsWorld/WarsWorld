@@ -1,9 +1,9 @@
 import { DispatchableError } from "shared/DispatchedError";
 import type { AbilityAction } from "shared/schemas/action";
-import { allDirections } from "shared/schemas/direction";
+import { allDirections } from "shared/schemas/position";
 import type { MatchWrapper } from "shared/wrappers/match";
 import type { UnitWrapper } from "shared/wrappers/unit";
-import { addDirection } from "../../positions";
+import { addDirection } from "shared/schemas/position";
 import type { SubActionToEvent } from "../handler-types";
 
 /* TODO transfer property ownership on HQ capture */

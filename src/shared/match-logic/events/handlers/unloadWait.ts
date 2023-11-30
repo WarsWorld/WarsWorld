@@ -8,7 +8,7 @@ import type { UnitType } from "shared/schemas/unit";
 import type { UnloadWaitEvent } from "shared/types/events";
 import type { ChangeableTile } from "shared/types/server-match-state";
 import type { MatchWrapper } from "shared/wrappers/match";
-import { addDirection } from "../../positions";
+import { addDirection } from "shared/schemas/position";
 import type { SubActionToEvent } from "../handler-types";
 
 export function throwIfUnitCantBeUnloadedToTile(unit: { type: UnitType }, tile: Tile | ChangeableTile) {

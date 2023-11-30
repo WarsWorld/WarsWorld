@@ -6,7 +6,7 @@ import type { MatchWrapper } from "shared/wrappers/match";
 import type { Position } from "shared/schemas/position";
 import type { AttackEvent } from "shared/types/events";
 import type { SubActionToEvent } from "../handler-types";
-import { getDistance } from "../../positions";
+import { getDistance } from "shared/schemas/position";
 
 type Params = [
   ...Parameters<SubActionToEvent<AttackAction>>,
