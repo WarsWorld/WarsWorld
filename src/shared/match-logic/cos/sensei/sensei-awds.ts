@@ -1,5 +1,5 @@
 import type { COProperties } from "../../co";
-import { unitPropertiesMap } from "../../buildable-unit";
+import { applySenseiPowerSpawn } from "./apply-sensei-power-spawn";
 
 export const senseiAWDS: COProperties = {
   displayName: "Sensei",
@@ -30,29 +30,10 @@ export const senseiAWDS: COProperties = {
   powers: {
     COPower: {
       name: "Copter Command",
-      description: "B-Copters gain +20% firepower. Spwans 9 HP infantry units on top of unoccupied owned cities, ready to move.",
+      description: "B-Copters gain +20% firepower. Spawns 9 HP infantry units on top of unoccupied owned cities, ready to move.",
       stars: 2,
-      instantEffect({match, player}) {
-        for (let i = 0; i < match.map.width; ++i) {
-          for (let j = 0; j < match.map.height; ++j) {
-            const tile = match.getTile([i, j]);
-
-            if (tile.type === "city" && "ownerSlot" in tile) {
-              if (tile.ownerSlot === player.data.slot &&
-                match.units.getUnit([i, j]) === undefined) {
-                player.addUnwrappedUnit({
-                  type: "infantry",
-                  position: [i, j],
-                  isReady: true,
-                  stats: {
-                    hp: 9,
-                    fuel: unitPropertiesMap.infantry.initialFuel
-                  }
-                })
-              }
-            }
-          }
-        }
+      instantEffect({player}) {
+        applySenseiPowerSpawn(player, "infantry")
       },
       hooks: {
         attack: ( {attacker} ) => {
@@ -72,30 +53,10 @@ export const senseiAWDS: COProperties = {
     },
     superCOPower: {
       name: "Airborne Assault",
-      description: "B-Copters gain +20% firepower. Spwans 9 HP mech units on top of unoccupied owned cities, ready to move.",
+      description: "B-Copters gain +20% firepower. Spawns 9 HP mech units on top of unoccupied owned cities, ready to move.",
       stars: 2,
-      instantEffect({match, player}) {
-        for (let i = 0; i < match.map.width; ++i) {
-          for (let j = 0; j < match.map.height; ++j) {
-            const tile = match.getTile([i, j]);
-
-            if (tile.type === "city" && "ownerSlot" in tile) {
-              if (tile.ownerSlot === player.data.slot &&
-                match.units.getUnit([i, j]) === undefined) {
-                player.addUnwrappedUnit({
-                  type: "mech",
-                  position: [i, j],
-                  isReady: true,
-                  stats: {
-                    hp: 9,
-                    fuel: unitPropertiesMap.infantry.initialFuel,
-                    ammo: unitPropertiesMap.mech.initialAmmo
-                  }
-                })
-              }
-            }
-          }
-        }
+      instantEffect({player}) {
+        applySenseiPowerSpawn(player, "mech")
       },
       hooks: {
         attack: ( {attacker} ) => {
