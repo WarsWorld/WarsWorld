@@ -65,7 +65,7 @@ export class UnitWrapper {
     this.data.stats.hp = Math.max(1, this.data.stats.hp - damageAmount);
   }
 
-  //heal 1 visual hp = heal(10)
+  /** heal 1 visual hp = heal(10) */
   heal(preciseHealAmount: number) {
     if (this.data.stats === "hidden") {
       return;
