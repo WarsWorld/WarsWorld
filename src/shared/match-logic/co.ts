@@ -3,7 +3,7 @@ import type { MatchWrapper } from "shared/wrappers/match";
 import type { PlayerInMatchWrapper } from "shared/wrappers/player-in-match";
 import type { Hooks } from "./co-hooks";
 type InstantEffectProps = {
-  match: MatchWrapper;
+  match: MatchWrapper; // TODO remove match because it can be accessed through player
   player: PlayerInMatchWrapper;
 };
 
