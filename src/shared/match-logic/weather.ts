@@ -14,7 +14,7 @@ function getBaseChanceOfRainOrSnow(players: PlayersWrapper): number {
 
 function getChanceOfRain(players: PlayersWrapper) {
   const numberOfDrakes = players.data.filter(
-    (p) => p.data.co === "drake"
+    (p) => p.data.coId.name === "drake"
   ).length;
 
   return getBaseChanceOfRainOrSnow(players) + numberOfDrakes * 7;

@@ -21,7 +21,7 @@ export const coPowerActionToEvent: MainActionToEvent<COPowerAction> = (
     );
   }
 
-  const coProperties = getCOProperties(player.data.co);
+  const coProperties = getCOProperties(player.data.coId);
   const power = coProperties.powers[powerType];
 
   if (power === undefined) {
@@ -41,7 +41,7 @@ export const coPowerActionToEvent: MainActionToEvent<COPowerAction> = (
 
 export const applyCOPowerEvent = (match: MatchWrapper, event: COPowerEvent) => {
   const player = match.players.getCurrentTurnPlayer();
-  const COProperties = getCOProperties(player.data.co);
+  const COProperties = getCOProperties(player.data.coId);
   const powerType: keyof COProperties["powers"] = event.isSuper
     ? "superCOPower"
     : "COPower";

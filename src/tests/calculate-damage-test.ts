@@ -55,7 +55,10 @@ const map: WWMap = {
 const players: PlayerInMatch[] = [
   {
     army: "orange-star",
-    co: "andy",
+    coId: {
+      name: "andy",
+      version: "AW1"
+    },
     COPowerState: "no-power",
     funds: 0,
     id: "0",
@@ -66,7 +69,10 @@ const players: PlayerInMatch[] = [
   },
   {
     army: "blue-moon",
-    co: "andy",
+    coId: {
+      name: "andy",
+      version: "AW1"
+    },
     COPowerState: "no-power",
     funds: 0,
     id: "0",

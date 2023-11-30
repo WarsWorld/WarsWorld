@@ -56,8 +56,8 @@ export const calculateDamage = (
     terrainStarsDefenderHook?.(baseTerrainStars, hookProps) ?? baseTerrainStars;
 
   const isDualStrikeSonja =
-    attacker.player.data.co === "sonja" &&
-    attacker.player.data.coVersion === "AWDS";
+    attacker.player.data.coId.name === "sonja" &&
+    attacker.player.data.coId.version === "AWDS";
 
   const terrainStarsForDefense = Math.max(
     terrainStarsModifiedByDefender - (isDualStrikeSonja ? 1 : 0),

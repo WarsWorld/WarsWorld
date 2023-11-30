@@ -14,7 +14,7 @@ import type {
   WaitAction
 } from "shared/schemas/action";
 import type { Army } from "shared/schemas/army";
-import type { CO } from "shared/schemas/co";
+import type { COID } from "shared/schemas/co";
 import type {
   UnitWithHiddenStats,
   UnitWithVisibleStats
@@ -109,7 +109,7 @@ export type NonStoredEvent = WithPlayer &
       }
     | {
         type: "player-picked-co";
-        co: CO;
+        coId: COID;
       }
     | {
         type: "player-picked-army";

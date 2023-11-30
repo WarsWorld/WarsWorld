@@ -1,6 +1,6 @@
 import { matchStore } from "server/match-store";
 import { prisma } from "server/prisma/prisma-client";
-import { coSchema } from "shared/schemas/co";
+import { coIdSchema } from "shared/schemas/co";
 import { mapMiddleware, withMapIdSchema } from "server/trpc/middleware/map";
 import { playerBaseProcedure } from "server/trpc/trpc-setup";
 import type { PlayerInMatch } from "shared/types/server-match-state";
@@ -9,7 +9,7 @@ import { matchToFrontend } from "./util";
 export const createMatchProcedure = playerBaseProcedure
   .input(
     withMapIdSchema.extend({
-      selectedCO: coSchema,
+      selectedCO: coIdSchema,
     })
   )
   .use(mapMiddleware)
@@ -19,7 +19,7 @@ export const createMatchProcedure = playerBaseProcedure
         id: ctx.currentPlayer.id,
         ready: false,
         slot: 0,
-        co: input.selectedCO,
+        coId: input.selectedCO,
         funds: 0,
         powerMeter: 0,
         army: "orange-star",

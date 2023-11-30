@@ -1,8 +1,8 @@
 import type { COProperties } from "../../co";
 
-export const maxAW2: COProperties = {
+export const maxAWDS: COProperties = {
   displayName: "Max",
-  gameVersion: "AW2",
+  gameVersion: "AWDS",
   dayToDay: {
     description: "Non-footsoldier direct units have +20% firepower, but indirect units have -1 range.",
     hooks: {

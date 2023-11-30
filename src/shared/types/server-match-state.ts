@@ -1,6 +1,6 @@
 import type { Player } from "@prisma/client";
 import type { Army } from "shared/schemas/army";
-import type { CO } from "shared/schemas/co";
+import type { COID } from "shared/schemas/co";
 import type { PlayerSlot } from "shared/schemas/player-slot";
 import type { Position } from "shared/schemas/position";
 import type { PropertyTileType, UnusedSiloTileType } from "shared/schemas/tile";
@@ -30,7 +30,7 @@ export type PlayerInMatch = {
   hasCurrentTurn?: boolean;
   id: Player["id"];
   ready?: boolean;
-  co: CO;
+  coId: COID;
   eliminated?: boolean;
   funds: number;
   powerMeter: number;

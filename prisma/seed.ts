@@ -177,7 +177,10 @@ async function main() {
           hasCurrentTurn: true,
           id: devPlayers[0].id,
           ready: true,
-          co: "andy",
+          coId: {
+            name: "andy",
+            version: "AW2"
+          },
           eliminated: false,
           funds: 20000,
           powerMeter: 10000,
@@ -190,7 +193,10 @@ async function main() {
           hasCurrentTurn: false,
           id: devPlayers[1].id,
           ready: true,
-          co: "max",
+          coId: {
+            name: "max",
+            version: "AW2"
+          },
           eliminated: false,
           funds: 10000,
           powerMeter: 10000,

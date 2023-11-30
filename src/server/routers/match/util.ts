@@ -1,6 +1,6 @@
 import type { Player } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
-import type { CO } from "shared/schemas/co";
+import type { COID } from "shared/schemas/co";
 import type { MapWrapper } from "shared/wrappers/map";
 import type { MatchWrapper } from "shared/wrappers/match";
 import { PlayerInMatchWrapper } from "shared/wrappers/player-in-match";
@@ -56,7 +56,7 @@ export function getNextAvailableSlot(match: MatchWrapper) {
 export function joinMatchAndGetPlayer(
   player: Player,
   match: MatchWrapper,
-  co: CO
+  coId: COID
 ) {
   const slot = getNextAvailableSlot(match);
 
@@ -66,7 +66,7 @@ export function joinMatchAndGetPlayer(
         id: player.id,
         slot,
         ready: false,
-        co,
+        coId,
         funds: 0,
         timesPowerUsed: 0,
         powerMeter: 0,

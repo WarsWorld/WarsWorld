@@ -38,7 +38,7 @@ export default function MatchCard({ match, inMatch }: matchData) {
     playerIndex === 0 ? (secondPlayer = match.players[1]) : (secondPlayer = match.players[0]);
   }
 
-  const [playerCO, setPlayerCO] = useState(firstPlayer.co);
+  const [playerCO, setPlayerCO] = useState(firstPlayer.coId);
   const [army, setArmy] = useState(firstPlayer.army);
 
   const [ready, setReady] = useState(firstPlayer.ready);
@@ -69,7 +69,7 @@ export default function MatchCard({ match, inMatch }: matchData) {
       <div className="@grid @grid-cols-2 @gap-3">
         <MatchPlayer name={firstPlayer.id} co={playerCO} country={army} playerReady={ready} />
         {twoPlayerCheck ? (
-          <MatchPlayer name={secondPlayer.id} co={secondPlayer.co} country={secondPlayer.army} flipCO={true} playerReady={secondPlayer.ready} />
+          <MatchPlayer name={secondPlayer.id} co={secondPlayer.coId} country={secondPlayer.army} flipCO={true} playerReady={secondPlayer.ready} />
         ) : (
           <MatchPlayer
             name={"Opponent"}

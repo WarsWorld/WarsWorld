@@ -37,7 +37,7 @@ export const buildActionToEvent: MainActionToEvent<BuildAction> = (
 
   const hachiScopLandUnit =
     facility === "base" &&
-    player.data.co === "hachi" &&
+    player.data.coId.name === "hachi" &&
     player.data.COPowerState === "super-co-power";
 
   if (tile.type !== facility && !(hachiScopLandUnit && tile.type === "city")) {

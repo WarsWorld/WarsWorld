@@ -5,7 +5,7 @@ import { playerMatchIndex } from "server/player-match-index";
 import { prisma } from "server/prisma/prisma-client";
 import { createMatchStartEvent } from "shared/match-logic/events/handlers/match-start";
 import { armySchema } from "shared/schemas/army";
-import { coSchema } from "shared/schemas/co";
+import { coIdSchema } from "shared/schemas/co";
 import { z } from "zod";
 import {
   matchBaseProcedure,
@@ -52,7 +52,7 @@ export const matchRouter = router({
   join: matchBaseProcedure
     .input(
       z.object({
-        selectedCO: coSchema
+        selectedCO: coIdSchema
       })
     )
     .mutation(({ input, ctx: { currentPlayer, match } }) => {
@@ -149,17 +149,17 @@ export const matchRouter = router({
   switchCO: playerInMatchBaseProcedure
     .input(
       z.object({
-        selectedCO: coSchema
+        selectedCO: coIdSchema
       })
     )
     .mutation(({ input, ctx }) => {
       throwIfMatchNotInSetupState(ctx.match);
 
-      ctx.playerInMatch.data.co = input.selectedCO;
+      ctx.playerInMatch.data.coId = input.selectedCO;
 
       emit({
         type: "player-picked-co",
-        co: input.selectedCO,
+        coId: input.selectedCO,
         matchId: ctx.match.id,
         playerId: ctx.currentPlayer.id
       });

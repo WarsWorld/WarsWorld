@@ -45,7 +45,7 @@ export class PlayerInMatchWrapper {
   }
 
   getHook<HookType extends keyof Hooks>(hookType: HookType) {
-    const COProperties = getCOProperties(this.data.co);
+    const COProperties = getCOProperties(this.data.coId);
 
     switch (this.data.COPowerState) {
       case "no-power":
@@ -114,7 +114,7 @@ export class PlayerInMatchWrapper {
         }
 
         const activeSonjaPower =
-          this.data.co === "sonja" && this.data.COPowerState !== "no-power";
+          this.data.coId.name === "sonja" && this.data.COPowerState !== "no-power";
 
         if (isHiddenTile(tile) && !activeSonjaPower) {
           return enemy.getNeighbouringUnits().some((unit) => this.owns(unit));
@@ -123,7 +123,7 @@ export class PlayerInMatchWrapper {
         return vision.isPositionVisible(enemy.data.position);
       })
       .map<UnitWithVisibleStats | UnitWithHiddenStats>((visibleEnemyUnit) => {
-        if (visibleEnemyUnit.player.data.co === "sonja") {
+        if (visibleEnemyUnit.player.data.coId.name === "sonja") {
           const hiddenUnit: UnitWithHiddenStats = {
             ...visibleEnemyUnit.data,
             stats: "hidden"
@@ -156,7 +156,7 @@ export class PlayerInMatchWrapper {
 
     let { fundsPerProperty } = this.match.rules;
 
-    if (this.data.co === "sasha") {
+    if (this.data.coId.name === "sasha") {
       fundsPerProperty += 100;
     }
 
@@ -168,7 +168,7 @@ export class PlayerInMatchWrapper {
   }
 
   getMaxPowerMeter() {
-    const COPowers = getCOProperties(this.data.co).powers;
+    const COPowers = getCOProperties(this.data.coId).powers;
 
     if (COPowers.superCOPower !== undefined) {
       return COPowers.superCOPower.stars * this.getPowerStarCost();
@@ -209,7 +209,7 @@ export class PlayerInMatchWrapper {
   getWeatherSpecialMovement(): Weather {
     const weather = this.match.currentWeather;
 
-    switch (this.data.co) {
+    switch (this.data.coId.name) {
       case "drake": {
         if (weather === "rain") {
           return "clear";

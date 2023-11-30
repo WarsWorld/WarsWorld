@@ -1,13 +1,22 @@
-import type { CO } from "shared/schemas/co";
+import type { CO, COID } from "shared/schemas/co";
 import type { MatchWrapper } from "shared/wrappers/match";
 import type { PlayerInMatchWrapper } from "shared/wrappers/player-in-match";
 import type { Hooks } from "./co-hooks";
+import { andyAW1 } from "./cos/andy/andy-aw1";
+import { andyAW2 } from "./cos/andy/andy-aw2";
+import { andyAWDS } from "./cos/andy/andy-awds";
+import { maxAW1 } from "./cos/max/max-aw1";
+import { maxAW2 } from "./cos/max/max-aw2";
+import { maxAWDS } from "./cos/max/max-awds";
+import { samiAW1 } from "./cos/sami/sami-aw1";
+import { samiAW2 } from "./cos/sami/sami-aw2";
+import { samiAWDS } from "./cos/sami/sami-awds";
+import type { GameVersion } from "shared/schemas/game-version";
+
 type InstantEffectProps = {
   match: MatchWrapper; // TODO remove match because it can be accessed through player
   player: PlayerInMatchWrapper;
 };
-
-const GameVersions = ["AW1", "AW2", "AWDS"] as const;
 
 type COPower = {
   name: string;
@@ -20,7 +29,7 @@ type COPower = {
 // TODO general CO description, likes, dislikes, etc.
 export type COProperties = {
   displayName: string;
-  gameVersion: typeof GameVersions[number];
+  gameVersion: GameVersion;
   dayToDay?: {
     description: string;
     hooks: Partial<Hooks>;
@@ -31,23 +40,40 @@ export type COProperties = {
   };
 };
 
-const COPropertiesMap = {
-  /*andy,
-  drake,
-  eagle,
-  grit,
-  hawke,
-  javier,
-  lash,
-  colin*/
-} satisfies Partial<Record<CO, COProperties>>;
+// we're using this index instead of just using a big array
+// and calling .find on it every time getCOProperties is called
+// because that function get called very often.
 
-export function getCOProperties(co: CO): COProperties {
-  if (co in COPropertiesMap) {
-    return COPropertiesMap[co as keyof typeof COPropertiesMap];
+const COIndex: Record<GameVersion, Map<CO, COProperties>> = {
+  AW1: new Map<CO, COProperties>([
+    ["andy", andyAW1], // TODO obviously
+    ["sami", samiAW1],
+    ["max", maxAW1]
+  ]),
+  AW2: new Map<CO, COProperties>([
+    ["andy", andyAW2],
+    ["sami", samiAW2],
+    ["max", maxAW2]
+  ]),
+  AWDS: new Map<CO, COProperties>([
+    ["andy", andyAWDS],
+    ["sami", samiAWDS],
+    ["max", maxAWDS]
+  ])
+};
+
+export function getCOProperties(id: COID): COProperties {
+  const map = COIndex[id.version];
+
+  const coProps = map.get(id.name);
+
+  if (coProps === undefined) {
+    throw new Error(
+      `CO ${JSON.stringify(
+        id
+      )} is not in the COIndex. (e.g. not implemented/added)`
+    );
   }
 
-  throw new Error(
-    `CO ${co} is not in the COPropertiesMap. (e.g. not implemented)`
-  );
+  return coProps;
 }

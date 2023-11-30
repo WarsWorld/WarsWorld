@@ -289,7 +289,7 @@ const Match = ({ spriteData }: Props) => {
         {players ? (
           <MatchPlayer
             name={players[0].id}
-            co={players[0].co}
+            co={players[0].coId.name}
             country={players[0].army}
             playerReady={true}
           />
@@ -310,7 +310,7 @@ const Match = ({ spriteData }: Props) => {
         {players ? (
           <MatchPlayer
             name={players[1].id}
-            co={players[1].co}
+            co={players[1].coId.name}
             country={players[1].army}
             playerReady={true}
             flipCO={true}
