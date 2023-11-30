@@ -9,7 +9,7 @@ export const lashAW2: COProperties = {
     hooks: {
       attack({ attacker }) {
         if (attacker.properties().facility !== "airport") {
-          const terrainStars = getTerrainDefenseStars(attacker.getTileOrThrow().type);
+          const terrainStars = getTerrainDefenseStars(attacker.getTile().type);
           return 100 + 10*terrainStars;
         }
       }

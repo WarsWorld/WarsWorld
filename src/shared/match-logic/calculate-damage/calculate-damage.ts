@@ -48,7 +48,7 @@ export const calculateDamage = (
 
   // 0-4 (+ lash COP) whole numbers
   const baseTerrainStars = getTerrainDefenseStars(
-    defender.getTileOrThrow().type
+    defender.getTile().type
   );
 
   const terrainStarsDefenderHook = defender.player.getHook("terrainStars");

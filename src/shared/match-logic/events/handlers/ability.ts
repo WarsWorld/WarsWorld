@@ -63,7 +63,7 @@ export const applyAbilityEvent = (match: MatchWrapper, unit: UnitWrapper) => {
       if (unit.data.currentCapturePoints <= 0) {
         unit.data.currentCapturePoints = undefined;
 
-        const tile = unit.getTileOrThrow();
+        const tile = unit.getTile();
 
         if (!("playerSlot" in tile)) {
           throw new Error(

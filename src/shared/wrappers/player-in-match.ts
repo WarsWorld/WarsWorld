@@ -107,7 +107,7 @@ export class PlayerInMatchWrapper {
           return true;
         }
 
-        const tile = enemy.getTileOrThrow();
+        const tile = enemy.getTile();
 
         if ("ownerSlot" in tile && this.owns(tile)) {
           return true;

@@ -230,7 +230,7 @@ export const applyMoveEvent = (match: MatchWrapper, event: MoveEvent) => {
 
   //if unit was capturing, interrupt capture
   if ("currentCapturePoints" in unit) {
-    const tile = unit.getTileOrThrow();
+    const tile = unit.getTile();
 
     if ("captureHP" in tile) {
       tile.captureHP = 20;

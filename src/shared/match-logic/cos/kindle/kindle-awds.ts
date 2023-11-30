@@ -7,7 +7,7 @@ export const kindleAWDS: COProperties = {
     description: "Units have +40% firepower on top of properties (air units included).",
     hooks: {
       attack: ( {attacker} ) => {
-        if ("ownerSlot" in attacker.getTileOrThrow()) {
+        if ("ownerSlot" in attacker.getTile()) {
           return 140;
         }
       }
@@ -20,14 +20,14 @@ export const kindleAWDS: COProperties = {
       stars: 3,
       instantEffect( {player} ) {
         for (const unit of player.getEnemyUnits().data) {
-          if ("ownerSlot" in unit.getTileOrThrow()) {
+          if ("ownerSlot" in unit.getTile()) {
             unit.damageUntil1HP(3);
           }
         }
       },
       hooks: {
         attack: ( {attacker} ) => {
-          if ("ownerSlot" in attacker.getTileOrThrow()) {
+          if ("ownerSlot" in attacker.getTile()) {
             return 180;
           }
         }
@@ -48,7 +48,7 @@ export const kindleAWDS: COProperties = {
             }
           }
 
-          if (attacker.getTileOrThrow().type === "city") {
+          if (attacker.getTile().type === "city") {
             return 220 + bonusFirepower;
           }
           else {

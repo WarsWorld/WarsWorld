@@ -51,7 +51,7 @@ export const applyPassTurnEvent = (
   nextTurnPlayer.gainFunds();
 
   for (const unit of nextTurnPlayer.getUnits().data) {
-    const tile = unit.getTileOrThrow();
+    const tile = unit.getTile();
 
     // TODO if is property and is owned by us then repair with special effects
     // i think kindle repairs 3HP or something?

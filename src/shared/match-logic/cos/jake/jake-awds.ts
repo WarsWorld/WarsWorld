@@ -8,7 +8,7 @@ export const jakeAWDS: COProperties = {
       "Units have +10% firepower on top of plains (air units included).",
     hooks: {
       attack: ({ attacker }) => {
-        if (attacker.getTileOrThrow().type === "plain") {
+        if (attacker.getTile().type === "plain") {
           return 110;
         }
       }
@@ -22,7 +22,7 @@ export const jakeAWDS: COProperties = {
       stars: 3,
       hooks: {
         attack: ({ attacker }) => {
-          if (attacker.getTileOrThrow().type === "plain") {
+          if (attacker.getTile().type === "plain") {
             return 120;
           }
         },
@@ -43,7 +43,7 @@ export const jakeAWDS: COProperties = {
       stars: 6,
       hooks: {
         attack: ({ attacker }) => {
-          if (attacker.getTileOrThrow().type === "plain") {
+          if (attacker.getTile().type === "plain") {
             return 140;
           }
         },

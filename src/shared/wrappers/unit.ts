@@ -98,9 +98,7 @@ export class UnitWrapper {
     );
   }
 
-  // TODO rename to `getTile`, the `OrThrow` suffix is from old code
-  // that had versions with and without throwing. `tile` is now never undefined.
-  getTileOrThrow() {
+  getTile() {
     const tile = this.match.getTile(this.data.position);
 
     if (tile === undefined) {
@@ -167,7 +165,7 @@ export class UnitWrapper {
       isSamePosition(u.data.position, this.data.position)
     );
 
-    const tile = this.getTileOrThrow();
+    const tile = this.getTile();
 
     // TODO remove this and if applicable modify current CapturableTile HP
     if ("captureHP" in tile) {

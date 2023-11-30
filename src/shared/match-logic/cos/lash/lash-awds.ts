@@ -11,7 +11,7 @@ export const lashAWDS: COProperties = {
     hooks: {
       attack({ attacker }) {
         if (attacker.properties().facility !== "airport") {
-          const terrainStars = getTerrainDefenseStars(attacker.getTileOrThrow().type);
+          const terrainStars = getTerrainDefenseStars(attacker.getTile().type);
           return 100 + 5*terrainStars;
         }
       }

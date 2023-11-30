@@ -7,7 +7,7 @@ export const koalAWDS: COProperties = {
     description: "Units have +10% firepower on top of roads (air units included).",
     hooks: {
       attack: ( {attacker} ) => {
-        if (attacker.getTileOrThrow().type === "road") {
+        if (attacker.getTile().type === "road") {
           return 110;
         }
       },
@@ -20,7 +20,7 @@ export const koalAWDS: COProperties = {
       stars: 3,
       hooks: {
         attack: ( {attacker} ) => {
-          if (attacker.getTileOrThrow().type === "road") {
+          if (attacker.getTile().type === "road") {
             return 120;
           }
         },
@@ -33,7 +33,7 @@ export const koalAWDS: COProperties = {
       stars: 5,
       hooks: {
         attack: ( {attacker} ) => {
-          if (attacker.getTileOrThrow().type === "road") {
+          if (attacker.getTile().type === "road") {
             return 130;
           }
         },
