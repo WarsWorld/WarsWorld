@@ -33,6 +33,7 @@ export const sturmAW2: COProperties = {
           epicenter: getBestPositionMeteor(match, player)
         });
       },
+      calculatePositions: (player) => [getBestPositionMeteor(player)],
       hooks: {
         attack: () => 140,
         defense: () => 140

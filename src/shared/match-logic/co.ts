@@ -12,6 +12,7 @@ import { samiAW1 } from "./cos/sami/sami-aw1";
 import { samiAW2 } from "./cos/sami/sami-aw2";
 import { samiAWDS } from "./cos/sami/sami-awds";
 import type { GameVersion } from "shared/schemas/game-version";
+import type { Position } from "shared/schemas/position";
 
 type InstantEffectProps = {
   match: MatchWrapper; // TODO remove match because it can be accessed through player
@@ -22,7 +23,8 @@ type COPower = {
   name: string;
   description: string;
   stars: number; //Stars are 9k value for AW2 and AWDS, 10k value for AW1
-  instantEffect?: (props: InstantEffectProps) => void;
+  instantEffect?: (props: InstantEffectProps) => void; // TODO add positions from calculatePositions from event
+  calculatePositions?: (player: PlayerInMatchWrapper) => Position[];
   hooks?: Partial<Hooks>;
 };
 
