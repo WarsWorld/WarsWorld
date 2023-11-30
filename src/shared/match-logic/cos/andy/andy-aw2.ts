@@ -14,7 +14,7 @@ export const andyAW2: COProperties = {
         player.getUnits().data.forEach((u) => u.heal(50));
       },
       hooks: {
-        movementRange: (value) => value + 1,
+        movementPoints: (value) => value + 1,
         attack: () => 120
       }
     }

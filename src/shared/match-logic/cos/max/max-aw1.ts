@@ -33,7 +33,7 @@ export const maxAW1: COProperties = {
       description: "Non-footsoldier direct units (and transport units) gain 1 movement and +20% firepower.",
       stars: 3,
       hooks: {
-        movementRange: (value, unit) => {
+        movementPoints: (value, unit) => {
           if (!unit.isIndirect() && unit.data.type !== "infantry" && unit.data.type !== "mech") {
             return value + 1;
           }

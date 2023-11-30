@@ -29,7 +29,7 @@ export const sturmAW1Versus: COProperties = { // TODO make a way to differenciat
         });
       },
       hooks: {
-        movementRange: (value) => value + 1,
+        movementPoints: (value) => value + 1,
         attack: () => 110
       }
     }

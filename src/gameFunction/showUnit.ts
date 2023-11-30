@@ -105,7 +105,7 @@ export function showUnits(
             mapData,
             enemyUnits,
             "clear", //!
-            unitPropertiesMap[unit.type].moveRange,
+            unitPropertiesMap[unit.type].movementPoints,
             unitPropertiesMap[unit.type].movementType,
             unit.position[0],
             unit.position[1]
@@ -114,7 +114,7 @@ export function showUnits(
             mapData,
             enemyUnits,
             "clear", //!,
-            unitPropertiesMap[unit.type].moveRange,
+            unitPropertiesMap[unit.type].movementPoints,
             unitPropertiesMap[unit.type].movementType,
             unit.position[0],
             unit.position[1],
@@ -164,7 +164,7 @@ export function showUnits(
               path = updatePath(
                 mapData,
                 "clear",
-                unitPropertiesMap[unit.type].moveRange,
+                unitPropertiesMap[unit.type].movementPoints,
                 unitPropertiesMap[unit.type].movementType,
                 accessibleNodes,
                 path,

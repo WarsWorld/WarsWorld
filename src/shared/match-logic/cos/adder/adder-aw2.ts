@@ -9,7 +9,7 @@ export const adderAW2: COProperties = {
       description: "All units gain 1 movement.",
       stars: 2,
       hooks: {
-        movementRange: (value) => value + 1,
+        movementPoints: (value) => value + 1,
       },
     },
     superCOPower: {
@@ -17,7 +17,7 @@ export const adderAW2: COProperties = {
       description: "All units gain 2 movement.",
       stars: 5,
       hooks: {
-        movementRange: (value) => value + 2,
+        movementPoints: (value) => value + 2,
       },
     },
   },

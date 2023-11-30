@@ -27,9 +27,9 @@ export const samiAWDS: COProperties = {
       description: "Footsoldiers gain 1 movement and +30% firepower.",
       stars: 3,
       hooks: {
-        movementRange: (range, unit) => {
+        movementPoints: (points, unit) => {
           if (unit.isInfantryOrMech()) {
-            return range + 1;
+            return points + 1;
           }
         },
         attack: ({ attacker }) => {
@@ -49,9 +49,9 @@ export const samiAWDS: COProperties = {
       stars: 8,
       hooks: {
         //TODO again, i think this is handled in a capture edge case somewhere else
-        movementRange: (range, unit) => {
+        movementPoints: (points, unit) => {
           if (unit.isInfantryOrMech()) {
-            return range + 2;
+            return points + 2;
           }
         },
         attack: ({ attacker }) => {

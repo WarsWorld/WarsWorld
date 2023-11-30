@@ -4,12 +4,12 @@ export const samiAW2: COProperties = {
   displayName: "Sami",
   gameVersion: "AW2",
   dayToDay: {
-    description: "Footsoldiers have +30% firepower and capture at 1.5 times the normal rate (rounded down). Transport units have +1 movement range. Other direct units have -10% firepower.",
+    description: "Footsoldiers have +30% firepower and capture at 1.5 times the normal rate (rounded down). Transport units have +1 movement point. Other direct units have -10% firepower.",
     hooks: {
       // TODO if i remember correctly capture is an edge case handled somewhere else
-      movementRange: (range, unit) => {
+      movementPoints: (points, unit) => {
         if ("loadedUnit" in unit.properties()) { // if it's a transport
-          return range + 1;
+          return points + 1;
         }
       },
       attack: ({ attacker }) => {
@@ -29,13 +29,13 @@ export const samiAW2: COProperties = {
       description: "Footsoldiers gain 1 movement and +20% firepower.",
       stars: 3,
       hooks: {
-        movementRange: (range, unit) => {
+        movementPoints: (points, unit) => {
           if ("loadedUnit" in unit.properties()) { // if it's a transport
-            return range + 1;
+            return points + 1;
           }
 
           if (unit.isInfantryOrMech()){
-            return range + 1;
+            return points + 1;
           }
         },
         attack: ({ attacker }) => {
@@ -55,13 +55,13 @@ export const samiAW2: COProperties = {
       stars: 8,
       hooks: {
         //TODO again, i think this is handled in a capture edge case somewhere else
-        movementRange: (range, unit) => {
+        movementPoints: (points, unit) => {
           if ("loadedUnit" in unit.properties()) { // if it's a transport
-            return range + 1;
+            return points + 1;
           }
 
           if (unit.isInfantryOrMech()){
-            return range + 2;
+            return points + 2;
           }
         },
         attack: ({ attacker }) => {

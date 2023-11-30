@@ -148,7 +148,7 @@ export function showPassableTiles(
       mapData,
       enemyUnits,
       "clear", //!
-      unitProperties.moveRange,
+      unitProperties.movementPoints,
       unitProperties.movementType,
       unit.position[0],
       unit.position[1]
@@ -266,7 +266,7 @@ export function showAttackableTiles(
       mapData,
       enemyUnits,
       "clear", //!
-      unitProperties.moveRange,
+      unitProperties.movementPoints,
       unitProperties.movementType,
       unit.position[0],
       unit.position[1]

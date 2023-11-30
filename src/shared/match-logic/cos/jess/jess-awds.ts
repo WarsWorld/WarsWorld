@@ -43,13 +43,13 @@ export const jessAWDS: COProperties = {
             return 90;
           }
         },
-        movementRange: (range, unit) => {
+        movementPoints: (points, unit) => {
           if (
             unit.properties().facility === "base" &&
             unit.data.type !== "infantry" &&
             unit.data.type !== "mech"
           ) {
-            return range + 1;
+            return points + 1;
           }
         }
       }
@@ -75,13 +75,13 @@ export const jessAWDS: COProperties = {
             return 90;
           }
         },
-        movementRange: (range, unit) => {
+        movementPoints: (points, unit) => {
           if (
             unit.properties().facility === "base" &&
             unit.data.type !== "infantry" &&
             unit.data.type !== "mech"
           ) {
-            return range + 2;
+            return points + 2;
           }
         }
       }

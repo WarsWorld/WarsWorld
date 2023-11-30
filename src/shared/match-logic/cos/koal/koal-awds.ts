@@ -24,7 +24,7 @@ export const koalAWDS: COProperties = {
             return 120;
           }
         },
-        movementRange: (range) => range + 1
+        movementPoints: (points) => points + 1
       }
     },
     superCOPower: {
@@ -37,7 +37,7 @@ export const koalAWDS: COProperties = {
             return 130;
           }
         },
-        movementRange: (range) => range + 2
+        movementPoints: (points) => points + 2
       }
     }
   }

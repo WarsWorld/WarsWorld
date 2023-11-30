@@ -112,10 +112,10 @@ export class UnitWrapper {
 
   /** TODO checking fuel twice? */
   getMovementPoints() {
-    const { moveRange, initialFuel } = this.properties2;
+    const { movementPoints, initialFuel } = this.properties2;
 
-    const movementRangeHook = this.player.getHook("movementRange");
-    const modifiedMovement = movementRangeHook?.(moveRange, this) ?? moveRange;
+    const movementPointsHook = this.player.getHook("movementPoints");
+    const modifiedMovement = movementPointsHook?.(movementPoints, this) ?? movementPoints;
 
     const fuel =
       this.data.stats === "hidden" ? initialFuel : this.data.stats.fuel;

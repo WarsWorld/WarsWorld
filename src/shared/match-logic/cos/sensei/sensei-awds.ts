@@ -20,7 +20,7 @@ export const senseiAWDS: COProperties = {
           return 90;
         }
       },
-      movementRange: (value, unit) => {
+      movementPoints: (value, unit) => {
         if ("loadedUnit" in unit.properties()) { //if it's a transport unit
           return value + 1;
         }

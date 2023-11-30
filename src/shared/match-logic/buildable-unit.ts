@@ -36,7 +36,7 @@ type UnitPropertiesWithoutWeapon = {
   cost: number;
   facility: Facility;
   movementType: MovementType;
-  moveRange: number;
+  movementPoints: number;
   initialFuel: number;
   vision: number;
 };
@@ -62,7 +62,7 @@ const infantry: UnitPropertiesWithoutAmmo = {
   cost: 1000,
   facility: "base",
   movementType: "foot",
-  moveRange: 3,
+  movementPoints: 3,
   initialFuel: 99,
   vision: 2,
   attackRange: directRange
@@ -72,7 +72,7 @@ const mech: UnitPropertiesWithAmmo = {
   cost: 3000,
   facility: "base",
   movementType: "boots",
-  moveRange: 2,
+  movementPoints: 2,
   initialFuel: 70,
   vision: 2,
   initialAmmo: 3,
@@ -86,13 +86,13 @@ const recon: UnitPropertiesWithoutAmmo = {
   initialFuel: 80,
   attackRange: directRange,
   movementType: "tires",
-  moveRange: 8
+  movementPoints: 8
 };
 
 const apc: UnitPropertiesWithoutWeapon = {
   cost: 5000,
   facility: "base",
-  moveRange: 5,
+  movementPoints: 5,
   vision: 1,
   initialFuel: 70,
   movementType: "treads"
@@ -106,13 +106,13 @@ const artillery: UnitPropertiesWithAmmo = {
   attackRange: [2, 3],
   initialAmmo: 9,
   movementType: "treads",
-  moveRange: 5
+  movementPoints: 5
 };
 
 const tank: UnitPropertiesWithAmmo = {
   cost: 7000,
   facility: "base",
-  moveRange: 6,
+  movementPoints: 6,
   vision: 3,
   initialAmmo: 9,
   attackRange: directRange,
@@ -127,7 +127,7 @@ const antiAir: UnitPropertiesWithAmmo = {
   initialFuel: 60,
   movementType: "treads",
   attackRange: directRange,
-  moveRange: 6,
+  movementPoints: 6,
   initialAmmo: 9
 };
 
@@ -135,7 +135,7 @@ const missile: UnitPropertiesWithAmmo = {
   cost: 12000,
   facility: "base",
   movementType: "tires",
-  moveRange: 4,
+  movementPoints: 4,
   initialAmmo: 6,
   attackRange: [3, 5],
   vision: 5,
@@ -147,7 +147,7 @@ const rocket: UnitPropertiesWithAmmo = {
   facility: "base",
   movementType: "tires",
   attackRange: [3, 5],
-  moveRange: 5,
+  movementPoints: 5,
   initialAmmo: 6,
   vision: 1,
   initialFuel: 50
@@ -157,7 +157,7 @@ const mediumTank: UnitPropertiesWithAmmo = {
   cost: 16000,
   facility: "base",
   vision: 1,
-  moveRange: 5,
+  movementPoints: 5,
   initialFuel: 50,
   initialAmmo: 8,
   movementType: "treads",
@@ -169,7 +169,7 @@ const pipeRunner: UnitPropertiesWithAmmo = {
   facility: "base",
   attackRange: [2, 5],
   movementType: "pipe",
-  moveRange: 9,
+  movementPoints: 9,
   vision: 4,
   initialAmmo: 9,
   initialFuel: 99
@@ -179,7 +179,7 @@ const neoTank: UnitPropertiesWithAmmo = {
   cost: 22000,
   facility: "base",
   initialAmmo: 9,
-  moveRange: 6,
+  movementPoints: 6,
   vision: 1,
   initialFuel: 99,
   movementType: "treads",
@@ -191,7 +191,7 @@ const megaTank: UnitPropertiesWithAmmo = {
   facility: "base",
   initialAmmo: 3,
   vision: 1,
-  moveRange: 4,
+  movementPoints: 4,
   initialFuel: 50,
   movementType: "treads",
   attackRange: directRange
@@ -199,7 +199,7 @@ const megaTank: UnitPropertiesWithAmmo = {
 
 const transportCopter: UnitPropertiesWithoutWeapon = {
   cost: 5000,
-  moveRange: 6,
+  movementPoints: 6,
   vision: 2,
   facility: "airport",
   movementType: "air",
@@ -212,7 +212,7 @@ const battleCopter: UnitPropertiesWithAmmo = {
   initialFuel: 99,
   facility: "airport",
   movementType: "air",
-  moveRange: 9000,
+  movementPoints: 9000,
   initialAmmo: 6,
   attackRange: directRange
 };
@@ -223,7 +223,7 @@ const fighter: UnitPropertiesWithAmmo = {
   initialFuel: 99,
   movementType: "air",
   facility: "airport",
-  moveRange: 9,
+  movementPoints: 9,
   initialAmmo: 9,
   attackRange: directRange
 };
@@ -234,7 +234,7 @@ const bomber: UnitPropertiesWithAmmo = {
   initialAmmo: 9,
   movementType: "air",
   facility: "airport",
-  moveRange: 7,
+  movementPoints: 7,
   initialFuel: 99,
   attackRange: directRange
 };
@@ -243,7 +243,7 @@ const stealth: UnitPropertiesWithAmmo = {
   cost: 24000,
   vision: 4,
   initialFuel: 60,
-  moveRange: 6,
+  movementPoints: 6,
   movementType: "air",
   facility: "airport",
   initialAmmo: 6,
@@ -253,7 +253,7 @@ const stealth: UnitPropertiesWithAmmo = {
 const blackBomb: UnitPropertiesWithoutWeapon = {
   cost: 25000,
   vision: 1,
-  moveRange: 9,
+  movementPoints: 9,
   // TODO: Black Bombs do not attack.ts other units
   // and instead have an "Explode" command
   movementType: "air",
@@ -264,7 +264,7 @@ const blackBomb: UnitPropertiesWithoutWeapon = {
 const blackBoat: UnitPropertiesWithoutWeapon = {
   cost: 7500,
   vision: 1,
-  moveRange: 7,
+  movementPoints: 7,
   movementType: "lander",
   facility: "port",
   initialFuel: 60
@@ -275,14 +275,14 @@ const lander: UnitPropertiesWithoutWeapon = {
   vision: 1,
   movementType: "lander",
   facility: "port",
-  moveRange: 6,
+  movementPoints: 6,
   initialFuel: 99
 };
 
 const cruiser: UnitPropertiesWithAmmo = {
   cost: 18000,
   vision: 3,
-  moveRange: 6,
+  movementPoints: 6,
   movementType: "sea",
   facility: "port",
   initialAmmo: 9,
@@ -293,7 +293,7 @@ const cruiser: UnitPropertiesWithAmmo = {
 const sub: UnitPropertiesWithAmmo = {
   cost: 20000,
   vision: 5,
-  moveRange: 5,
+  movementPoints: 5,
   facility: "port",
   movementType: "sea",
   initialAmmo: 6,
@@ -306,7 +306,7 @@ const battleship: UnitPropertiesWithAmmo = {
   attackRange: [2, 6],
   vision: 2,
   movementType: "sea",
-  moveRange: 5,
+  movementPoints: 5,
   facility: "port",
   initialAmmo: 9,
   initialFuel: 99
@@ -318,7 +318,7 @@ const carrier: UnitPropertiesWithAmmo = {
   vision: 4,
   movementType: "sea",
   facility: "port",
-  moveRange: 5,
+  movementPoints: 5,
   initialAmmo: 9,
   initialFuel: 99
 };

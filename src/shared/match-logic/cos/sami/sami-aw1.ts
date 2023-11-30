@@ -4,12 +4,12 @@ export const samiAW1: COProperties = {
   displayName: "Sami",
   gameVersion: "AW1",
   dayToDay: {
-    description: "Footsoldiers have +20% firepower and +10% defense, and capture at 1.5 times the normal rate (rounded down). Transport units have +1 movement range. Other direct units have -10% firepower.",
+    description: "Footsoldiers have +20% firepower and +10% defense, and capture at 1.5 times the normal rate (rounded down). Transport units have +1 movement point. Other direct units have -10% firepower.",
     hooks: {
       // TODO if i remember correctly capture is an edge case handled somewhere else
-      movementRange: (range, unit) => {
+      movementPoints: (points, unit) => {
         if ("loadedUnit" in unit.properties()) { //if it's a transport
-          return range + 1;
+          return points + 1;
         }
       },
       attack: ({ attacker }) => {
@@ -34,13 +34,13 @@ export const samiAW1: COProperties = {
       description: "Footsoldiers gain 1 movement, 20% firepower and 10% defense, and all terrain cost is reduced to 1 (only for footsoldiers).",
       stars: 2.5, //xdd
       hooks: {
-        movementRange: (range, unit) => {
+        movementPoints: (points, unit) => {
           if ("loadedUnit" in unit.properties()) { //if it's a transport
-            return range + 1;
+            return points + 1;
           }
 
           if (unit.isInfantryOrMech()){
-            return range + 1;
+            return points + 1;
           }
         },
         movementCost: (_value, {unitType}) => {

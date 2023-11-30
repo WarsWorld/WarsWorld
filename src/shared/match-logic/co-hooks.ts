@@ -12,7 +12,7 @@ export type Hooks = {
     baseMovementCost: number,
     props: { match: MatchWrapper; unitType: UnitType }
   ) => ReturnValue;
-  movementRange: (baseMovementRange: number, unit: UnitWrapper) => ReturnValue;
+  movementPoints: (baseMovementPoints: number, unit: UnitWrapper) => ReturnValue;
   vision: (baseVisionRange: number, unit: UnitWrapper) => ReturnValue;
 
   terrainStars: (
