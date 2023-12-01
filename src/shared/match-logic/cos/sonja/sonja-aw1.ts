@@ -6,7 +6,7 @@ export const sonjaAW1: COProperties = {
   dayToDay: {
     description: "Units have 1 additional vision range (during FOW), their stats are hidden to the enemies, and have 25% good luck (instead of 10%) and 15% bad luck (instead of 0%).",
     hooks: {
-      // TODO hidden stats special case
+      // hidden stats is a special case
       maxGoodLuck: () => 25,
       maxBadLuck: () => 15,
       vision: (value) => value + 1
@@ -18,7 +18,7 @@ export const sonjaAW1: COProperties = {
       description: "Units gain +2 additional vision range (for a total of +3), and all woods and reefs inside vision range are revealed.",
       stars: 3,
       hooks: {
-        // TODO woods and reefs
+        // woods and reefs handled in vision wrapper
         vision: (value) => value + 3
       }
     }

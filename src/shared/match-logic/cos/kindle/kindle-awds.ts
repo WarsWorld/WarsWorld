@@ -18,7 +18,7 @@ export const kindleAWDS: COProperties = {
       name: "Urban Blight",
       description: "Units gain +40% more firepower on top of properties. Enemy units on top of a property lose 3 HP.",
       stars: 3,
-      instantEffect( {player} ) {
+      instantEffect(player) {
         for (const unit of player.team.getEnemyUnits()) {
           if ("ownerSlot" in unit.getTile()) {
             unit.damageUntil1HP(3);
@@ -39,7 +39,6 @@ export const kindleAWDS: COProperties = {
       stars: 6,
       hooks: {
         attack: ( {attacker} ) => {
-          // TODO is this correct? Move this logic somewhere else?
           let bonusFirepower = 0;
 
           for (const tile of attacker.match.changeableTiles) {

@@ -1,7 +1,7 @@
 import type { COProperties } from "../../co";
-import { getBestPositionMeteor } from "./sturm-aw1-campaign";
+import { getRandomMeteorPosition } from "./get-meteor-position";
 
-export const sturmAW1Versus: COProperties = { // TODO make a way to differenciate between the 2 versions?
+export const sturmAW1Versus: COProperties = {
   displayName: "Sturm (Versus)",
   gameVersion: "AW1",
   dayToDay: {
@@ -17,20 +17,21 @@ export const sturmAW1Versus: COProperties = { // TODO make a way to differenciat
     }
   },
   powers: {
-    COPower: { // TODO idk if the firepower thing is accurate
+    COPower: {
       name: "Meteor Strike",
       description: "Deals 4 HP of damage to all units at a distance less or equal than 2 from the chosen position, centered on a unit. The meteor prioritises the most unit value in damages (allied units are dealt damage as well, and contribute negatively to the unit value calculation).",
       stars: 5,
-      instantEffect( {match, player} ) {
-        match.damageUntil1HPInRadius({
+      calculatePositions: (player) => [getRandomMeteorPosition(player, 8)],
+      instantEffect(player, positions) {
+        if (positions === undefined || positions.length !== 1) {
+          throw new Error("Did not get a meteor position");
+        }
+
+        player.match.damageUntil1HPInRadius({
           radius: 2,
-          damageAmount: 8,
-          epicenter: getBestPositionMeteor(match, player)
+          damageAmount: 4,
+          epicenter: positions[0]
         });
-      },
-      hooks: {
-        movementPoints: (value) => value + 1,
-        attack: () => 110
       }
     }
   }

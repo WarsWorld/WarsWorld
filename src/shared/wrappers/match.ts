@@ -33,6 +33,7 @@ import { DispatchableError } from "shared/DispatchedError";
 /** TODO: Add favorites, possibly spectators, also a timer */
 export class MatchWrapper {
   public playerToRemoveWeatherEffect: PlayerInMatchWrapper | null = null;
+  public weatherDaysLeft = 0;
   public teams: TeamWrapper[] = [];
   /**
    * TODO
@@ -99,7 +100,6 @@ export class MatchWrapper {
       return null;
     }
 
-    /** TODO we might need to add a position to the movementCost hook later on */
     return (
       player.getHook("movementCost")?.(baseMovementCost, {
         match: this,

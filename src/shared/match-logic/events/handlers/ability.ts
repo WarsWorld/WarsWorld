@@ -49,8 +49,6 @@ export const applyAbilityEvent = (match: MatchWrapper, unit: UnitWrapper) => {
     case "mech": {
       //capture tile
 
-      // TODO sami
-
       if (!("currentCapturePoints" in unit.data)) {
         // theoretically this check should never be positive, but
         // TS has issues narrowing UnitWithHiddenStats
@@ -61,9 +59,19 @@ export const applyAbilityEvent = (match: MatchWrapper, unit: UnitWrapper) => {
         unit.data.currentCapturePoints = 20;
       }
 
-      unit.data.currentCapturePoints -= unit.getHP();
+      if (unit.player.data.coId.name === "sami") {
+        if (unit.player.data.COPowerState === "super-co-power") {
+          unit.data.currentCapturePoints = 0; // insta capture
+        } else {
+          // capture at 1.5x rate, rounded down
+          unit.data.currentCapturePoints -= Math.floor(unit.getHP() * 1.5);
+        }
+      } else {
+        unit.data.currentCapturePoints -= unit.getHP();
+      }
 
       if (unit.data.currentCapturePoints <= 0) {
+        // finished capturing
         unit.data.currentCapturePoints = undefined;
 
         const tile = unit.getTile();

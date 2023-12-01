@@ -26,7 +26,7 @@ export const jessAW2: COProperties = {
       description:
         "Supplies all units (fuel and ammo). Ground vehicles gain +20% firepower and +1 movement.",
       stars: 3,
-      instantEffect({ player }) {
+      instantEffect(player) {
         player.getUnits().forEach((unit) => unit.resupply());
       },
       hooks: {
@@ -57,7 +57,7 @@ export const jessAW2: COProperties = {
       description:
         "Supplies all units (fuel and ammo). Ground vehicles gain +40% firepower and +2 movement.",
       stars: 6,
-      instantEffect({ player }) {
+      instantEffect(player) {
         player.getUnits().forEach((unit) => unit.resupply());
       },
       hooks: {

@@ -22,11 +22,12 @@ export const kanbeiAW2: COProperties = {
     },
     superCOPower: {
       name: "Samurai Spirit",
-      description: "Units gain +20% firepower and defense, and their counterattacks are 50% stronger.", // TODO counterattacks
+      description: "Units gain +20% firepower and defense, and their counterattacks are 50% stronger.",
       stars: 7,
       hooks: {
         attack: () => 150,
         defense: () => 150,
+        // counters handled in calculateDamage
       }
     }
   }

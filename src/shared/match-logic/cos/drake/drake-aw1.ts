@@ -31,7 +31,7 @@ export const drakeAW1: COProperties = {
       description:
         "All enemy units lose 1 HP (to a minimum of 0.1HP).",
       stars: 4,
-      instantEffect({ player }) {
+      instantEffect(player) {
         const enemyUnits = player.team.getEnemyUnits();
         enemyUnits.forEach(unit => unit.damageUntil1HP(10));
       }

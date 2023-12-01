@@ -6,7 +6,7 @@ export const sashaAWDS: COProperties = {
   dayToDay: {
     description: "Properties that give funds give an extra 100 funds per turn.",
     hooks: {
-      // TODO handle separately on giving funds
+      // handled in gainFunds()
     }
   },
   powers: {
@@ -14,12 +14,11 @@ export const sashaAWDS: COProperties = {
       name: "Market Crash",
       description: "Reduces all enemies' power charge by 10% for every 5000 funds Sasha currently has.",
       stars: 2,
-      instantEffect( {match, player} ) {
+      instantEffect(player) {
         const powerMeterDecrease = player.data.funds / 50000;
 
-        for (const enemy of match.getAllPlayers()) {
-          // TODO team stuff
-          if (enemy.data.slot === player.data.slot) {
+        for (const enemy of player.match.getAllPlayers()) {
+          if (enemy.team.index === player.team.index) {
             continue; //not an enemy
           }
 
@@ -32,7 +31,7 @@ export const sashaAWDS: COProperties = {
       description: "Turns 50% of the damage units deal into funds.",
       stars: 6,
       hooks: {
-        // TODO i think this should be another edge case
+        // edge case handled in attack event
       }
     }
   }

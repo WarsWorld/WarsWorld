@@ -15,7 +15,7 @@ export const hawkeAW2: COProperties = {
       stars: 5,
       description:
         "All units heal 1 HP, and all enemy units lose 1 HP (to a minimum of 0.1HP).",
-      instantEffect({ player }) {
+      instantEffect(player) {
         player.getUnits().forEach((unit) => unit.heal(10));
         player.team.getEnemyUnits().forEach(unit => unit.damageUntil1HP(10));
       }
@@ -25,7 +25,7 @@ export const hawkeAW2: COProperties = {
       stars: 9,
       description:
         "All units heal 2 HP, and all enemy units lose 2 HP (to a minimum of 0.1HP).",
-      instantEffect({ player }) {
+      instantEffect(player) {
         player.getUnits().forEach((unit) => unit.heal(20));
         player.team.getEnemyUnits().forEach(unit => unit.damageUntil1HP(20));
       }

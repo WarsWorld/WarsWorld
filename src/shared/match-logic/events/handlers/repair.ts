@@ -20,8 +20,7 @@ export const repairActionToEvent: SubActionToEvent<RepairAction> = (
     throw new DispatchableError("You don't own this unit")
   }
 
-  // TODO if the player does not have the funds, he is unable to repair
-  // taken from https://advancewars.fandom.com/wiki/Black_Boat
+  // TESTED: if trying to repair but no funds, unit will get resupplied but not repaired
 
   if (unit.data.type !== "blackBoat") {
     throw new DispatchableError(
@@ -59,13 +58,11 @@ export const applyRepairEvent = (
     repairedUnit.heal(10);
   } else {
     //check if enough funds for heal, and heal if it's the case
-    const unitCost = unitPropertiesMap[repairedUnit.data.type].cost;
-    const modifiedCost = player.getHook("buildCost")?.(unitCost, match);
-    const repairEffectiveCost = (modifiedCost ?? unitCost) * 0.1; // TODO what does this 0.1 factor do?
+    const repairCost = repairedUnit.getBuildCost() / 10;
 
-    if (repairEffectiveCost <= player.data.funds) {
+    if (repairCost <= player.data.funds) {
       repairedUnit.heal(10);
-      player.data.funds -= repairEffectiveCost;
+      player.data.funds -= repairCost;
     }
   }
 };

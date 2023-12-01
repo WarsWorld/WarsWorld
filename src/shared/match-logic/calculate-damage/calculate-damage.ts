@@ -1,6 +1,7 @@
 import type { CombatProps } from "../co-hooks";
 import { getTerrainDefenseStars } from "../terrain";
 import { getBaseDamage } from "./base-damage";
+import type { LuckRoll } from "../events/handlers/attack";
 
 /** @returns 1-10, whole numbers */
 export const getVisualHPfromHP = (hp: number) => Math.ceil(hp / 10);
@@ -11,74 +12,96 @@ const roundUpTo = (value: number, step: number) => {
 };
 
 /**
- * @param {number} luckValue number between 0 and 1, will be rounded down by 0.1
- * (0.0, 0.1, ... 0.9, 1.0)
+ * @param luckRoll contains goodLuck roll and badLuck roll
+ * goodLuck roll number between 0 and 1: 1 = max luck, 0 = no luck
+ * badLuck roll same as goodLuck roll (but not always used): 1 = max bad luck, 0 = no bad luck
+ * @param isCounterAttack only used for sonja d2d and kanbei during scop (bonus counterattack damage).
  *
  * @see https://awbw.fandom.com/wiki/Damage_Formula?so=search
  */
 export const calculateDamage = (
   { attacker, defender }: CombatProps,
-  luckValue: number
+  luckRoll: LuckRoll,
+  isCounterAttack: boolean
 ) => {
+  const baseDamage = getBaseDamage(attacker, defender);
+
+  // null baseDamage = unit can't attack this other unit
+  if (baseDamage === null) {
+    return null;
+  }
+
   const visualHPOfAttacker = getVisualHPfromHP(attacker.getHP());
   const visualHPOfDefender = getVisualHPfromHP(defender.getHP());
 
   const hookProps: CombatProps = { attacker, defender };
 
-  // TODO is this correct or needlessly complicated to start with a
-  // commtower-affected multiplier value?
+  // attack and defense multipliers
   const attackHook = attacker.player.getHook("attack");
-  const modifiedAttack = attackHook?.(hookProps) ?? 100;
+  let attackModifier =
+    attackHook?.(hookProps) ?? 100
+    + attacker.player.getCommtowerAttackBoost();
 
-  const attackModifier =
-    modifiedAttack + attacker.player.getCommtowerAttackBoost();
+  if (isCounterAttack) {
+    const dCoId = defender.player.data.coId;
+
+    if (dCoId.name === "sonja" && (dCoId.version === "AW1" || dCoId.version === "AW2")) {
+      attackModifier += 50; //aw1 and aw2 sonja d2d is +50% firepower on counters
+    } else if (dCoId.name === "kanbei" && defender.player.data.COPowerState === "super-co-power") {
+      if (dCoId.version === "AW2") {
+        attackModifier *= 5/3; //aw2 kanbei with super deals x5/3 dmg on counters
+      } else {
+        attackModifier *= 2; //awds kanbei with super deals double dmg on counters
+      }
+    }
+  }
 
   const defenseHook = defender.player.getHook("defense");
   const defenseModifier = defenseHook?.(hookProps) ?? 100;
 
-  // base luck: 0-9, whole numbers i think
-  //const goodLuckRoll = Math.floor(luckValue * 10);
+  // luck calculations
   const goodLuckHook = attacker.player.getHook("maxGoodLuck");
-  const maxGoodLuck = goodLuckHook?.(hookProps) ?? 10; // TODO this 10 should be inside match rules
+  const maxGoodLuck = goodLuckHook?.(hookProps) ?? 10; // this 10 should be inside match rules
   const badLuckHook = attacker.player.getHook("maxBadLuck");
   const maxBadLuck = badLuckHook?.(hookProps) ?? 0;
 
-  const goodLuckValue = luckValue * maxGoodLuck;
-  const badLuckValue = 1 * maxBadLuck; // TODO this function should get goodLuckRoll and badLuckRoll (also change name of param)
+  const goodLuckValue = luckRoll.goodLuck * maxGoodLuck;
+  const badLuckValue = luckRoll.badLuck * maxBadLuck;
 
-  // 0-4 (+ lash COP) whole numbers
+  // terrain stars calculations
   const baseTerrainStars = getTerrainDefenseStars(
     defender.getTile().type
   );
 
   const terrainStarsDefenderHook = defender.player.getHook("terrainStars");
-  const terrainStarsModifiedByDefender =
+  let defenderTerrainStars =
     terrainStarsDefenderHook?.(baseTerrainStars, hookProps) ?? baseTerrainStars;
 
-  const isDualStrikeSonja =
-    attacker.player.data.coId.name === "sonja" &&
-    attacker.player.data.coId.version === "AWDS";
-
-  const terrainStarsForDefense = Math.max(
-    terrainStarsModifiedByDefender - (isDualStrikeSonja ? 1 : 0),
-    0
-  );
-
-  // TODO maybe the attack hook should be applied here instead?
-
-  // baseDamage: 1-100
-  const baseDamage = getBaseDamage(attacker, defender);
-
-  if (baseDamage === null) {
-    return null;
+  if (attacker.player.data.coId.name === "sonja" &&
+    attacker.player.data.coId.version === "AWDS") {
+    // hmm ackshually, if sonja pops powers before lash, outcome is different than popping after lash
+    switch (attacker.player.data.COPowerState) {
+      case "no-power": {
+        defenderTerrainStars = Math.max(0, defenderTerrainStars - 1);
+        break;
+      }
+      case "co-power": {
+        defenderTerrainStars = Math.max(0, defenderTerrainStars - 2);
+        break;
+      }
+      case "super-co-power": {
+        defenderTerrainStars = Math.max(0, defenderTerrainStars - 3);
+        break;
+      }
+    }
   }
 
   // TODO explain magic values
-
+  // damage formula application
   const luckModifier = goodLuckValue - badLuckValue;
-  const attackFactor = (baseDamage * attackModifier) / 100 + luckModifier;
+  const attackFactor = baseDamage * (attackModifier / 100) + luckModifier;
   const defenseFactor =
-    (200 - (defenseModifier + terrainStarsForDefense * visualHPOfDefender)) /
+    (200 - (defenseModifier + defenderTerrainStars * visualHPOfDefender)) /
     100;
 
   const dirtyDamageAsPercentage =

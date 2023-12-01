@@ -19,20 +19,22 @@ export const olafAWDS: COProperties = {
       name: "Blizzard",
       description: "Causes it to snow for the next 2 days.",
       stars: 3,
-      instantEffect( {match, player} ) {
-        match.currentWeather = "snow"; // TODO :D now we need to implement 2 day weather cycle!
-        match.playerToRemoveWeatherEffect = player;
+      instantEffect(player) {
+        player.match.currentWeather = "snow";
+        player.match.playerToRemoveWeatherEffect = player;
+        player.match.weatherDaysLeft = 2;
       }
     },
     superCOPower: {
       name: "Winter fury",
       description: "All enemy units lose 2 HP, and causes it to snow for the next 2 days.",
       stars: 6,
-      instantEffect( {match, player} ) {
+      instantEffect(player) {
         player.team.getEnemyUnits().forEach(unit => unit.damageUntil1HP(20));
 
-        match.currentWeather = "snow";
-        match.playerToRemoveWeatherEffect = player;
+        player.match.currentWeather = "snow";
+        player.match.playerToRemoveWeatherEffect = player;
+        player.match.weatherDaysLeft = 2;
       }
     }
   }

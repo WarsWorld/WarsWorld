@@ -10,7 +10,7 @@ export const andyAW2: COProperties = {
       name: "Hyper Upgrade",
       description: "All units heal 5 HP, and gain 20% firepower and 1 movement.",
       stars: 6,
-      instantEffect({ player }) {
+      instantEffect(player) {
         player.getUnits().forEach((unit) => unit.heal(50));
       },
       hooks: {

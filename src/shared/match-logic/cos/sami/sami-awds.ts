@@ -8,7 +8,6 @@ export const samiAWDS: COProperties = {
   dayToDay: {
     description: "Footsoldiers have +20% firepower and capture at 1.5 times the normal rate (rounded down). Other direct units have -10% firepower.",
     hooks: {
-      // TODO if i remember correctly capture is an edge case handled somewhere else
       attack: ({ attacker }) => {
         if (attacker.isInfantryOrMech()) {
           return 120;
@@ -48,7 +47,6 @@ export const samiAWDS: COProperties = {
       description: "Footsoldiers gain 2 movement, +60% firepower and the ability to capture instantly.",
       stars: 8,
       hooks: {
-        //TODO again, i think this is handled in a capture edge case somewhere else
         movementPoints: (points, unit) => {
           if (unit.isInfantryOrMech()) {
             return points + 2;

@@ -11,11 +11,12 @@ export const olafAW2: COProperties = {
       description:
         "All enemy units lose 2 HP, and causes it to snow until next turn.",
       stars: 6,
-      instantEffect({ match, player }) {
+      instantEffect(player) {
         player.team.getEnemyUnits().forEach((unit) => unit.damageUntil1HP(20));
 
-        match.currentWeather = "snow";
-        match.playerToRemoveWeatherEffect = player;
+        player.match.currentWeather = "snow";
+        player.match.playerToRemoveWeatherEffect = player;
+        player.match.weatherDaysLeft = 1;
       }
     }
   }

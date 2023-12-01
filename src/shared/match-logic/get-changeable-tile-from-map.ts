@@ -16,7 +16,6 @@ const getChangeableTileFromTile = (tile: PropertyTile | UnusedSiloTile, position
   return {
     type: tile.type,
     position,
-    hp: 20,
     ownerSlot: tile.playerSlot
   };
 };

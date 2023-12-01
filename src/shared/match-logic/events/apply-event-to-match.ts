@@ -13,7 +13,6 @@ import { applyRepairEvent } from "./handlers/repair";
 import { applyUnloadNoWaitEvent } from "./handlers/unloadNoWait";
 import { applyUnloadWaitEvent } from "./handlers/unloadWait";
 
-//TODO: call subevents from move case? or different?
 export const applyMainEventToMatch = (
   match: MatchWrapper,
   event: MainEvent

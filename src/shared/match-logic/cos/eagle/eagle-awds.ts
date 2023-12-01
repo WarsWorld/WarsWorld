@@ -6,7 +6,8 @@ export const eagleAWDS: COProperties = {
   dayToDay: {
     description:
       "Air units have +20% firepower, and consume -2 fuel per day. Naval units have -10% firepower.",
-    hooks: { //TODO air units fuel exception
+    hooks: {
+      // fuel consumption handled in pass turn event
       attack({ attacker }) {
         switch (attacker.properties().facility) {
           case "airport":
@@ -23,7 +24,7 @@ export const eagleAWDS: COProperties = {
       stars: 3,
       description:
         "All non-footsoldier units may move and fire again, even if built this turn. Firepower is reduced to 70% for air units, 60% for vehicles and 55% for naval units (including power boost)",
-      instantEffect({ player }) {
+      instantEffect(player) {
         player
           .getUnits()
           .filter(
@@ -52,7 +53,7 @@ export const eagleAWDS: COProperties = {
       description:
         "All non-footsoldier units may move and fire again, even if built this turn.",
       stars: 9,
-      instantEffect({ player }) {
+      instantEffect(player) {
         player
           .getUnits()
           .filter(

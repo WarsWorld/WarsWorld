@@ -7,8 +7,7 @@ export const sonjaAWDS: COProperties = {
     description:
       "Units have 1 additional vision range (during FOW), their stats are hidden to the enemies and have 5% bad luck. Enemy terrain stars are reduced by 1 (for a minimum of 0).",
     hooks: {
-      // terrain stars are implemented directly in calculate-damage.ts because
-      // these affect from the attacker side, terrainStars hook wouldn't work
+      // terrain stars handled in calculateDamage
       maxBadLuck: () => 5,
       vision: (value) => value + 1
     }

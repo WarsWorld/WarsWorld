@@ -13,6 +13,10 @@ export const buildActionToEvent: MainActionToEvent<BuildAction> = (
 ) => {
   const player = match.getCurrentTurnPlayer();
 
+  if (player.getUnits().length >= match.rules.unitCapPerPlayer) {
+    throw new DispatchableError("Unit cap alreaedy reached");
+  }
+
   const { cost, facility } = unitPropertiesMap[action.unitType];
   const modifiedCost = player.getHook("buildCost")?.(cost, match);
   const effectiveCost = modifiedCost ?? cost;

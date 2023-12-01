@@ -28,7 +28,7 @@ export const eagleAW1: COProperties = {
       description:
         "All non-footsoldier units may move and fire again, even if built this turn. All units (including footsoldiers) are affected with -20% damage and -30% defense (including power boost).",
       stars: 5,
-      instantEffect({ player }) {
+      instantEffect(player) {
         player
           .getUnits()
           .filter(

@@ -6,7 +6,7 @@ export const sonjaAW2: COProperties = {
   dayToDay: {
     description: "Units have 1 additional vision range (during FOW), their stats are hidden to the enemies, have 10% bad luck and their counter attacks deal 50% extra damage.",
     hooks: {
-      // TODO special counter case for sonja and kanbei
+      // counters handled in calculateDamage
       maxBadLuck: () => 10,
       vision: (value) => value + 1
     }
@@ -17,7 +17,7 @@ export const sonjaAW2: COProperties = {
       description: "Units gain +1 additional vision range (for a total of +2), and all woods and reefs inside vision range are revealed.",
       stars: 3,
       hooks: {
-        // TODO woods and reefs
+        // woods and reefs in vision handler
         vision: (value) => value + 2
       }
     },
@@ -26,8 +26,7 @@ export const sonjaAW2: COProperties = {
       description: "Units gain +1 additional vision range (for a total of +2), and all woods and reefs inside vision range are revealed. Units attack first when being attacked.",
       stars: 5,
       hooks: {
-        // TODO woods and reefs
-        // TODO attacking first should already be considered edge case somewhere
+        // attacking first considered in attack event generation
         vision: (value) => value + 2
       }
     }

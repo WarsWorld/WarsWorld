@@ -12,8 +12,8 @@ type WithPosition = {
 
 export type CapturableTile = WithPosition & {
   type: PropertyTileType;
-  hp: number;
   ownerSlot: PlayerSlot;
+  // capture points are stored in unit
 };
 
 type LaunchableSiloTile = WithPosition & {

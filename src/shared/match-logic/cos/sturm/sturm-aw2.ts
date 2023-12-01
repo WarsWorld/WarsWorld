@@ -1,5 +1,5 @@
 import type { COProperties } from "../../co";
-import { getBestPositionMeteor } from "./sturm-aw1-campaign";
+import { getRandomMeteorPosition } from "./get-meteor-position";
 
 export const sturmAW2: COProperties = {
   displayName: "Sturm",
@@ -18,22 +18,23 @@ export const sturmAW2: COProperties = {
     }
   },
   powers: {
-    // TODO important! meteor strike cannot be deterministic for clients because
-    // clients don't see into fog or hidden sub/stealth, which meteor strike ignores.
-    // therefore the power event must be extended by the impact position.
     superCOPower: {
       name: "Meteor Strike",
       description:
         "Units gain an additional +20% firepower and +20% defense. Deals 8 HP of damage to all units at a distance less or equal than 2 from the chosen position, centered on a unit. The meteor prioritises the most unit value in damages (allied units are dealt damage as well, and contribute negatively to the unit value calculation).",
       stars: 10,
-      instantEffect({ match, player }) {
-        match.damageUntil1HPInRadius({
+      calculatePositions: (player) => [getRandomMeteorPosition(player, 8)],
+      instantEffect(player, positions) {
+        if (positions === undefined || positions.length !== 1) {
+          throw new Error("Did not get a meteor position");
+        }
+
+        player.match.damageUntil1HPInRadius({
           radius: 2,
           damageAmount: 8,
-          epicenter: getBestPositionMeteor(match, player)
+          epicenter: positions[0]
         });
       },
-      calculatePositions: (player) => [getBestPositionMeteor(player)],
       hooks: {
         attack: () => 140,
         defense: () => 140

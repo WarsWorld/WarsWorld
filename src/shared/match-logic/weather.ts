@@ -23,6 +23,8 @@ function getChanceOfRain(match: MatchWrapper) {
 /**
  * TODO we don't handle sandstorm yet.
  * do we ever even want to..?
+ *
+ * also weather is different in versions
  */
 export function getRandomWeather(match: MatchWrapper): Weather {
   const roll = Math.random() * 100;

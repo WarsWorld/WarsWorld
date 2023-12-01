@@ -1,6 +1,6 @@
 import type { COProperties } from "../../co";
 
-export const grit: COProperties = {
+export const gritAW1: COProperties = {
   displayName: "Grit",
   gameVersion: "AW1",
   dayToDay: {

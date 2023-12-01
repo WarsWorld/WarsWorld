@@ -30,7 +30,7 @@ export const drakeAW2: COProperties = {
       description:
         "All enemy units lose 1 HP (to a minimum of 0.1HP) and half their current fuel.",
       stars: 4,
-      instantEffect({ player }) {
+      instantEffect(player) {
         const enemyUnits = player.team.getEnemyUnits();
 
         enemyUnits.forEach(unit => {
@@ -44,7 +44,7 @@ export const drakeAW2: COProperties = {
       description:
         "All enemy units lose 2 HP (to a minimum of 0.1HP) and half their current fuel. Weather changes to rain for 1 day.",
       stars: 7,
-      instantEffect({ match, player }) {
+      instantEffect(player) {
         const enemyUnits = player.team.getEnemyUnits();
 
         enemyUnits.forEach(unit => {
@@ -52,8 +52,9 @@ export const drakeAW2: COProperties = {
           unit.damageUntil1HP(20);
         });
 
-        match.currentWeather = "rain";
-        match.playerToRemoveWeatherEffect = player;
+        player.match.currentWeather = "rain";
+        player.match.playerToRemoveWeatherEffect = player;
+        player.match.weatherDaysLeft = 1;
       }
     }
   }

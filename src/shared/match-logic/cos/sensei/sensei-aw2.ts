@@ -1,5 +1,5 @@
 import type { COProperties } from "../../co";
-import { applySenseiPowerSpawn } from "./apply-sensei-power-spawn";
+import { applySenseiPowerSpawn } from "./apply-sensei-power";
 
 export const senseiAW2: COProperties = {
   displayName: "Sensei",
@@ -32,7 +32,7 @@ export const senseiAW2: COProperties = {
       name: "Copter Command",
       description: "B-Copters gain +25% firepower. Spawns 9 HP infantry units on top of unoccupied owned cities, ready to move.",
       stars: 2,
-      instantEffect({player}) {
+      instantEffect(player) {
         applySenseiPowerSpawn(player, "infantry")
       },
       hooks: {
@@ -55,7 +55,7 @@ export const senseiAW2: COProperties = {
       name: "Airborne Assault",
       description: "B-Copters gain +25% firepower. Spawns 9 HP mech units on top of unoccupied owned cities, ready to move.",
       stars: 2,
-      instantEffect({player}) {
+      instantEffect(player) {
         applySenseiPowerSpawn(player, "mech")
       },
       hooks: {

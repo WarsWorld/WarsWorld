@@ -43,6 +43,10 @@ export class UnitWrapper {
     }
 
     this.data.stats.fuel = newFuel;
+
+    if (this.data.stats.fuel === 0 && this.properties2.facility !== "base") {
+      this.remove(); // unit crashes
+    }
   }
 
   getHP() {
@@ -87,7 +91,7 @@ export class UnitWrapper {
       return;
     }
 
-    this.data.stats.fuel = Math.max(fuelAmount, 0);
+    this.setFuel(Math.max(this.data.stats.fuel - fuelAmount, 0));
   }
 
   getNeighbouringUnits() {
@@ -123,41 +127,10 @@ export class UnitWrapper {
     return Math.min(modifiedMovement, fuel);
   }
 
-  getCost(): number {
+  getBuildCost(): number {
     const { cost: baseCost } = this.properties2;
     const hook = this.player.getHook("buildCost");
     return hook?.(baseCost, this.match) ?? baseCost;
-  }
-
-  getPowerMeterGainsWhenAttacking(
-    defender: UnitWrapper,
-    attackerHPAfterAttack: number | undefined,
-    defenderHPAfterAttack: number
-  ) {
-    const previousAttackerHP =
-      this.data.stats === "hidden" ? 100 : this.data.stats.hp;
-    const previousDefenderHP =
-      defender.data.stats === "hidden" ? 100 : defender.data.stats.hp;
-
-    const attackerUnitCost = this.getCost();
-    const defenderUnitCost = defender.getCost();
-
-    const lostAttackerVisualHP =
-      getVisualHPfromHP(previousAttackerHP) -
-      getVisualHPfromHP(attackerHPAfterAttack ?? previousAttackerHP);
-
-    const lostDefenderVisualHP =
-      getVisualHPfromHP(previousDefenderHP) -
-      getVisualHPfromHP(defenderHPAfterAttack);
-
-    return {
-      attackingPlayerGain:
-        lostAttackerVisualHP * attackerUnitCost +
-        lostDefenderVisualHP * defenderUnitCost * 0.5,
-      defendingPlayerGain:
-        lostDefenderVisualHP * defenderUnitCost +
-        lostAttackerVisualHP * attackerUnitCost * 0.5
-    };
   }
 
   remove() {
@@ -166,11 +139,6 @@ export class UnitWrapper {
     );
 
     const tile = this.getTile();
-
-    // TODO remove this and if applicable modify current CapturableTile HP
-    if ("captureHP" in tile) {
-      tile.captureHP = 20;
-    }
 
     /* TODO check if player is eliminated, then create and send appropriate event */
   }

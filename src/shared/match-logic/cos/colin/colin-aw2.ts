@@ -1,7 +1,5 @@
 import type { COProperties } from "../../co";
 
-/* TODO is any rounding needed here? */
-
 export const colinAW2: COProperties = {
   displayName: "Colin",
   gameVersion: "AW2",
@@ -17,7 +15,7 @@ export const colinAW2: COProperties = {
       name: "Gold Rush",
       description: "Current funds are multiplied by 1.5x.",
       stars: 2,
-      instantEffect: ({ player }) => {
+      instantEffect: (player) => {
         player.data.funds = player.data.funds * 1.5;
       }
     },

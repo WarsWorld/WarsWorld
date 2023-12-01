@@ -20,8 +20,11 @@ export class PlayerInMatchWrapper {
     this.match = team.match;
   }
 
+  /**
+   * returns amount of commtowers owned * 10 (since 1 commtower gives 10% attack boost)
+   */
   getCommtowerAttackBoost() {
-    return this.match.changeableTiles.reduce(
+    return 10 * this.match.changeableTiles.reduce(
       (prev, cur) =>
         cur.type === "commtower" && cur.ownerSlot === this.data.slot
           ? prev + 1

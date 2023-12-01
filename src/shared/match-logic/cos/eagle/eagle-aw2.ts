@@ -45,7 +45,7 @@ export const eagleAW2: COProperties = {
       description:
         "Air units gain +15% firepower and +10% defense. All non-footsoldier units may move and fire again, even if built this turn.",
       stars: 9,
-      instantEffect({ player }) {
+      instantEffect(player) {
         player
           .getUnits()
           .filter(

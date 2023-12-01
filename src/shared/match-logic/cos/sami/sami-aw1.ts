@@ -6,7 +6,7 @@ export const samiAW1: COProperties = {
   dayToDay: {
     description: "Footsoldiers have +20% firepower and +10% defense, and capture at 1.5 times the normal rate (rounded down). Transport units have +1 movement point. Other direct units have -10% firepower.",
     hooks: {
-      // TODO if i remember correctly capture is an edge case handled somewhere else
+      // capturing handled in ability event
       movementPoints: (points, unit) => {
         if ("loadedUnit" in unit.properties()) { //if it's a transport
           return points + 1;
