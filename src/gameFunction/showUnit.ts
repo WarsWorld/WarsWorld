@@ -3,7 +3,7 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
 
-import type { AnimatedSprite, Spritesheet } from "pixi.js";
+import type { AnimatedSprite, Resource, Spritesheet } from "pixi.js";
 import { Container, Texture } from "pixi.js";
 import { isSamePosition } from "shared/schemas/position";
 import type { Tile } from "shared/schemas/tile";
@@ -30,7 +30,7 @@ export function getUnitSprite(
   unit: UnitWithVisibleStats
 ): AnimatedSprite {
   return animatedSpriteConstructor(
-    spriteSheet.animations[unit.type],
+    spriteSheet.animations[unit.type] as Texture<Resource>[],
     0.07,
     (unit.position[1] + 1) * 16,
     (unit.position[0] + 1) * 16,

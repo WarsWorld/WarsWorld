@@ -4,20 +4,28 @@
  * @link https://www.prisma.io/docs/guides/database/seed-database
  */
 import { PrismaClient } from "@prisma/client";
+import { hashPassword } from "server/hashPassword";
 import { importAWBWMap } from "server/tools/map-importer-utilities";
-import { developmentPlayerNamePrefix } from "server/trpc/middleware/player";
+import { developmentPlayerNamePrefix as Prefix } from "server/trpc/middleware/player";
 
 const prisma = new PrismaClient();
 
-const developmentPlayerNames = Array(4)
-  .fill(1)
-  .map((_, i) => `${developmentPlayerNamePrefix}${i}`);
+const developmentPlayerNames = [
+  "Grimm Guy",
+  "Incuggarch",
+  "Master Chief Z",
+  "Dev Player 4",
+].map((name) => `${Prefix} ${name}`);
 
 async function main() {
+  const hashedPassword = await hashPassword("secret");
+  
   const { id: userId } = await prisma.user.create({
     data: {
-      name: "development_user"
-    }
+      name: "development_user",
+      password: hashedPassword,
+      email: "development@example.com",
+    },
   });
 
   const devPlayers = await Promise.all(developmentPlayerNames.map((name) => prisma.player.create({ data: { name, userId } })));
@@ -176,6 +184,7 @@ async function main() {
           slot: 0,
           hasCurrentTurn: true,
           id: devPlayers[0].id,
+          name: devPlayers[0].name,
           ready: true,
           coId: {
             name: "andy",
@@ -192,6 +201,7 @@ async function main() {
           slot: 1,
           hasCurrentTurn: false,
           id: devPlayers[1].id,
+          name: devPlayers[1].name,
           ready: true,
           coId: {
             name: "max",

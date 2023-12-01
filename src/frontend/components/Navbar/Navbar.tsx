@@ -4,20 +4,33 @@ import Image from "next/image";
 import { NavGroup } from "./NavGroup";
 import { NavGroupMobile } from "./NavGroupMobile";
 import { useWindowWidth } from "@react-hook/window-size";
-import { NavItem } from "./NavItem";
+import { useSearchParams } from "next/navigation";
+import NavLoginLogout from "./NavLoginLogout";
+import { useRouter } from "next/router";
 
 export function Navbar() {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+
   const windowWidth = useWindowWidth();
   const [showLinks, setShowLinks] = useState(false);
   const [showMatchLinks, setShowMatchLinks] = useState(false);
   const [isMobileWidth, setIsMobileWidth] = useState(false);
+  const isOpen = searchParams.has("authModalOpen");
+
+  const setIsOpen = async (value: boolean, callbackUrl?: string) => {
+    if (value) {
+      await router.replace("", {
+        query: "authModalOpen",
+      });
+    }  
+    else {
+      await router.replace(callbackUrl ?? "");
+    }
+  };
 
   const handleBurgerMenu = () => {
     setShowLinks(!showLinks);
-  };
-
-  const handleMatchLinks = () => {
-    setShowMatchLinks(!showMatchLinks);
   };
 
   useEffect(() => {
@@ -29,22 +42,24 @@ export function Navbar() {
   }, [windowWidth]);
 
   return (
-    <header className="@w-full @fixed @top-0 @z-30 @shadow-lg @shadow-bg-primary">
+    <header className="@w-screen @fixed @top-0 @z-30 @shadow-lg @shadow-bg-primary">
       <nav className="@flex @h-full @justify-between @items-center @bg-gradient-to-r @from-bg-primary @via-bg-secondary @to-bg-primary @mx-auto @px-4 smallscreen:@px-8 laptop:@px-6">
-        <Link href="/">
-          <Image
-            className="@flex @w-16 smallscreen:@w-20"
-            src="/img/layout/logo.webp"
-            alt="AW Logo"
-            width={0}
-            height={0}
-            sizes="100vw"
-          />
-        </Link>
+        <div className="@h-full @w-[25vw] smallscreen:@w-[10vw] @flex @flex-col @justify-center @align-middle">
+          <Link className="@flex @align-middle @justify-start" href="/">
+            <Image
+              className="@w-16 smallscreen:@w-20"
+              src="/img/layout/logo.webp"
+              alt="AW Logo"
+              width={0}
+              height={0}
+              sizes="100vw"
+            />
+          </Link>
+        </div>
 
         {!isMobileWidth ? (
           <>
-            <div className="@flex @justify-center @items-center @relative @gap-8 tablet:@gap-10 laptop:@gap-16">
+            <div className="@w-screen @flex @justify-end @items-center @relative @gap-8 tablet:@gap-10 laptop:@gap-16">
               <button
                 className="@flex @justify-center @items-center @h-7 @w-7"
                 onClick={handleBurgerMenu}
@@ -55,7 +70,13 @@ export function Navbar() {
                   <div className="@h-1 @w-9 smallscreen:@h-[0.3rem] smallscreen:@w-14 @rounded @bg-gradient-to-r @from-primary @to-primary-dark" />
                 </div>
               </button>
-              <NavItem text="LOGIN" location="/" />
+              <div className="@flex @h-full @justify-center @items-center @relative">
+                <NavLoginLogout
+                  isOpen={isOpen}
+                  setIsOpen={setIsOpen}
+                  width="95vw"
+                />
+              </div>
             </div>
 
             <NavGroupMobile
@@ -64,11 +85,15 @@ export function Navbar() {
             />
           </>
         ) : (
-          <NavGroup
-            showMatchLinks={showMatchLinks}
-            handleMatchLinks={handleMatchLinks}
-            setShowLinks={setShowLinks}
-          />
+          <>
+            <NavGroup
+              showMatchLinks={showMatchLinks}
+              setShowMatchLinks={setShowMatchLinks}
+              setShowLinks={setShowLinks}
+              setIsOpen={setIsOpen}
+              isOpen={isOpen}
+            />
+          </>
         )}
       </nav>
       <div className="@h-1 @w-full @bg-gradient-to-r @from-primary-dark @from-10% @via-primary @to-primary-dark @to-90%" />

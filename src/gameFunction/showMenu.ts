@@ -1,5 +1,5 @@
 import type { inferProcedureInput } from "@trpc/server";
-import type { ISpritesheetData, Spritesheet } from "pixi.js";
+import type { Spritesheet } from "pixi.js";
 import {
   AnimatedSprite,
   Assets,

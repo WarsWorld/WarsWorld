@@ -59,7 +59,7 @@ export default function MatchCard({ match, inMatch }: matchData) {
 
   let twoPlayerCheck = false;
 
-  if (secondPlayer) {
+  if (secondPlayer !== undefined) {
     twoPlayerCheck = true;
   }
 
@@ -67,9 +67,20 @@ export default function MatchCard({ match, inMatch }: matchData) {
     <div className="@grid @bg-bg-primary @relative">
       <MatchCardTop mapName={match.map.name} day={match.turn} state={match.state} favorites={0} spectators={0} time={0.15} />
       <div className="@grid @grid-cols-2 @gap-3">
-        <MatchPlayer name={firstPlayer.id} co={playerCO} country={army} playerReady={ready} />
+        <MatchPlayer
+          name={firstPlayer.name}
+          co={playerCO}
+          country={army}
+          playerReady={ready}
+        />
         {twoPlayerCheck ? (
-          <MatchPlayer name={secondPlayer.id} co={secondPlayer.coId} country={secondPlayer.army} flipCO={true} playerReady={secondPlayer.ready} />
+          <MatchPlayer
+            name={secondPlayer.name}
+            co={secondPlayer.coId.name}
+            country={secondPlayer.army}
+            flipCO={true}
+            playerReady={secondPlayer.ready}
+          />
         ) : (
           <MatchPlayer
             name={"Opponent"}
@@ -92,7 +103,7 @@ export default function MatchCard({ match, inMatch }: matchData) {
             // TODO: how can we handle if a player is undefined? for now I put an empty string
             playerID={currentPlayer ? currentPlayer.id : ""}
             inMatch={inMatch}
-            readyStatus={ready ? ready : false}
+            readyStatus={ready ?? false}
           />
         )
       }

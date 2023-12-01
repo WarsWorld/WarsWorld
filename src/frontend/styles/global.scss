@@ -77,7 +77,7 @@
 
   .btn:hover {
     color: black;
-    background-color: theme("colors.secondary");
+    background-color: theme("colors.primary-light");
   }
 
   //The button we use for match cards right now
@@ -94,7 +94,7 @@
 
   .btnMenu:hover {
     color: black;
-    background-color: theme("colors.secondary");
+    background-color: theme("colors.primary-light");
   }
 
   a {
@@ -105,7 +105,7 @@
   }
 
   a:hover {
-    color: theme("colors.secondary");
+    color: theme("colors.primary-light");
   }
 }
 

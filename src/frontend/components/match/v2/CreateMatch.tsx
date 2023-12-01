@@ -8,16 +8,30 @@ import { useEffect, useState } from "react";
 
 type Props = {
   currentPlayer: Player | undefined;
-  refecthYourMatches: () => any;
-  refecthAllMatches: () => any;
-  setCurrentPlayer: (player: Player) => any;
+  refecthYourMatches: () => void;
+  refecthAllMatches: () => void;
+  setCurrentPlayer: (player: Player) => void;
 };
 
-export default function CreateMatch({ currentPlayer, refecthYourMatches, refecthAllMatches, setCurrentPlayer }: Props) {
-  const { ownedPlayers, areOwnedPlayersLoaded } = usePlayers();
+export default function CreateMatch({
+  currentPlayer,
+  refecthYourMatches,
+  refecthAllMatches,
+  setCurrentPlayer,
+}: Props) {
+  const { ownedPlayers } = usePlayers();
 
   // Get map data
-  const { data: mapQuery, isLoading: isLoadingMapQuery } = trpc.map.getAll.useQuery();
+  const { data: mapQuery, isLoading: isLoadingMapQuery } =
+    trpc.map.getAll.useQuery(undefined, {
+      onSuccess: (onSuccessMaps) => {
+        setCurrentMapId(onSuccessMaps[0].id);
+        setSelectMap({
+          label: onSuccessMaps[0].name,
+          value: onSuccessMaps[0].id,
+        });
+      },
+    });
   const [currentMapId, setCurrentMapId] = useState<string>();
   const createMutation = trpc.match.create.useMutation();
 
@@ -31,17 +45,10 @@ export default function CreateMatch({ currentPlayer, refecthYourMatches, refecth
     label: "No player selected",
     value: ""
   });
-  const [selectMap, setSelectMap] = useState<SelectOption | undefined>(
-    !isLoadingMapQuery && mapQuery
-      ? {
-          label: mapQuery[0].name,
-          value: mapQuery[0].id
-        }
-      : {
-          label: "No map selected",
-          value: ""
-        }
-  );
+  const [selectMap, setSelectMap] = useState<SelectOption | undefined>({
+    label: "No map selected",
+    value: "",
+  });
 
   useEffect(() => {
     if (currentPlayer) {
@@ -55,7 +62,7 @@ export default function CreateMatch({ currentPlayer, refecthYourMatches, refecth
   const createMatchHandler = async () => {
     const mapId = currentMapId;
 
-    if (!mapId || !currentPlayer) {
+    if (mapId == undefined || !currentPlayer) {
       return;
     }
 
@@ -89,7 +96,7 @@ export default function CreateMatch({ currentPlayer, refecthYourMatches, refecth
   };
 
   return (
-    <div className="@w-[100vw]">
+    <div className="@w-full">
       <h1>Hello dev! Read Instructions</h1>
       <p>
         To create a match, first change Current Player to any other player.
@@ -97,7 +104,7 @@ export default function CreateMatch({ currentPlayer, refecthYourMatches, refecth
         Then click on Create Game and then on Enter Match
       </p>
       <br />
-      {areOwnedPlayersLoaded ? (
+      {ownedPlayers ? (
         <div className="@flex @flex-col smallscreen:@flex-row @justify-center @items-center @py-2 @pb-6">
           <p className="@px-0 smallscreen:@pr-8">Current Player: </p>
           <div className="@relative @w-64 @my-4 smallscreen:@m-0">

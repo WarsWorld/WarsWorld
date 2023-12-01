@@ -77,21 +77,21 @@
       "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 22 },
       "sourceSize": { "w": 16, "h": 22 }
     },
-    "comtower-0.png": {
+    "commtower-0.png": {
       "frame": { "x": 176, "y": 0, "w": 16, "h": 25 },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 25 },
       "sourceSize": { "w": 16, "h": 25 }
     },
-    "comtower_rain-0.png": {
+    "commtower_rain-0.png": {
       "frame": { "x": 192, "y": 0, "w": 16, "h": 25 },
       "rotated": false,
       "trimmed": false,
       "spriteSourceSize": { "x": 0, "y": 0, "w": 16, "h": 25 },
       "sourceSize": { "w": 16, "h": 25 }
     },
-    "comtower_snow-0.png": {
+    "commtower_snow-0.png": {
       "frame": { "x": 208, "y": 0, "w": 16, "h": 25 },
       "rotated": false,
       "trimmed": false,

@@ -117,7 +117,7 @@ export default function Howtoplay() {
       Shows titles and loops through a list of sections that each contain a 
       title, description and any amount of clickable artciles or tutorials.
     */
-    <div className="@flex @flex-col @w-full @items-center @justify-center">
+    <>
       <Head>
         <title>Wars World Guides</title>
       </Head>
@@ -146,6 +146,6 @@ export default function Howtoplay() {
           })}
         </div>
       </div>
-    </div>
+    </>
   );
 }

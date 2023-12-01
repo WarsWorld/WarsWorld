@@ -28,6 +28,7 @@ export const matchToFrontend = (match: MatchWrapper) => ({
 });
 
 export function allMatchSlotsReady(match: MatchWrapper) {
+
   for (let i = 0; i < match.map.data.numberOfPlayers; i++) {
     if (match.getBySlot(i)?.data.ready !== true) {
       return false;

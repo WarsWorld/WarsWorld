@@ -4,6 +4,7 @@ export const playerInMatch1: PlayerInMatch = {
   slot: 0,
   hasCurrentTurn: true,
   id: "111",
+  name: "Hello",
   ready: true,
   coId: {
     name: "adder",
@@ -21,6 +22,7 @@ export const playerInMatch2: PlayerInMatch = {
   slot: 1,
   hasCurrentTurn: false,
   id: "222",
+  name: "World",
   ready: false,
   coId: {
     name: "sami",

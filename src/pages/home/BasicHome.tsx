@@ -2,6 +2,7 @@ import SquareButton from "frontend/components/layout/SquareButton";
 import Banner from "frontend/components/layout/Banner";
 import SmallContainer from "frontend/components/layout/SmallContainer";
 import ThreeLinesText from "frontend/components/layout/ThreeLinesText";
+import { useRouter } from "next/router";
 
 const homePageCards = [
   {
@@ -25,6 +26,7 @@ const homePageCards = [
 ];
 
 export default function BasicHome() {
+  const router = useRouter();
   return (
     <div className="@w-full">
       <Banner
@@ -37,7 +39,11 @@ export default function BasicHome() {
             </h1>
             <div className="@flex @justify-center">
               <div className="@mt-4 tablet:@mt-12 @h-12 tablet:@h-20 monitor:@h-24 large_monitor:@h-28 @text-xl tablet:@text-4xl monitor:@text-5xl large_monitor:@text-6xl @w-[50vw] tablet:@w-[50%] @shadow-lg @shadow-black">
-                <SquareButton onClick={undefined}>Play Now</SquareButton>
+                <SquareButton onClick={() => {
+                  void router.push("/your-matches");
+                }}>
+                  Play Now
+                </SquareButton>
               </div>
             </div>
           </>

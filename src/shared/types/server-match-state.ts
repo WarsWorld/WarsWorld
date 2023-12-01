@@ -23,12 +23,11 @@ type LaunchableSiloTile = WithPosition & {
 
 export type ChangeableTile = CapturableTile | LaunchableSiloTile;
 
-//TODO: Add player name to this, it would make things easier rather than
-// having to always look up players id to get their username
 export type PlayerInMatch = {
   slot: PlayerSlot;
   hasCurrentTurn?: boolean;
   id: Player["id"];
+  name: Player["name"];
   ready?: boolean;
   coId: COID;
   eliminated?: boolean;

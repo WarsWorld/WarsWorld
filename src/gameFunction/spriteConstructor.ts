@@ -17,7 +17,7 @@ export function spriteConstructor(
   sprite.width = width;
   sprite.height = height;
 
-  if (zIndex) {
+  if (zIndex !== undefined) {
     sprite.zIndex = zIndex;
   }
 
@@ -25,7 +25,7 @@ export function spriteConstructor(
     sprite.eventMode = eventMode;
   }
 
-  if (tint) {
+  if (tint !== undefined) {
     sprite.tint = tint;
   }
 
@@ -49,7 +49,7 @@ export function animatedSpriteConstructor(
   sprite.width = width;
   sprite.height = height;
 
-  if (zIndex) {
+  if (zIndex !== undefined) {
     sprite.zIndex = zIndex;
   }
 
@@ -57,7 +57,7 @@ export function animatedSpriteConstructor(
     sprite.eventMode = eventMode;
   }
 
-  if (tint) {
+  if (tint !== undefined) {
     sprite.tint = tint;
   }
 

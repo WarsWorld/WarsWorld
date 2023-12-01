@@ -19,7 +19,7 @@ export default function MatchPlayer({
   playerReady
 }: matchData) {
   //it might be the other player AND an unpicked spot (a greyed out opponent)
-  if (flipCO) {
+  if (flipCO !== undefined) {
     return (
       <div className={"@truncate @text-right"}>
         <div
@@ -27,16 +27,16 @@ export default function MatchPlayer({
             backgroundImage: `url("/img/CO/pixelated/${co}-full.png")`
           }}
           className={`@h-[200px] [image-rendering:pixelated] @bg-cover 
-             ${opponent ? "@brightness-[0.1]" : ""} 
-             ${playerReady ? "@contrast-[1]" : "@contrast-[0.5]"}`}
+             ${opponent !== undefined ? "@brightness-[0.1]" : ""} 
+             ${playerReady !== undefined ? "@contrast-[1]" : "@contrast-[0.5]"}`}
         ></div>
         <div
           className={`@flex @flex-row-reverse
-      ${opponent ? "@bg-gray-600" : `@bg-${country}`}`}
+      ${opponent !== undefined ? "@bg-gray-600" : `@bg-${country}`}`}
         >
           <img
             src={
-              opponent
+              opponent !== undefined
                 ? `/img/nations/black-hole.gif`
                 : `/img/nations/${country}.gif`
             }
@@ -57,7 +57,7 @@ export default function MatchPlayer({
             backgroundImage: `url("/img/CO/pixelated/${co}-full.png")`
           }}
           className={`@h-[200px] [image-rendering:pixelated] @bg-cover @scale-x-[-1] ${
-            playerReady ? "@contrast-[1]" : "@contrast-[0.5]"
+            playerReady !== undefined ? "@contrast-[1]" : "@contrast-[0.5]"
           }`}
         ></div>
         <div className={`@flex @bg-${country}`}>

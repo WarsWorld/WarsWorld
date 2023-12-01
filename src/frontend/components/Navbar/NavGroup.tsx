@@ -1,12 +1,15 @@
 import type { Dispatch, SetStateAction } from "react";
 import { NavItem } from "./NavItem";
 import { NavMenuMatches } from "./NavMenuMatches";
-import NavButton from "../layout/NavButton";
+import NavButton from "./NavButton";
+import NavLoginLogout from "./NavLoginLogout";
 
 type Props = {
   showMatchLinks: boolean;
-  handleMatchLinks: () => void;
+  setShowMatchLinks: Dispatch<SetStateAction<boolean>>;
   setShowLinks: Dispatch<SetStateAction<boolean>>;
+  setIsOpen: (value: boolean, callbackUrl?: string) => Promise<void>;
+  isOpen: boolean;
 }
 
 const navItemObject = [
@@ -40,15 +43,23 @@ const navItemObject = [
   }
 ];
 
-export function NavGroup({ showMatchLinks, handleMatchLinks }: Props) {
+export function NavGroup({
+  showMatchLinks,
+  setShowMatchLinks,
+  setIsOpen,
+  isOpen,
+}: Props) {
   return (
     <>
-      <div className="@flex @items-center @justify-center @gap-10 monitor:@gap-16">
+      <div className="@flex @items-center @justify-center @gap-10 monitor:@gap-16 @h-full @w-[70vw]">
         <button
-          onClick={handleMatchLinks}
-          className="@text-white @flex @flex-col relative @justify-center @items-center @cursor-pointer matchLobbyToggle"
+          onMouseEnter={() => setShowMatchLinks(true)}
+          onMouseLeave={() => setShowMatchLinks(false)}
+          className="@text-white @flex @flex-col relative @justify-center @items-center @cursor-pointer matchLobbyToggle @h-full"
         >
-          <NavButton key="GAME">GAME</NavButton>
+          <NavButton key="GAME" hasArrow isOpen={showMatchLinks}>
+            GAME
+          </NavButton>
           <div className="@flex @justify-center @relative @w-full ">
             <NavMenuMatches showMatchLinks={showMatchLinks} />
           </div>
@@ -57,8 +68,8 @@ export function NavGroup({ showMatchLinks, handleMatchLinks }: Props) {
           <NavItem key={item.text} text={item.text} location={item.location} />
         ))}
       </div>
-      <div className="@flex @justify-center @items-center @relative loginLink">
-        <NavItem text="LOGIN" location="/" />
+      <div className="@flex @h-12 @w-[15vw] @justify-end @items-center @relative">
+        <NavLoginLogout isOpen={isOpen} setIsOpen={setIsOpen} />
       </div>
     </>
   );
