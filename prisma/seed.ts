@@ -186,7 +186,10 @@ async function main() {
           id: devPlayers[0].id,
           name: devPlayers[0].name,
           ready: true,
-          co: "andy",
+          coId: {
+            name: "andy",
+            version: "AW2"
+          },
           eliminated: false,
           funds: 20000,
           powerMeter: 10000,
@@ -200,7 +203,10 @@ async function main() {
           id: devPlayers[1].id,
           name: devPlayers[1].name,
           ready: true,
-          co: "max",
+          coId: {
+            name: "max",
+            version: "AW2"
+          },
           eliminated: false,
           funds: 10000,
           powerMeter: 10000,

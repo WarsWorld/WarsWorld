@@ -23,7 +23,7 @@ const kebabToCamel = (str: string) => {
 export const PlayerBox = ({ playerTurn, playerInMatch }: Props) => {
   const army = playerInMatch?.army && kebabToCamel(playerInMatch.army);
   const playerGradient = nationColorGradients[army ?? "neutral"];
-  const playerCO = playerInMatch?.co ?? "Neutral";
+  const playerCO = playerInMatch?.coId ?? "Neutral";
   const playerNation = army ?? "neutral";
   const playerId = playerInMatch?.id ?? "Awaiting player...";
   const playerUnit = army ?? "neutral";

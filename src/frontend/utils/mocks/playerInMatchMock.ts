@@ -6,7 +6,10 @@ export const playerInMatch1: PlayerInMatch = {
   id: "111",
   name: "Hello",
   ready: true,
-  co: "adder",
+  coId: {
+    name: "adder",
+    version: "AW2"
+  },
   eliminated: false,
   funds: 1000,
   powerMeter: 3000,
@@ -21,7 +24,10 @@ export const playerInMatch2: PlayerInMatch = {
   id: "222",
   name: "World",
   ready: false,
-  co: "sami",
+  coId: {
+    name: "sami",
+    version: "AW2"
+  },
   eliminated: false,
   funds: 2000,
   powerMeter: 5000,

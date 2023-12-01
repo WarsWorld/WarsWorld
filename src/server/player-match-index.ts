@@ -9,6 +9,8 @@ class PlayerMatchIndex {
     return this.index.get(playerId);
   }
 
+  // TODO remove match param from these methods
+  // because player already has a path to match.
   onPlayerJoin(player: PlayerInMatchWrapper, match: MatchWrapper) {
     const playerMatches = this.index.get(player.data.id);
 

@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { gameVersionSchema } from "./game-version";
 
 export const coSchema = z.enum([
   "adder",
@@ -29,7 +30,14 @@ export const coSchema = z.enum([
   "von-bolt",
   "sasha",
   "rachel",
-  "hadeez",
+  "hadeez"
 ]);
+
+export const coIdSchema = z.strictObject({
+  name: coSchema,
+  version: gameVersionSchema
+});
+
+export type COID = z.infer<typeof coIdSchema>;
 
 export type CO = z.infer<typeof coSchema>;

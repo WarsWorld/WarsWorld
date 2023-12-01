@@ -1,21 +1,30 @@
-import { COPropertiesMap } from "shared/match-logic/co";
+import { getCOProperties } from "shared/match-logic/co";
 import type { Hooks } from "shared/match-logic/co-hooks";
 import type {
-  UnitWithHiddenStats,
   UnitWithVisibleStats
 } from "shared/schemas/unit";
 import type { Weather } from "shared/schemas/weather";
-import type { PlayerInMatch } from "shared/types/server-match-state";
+import type {
+  CapturableTile,
+  PlayerInMatch
+} from "shared/types/server-match-state";
+import { clamp } from "shared/utils/clamp";
 import type { MatchWrapper } from "./match";
+import type { TeamWrapper } from "./team";
 import { UnitWrapper } from "./unit";
-import { UnitsWrapper } from "./units";
-import { Vision } from "./vision";
 
 export class PlayerInMatchWrapper {
-  constructor(public data: PlayerInMatch, public match: MatchWrapper) {}
+  public match: MatchWrapper;
 
+  constructor(public data: PlayerInMatch, public team: TeamWrapper) {
+    this.match = team.match;
+  }
+
+  /**
+   * returns amount of commtowers owned * 10 (since 1 commtower gives 10% attack boost)
+   */
   getCommtowerAttackBoost() {
-    return this.match.changeableTiles.reduce(
+    return 10 * this.match.changeableTiles.reduce(
       (prev, cur) =>
         cur.type === "commtower" && cur.ownerSlot === this.data.slot
           ? prev + 1
@@ -25,22 +34,11 @@ export class PlayerInMatchWrapper {
   }
 
   getUnits() {
-    return new UnitsWrapper(
-      this.match.units.data.filter((u) => u.data.playerSlot === this.data.slot)
-    );
-  }
-
-  /**
-   * TODO Teams/Allies!
-   */
-  getEnemyUnits() {
-    return new UnitsWrapper(
-      this.match.units.data.filter((u) => u.data.playerSlot !== this.data.slot)
-    );
+    return this.match.units.filter((u) => u.data.playerSlot === this.data.slot)
   }
 
   getHook<HookType extends keyof Hooks>(hookType: HookType) {
-    const COProperties = COPropertiesMap[this.data.co];
+    const COProperties = getCOProperties(this.data.coId);
 
     switch (this.data.COPowerState) {
       case "no-power":
@@ -48,7 +46,7 @@ export class PlayerInMatchWrapper {
       case "co-power":
         return COProperties.powers.COPower?.hooks?.[hookType];
       case "super-co-power":
-        return COProperties.powers.superCOPower.hooks?.[hookType];
+        return COProperties.powers.superCOPower?.hooks?.[hookType];
     }
   }
 
@@ -65,7 +63,7 @@ export class PlayerInMatchWrapper {
       i !== this.data.slot;
       i = nextSlot(i)
     ) {
-      const player = this.match.players.getBySlot(i);
+      const player = this.match.getBySlot(i);
 
       if (player?.data.eliminated === true) {
         return player;
@@ -75,72 +73,63 @@ export class PlayerInMatchWrapper {
     return null;
   }
 
-  /**
-   * This might be suboptimal - especially considering clear-weather matches,
-   * but it should cover discovering hidden units as well as fog of war
-   * without too much complexity.
-   */
-  getEnemyUnitsInVision() {
-    const vision = this.match.rules.fogOfWar ? new Vision(this) : null;
-
-    return this.getEnemyUnits()
-      .data.filter((enemy) => {
-        if (enemy.isHiddenThroughHiddenProperty()) {
-          return enemy.getNeighbouringUnits().some((u) => this.ownsUnit(u));
-        }
-
-        if (vision === null) {
-          return true;
-        }
-
-        const isSonjaAndPower =
-          this.data.co === "sonja" && this.data.COPowerState !== "no-power";
-
-        if (!isSonjaAndPower && enemy.isOnHiddenTile()) {
-          return enemy.getNeighbouringUnits().some((u) => this.ownsUnit(u));
-        }
-
-        return vision.isPositionVisible(enemy.data.position);
-      })
-      .map<UnitWithVisibleStats | UnitWithHiddenStats>((visibleEnemyUnit) => {
-        if (visibleEnemyUnit.player.data.co === "sonja") {
-          const hiddenUnit: UnitWithHiddenStats = {
-            ...visibleEnemyUnit.data,
-            stats: "hidden"
-          };
-
-          return hiddenUnit;
-        }
-
-        return visibleEnemyUnit.data;
-      });
-  }
-
   gainFunds() {
-    // TODO get all owned properties + check if high funds mode + ?
+    let numberOfFundsGivingProperties = 0;
+
+    for (const tile of this.match.changeableTiles) {
+      if (!("ownerSlot" in tile)) {
+        // is non-ownable changeable tile, like a pipe seam or missile silo etc.
+        continue;
+      }
+
+      if (tile.type === "lab" || tile.type === "commtower") {
+        continue;
+      }
+
+      if (this.owns(tile)) {
+        numberOfFundsGivingProperties++;
+      }
+    }
+
+    let { fundsPerProperty } = this.match.rules;
+
+    if (this.data.coId.name === "sasha") {
+      fundsPerProperty += 100;
+    }
+
+    this.data.funds += numberOfFundsGivingProperties * fundsPerProperty;
   }
 
   getPowerStarCost() {
     return 9000 * (1 + 0.2 * Math.min(this.data.timesPowerUsed, 10));
   }
 
-  increasePowerMeter(amount: number) {
+  getMaxPowerMeter() {
+    const COPowers = getCOProperties(this.data.coId).powers;
+
+    if (COPowers.superCOPower !== undefined) {
+      return COPowers.superCOPower.stars * this.getPowerStarCost();
+    } else if (COPowers.COPower !== undefined) {
+      return COPowers.COPower.stars * this.getPowerStarCost();
+    }
+
+    return 0;
+  }
+
+  setPowerMeter(value: number) {
     if (this.data.COPowerState !== "no-power") {
       return;
     }
 
-    const maxPowerMeter =
-      COPropertiesMap[this.data.co].powers.superCOPower.stars *
-      this.getPowerStarCost();
-
-    this.data.powerMeter = Math.min(
-      this.data.powerMeter + amount,
-      maxPowerMeter
-    );
+    this.data.powerMeter = clamp(value, 0, this.getMaxPowerMeter());
   }
 
-  ownsUnit(unit: UnitWrapper) {
-    return unit.data.playerSlot === this.data.slot;
+  owns(capturableTileOrUnit: CapturableTile | UnitWrapper) {
+    if ("ownerSlot" in capturableTileOrUnit) {
+      return capturableTileOrUnit.ownerSlot === this.data.slot;
+    }
+
+    return capturableTileOrUnit.data.playerSlot === this.data.slot;
   }
 
   /**
@@ -149,11 +138,14 @@ export class PlayerInMatchWrapper {
    * e.g.: olaf has clear weather cost during snow.
    *
    * sturm is handled with a movementCost hook.
+   *
+   * TODO: if this method continues to be only used once, it's a candidate
+   * to be moved outside this class.
    */
   getWeatherSpecialMovement(): Weather {
     const weather = this.match.currentWeather;
 
-    switch (this.data.co) {
+    switch (this.data.coId.name) {
       case "drake": {
         if (weather === "rain") {
           return "clear";
@@ -184,11 +176,13 @@ export class PlayerInMatchWrapper {
   }
 
   addUnwrappedUnit(rawUnit: Omit<UnitWithVisibleStats, "playerSlot">) {
-    this.match.units.data.push(
-      new UnitWrapper(
-        { ...rawUnit, playerSlot: this.data.slot } as UnitWithVisibleStats,
-        this.match
-      )
+    const unit = new UnitWrapper(
+      { ...rawUnit, playerSlot: this.data.slot } as UnitWithVisibleStats,
+      this.match
     );
+
+    this.match.units.push(unit);
+
+    return unit;
   }
 }

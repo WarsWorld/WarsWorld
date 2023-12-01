@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { directionSchema } from "./direction";
+import { directionSchema } from "./position";
 import { pathSchema, positionSchema } from "./position";
 import { unitTypeSchema } from "./unit";
 

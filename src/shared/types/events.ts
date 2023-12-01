@@ -14,7 +14,8 @@ import type {
   WaitAction
 } from "shared/schemas/action";
 import type { Army } from "shared/schemas/army";
-import type { CO } from "shared/schemas/co";
+import type { COID } from "shared/schemas/co";
+import type { Position } from "shared/schemas/position";
 import type {
   UnitWithHiddenStats,
   UnitWithVisibleStats
@@ -51,7 +52,10 @@ export type AttackEvent = {
   attackerHP?: number;
 } & AttackAction;
 
-export type COPowerEvent = COPowerAction;
+export type COPowerEvent = COPowerAction & {
+  /** used for rachel, von-bolt and sturm SCOPs */
+  positions?: Position[];
+};
 
 type WithPlayer = {
   playerId: Player["id"];
@@ -109,7 +113,7 @@ export type NonStoredEvent = WithPlayer &
       }
     | {
         type: "player-picked-co";
-        co: CO;
+        coId: COID;
       }
     | {
         type: "player-picked-army";

@@ -1,9 +1,8 @@
 import { DispatchableError } from "shared/DispatchedError";
 import type { AbilityAction } from "shared/schemas/action";
-import { allDirections } from "shared/schemas/direction";
+import { addDirection, allDirections } from "shared/schemas/position";
 import type { MatchWrapper } from "shared/wrappers/match";
 import type { UnitWrapper } from "shared/wrappers/unit";
-import { addDirection } from "../../positions";
 import type { SubActionToEvent } from "../handler-types";
 
 /* TODO transfer property ownership on HQ capture */
@@ -14,8 +13,12 @@ export const abilityActionToEvent: SubActionToEvent<AbilityAction> = (
   action,
   fromPosition
 ) => {
-  const player = match.players.getCurrentTurnPlayer();
-  const unit = player.getUnits().getUnitOrThrow(fromPosition);
+  const player = match.getCurrentTurnPlayer();
+  const unit = match.getUnitOrThrow(fromPosition);
+
+  if (unit.data.playerSlot !== player.data.slot) {
+    throw new DispatchableError("You don't own this unit");
+  }
 
   switch (unit.data.type) {
     case "infantry":
@@ -46,8 +49,6 @@ export const applyAbilityEvent = (match: MatchWrapper, unit: UnitWrapper) => {
     case "mech": {
       //capture tile
 
-      // TODO sami
-
       if (!("currentCapturePoints" in unit.data)) {
         // theoretically this check should never be positive, but
         // TS has issues narrowing UnitWithHiddenStats
@@ -58,12 +59,22 @@ export const applyAbilityEvent = (match: MatchWrapper, unit: UnitWrapper) => {
         unit.data.currentCapturePoints = 20;
       }
 
-      unit.data.currentCapturePoints -= unit.hp();
+      if (unit.player.data.coId.name === "sami") {
+        if (unit.player.data.COPowerState === "super-co-power") {
+          unit.data.currentCapturePoints = 0; // insta capture
+        } else {
+          // capture at 1.5x rate, rounded down
+          unit.data.currentCapturePoints -= Math.floor(unit.getHP() * 1.5);
+        }
+      } else {
+        unit.data.currentCapturePoints -= unit.getHP();
+      }
 
       if (unit.data.currentCapturePoints <= 0) {
+        // finished capturing
         unit.data.currentCapturePoints = undefined;
 
-        const tile = unit.getTileOrThrow();
+        const tile = unit.getTile();
 
         if (!("playerSlot" in tile)) {
           throw new Error(
@@ -81,13 +92,13 @@ export const applyAbilityEvent = (match: MatchWrapper, unit: UnitWrapper) => {
     case "apc": {
       //supply
       for (const dir of allDirections) {
-        match.units.getUnit(addDirection(unit.data.position, dir))?.refuel();
+        match.getUnit(addDirection(unit.data.position, dir))?.resupply();
       }
 
       break;
     }
     case "blackBomb": {
-      match.units.damageUntil1HPInRadius({
+      match.damageUntil1HPInRadius({
         radius: 3,
         damageAmount: 50,
         epicenter: unit.data.position

@@ -1,6 +1,6 @@
 import type { Player } from "@prisma/client";
 import type { Army } from "shared/schemas/army";
-import type { CO } from "shared/schemas/co";
+import type { COID } from "shared/schemas/co";
 import type { PlayerSlot } from "shared/schemas/player-slot";
 import type { Position } from "shared/schemas/position";
 import type { PropertyTileType, UnusedSiloTileType } from "shared/schemas/tile";
@@ -10,10 +10,10 @@ type WithPosition = {
   position: Position;
 };
 
-type CapturableTile = WithPosition & {
+export type CapturableTile = WithPosition & {
   type: PropertyTileType;
-  hp: number;
   ownerSlot: PlayerSlot;
+  // capture points are stored in unit
 };
 
 type LaunchableSiloTile = WithPosition & {
@@ -29,7 +29,7 @@ export type PlayerInMatch = {
   id: Player["id"];
   name: Player["name"];
   ready?: boolean;
-  co: CO;
+  coId: COID;
   eliminated?: boolean;
   funds: number;
   powerMeter: number;

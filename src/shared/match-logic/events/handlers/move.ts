@@ -19,8 +19,12 @@ export const moveActionToEvent: MainActionToEvent<MoveAction> = (
   match,
   action
 ) => {
-  const player = match.players.getCurrentTurnPlayer();
-  const unit = player.getUnits().getUnitOrThrow(action.path[0]);
+  const player = match.getCurrentTurnPlayer();
+  const unit = match.getUnitOrThrow(action.path[0]);
+
+  if (!player.owns(unit)) {
+    throw new DispatchableError("You don't own this unit")
+  }
 
   if (!unit.data.isReady) {
     throw new DispatchableError("Trying to move a waited unit");
@@ -32,7 +36,7 @@ export const moveActionToEvent: MainActionToEvent<MoveAction> = (
 
   const fuelNeeded = action.path.length - 1;
 
-  if (unit.fuel() < fuelNeeded) {
+  if (unit.getFuel() < fuelNeeded) {
     throw new DispatchableError("Not enough fuel for this move");
   }
 
@@ -41,10 +45,7 @@ export const moveActionToEvent: MainActionToEvent<MoveAction> = (
 
     match.map.throwIfOutOfBounds(position);
 
-    const moveCost = match.getMovementCost(
-      position,
-      unit.properties().movementType
-    );
+    const moveCost = match.getMovementCost(position, unit.data.type);
 
     if (moveCost === null) {
       throw new DispatchableError("Cannot move to a desired position");
@@ -56,7 +57,7 @@ export const moveActionToEvent: MainActionToEvent<MoveAction> = (
       );
     }
 
-    const unitInPosition = match.units.getUnit(position);
+    const unitInPosition = match.getUnit(position);
 
     if (unitInPosition?.data.playerSlot === unit.data.playerSlot) {
       result.trap = true;
@@ -74,15 +75,26 @@ export const moveActionToEvent: MainActionToEvent<MoveAction> = (
       unitInPosition !== undefined &&
       unitInPosition.data.playerSlot === unit.data.playerSlot
     ) {
-      // if this is false, indicates join, which is always valid because then
-      // the final position unit is by the same player and unit type.
-      const indicateLoadingUnit = unitInPosition.data.type !== unit.data.type;
 
-      if (indicateLoadingUnit) {
+      if (unitInPosition.data.type === unit.data.type) {
+        // trying to join (same unit type)
+        // join logic: if neither unit has loaded units, and the unit at join destination is not 10 hp
+        if (unitInPosition.getVisualHP() === 10) {
+          throw new DispatchableError("Trying to join into a unit at full hp");
+        }
+
+        if ("loadedUnit" in unitInPosition && unitInPosition.loadedUnit !== null) {
+          throw new DispatchableError("Trying to join into a unit that has a loaded unit");
+        }
+
+        if ("loadedUnit" in unit && unit.loadedUnit !== null) {
+          throw new DispatchableError("Trying to join while having a unit loaded");
+        }
+
+      } else {
+        // trying to load (different unit type)
         if (!("loadedUnit" in unitInPosition)) {
-          throw new DispatchableError(
-            "Move action ending position is overlapping with an allied unit"
-          );
+          throw new DispatchableError("Move action ending position is overlapping with an allied unit");
         }
 
         if (unitInPosition.loadedUnit !== null) {
@@ -229,22 +241,16 @@ export const applyMoveEvent = (match: MatchWrapper, event: MoveEvent) => {
     return;
   }
 
-  const unit = match.units.getUnitOrThrow(event.path[0]);
+  const unit = match.getUnitOrThrow(event.path[0]);
 
   //if unit was capturing, interrupt capture
   if ("currentCapturePoints" in unit) {
-    const tile = unit.getTileOrThrow();
-
-    if ("captureHP" in tile) {
-      tile.captureHP = 20;
-    }
-
     unit.currentCapturePoints = undefined;
   }
 
   unit.drainFuel(event.path.length - 1);
 
-  const unitAtDestination = match.units.getUnit(
+  const unitAtDestination = match.getUnit(
     getFinalPositionSafe(event.path)
   );
 
@@ -257,25 +263,25 @@ export const applyMoveEvent = (match: MatchWrapper, event: MoveEvent) => {
 
       unitAtDestination.setFuel(
         Math.min(
-          unit.fuel() + unitAtDestination.fuel(),
+          unit.getFuel() + unitAtDestination.getFuel(),
           unitProperties.initialFuel
         )
       );
 
-      unitAtDestination.setHp(Math.min(unit.hp() + unitAtDestination.hp(), 99));
+      // yes, this "generates" hp, but it's how it works in game
+      const newVisualHP = unit.getVisualHP() + unitAtDestination.getVisualHP();
 
-      if (
-        unit.data.stats !== "hidden" &&
-        "ammo" in unit.data.stats &&
-        unitAtDestination.data.stats !== "hidden" &&
-        "ammo" in unitAtDestination.data.stats &&
-        "initialAmmo" in unitProperties
-      ) {
-        unitAtDestination.data.stats.ammo = Math.min(
-          unit.data.stats.ammo + unitAtDestination.data.stats.ammo,
-          unitProperties.initialAmmo
-        );
+      if (newVisualHP > 10) {
+        //gain funds
+        unit.player.data.funds += (unit.getBuildCost() / 10) * (newVisualHP - 10);
       }
+
+      unitAtDestination.setHp(Math.min(newVisualHP, 10) * 10);
+
+      const newAmmo =
+        (unit.getAmmo() ?? 0) + (unitAtDestination.getAmmo() ?? 0);
+
+      unitAtDestination.setAmmo(newAmmo);
     } else if (
       unit.data.stats !== "hidden" &&
       unitAtDestination.data.stats !== "hidden"

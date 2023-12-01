@@ -7,8 +7,14 @@ import type { SubActionToEvent } from "../handler-types";
 export const launchMissileActionToEvent: SubActionToEvent<
   LaunchMissileAction
 > = (match, action, fromPosition) => {
-  const player = match.players.getCurrentTurnPlayer();
-  const unit = player.getUnits().getUnitOrThrow(fromPosition);
+  const player = match.getCurrentTurnPlayer();
+  
+  const unit = match.getUnitOrThrow(fromPosition);
+
+  if (!player.owns(unit)) {
+    throw new DispatchableError("You don't own this unit")
+  }
+
   const tile = match.getTile(fromPosition);
 
   if (tile.type !== "unusedSilo") {
@@ -30,7 +36,7 @@ export const applyLaunchMissileEvent = (
   match: MatchWrapper,
   event: LaunchMissileEvent
 ) => {
-  match.units.damageUntil1HPInRadius({
+  match.damageUntil1HPInRadius({
     radius: 3,
     damageAmount: 30,
     epicenter: event.targetPosition,

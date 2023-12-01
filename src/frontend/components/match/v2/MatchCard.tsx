@@ -38,7 +38,7 @@ export default function MatchCard({ match, inMatch }: matchData) {
     playerIndex === 0 ? (secondPlayer = match.players[1]) : (secondPlayer = match.players[0]);
   }
 
-  const [playerCO, setPlayerCO] = useState(firstPlayer.co);
+  const [playerCO, setPlayerCO] = useState(firstPlayer.coId);
   const [army, setArmy] = useState(firstPlayer.army);
 
   const [ready, setReady] = useState(firstPlayer.ready);
@@ -76,7 +76,7 @@ export default function MatchCard({ match, inMatch }: matchData) {
         {twoPlayerCheck ? (
           <MatchPlayer
             name={secondPlayer.name}
-            co={secondPlayer.co}
+            co={secondPlayer.coId}
             country={secondPlayer.army}
             flipCO={true}
             playerReady={secondPlayer.ready}

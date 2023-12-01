@@ -1,0 +1,24 @@
+CLARIFICATION: when powers are active, power hooks take prio over d2d hooks (overwrite them).
+                d2d hooks not present in power hooks still get applied
+
+| DAY 2 DAY
+
+?type? units
+    have +??% firepower and -??% defense
+    have +1 movement
+
+
+Units cost -??% less/more to build
+
+| POWERS
+?type? units
+    gain +??% firepower and -??% defense
+    gain 1 movement
+
+All units heal ? HP
+All enemy units lose ? HP (to a minimum of 0.1HP)
+Weather changes to ?? for 1 day.
+
+
+ground vehicles can be checked by movetype, since piperruners dont count as ground vehicles (:/)
+(remember that aw2 doesn't have attack boost on power)

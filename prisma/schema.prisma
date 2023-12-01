@@ -234,7 +234,15 @@ model Event {
   index Int @default(autoincrement()) @map("eventIndex")
 
   /// [PrismaEvent]
-  content   Json
+  content Json
+
+  // at some point i considered removing the "index" field/column and using this createdAt
+  // instead, but then it'd have to be part of the id and unique and
+  // that will probably become awkward at some point.
+  // so i decided to keep the index, even though createdAt *should*
+  // in theory always be usable for processing events in order as well.
+  // - Function
+
   createdAt DateTime @default(now())
 
   @@id([matchId, index])

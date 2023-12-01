@@ -1,6 +1,6 @@
 import { DispatchableError } from "shared/DispatchedError";
 import type { RepairAction } from "shared/schemas/action";
-import { addDirection } from "../../positions";
+import { addDirection } from "shared/schemas/position";
 import type { MatchWrapper } from "shared/wrappers/match";
 import type { RepairEvent } from "shared/types/events";
 import type { Position } from "shared/schemas/position";
@@ -13,8 +13,14 @@ export const repairActionToEvent: SubActionToEvent<RepairAction> = (
   action,
   fromPosition
 ) => {
-  const player = match.players.getCurrentTurnPlayer();
-  const unit = player.getUnits().getUnitOrThrow(fromPosition);
+  const player = match.getCurrentTurnPlayer();
+  const unit = match.getUnitOrThrow(fromPosition);
+
+  if (!player.owns(unit)) {
+    throw new DispatchableError("You don't own this unit")
+  }
+
+  // TESTED: if trying to repair but no funds, unit will get resupplied but not repaired
 
   if (unit.data.type !== "blackBoat") {
     throw new DispatchableError(
@@ -24,7 +30,12 @@ export const repairActionToEvent: SubActionToEvent<RepairAction> = (
 
   const repairPosition = addDirection(fromPosition, action.direction);
   match.map.throwIfOutOfBounds(repairPosition);
-  player.getUnits().getUnitOrThrow(repairPosition);
+
+  const repairedUnit = match.getUnitOrThrow(repairPosition);
+
+  if (!player.owns(repairedUnit)) {
+    throw new DispatchableError("You don't own the repaired unit")
+  }
 
   return action;
 };
@@ -34,29 +45,24 @@ export const applyRepairEvent = (
   event: RepairEvent,
   fromPosition: Position
 ) => {
-  const player = match.players.getCurrentTurnPlayer();
+  const player = match.getCurrentTurnPlayer();
 
-  const repairedUnit = match.units.getUnitOrThrow(
+  const repairedUnit = match.getUnitOrThrow(
     addDirection(fromPosition, event.direction)
   );
 
-  repairedUnit.setStat(
-    "fuel",
-    unitPropertiesMap[repairedUnit.data.type].initialFuel
-  );
+  repairedUnit.resupply();
 
   //heal for free if visual hp is 10
-  if (getVisualHPfromHP(repairedUnit.getStat("hp")) === 10) {
-    repairedUnit.heal(1);
+  if (getVisualHPfromHP(repairedUnit.getHP()) === 10) {
+    repairedUnit.heal(10);
   } else {
     //check if enough funds for heal, and heal if it's the case
-    const unitCost = unitPropertiesMap[repairedUnit.data.type].cost;
-    const modifiedCost = player.getHook("buildCost")?.(unitCost, match);
-    const repairEffectiveCost = (modifiedCost ?? unitCost) * 0.1; // TODO what does this 0.1 factor do?
+    const repairCost = repairedUnit.getBuildCost() / 10;
 
-    if (repairEffectiveCost <= player.data.funds) {
-      repairedUnit.heal(1);
-      player.data.funds -= repairEffectiveCost;
+    if (repairCost <= player.data.funds) {
+      repairedUnit.heal(10);
+      player.data.funds -= repairCost;
     }
   }
 };

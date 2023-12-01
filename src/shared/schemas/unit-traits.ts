@@ -17,9 +17,6 @@ export const withAmmoUnitStatsSchema = z.object({
   })
 });
 
-type WithAmmoStats = z.infer<typeof withAmmoUnitStatsSchema>["stats"];
-export type StatsKey = keyof WithAmmoStats;
-
 export const unitInMapSharedPropertiesSchema = z.object({
   playerSlot: playerSlotForPropertiesSchema,
   position: positionSchema,
