@@ -42,7 +42,7 @@
     "@react-hook/window-size": "^3.1.1",
     "@tanstack/react-table": "^8.10.7",
     "@trpc/client": "^10.44.0",
-    "@trpc/next": "^10.44.0",
+    "@trpc/next": "^10.44.1",
     "@trpc/server": "^10.44.0",
     "gray-matter": "^4.0.3",
     "next": "^13.4.4",
