@@ -76,7 +76,7 @@ export default function MatchCard({ match, inMatch }: matchData) {
         {twoPlayerCheck ? (
           <MatchPlayer
             name={secondPlayer.name}
-            co={secondPlayer.coId}
+            co={secondPlayer.coId.name}
             country={secondPlayer.army}
             flipCO={true}
             playerReady={secondPlayer.ready}
