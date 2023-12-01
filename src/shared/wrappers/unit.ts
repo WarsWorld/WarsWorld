@@ -75,7 +75,7 @@ export class UnitWrapper {
       return;
     }
 
-    this.data.stats.hp = Math.min(this.data.stats.hp + preciseHealAmount, 99);
+    this.data.stats.hp = Math.min(this.data.stats.hp + preciseHealAmount, 100);
   }
 
   setHp(newPreciseHp: number) {
@@ -83,7 +83,7 @@ export class UnitWrapper {
       return;
     }
 
-    this.data.stats.hp = clamp(newPreciseHp, 0, 99);
+    this.data.stats.hp = clamp(newPreciseHp, 0, 100);
   }
 
   drainFuel(fuelAmount: number) {

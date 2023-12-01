@@ -75,15 +75,26 @@ export const moveActionToEvent: MainActionToEvent<MoveAction> = (
       unitInPosition !== undefined &&
       unitInPosition.data.playerSlot === unit.data.playerSlot
     ) {
-      // if this is false, indicates join, which is always valid because then
-      // the final position unit is by the same player and unit type.
-      const indicateLoadingUnit = unitInPosition.data.type !== unit.data.type;
 
-      if (indicateLoadingUnit) {
+      if (unitInPosition.data.type === unit.data.type) {
+        // trying to join (same unit type)
+        // join logic: if neither unit has loaded units, and the unit at join destination is not 10 hp
+        if (unitInPosition.getVisualHP() === 10) {
+          throw new DispatchableError("Trying to join into a unit at full hp");
+        }
+
+        if ("loadedUnit" in unitInPosition && unitInPosition.loadedUnit !== null) {
+          throw new DispatchableError("Trying to join into a unit that has a loaded unit");
+        }
+
+        if ("loadedUnit" in unit && unit.loadedUnit !== null) {
+          throw new DispatchableError("Trying to join while having a unit loaded");
+        }
+
+      } else {
+        // trying to load (different unit type)
         if (!("loadedUnit" in unitInPosition)) {
-          throw new DispatchableError(
-            "Move action ending position is overlapping with an allied unit"
-          );
+          throw new DispatchableError("Move action ending position is overlapping with an allied unit");
         }
 
         if (unitInPosition.loadedUnit !== null) {
@@ -234,12 +245,6 @@ export const applyMoveEvent = (match: MatchWrapper, event: MoveEvent) => {
 
   //if unit was capturing, interrupt capture
   if ("currentCapturePoints" in unit) {
-    const tile = unit.getTile();
-
-    if ("captureHP" in tile) {
-      tile.captureHP = 20;
-    }
-
     unit.currentCapturePoints = undefined;
   }
 
@@ -256,8 +261,6 @@ export const applyMoveEvent = (match: MatchWrapper, event: MoveEvent) => {
       //join (hp, fuel, ammo, (keep capture points))
       const unitProperties = unitPropertiesMap[unit.data.type];
 
-      // TODO calculate fund gains when joined HP would have been above 10
-
       unitAtDestination.setFuel(
         Math.min(
           unit.getFuel() + unitAtDestination.getFuel(),
@@ -265,7 +268,15 @@ export const applyMoveEvent = (match: MatchWrapper, event: MoveEvent) => {
         )
       );
 
-      unitAtDestination.setHp(unit.getHP() + unitAtDestination.getHP());
+      // yes, this "generates" hp, but it's how it works in game
+      const newVisualHP = unit.getVisualHP() + unitAtDestination.getVisualHP();
+
+      if (newVisualHP > 10) {
+        //gain funds
+        unit.player.data.funds += (unit.getBuildCost() / 10) * (newVisualHP - 10);
+      }
+
+      unitAtDestination.setHp(Math.min(newVisualHP, 10) * 10);
 
       const newAmmo =
         (unit.getAmmo() ?? 0) + (unitAtDestination.getAmmo() ?? 0);
