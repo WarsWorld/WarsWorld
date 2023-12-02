@@ -1,14 +1,15 @@
 import { DispatchableError } from "shared/DispatchedError";
 import type { AttackAction } from "shared/schemas/action";
-import { unitPropertiesMap } from "../../buildable-unit";
-import { calculateDamage, getVisualHPfromHP } from "../../calculate-damage/calculate-damage";
+import { unitPropertiesMap } from "../../game-constants/unit-properties";
+import { calculateDamage, getVisualHPfromHP } from "../../calculate-damage";
 import type { MatchWrapper } from "shared/wrappers/match";
 import type { Position } from "shared/schemas/position";
 import type { AttackEvent } from "shared/types/events";
 import type { SubActionToEvent } from "../handler-types";
 import { getDistance } from "shared/schemas/position";
 import type { UnitWrapper } from "../../../wrappers/unit";
-import { getBaseDamage } from "../../calculate-damage/base-damage";
+import { getBaseDamage } from "../../game-constants/base-damage";
+import { gameBehaviourMap } from "../../game-constants/version-properties";
 
 export type LuckRoll = {
   goodLuck: number,
@@ -100,7 +101,6 @@ export const attackActionToEvent: (...params: Params) => AttackEvent = (
   attackerLuck,
   defenderLuck
 ) => {
-  // TODO sonja SCOP special case reversal
   const player = match.getCurrentTurnPlayer();
 
   const attacker = match.getUnitOrThrow(fromPosition);
@@ -131,12 +131,14 @@ export const attackActionToEvent: (...params: Params) => AttackEvent = (
     defender.data.position
   );
 
+
+  let maximumAttackRange = attackerProperties.attackRange[1] - (match.currentWeather === "sandstorm" ? 1 : 0);
+  maximumAttackRange =
+    attacker.player.getHook("attackRange")?.(maximumAttackRange, {attacker, defender}) ?? maximumAttackRange;
+
   // we'll need this logic to prevent e.g. Max from having
   // [2, 1] artillery attack range in sandstorms.
-  const maximumAttackRange = Math.max(
-    attackerProperties.attackRange[0],
-    attackerProperties.attackRange[1]
-  );
+  maximumAttackRange = Math.max(attackerProperties.attackRange[0], maximumAttackRange);
 
   if (
     attackerProperties.attackRange[0] > attackDistance ||
@@ -194,7 +196,7 @@ export const applyAttackEvent = (
     defender.data.playerSlot
   );
 
-  //Calculate value in damages:
+  //Calculate visible hp difference:
   const previousAttackerHP =
     attacker.data.stats === "hidden" ? 100 : attacker.data.stats.hp;
   const previousDefenderHP =
@@ -204,21 +206,26 @@ export const applyAttackEvent = (
     getVisualHPfromHP(event.attackerHP ?? previousAttackerHP);
   const defenderHpDiff = getVisualHPfromHP(previousDefenderHP) -
     getVisualHPfromHP(event.defenderHP);
-  const attackerValueDiff = attackerHpDiff * attacker.getBuildCost() / 10;
-  const defenderValueDiff = defenderHpDiff * defender.getBuildCost() / 10;
 
   //sasha scop funds
   if (attacker.player.data.coId.name === "sasha" && attacker.player.data.COPowerState === "super-co-power") {
-    attacker.player.data.funds += defenderValueDiff * 0.5;
+    attacker.player.data.funds += defenderHpDiff * defender.getBuildCost() / 10 * 0.5;
   }
 
   if (defender.player.data.coId.name === "sasha" && defender.player.data.COPowerState === "super-co-power") {
-    defender.player.data.funds += attackerValueDiff * 0.5;
+    defender.player.data.funds += attackerHpDiff * attacker.getBuildCost() / 10 * 0.5;
   }
 
   //power meter charge
-  attackingPlayer.setPowerMeter(attackingPlayer.data.powerMeter + attackerValueDiff  + defenderValueDiff * 0.5);
-  defendingPlayer.setPowerMeter(defendingPlayer.data.powerMeter + defenderValueDiff + attackerValueDiff * 0.5);
+  const gb = gameBehaviourMap[match.rules.gameVersion];
+  attackingPlayer.gainPowerCharge(
+    gb.powerMeterIncreasePerHP(attacker) * attackerHpDiff +
+    gb.powerMeterIncreasePerHP(defender) * defenderHpDiff * gb.offensivePowerGenMult
+  );
+  defendingPlayer.gainPowerCharge(
+    gb.powerMeterIncreasePerHP(defender) * defenderHpDiff +
+    gb.powerMeterIncreasePerHP(attacker) * attackerHpDiff * gb.offensivePowerGenMult
+  )
 
   //hp updates (+ removal if unit dies)
   if (event.defenderHP === 0) {

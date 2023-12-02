@@ -4,7 +4,7 @@ import type { MatchWrapper } from "shared/wrappers/match";
 import type { MainEvent, MoveEvent, SubEvent } from "../../types/events";
 import { applyAbilityEvent } from "./handlers/ability";
 import { applyAttackEvent } from "./handlers/attack";
-import { applyBuildEvent } from "./handlers/build/build";
+import { applyBuildEvent } from "./handlers/build";
 import { applyCOPowerEvent } from "./handlers/coPower";
 import { applyLaunchMissileEvent } from "./handlers/launchMissile";
 import { applyMoveEvent } from "./handlers/move";

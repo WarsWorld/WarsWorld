@@ -8,10 +8,10 @@ import type {
   CapturableTile,
   PlayerInMatch
 } from "shared/types/server-match-state";
-import { clamp } from "shared/utils/clamp";
 import type { MatchWrapper } from "./match";
 import type { TeamWrapper } from "./team";
 import { UnitWrapper } from "./unit";
+import { gameBehaviourMap } from "../match-logic/game-constants/version-properties";
 
 export class PlayerInMatchWrapper {
   public match: MatchWrapper;
@@ -73,35 +73,9 @@ export class PlayerInMatchWrapper {
     return null;
   }
 
-  gainFunds() {
-    let numberOfFundsGivingProperties = 0;
-
-    for (const tile of this.match.changeableTiles) {
-      if (!("ownerSlot" in tile)) {
-        // is non-ownable changeable tile, like a pipe seam or missile silo etc.
-        continue;
-      }
-
-      if (tile.type === "lab" || tile.type === "commtower") {
-        continue;
-      }
-
-      if (this.owns(tile)) {
-        numberOfFundsGivingProperties++;
-      }
-    }
-
-    let { fundsPerProperty } = this.match.rules;
-
-    if (this.data.coId.name === "sasha") {
-      fundsPerProperty += 100;
-    }
-
-    this.data.funds += numberOfFundsGivingProperties * fundsPerProperty;
-  }
-
   getPowerStarCost() {
-    return 9000 * (1 + 0.2 * Math.min(this.data.timesPowerUsed, 10));
+    const versionBehaviour = gameBehaviourMap[this.match.rules.gameVersion];
+    return versionBehaviour.baseStarValue * (1 + versionBehaviour.powerMeterScaling * Math.min(this.data.timesPowerUsed, 10));
   }
 
   getMaxPowerMeter() {
@@ -109,19 +83,21 @@ export class PlayerInMatchWrapper {
 
     if (COPowers.superCOPower !== undefined) {
       return COPowers.superCOPower.stars * this.getPowerStarCost();
-    } else if (COPowers.COPower !== undefined) {
+    }
+
+    if (COPowers.COPower !== undefined) {
       return COPowers.COPower.stars * this.getPowerStarCost();
     }
 
     return 0;
   }
 
-  setPowerMeter(value: number) {
+  gainPowerCharge(value: number) {
     if (this.data.COPowerState !== "no-power") {
       return;
     }
 
-    this.data.powerMeter = clamp(value, 0, this.getMaxPowerMeter());
+    this.data.powerMeter = Math.min(value, this.getMaxPowerMeter());
   }
 
   owns(capturableTileOrUnit: CapturableTile | UnitWrapper) {

@@ -1,9 +1,40 @@
 import type { Match, WWMap } from "@prisma/client";
 import { prisma } from "server/prisma/prisma-client";
-import { getChangeableTilesFromMap } from "shared/match-logic/get-changeable-tile-from-map";
 import { MatchWrapper } from "shared/wrappers/match";
 import { pageMatchIndex } from "./page-match-index";
 import { playerMatchIndex } from "./player-match-index";
+import type { ChangeableTile } from "../shared/types/server-match-state";
+import { willBeChangeableTile } from "../shared/schemas/tile";
+
+const getChangeableTilesFromMap = (map: WWMap): ChangeableTile[] => {
+  const changeableTiles: ChangeableTile[] = [];
+
+  for (let y = 0; y < map.tiles.length; y++) {
+    for (let x = 0; x < map.tiles[y].length; x++) {
+      const tile = map.tiles[y][x];
+
+      if (willBeChangeableTile(tile)) {
+        if (tile.type === "unusedSilo") {
+          changeableTiles.push({
+            type: tile.type,
+            position: [x, y],
+            fired: false
+          });
+        }
+        else {
+          changeableTiles.push({
+            type: tile.type,
+            position: [x, y],
+            ownerSlot: tile.playerSlot
+          });
+        }
+      }
+    }
+  }
+
+  return changeableTiles;
+};
+
 
 export class MatchStore {
   private index = new Map<Match["id"], MatchWrapper>();

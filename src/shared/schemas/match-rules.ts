@@ -1,10 +1,12 @@
 import { z } from "zod";
 import { unitTypeSchema } from "./unit";
 import { weatherSettingSchema } from "./weather";
+import { gameVersionSchema } from "./game-version";
 
 export const matchRulesSchema = z.object({
   unitCapPerPlayer: z.number().int().positive(),
   fogOfWar: z.boolean(),
+  gameVersion: gameVersionSchema,
   fundsPerProperty: z.number().int(),
   bannedUnitTypes: unitTypeSchema.array(),
   captureLimit: z.number().int().positive(),

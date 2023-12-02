@@ -8,7 +8,7 @@ import {
   Texture,
 } from "pixi.js";
 import type { MatchWrapper } from "../shared/wrappers/match";
-import { unitPropertiesMap } from "../shared/match-logic/buildable-unit";
+import { unitPropertiesMap } from "../shared/match-logic/unit-properties";
 import type { UnitWrapper } from "../shared/wrappers/unit";
 import type { Position } from "acorn";
 

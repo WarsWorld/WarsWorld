@@ -22,10 +22,6 @@ export class TeamWrapper {
     return this.players.flatMap((player) => player.getUnits());
   }
 
-  addUnwrappedPlayer(player: PlayerInMatch) {
-    this.players.push(new PlayerInMatchWrapper(player, this));
-  }
-
   getEnemyUnits() {
     const playerSlotsOfTeam = this.players.map((p) => p.data.slot);
 
@@ -75,5 +71,9 @@ export class TeamWrapper {
 
         return visibleEnemyUnit.data;
       });
+  }
+
+  addUnwrappedPlayer(player: PlayerInMatch) {
+    this.players.push(new PlayerInMatchWrapper(player, this));
   }
 }

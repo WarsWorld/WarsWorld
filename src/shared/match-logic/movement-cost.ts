@@ -1,13 +1,14 @@
 import type { TileType } from "shared/schemas/tile";
 import type { Weather } from "shared/schemas/weather";
-import { tsIncludes } from "shared/utils/typesafe-includes";
-import type { MovementType } from "./buildable-unit";
-import { terrainProperties } from "./terrain";
+import type { MovementType } from "./game-constants/unit-properties";
+import { terrainProperties } from "./game-constants/terrain-properties";
+import type { GameVersion } from "../schemas/game-version";
 
 export function getBaseMovementCost(
   movementType: MovementType,
   weather: Weather,
-  tileType: TileType
+  tileType: TileType,
+  gameVersion: GameVersion
 ): number | null {
   const clearMovementCost =
     terrainProperties[tileType].movementCosts[movementType];
@@ -17,13 +18,15 @@ export function getBaseMovementCost(
     return null;
   }
 
+  if (gameVersion === "AWDS") {
+    return clearMovementCost; // weather doesn't inflict move penalties in awds
+  }
+
   switch (weather) {
-    case "clear":
-      return clearMovementCost;
     case "rain": {
       if (
-        tsIncludes(tileType, ["plain", "forest"]) &&
-        tsIncludes(movementType, ["treads", "tires"])
+        ["plain", "forest"].includes(tileType) &&
+        ["treads", "tires"].includes(movementType)
       ) {
         return clearMovementCost + 1;
       }
@@ -37,7 +40,7 @@ export function getBaseMovementCost(
 
       if (
         tileType === "plain" &&
-        tsIncludes(movementType, ["foot", "tires", "treads"])
+        ["foot", "tires", "treads"].includes(movementType)
       ) {
         return clearMovementCost + 1;
       }
@@ -48,14 +51,14 @@ export function getBaseMovementCost(
 
       if (
         tileType === "mountain" &&
-        tsIncludes(movementType, ["foot", "boots"])
+        ["foot", "boots"].includes(movementType)
       ) {
         return clearMovementCost * 2;
       }
 
       if (
-        tsIncludes(tileType, ["sea", "port"]) &&
-        tsIncludes(movementType, ["sea", "lander"])
+        ["sea", "port"].includes(tileType) &&
+        ["sea", "lander"].includes(movementType)
       ) {
         return clearMovementCost + 1;
       }
@@ -63,7 +66,7 @@ export function getBaseMovementCost(
       return clearMovementCost;
     }
     default: {
-      throw new Error(`Can't handle weather ${weather} yet!`);
+      return clearMovementCost;
     }
   }
 }

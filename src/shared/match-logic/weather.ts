@@ -1,7 +1,9 @@
 import type { Weather } from "shared/schemas/weather";
 import type { MatchWrapper } from "shared/wrappers/match";
 
-function getBaseChanceOfRainOrSnow(match: MatchWrapper): number {
+// chance of random weather when starting a turn depends on the amount of
+// players present in the match
+function weatherBaseChance(match: MatchWrapper): number {
   switch (match.getAllPlayers().length) {
     case 2:
       return 4;
@@ -13,24 +15,24 @@ function getBaseChanceOfRainOrSnow(match: MatchWrapper): number {
 }
 
 function getChanceOfRain(match: MatchWrapper) {
+  //AWDS Drake doesn't increase weather chances
   const numberOfDrakes = match
     .getAllPlayers()
-    .filter((p) => p.data.coId.name === "drake").length;
+    .filter((p) => (p.data.coId.name === "drake" && p.data.coId.version !== "AWDS")).length;
 
-  return getBaseChanceOfRainOrSnow(match) + numberOfDrakes * 7;
+  return weatherBaseChance(match) + numberOfDrakes * 7;
 }
 
-/**
- * TODO we don't handle sandstorm yet.
- * do we ever even want to..?
- *
- * also weather is different in versions
- */
 export function getRandomWeather(match: MatchWrapper): Weather {
   const roll = Math.random() * 100;
 
-  const snowThreshold = getBaseChanceOfRainOrSnow(match);
+  // Of 100 "numbers", some of them are assigned to rain, others to snow,
+  // others to sandstorm (if game version is AWDS), and the remaining to clear
+  const snowThreshold = weatherBaseChance(match);
   const rainThreshold = getChanceOfRain(match) + snowThreshold;
+  const sandstormThreshold =
+    (match.rules.gameVersion === "AWDS" ? weatherBaseChance(match) : 0)
+    + rainThreshold;
 
   if (roll < snowThreshold) {
     return "snow";
@@ -38,6 +40,10 @@ export function getRandomWeather(match: MatchWrapper): Weather {
 
   if (roll < rainThreshold) {
     return "rain";
+  }
+
+  if (roll < sandstormThreshold) {
+    return "sandstorm";
   }
 
   return "clear";

@@ -1,4 +1,4 @@
-import { unitPropertiesMap } from "shared/match-logic/buildable-unit";
+import { unitPropertiesMap } from "shared/match-logic/game-constants/unit-properties";
 import type { Position } from "shared/schemas/position";
 import { getDistance } from "shared/schemas/position";
 import type { TeamWrapper } from "./team";

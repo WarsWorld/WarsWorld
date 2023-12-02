@@ -4,9 +4,8 @@ import { addDirection } from "shared/schemas/position";
 import type { MatchWrapper } from "shared/wrappers/match";
 import type { RepairEvent } from "shared/types/events";
 import type { Position } from "shared/schemas/position";
-import { unitPropertiesMap } from "../../buildable-unit";
 import type { SubActionToEvent } from "../handler-types";
-import { getVisualHPfromHP } from "shared/match-logic/calculate-damage/calculate-damage";
+import { getVisualHPfromHP } from "shared/match-logic/calculate-damage";
 
 export const repairActionToEvent: SubActionToEvent<RepairAction> = (
   match,

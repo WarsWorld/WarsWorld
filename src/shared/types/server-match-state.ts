@@ -4,7 +4,7 @@ import type { COID } from "shared/schemas/co";
 import type { PlayerSlot } from "shared/schemas/player-slot";
 import type { Position } from "shared/schemas/position";
 import type { PropertyTileType, UnusedSiloTileType } from "shared/schemas/tile";
-import type { COPowerState } from "shared/match-logic/co-power-state";
+import type { COPowerState } from "shared/match-logic/co";
 
 type WithPosition = {
   position: Position;

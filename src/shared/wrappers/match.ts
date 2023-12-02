@@ -5,9 +5,7 @@ import type {
   Player,
   WWMap
 } from "@prisma/client";
-import { unitPropertiesMap } from "shared/match-logic/buildable-unit";
 import { applyMainEventToMatch } from "shared/match-logic/events/apply-event-to-match";
-import { getBaseMovementCost } from "shared/match-logic/movement-cost";
 import type { MatchRules } from "shared/schemas/match-rules";
 import type { PlayerSlot } from "shared/schemas/player-slot";
 import type { Position } from "shared/schemas/position";
@@ -81,33 +79,7 @@ export class MatchWrapper {
     return this.map.data.tiles[position[1]][position[0]];
   }
 
-  /**
-   * returns the amount of movement points which must be spent to *enter* the tile
-   * `null` means impassible terrain.
-   *
-   * TODO maybe put this on unit wrapper?
-   */
-  getMovementCost(position: Position, unitType: UnitType): number | null {
-    const player = this.getCurrentTurnPlayer();
-
-    const baseMovementCost = getBaseMovementCost(
-      unitPropertiesMap[unitType].movementType,
-      player.getWeatherSpecialMovement(),
-      this.getTile(position).type
-    );
-
-    if (baseMovementCost === null) {
-      return null;
-    }
-
-    return (
-      player.getHook("movementCost")?.(baseMovementCost, {
-        match: this,
-        unitType
-      }) ?? baseMovementCost
-    );
-  }
-
+  // PLAYER STUFF **************************************************************
   getCurrentTurnPlayer() {
     const player = this.getAllPlayers().find((p) => p.data.hasCurrentTurn);
 
@@ -162,6 +134,7 @@ export class MatchWrapper {
     foundTeam.addUnwrappedPlayer(player);
   }
 
+  // UNIT STUFF ****************************************************************
   getUnit(position: Position) {
     return this.units.find((u) => isSamePosition(u.data.position, position));
   }
@@ -181,7 +154,6 @@ export class MatchWrapper {
   hasUnit(position: Position) {
     return this.getUnit(position) !== undefined;
   }
-
 
   damageUntil1HPInRadius({
     radius,

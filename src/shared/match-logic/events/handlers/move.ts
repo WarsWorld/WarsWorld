@@ -1,5 +1,5 @@
 import { DispatchableError } from "shared/DispatchedError";
-import { unitPropertiesMap } from "shared/match-logic/buildable-unit";
+import { unitPropertiesMap } from "shared/match-logic/game-constants/unit-properties";
 import type { MoveAction } from "shared/schemas/action";
 import { getFinalPositionSafe, isSamePosition } from "shared/schemas/position";
 import type { UnitWithVisibleStats } from "shared/schemas/unit";
@@ -45,7 +45,7 @@ export const moveActionToEvent: MainActionToEvent<MoveAction> = (
 
     match.map.throwIfOutOfBounds(position);
 
-    const moveCost = match.getMovementCost(position, unit.data.type);
+    const moveCost = unit.getMovementCost(position);
 
     if (moveCost === null) {
       throw new DispatchableError("Cannot move to a desired position");

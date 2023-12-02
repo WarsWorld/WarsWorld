@@ -1,6 +1,6 @@
 import { DispatchableError } from "shared/DispatchedError";
-import { unitPropertiesMap } from "shared/match-logic/buildable-unit";
-import { terrainProperties } from "shared/match-logic/terrain";
+import { unitPropertiesMap } from "shared/match-logic/game-constants/unit-properties";
+import { terrainProperties } from "shared/match-logic/game-constants/terrain-properties";
 import type { UnloadWaitAction } from "shared/schemas/action";
 import type { Position } from "shared/schemas/position";
 import type { Tile } from "shared/schemas/tile";

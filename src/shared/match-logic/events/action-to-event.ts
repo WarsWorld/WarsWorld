@@ -5,7 +5,7 @@ import type { MainEvent, SubEvent } from "shared/types/events";
 import type { MatchWrapper } from "shared/wrappers/match";
 import { abilityActionToEvent } from "./handlers/ability";
 import { attackActionToEvent } from "./handlers/attack";
-import { buildActionToEvent } from "./handlers/build/build";
+import { buildActionToEvent } from "./handlers/build";
 import { coPowerActionToEvent } from "./handlers/coPower";
 import { launchMissileActionToEvent } from "./handlers/launchMissile";
 import { moveActionToEvent } from "./handlers/move";
@@ -47,8 +47,8 @@ export const validateSubActionAndToEvent = (
         match,
         action,
         unitPosition,
-        Math.random(),
-        Math.random()
+        {goodLuck: Math.random(), badLuck: Math.random()},
+        {goodLuck: Math.random(), badLuck: Math.random()}
       );
     case "ability":
       return abilityActionToEvent(match, action, unitPosition);

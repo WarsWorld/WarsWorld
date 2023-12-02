@@ -36,6 +36,13 @@ export const coPowerActionToEvent: MainActionToEvent<COPowerAction> = (
     throw new DispatchableError(`Not enough power meter for ${powerType}`);
   }
 
+  if (power.calculatePositions !== undefined) {
+    return {
+      ...action,
+      positions: power.calculatePositions(player)
+    };
+  }
+
   return action;
 };
 
@@ -55,8 +62,6 @@ export const applyCOPowerEvent = (match: MatchWrapper, event: COPowerEvent) => {
 
   player.data.powerMeter -= power.stars * player.getPowerStarCost();
 
-  power.instantEffect?.({
-    match,
-    player
-  });
+  //event.positions are for raachel, sturm, vb supers
+  power.instantEffect?.(player, event.positions);
 };

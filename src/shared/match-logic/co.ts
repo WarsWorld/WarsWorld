@@ -1,63 +1,66 @@
 import type { CO, COID } from "shared/schemas/co";
 import type { PlayerInMatchWrapper } from "shared/wrappers/player-in-match";
 import type { Hooks } from "./co-hooks";
-import { andyAW1 } from "./cos/andy/andy-aw1";
-import { andyAW2 } from "./cos/andy/andy-aw2";
-import { andyAWDS } from "./cos/andy/andy-awds";
-import { maxAW1 } from "./cos/max/max-aw1";
-import { maxAW2 } from "./cos/max/max-aw2";
-import { maxAWDS } from "./cos/max/max-awds";
-import { samiAW1 } from "./cos/sami/sami-aw1";
-import { samiAW2 } from "./cos/sami/sami-aw2";
-import { samiAWDS } from "./cos/sami/sami-awds";
+import { andyAW1 } from "./game-constants/cos/andy/andy-aw1";
+import { andyAW2 } from "./game-constants/cos/andy/andy-aw2";
+import { andyAWDS } from "./game-constants/cos/andy/andy-awds";
+import { maxAW1 } from "./game-constants/cos/max/max-aw1";
+import { maxAW2 } from "./game-constants/cos/max/max-aw2";
+import { maxAWDS } from "./game-constants/cos/max/max-awds";
+import { samiAW1 } from "./game-constants/cos/sami/sami-aw1";
+import { samiAW2 } from "./game-constants/cos/sami/sami-aw2";
+import { samiAWDS } from "./game-constants/cos/sami/sami-awds";
 import type { GameVersion } from "shared/schemas/game-version";
 import type { Position } from "shared/schemas/position";
-import { nellAW1 } from "./cos/nell/nell-aw1";
-import { olafAW1 } from "./cos/olaf/olaf-aw1";
-import { gritAW2 } from "./cos/grit/grit-aw2";
-import { gritAW1 } from "./cos/grit/grit-aw1";
-import { eagleAW1 } from "./cos/eagle/eagle-aw1";
-import { drakeAW1 } from "./cos/drake/drake-aw1";
-import { kanbeiAW1 } from "./cos/kanbei/kanbei-aw1";
-import { sonjaAW1 } from "./cos/sonja/sonja-aw1";
-import { sturmAW1Versus } from "./cos/sturm/sturm-aw1-versus";
-import { hachiAW2 } from "./cos/hachi/hachi-aw2";
-import { nellAW2 } from "./cos/nell/nell-aw2";
-import { colinAW2 } from "./cos/colin/colin-aw2";
-import { olafAW2 } from "./cos/olaf/olaf-aw2";
-import { drakeAW2 } from "./cos/drake/drake-aw2";
-import { eagleAW2 } from "./cos/eagle/eagle-aw2";
-import { jessAW2 } from "./cos/jess/jess-aw2";
-import { kanbeiAW2 } from "./cos/kanbei/kanbei-aw2";
-import { sonjaAW2 } from "./cos/sonja/sonja-aw2";
-import { senseiAW2 } from "./cos/sensei/sensei-aw2";
-import { sturmAW2 } from "./cos/sturm/sturm-aw2";
-import { adderAW2 } from "./cos/adder/adder-aw2";
-import { lashAW2 } from "./cos/lash/lash-aw2";
-import { flakAW2 } from "./cos/flak/flak-aw2";
-import { nellAWDS } from "./cos/nell/nell-awds";
-import { hachiAWDS } from "./cos/hachi/hachi-awds";
-import { jakeAWDS } from "./cos/jake/jake-awds";
-import { rachelAWDS } from "./cos/rachel/rachel";
-import { olafAWDS } from "./cos/olaf/olaf-awds";
-import { gritAWDS } from "./cos/grit/grit-awds";
-import { colinAWDS } from "./cos/colin/colin-awds";
-import { sashaAWDS } from "./cos/sasha/sasha-awds";
-import { eagleAWDS } from "./cos/eagle/eagle-awds";
-import { drakeAWDS } from "./cos/drake/drake-awds";
-import { jessAWDS } from "./cos/jess/jess-awds";
-import { javierAWDS } from "./cos/javier/javier-awds";
-import { kanbeiAWDS } from "./cos/kanbei/kanbei-awds";
-import { sonjaAWDS } from "./cos/sonja/sonja-awds";
-import { senseiAWDS } from "./cos/sensei/sensei-awds";
-import { grimmAWDS } from "./cos/grimm/grimm-awds";
-import { adderAWDS } from "./cos/adder/adder-awds";
-import { lashAWDS } from "./cos/lash/lash-awds";
-import { flakAWDS } from "./cos/flak/flak-awds";
-import { juggerAWDS } from "./cos/jugger/jugger-awds";
-import { koalAWDS } from "./cos/koal/koal-awds";
-import { kindleAWDS } from "./cos/kindle/kindle-awds";
-import { vonBoltAWDS } from "./cos/von-bolt/von-bolt-awds";
+import { nellAW1 } from "./game-constants/cos/nell/nell-aw1";
+import { olafAW1 } from "./game-constants/cos/olaf/olaf-aw1";
+import { gritAW2 } from "./game-constants/cos/grit/grit-aw2";
+import { gritAW1 } from "./game-constants/cos/grit/grit-aw1";
+import { eagleAW1 } from "./game-constants/cos/eagle/eagle-aw1";
+import { drakeAW1 } from "./game-constants/cos/drake/drake-aw1";
+import { kanbeiAW1 } from "./game-constants/cos/kanbei/kanbei-aw1";
+import { sonjaAW1 } from "./game-constants/cos/sonja/sonja-aw1";
+import { sturmAW1Versus } from "./game-constants/cos/sturm/sturm-aw1-versus";
+import { hachiAW2 } from "./game-constants/cos/hachi/hachi-aw2";
+import { nellAW2 } from "./game-constants/cos/nell/nell-aw2";
+import { colinAW2 } from "./game-constants/cos/colin/colin-aw2";
+import { olafAW2 } from "./game-constants/cos/olaf/olaf-aw2";
+import { drakeAW2 } from "./game-constants/cos/drake/drake-aw2";
+import { eagleAW2 } from "./game-constants/cos/eagle/eagle-aw2";
+import { jessAW2 } from "./game-constants/cos/jess/jess-aw2";
+import { kanbeiAW2 } from "./game-constants/cos/kanbei/kanbei-aw2";
+import { sonjaAW2 } from "./game-constants/cos/sonja/sonja-aw2";
+import { senseiAW2 } from "./game-constants/cos/sensei/sensei-aw2";
+import { sturmAW2 } from "./game-constants/cos/sturm/sturm-aw2";
+import { adderAW2 } from "./game-constants/cos/adder/adder-aw2";
+import { lashAW2 } from "./game-constants/cos/lash/lash-aw2";
+import { flakAW2 } from "./game-constants/cos/flak/flak-aw2";
+import { nellAWDS } from "./game-constants/cos/nell/nell-awds";
+import { hachiAWDS } from "./game-constants/cos/hachi/hachi-awds";
+import { jakeAWDS } from "./game-constants/cos/jake/jake-awds";
+import { rachelAWDS } from "./game-constants/cos/rachel/rachel";
+import { olafAWDS } from "./game-constants/cos/olaf/olaf-awds";
+import { gritAWDS } from "./game-constants/cos/grit/grit-awds";
+import { colinAWDS } from "./game-constants/cos/colin/colin-awds";
+import { sashaAWDS } from "./game-constants/cos/sasha/sasha-awds";
+import { eagleAWDS } from "./game-constants/cos/eagle/eagle-awds";
+import { drakeAWDS } from "./game-constants/cos/drake/drake-awds";
+import { jessAWDS } from "./game-constants/cos/jess/jess-awds";
+import { javierAWDS } from "./game-constants/cos/javier/javier-awds";
+import { kanbeiAWDS } from "./game-constants/cos/kanbei/kanbei-awds";
+import { sonjaAWDS } from "./game-constants/cos/sonja/sonja-awds";
+import { senseiAWDS } from "./game-constants/cos/sensei/sensei-awds";
+import { grimmAWDS } from "./game-constants/cos/grimm/grimm-awds";
+import { adderAWDS } from "./game-constants/cos/adder/adder-awds";
+import { lashAWDS } from "./game-constants/cos/lash/lash-awds";
+import { flakAWDS } from "./game-constants/cos/flak/flak-awds";
+import { juggerAWDS } from "./game-constants/cos/jugger/jugger-awds";
+import { koalAWDS } from "./game-constants/cos/koal/koal-awds";
+import { kindleAWDS } from "./game-constants/cos/kindle/kindle-awds";
+import { vonBoltAWDS } from "./game-constants/cos/von-bolt/von-bolt-awds";
+import { hawkeAWDS } from "./game-constants/cos/hawke/hawke-awds";
+
+export type COPowerState = "no-power" | "co-power" | "super-co-power";
 
 type COPower = {
   name: string;
@@ -141,7 +144,7 @@ const COIndex: Record<GameVersion, Map<CO, COProperties>> = {
     ["sonja", sonjaAWDS],
     ["sensei", senseiAWDS],
     ["grimm", grimmAWDS],
-    ["hawke", hachiAWDS],
+    ["hawke", hawkeAWDS],
     ["adder", adderAWDS],
     ["lash", lashAWDS],
     ["flak", flakAWDS],

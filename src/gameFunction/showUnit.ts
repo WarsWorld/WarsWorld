@@ -8,7 +8,7 @@ import { Container, Texture } from "pixi.js";
 import { isSamePosition } from "shared/schemas/position";
 import type { Tile } from "shared/schemas/tile";
 import type { UnitWithVisibleStats } from "shared/schemas/unit";
-import { unitPropertiesMap } from "shared/match-logic/buildable-unit";
+import { unitPropertiesMap } from "shared/match-logic/unit-properties";
 import type { PathNode } from "./showPathing";
 import {
   getAccessibleNodes,

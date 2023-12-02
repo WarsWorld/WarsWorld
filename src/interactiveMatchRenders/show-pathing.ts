@@ -1,6 +1,6 @@
 import type { Spritesheet } from "pixi.js";
 import { Container, Sprite } from "pixi.js";
-import { unitPropertiesMap } from "shared/match-logic/buildable-unit";
+import { unitPropertiesMap } from "shared/match-logic/unit-properties";
 import type { Position } from "shared/schemas/position";
 import { tileConstructor } from "./sprite-constructor";
 import type { MatchWrapper } from "shared/wrappers/match";

@@ -1,6 +1,7 @@
 import type { PassTurnEvent } from "shared/types/events";
 import type { MatchWrapper } from "shared/wrappers/match";
-import { getVisualHPfromHP } from "../../calculate-damage/calculate-damage";
+import { getVisualHPfromHP } from "../../calculate-damage";
+import { getRandomWeather } from "../../weather";
 
 export const applyPassTurnEvent = (
   match: MatchWrapper,
@@ -15,14 +16,9 @@ export const applyPassTurnEvent = (
    * - random weather or d2d weather influence (use getRandomWeather!!)
    * - (done) active power weather removal
    * - (done) funds
-   * - repairs
-   * - refuel (property + apc/blackboat)
-   * - fuel drain
-   *      if (eagle) {
-  *         if (currentPlayerData.unitFacility === "airport") {
-              return fuelDrain - 2;
-            }
-   *      }
+   * - (done) repairs
+   * - (done) refuel (property + apc/blackboat)
+   * - (done) fuel drain
    */
 
   const lastTurnPlayer = match.getCurrentTurnPlayer();
@@ -42,9 +38,15 @@ export const applyPassTurnEvent = (
   nextTurnPlayer.data.hasCurrentTurn = true;
   nextTurnPlayer.data.COPowerState = "no-power";
 
-  if (
-    match.playerToRemoveWeatherEffect?.data.slot === nextTurnPlayer.data.slot
-  ) {
+  // update weather
+  // TODO wip, i think player -1 should be playing the game as first player,
+  //  and be responsible to set weather at the start of each day (day = turn cycle)
+  if (match.playerToRemoveWeatherEffect === null) {
+    if (match.rules.weatherSetting === "random") {
+      match.currentWeather = getRandomWeather(match);
+    }
+  }
+  else if (match.playerToRemoveWeatherEffect.data.slot === nextTurnPlayer.data.slot) {
     // the weather days left is for olaf awds, since his powers cause snow for TWO days
     --match.weatherDaysLeft;
 
@@ -56,38 +58,70 @@ export const applyPassTurnEvent = (
     }
   }
 
-  nextTurnPlayer.gainFunds();
+  { // gain funds
+    let numberOfFundsGivingProperties = 0;
 
+    for (const tile of match.changeableTiles) {
+      if (!("ownerSlot" in tile)) {
+        // is non-ownable changeable tile, like a pipe seam or missile silo etc.
+        continue;
+      }
+
+      if (tile.type === "lab" || tile.type === "commtower") {
+        continue;
+      }
+
+      if (nextTurnPlayer.owns(tile)) {
+        numberOfFundsGivingProperties++;
+      }
+    }
+
+    let { fundsPerProperty } = match.rules;
+
+    if (nextTurnPlayer.data.coId.name === "sasha") {
+      fundsPerProperty += 100;
+    }
+
+    nextTurnPlayer.data.funds += numberOfFundsGivingProperties * fundsPerProperty;
+  }
+
+  // update units
   for (const unit of nextTurnPlayer.getUnits()) {
 
-    // consume fuel
-    let fuelConsumed = 0;
+    { // consume fuel
+      let fuelConsumed = 0;
 
-    if (unit.properties().facility === "airport") {
-      fuelConsumed = 5;
-
-      if (unit.data.type === "transportCopter" || unit.data.type === "battleCopter") {
-        fuelConsumed = 2;
-      } else if ("hidden" in unit.data && unit.data.hidden) { // hidden stealth
-        fuelConsumed = 8;
-      }
-
-      if (unit.player.data.coId.name === "eagle") {
-        fuelConsumed -= 2;
-      }
-    } else if (unit.properties().facility === "port") {
-      fuelConsumed = 1;
-
-      if ("hidden" in unit.data && unit.data.hidden) { // hidden sub
+      if (unit.properties().facility === "airport") {
         fuelConsumed = 5;
+
+        if (unit.data.type === "transportCopter" || unit.data.type === "battleCopter") {
+          fuelConsumed = 2;
+        } else if ("hidden" in unit.data && unit.data.hidden) { // hidden stealth
+          fuelConsumed = 8;
+        }
+
+        if (unit.player.data.coId.name === "eagle") {
+          fuelConsumed -= 2;
+        }
+      } else if (unit.properties().facility === "port") {
+        fuelConsumed = 1;
+
+        if ("hidden" in unit.data && unit.data.hidden) { // hidden sub
+          fuelConsumed = 5;
+        }
+      }
+
+      if (fuelConsumed !== 0) {
+        unit.drainFuel(fuelConsumed);
+      }
+
+      if (unit.properties().facility !== "base" && unit.getFuel() <= 0) {
+        // unit crashes
+        // (has to be done here cause eagle copters consume 0 fuel per turn, but still crash if they start turn at 0 fuel)
+        unit.remove();
       }
     }
 
-    if (fuelConsumed !== 0) {
-      // this will make a unit crash if it runs out of fuel and it's not grounded
-      unit.drainFuel(fuelConsumed);
-    }
-    
     // resupply own neighbour units if apc
     if (unit.data.type === "apc") {
       for (const neighbourUnit of unit.getNeighbouringUnits()) {
@@ -97,13 +131,14 @@ export const applyPassTurnEvent = (
       }
     }
 
-    // heal and resupply if on top of appropriate facility
-    const tile = unit.getTile();
+    { // heal and resupply if on top of appropriate facility
+      const tile = unit.getTile();
 
-    if ("ownerSlot" in tile && unit.player.owns(tile)) {
       // TODO is this correct? comparing Facility with Tile type
-      if (unit.properties().facility === tile.type ||
-        (unit.properties().facility === "base" && (tile.type === "city" || tile.type === "hq"))) {
+      const isInRepairFacility = unit.properties().facility === tile.type ||
+        (unit.properties().facility === "base" && (tile.type === "city" || tile.type === "hq"));
+
+      if ("ownerSlot" in tile && unit.player.owns(tile) && isInRepairFacility) {
         unit.resupply();
 
         // rachel d2d repairs +1
@@ -126,9 +161,7 @@ export const applyPassTurnEvent = (
             unit.player.data.funds -= oneHpRepairCost * visualHpRepairPossible;
           }
         }
-
       }
     }
-
   }
 };
