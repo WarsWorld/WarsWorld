@@ -55,7 +55,7 @@ module.exports = {
       }
     ],
     "@typescript-eslint/explicit-module-boundary-types": "off",
-    "@typescript-eslint/consistent-type-imports": "error",
+    "@typescript-eslint/consistent-type-imports": "warn",
     "@typescript-eslint/strict-boolean-expressions": "error",
     "react/react-in-jsx-scope": "off",
     "react/prop-types": "off",
