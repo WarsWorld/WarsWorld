@@ -81,7 +81,8 @@ export const matchRouter = router({
         timesPowerUsed: 0,
         powerMeter: 0,
         army: "orange-star",
-        COPowerState: "no-power"
+        COPowerState: "no-power",
+        name: currentPlayer.name
       });
 
       const player = match.getByIdOrThrow(currentPlayer.id);
