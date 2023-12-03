@@ -8,8 +8,8 @@ import type { AttackEvent } from "shared/types/events";
 import type { SubActionToEvent } from "../handler-types";
 import { getDistance } from "shared/schemas/position";
 import type { UnitWrapper } from "../../../wrappers/unit";
-import { getBaseDamage } from "../../game-constants/base-damage";
-import { gameBehaviourMap } from "../../game-constants/version-properties";
+import { canAttackWithPrimary, getBaseDamage } from "../../game-constants/base-damage";
+import { versionPropertiesMap } from "../../game-constants/version-properties";
 
 export type LuckRoll = {
   goodLuck: number,
@@ -149,6 +149,7 @@ export const attackActionToEvent: (...params: Params) => AttackEvent = (
 
   // sonja scop exception (she attacks first when attacked)
   if (defender.player.data.coId.name === "sonja" && defender.player.data.COPowerState === "super-co-power") {
+    // "defender" is sonja unit with scop, "attacker" is unit that attacked sonja unit
     const result = calculateEngagementOutcome(
       defender,
       attacker,
@@ -157,8 +158,9 @@ export const attackActionToEvent: (...params: Params) => AttackEvent = (
     );
 
     if (result.attackerHP === undefined) {
-      //that means sonja scop unit killed attacker, so they couldnt "counterattack" the sonja unit
-      result.attackerHP = attacker.getHP();
+      // that means sonja scop unit killed attacker, so they couldn't "counterattack" the sonja unit
+      // therefore, sonja unit (defender) remains untouched
+      result.attackerHP = defender.getHP();
     }
 
     return {
@@ -197,15 +199,8 @@ export const applyAttackEvent = (
   );
 
   //Calculate visible hp difference:
-  const previousAttackerHP =
-    attacker.data.stats === "hidden" ? 100 : attacker.data.stats.hp;
-  const previousDefenderHP =
-    defender.data.stats === "hidden" ? 100 : defender.data.stats.hp;
-
-  const attackerHpDiff = getVisualHPfromHP(previousAttackerHP) -
-    getVisualHPfromHP(event.attackerHP ?? previousAttackerHP);
-  const defenderHpDiff = getVisualHPfromHP(previousDefenderHP) -
-    getVisualHPfromHP(event.defenderHP);
+  const attackerHpDiff = attacker.getVisualHP() - getVisualHPfromHP(event.attackerHP ?? attacker.getVisualHP());
+  const defenderHpDiff = defender.getVisualHP() - getVisualHPfromHP(event.defenderHP);
 
   //sasha scop funds
   if (attacker.player.data.coId.name === "sasha" && attacker.player.data.COPowerState === "super-co-power") {
@@ -217,7 +212,7 @@ export const applyAttackEvent = (
   }
 
   //power meter charge
-  const gb = gameBehaviourMap[match.rules.gameVersion];
+  const gb = versionPropertiesMap[match.rules.gameVersion];
   attackingPlayer.gainPowerCharge(
     gb.powerMeterIncreasePerHP(attacker) * attackerHpDiff +
     gb.powerMeterIncreasePerHP(defender) * defenderHpDiff * gb.offensivePowerGenMult
@@ -225,7 +220,16 @@ export const applyAttackEvent = (
   defendingPlayer.gainPowerCharge(
     gb.powerMeterIncreasePerHP(defender) * defenderHpDiff +
     gb.powerMeterIncreasePerHP(attacker) * attackerHpDiff * gb.offensivePowerGenMult
-  )
+  );
+
+  //ammo consumption
+  if (canAttackWithPrimary(attacker, defender)) {
+    attacker.setAmmo((attacker.getAmmo() ?? 1) - 1);
+  }
+
+  if (event.attackerHP !== undefined && canAttackWithPrimary(defender, attacker)) {
+    defender.setAmmo((defender.getAmmo() ?? 1) - 1);
+  }
 
   //hp updates (+ removal if unit dies)
   if (event.defenderHP === 0) {

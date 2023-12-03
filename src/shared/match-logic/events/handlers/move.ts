@@ -248,7 +248,14 @@ export const applyMoveEvent = (match: MatchWrapper, event: MoveEvent) => {
     unit.currentCapturePoints = undefined;
   }
 
-  unit.drainFuel(event.path.length - 1);
+  // in AWDS, snow causes units to consume double fuel when moving (except for olaf)
+  if (match.currentWeather === "snow" && match.rules.gameVersion === "AWDS" &&
+    unit.player.data.coId.name !== "olaf") {
+    unit.drainFuel(2 * (event.path.length - 1));
+  }
+  else {
+    unit.drainFuel(event.path.length - 1);
+  }
 
   const unitAtDestination = match.getUnit(
     getFinalPositionSafe(event.path)

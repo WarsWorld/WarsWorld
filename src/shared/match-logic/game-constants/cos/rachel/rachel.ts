@@ -5,7 +5,7 @@ export const rachelAWDS: COProperties = {
   displayName: "Rachel",
   gameVersion: "AWDS",
   dayToDay: {
-    description: "When repairing, units heal 1 extra HP (consumes additional funds).",
+    description: "When repairing in properties, units heal 1 extra HP (consumes additional funds).",
     hooks: {
       // extra repairs handled in pass turn event
     }

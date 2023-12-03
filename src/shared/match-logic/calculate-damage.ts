@@ -2,7 +2,7 @@ import type { CombatProps } from "./co-hooks";
 import { getTerrainDefenseStars } from "./game-constants/terrain-properties";
 import { getBaseDamage } from "./game-constants/base-damage";
 import type { LuckRoll } from "./events/handlers/attack";
-import { gameBehaviourMap } from "./game-constants/version-properties";
+import { versionPropertiesMap } from "./game-constants/version-properties";
 
 /** @returns 1-10, whole numbers */
 export const getVisualHPfromHP = (hp: number) => Math.ceil(hp / 10);
@@ -32,7 +32,7 @@ export const calculateDamage = (
     return null;
   }
 
-  const gameBehaviour = gameBehaviourMap[attacker.match.rules.gameVersion];
+  const gameBehaviour = versionPropertiesMap[attacker.match.rules.gameVersion];
 
   const visualHPOfAttacker = getVisualHPfromHP(attacker.getHP());
   const visualHPOfDefender = getVisualHPfromHP(defender.getHP());
@@ -72,7 +72,7 @@ export const calculateDamage = (
 
   // luck calculations
   const goodLuckHook = attacker.player.getHook("maxGoodLuck");
-  const maxGoodLuck = goodLuckHook?.(hookProps) ?? gameBehaviour.baseGoodLuck; // this 10 should be inside match rules
+  const maxGoodLuck = goodLuckHook?.(hookProps) ?? gameBehaviour.baseGoodLuck;
   const badLuckHook = attacker.player.getHook("maxBadLuck");
   const maxBadLuck = badLuckHook?.(hookProps) ?? gameBehaviour.baseBadLuck;
 

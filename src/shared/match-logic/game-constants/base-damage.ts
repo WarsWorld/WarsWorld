@@ -2,11 +2,24 @@ import type { UnitType } from "shared/schemas/unit";
 import type { UnitWrapper } from "shared/wrappers/unit";
 import type { GameVersion } from "../../schemas/game-version";
 
+/**
+ * Returns if unit is going to attack enemy unit with primary weapon or not
+ */
+export const canAttackWithPrimary = (
+  attacker: UnitWrapper,
+  defender: UnitWrapper
+): boolean => {
+  if (attacker.getAmmo() === 0 || attacker.getAmmo() === null) {
+    return false;
+  }
+
+  return damageChartMap[attacker.match.rules.gameVersion][attacker.data.type]?.primary?.[defender.data.type] !== undefined;
+}
+
 export const getBaseDamage = (
   attacker: UnitWrapper,
   defender: UnitWrapper
 ): number | null => {
-  // using awds values always for now
   const damageValues = damageChartMap[attacker.match.rules.gameVersion][attacker.data.type];
 
   if (damageValues === undefined) {
@@ -15,7 +28,7 @@ export const getBaseDamage = (
 
   const primaryDamage = damageValues.primary?.[defender.data.type] ?? null;
   const secondaryDamage = damageValues.secondary?.[defender.data.type] ?? null;
-  const cantUsePrimaryWeapon = attacker.getAmmo() === 0;
+  const cantUsePrimaryWeapon = (attacker.getAmmo() === 0 || attacker.getAmmo() === null);
 
   return cantUsePrimaryWeapon
     ? secondaryDamage
