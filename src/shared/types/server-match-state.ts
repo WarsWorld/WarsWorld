@@ -12,7 +12,7 @@ type WithPosition = {
 
 export type CapturableTile = WithPosition & {
   type: PropertyTileType;
-  ownerSlot: PlayerSlot;
+  ownerSlot: PlayerSlot; // TODO i think i mixed up "playerSlot" and "ownerSlot" in places. needs to be made consistent.
   // capture points are stored in unit
 };
 
