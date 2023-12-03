@@ -2,7 +2,7 @@ import type { CombatProps } from "./co-hooks";
 import { getTerrainDefenseStars } from "./game-constants/terrain-properties";
 import { getBaseDamage } from "./game-constants/base-damage";
 import type { LuckRoll } from "./events/handlers/attack";
-import { gameBehaviourMap } from "./game-constants/version-properties";
+import { versionPropertiesMap } from "./game-constants/version-properties";
 
 /** @returns 1-10, whole numbers */
 export const getVisualHPfromHP = (hp: number) => Math.ceil(hp / 10);
@@ -32,8 +32,6 @@ export const calculateDamage = (
     return null;
   }
 
-  const gameBehaviour = gameBehaviourMap[attacker.match.rules.gameVersion];
-
   const visualHPOfAttacker = getVisualHPfromHP(attacker.getHP());
   const visualHPOfDefender = getVisualHPfromHP(defender.getHP());
 
@@ -59,22 +57,24 @@ export const calculateDamage = (
     }
   }
 
+  const versionProperties = versionPropertiesMap[attacker.match.rules.gameVersion];
+
   if (attacker.player.data.COPowerState !== "no-power") {
-    attackModifier = gameBehaviour.powerFirepowerMod(attackModifier);
+    attackModifier = versionProperties.powerFirepowerMod(attackModifier);
   }
 
   const defenseHook = defender.player.getHook("defense");
   let defenseModifier = defenseHook?.(hookProps) ?? 100;
 
   if (defender.player.data.COPowerState !== "no-power") {
-    defenseModifier = gameBehaviour.powerDefenseMod(defenseModifier);
+    defenseModifier = versionProperties.powerDefenseMod(defenseModifier);
   }
 
   // luck calculations
   const goodLuckHook = attacker.player.getHook("maxGoodLuck");
-  const maxGoodLuck = goodLuckHook?.(hookProps) ?? gameBehaviour.baseGoodLuck; // this 10 should be inside match rules
+  const maxGoodLuck = goodLuckHook?.(hookProps) ?? versionProperties.baseGoodLuck;
   const badLuckHook = attacker.player.getHook("maxBadLuck");
-  const maxBadLuck = badLuckHook?.(hookProps) ?? gameBehaviour.baseBadLuck;
+  const maxBadLuck = badLuckHook?.(hookProps) ?? versionProperties.baseBadLuck;
 
   const goodLuckValue = luckRoll.goodLuck * maxGoodLuck;
   const badLuckValue = luckRoll.badLuck * maxBadLuck;

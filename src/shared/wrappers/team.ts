@@ -28,7 +28,11 @@ export class TeamWrapper {
   }
 
   getEnemyUnitsInVision() {
-    const vision = this.match.rules.fogOfWar ? new Vision(this) : null;
+    // AWDS rain forces fog of war
+    const isFogOfWar = this.match.rules.fogOfWar ||
+      this.match.currentWeather === "rain" && this.match.rules.gameVersion === "AWDS";
+
+    const vision = isFogOfWar ? new Vision(this) : null;
     const playerSlots = this.players.map((player) => player.data.slot);
 
     return this.getEnemyUnits()

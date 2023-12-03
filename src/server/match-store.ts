@@ -5,6 +5,7 @@ import { pageMatchIndex } from "./page-match-index";
 import { playerMatchIndex } from "./player-match-index";
 import type { ChangeableTile } from "../shared/types/server-match-state";
 import { willBeChangeableTile } from "../shared/schemas/tile";
+import { applyMainEventToMatch, applySubEventToMatch } from "../shared/match-logic/events/apply-event-to-match";
 
 const getChangeableTilesFromMap = (map: WWMap): ChangeableTile[] => {
   const changeableTiles: ChangeableTile[] = [];
@@ -80,8 +81,13 @@ export class MatchStore {
 
     rawMatches.forEach((rawMatch) => {
       const match = this.createMatchAndIndex(rawMatch, rawMatch.map);
-      rawMatch.Event.forEach((dbEvent) =>
-        match.applyMainEvent(dbEvent.content)
+      rawMatch.Event.forEach((dbEvent) => {
+          applyMainEventToMatch(match, dbEvent.content);
+
+          if (dbEvent.content.type === "move") {
+            applySubEventToMatch(match, dbEvent.content);
+          }
+        }
       );
     });
 

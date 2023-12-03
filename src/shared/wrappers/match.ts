@@ -55,10 +55,6 @@ export class MatchWrapper {
     this.units = units.map(unit => new UnitWrapper(unit, this))
   }
 
-  applyMainEvent(event: MainEvent) {
-    applyMainEventToMatch(this, event);
-  }
-
   getTile(position: Position): Tile | ChangeableTile {
     this.map.throwIfOutOfBounds(position);
 

@@ -21,7 +21,7 @@ export const sturmAW1Versus: COProperties = {
       name: "Meteor Strike",
       description: "Deals 4 HP of damage to all units at a distance less or equal than 2 from the chosen position, centered on a unit. The meteor prioritises the most unit value in damages (allied units are dealt damage as well, and contribute negatively to the unit value calculation).",
       stars: 5,
-      calculatePositions: (player) => [getRandomMeteorPosition(player, 8)],
+      calculatePositions: (player) => [getRandomMeteorPosition(player, 4)],
       instantEffect(player, positions) {
         if (positions === undefined || positions.length !== 1) {
           throw new Error("Did not get a meteor position");

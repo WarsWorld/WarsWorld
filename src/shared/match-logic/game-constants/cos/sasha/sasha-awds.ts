@@ -6,7 +6,7 @@ export const sashaAWDS: COProperties = {
   dayToDay: {
     description: "Properties that give funds give an extra 100 funds per turn.",
     hooks: {
-      // handled in gainFunds()
+      // handled in passTurn -> gainFunds
     }
   },
   powers: {
@@ -33,7 +33,7 @@ export const sashaAWDS: COProperties = {
       description: "Turns 50% of the damage units deal into funds.",
       stars: 6,
       hooks: {
-        // edge case handled in attack event
+        // handled in attack event
       }
     }
   }

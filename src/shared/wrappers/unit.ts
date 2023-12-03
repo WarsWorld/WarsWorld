@@ -5,6 +5,7 @@ import type { UnitType, WWUnit } from "shared/schemas/unit";
 import type { MatchWrapper } from "./match";
 import type { PlayerInMatchWrapper } from "./player-in-match";
 import { getBaseMovementCost } from "../match-logic/movement-cost";
+import { getWeatherSpecialMovement } from "../match-logic/weather";
 
 export class UnitWrapper<ThisUnitType extends UnitType = UnitType> {
   public player: PlayerInMatchWrapper;
@@ -164,7 +165,7 @@ export class UnitWrapper<ThisUnitType extends UnitType = UnitType> {
   getMovementCost(position: Position): number | null {
     const baseMovementCost = getBaseMovementCost(
       unitPropertiesMap[this.data.type].movementType,
-      this.player.getWeatherSpecialMovement(),
+      getWeatherSpecialMovement(this.player),
       this.match.getTile(position).type,
       this.match.rules.gameVersion
     );

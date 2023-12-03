@@ -5,7 +5,7 @@ import {
   validateMainActionAndToEvent,
   validateSubActionAndToEvent
 } from "shared/match-logic/events/action-to-event";
-import { applySubEventToMatch } from "shared/match-logic/events/apply-event-to-match";
+import { applyMainEventToMatch, applySubEventToMatch } from "shared/match-logic/events/apply-event-to-match";
 import { mainActionSchema } from "shared/schemas/action";
 import type { Emittable, EmittableEvent } from "shared/types/events";
 import { z } from "zod";
@@ -24,7 +24,7 @@ export const actionRouter = router({
 
       // IMPORTANT @FUNCTION IDIOT: we MUST apply the main event before validateSubActionAndToEvent
       // because the subAction needs the match state to be changed already, otherwise it's going to break.
-      match.applyMainEvent(event);
+      applyMainEventToMatch(match, event);
 
       if (event.type === "move" && input.type === "move") {
         // second condition is only needed for type-gating input event

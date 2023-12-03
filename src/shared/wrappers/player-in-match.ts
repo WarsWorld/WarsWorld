@@ -12,7 +12,7 @@ import type {
 import type { MatchWrapper } from "./match";
 import type { TeamWrapper } from "./team";
 import { UnitWrapper } from "./unit";
-import { gameBehaviourMap } from "../match-logic/game-constants/version-properties";
+import { versionPropertiesMap } from "../match-logic/game-constants/version-properties";
 
 export class PlayerInMatchWrapper {
   public match: MatchWrapper;
@@ -75,7 +75,7 @@ export class PlayerInMatchWrapper {
   }
 
   getPowerStarCost() {
-    const versionBehaviour = gameBehaviourMap[this.match.rules.gameVersion];
+    const versionBehaviour = versionPropertiesMap[this.match.rules.gameVersion];
     return versionBehaviour.baseStarValue * (1 + versionBehaviour.powerMeterScaling * Math.min(this.data.timesPowerUsed, 10));
   }
 
@@ -111,49 +111,6 @@ export class PlayerInMatchWrapper {
     }
 
     return false;
-  }
-
-  /**
-   * some COs use the movement factors of different weather
-   * depending on the current weather (and their powers).
-   * e.g.: olaf has clear weather cost during snow.
-   *
-   * sturm is handled with a movementCost hook.
-   *
-   * TODO: if this method continues to be only used once, it's a candidate
-   * to be moved outside this class.
-   */
-  getWeatherSpecialMovement(): Weather {
-    const weather = this.match.currentWeather;
-
-    switch (this.data.coId.name) {
-      case "drake": {
-        if (weather === "rain") {
-          return "clear";
-        }
-
-        return weather;
-      }
-      case "olaf": {
-        if (weather === "rain") {
-          return "snow";
-        } else if (weather === "snow") {
-          return "clear";
-        }
-
-        return weather;
-      }
-      case "lash": {
-        if (weather !== "snow" && this.data.COPowerState !== "no-power") {
-          return "clear";
-        }
-
-        return weather;
-      }
-      default: {
-        return weather;
-      }
-    }
   }
 
   addUnwrappedUnit(rawUnit: Omit<UnitWithVisibleStats, "playerSlot">) {
