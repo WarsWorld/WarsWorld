@@ -8,17 +8,17 @@ export const drakeAW2: COProperties = {
       "Naval units have +1 movement and +10% defense. Air units have -30% firepower. Drake has clear weather movement costs in rain and raises the chance of rain by +7% in random weather.",
     hooks: {
       movementPoints: (value, unit) => {
-        if (unit.properties().facility === "port") {
+        if (unit.properties.facility === "port") {
           return value + 1;
         }
       },
       defense: ({ attacker }) => {
-        if (attacker.properties().facility === "port") {
+        if (attacker.properties.facility === "port") {
           return 110;
         }
       },
       attack: ({ attacker }) => {
-        if (attacker.properties().facility === "airport") {
+        if (attacker.properties.facility === "airport") {
           return 70;
         }
       }

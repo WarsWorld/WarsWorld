@@ -11,7 +11,7 @@ export const maxAW1: COProperties = {
           return 90;
         }
 
-        if (attacker.data.type !== "infantry" && attacker.data.type !== "mech") {
+        if (!attacker.isInfantryOrMech()) {
           return 150;
         }
       },
@@ -34,7 +34,7 @@ export const maxAW1: COProperties = {
       stars: 3,
       hooks: {
         movementPoints: (value, unit) => {
-          if (!unit.isIndirect() && unit.data.type !== "infantry" && unit.data.type !== "mech") {
+          if (!unit.isIndirect() && !unit.isInfantryOrMech()) {
             return value + 1;
           }
         },
@@ -43,7 +43,7 @@ export const maxAW1: COProperties = {
             return 90;
           }
 
-          if (attacker.data.type !== "infantry" && attacker.data.type !== "mech") {
+          if (!attacker.isInfantryOrMech()) {
             return 170;
           }
         },

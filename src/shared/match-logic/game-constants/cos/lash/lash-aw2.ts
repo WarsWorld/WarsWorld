@@ -8,7 +8,7 @@ export const lashAW2: COProperties = {
     description: "Units gain 10% firepower per terrain star (air units don't get terrain stars).",
     hooks: {
       attack({ attacker }) {
-        if (attacker.properties().facility !== "airport") {
+        if (attacker.properties.facility !== "airport") {
           const terrainStars = getTerrainDefenseStars(attacker.getTile().type);
           return 100 + 10*terrainStars;
         }

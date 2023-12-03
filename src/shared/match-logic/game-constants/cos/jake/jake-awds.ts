@@ -28,7 +28,7 @@ export const jakeAWDS: COProperties = {
         },
         attackRange: (range, { attacker }) => {
           if (
-            attacker.properties().facility === "base" &&
+            attacker.properties.facility === "base" &&
             attacker.isIndirect()
           ) {
             return range + 1;
@@ -49,18 +49,14 @@ export const jakeAWDS: COProperties = {
         },
         attackRange: (range, { attacker }) => {
           if (
-            attacker.properties().facility === "base" &&
+            attacker.properties.facility === "base" &&
             attacker.isIndirect()
           ) {
             return range + 1;
           }
         },
         movementPoints: (points, unit) => {
-          if (
-            unit.properties().facility === "base" &&
-            unit.data.type !== "infantry" &&
-            unit.data.type !== "mech"
-          ) {
+          if (unit.properties.facility === "base" && !unit.isInfantryOrMech()) {
             return points + 2;
           }
         }

@@ -16,7 +16,7 @@ export const senseiAWDS: COProperties = {
           return 150;
         }
 
-        if (attacker.properties().facility === "port") {
+        if (attacker.properties.facility === "port") {
           return 90;
         }
       },
@@ -45,7 +45,7 @@ export const senseiAWDS: COProperties = {
             return 170;
           }
 
-          if (attacker.properties().facility === "port") {
+          if (attacker.properties.facility === "port") {
             return 90;
           }
         },
@@ -68,7 +68,7 @@ export const senseiAWDS: COProperties = {
             return 170;
           }
 
-          if (attacker.properties().facility === "port") {
+          if (attacker.properties.facility === "port") {
             return 90;
           }
         },

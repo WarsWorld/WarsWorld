@@ -8,7 +8,7 @@ export const eagleAW1: COProperties = {
       "Air units have +15% firepower and +10% defense, and consume -2 fuel per day. Naval units have -20% firepower.",
     hooks: {
       attack({ attacker }) {
-        switch (attacker.properties().facility) {
+        switch (attacker.properties.facility) {
           case "airport":
             return 115;
           case "port":
@@ -16,7 +16,7 @@ export const eagleAW1: COProperties = {
         }
       },
       defense({ attacker }) {
-        if (attacker.properties().facility === "airport") {
+        if (attacker.properties.facility === "airport") {
           return 110;
         }
       }
@@ -40,7 +40,7 @@ export const eagleAW1: COProperties = {
       },
       hooks: {
         attack({ attacker }) {
-          switch (attacker.properties().facility) {
+          switch (attacker.properties.facility) {
             case "airport":
               return 85; //115 + (-10 - 20) = 85, -10 to counteract the passive +10, which is not +10 in aw1 but whatever power boost
             case "port":
@@ -50,7 +50,7 @@ export const eagleAW1: COProperties = {
           }
         },
         defense({ attacker }) {
-          if (attacker.properties().facility === "airport") {
+          if (attacker.properties.facility === "airport") {
             return 80;
           }
 

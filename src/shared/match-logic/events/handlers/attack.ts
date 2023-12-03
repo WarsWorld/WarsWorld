@@ -55,11 +55,9 @@ const calculateEngagementOutcome = (
 
   //check if defender can counterattack
   if (getDistance(attacker.data.position, defender.data.position) === 1) {
-    const defenderProperties = unitPropertiesMap[defender.data.type];
-
     if (
-      "attackRange" in defenderProperties &&
-      defenderProperties.attackRange[1] === 1
+      "attackRange" in defender.properties &&
+      defender.properties.attackRange[1] === 1
     ) {
       //defender is melee, maybe can counterattack
       //temporarily subtract hp to calculate counter dmg

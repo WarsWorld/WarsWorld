@@ -54,9 +54,7 @@ export const getIndirectsMeteorPosition = (
         // duplicate value if unit is an indirect
         // (idk if it only counts for enemy units or for all units)
 
-        const unitProperties = unit.properties();
-
-        if ("attackRange" in unitProperties && unitProperties.attackRange[1] > 1) {
+        if ("attackRange" in unit.properties && unit.properties.attackRange[1] > 1) {
           thisUnitValue *= 2;
         }
 

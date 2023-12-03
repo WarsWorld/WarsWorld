@@ -180,10 +180,4 @@ export type UnitWithHiddenStats = Omit<UnitWithVisibleStats, "stats"> & {
   stats: "hidden";
 };
 
-// TODO old code, just in case the extending one doesn't work.
-// export type UnitWithHiddenStats = {
-//   type: UnitType;
-//   playerSlot: PlayerSlot;
-//   stats: "hidden";
-//   position: Position;
-// };
+export type WWUnit = UnitWithHiddenStats | UnitWithVisibleStats;

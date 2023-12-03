@@ -8,16 +8,14 @@ export const jessAWDS: COProperties = {
       "Ground vehicles have +20% firepower. Air and naval units have -10% firepower.",
     hooks: {
       attack: ({ attacker }) => {
-        if (attacker.properties().facility === "base") {
-          if (
-            attacker.data.type !== "infantry" &&
-            attacker.data.type !== "mech"
-          ) {
-            return 120;
-          }
-        } else {
-          return 90;
+        if (
+          attacker.properties.facility === "base" &&
+          !attacker.isInfantryOrMech()
+        ) {
+          return 120;
         }
+
+        return 90;
       }
     }
   },
@@ -32,22 +30,19 @@ export const jessAWDS: COProperties = {
       },
       hooks: {
         attack: ({ attacker }) => {
-          if (attacker.properties().facility === "base") {
-            if (
-              attacker.data.type !== "infantry" &&
-              attacker.data.type !== "mech"
-            ) {
-              return 140;
-            }
-          } else {
-            return 90;
+          if (
+            attacker.properties.facility === "base" &&
+            !attacker.isInfantryOrMech()
+          ) {
+            return 140;
           }
+  
+          return 90;
         },
         movementPoints: (points, unit) => {
           if (
-            unit.properties().facility === "base" &&
-            unit.data.type !== "infantry" &&
-            unit.data.type !== "mech"
+            unit.properties.facility === "base" &&
+            !unit.isInfantryOrMech()
           ) {
             return points + 1;
           }
@@ -64,22 +59,19 @@ export const jessAWDS: COProperties = {
       },
       hooks: {
         attack: ({ attacker }) => {
-          if (attacker.properties().facility === "base") {
-            if (
-              attacker.data.type !== "infantry" &&
-              attacker.data.type !== "mech"
-            ) {
-              return 160;
-            }
-          } else {
-            return 90;
+          if (
+            attacker.properties.facility === "base" &&
+            !attacker.isInfantryOrMech()
+          ) {
+            return 160;
           }
+  
+          return 90;
         },
         movementPoints: (points, unit) => {
           if (
-            unit.properties().facility === "base" &&
-            unit.data.type !== "infantry" &&
-            unit.data.type !== "mech"
+            unit.properties.facility === "base" &&
+            !unit.isInfantryOrMech()
           ) {
             return points + 2;
           }

@@ -49,9 +49,7 @@ export const applyAbilityEvent = (match: MatchWrapper, unit: UnitWrapper) => {
     case "mech": {
       //capture tile
 
-      if (!("currentCapturePoints" in unit.data)) {
-        // theoretically this check should never be positive, but
-        // TS has issues narrowing UnitWithHiddenStats
+      if (unit.data.stats === "hidden") {
         break;
       }
 

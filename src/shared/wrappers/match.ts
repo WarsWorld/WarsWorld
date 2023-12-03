@@ -11,11 +11,7 @@ import type { PlayerSlot } from "shared/schemas/player-slot";
 import type { Position } from "shared/schemas/position";
 import { getDistance, isSamePosition } from "shared/schemas/position";
 import type { Tile } from "shared/schemas/tile";
-import type {
-  UnitType,
-  UnitWithHiddenStats,
-  UnitWithVisibleStats
-} from "shared/schemas/unit";
+import type { WWUnit } from "shared/schemas/unit";
 import type { Weather } from "shared/schemas/weather";
 import type { MainEvent } from "shared/types/events";
 import type {
@@ -51,7 +47,7 @@ export class MatchWrapper {
     public status: MatchStatus,
     map: WWMap,
     players: PlayerInMatch[],
-    units: (UnitWithHiddenStats | UnitWithVisibleStats)[],
+    units: WWUnit[],
     public turn: number
   ) {
     this.map = new MapWrapper(map);

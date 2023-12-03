@@ -7,7 +7,7 @@ export const maxAWDS: COProperties = {
     description: "Non-footsoldier direct units have +20% firepower, but indirect units have -1 range.",
     hooks: {
       attack: ({ attacker }) => {
-        if (!attacker.isIndirect() && attacker.data.type !== "infantry" && attacker.data.type !== "mech") {
+        if (!attacker.isIndirect() && !attacker.isInfantryOrMech()) {
           return 120;
         }
       },
@@ -25,7 +25,7 @@ export const maxAWDS: COProperties = {
       stars: 3,
       hooks: {
         attack: ({ attacker }) => {
-          if (!attacker.isIndirect() && attacker.data.type !== "infantry" && attacker.data.type !== "mech") {
+          if (!attacker.isIndirect() && !attacker.isInfantryOrMech()) {
             return 150;
           }
         },
@@ -37,7 +37,7 @@ export const maxAWDS: COProperties = {
       stars: 6,
       hooks: {
         attack: ({ attacker }) => {
-          if (!attacker.isIndirect() && attacker.data.type !== "infantry" && attacker.data.type !== "mech") {
+          if (!attacker.isIndirect() && !attacker.isInfantryOrMech()) {
             return 170;
           }
         },

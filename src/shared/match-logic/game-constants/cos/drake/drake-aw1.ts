@@ -9,17 +9,17 @@ export const drakeAW1: COProperties = {
     hooks: {
       // TODO increase rain in random weather
       movementPoints: (value, unit) => {
-        if (unit.properties().facility === "port") {
+        if (unit.properties.facility === "port") {
           return value + 1;
         }
       },
       terrainStars: ( value, { defender }) => {
-        if (defender.properties().facility === "port") {
+        if (defender.properties.facility === "port") {
           return value + 2; // TODO is this correct? (like, if the implementation is correct or not. is it defender or attacker?)
         }
       },
       attack: ({ attacker }) => {
-        if (attacker.properties().facility === "airport") {
+        if (attacker.properties.facility === "airport") {
           return 80;
         }
       }

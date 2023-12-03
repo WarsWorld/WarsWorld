@@ -1,7 +1,4 @@
-import type {
-  UnitWithHiddenStats,
-  UnitWithVisibleStats
-} from "shared/schemas/unit";
+import type { WWUnit } from "shared/schemas/unit";
 import type { PlayerInMatch } from "shared/types/server-match-state";
 import type { MatchWrapper } from "./match";
 import { PlayerInMatchWrapper } from "./player-in-match";
@@ -59,14 +56,12 @@ export class TeamWrapper {
 
         return vision.isPositionVisible(enemy.data.position);
       })
-      .map<UnitWithVisibleStats | UnitWithHiddenStats>((visibleEnemyUnit) => {
+      .map<WWUnit>((visibleEnemyUnit) => {
         if (visibleEnemyUnit.player.data.coId.name === "sonja") {
-          const hiddenUnit: UnitWithHiddenStats = {
+          return {
             ...visibleEnemyUnit.data,
             stats: "hidden"
           };
-
-          return hiddenUnit;
         }
 
         return visibleEnemyUnit.data;

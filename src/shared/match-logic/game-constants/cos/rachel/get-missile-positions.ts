@@ -42,7 +42,7 @@ export const getMissilePositions = (
           if (unit.isInfantryOrMech()) {
             ++currentInfantry;
 
-            if ("currentCapturePoints" in unit.data && unit.data.currentCapturePoints !== undefined) {
+            if (unit.data.currentCapturePoints !== undefined) {
               ++currentInfantry; //capping infantry counts as double
             }
           }

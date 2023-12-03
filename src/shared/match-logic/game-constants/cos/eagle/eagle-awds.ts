@@ -9,7 +9,7 @@ export const eagleAWDS: COProperties = {
     hooks: {
       // fuel consumption handled in pass turn event
       attack({ attacker }) {
-        switch (attacker.properties().facility) {
+        switch (attacker.properties.facility) {
           case "airport":
             return 120;
           case "port":
@@ -37,7 +37,7 @@ export const eagleAWDS: COProperties = {
       hooks: {
         //after applying passive power boost, firepower is going to be just as the description says
         attack({ attacker }) {
-          switch (attacker.properties().facility) {
+          switch (attacker.properties.facility) {
             case "airport":
               return 60;
             case "port":

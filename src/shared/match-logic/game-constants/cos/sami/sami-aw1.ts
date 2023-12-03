@@ -43,8 +43,8 @@ export const samiAW1: COProperties = {
             return points + 1;
           }
         },
-        movementCost: (_value, {unitType}) => {
-          if (unitType === "infantry" || unitType === "mech") {
+        movementCost: (_value, unit) => {
+          if (unit.isInfantryOrMech()) {
             return 1;
           }
         },

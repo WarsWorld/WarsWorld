@@ -1,40 +1,28 @@
-import type { UnitProperties } from "shared/match-logic/game-constants/unit-properties";
 import { unitPropertiesMap } from "shared/match-logic/game-constants/unit-properties";
 import type { Position } from "shared/schemas/position";
 import { getNeighbourPositions, isSamePosition } from "shared/schemas/position";
-import type {
-  UnitWithHiddenStats,
-  UnitWithVisibleStats
-} from "shared/schemas/unit";
+import type { UnitType, WWUnit } from "shared/schemas/unit";
 import type { MatchWrapper } from "./match";
 import type { PlayerInMatchWrapper } from "./player-in-match";
 import { getBaseMovementCost } from "../match-logic/movement-cost";
 
-export class UnitWrapper {
+export class UnitWrapper<ThisUnitType extends UnitType = UnitType> {
   public player: PlayerInMatchWrapper;
 
-  // TODO will replace this.properties() with next update for access
-  // outside of this file as well because it's apparent that the tradeoff
-  // between memory and lookup time is worth storing the reference in memory.
-  public properties2: UnitProperties;
+  public properties: typeof unitPropertiesMap[ThisUnitType];
 
   constructor(
-    public data: UnitWithHiddenStats | UnitWithVisibleStats,
+    public data: Extract<WWUnit, { type: ThisUnitType }>,
     public match: MatchWrapper
   ) {
     this.player = match.getBySlotOrThrow(data.playerSlot);
-    this.properties2 = unitPropertiesMap[data.type];
-  }
-
-  // TODO remove this method from the CO files. not doing it right now to reduce changes at once.
-  properties() {
-    return this.properties2;
+    this.properties = unitPropertiesMap[data.type];
   }
 
   // FUEL AND AMMO *************************************************************
   getFuel() {
     if (this.data.stats === "hidden") {
-      return this.properties2.initialFuel;
+      return this.properties.initialFuel;
     }
 
     return this.data.stats.fuel;
@@ -61,8 +49,8 @@ export class UnitWrapper {
    */
   getAmmo() {
     if (this.data.stats === "hidden") {
-      return "initialAmmo" in this.properties2
-        ? this.properties2.initialAmmo
+      return "initialAmmo" in this.properties
+        ? this.properties.initialAmmo
         : null;
     }
 
@@ -82,12 +70,10 @@ export class UnitWrapper {
   }
 
   resupply() {
-    const properties = this.properties();
+    this.setFuel(this.properties.initialFuel);
 
-    this.setFuel(properties.initialFuel);
-
-    if ("initialAmmo" in properties) {
-      this.setAmmo(properties.initialAmmo);
+    if ("initialAmmo" in this.properties) {
+      this.setAmmo(this.properties.initialAmmo);
     }
   }
 
@@ -160,7 +146,7 @@ export class UnitWrapper {
 
   /** TODO checking fuel twice? */
   getMovementPoints() {
-    const { movementPoints, initialFuel } = this.properties2;
+    const { movementPoints, initialFuel } = this.properties;
 
     const movementPointsHook = this.player.getHook("movementPoints");
     const modifiedMovement = movementPointsHook?.(movementPoints, this) ?? movementPoints;
@@ -188,16 +174,13 @@ export class UnitWrapper {
     }
 
     return (
-      this.player.getHook("movementCost")?.(baseMovementCost, {
-        match: this.match,
-        unitType: this.data.type
-      }) ?? baseMovementCost
+      this.player.getHook("movementCost")?.(baseMovementCost, this) ?? baseMovementCost
     );
   }
 
   // OTHERS ********************************************************************
   getBuildCost(): number {
-    const { cost: baseCost } = this.properties2;
+    const { cost: baseCost } = this.properties;
     const hook = this.player.getHook("buildCost");
     return hook?.(baseCost, this.match) ?? baseCost;
   }
@@ -211,21 +194,17 @@ export class UnitWrapper {
   }
 
   // UNIT TYPE CHECKS **********************************************************
-  isIndirect() {
-    if (!("attackRange" in this.properties2)) {
+  isIndirect(): this is UnitWrapper<
+    "artillery" | "missile" | "battleship" | "carrier" | "pipeRunner" | "rocket"
+  > {
+    if (!("attackRange" in this.properties)) {
       return false;
     }
 
-    return this.properties2.attackRange[1] > 1;
+    return this.properties.attackRange[1] > 1;
   }
 
-
-  /**
-   * this method doesn't narrow the type of `unit`,
-   * which is why sometimes `unit.data.type` must be used.
-   * this could be fixed at some point by making `UnitWrapper` generic.
-   */
-  isInfantryOrMech() {
+  isInfantryOrMech(): this is UnitWrapper<"infantry" | "mech"> {
     return this.data.type === "infantry" || this.data.type === "mech";
   }
 }

@@ -16,10 +16,7 @@ import type {
 import type { Army } from "shared/schemas/army";
 import type { COID } from "shared/schemas/co";
 import type { Position } from "shared/schemas/position";
-import type {
-  UnitWithHiddenStats,
-  UnitWithVisibleStats
-} from "shared/schemas/unit";
+import type { WWUnit } from "shared/schemas/unit";
 import type { Weather } from "shared/schemas/weather";
 
 /** player slot 0 implicity starts */
@@ -101,7 +98,7 @@ export type SubEvent =
 
 export type EmittableEvent = MainEvent &
   WithMatchId & {
-    discoveredUnits?: (UnitWithHiddenStats | UnitWithVisibleStats)[];
+    discoveredUnits?: WWUnit[];
     eventIndex: number;
   };
 

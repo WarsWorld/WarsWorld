@@ -9,9 +9,8 @@ export const jessAW2: COProperties = {
     hooks: {
       attack: ({ attacker }) => {
         if (
-          attacker.properties().facility === "base" &&
-          attacker.data.type !== "infantry" &&
-          attacker.data.type !== "mech"
+          attacker.properties.facility === "base" &&
+          !attacker.isInfantryOrMech()
         ) {
           return 110;
         }
@@ -32,9 +31,8 @@ export const jessAW2: COProperties = {
       hooks: {
         attack: ({ attacker }) => {
           if (
-            attacker.properties().facility === "base" &&
-            attacker.data.type !== "infantry" &&
-            attacker.data.type !== "mech"
+            attacker.properties.facility === "base" &&
+            !attacker.isInfantryOrMech()
           ) {
             return 130;
           }
@@ -43,9 +41,8 @@ export const jessAW2: COProperties = {
         },
         movementPoints: (points, unit) => {
           if (
-            unit.properties().facility === "base" &&
-            unit.data.type !== "infantry" &&
-            unit.data.type !== "mech"
+            unit.properties.facility === "base" &&
+            !unit.isInfantryOrMech()
           ) {
             return points + 1;
           }
@@ -63,9 +60,8 @@ export const jessAW2: COProperties = {
       hooks: {
         attack: ({ attacker }) => {
           if (
-            attacker.properties().facility === "base" &&
-            attacker.data.type !== "infantry" &&
-            attacker.data.type !== "mech"
+            attacker.properties.facility === "base" &&
+            !attacker.isInfantryOrMech()
           ) {
             return 150;
           }
@@ -74,9 +70,8 @@ export const jessAW2: COProperties = {
         },
         movementPoints: (points, unit) => {
           if (
-            unit.properties().facility === "base" &&
-            unit.data.type !== "infantry" &&
-            unit.data.type !== "mech"
+            unit.properties.facility === "base" &&
+            !unit.isInfantryOrMech()
           ) {
             return points + 2;
           }

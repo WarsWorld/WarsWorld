@@ -16,7 +16,7 @@ export const senseiAW2: COProperties = {
           return 150;
         }
 
-        if (attacker.properties().facility !== "airport") {
+        if (attacker.properties.facility !== "airport") {
           return 90;
         }
       },
@@ -45,7 +45,7 @@ export const senseiAW2: COProperties = {
             return 175;
           }
 
-          if (attacker.properties().facility !== "airport") {
+          if (attacker.properties.facility !== "airport") {
             return 90;
           }
         },
@@ -68,7 +68,7 @@ export const senseiAW2: COProperties = {
             return 175;
           }
 
-          if (attacker.properties().facility !== "airport") {
+          if (attacker.properties.facility !== "airport") {
             return 90;
           }
         },
