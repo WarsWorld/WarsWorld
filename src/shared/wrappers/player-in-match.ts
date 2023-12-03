@@ -1,11 +1,12 @@
 import { getCOProperties } from "shared/match-logic/co";
 import type { Hooks } from "shared/match-logic/co-hooks";
+import type { Tile } from "shared/schemas/tile";
 import type {
   UnitWithVisibleStats
 } from "shared/schemas/unit";
 import type { Weather } from "shared/schemas/weather";
 import type {
-  CapturableTile,
+  ChangeableTile,
   PlayerInMatch
 } from "shared/types/server-match-state";
 import type { MatchWrapper } from "./match";
@@ -100,12 +101,16 @@ export class PlayerInMatchWrapper {
     this.data.powerMeter = Math.min(value, this.getMaxPowerMeter());
   }
 
-  owns(capturableTileOrUnit: CapturableTile | UnitWrapper) {
-    if ("ownerSlot" in capturableTileOrUnit) {
-      return capturableTileOrUnit.ownerSlot === this.data.slot;
+  owns(tileOrUnit: Tile | ChangeableTile | UnitWrapper) {
+    if ("ownerSlot" in tileOrUnit) {
+      return tileOrUnit.ownerSlot === this.data.slot;
     }
 
-    return capturableTileOrUnit.data.playerSlot === this.data.slot;
+    if ("playerSlot" in tileOrUnit) {
+      return tileOrUnit.playerSlot === this.data.slot;
+    }
+
+    return false;
   }
 
   /**

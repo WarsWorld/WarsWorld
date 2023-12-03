@@ -33,7 +33,7 @@ export const buildActionToEvent: MainActionToEvent<BuildAction> = (
 
   const tile = match.getTile(action.position);
 
-  if (!("ownerSlot" in tile) || tile.ownerSlot !== player.data.slot) {
+  if (!player.owns(tile)) {
     throw new DispatchableError(
       "You don't own this tile or this tile cannot be owned"
     );
