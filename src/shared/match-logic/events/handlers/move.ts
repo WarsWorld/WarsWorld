@@ -97,13 +97,11 @@ export const moveActionToEvent: MainActionToEvent<MoveAction> = (
           throw new DispatchableError("Move action ending position is overlapping with an allied unit");
         }
 
-        if (unitInPosition.loadedUnit !== null) {
-          if (
-            !("loadedUnit2" in unitInPosition) ||
-            unitInPosition.loadedUnit2 !== null
-          ) {
-            throw new DispatchableError("Transport already occupied");
-          }
+        if (
+          unitInPosition.loadedUnit !== null
+          && (!("loadedUnit2" in unitInPosition) || unitInPosition.loadedUnit2 !== null)
+        ) {
+          throw new DispatchableError("Transport already occupied");
         }
 
         //check if unit can go into that transport
