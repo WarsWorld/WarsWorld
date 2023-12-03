@@ -17,7 +17,7 @@ export const gritAW2: COProperties = {
           return 120;
         }
 
-        if (attacker.properties().movementType !== "foot") {
+        if (!attacker.isInfantryOrMech()) {
           return 80;
         }
       }
@@ -38,6 +38,10 @@ export const gritAW2: COProperties = {
           if (attacker.isIndirect()) {
             return 150;
           }
+
+          if (!attacker.isInfantryOrMech()) {
+            return 80;
+          }
         }
       }
     },
@@ -54,6 +58,10 @@ export const gritAW2: COProperties = {
         attack({ attacker }) {
           if (attacker.isIndirect()) {
             return 150;
+          }
+
+          if (!attacker.isInfantryOrMech()) {
+            return 80;
           }
         }
       }
