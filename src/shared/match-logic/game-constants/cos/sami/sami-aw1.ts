@@ -8,7 +8,7 @@ export const samiAW1: COProperties = {
     hooks: {
       // capturing handled in ability event
       movementPoints: (points, unit) => {
-        if ("loadedUnit" in unit.properties()) { //if it's a transport
+        if (unit.isTransport()) {
           return points + 1;
         }
       },
@@ -35,7 +35,7 @@ export const samiAW1: COProperties = {
       stars: 2.5, //xdd
       hooks: {
         movementPoints: (points, unit) => {
-          if ("loadedUnit" in unit.properties()) { //if it's a transport
+          if (unit.isTransport()) {
             return points + 1;
           }
 

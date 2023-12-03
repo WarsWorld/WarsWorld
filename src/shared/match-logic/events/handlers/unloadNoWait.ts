@@ -15,7 +15,7 @@ export const unloadNoWaitActionToEvent: MainActionToEvent<UnloadNoWaitAction> = 
     throw new DispatchableError("You don't own this unit")
   }
 
-  if (!("loadedUnit" in transportUnit.data)) {
+  if (!transportUnit.isTransport()) {
     throw new DispatchableError("Trying to unload from a unit that can't load units");
   }
 

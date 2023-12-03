@@ -21,7 +21,7 @@ export const senseiAWDS: COProperties = {
         }
       },
       movementPoints: (value, unit) => {
-        if ("loadedUnit" in unit.properties()) { //if it's a transport unit
+        if (unit.isTransport()) {
           return value + 1;
         }
       }

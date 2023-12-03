@@ -33,7 +33,7 @@ export const unloadWaitActionToEvent: SubActionToEvent<UnloadWaitAction> = (matc
     throw new DispatchableError("No unit specified to unload");
   }
 
-  if (!("loadedUnit" in transportUnit.data)) {
+  if (!transportUnit.isTransport()) {
     throw new DispatchableError("Trying to unload from a unit that can't load units");
   }
 
@@ -110,7 +110,7 @@ export const applyUnloadWaitEvent = (match: MatchWrapper, event: UnloadWaitEvent
       });
 
       unit.data.loadedUnit2 = null;
-    } else if (!event.unloads[0].isSecondUnit && "loadedUnit" in unit.data) {
+    } else if (!event.unloads[0].isSecondUnit && unit.isTransport()) {
       if (unit.data.loadedUnit === null) {
         throw new Error("Can't unload from empty slot 1");
       }

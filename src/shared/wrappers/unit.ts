@@ -118,7 +118,7 @@ export class UnitWrapper<ThisUnitType extends UnitType = UnitType> {
     }
 
     this.data.stats.hp = Math.max(0, Math.min(100, newPreciseHp));
-    
+
     if (this.data.stats.hp === 0) {
       this.remove();
     }
@@ -206,5 +206,9 @@ export class UnitWrapper<ThisUnitType extends UnitType = UnitType> {
 
   isInfantryOrMech(): this is UnitWrapper<"infantry" | "mech"> {
     return this.data.type === "infantry" || this.data.type === "mech";
+  }
+
+  isTransport(): this is UnitWrapper<"apc" | "transportCopter" | "blackBoat" | "lander"> {
+    return "loadedUnit" in this.data;
   }
 }

@@ -7,7 +7,7 @@ export const samiAW2: COProperties = {
     description: "Footsoldiers have +30% firepower and capture at 1.5 times the normal rate (rounded down). Transport units have +1 movement point. Other direct units have -10% firepower.",
     hooks: {
       movementPoints: (points, unit) => {
-        if ("loadedUnit" in unit.properties()) { // if it's a transport
+        if (unit.isTransport()) {
           return points + 1;
         }
       },
@@ -29,7 +29,7 @@ export const samiAW2: COProperties = {
       stars: 3,
       hooks: {
         movementPoints: (points, unit) => {
-          if ("loadedUnit" in unit.properties()) { // if it's a transport
+          if (unit.isTransport()) {
             return points + 1;
           }
 
@@ -55,7 +55,7 @@ export const samiAW2: COProperties = {
       hooks: {
         // capturing handled in abiltiy event
         movementPoints: (points, unit) => {
-          if ("loadedUnit" in unit.properties()) { // if it's a transport
+          if (unit.isTransport()) {
             return points + 1;
           }
 
