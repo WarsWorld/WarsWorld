@@ -1,78 +1,72 @@
-import { withType } from "shared/schemas/algebraic-datatypes";
 import { ZodFirstPartyTypeKind, z } from "zod";
 import {
-  unitInMapSharedPropertiesSchema,
-  withAmmoUnitStatsSchema,
-  withHiddenSchema,
-  withNoAmmoUnitStatsSchema
+  getLoadedSchema,
+  unitInMapSharedProperties as shared,
+  withAmmoUnitStats,
+  withCapturePoints,
+  withHidden,
+  withNoAmmoUnitStats,
+  withTypeSchema
 } from "./unit-traits";
 
 //LAND UNITS:
-const infantrySchema = withNoAmmoUnitStatsSchema
-  .extend(withType("infantry"))
-  .extend({
-    currentCapturePoints: z.number().positive().optional()
-  });
 
 // TODO replace unit capture points with tile HP
-const mechSchema = withAmmoUnitStatsSchema.extend(withType("mech")).extend({
-  currentCapturePoints: z.number().positive().optional()
-});
 
-const soldierSchema = z.discriminatedUnion("type", [
-  infantrySchema,
-  mechSchema
-]);
+const infantrySchema = withTypeSchema("infantry")
+  .extend(withNoAmmoUnitStats)
+  .extend(withCapturePoints);
 
-const APCSchema = withNoAmmoUnitStatsSchema.extend(withType("apc")).extend({
-  loadedUnit: z.nullable(soldierSchema)
-});
+const mechSchema = withTypeSchema("mech")
+  .extend(withAmmoUnitStats)
+  .extend(withCapturePoints);
 
-const reconSchema = withNoAmmoUnitStatsSchema.extend(withType("recon"));
-
-const otherLandUnitsWithAmmo = withAmmoUnitStatsSchema.extend({
-  type: z.enum([
-    "artillery",
-    "tank",
-    "antiAir",
-    "missile",
-    "rocket",
-    "mediumTank",
-    "neoTank",
-    "megaTank"
-  ])
-});
-
-const landUnitSchema = z.discriminatedUnion("type", [
-  infantrySchema,
-  mechSchema,
-  reconSchema,
-  APCSchema,
-  otherLandUnitsWithAmmo
-]);
-
-//AIR UNITS:
-const transportCopterSchema = withNoAmmoUnitStatsSchema
-  .extend(withType("transportCopter"))
+const APCSchema = withTypeSchema("apc")
+  .extend(withNoAmmoUnitStats)
   .extend({
-    loadedUnit: z.nullable(soldierSchema)
+    loadedUnit: getLoadedSchema([infantrySchema, mechSchema])
   });
 
-const battleCopterSchema = withAmmoUnitStatsSchema.extend(
-  withType("battleCopter")
-);
+const reconSchema = withTypeSchema("recon").extend(withNoAmmoUnitStats);
 
-const blackBombSchema = withNoAmmoUnitStatsSchema.extend(withType("blackBomb"));
+const otherLandUnitsWithAmmo = z
+  .object({
+    type: z.enum([
+      "artillery",
+      "tank",
+      "antiAir",
+      "missile",
+      "rocket",
+      "mediumTank",
+      "neoTank",
+      "megaTank"
+    ])
+  })
+  .extend(withAmmoUnitStats);
 
-const bomberAndFighterSchema = withAmmoUnitStatsSchema.extend({
-  type: z.enum(["bomber", "fighter"])
-});
+//AIR UNITS:
+const transportCopterSchema = withTypeSchema("transportCopter")
+  .extend(withNoAmmoUnitStats)
+  .extend({
+    loadedUnit: getLoadedSchema([infantrySchema, mechSchema])
+  });
 
-const stealthSchema = withAmmoUnitStatsSchema
-  .extend(withHiddenSchema.shape)
-  .extend(withType("stealth"));
+const battleCopterSchema =
+  withTypeSchema("battleCopter").extend(withAmmoUnitStats);
 
-const airUnitSchema = z.discriminatedUnion("type", [
+const blackBombSchema = withTypeSchema("blackBomb").extend(withNoAmmoUnitStats);
+
+const bomberAndFighterSchema = z
+  .object({
+    type: z.enum(["bomber", "fighter"])
+  })
+  .extend(withAmmoUnitStats);
+
+const stealthSchema = withTypeSchema("stealth")
+  .extend(withHidden)
+  .extend(withAmmoUnitStats);
+
+const loadableAirUnitSchema = getLoadedSchema([
   transportCopterSchema,
   battleCopterSchema,
   blackBombSchema,
@@ -81,88 +75,82 @@ const airUnitSchema = z.discriminatedUnion("type", [
 ]);
 
 //SEA UNITS:
-const blackBoatSchema = withNoAmmoUnitStatsSchema
-  .extend(withType("blackBoat"))
+const blackBoatSchema = withTypeSchema("blackBoat")
+  .extend(withNoAmmoUnitStats)
   .extend({
-    loadedUnit: z.nullable(soldierSchema),
-    loadedUnit2: z.nullable(soldierSchema)
+    loadedUnit: getLoadedSchema([infantrySchema, mechSchema]),
+    loadedUnit2: getLoadedSchema([infantrySchema, mechSchema])
   });
 
-const landerSchema = withNoAmmoUnitStatsSchema
-  .extend(withType("lander"))
+const landerSchema = withTypeSchema("lander")
+  .extend(withNoAmmoUnitStats)
   .extend({
-    loadedUnit: z.nullable(landUnitSchema),
-    loadedUnit2: z.nullable(landUnitSchema)
+    loadedUnit: getLoadedSchema([
+      infantrySchema,
+      mechSchema,
+      reconSchema,
+      APCSchema,
+      otherLandUnitsWithAmmo
+    ]),
+    loadedUnit2: getLoadedSchema([
+      infantrySchema,
+      mechSchema,
+      reconSchema,
+      APCSchema,
+      otherLandUnitsWithAmmo
+    ])
   });
 
-const cruiserSchema = withAmmoUnitStatsSchema
-  .extend(withType("cruiser"))
+const cruiserSchema = withTypeSchema("cruiser")
+  .extend(withAmmoUnitStats)
   .extend({
-    loadedUnit: z.nullable(
-      z.discriminatedUnion("type", [transportCopterSchema, battleCopterSchema])
-    ),
-    loadedUnit2: z.nullable(
-      z.discriminatedUnion("type", [transportCopterSchema, battleCopterSchema])
-    )
+    loadedUnit: getLoadedSchema([transportCopterSchema, battleCopterSchema]),
+    loadedUnit2: getLoadedSchema([transportCopterSchema, battleCopterSchema])
   });
 
-const battleshipSchema = withAmmoUnitStatsSchema.extend(withType("battleship"));
+const battleshipSchema = withTypeSchema("battleship").extend(withAmmoUnitStats);
 
-const subSchema = withAmmoUnitStatsSchema
-  .extend(withHiddenSchema.shape)
-  .extend(withType("sub"));
+const subSchema = withTypeSchema("sub")
+  .extend(withHidden)
+  .extend(withAmmoUnitStats);
 
-const carrierSchema = withAmmoUnitStatsSchema
-  .extend(withType("carrier"))
+const carrierSchema = withTypeSchema("carrier")
+  .extend(withAmmoUnitStats)
   .extend({
-    loadedUnit: z.nullable(airUnitSchema),
-    loadedUnit2: z.nullable(airUnitSchema)
+    loadedUnit: loadableAirUnitSchema,
+    loadedUnit2: loadableAirUnitSchema
   });
 
 //PIPE? UNITS:
-const pipeRunnerSchema = withAmmoUnitStatsSchema.extend(withType("pipeRunner"));
-
-const shared = unitInMapSharedPropertiesSchema;
+const pipeRunnerSchema = withTypeSchema("pipeRunner").extend(withAmmoUnitStats);
 
 export const unitSchema = z.discriminatedUnion("type", [
   // this can't be easily mapped
   // because it'd be pushing the limits of zod or typescript i think
-  shared.extend(infantrySchema.shape),
-  shared.extend(mechSchema.shape),
-  shared.extend(reconSchema.shape),
-  shared.extend(APCSchema.shape),
-  shared.extend(otherLandUnitsWithAmmo.shape),
-  shared.extend(transportCopterSchema.shape),
-  shared.extend(battleCopterSchema.shape),
-  shared.extend(blackBombSchema.shape),
-  shared.extend(blackBoatSchema.shape),
-  shared.extend(landerSchema.shape),
-  shared.extend(cruiserSchema.shape),
-  shared.extend(bomberAndFighterSchema.shape),
-  shared.extend(stealthSchema.shape),
-  shared.extend(battleshipSchema.shape),
-  shared.extend(subSchema.shape),
-  shared.extend(carrierSchema.shape),
-  shared.extend(pipeRunnerSchema.shape)
+  infantrySchema.extend(shared),
+  mechSchema.extend(shared),
+  reconSchema.extend(shared),
+  APCSchema.extend(shared),
+  otherLandUnitsWithAmmo.extend(shared),
+  transportCopterSchema.extend(shared),
+  battleCopterSchema.extend(shared),
+  blackBombSchema.extend(shared),
+  blackBoatSchema.extend(shared),
+  landerSchema.extend(shared),
+  cruiserSchema.extend(shared),
+  bomberAndFighterSchema.extend(shared),
+  stealthSchema.extend(shared),
+  battleshipSchema.extend(shared),
+  subSchema.extend(shared),
+  carrierSchema.extend(shared),
+  pipeRunnerSchema.extend(shared)
 ]);
 
 export type UnitWithVisibleStats = z.infer<typeof unitSchema>;
 
 export type UnitType = UnitWithVisibleStats["type"];
 
-/**
- * i would usually extract the following into a function with a good name
- * like "indexDiscriminatedUnionSchema"
- * but that would require that either i give up type safety
- * for this (doesn't make any sense, that's the point of zod)
- * or i write types to make this generic which will be literally
- * the deepest and ugliest of all hells.
- * so it must stay here unless someone sacrifices their firstborn at moonlight
- * to an eldritch god and receives the forbidden types that will actually
- * make this work in a generic way.
- * yes, i think this comment is probably still shorter
- * than the types you'd need to write.
- */
+/** not nice to read but the only way to get the type strings as values */
 const unitTypes = unitSchema.options.flatMap((option) => {
   const { _def } = option._def.shape().type;
 
@@ -173,10 +161,9 @@ const unitTypes = unitSchema.options.flatMap((option) => {
   return _def.values;
 });
 
-type WhatZodWants = [(typeof unitTypes)[number], ...typeof unitTypes];
-export const unitTypeSchema = z.enum(unitTypes as WhatZodWants);
+export const unitTypeSchema = z.enum(unitTypes as [UnitType, ...UnitType[]]);
 
-export type UnitWithHiddenStats = Omit<UnitWithVisibleStats, "stats"> & {
+type UnitWithHiddenStats = Omit<UnitWithVisibleStats, "stats"> & {
   stats: "hidden";
 };
 
