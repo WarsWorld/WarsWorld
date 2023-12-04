@@ -11,7 +11,7 @@ const getUnitVisionRangeCache = (team: TeamWrapper) =>
     const hasMountainBonus =
       unit.isInfantryOrMech() && unit.getTile().type === "mountain";
 
-    const modifiedVision = unit.player.getHook("vision")?.(baseVision, unit);
+    const modifiedVision = unit.player.getHook("vision")?.(baseVision);
 
     const coVisionRange =
       (modifiedVision ?? baseVision) + (hasMountainBonus ? 3 : 0);

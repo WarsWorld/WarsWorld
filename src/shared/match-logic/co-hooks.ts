@@ -16,10 +16,7 @@ export type Hooks = {
     baseMovementPoints: number,
     unit: UnitWrapper<T>
   ) => ReturnValue;
-  vision: <T extends UnitType>(
-    baseVisionRange: number,
-    unit: UnitWrapper<T> // TODO unit is fully unused
-  ) => ReturnValue;
+  vision: (baseVisionRange: number) => ReturnValue;
 
   terrainStars: (
     baseTerrainStars: number,
