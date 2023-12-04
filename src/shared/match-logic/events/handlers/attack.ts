@@ -188,13 +188,6 @@ export const applyAttackEvent = (
   const attacker = match.getUnitOrThrow(position);
   const defender = match.getUnitOrThrow(event.defenderPosition);
 
-  const attackingPlayer = match.getBySlotOrThrow(
-    attacker.data.playerSlot
-  );
-  const defendingPlayer = match.getBySlotOrThrow(
-    defender.data.playerSlot
-  );
-
   //Calculate visible hp difference:
   const attackerHpDiff = attacker.getVisualHP() - getVisualHPfromHP(event.attackerHP ?? attacker.getVisualHP());
   const defenderHpDiff = defender.getVisualHP() - getVisualHPfromHP(event.defenderHP);
@@ -209,15 +202,15 @@ export const applyAttackEvent = (
   }
 
   //power meter charge
-  const attackerVP = attackingPlayer.getVersionProperties();
-  const defenderVP = defendingPlayer.getVersionProperties();
+  const attackerVP = attacker.player.getVersionProperties();
+  const defenderVP = defender.player.getVersionProperties();
 
-  attackingPlayer.gainPowerCharge(
+  attacker.player.gainPowerCharge(
     attackerVP.powerMeterIncreasePerHP(attacker) * attackerHpDiff +
     attackerVP.powerMeterIncreasePerHP(defender) * defenderHpDiff * attackerVP.offensivePowerGenMult
   );
 
-  defendingPlayer.gainPowerCharge(
+  defender.player.gainPowerCharge(
     defenderVP.powerMeterIncreasePerHP(defender) * defenderHpDiff +
     defenderVP.powerMeterIncreasePerHP(attacker) * attackerHpDiff * defenderVP.offensivePowerGenMult
   );

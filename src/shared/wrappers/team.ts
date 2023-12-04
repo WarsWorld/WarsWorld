@@ -72,7 +72,9 @@ export class TeamWrapper {
       });
   }
 
-  addUnwrappedPlayer(player: PlayerInMatch) {
-    this.players.push(new PlayerInMatchWrapper(player, this));
+  addUnwrappedPlayer(player: PlayerInMatch): PlayerInMatchWrapper {
+    const playerWrapper = new PlayerInMatchWrapper(player, this)
+    this.players.push(playerWrapper);
+    return playerWrapper
   }
 }

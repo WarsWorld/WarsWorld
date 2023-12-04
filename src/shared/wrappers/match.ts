@@ -5,7 +5,7 @@ import type {
   Player,
   WWMap
 } from "@prisma/client";
-import { applyMainEventToMatch } from "shared/match-logic/events/apply-event-to-match";
+import { DispatchableError } from "shared/DispatchedError";
 import type { MatchRules } from "shared/schemas/match-rules";
 import type { PlayerSlot } from "shared/schemas/player-slot";
 import type { Position } from "shared/schemas/position";
@@ -13,7 +13,6 @@ import { getDistance, isSamePosition } from "shared/schemas/position";
 import type { Tile } from "shared/schemas/tile";
 import type { WWUnit } from "shared/schemas/unit";
 import type { Weather } from "shared/schemas/weather";
-import type { MainEvent } from "shared/types/events";
 import type {
   ChangeableTile,
   PlayerInMatch
@@ -22,7 +21,6 @@ import { MapWrapper } from "./map";
 import type { PlayerInMatchWrapper } from "./player-in-match";
 import { TeamWrapper } from "./team";
 import { UnitWrapper } from "./unit";
-import { DispatchableError } from "shared/DispatchedError";
 
 /** TODO: Add favorites, possibly spectators, also a timer */
 export class MatchWrapper {
@@ -86,44 +84,25 @@ export class MatchWrapper {
     return this.teams.flatMap((team) => team.players);
   }
 
-  getById(playerId: Player["id"]) {
+  getPlayerById(playerId: Player["id"]) {
     return this.getAllPlayers().find((p) => p.data.id === playerId);
   }
 
-  getByIdOrThrow(playerId: Player["id"]) {
-    const player = this.getById(playerId);
-
-    if (player === undefined) {
-      throw new Error(`Could not find player by id ${playerId}`);
-    }
-
-    return player;
-  }
-
-  getBySlot(playerSlot: PlayerSlot) {
+  getPlayerBySlot(playerSlot: PlayerSlot) {
     return this.getAllPlayers().find((p) => p.data.slot === playerSlot);
   }
 
-  getBySlotOrThrow(playerSlot: PlayerSlot) {
-    const player = this.getBySlot(playerSlot);
-
-    if (player === undefined) {
-      throw new Error(`Could not find player by slot ${playerSlot}`);
-    }
-
-    return player;
-  }
-
-  addUnwrappedPlayer(player: PlayerInMatch) {
+  addUnwrappedPlayer(player: PlayerInMatch): PlayerInMatchWrapper {
     const teamIndex = this.rules.teamMapping[player.slot];
     const foundTeam = this.teams.find((team) => team.index === teamIndex);
 
     if (foundTeam === undefined) {
-      this.teams.push(new TeamWrapper([player], this, teamIndex));
-      return;
+      const team = new TeamWrapper([player], this, teamIndex)
+      this.teams.push(team);
+      return team.players[0];
     }
 
-    foundTeam.addUnwrappedPlayer(player);
+    return foundTeam.addUnwrappedPlayer(player);
   }
 
   // UNIT STUFF ****************************************************************
@@ -141,10 +120,6 @@ export class MatchWrapper {
     }
 
     return unit;
-  }
-
-  hasUnit(position: Position) {
-    return this.getUnit(position) !== undefined;
   }
 
   /**

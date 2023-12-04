@@ -33,9 +33,9 @@ export const actionRouter = router({
       if (event.type === "move" && input.type === "move") {
         // second condition is only needed for type-gating input event
 
-        const isJoinOrLoad = match.hasUnit(
+        const isJoinOrLoad = match.getUnit(
           getFinalPositionSafe(event.path)
-        );
+        ) !== undefined;
 
         if (!event.trap && !isJoinOrLoad) {
           event.subEvent = validateSubActionAndToEvent(
@@ -90,7 +90,8 @@ export const actionRouter = router({
             throw new Error("This should never happen: When checking win conditions of capture, tile wasn't capturable")
           }
 
-          const previousOwner = match.getBySlot(tile.playerSlot); // TODO this won't work because at this point, the playerSlot was already changed
+          // TODO this won't work because at this point, the playerSlot was already changed
+          const previousOwner = match.getPlayerBySlot(tile.playerSlot);
 
           if (previousOwner === undefined) {
             return; // should only happen when capturing tiles owned by neutral (slot = -1)

@@ -16,7 +16,13 @@ export class UnitWrapper<ThisUnitType extends UnitType = UnitType> {
     public data: Extract<WWUnit, { type: ThisUnitType }>,
     public match: MatchWrapper
   ) {
-    this.player = match.getBySlotOrThrow(data.playerSlot);
+    const player = match.getPlayerBySlot(data.playerSlot);
+
+    if (player === undefined) {
+      throw new Error(`Could not find player by slot ${data.playerSlot}`);
+    }
+
+    this.player = player;
     this.properties = unitPropertiesMap[data.type];
   }
 

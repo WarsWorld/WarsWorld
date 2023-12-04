@@ -30,7 +30,7 @@ export const matchToFrontend = (match: MatchWrapper) => ({
 export function allMatchSlotsReady(match: MatchWrapper) {
 
   for (let i = 0; i < match.map.data.numberOfPlayers; i++) {
-    if (match.getBySlot(i)?.data.ready !== true) {
+    if (match.getPlayerBySlot(i)?.data.ready !== true) {
       return false;
     }
   }
@@ -40,7 +40,7 @@ export function allMatchSlotsReady(match: MatchWrapper) {
 
 export function getNextAvailableSlot(match: MatchWrapper) {
   for (let i = 0; i < match.map.data.numberOfPlayers; i++) {
-    if (match.getBySlot(i) !== undefined) {
+    if (match.getPlayerBySlot(i) !== undefined) {
       return i;
     }
   }

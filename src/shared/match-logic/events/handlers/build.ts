@@ -37,7 +37,7 @@ export const buildActionToEvent: MainActionToEvent<BuildAction> = (
     );
   }
 
-  if (match.hasUnit(action.position)) {
+  if (match.getUnit(action.position) !== undefined) {
     throw new DispatchableError("Can't build where there's a unit already");
   }
 

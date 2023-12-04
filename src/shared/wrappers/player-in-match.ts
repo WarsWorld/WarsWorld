@@ -76,7 +76,7 @@ export class PlayerInMatchWrapper {
       i !== this.data.slot;
       i = nextSlot(i)
     ) {
-      const player = this.match.getBySlot(i);
+      const player = this.match.getPlayerBySlot(i);
 
       if (player?.data.eliminated === true) {
         return player;

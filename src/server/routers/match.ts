@@ -46,7 +46,7 @@ export const matchRouter = router({
     status: match.status,
     turn: match.turn,
     units:
-      match.getById(currentPlayer.id)?.team.getEnemyUnitsInVision() ?? []
+      match.getPlayerById(currentPlayer.id)?.team.getEnemyUnitsInVision() ?? []
   })),
   join: matchBaseProcedure
     .input(
@@ -58,7 +58,7 @@ export const matchRouter = router({
     .mutation(({ input, ctx: { currentPlayer, match } }) => {
       throwIfMatchNotInSetupState(match);
 
-      if (match.getById(currentPlayer.id) !== undefined) {
+      if (match.getPlayerById(currentPlayer.id) !== undefined) {
         throw new Error("You've already joined this match!");
       }
 
@@ -66,13 +66,13 @@ export const matchRouter = router({
         throw new DispatchableError("Invalid player slot given")
       }
       
-      if (match.getBySlot(input.playerSlot) !== undefined) {
+      if (match.getPlayerBySlot(input.playerSlot) !== undefined) {
         throw new DispatchableError("Player slot is occupied")
       }
 
       // TODO check if selectedCO is allowed for tier/league/match-blacklist
 
-      match.addUnwrappedPlayer({
+      const player = match.addUnwrappedPlayer({
         id: currentPlayer.id,
         slot: input.playerSlot,
         ready: false,
@@ -84,8 +84,6 @@ export const matchRouter = router({
         COPowerState: "no-power",
         name: currentPlayer.name
       });
-
-      const player = match.getByIdOrThrow(currentPlayer.id);
 
       playerMatchIndex.onPlayerJoin(player);
 
