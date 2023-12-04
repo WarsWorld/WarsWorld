@@ -23,6 +23,17 @@ export const actionRouter = router({
     .mutation(async ({ input, ctx: { match, player } }) => {
       const mainEvent = validateMainActionAndToEvent(match, input);
 
+      /**
+       * we need to analyze and check for player eliminations separate from the events.
+       * that's because we need a separate event for eliminations because
+       * eliminations are always public whereas some events are not (e.g. move during fog of war).
+       * we need the generated event data (at least for capture and attack) so this
+       * code comes after the validation.
+       * we also need to read the match state before applying the event in order
+       * to determine who gets the properties if a player gets eliminated by capture.
+       * that's the reason these player elimination checks / events are
+       * sandwiched between validation and application of the events like this.
+       */
       let playerEliminatedEvent: PlayerEliminatedEvent | null = null;
 
       if (mainEvent.type === "passTurn") {
@@ -73,6 +84,8 @@ export const actionRouter = router({
       emit(emittableEvent);
 
       if (playerEliminatedEvent !== null) {
+        applyMainEventToMatch(match, playerEliminatedEvent);
+
         const eliminationEventOnDB = await prisma.event.create({
           data: {
             content: playerEliminatedEvent,
