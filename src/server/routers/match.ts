@@ -87,7 +87,7 @@ export const matchRouter = router({
 
       const player = match.getByIdOrThrow(currentPlayer.id);
 
-      playerMatchIndex.onPlayerJoin(player, match);
+      playerMatchIndex.onPlayerJoin(player);
 
       emit({
         type: "player-joined",
@@ -106,7 +106,7 @@ export const matchRouter = router({
         match.teams = match.teams.filter(team2 => team2 === teamToRemoveFrom)
       }
 
-      playerMatchIndex.onPlayerLeave(playerInMatch, match);
+      playerMatchIndex.onPlayerLeave(playerInMatch);
 
       if (match.teams.length === 0) {
         pageMatchIndex.removeMatch(match);

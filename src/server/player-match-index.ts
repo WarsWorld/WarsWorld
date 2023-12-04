@@ -9,29 +9,27 @@ class PlayerMatchIndex {
     return this.index.get(playerId);
   }
 
-  // TODO remove match param from these methods
-  // because player already has a path to match.
-  onPlayerJoin(player: PlayerInMatchWrapper, match: MatchWrapper) {
+  onPlayerJoin(player: PlayerInMatchWrapper) {
     const playerMatches = this.index.get(player.data.id);
 
     if (playerMatches === undefined) {
-      this.index.set(player.data.id, [match]);
+      this.index.set(player.data.id, [player.match]);
     } else {
-      playerMatches.push(match);
+      playerMatches.push(player.match);
     }
   }
 
-  onPlayerLeave(player: PlayerInMatchWrapper, match: MatchWrapper) {
+  onPlayerLeave(player: PlayerInMatchWrapper) {
     const playerMatchesIndex = this.index.get(player.data.id);
 
     if (playerMatchesIndex === undefined) {
       throw new Error(`Tried to remove a match for player ${player.data.id} from playerIdIndex but index entry wasn't found`);
     }
 
-    const matchIndex = playerMatchesIndex.findIndex((m) => m.id === match.id);
+    const matchIndex = playerMatchesIndex.findIndex((m) => m.id === player.match.id);
 
     if (matchIndex === -1) {
-      throw new Error(`Tried to remove match ${match.id} for player ${player.data.id} from playerIdIndex but match wasn't found in index`);
+      throw new Error(`Tried to remove match ${player.match.id} for player ${player.data.id} from playerIdIndex but match wasn't found in index`);
     }
 
     playerMatchesIndex.splice(matchIndex, 1);

@@ -56,7 +56,7 @@ export class MatchStore {
     this.index.set(match.id, match);
 
     for (const player of match.getAllPlayers()) {
-      playerMatchIndex.onPlayerJoin(player, match);
+      playerMatchIndex.onPlayerJoin(player);
     }
 
     pageMatchIndex.addMatch(match);
