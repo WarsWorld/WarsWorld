@@ -33,7 +33,7 @@ export const drakeAW1: COProperties = {
       stars: 4,
       instantEffect(player) {
         const enemyUnits = player.team.getEnemyUnits();
-        enemyUnits.forEach(unit => unit.damageUntil1HP(10));
+        enemyUnits.forEach(unit => unit.damageUntil1HP(1));
       }
     },
   }

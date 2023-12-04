@@ -29,7 +29,7 @@ export const sturmAW1Versus: COProperties = {
 
         player.match.damageUntil1HPInRadius({
           radius: 2,
-          damageAmount: 4,
+          visualHpAmount: 4,
           epicenter: positions[0]
         });
       }

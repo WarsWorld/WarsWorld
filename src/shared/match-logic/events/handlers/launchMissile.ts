@@ -38,7 +38,7 @@ export const applyLaunchMissileEvent = (
 ) => {
   match.damageUntil1HPInRadius({
     radius: 3,
-    damageAmount: 30,
+    visualHpAmount: 3,
     epicenter: event.targetPosition,
   });
 };

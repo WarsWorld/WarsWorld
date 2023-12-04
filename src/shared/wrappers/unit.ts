@@ -91,23 +91,31 @@ export class UnitWrapper<ThisUnitType extends UnitType = UnitType> {
     return Math.ceil(this.getHP() / 10);
   }
 
-  damageUntil1HP(damageAmount: number) {
+  /**
+   * IMPORTANT!
+   * Param is VISUAL hp, since all sources of damaging without killing
+   * are "multiples of 10" (nothing does 25 damage, for example)
+   */
+  damageUntil1HP(visualHpAmount: number) {
     if (this.data.stats === "hidden") {
       return;
     }
 
-    this.data.stats.hp = Math.max(1, this.data.stats.hp - damageAmount);
+    this.data.stats.hp = Math.max(1, this.data.stats.hp - visualHpAmount * 10);
   }
 
   /**
-   * heal 1 visual hp = heal(10)
+   * IMPORTANT!
+   * Param is VISUAL hp, since all sources of healing round the up to
+   * the highest "real" hp that corresponds to the resulting visual hp.
    */
-  heal(preciseHealAmount: number) {
+  heal(visualHpAmount: number) {
     if (this.data.stats === "hidden") {
       return;
     }
 
-    this.data.stats.hp = Math.min(this.data.stats.hp + preciseHealAmount, 100);
+    const newVisualHP = this.getVisualHP() + visualHpAmount;
+    this.data.stats.hp = Math.min(10, newVisualHP) * 10;
   }
 
   /**

@@ -98,7 +98,7 @@ export const applyAbilityEvent = (match: MatchWrapper, unit: UnitWrapper) => {
     case "blackBomb": {
       match.damageUntil1HPInRadius({
         radius: 3,
-        damageAmount: 50,
+        visualHpAmount: 5,
         epicenter: unit.data.position
       });
       unit.remove();
