@@ -7,7 +7,7 @@ import {
 } from "shared/match-logic/events/action-to-event";
 import { applyMainEventToMatch, applySubEventToMatch } from "shared/match-logic/events/apply-event-to-match";
 import { mainActionSchema } from "shared/schemas/action";
-import type { Emittable, EmittableEvent } from "shared/types/events";
+import type { Emittable, EmittableEvent, PlayerEliminatedEvent } from "shared/types/events";
 import { z } from "zod";
 import {
   playerInMatchBaseProcedure,
@@ -15,6 +15,7 @@ import {
   router
 } from "../trpc/trpc-setup";
 import { getFinalPositionSafe } from "shared/schemas/position";
+import { eliminatePlayer } from "./match/util";
 
 export const actionRouter = router({
   send: playerInMatchBaseProcedure
@@ -56,13 +57,85 @@ export const actionRouter = router({
       const emittableEvent: EmittableEvent = {
         ...event,
         matchId: input.matchId,
-        eventIndex: eventOnDB.index
+        index: eventOnDB.index
       };
 
       
       emittableEvent.discoveredUnits = player.team.getEnemyUnitsInVision()
 
       emit(emittableEvent);
+
+      // TODO check for loss conditions? (below is WIP)
+
+      if (event.type === "move") { // TODO if day limit reached, check for winner by captured properties
+        if (event.subEvent.type === "ability") {
+          // TODO check if HQ / number of labs was captured
+
+          const unit = match.getUnitOrThrow(event.path[0]!);
+
+          if (!unit.isInfantryOrMech()) {
+            return; // not a capture
+          }
+
+          const tile = match.getTile(getFinalPositionSafe(event.path))
+
+          if (!("playerSlot" in tile)) {
+            throw new Error("This should never happen: When checking win conditions of capture, tile wasn't capturable")
+          }
+
+          const previousOwner = match.getBySlot(tile.playerSlot); // TODO this won't work because at this point, the playerSlot was already changed
+
+          if (previousOwner === undefined) {
+            return; // should only happen when capturing tiles owned by neutral (slot = -1)
+          }
+
+          const playerHasNoHQ = false; // TODO
+
+          const playerLabs = match.changeableTiles.filter(tile => (
+            tile.type === "lab"
+            && tile.playerSlot === previousOwner.data.slot
+          ))
+
+          const playerHasNoLabsLeft = playerLabs.length === 0
+
+          if (
+            tile.type === "hq"
+            || (playerHasNoHQ && tile.type === "lab" && playerHasNoLabsLeft)
+          ) {
+            const eliminationEvent: PlayerEliminatedEvent = {
+              type: "player-eliminated",
+              playerId: previousOwner.data.id,
+              condition: "by HQ / lab capture",
+            }
+
+            const eliminationEventOnDB = await prisma.event.create({
+              data: {
+                content: eliminationEvent,
+                matchId: match.id
+              }
+            })
+
+            // TODO this match altering code should be an applyEvent thing that can be used by clients as well
+            for (const changeableTile of match.changeableTiles) { // give current player all owned properties of eliminated player
+              if ("playerSlot" in changeableTile && previousOwner.owns(changeableTile)) {
+                changeableTile.playerSlot = player.data.slot
+              }
+            }
+
+            eliminatePlayer(previousOwner)
+
+            emit({
+              ...eliminationEvent,
+              matchId: match.id,
+              index: eliminationEventOnDB.index
+            })
+          }
+        }
+
+        if (event.subEvent.type === "attack") {
+          // TODO check if all units were destroyed, then eliminate player
+        }
+      }
     }),
   onEvent: publicBaseProcedure.input(z.string()).subscription(({ input }) =>
     observable<Emittable>((emit) => {

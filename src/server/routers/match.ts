@@ -154,7 +154,7 @@ export const matchRouter = router({
           emit({
             ...matchStartEvent,
             matchId: match.id,
-            eventIndex: eventOnDB.index
+            index: eventOnDB.index
           });
         } else {
           emit({

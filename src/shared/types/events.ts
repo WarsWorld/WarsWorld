@@ -18,6 +18,7 @@ import type { COID } from "shared/schemas/co";
 import type { Position } from "shared/schemas/position";
 import type { WWUnit } from "shared/schemas/unit";
 import type { Weather } from "shared/schemas/weather";
+import type { ChangeableTile } from "./server-match-state";
 
 /** player slot 0 implicity starts */
 export type MatchStartEvent = {
@@ -58,7 +59,7 @@ type WithPlayer = {
   playerId: Player["id"];
 };
 
-export type PlayerEliminated = WithPlayer & {
+export type PlayerEliminatedEvent = WithPlayer & {
   type: "player-eliminated";
   condition: string;
 };
@@ -82,7 +83,7 @@ export type MainEvent =
   | MatchStartEvent
   | MoveEvent
   | UnloadNoWaitEvent
-  | PlayerEliminated
+  | PlayerEliminatedEvent
   | COPowerEvent
   | PassTurnEvent
   | BuildEvent
@@ -99,7 +100,8 @@ export type SubEvent =
 export type EmittableEvent = MainEvent &
   WithMatchId & {
     discoveredUnits?: WWUnit[];
-    eventIndex: number;
+    discoveredChangeableTiles?: ChangeableTile[]; // TODO e.g. properties / pipeseam in fog of war
+    index: number;
   };
 
 export type NonStoredEvent = WithPlayer &

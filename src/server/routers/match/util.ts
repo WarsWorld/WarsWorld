@@ -48,10 +48,22 @@ export function getNextAvailableSlot(match: MatchWrapper) {
   throw new Error("No player slots available (game full)");
 }
 
-function eliminatePlayer(player: PlayerInMatchWrapper) {
+export function eliminatePlayer(player: PlayerInMatchWrapper) {
   player.data.eliminated = true;
 
   if (player.match.playerToRemoveWeatherEffect === player) {
     player.match.playerToRemoveWeatherEffect = player.getNextAlivePlayer();
+  }
+
+  // TODO what happens with olaf snow and other CO powers?
+
+  for (const unit of player.getUnits()) {
+    unit.remove();
+  }
+
+  for (const tile of player.match.changeableTiles) {
+    if ("playerSlot" in tile && player.owns(tile)) {
+      tile.playerSlot = -1
+    }
   }
 }
