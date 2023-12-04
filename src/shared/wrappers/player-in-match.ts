@@ -34,6 +34,10 @@ export class PlayerInMatchWrapper {
     );
   }
 
+  possessesLab() {
+    return this.match.changeableTiles.find((tile) => tile.type === "lab" && tile.playerSlot === this.data.slot) !== undefined;
+  }
+
   getUnits() {
     return this.match.units.filter((u) => u.data.playerSlot === this.data.slot)
   }

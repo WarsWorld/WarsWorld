@@ -9,6 +9,10 @@ import { throwIfUnitCantBeUnloadedToTile } from "./unloadWait";
 export const unloadNoWaitActionToEvent: MainActionToEvent<UnloadNoWaitAction> = (match, action) => {
   const player = match.getCurrentTurnPlayer();
 
+  if (player.getVersionProperties().unloadOnlyAfterMove) {
+    throw new DispatchableError("This type of unload is illegal in this version/setting");
+  }
+
   const transportUnit = match.getUnitOrThrow(action.transportPosition);
 
   if (!player.owns(transportUnit)) {

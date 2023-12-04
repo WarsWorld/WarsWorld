@@ -23,6 +23,10 @@ export function throwIfUnitCantBeUnloadedToTile(unit: { type: UnitType }, tile: 
 export const unloadWaitActionToEvent: SubActionToEvent<UnloadWaitAction> = (match, action, fromPosition) => {
   const player = match.getCurrentTurnPlayer();
 
+  if (!player.getVersionProperties().unloadOnlyAfterMove) {
+    throw new DispatchableError("This type of unload is illegal in this version/setting");
+  }
+
   const transportUnit = match.getUnitOrThrow(fromPosition);
 
   if (!player.owns(transportUnit)) {

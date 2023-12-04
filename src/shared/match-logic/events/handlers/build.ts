@@ -13,6 +13,16 @@ export const buildActionToEvent: MainActionToEvent<BuildAction> = (
 ) => {
   const player = match.getCurrentTurnPlayer();
 
+  if (action.unitType in match.rules.bannedUnitTypes) {
+    throw new DispatchableError("Trying to build a banned unit type");
+  }
+
+  if (action.unitType in match.rules.labUnitTypes && !player.possessesLab()) {
+    throw new DispatchableError("Trying to build a unit type that requires a lab, but no lab is owned");
+  }
+
+  // TODO discuss how we handle "existing unit types" for each version
+
   if (player.getUnits().length >= match.rules.unitCapPerPlayer) {
     throw new DispatchableError("Unit cap alreaedy reached");
   }
