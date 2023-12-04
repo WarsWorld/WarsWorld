@@ -96,17 +96,17 @@ export const matchRouter = router({
       });
     }),
   leave: playerInMatchBaseProcedure.mutation(
-    ({ ctx: { match, playerInMatch } }) => {
+    ({ ctx: { match, player } }) => {
       throwIfMatchNotInSetupState(match);
 
-      const { team: teamToRemoveFrom } = playerInMatch
-      teamToRemoveFrom.players = teamToRemoveFrom.players.filter(player => player.data.slot === playerInMatch.data.slot)
+      const { team: teamToRemoveFrom } = player
+      teamToRemoveFrom.players = teamToRemoveFrom.players.filter(player2 => player2.data.slot === player.data.slot)
   
       if (teamToRemoveFrom.players.length === 0) {
         match.teams = match.teams.filter(team2 => team2 === teamToRemoveFrom)
       }
 
-      playerMatchIndex.onPlayerLeave(playerInMatch);
+      playerMatchIndex.onPlayerLeave(player);
 
       if (match.teams.length === 0) {
         pageMatchIndex.removeMatch(match);
@@ -117,7 +117,7 @@ export const matchRouter = router({
       emit({
         matchId: match.id,
         type: "player-left",
-        playerId: playerInMatch.data.id
+        playerId: player.data.id
       });
     }
   ),
@@ -128,10 +128,10 @@ export const matchRouter = router({
       })
     )
     .mutation(
-      async ({ input, ctx: { match, playerInMatch, currentPlayer } }) => {
+      async ({ input, ctx: { match, player } }) => {
         throwIfMatchNotInSetupState(match);
 
-        playerInMatch.data.ready = input.readyState;
+        player.data.ready = input.readyState;
 
         if (allMatchSlotsReady(match)) {
           match.status = "playing";
@@ -160,7 +160,7 @@ export const matchRouter = router({
           emit({
             type: "player-changed-ready-status",
             matchId: match.id,
-            playerId: currentPlayer.id,
+            playerId: player.data.id,
             ready: input.readyState
           });
         }
@@ -172,16 +172,16 @@ export const matchRouter = router({
         selectedCO: coIdSchema
       })
     )
-    .mutation(({ input, ctx }) => {
-      throwIfMatchNotInSetupState(ctx.match);
+    .mutation(({ input, ctx: { match, player } }) => {
+      throwIfMatchNotInSetupState(match);
 
-      ctx.playerInMatch.data.coId = input.selectedCO;
+      player.data.coId = input.selectedCO;
 
       emit({
         type: "player-picked-co",
         coId: input.selectedCO,
-        matchId: ctx.match.id,
-        playerId: ctx.currentPlayer.id
+        matchId: match.id,
+        playerId: player.data.id
       });
     }),
   switchArmy: playerInMatchBaseProcedure
@@ -190,16 +190,16 @@ export const matchRouter = router({
         selectedArmy: armySchema
       })
     )
-    .mutation(({ input, ctx }) => {
-      throwIfMatchNotInSetupState(ctx.match);
+    .mutation(({ input, ctx: { match, player } }) => {
+      throwIfMatchNotInSetupState(match);
 
-      ctx.playerInMatch.data.army = input.selectedArmy;
+      player.data.army = input.selectedArmy;
 
       emit({
         type: "player-picked-army",
         army: input.selectedArmy,
-        matchId: ctx.match.id,
-        playerId: ctx.currentPlayer.id
+        matchId: match.id,
+        playerId: player.data.id
       });
     })
 });

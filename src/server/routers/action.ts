@@ -19,7 +19,7 @@ import { getFinalPositionSafe } from "shared/schemas/position";
 export const actionRouter = router({
   send: playerInMatchBaseProcedure
     .input(mainActionSchema)
-    .mutation(async ({ input, ctx: { match, playerInMatch } }) => {
+    .mutation(async ({ input, ctx: { match, player } }) => {
       const event = validateMainActionAndToEvent(match, input);
 
       // IMPORTANT @FUNCTION IDIOT: we MUST apply the main event before validateSubActionAndToEvent
@@ -60,7 +60,7 @@ export const actionRouter = router({
       };
 
       
-      emittableEvent.discoveredUnits = playerInMatch.team.getEnemyUnitsInVision()
+      emittableEvent.discoveredUnits = player.team.getEnemyUnitsInVision()
 
       emit(emittableEvent);
     }),

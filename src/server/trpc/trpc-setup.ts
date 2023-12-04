@@ -31,8 +31,8 @@ export const playerInMatchBaseProcedure = matchBaseProcedure.use(
       return next({
         ctx: {
           ...ctx,
-          playerInMatch: player, // TODO rename this property to player
-        },
+          player
+        }
       });
     })
 );
