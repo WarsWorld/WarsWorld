@@ -5,7 +5,6 @@ import type { MatchWrapper } from "shared/wrappers/match";
 import type { COProperties } from "../../co";
 import { getCOProperties } from "../../co";
 import type { MainActionToEvent } from "../handler-types";
-import { versionPropertiesMap } from "../../game-constants/version-properties";
 
 export const coPowerActionToEvent: MainActionToEvent<COPowerAction> = (
   match,
@@ -63,7 +62,7 @@ export const applyCOPowerEvent = (match: MatchWrapper, event: COPowerEvent) => {
 
   // applying all match rules, read doc of variables for details
   player.data.powerMeter -= power.stars * player.getPowerStarCost() *
-    (1 + versionPropertiesMap[match.rules.gameVersion].powerUsagePenalty);
+    (1 + player.getVersionProperties().powerUsagePenalty);
 
   //event.positions are for rachel, sturm, von-bolt supers
   power.instantEffect?.(player, event.positions);

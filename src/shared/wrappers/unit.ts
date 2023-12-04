@@ -167,7 +167,7 @@ export class UnitWrapper<ThisUnitType extends UnitType = UnitType> {
       unitPropertiesMap[this.data.type].movementType,
       getWeatherSpecialMovement(this.player),
       this.match.getTile(position).type,
-      this.match.rules.gameVersion
+      this.match.rules.gameVersion ?? this.player.data.coId.version
     );
 
     if (baseMovementCost === null) {

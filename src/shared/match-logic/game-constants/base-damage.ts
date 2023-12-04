@@ -13,14 +13,16 @@ export const canAttackWithPrimary = (
     return false;
   }
 
-  return damageChartMap[attacker.match.rules.gameVersion][attacker.data.type]?.primary?.[defender.data.type] !== undefined;
+  const gameVersion = attacker.match.rules.gameVersion ?? attacker.player.data.coId.version;
+  return damageChartMap[gameVersion][attacker.data.type]?.primary?.[defender.data.type] !== undefined;
 }
 
 export const getBaseDamage = (
   attacker: UnitWrapper,
   defender: UnitWrapper
 ): number | null => {
-  const damageValues = damageChartMap[attacker.match.rules.gameVersion][attacker.data.type];
+  const gameVersion = attacker.match.rules.gameVersion ?? attacker.player.data.coId.version;
+  const damageValues = damageChartMap[gameVersion][attacker.data.type];
 
   if (damageValues === undefined) {
     return null;

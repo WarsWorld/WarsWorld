@@ -18,6 +18,10 @@ type VersionProperties = {
    */
   existingWeathers: Weather[],
   /**
+   * Allow AWBW unload mechanics if set to false
+   */
+  unloadOnlyAfterMove: boolean,
+  /**
    * Highly dependant on game version, the amount of power charge needed to fill a star
    * (AW1 star is arbitrarily 10.000 for compatibility reasons)
    */
@@ -59,6 +63,7 @@ const AW1Properties: VersionProperties = {
   baseGoodLuck: 10,
   baseBadLuck: 0,
   existingWeathers: ["clear", "rain", "snow"],
+  unloadOnlyAfterMove: true,
   baseStarValue: 10000, // to make an equivalent, arbitrary
   powerMeterScaling: 0.2,
   powerUsagePenalty: 0.2,
@@ -73,6 +78,7 @@ const AW2Properties: VersionProperties = {
   baseGoodLuck: 10,
   baseBadLuck: 0,
   existingWeathers: ["clear", "rain", "snow"],
+  unloadOnlyAfterMove: true,
   baseStarValue: 9000,
   powerMeterScaling: 0.2,
   powerUsagePenalty: 0.2,
@@ -87,6 +93,7 @@ const AWDSProperties: VersionProperties = {
   baseGoodLuck: 15,
   baseBadLuck: 0,
   existingWeathers: ["clear", "rain", "snow", "sandstorm"],
+  unloadOnlyAfterMove: true,
   baseStarValue: 50, // star calculations are different in awds
   powerMeterScaling: 0.2,
   powerUsagePenalty: 0.2,
@@ -130,6 +137,22 @@ const AWDSProperties: VersionProperties = {
         return 0;
     }
   },
+  powerFirepowerMod: (baseFirepower) => (baseFirepower + 10),
+  powerDefenseMod: (baseDefense) => (baseDefense + 10)
+};
+
+// as proof of concept:
+const AWBWProperties: VersionProperties = {
+  gameVersion: "AW2", // not accurate
+  baseGoodLuck: 10,
+  baseBadLuck: 0,
+  existingWeathers: ["clear", "rain", "snow"],
+  unloadOnlyAfterMove: false,
+  baseStarValue: 9000,
+  powerMeterScaling: 0.2,
+  powerUsagePenalty: 0,
+  offensivePowerGenMult: 0.5,
+  powerMeterIncreasePerHP: (affectedUnit) => affectedUnit.getBuildCost() / 10,
   powerFirepowerMod: (baseFirepower) => (baseFirepower + 10),
   powerDefenseMod: (baseDefense) => (baseDefense + 10)
 };

@@ -51,6 +51,14 @@ export class PlayerInMatchWrapper {
     }
   }
 
+  getVersionProperties() {
+    if (this.match.rules.gameVersion === undefined) {
+      return versionPropertiesMap[this.data.coId.version];
+    }
+
+    return versionPropertiesMap[this.match.rules.gameVersion];
+  }
+
   /**
    * gets the next player, looping back around to index 0
    * if needed until current player slot.
@@ -75,8 +83,8 @@ export class PlayerInMatchWrapper {
   }
 
   getPowerStarCost() {
-    const versionBehaviour = versionPropertiesMap[this.match.rules.gameVersion];
-    return versionBehaviour.baseStarValue * (1 + versionBehaviour.powerMeterScaling * Math.min(this.data.timesPowerUsed, 10));
+    const versionProperties = this.getVersionProperties();
+    return versionProperties.baseStarValue * (1 + versionProperties.powerMeterScaling * Math.min(this.data.timesPowerUsed, 10));
   }
 
   getMaxPowerMeter() {
