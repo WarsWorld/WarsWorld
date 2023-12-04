@@ -13,3 +13,8 @@ export type SubActionToEvent<T extends SubAction> = (
   action: T,
   fromPosition: Position
 ) => SubEvent;
+
+export type Apply<Event extends MainEvent | SubEvent> = (
+  match: MatchWrapper,
+  event: Event
+) => void

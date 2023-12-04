@@ -61,8 +61,11 @@ type WithPlayer = {
 
 export type PlayerEliminatedEvent = WithPlayer & {
   type: "player-eliminated";
-  condition: string;
-};
+} & (
+  { eliminationType: "all-units-destroyed" }
+  | { eliminationType: "hq-or-labs-captured", capturedByPlayerId: Player["id"] }
+  | { eliminationType: "timer-ran-out" }
+);
 
 // TODO maybe add the turn/day number
 // TODO important! add repairs, fuel drain, loss condition like

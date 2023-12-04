@@ -56,7 +56,7 @@ export const applyPassTurnEvent = (
     if (isInRepairFacility && unit.player.owns(tile)) {
       propertyRepairAndResupply(unit);
     } else {
-      consumeFuelAndCrash(unit);
+      consumeFuelAndCrash(unit, false);
     }
 
     APCresupply(unit);

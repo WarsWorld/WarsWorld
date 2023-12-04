@@ -1,7 +1,6 @@
 import { TRPCError } from "@trpc/server";
 import type { MapWrapper } from "shared/wrappers/map";
 import type { MatchWrapper } from "shared/wrappers/match";
-import type { PlayerInMatchWrapper } from "shared/wrappers/player-in-match";
 
 export const throwIfMatchNotInSetupState = (match: MatchWrapper) => {
   if (match.status !== "setup") {
@@ -28,7 +27,6 @@ export const matchToFrontend = (match: MatchWrapper) => ({
 });
 
 export function allMatchSlotsReady(match: MatchWrapper) {
-
   for (let i = 0; i < match.map.data.numberOfPlayers; i++) {
     if (match.getPlayerBySlot(i)?.data.ready !== true) {
       return false;
@@ -46,24 +44,4 @@ export function getNextAvailableSlot(match: MatchWrapper) {
   }
 
   throw new Error("No player slots available (game full)");
-}
-
-export function eliminatePlayer(player: PlayerInMatchWrapper) {
-  player.data.eliminated = true;
-
-  if (player.match.playerToRemoveWeatherEffect === player) {
-    player.match.playerToRemoveWeatherEffect = player.getNextAlivePlayer();
-  }
-
-  // TODO what happens with olaf snow and other CO powers?
-
-  for (const unit of player.getUnits()) {
-    unit.remove();
-  }
-
-  for (const tile of player.match.changeableTiles) {
-    if ("playerSlot" in tile && player.owns(tile)) {
-      tile.playerSlot = -1
-    }
-  }
 }
