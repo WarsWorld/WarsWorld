@@ -23,6 +23,9 @@ export const actionRouter = router({
     .mutation(async ({ input, ctx: { match, player } }) => {
       const event = validateMainActionAndToEvent(match, input);
 
+      // TODO check if acting player is going to be eliminated
+      // by losing all units (fuel drain).
+
       // IMPORTANT @FUNCTION IDIOT: we MUST apply the main event before validateSubActionAndToEvent
       // because the subAction needs the match state to be changed already, otherwise it's going to break.
       applyMainEventToMatch(match, event);
@@ -41,6 +44,10 @@ export const actionRouter = router({
             event.path[event.path.length - 1]
           );
         }
+
+        // TODO check here if opponent player is going to be eliminated
+        // by capture or by attack, and check if acting player is
+        // going to be eliminated by counter-attack.
 
         // if there was a trap or join/load, the default subEvent
         // which must be "wait" gets applied here, otherwise the custom one.
