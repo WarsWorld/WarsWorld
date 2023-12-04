@@ -2,6 +2,13 @@ import type { PlayerInMatchWrapper } from "../../../../wrappers/player-in-match"
 import type { Position } from "../../../../schemas/position";
 import { getDistance } from "../../../../schemas/position";
 
+// TODO i think this logic can be merged with sturm meteor
+// by adding a parameter to control whether own units should be ignored (von-bolt)
+// or if they should count negatively towards value like with meteor strike.
+// i think that this algorithm here can hit a non-unit field though unlike
+// meteor strike, right? is that accurate to AWDS?
+// - Function
+
 export const getBoltPosition = (
   vbPlayer: PlayerInMatchWrapper
 ): Position => {
