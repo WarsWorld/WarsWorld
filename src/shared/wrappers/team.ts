@@ -40,7 +40,7 @@ export class TeamWrapper {
         const tile = enemy.getTile();
 
         // units hidden by ability (sub/stealth) also get revealed on owned properties
-        if ("ownerSlot" in tile && playerSlots.includes(tile.ownerSlot)) {
+        if ("playerSlot" in tile && playerSlots.includes(tile.playerSlot)) {
           return true;
         }
 

@@ -27,7 +27,7 @@ export class PlayerInMatchWrapper {
   getCommtowerAttackBoost() {
     return 10 * this.match.changeableTiles.reduce(
       (prev, cur) =>
-        cur.type === "commtower" && cur.ownerSlot === this.data.slot
+        cur.type === "commtower" && cur.playerSlot === this.data.slot
           ? prev + 1
           : prev,
       0
@@ -102,10 +102,6 @@ export class PlayerInMatchWrapper {
   }
 
   owns(tileOrUnit: Tile | ChangeableTile | UnitWrapper) {
-    if ("ownerSlot" in tileOrUnit) {
-      return tileOrUnit.ownerSlot === this.data.slot;
-    }
-
     if ("playerSlot" in tileOrUnit) {
       return tileOrUnit.playerSlot === this.data.slot;
     }

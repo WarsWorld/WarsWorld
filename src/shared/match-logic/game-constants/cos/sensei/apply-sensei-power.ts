@@ -28,7 +28,6 @@ export function applySenseiPowerSpawn(
 
       if (
         tile.type !== "city" ||
-        !("ownerSlot" in tile) ||
         !player.owns(tile) ||
         match.getUnit(position) !== undefined
       ) {

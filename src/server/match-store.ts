@@ -26,7 +26,7 @@ const getChangeableTilesFromMap = (map: WWMap): ChangeableTile[] => {
           changeableTiles.push({
             type: tile.type,
             position: [x, y],
-            ownerSlot: tile.playerSlot
+            playerSlot: tile.playerSlot
           });
         }
       }

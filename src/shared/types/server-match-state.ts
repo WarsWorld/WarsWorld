@@ -12,7 +12,7 @@ type WithPosition = {
 
 export type CapturableTile = WithPosition & {
   type: PropertyTileType;
-  ownerSlot: PlayerSlot; // TODO i think i mixed up "playerSlot" and "ownerSlot" in places. needs to be made consistent.
+  playerSlot: PlayerSlot;
   // capture points are stored in unit
 };
 
@@ -21,6 +21,7 @@ type LaunchableSiloTile = WithPosition & {
   fired: boolean;
 };
 
+// TODO missing: pipeseams
 export type ChangeableTile = CapturableTile | LaunchableSiloTile;
 
 export type PlayerInMatch = {
