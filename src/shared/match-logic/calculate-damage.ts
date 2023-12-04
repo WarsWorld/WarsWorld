@@ -2,7 +2,6 @@ import type { CombatProps } from "./co-hooks";
 import { getTerrainDefenseStars } from "./game-constants/terrain-properties";
 import { getBaseDamage } from "./game-constants/base-damage";
 import type { LuckRoll } from "./events/handlers/attack";
-import { versionPropertiesMap } from "./game-constants/version-properties";
 
 /** @returns 1-10, whole numbers */
 export const getVisualHPfromHP = (hp: number) => Math.ceil(hp / 10);
@@ -57,24 +56,24 @@ export const calculateDamage = (
     }
   }
 
-  const versionProperties = versionPropertiesMap[attacker.match.rules.gameVersion];
+  const attackerVersionProperties = attacker.player.getVersionProperties();
 
   if (attacker.player.data.COPowerState !== "no-power") {
-    attackModifier = versionProperties.powerFirepowerMod(attackModifier);
+    attackModifier = attackerVersionProperties.powerFirepowerMod(attackModifier);
   }
 
   const defenseHook = defender.player.getHook("defense");
   let defenseModifier = defenseHook?.(hookProps) ?? 100;
 
   if (defender.player.data.COPowerState !== "no-power") {
-    defenseModifier = versionProperties.powerDefenseMod(defenseModifier);
+    defenseModifier = defender.player.getVersionProperties().powerDefenseMod(defenseModifier);
   }
 
   // luck calculations
   const goodLuckHook = attacker.player.getHook("maxGoodLuck");
-  const maxGoodLuck = goodLuckHook?.(hookProps) ?? versionProperties.baseGoodLuck;
+  const maxGoodLuck = goodLuckHook?.(hookProps) ?? attackerVersionProperties.baseGoodLuck;
   const badLuckHook = attacker.player.getHook("maxBadLuck");
-  const maxBadLuck = badLuckHook?.(hookProps) ?? versionProperties.baseBadLuck;
+  const maxBadLuck = badLuckHook?.(hookProps) ?? attackerVersionProperties.baseBadLuck;
 
   const goodLuckValue = luckRoll.goodLuck * maxGoodLuck;
   const badLuckValue = luckRoll.badLuck * maxBadLuck;

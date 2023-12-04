@@ -54,13 +54,13 @@ export const applyRepairEvent = (
 
   //heal for free if visual hp is 10
   if (getVisualHPfromHP(repairedUnit.getHP()) === 10) {
-    repairedUnit.heal(10);
+    repairedUnit.heal(0);
   } else {
     //check if enough funds for heal, and heal if it's the case
     const repairCost = repairedUnit.getBuildCost() / 10;
 
     if (repairCost <= player.data.funds) {
-      repairedUnit.heal(10);
+      repairedUnit.heal(1);
       player.data.funds -= repairCost;
     }
   }

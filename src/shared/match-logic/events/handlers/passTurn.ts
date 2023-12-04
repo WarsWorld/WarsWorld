@@ -45,9 +45,21 @@ export const applyPassTurnEvent = (
 
   // update units
   for (const unit of nextTurnPlayer.getUnits()) {
-    consumeFuelAndCrash(unit);
+    const tile = unit.getTile();
+
+    const isInRepairFacility =
+      unit.properties.facility === tile.type ||
+      (unit.properties.facility === "base" &&
+        (tile.type === "city" || tile.type === "hq"));
+
+    // if units are on top of a repair property, they can't crash
+    if (isInRepairFacility && unit.player.owns(tile)) {
+      propertyRepairAndResupply(unit);
+    } else {
+      consumeFuelAndCrash(unit);
+    }
+
     APCresupply(unit);
-    propertyRepairAndResupply(unit);
   }
 };
 

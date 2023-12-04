@@ -1,6 +1,5 @@
 import type { UnitType } from "shared/schemas/unit";
 import type { UnitWrapper } from "shared/wrappers/unit";
-import type { GameVersion } from "../../schemas/game-version";
 
 /**
  * Returns if unit is going to attack enemy unit with primary weapon or not
@@ -13,14 +12,15 @@ export const canAttackWithPrimary = (
     return false;
   }
 
-  return damageChartMap[attacker.match.rules.gameVersion][attacker.data.type]?.primary?.[defender.data.type] !== undefined;
+  return attacker.player.getVersionProperties().
+    damageChart[attacker.data.type]?.primary?.[defender.data.type] !== undefined;
 }
 
 export const getBaseDamage = (
   attacker: UnitWrapper,
   defender: UnitWrapper
 ): number | null => {
-  const damageValues = damageChartMap[attacker.match.rules.gameVersion][attacker.data.type];
+  const damageValues = attacker.player.getVersionProperties().damageChart[attacker.data.type];
 
   if (damageValues === undefined) {
     return null;
@@ -44,7 +44,7 @@ type Weaponry = {
   secondary?: DamageValues;
 };
 
-type DamageChart = Partial<Record<UnitType, Weaponry>>;
+export type DamageChart = Partial<Record<UnitType, Weaponry>>;
 
 //if no game version is specified, all of them share the same dmg values
 //otherwise, if a version doesn't appear, it uses the newer version (if AW1 is not present, it uses AW2 table)
@@ -141,7 +141,7 @@ const artilleryWeaponryAWDS = {
     blackBoat: 55
   }
 };
-const artilleryWeaponryAW2 = { //also used in AW1
+const artilleryWeaponryAW2 = {
   primary: {
     ...artilleryWeaponryAWDS.primary,
     cruiser: 65
@@ -208,7 +208,7 @@ const antiAirWeaponryAWDS = {
     blackBomb: 120
   }
 };
-const antiAirWeaponryAW2 = { //also used for AW1
+const antiAirWeaponryAW2 = {
   primary: {
     ...antiAirWeaponryAWDS.primary,
     battleCopter: 120,
@@ -293,7 +293,7 @@ const mediumTankWeaponryAWDS = {
     transportCopter: 45
   }
 };
-const mediumTankWeaponryAW2 = { // TODO check if typo in wiki
+const mediumTankWeaponryAW2 = {
   primary: {
     ...mediumTankWeaponryAWDS.primary,
     cruiser: 45
@@ -634,7 +634,7 @@ const carrierWeaponry = {
   }
 };
 
-const damageChartAWDS: DamageChart = {
+export const damageChartAWDS: DamageChart = {
   infantry: infantryWeaponry,
   mech: mechWeaponry,
   recon: reconWeaponry,
@@ -657,7 +657,7 @@ const damageChartAWDS: DamageChart = {
   carrier: carrierWeaponry
 };
 
-const damageChartAW2: DamageChart = { //including more units than the game has cause whatever
+export const damageChartAW2: DamageChart = { //including more units than the game has cause whatever
   ...damageChartAWDS,
   mediumTank: mediumTankWeaponryAW2,
   neoTank: neoTankWeaponryAW2,
@@ -672,13 +672,7 @@ const damageChartAW2: DamageChart = { //including more units than the game has c
   battleship: battleshipWeaponryAW2,
 };
 
-const damageChartAW1: DamageChart = { //including more units than the game has cause whatever
+export const damageChartAW1: DamageChart = { //including more units than the game has cause whatever
   ...damageChartAW2,
   mediumTank: mediumTankWeaponryAW1
 };
-
-const damageChartMap: Record<GameVersion, DamageChart> = {
-  AW1: damageChartAW1,
-  AW2: damageChartAW2,
-  AWDS: damageChartAWDS
-}

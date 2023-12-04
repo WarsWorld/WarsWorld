@@ -147,17 +147,22 @@ export class MatchWrapper {
     return this.getUnit(position) !== undefined;
   }
 
+  /**
+   * IMPORTANT!
+   * Param is VISUAL hp, since all sources of damaging without killing
+   * are "multiples of 10" (nothing does 25 damage, for example)
+   */
   damageUntil1HPInRadius({
     radius,
-    damageAmount,
+    visualHpAmount,
     epicenter
   }: {
     radius: number;
-    damageAmount: number;
+    visualHpAmount: number;
     epicenter: Position;
   }) {
     this.units
       .filter((unit) => getDistance(unit.data.position, epicenter) <= radius)
-      .forEach((unit) => unit.damageUntil1HP(damageAmount));
+      .forEach((unit) => unit.damageUntil1HP(visualHpAmount));
   }
 }

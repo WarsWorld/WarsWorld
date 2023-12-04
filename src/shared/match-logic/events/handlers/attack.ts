@@ -9,7 +9,6 @@ import type { SubActionToEvent } from "../handler-types";
 import { getDistance } from "shared/schemas/position";
 import type { UnitWrapper } from "../../../wrappers/unit";
 import { canAttackWithPrimary, getBaseDamage } from "../../game-constants/base-damage";
-import { versionPropertiesMap } from "../../game-constants/version-properties";
 
 export type LuckRoll = {
   goodLuck: number,
@@ -210,16 +209,17 @@ export const applyAttackEvent = (
   }
 
   //power meter charge
-  const { powerMeterIncreasePerHP, offensivePowerGenMult } = versionPropertiesMap[match.rules.gameVersion];
+  const attackerVP = attackingPlayer.getVersionProperties();
+  const defenderVP = defendingPlayer.getVersionProperties();
 
   attackingPlayer.gainPowerCharge(
-    powerMeterIncreasePerHP(attacker) * attackerHpDiff +
-    powerMeterIncreasePerHP(defender) * defenderHpDiff * offensivePowerGenMult
+    attackerVP.powerMeterIncreasePerHP(attacker) * attackerHpDiff +
+    attackerVP.powerMeterIncreasePerHP(defender) * defenderHpDiff * attackerVP.offensivePowerGenMult
   );
 
   defendingPlayer.gainPowerCharge(
-    powerMeterIncreasePerHP(defender) * defenderHpDiff +
-    powerMeterIncreasePerHP(attacker) * attackerHpDiff * offensivePowerGenMult
+    defenderVP.powerMeterIncreasePerHP(defender) * defenderHpDiff +
+    defenderVP.powerMeterIncreasePerHP(attacker) * attackerHpDiff * defenderVP.offensivePowerGenMult
   );
 
   //ammo consumption

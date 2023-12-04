@@ -31,7 +31,7 @@ export const sturmAW1Campaign: COProperties = {
 
         player.match.damageUntil1HPInRadius({
           radius: 2,
-          damageAmount: 8,
+          visualHpAmount: 8,
           epicenter: getRandomMeteorPosition(player, 8)
         });
       },

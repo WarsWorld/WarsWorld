@@ -35,7 +35,7 @@ export const drakeAW2: COProperties = {
 
         enemyUnits.forEach(unit => {
           unit.drainFuel(Math.floor(unit.getFuel() / 2)); // half fuel till 0 and round down
-          unit.damageUntil1HP(10);
+          unit.damageUntil1HP(1);
         });
       }
     },
@@ -49,7 +49,7 @@ export const drakeAW2: COProperties = {
 
         enemyUnits.forEach(unit => {
           unit.drainFuel(Math.floor(unit.getFuel() / 2)); // half fuel till 0 and round down
-          unit.damageUntil1HP(20);
+          unit.damageUntil1HP(2);
         });
 
         player.match.currentWeather = "rain";

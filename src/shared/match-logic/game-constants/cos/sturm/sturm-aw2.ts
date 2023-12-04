@@ -31,7 +31,7 @@ export const sturmAW2: COProperties = {
 
         player.match.damageUntil1HPInRadius({
           radius: 2,
-          damageAmount: 8,
+          visualHpAmount: 8,
           epicenter: positions[0]
         });
       },

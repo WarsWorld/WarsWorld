@@ -32,17 +32,17 @@ export const rachelAWDS: COProperties = {
 
         player.match.damageUntil1HPInRadius({
           radius: 2,
-          damageAmount: 3,
+          visualHpAmount: 3,
           epicenter: positions[0]
         });
         player.match.damageUntil1HPInRadius({
           radius: 2,
-          damageAmount: 3,
+          visualHpAmount: 3,
           epicenter: positions[1]
         });
         player.match.damageUntil1HPInRadius({
           radius: 2,
-          damageAmount: 3,
+          visualHpAmount: 3,
           epicenter: positions[2]
         });
       }

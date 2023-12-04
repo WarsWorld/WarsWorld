@@ -34,6 +34,10 @@ export class PlayerInMatchWrapper {
     );
   }
 
+  possessesLab() {
+    return this.match.changeableTiles.find((tile) => tile.type === "lab" && tile.playerSlot === this.data.slot) !== undefined;
+  }
+
   getUnits() {
     return this.match.units.filter((u) => u.data.playerSlot === this.data.slot)
   }
@@ -49,6 +53,14 @@ export class PlayerInMatchWrapper {
       case "super-co-power":
         return COProperties.powers.superCOPower?.hooks?.[hookType];
     }
+  }
+
+  getVersionProperties() {
+    if (this.match.rules.gameVersion === undefined) {
+      return versionPropertiesMap[this.data.coId.version];
+    }
+
+    return versionPropertiesMap[this.match.rules.gameVersion];
   }
 
   /**
@@ -75,8 +87,8 @@ export class PlayerInMatchWrapper {
   }
 
   getPowerStarCost() {
-    const versionBehaviour = versionPropertiesMap[this.match.rules.gameVersion];
-    return versionBehaviour.baseStarValue * (1 + versionBehaviour.powerMeterScaling * Math.min(this.data.timesPowerUsed, 10));
+    const versionProperties = this.getVersionProperties();
+    return versionProperties.baseStarValue * (1 + versionProperties.powerMeterScaling * Math.min(this.data.timesPowerUsed, 10));
   }
 
   getMaxPowerMeter() {

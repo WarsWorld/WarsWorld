@@ -247,7 +247,9 @@ export const applyMoveEvent = (match: MatchWrapper, event: MoveEvent) => {
   }
 
   // in AWDS, snow causes units to consume double fuel when moving (except for olaf)
-  if (match.currentWeather === "snow" && match.rules.gameVersion === "AWDS" &&
+  const gameVersion = match.rules.gameVersion ?? unit.player.data.coId.version;
+
+  if (match.currentWeather === "snow" && gameVersion === "AWDS" &&
     unit.player.data.coId.name !== "olaf") {
     unit.drainFuel(2 * (event.path.length - 1));
   }

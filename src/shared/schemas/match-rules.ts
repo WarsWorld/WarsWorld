@@ -6,8 +6,15 @@ import { gameVersionSchema } from "./game-version";
 export const matchRulesSchema = z.object({
   unitCapPerPlayer: z.number().int().positive(),
   fogOfWar: z.boolean(),
-  gameVersion: gameVersionSchema,
+  /**
+   * If no game version is specified, each CO will use its own
+   */
+  gameVersion: gameVersionSchema.optional(),
   fundsPerProperty: z.number().int(),
+  /**
+   * Allowed unit types only if a lab is owned
+   */
+  labUnitTypes: unitTypeSchema.array(),
   bannedUnitTypes: unitTypeSchema.array(),
   captureLimit: z.number().int().positive(),
   dayLimit: z.number().int().positive(),

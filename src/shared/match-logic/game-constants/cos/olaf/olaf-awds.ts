@@ -30,7 +30,7 @@ export const olafAWDS: COProperties = {
       description: "All enemy units lose 2 HP, and causes it to snow for the next 2 days.",
       stars: 6,
       instantEffect(player) {
-        player.team.getEnemyUnits().forEach(unit => unit.damageUntil1HP(20));
+        player.team.getEnemyUnits().forEach(unit => unit.damageUntil1HP(2));
 
         player.match.currentWeather = "snow";
         player.match.playerToRemoveWeatherEffect = player;
