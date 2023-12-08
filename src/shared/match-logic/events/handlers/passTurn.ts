@@ -4,7 +4,7 @@ import type { PassTurnEvent, Turn } from "shared/types/events";
 import type { PlayerInMatchWrapper } from "shared/wrappers/player-in-match";
 import type { UnitWrapper } from "shared/wrappers/unit";
 import type { ApplyEvent, MainActionToEvent } from "../handler-types";
-import { consumeFuelAndCrash } from "./passTurn/consumeFuelAndCrash";
+import { getTurnFuelConsumption } from "./passTurn/consumeFuelAndCrash";
 import { gainFunds } from "./passTurn/gainFunds";
 import { propertyRepairAndResupply } from "./passTurn/propertyRepairAndResupply";
 import { updateWeather } from "./passTurn/updateWeather";
@@ -55,7 +55,9 @@ export const passTurnActionToEvent: MainActionToEvent<PassTurnAction> = (match, 
 
       // if units are on top of a repair property, they can't crash
       if (!isInRepairFacility || !unit.player.owns(tile)) {
-        const willCrash = consumeFuelAndCrash(unit, true);
+        const fuelConsumption = getTurnFuelConsumption(unit);
+        const fuelAfterConsumption = unit.getFuel() - fuelConsumption
+        const willCrash = fuelAfterConsumption <= 0;
 
         if (willCrash && nextTurnPlayer.getUnits().length === 0) {
           // i'm pretty sure even on a turn where a player gets eliminated due to crashing
@@ -67,7 +69,7 @@ export const passTurnActionToEvent: MainActionToEvent<PassTurnAction> = (match, 
 
           const singleTeamAlive = match.teams.filter((t) =>
             t.players.some((p) => p.data.eliminated !== false)
-          ).length;
+          ).length <= 1;
 
           if (singleTeamAlive) {
             break turnLoop; // TODO not quite sure what should happen then. some MatchEndEvent logic i guess. maybe another field on PassTurnEvent?
@@ -136,7 +138,14 @@ export const applyPassTurnEvent: ApplyEvent<PassTurnEvent> = (match, event) => {
       if (isInRepairFacility && unit.player.owns(tile)) {
         propertyRepairAndResupply(unit);
       } else {
-        consumeFuelAndCrash(unit, false);
+        const fuelConsumed = getTurnFuelConsumption(unit);
+        unit.drainFuel(fuelConsumed);
+
+        if (unit.properties.facility !== "base" && unit.getFuel() <= 0) {
+          // unit crashes
+          // (has to be done here cause eagle copters consume 0 fuel per turn, but still crash if they start turn at 0 fuel)
+          unit.remove();
+        }
       }
 
       APCresupply(unit);

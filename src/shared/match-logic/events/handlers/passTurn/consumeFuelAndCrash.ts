@@ -1,10 +1,6 @@
 import type { UnitWrapper } from "shared/wrappers/unit";
 
-/**
- * @param simulate if true, doesn't change unit properties (used for player elimination check)
- * @returns true if crashed
- */
-export function consumeFuelAndCrash(unit: UnitWrapper, simulate: boolean): boolean {
+export function getTurnFuelConsumption(unit: UnitWrapper): number {
   let fuelConsumed = 0;
 
   if (unit.properties.facility === "airport") {
@@ -32,21 +28,5 @@ export function consumeFuelAndCrash(unit: UnitWrapper, simulate: boolean): boole
     }
   }
 
-  if (simulate) {
-    const simulatedFuel = unit.getFuel() - fuelConsumed
-    return unit.properties.facility !== "base" && simulatedFuel <= 0;
-  }
-
-  if (fuelConsumed !== 0) {
-    unit.drainFuel(fuelConsumed);
-  }
-
-  if (unit.properties.facility !== "base" && unit.getFuel() <= 0) {
-    // unit crashes
-    // (has to be done here cause eagle copters consume 0 fuel per turn, but still crash if they start turn at 0 fuel)
-    unit.remove();
-    return true;
-  }
-
-  return false;
+  return fuelConsumed
 }

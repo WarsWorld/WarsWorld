@@ -30,8 +30,6 @@ function infantryOrMechAbilityToEvent(
 ): AbilityEvent {
   const capturingTile = unit.getTile();
 
-  // TODO handle missile silo launch!
-
   if (!("playerSlot" in capturingTile) || unit.player.owns(capturingTile)) {
     throw new DispatchableError("This tile can not be captured");
   }
