@@ -1,16 +1,94 @@
-import type { PassTurnEvent } from "shared/types/events";
-import type { MatchWrapper } from "shared/wrappers/match";
+import { getRandomWeather } from "shared/match-logic/weather";
+import type { PassTurnAction } from "shared/schemas/action";
+import type { PassTurnEvent, Turn } from "shared/types/events";
 import type { PlayerInMatchWrapper } from "shared/wrappers/player-in-match";
 import type { UnitWrapper } from "shared/wrappers/unit";
+import type { ApplyEvent, MainActionToEvent } from "../handler-types";
 import { consumeFuelAndCrash } from "./passTurn/consumeFuelAndCrash";
 import { gainFunds } from "./passTurn/gainFunds";
 import { propertyRepairAndResupply } from "./passTurn/propertyRepairAndResupply";
 import { updateWeather } from "./passTurn/updateWeather";
 
-export const applyPassTurnEvent = (
-  match: MatchWrapper,
-  _event: PassTurnEvent
-) => {
+function getNewWeather(nextTurnPlayer: PlayerInMatchWrapper): Turn["newWeather"] {
+  const { match } = nextTurnPlayer;
+
+  if (match.playerToRemoveWeatherEffect !== null) {
+    if (
+      match.playerToRemoveWeatherEffect.data.slot === nextTurnPlayer.data.slot &&
+      match.weatherDaysLeft - 1 <= 0
+    ) {
+      // after non-clear weather, clear weather is always forced for at least one turn
+      // (no random weather on the turn we're passing to, unless that player uses a power)
+      return "clear";
+    }
+
+    // weather stays the same when there's a "playerToRemoveWeatherEffect" and it's not clearing
+    return null;
+  }
+
+  if (match.rules.weatherSetting === "random") {
+    return getRandomWeather(match);
+  }
+
+  return null;
+}
+
+export const passTurnActionToEvent: MainActionToEvent<PassTurnAction> = (match, action) => {
+  const turns: Turn[] = [];
+
+  turnLoop: while (true) {
+    const nextTurnPlayer = match.getCurrentTurnPlayer().getNextAlivePlayer();
+
+    if (nextTurnPlayer === null) {
+      throw new Error("No next alive player");
+    }
+
+    unitLoop: for (const unit of nextTurnPlayer.getUnits()) {
+      if (unit.properties.facility === "base") {
+        // land units can't crash
+        continue unitLoop;
+      }
+
+      const tile = unit.getTile();
+
+      const isInRepairFacility = unit.properties.facility === tile.type;
+
+      // if units are on top of a repair property, they can't crash
+      if (!isInRepairFacility || !unit.player.owns(tile)) {
+        const willCrash = consumeFuelAndCrash(unit, true);
+
+        if (willCrash && nextTurnPlayer.getUnits().length === 0) {
+          // i'm pretty sure even on a turn where a player gets eliminated due to crashing
+          // the game still generates a random weather first and sets it if applicable.
+          turns.push({
+            newWeather: getNewWeather(nextTurnPlayer),
+            eliminationReason: "all-units-crashed"
+          });
+
+          const singleTeamAlive = match.teams.filter((t) =>
+            t.players.some((p) => p.data.eliminated !== false)
+          ).length;
+
+          if (singleTeamAlive) {
+            break turnLoop; // TODO not quite sure what should happen then. some MatchEndEvent logic i guess. maybe another field on PassTurnEvent?
+          }
+
+          continue turnLoop;
+        }
+      }
+    }
+
+    turns.push({ newWeather: getNewWeather(nextTurnPlayer) });
+    break turnLoop;
+  }
+
+  return {
+    ...action,
+    turns
+  };
+};
+
+export const applyPassTurnEvent: ApplyEvent<PassTurnEvent> = (match, event) => {
   /**
    * Things that probably need to be done here (ordered by best effort)
    *
@@ -25,41 +103,44 @@ export const applyPassTurnEvent = (
    * - (done) refuel (property + apc/blackboat)
    */
 
-  const lastTurnPlayer = match.getCurrentTurnPlayer();
+  for (const turn of event.turns) {
+    // TODO when we pass multiple turns, getCurrentTurnPlayer relies on the just eliminated / previous player still having a turn
+    // i'm just marking this in case this doesn't work as planned.
+    const lastTurnPlayer = match.getCurrentTurnPlayer();
 
-  unwaitUnits(lastTurnPlayer);
+    unwaitUnits(lastTurnPlayer);
 
-  lastTurnPlayer.data.hasCurrentTurn = false;
+    lastTurnPlayer.data.hasCurrentTurn = false;
 
-  const nextTurnPlayer = lastTurnPlayer.getNextAlivePlayer();
+    const nextTurnPlayer = lastTurnPlayer.getNextAlivePlayer();
 
-  if (nextTurnPlayer === null) {
-    throw new Error("No next alive player");
-  }
-
-  nextTurnPlayer.data.hasCurrentTurn = true;
-  nextTurnPlayer.data.COPowerState = "no-power";
-
-  updateWeather(nextTurnPlayer);
-  gainFunds(nextTurnPlayer);
-
-  // update units
-  for (const unit of nextTurnPlayer.getUnits()) {
-    const tile = unit.getTile();
-
-    const isInRepairFacility =
-      unit.properties.facility === tile.type ||
-      (unit.properties.facility === "base" &&
-        (tile.type === "city" || tile.type === "hq"));
-
-    // if units are on top of a repair property, they can't crash
-    if (isInRepairFacility && unit.player.owns(tile)) {
-      propertyRepairAndResupply(unit);
-    } else {
-      consumeFuelAndCrash(unit, false);
+    if (nextTurnPlayer === null) {
+      throw new Error("No next alive player");
     }
 
-    APCresupply(unit);
+    nextTurnPlayer.data.hasCurrentTurn = true;
+    nextTurnPlayer.data.COPowerState = "no-power";
+
+    updateWeather(nextTurnPlayer, turn.newWeather);
+    gainFunds(nextTurnPlayer);
+
+    // update units
+    for (const unit of nextTurnPlayer.getUnits()) {
+      const tile = unit.getTile();
+
+      const isInRepairFacility =
+        unit.properties.facility === tile.type ||
+        (unit.properties.facility === "base" && (tile.type === "city" || tile.type === "hq"));
+
+      // if units are on top of a repair property, they can't crash
+      if (isInRepairFacility && unit.player.owns(tile)) {
+        propertyRepairAndResupply(unit);
+      } else {
+        consumeFuelAndCrash(unit, false);
+      }
+
+      APCresupply(unit);
+    }
   }
 };
 

@@ -60,7 +60,7 @@ export const applySubEventToMatch = (
       break;
     }
     case "ability": {
-      applyAbilityEvent(match, unit);
+      applyAbilityEvent(match, subEvent, fromPosition);
       break;
     }
     case "unloadWait": {

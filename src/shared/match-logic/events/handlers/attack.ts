@@ -9,6 +9,7 @@ import type { SubActionToEvent } from "../handler-types";
 import { getDistance } from "shared/schemas/position";
 import type { UnitWrapper } from "../../../wrappers/unit";
 import { canAttackWithPrimary, getBaseDamage } from "../../game-constants/base-damage";
+import type { PlayerInMatchWrapper } from "shared/wrappers/player-in-match";
 
 export type LuckRoll = {
   goodLuck: number,
@@ -88,7 +89,28 @@ const calculateEngagementOutcome = (
     defenderHP: defender.getHP() - damageByAttacker,
     attackerHP: undefined
   };
+};
 
+function getEliminationReason({
+  attacker,
+  defender,
+  attackerHP,
+  defenderHP
+}: {
+  attacker: PlayerInMatchWrapper;
+  defender: PlayerInMatchWrapper;
+  attackerHP: number | undefined;
+  defenderHP: number | undefined;
+}): AttackEvent["eliminationReason"] {
+  if (defenderHP === 0 && defender.getUnits().length - 1 <= 0) {
+    return "all-defender-units-destroyed";
+  }
+
+  if (attackerHP === 0 && attacker.getUnits().length - 1 <= 0) {
+    return "all-attacker-units-destroyed";
+  }
+
+  return undefined;
 }
 
 export const attackActionToEvent: (...params: Params) => AttackEvent = (
@@ -163,7 +185,13 @@ export const attackActionToEvent: (...params: Params) => AttackEvent = (
     return {
       ...action,
       defenderHP: result.attackerHP,
-      attackerHP: result.defenderHP
+      attackerHP: result.defenderHP,
+      eliminationReason: getEliminationReason({
+        attacker: attacker.player, // TODO not sure if this is the correct way around...
+        defender: defender.player,
+        attackerHP: result.defenderHP,
+        defenderHP: result.attackerHP
+      })
     };
   }
 
@@ -176,7 +204,13 @@ export const attackActionToEvent: (...params: Params) => AttackEvent = (
   return {
     ...action,
     defenderHP: result.defenderHP,
-    attackerHp: result.attackerHP
+    attackerHp: result.attackerHP,
+    eliminationReason: getEliminationReason({
+      attacker: attacker.player,
+      defender: defender.player,
+      attackerHP: result.attackerHP,
+      defenderHP: result.defenderHP
+    })
   };
 };
 

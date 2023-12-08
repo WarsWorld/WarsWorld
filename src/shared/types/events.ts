@@ -32,9 +32,9 @@ export type MatchEndEvent = {
   // TODO this type can probably be made a lot more fine-grained later on
 };
 
-export type MoveEvent = {
+export type MoveEvent<SubEventType extends SubEvent = SubEvent> = {
   trap: boolean;
-  subEvent: SubEvent;
+  subEvent: SubEventType;
 } & Omit<MoveAction, "subAction">;
 
 export type AttackEvent = {
@@ -48,7 +48,8 @@ export type AttackEvent = {
    * because there was no counter-attack.
    */
   attackerHP?: number;
-} & AttackAction;
+} & AttackAction &
+  WithElimination<`all-${"attacker" | "defender"}-units-destroyed`>;
 
 export type COPowerEvent = COPowerAction & {
   /** used for rachel, von-bolt and sturm SCOPs */
@@ -62,19 +63,29 @@ type WithPlayer = {
 export type PlayerEliminatedEvent = WithPlayer & {
   type: "player-eliminated";
 } & (
-  { eliminationType: "all-units-destroyed" }
-  | { eliminationType: "hq-or-labs-captured", capturedByPlayerId: Player["id"] }
-  | { eliminationType: "timer-ran-out" }
-);
+    | { eliminationReason: Exclude<Turn["eliminationReason"], undefined> }
+    | { eliminationReason: Exclude<AttackEvent["eliminationReason"], undefined> }
+    | {
+        eliminationReason: Exclude<AbilityEvent["eliminationReason"], undefined>;
+        capturedByPlayerId: Player["id"];
+      }
+    | { eliminationReason: "timer-ran-out" }
+  );
 
-// TODO maybe add the turn/day number
-// TODO important! add repairs, fuel drain, loss condition like
-// last unit was a fighter and crashed etc.
-export type PassTurnEvent = PassTurnAction & {
-  newWeather?: Weather;
+type WithElimination<Reason extends string> = {
+  eliminationReason?: Reason;
 };
 
-export type AbilityEvent = AbilityAction;
+/** TODO maybe add the turn/day number */
+export type Turn = WithElimination<"all-units-crashed"> & {
+  newWeather: Weather | null;
+};
+
+export type PassTurnEvent = PassTurnAction & { turns: Turn[] };
+
+export type AbilityEvent = AbilityAction &
+  WithElimination<"hq-or-labs-captured" | "property-goal-reached">;
+
 export type BuildEvent = BuildAction;
 export type LaunchMissileEvent = LaunchMissileAction;
 export type RepairEvent = RepairAction;

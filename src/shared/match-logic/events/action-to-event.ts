@@ -12,6 +12,7 @@ import { moveActionToEvent } from "./handlers/move";
 import { repairActionToEvent } from "./handlers/repair";
 import { unloadNoWaitActionToEvent } from "./handlers/unloadNoWait";
 import { unloadWaitActionToEvent } from "./handlers/unloadWait";
+import { passTurnActionToEvent } from "./handlers/passTurn";
 
 export const validateMainActionAndToEvent = (
   match: MatchWrapper,
@@ -27,7 +28,7 @@ export const validateMainActionAndToEvent = (
     case "coPower":
       return coPowerActionToEvent(match, action);
     case "passTurn":
-      return { type: "passTurn", newWeather: "clear" /* TODO  weather */ };
+      return passTurnActionToEvent(match, action);
     default:
       /** this would only run for bad data from DB because of zod when validating user data */
       throw new DispatchableError(
