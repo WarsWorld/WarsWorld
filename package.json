@@ -35,7 +35,7 @@
   "prettier": {
     "singleQuote": false,
     "endOfLine": "auto",
-    "printWidth": 80
+    "printWidth": 100
   },
   "dependencies": {
     "@auth/core": "^0.18.0",

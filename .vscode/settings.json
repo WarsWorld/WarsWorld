@@ -4,7 +4,6 @@
   "editor.formatOnSave": false, // to make git diffs shorter. isolate auto-formatting into their own commits.
   "editor.formatOnPaste": false,
   "editor.formatOnType": false,
-  "editor.formatOnSaveMode": "file",
   "editor.tabSize": 2,
   "vs-code-prettier-eslint.prettierLast": false,
   "[prisma]": {
@@ -12,5 +11,5 @@
   },
   "typescript.tsserver.experimental.enableProjectDiagnostics": true,
   "typescript.referencesCodeLens.enabled": true,
-  "editor.rulers": [80]
+  "editor.rulers": [100],
 }
