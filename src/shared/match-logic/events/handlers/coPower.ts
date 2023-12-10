@@ -61,8 +61,13 @@ export const applyCOPowerEvent = (match: MatchWrapper, event: COPowerEvent) => {
   }
 
   // applying all match rules, read doc of variables for details
-  player.data.powerMeter -= power.stars * player.getPowerStarCost() *
-    (1 + player.getVersionProperties().powerUsagePenalty);
+  if (player.getVersionProperties().raisePowerCostBeforeUsing) {
+    ++player.data.timesPowerUsed;
+    player.data.powerMeter -= power.stars * player.getPowerStarCost();
+  } else {
+    player.data.powerMeter -= power.stars * player.getPowerStarCost();
+    ++player.data.timesPowerUsed;
+  }
 
   //event.positions are for rachel, sturm, von-bolt supers
   power.instantEffect?.(player, event.positions);
