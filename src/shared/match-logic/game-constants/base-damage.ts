@@ -26,6 +26,17 @@ export const getBaseDamage = (
     return null;
   }
 
+  // hardcoded: subs / stealth can only be damaged by cruiser+sub / fighter+stealth
+  if (defender.data.type === "sub" && "hidden" in defender.data && defender.data.hidden &&
+      attacker.data.type !== "sub" && attacker.data.type !== "cruiser") {
+    return null;
+  }
+
+  if (defender.data.type === "stealth" && "hidden" in defender.data && defender.data.hidden &&
+      attacker.data.type !== "stealth" && attacker.data.type !== "fighter") {
+    return null;
+  }
+
   const primaryDamage = damageValues.primary?.[defender.data.type] ?? null;
   const secondaryDamage = damageValues.secondary?.[defender.data.type] ?? null;
   const cantUsePrimaryWeapon = (attacker.getAmmo() === 0 || attacker.getAmmo() === null);
