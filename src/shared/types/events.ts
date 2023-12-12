@@ -19,6 +19,7 @@ import type { Position } from "shared/schemas/position";
 import type { WWUnit } from "shared/schemas/unit";
 import type { Weather } from "shared/schemas/weather";
 import type { ChangeableTile } from "./server-match-state";
+import type { PlayerSlot } from "shared/schemas/player-slot";
 
 /** player slot 0 implicity starts */
 export type MatchStartEvent = {
@@ -111,12 +112,43 @@ export type SubEvent =
   | UnloadWaitEvent
   | AttackEvent;
 
-export type EmittableEvent = MainEvent &
-  WithMatchId & {
-    discoveredUnits?: WWUnit[];
-    discoveredChangeableTiles?: ChangeableTile[]; // TODO e.g. properties / pipeseam in fog of war
-    index: number;
-  };
+export type EmittableSubEvent =
+  | AbilityEvent
+  | WaitEvent
+  | RepairEvent
+  | LaunchMissileEvent
+  | (UnloadWaitEvent & WithDiscoveries)
+  | {
+      type: "attack";
+      attackerHP?: number;
+      attackerPlayerSlot: PlayerSlot;
+      attackerPowerCharge: number;
+      defenderHP?: number;
+      defenderPosition?: Position;
+      defenderPlayerSlot: PlayerSlot;
+      defenderPowerCharge: number;
+    };
+
+type WithDiscoveries = {
+  discoveredUnits?: WWUnit[];
+  discoveredChangeableTiles?: ChangeableTile[]; // TODO e.g. properties / pipeseam in fog of war
+}
+
+export type EmittableEvent = 
+  | MatchStartEvent
+  | (MoveEvent & WithDiscoveries & {
+    subEvent: EmittableSubEvent;
+    /**
+     * e.g. for when a unit moves from FoW into vision or when it's unloaded into vision
+     */
+    discoveredUnit?: WWUnit
+  })
+  | (UnloadNoWaitEvent & WithDiscoveries)
+  | PlayerEliminatedEvent
+  | (COPowerEvent & WithDiscoveries)
+  | PassTurnEvent
+  | (BuildEvent & WithDiscoveries)
+  | MatchEndEvent;
 
 export type NonStoredEvent = WithPlayer &
   WithMatchId &
