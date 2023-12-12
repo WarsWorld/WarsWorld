@@ -113,6 +113,10 @@ function getEliminationReason({
   return undefined;
 }
 
+/**
+ * TODO pass a `unitHasMoved` boolean to check for indirects
+ * not moving + attacking in one MoveAction.
+ */
 export const attackActionToEvent: (...params: Params) => AttackEvent = (
   match,
   action,
