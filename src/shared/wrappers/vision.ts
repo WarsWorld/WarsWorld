@@ -52,6 +52,8 @@ export class Vision {
 
           const tileType = map.data.tiles[y][x].type
 
+          // TODO teams have vision on owned properties
+
           if (
             (tileType === "forest" || tileType === "reef")
             && distance > 1 // no team unit next to tile
