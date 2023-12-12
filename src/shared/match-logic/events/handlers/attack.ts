@@ -141,6 +141,8 @@ export const attackActionToEvent: (...params: Params) => AttackEvent = (
     throw new DispatchableError("Unit cannot attack");
   }
 
+  // TODO check if the enemy unit is actually in vision
+
   if (getBaseDamage(attacker, defender) === null) {
     throw new DispatchableError("This unit cannot attack specified enemy unit");
   }
