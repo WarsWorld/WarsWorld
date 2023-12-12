@@ -6,6 +6,7 @@ import { Vision } from "./vision";
 
 export class TeamWrapper {
   public players: PlayerInMatchWrapper[];
+  private vision: Vision = new Vision(this);
 
   constructor(
     players: PlayerInMatch[],
@@ -32,7 +33,6 @@ export class TeamWrapper {
     const isFogOfWar = this.match.rules.fogOfWar ||
       this.match.currentWeather === "rain" && this.match.rules.gameVersion === "AWDS";
 
-    const vision = isFogOfWar ? new Vision(this) : null;
     const playerSlots = this.players.map((player) => player.data.slot);
 
     return this.getEnemyUnits()
@@ -54,11 +54,11 @@ export class TeamWrapper {
             .some((unit) => playerSlots.includes(unit.data.playerSlot));
         }
 
-        if (vision === null) {
+        if (!isFogOfWar) {
           return true;
         }
 
-        return vision.isPositionVisible(enemy.data.position);
+        return this.vision.isPositionVisible(enemy.data.position);
       })
       .map<WWUnit>((visibleEnemyUnit) => {
         if (visibleEnemyUnit.player.data.coId.name === "sonja") {
@@ -76,5 +76,13 @@ export class TeamWrapper {
     const playerWrapper = new PlayerInMatchWrapper(player, this)
     this.players.push(playerWrapper);
     return playerWrapper
+  }
+
+  refreshVision() {
+    this.vision = new Vision(this)
+  }
+
+  getVision() {
+    return this.vision;
   }
 }
