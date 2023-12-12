@@ -23,7 +23,7 @@ export const sturmAW1Campaign: COProperties = {
       description:
         "Deals 8 HP of damage to all units at a distance less or equal than 2 from the chosen position, centered on a unit, and gains +10% firepower. The meteor prioritises the most unit value in damages (allied units are dealt damage as well, and contribute negatively to the unit value calculation).",
       stars: 5,
-      calculatePositions: (player) => [getRandomMeteorPosition(player, 8)],
+      calculatePositions: (player) => [getRandomMeteorPosition(player, 8, true)],
       instantEffect(player, positions) {
         if (positions === undefined || positions.length !== 1) {
           throw new Error("Did not get a meteor position");
@@ -32,7 +32,7 @@ export const sturmAW1Campaign: COProperties = {
         player.match.damageUntil1HPInRadius({
           radius: 2,
           visualHpAmount: 8,
-          epicenter: getRandomMeteorPosition(player, 8)
+          epicenter: positions[0]
         });
       },
       hooks: {

@@ -38,12 +38,12 @@ type VersionProperties = {
    */
   powerMeterScaling: number,
   /**
-   * Power activation reduces power bar by more than its actual cost in AW games.
-   * In AW2 and AWDS, activating power reduces power bar by (up to) 120% of the power cost
-   * (only takes effect when using CO power while having extra power stored)
-   * Number between 0 and 1 (usually 0.2 = 20%)
+   * In AW games, activating power reduces power bar by the amount is costs after
+   * applying the scaling value (this results in a 120% power bar spent of the actual
+   * amount it takes to use it), so this boolean is set to true (raise power cost,
+   * then spend power meter). In AWBW it's false, for example.
    */
-  powerUsagePenalty: number,
+  raisePowerCostBeforeUsing: boolean,
   /**
    * multiplier for when dealing damage instead of taking damage
    * (taking dmg is always 100% power generated)
@@ -73,7 +73,7 @@ const AW1Properties: VersionProperties = {
   unloadOnlyAfterMove: true,
   baseStarValue: 10000, // to make an equivalent, arbitrary
   powerMeterScaling: 0.2,
-  powerUsagePenalty: 0.2,
+  raisePowerCostBeforeUsing: true,
   offensivePowerGenMult: 0.25,
   powerMeterIncreasePerHP: (affectedUnit) => affectedUnit.getBuildCost() / 10,
   powerFirepowerMod: (baseFirepower) => (baseFirepower * 1.1),
@@ -89,7 +89,7 @@ const AW2Properties: VersionProperties = {
   unloadOnlyAfterMove: true,
   baseStarValue: 9000,
   powerMeterScaling: 0.2,
-  powerUsagePenalty: 0.2,
+  raisePowerCostBeforeUsing: true,
   offensivePowerGenMult: 0.5,
   powerMeterIncreasePerHP: (affectedUnit) => affectedUnit.getBuildCost() / 10,
   powerFirepowerMod: (baseFirepower) => (baseFirepower),
@@ -98,14 +98,14 @@ const AW2Properties: VersionProperties = {
 
 const AWDSProperties: VersionProperties = {
   gameVersion: "AWDS",
-  baseGoodLuck: 15,
+  baseGoodLuck: 10, //it seems like base luck is also 10
   baseBadLuck: 0,
   existingWeathers: ["clear", "rain", "snow", "sandstorm"],
   damageChart: damageChartAWDS,
   unloadOnlyAfterMove: true,
   baseStarValue: 50, // star calculations are different in awds
   powerMeterScaling: 0.2,
-  powerUsagePenalty: 0.2,
+  raisePowerCostBeforeUsing: true,
   offensivePowerGenMult: 0.5,
   powerMeterIncreasePerHP: (affectedUnit) => {
     switch (affectedUnit.data.type) {
@@ -160,7 +160,7 @@ const AWBWProperties: VersionProperties = {
   unloadOnlyAfterMove: false,
   baseStarValue: 9000,
   powerMeterScaling: 0.2,
-  powerUsagePenalty: 0,
+  raisePowerCostBeforeUsing: false,
   offensivePowerGenMult: 0.5,
   powerMeterIncreasePerHP: (affectedUnit) => affectedUnit.getBuildCost() / 10,
   powerFirepowerMod: (baseFirepower) => (baseFirepower + 10),
