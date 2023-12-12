@@ -9,10 +9,9 @@ import { applyMainEventToMatch, applySubEventToMatch } from "shared/match-logic/
 import { mainActionSchema } from "shared/schemas/action";
 import { getFinalPositionSafe } from "shared/schemas/position";
 import type { Emittable, EmittableEvent } from "shared/types/events";
-import { z } from "zod";
 import {
+  matchBaseProcedure,
   playerInMatchBaseProcedure,
-  publicBaseProcedure,
   router
 } from "../trpc/trpc-setup";
 
@@ -25,6 +24,15 @@ export const actionRouter = router({
       // IMPORTANT @FUNCTION IDIOT: we MUST apply the main event before validateSubActionAndToEvent
       // because the subAction needs the match state to be changed already, otherwise it's going to break.
       applyMainEventToMatch(match, mainEvent);
+
+      /**
+       * TODO important!
+       * we must try-catch the subEvent generation and applying
+       * and then apply the "wait" subEvent as a fallback.
+       * otherwise bugs or invalid moves would cause a desync
+       * between server match state and database/client state
+       * because we stop about here and don't store/emit.
+       */
 
       if (mainEvent.type === "move" && input.type === "move") {
         // second condition is only needed for type-gating input event
@@ -91,10 +99,20 @@ export const actionRouter = router({
       //   emit(emittableEliminationEvent)
       // }
     }),
-  onEvent: publicBaseProcedure.input(z.string()).subscription(({ input }) =>
-    observable<Emittable>((emit) => {
-      const unsubscribe = subscribe(input, emit.next);
-      return () => unsubscribe();
-    })
+  onEvent: matchBaseProcedure.subscription(({ input, ctx: { currentPlayer, match } }) =>
+    {
+      const player = match.getPlayerById(currentPlayer.id);
+      
+      
+
+      return observable<Emittable>((emit) => {
+        const unsubscribe = subscribe(input.matchId, emittable => {
+          emit.next(emittable);
+        });
+        return () => unsubscribe();
+      });
+    }
   )
+  // TODO create procedure for anonymous users to observe games
+  // (they get their own special "-1" team or something)
 });
