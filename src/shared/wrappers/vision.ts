@@ -40,6 +40,13 @@ export class Vision {
     this.mapWidth = map.width;
     const visionArraySize = this.mapWidth * map.height;
     this.visionArray = new Uint8Array(visionArraySize);
+
+    // if it's not fog of war, all positions are visible
+    if (!team.match.rules.fogOfWar && (team.match.currentWeather !== "rain" || team.match.rules.gameVersion !== "AWDS")) {
+      this.visionArray.fill(1);
+      return;
+    }
+
     const unitVisionRangeCache = getUnitVisionRangeCache(team);
 
     for (let y = 0; y < map.height; y++) {

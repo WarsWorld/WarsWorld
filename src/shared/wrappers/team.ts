@@ -29,9 +29,6 @@ export class TeamWrapper {
   }
 
   getEnemyUnitsInVision() {
-    // AWDS rain forces fog of war
-    const isFogOfWar = this.match.rules.fogOfWar ||
-      this.match.currentWeather === "rain" && this.match.rules.gameVersion === "AWDS";
 
     const playerSlots = this.players.map((player) => player.data.slot);
 
@@ -52,10 +49,6 @@ export class TeamWrapper {
           return enemy
             .getNeighbouringUnits()
             .some((unit) => playerSlots.includes(unit.data.playerSlot));
-        }
-
-        if (!isFogOfWar) {
-          return true;
         }
 
         return this.vision.isPositionVisible(enemy.data.position);
