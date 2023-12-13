@@ -44,15 +44,19 @@ export class Vision {
 
     for (let y = 0; y < map.height; y++) {
       for (let x = 0; x < this.mapWidth; x++) {
-        const rowOffset = this.getVisionIndexRowOffset(y);
+        // if property is owned by the team, it gives vision
+        const tile = team.match.getTile([x, y]);
+
+        if ("playerSlot" in tile && team.match.getPlayerBySlot(tile.playerSlot)?.team.index === team.index) {
+          this.visionArray[y * this.mapWidth + x] = 1;
+          continue;
+        }
 
         unitLoop: for (const unit of unitVisionRangeCache) {
           const distance = getDistance([x, y], unit.position);
           let isVisible = distance <= unit.visionRange
 
           const tileType = map.data.tiles[y][x].type
-
-          // TODO teams have vision on owned properties
 
           if (
             (tileType === "forest" || tileType === "reef")
@@ -63,8 +67,7 @@ export class Vision {
           }
 
           if (isVisible) {
-            const visionIndex = x * rowOffset;
-            this.visionArray[visionIndex] = 1;
+            this.visionArray[y * this.mapWidth + x] = 1;
             break unitLoop;
           }
         }
@@ -72,13 +75,9 @@ export class Vision {
     }
   }
 
-  private getVisionIndexRowOffset(y: Position[1]) {
-    return y * this.mapWidth;
-  }
-
   isPositionVisible(position: Position): boolean {
-    const visionIndex = this.getVisionIndexRowOffset(position[1]) + position[0];
-    const result: number | undefined = this.visionArray[visionIndex];
+    const result: number | undefined =
+      this.visionArray[position[1] * this.mapWidth + position[0]];
 
     if (result === undefined) {
       throw new Error("Position for visible check is out of bounds");

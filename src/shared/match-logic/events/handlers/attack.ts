@@ -17,6 +17,7 @@ export type LuckRoll = {
 };
 type Params = [
   ...Parameters<SubActionToEvent<AttackAction>>,
+  unitHasMoved: boolean,
   attackerLuck: LuckRoll,
   defenderLuck: LuckRoll
 ];
@@ -113,14 +114,11 @@ function getEliminationReason({
   return undefined;
 }
 
-/**
- * TODO pass a `unitHasMoved` boolean to check for indirects
- * not moving + attacking in one MoveAction.
- */
 export const attackActionToEvent: (...params: Params) => AttackEvent = (
   match,
   action,
   fromPosition,
+  unitHasMoved, // for indirects not attacking and shooting
   attackerLuck,
   defenderLuck
 ) => {
@@ -145,7 +143,13 @@ export const attackActionToEvent: (...params: Params) => AttackEvent = (
     throw new DispatchableError("Unit cannot attack");
   }
 
-  // TODO check if the enemy unit is actually in vision
+  if (attackerProperties.attackRange[0] > 1 && unitHasMoved) {
+    throw new DispatchableError("Trying to move and attack with an indirect unit");
+  }
+
+  if (!attacker.player.team.getVision().isPositionVisible(action.defenderPosition)) {
+    throw new DispatchableError("The target unit is not in vision");
+  }
 
   if (getBaseDamage(attacker, defender) === null) {
     throw new DispatchableError("This unit cannot attack specified enemy unit");
@@ -264,6 +268,7 @@ export const applyAttackEvent = (
     defender.setAmmo((defender.getAmmo() ?? 1) - 1);
   }
 
+
   //hp updates (+ removal if unit dies)
   if (event.defenderHP === 0) {
     defender.remove();
@@ -279,3 +284,27 @@ export const applyAttackEvent = (
     }
   }
 };
+
+
+/**
+ * Apply move event
+ * Create emittable sub events (for all players at once, as an array of emittable events)
+ * Create emittable move events
+ * Apply sub event
+ */
+
+export const attackEventInFog = (
+  attackEvent: AttackEvent,
+  fromPosition: Position,
+  match: MatchWrapper,
+  viewerSlot: number
+) => {
+  const player = match.getPlayerBySlot(viewerSlot);
+
+  if (player === undefined) {
+    return undefined;
+  }
+
+  const attacker = match.getUnit(fromPosition);
+
+}

@@ -9,6 +9,11 @@ const buildActionSchema = z.object({
   position: positionSchema,
 });
 
+const deleteActionSchema = z.object({
+  type: z.literal("delete"),
+  position: positionSchema,
+});
+
 const waitActionSchema = z.object({
   type: z.literal("wait"),
 });
@@ -89,6 +94,7 @@ const moveActionSchema = z.object({
 export const mainActionSchema = z.discriminatedUnion("type", [
   moveActionSchema,
   buildActionSchema,
+  deleteActionSchema,
   // for DoR unload, unloading wouldn't be plainly (i.e. partially) allowed,
   // only as a subaction of move - Function
   unloadNoWaitActionSchema,
@@ -102,6 +108,7 @@ export type SubAction = z.infer<typeof subActionSchema>;
 export type Action = MainAction | SubAction;
 
 export type BuildAction = z.infer<typeof buildActionSchema>;
+export type DeleteAction = z.infer<typeof deleteActionSchema>;
 export type MoveAction = z.infer<typeof moveActionSchema>;
 export type WaitAction = z.infer<typeof waitActionSchema>;
 export type AbilityAction = z.infer<typeof abilityActionSchema>;

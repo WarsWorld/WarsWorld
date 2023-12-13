@@ -44,8 +44,7 @@ export const actionRouter = router({
         if (!mainEvent.trap && !isJoinOrLoad) {
           mainEvent.subEvent = validateSubActionAndToEvent(
             match,
-            input.subAction,
-            mainEvent.path[mainEvent.path.length - 1]
+            input
           );
         }
 

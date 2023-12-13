@@ -129,6 +129,8 @@ export class PlayerInMatchWrapper {
 
     this.match.units.push(unit);
 
+    this.team.refreshVision();
+
     return unit;
   }
 }

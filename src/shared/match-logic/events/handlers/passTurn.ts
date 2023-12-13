@@ -151,6 +151,10 @@ export const applyPassTurnEvent: ApplyEvent<PassTurnEvent> = (match, event) => {
       APCresupply(unit);
     }
   }
+
+  for (const team of match.teams) {
+    team.refreshVision();
+  }
 };
 
 function unwaitUnits(player: PlayerInMatchWrapper) {

@@ -12,6 +12,7 @@ import { applyPassTurnEvent } from "./handlers/passTurn";
 import { applyRepairEvent } from "./handlers/repair";
 import { applyUnloadNoWaitEvent } from "./handlers/unloadNoWait";
 import { applyUnloadWaitEvent } from "./handlers/unloadWait";
+import { applyDeleteEvent } from "./handlers/delete";
 
 export const applyMainEventToMatch = (
   match: MatchWrapper,
@@ -20,6 +21,10 @@ export const applyMainEventToMatch = (
   switch (event.type) {
     case "build": {
       applyBuildEvent(match, event);
+      break;
+    }
+    case "delete": {
+      applyDeleteEvent(match, event);
       break;
     }
     case "move": {

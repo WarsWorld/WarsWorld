@@ -1,7 +1,6 @@
 import type { PlayerInMatchWrapper } from "../../../../wrappers/player-in-match";
 import { getDistance} from "../../../../schemas/position";
 import type { Position } from "../../../../schemas/position";
-import { Vision } from "../../../../wrappers/vision";
 
 export const getUnitValueMeteorPosition = (
   sturmPlayer: PlayerInMatchWrapper,
@@ -11,7 +10,7 @@ export const getUnitValueMeteorPosition = (
   let bestPosition: Position = [0, 0];
   let bestValue = Number.NEGATIVE_INFINITY;
 
-  const vision = sturmPlayer.match.rules.fogOfWar ? new Vision(sturmPlayer.team) : null;
+  const vision = sturmPlayer.match.rules.fogOfWar ? sturmPlayer.team.getVision() : null;
 
   //centered in an enemy unit
   for (const enemyUnit of sturmPlayer.team.getEnemyUnits()) {
@@ -52,7 +51,7 @@ export const getIndirectsMeteorPosition = (
   let bestPosition: Position = [0, 0];
   let bestValue = Number.NEGATIVE_INFINITY;
 
-  const vision = sturmPlayer.match.rules.fogOfWar ? new Vision(sturmPlayer.team) : null;
+  const vision = sturmPlayer.match.rules.fogOfWar ? sturmPlayer.team.getVision() : null;
 
   //centered in an enemy unit
   for (const enemyUnit of sturmPlayer.team.getEnemyUnits()) {
@@ -100,7 +99,7 @@ export const getMostHPMeteorPosition = (
   let bestPosition: Position = [0, 0];
   let bestHP = Number.NEGATIVE_INFINITY;
 
-  const vision = sturmPlayer.match.rules.fogOfWar ? new Vision(sturmPlayer.team) : null;
+  const vision = sturmPlayer.match.rules.fogOfWar ? sturmPlayer.team.getVision() : null;
 
   //centered in an enemy unit
   for (const enemyUnit of sturmPlayer.team.getEnemyUnits()) {

@@ -71,4 +71,6 @@ export const applyCOPowerEvent = (match: MatchWrapper, event: COPowerEvent) => {
 
   //event.positions are for rachel, sturm, von-bolt supers
   power.instantEffect?.(player, event.positions);
+
+  player.team.refreshVision(); // justin case
 };

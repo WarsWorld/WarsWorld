@@ -205,7 +205,7 @@ export class UnitWrapper<ThisUnitType extends UnitType = UnitType> {
       isSamePosition(u.data.position, this.data.position)
     );
 
-    /* TODO check if player is eliminated, then create and send appropriate event */
+    this.player.team.refreshVision();
   }
 
   // UNIT TYPE CHECKS **********************************************************

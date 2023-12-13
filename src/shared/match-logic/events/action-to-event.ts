@@ -1,5 +1,5 @@
 import { DispatchableError } from "shared/DispatchedError";
-import type { Action, MainAction } from "shared/schemas/action";
+import type { Action, MainAction, MoveAction } from "shared/schemas/action";
 import type { Position } from "shared/schemas/position";
 import type { MainEvent, SubEvent } from "shared/types/events";
 import type { MatchWrapper } from "shared/wrappers/match";
@@ -13,6 +13,8 @@ import { repairActionToEvent } from "./handlers/repair";
 import { unloadNoWaitActionToEvent } from "./handlers/unloadNoWait";
 import { unloadWaitActionToEvent } from "./handlers/unloadWait";
 import { passTurnActionToEvent } from "./handlers/passTurn";
+import { getFinalPositionSafe } from "shared/schemas/position";
+import { deleteActionToEvent } from "./handlers/delete";
 
 export const validateMainActionAndToEvent = (
   match: MatchWrapper,
@@ -21,6 +23,8 @@ export const validateMainActionAndToEvent = (
   switch (action.type) {
     case "build":
       return buildActionToEvent(match, action);
+    case "delete":
+      return deleteActionToEvent(match, action);
     case "unloadNoWait":
       return unloadNoWaitActionToEvent(match, action);
     case "move":
@@ -39,31 +43,29 @@ export const validateMainActionAndToEvent = (
 
 export const validateSubActionAndToEvent = (
   match: MatchWrapper,
-  action: Action,
-  unitPosition: Position
+  { subAction, path }: MoveAction
 ): SubEvent => {
-  switch (action.type) {
+  const unitPosition = getFinalPositionSafe(path);
+
+  switch (subAction.type) {
     case "attack":
       return attackActionToEvent(
         match,
-        action,
+        subAction,
         unitPosition,
+        (path.length > 1),
         {goodLuck: Math.random(), badLuck: Math.random()},
         {goodLuck: Math.random(), badLuck: Math.random()}
       );
     case "ability":
-      return abilityActionToEvent(match, action, unitPosition);
+      return abilityActionToEvent(match, subAction, unitPosition);
     case "unloadWait":
-      return unloadWaitActionToEvent(match, action, unitPosition);
+      return unloadWaitActionToEvent(match, subAction, unitPosition);
     case "repair":
-      return repairActionToEvent(match, action, unitPosition);
+      return repairActionToEvent(match, subAction, unitPosition);
     case "launchMissile":
-      return launchMissileActionToEvent(match, action, unitPosition);
+      return launchMissileActionToEvent(match, subAction, unitPosition);
     case "wait":
       return { type: "wait" };
-    default:
-      /** TODO: the second line will only be valid once we've implemented all subAction types!
-       * this would only run for bad data from DB because of zod when validating user data */
-      throw new DispatchableError(`Unsupported action type: ${action.type}`);
   }
 };

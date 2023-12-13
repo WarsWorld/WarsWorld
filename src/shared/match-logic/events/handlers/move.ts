@@ -7,6 +7,7 @@ import type { MoveEvent } from "shared/types/events";
 import type { MatchWrapper } from "shared/wrappers/match";
 import { applySubEventToMatch } from "../apply-event-to-match";
 import type { MainActionToEvent } from "../handler-types";
+import { PlayerInMatchWrapper } from "../../../wrappers/player-in-match";
 
 export const createNoMoveEvent = (): MoveEvent => ({
   type: "move",
@@ -300,4 +301,6 @@ export const applyMoveEvent = (match: MatchWrapper, event: MoveEvent) => {
   }
 
   applySubEventToMatch(match, event);
+
+  unit.player.team.refreshVision(); // probably repeated twice in some cases. Not risking bugs for now
 };

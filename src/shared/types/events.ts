@@ -4,14 +4,14 @@ import type {
   AbilityAction,
   AttackAction,
   BuildAction,
-  COPowerAction,
+  COPowerAction, DeleteAction,
   LaunchMissileAction,
   MoveAction,
   PassTurnAction,
   RepairAction,
   UnloadNoWaitAction,
   UnloadWaitAction,
-  WaitAction
+  WaitAction,
 } from "shared/schemas/action";
 import type { Army } from "shared/schemas/army";
 import type { COID } from "shared/schemas/co";
@@ -87,6 +87,9 @@ export type PassTurnEvent = PassTurnAction & { turns: Turn[] };
 export type AbilityEvent = AbilityAction &
   WithElimination<"hq-or-labs-captured" | "property-goal-reached">;
 
+export type DeleteEvent = DeleteAction &
+  WithElimination<`all-units-destroyed`>;
+
 export type BuildEvent = BuildAction;
 export type LaunchMissileEvent = LaunchMissileAction;
 export type RepairEvent = RepairAction;
@@ -102,6 +105,7 @@ export type MainEvent =
   | COPowerEvent
   | PassTurnEvent
   | BuildEvent
+  | DeleteEvent
   | MatchEndEvent;
 
 export type SubEvent =
@@ -111,6 +115,12 @@ export type SubEvent =
   | LaunchMissileEvent
   | UnloadWaitEvent
   | AttackEvent;
+
+
+type WithDiscoveries = {
+  discoveredUnits?: WWUnit[];
+  discoveredChangeableTiles?: ChangeableTile[]; // TODO e.g. properties / pipeseam in fog of war
+}
 
 export type EmittableSubEvent =
   | AbilityEvent
@@ -128,11 +138,6 @@ export type EmittableSubEvent =
       defenderPlayerSlot: PlayerSlot;
       defenderPowerCharge: number;
     };
-
-type WithDiscoveries = {
-  discoveredUnits?: WWUnit[];
-  discoveredChangeableTiles?: ChangeableTile[]; // TODO e.g. properties / pipeseam in fog of war
-}
 
 export type EmittableEvent = 
   | MatchStartEvent
