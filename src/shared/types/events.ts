@@ -139,20 +139,23 @@ export type EmittableSubEvent =
       defenderPowerCharge: number;
     };
 
+export type EmittableMoveEvent = (Omit<MoveEvent, "subEvent"> & WithDiscoveries & {
+  subEvent: EmittableSubEvent;
+  /**
+   * e.g. for when a unit moves from FoW into vision or when it's unloaded into vision
+   */
+  appearingUnit?: WWUnit
+});
+
 export type EmittableEvent = 
   | MatchStartEvent
-  | (MoveEvent & WithDiscoveries & {
-    subEvent: EmittableSubEvent;
-    /**
-     * e.g. for when a unit moves from FoW into vision or when it's unloaded into vision
-     */
-    discoveredUnit?: WWUnit
-  })
+  | EmittableMoveEvent
   | (UnloadNoWaitEvent & WithDiscoveries)
   | PlayerEliminatedEvent
   | (COPowerEvent & WithDiscoveries)
   | PassTurnEvent
   | (BuildEvent & WithDiscoveries)
+  | DeleteEvent
   | MatchEndEvent;
 
 export type NonStoredEvent = WithPlayer &

@@ -8,6 +8,7 @@ import type { MatchWrapper } from "shared/wrappers/match";
 import { applySubEventToMatch } from "../apply-event-to-match";
 import type { MainActionToEvent } from "../handler-types";
 import { PlayerInMatchWrapper } from "../../../wrappers/player-in-match";
+import { UnitWrapper } from "../../../wrappers/unit";
 
 export const createNoMoveEvent = (): MoveEvent => ({
   type: "move",
@@ -233,6 +234,14 @@ const loadUnitInto = (
   }
 };
 
+export const getOneTileFuelCost = (match: MatchWrapper, unit: UnitWrapper) => {
+  // in AWDS, snow causes units to consume double fuel when moving (except for olaf)
+  const gameVersion = match.rules.gameVersion ?? unit.player.data.coId.version;
+
+  return (match.currentWeather === "snow" && gameVersion === "AWDS" &&
+    unit.player.data.coId.name !== "olaf") ? 2 : 1;
+}
+
 export const applyMoveEvent = (match: MatchWrapper, event: MoveEvent) => {
   //check if unit is moving or just standing still
   if (event.path.length <= 1) {
@@ -247,16 +256,7 @@ export const applyMoveEvent = (match: MatchWrapper, event: MoveEvent) => {
     unit.currentCapturePoints = undefined;
   }
 
-  // in AWDS, snow causes units to consume double fuel when moving (except for olaf)
-  const gameVersion = match.rules.gameVersion ?? unit.player.data.coId.version;
-
-  if (match.currentWeather === "snow" && gameVersion === "AWDS" &&
-    unit.player.data.coId.name !== "olaf") {
-    unit.drainFuel(2 * (event.path.length - 1));
-  }
-  else {
-    unit.drainFuel(event.path.length - 1);
-  }
+  unit.drainFuel((event.path.length - 1) * getOneTileFuelCost(match, unit));
 
   const unitAtDestination = match.getUnit(
     getFinalPositionSafe(event.path)

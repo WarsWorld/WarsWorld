@@ -224,6 +224,24 @@ export const attackActionToEvent: (...params: Params) => AttackEvent = (
   };
 };
 
+export const getPowerChargeGain = (
+  attacker: UnitWrapper,
+  attackerHpDiff: number,
+  defender: UnitWrapper,
+  defenderHpDiff: number
+) => {
+  //power meter charge
+  const attackerVP = attacker.player.getVersionProperties();
+  const defenderVP = defender.player.getVersionProperties();
+
+  return {
+    attackerPowerCharge: attackerVP.powerMeterIncreasePerHP(attacker) * attackerHpDiff +
+      attackerVP.powerMeterIncreasePerHP(defender) * defenderHpDiff * attackerVP.offensivePowerGenMult,
+    defenderPowerCharge: defenderVP.powerMeterIncreasePerHP(defender) * defenderHpDiff +
+      defenderVP.powerMeterIncreasePerHP(attacker) * attackerHpDiff * defenderVP.offensivePowerGenMult
+  };
+}
+
 export const applyAttackEvent = (
   match: MatchWrapper,
   event: AttackEvent,
@@ -245,19 +263,15 @@ export const applyAttackEvent = (
     defender.player.data.funds += attackerHpDiff * attacker.getBuildCost() / 10 * 0.5;
   }
 
-  //power meter charge
-  const attackerVP = attacker.player.getVersionProperties();
-  const defenderVP = defender.player.getVersionProperties();
-
-  attacker.player.gainPowerCharge(
-    attackerVP.powerMeterIncreasePerHP(attacker) * attackerHpDiff +
-    attackerVP.powerMeterIncreasePerHP(defender) * defenderHpDiff * attackerVP.offensivePowerGenMult
+  const {attackerPowerCharge, defenderPowerCharge} = getPowerChargeGain(
+    attacker,
+    attackerHpDiff,
+    defender,
+    defenderHpDiff
   );
 
-  defender.player.gainPowerCharge(
-    defenderVP.powerMeterIncreasePerHP(defender) * defenderHpDiff +
-    defenderVP.powerMeterIncreasePerHP(attacker) * attackerHpDiff * defenderVP.offensivePowerGenMult
-  );
+  attacker.player.gainPowerCharge(attackerPowerCharge);
+  defender.player.gainPowerCharge(defenderPowerCharge);
 
   //ammo consumption
   if (canAttackWithPrimary(attacker, defender)) {
