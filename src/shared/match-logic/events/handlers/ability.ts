@@ -198,7 +198,9 @@ export const applyAbilityEvent: ApplySubEvent<AbilityEvent> = (match, event, fro
           );
         }
 
+        match.getPlayerBySlot(tile.playerSlot)?.team.vision?.removeOwnedProperty(unit.data.position);
         tile.playerSlot = unit.data.playerSlot;
+        unit.player.team.vision?.addOwnedProperty(unit.data.position);
       }
 
       break;

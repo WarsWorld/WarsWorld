@@ -3,10 +3,11 @@ import type { PlayerInMatch } from "shared/types/server-match-state";
 import type { MatchWrapper } from "./match";
 import { PlayerInMatchWrapper } from "./player-in-match";
 import { Vision } from "./vision";
+import type { Position } from "../schemas/position";
 
 export class TeamWrapper {
   public players: PlayerInMatchWrapper[];
-  private vision: Vision = new Vision(this);
+  public vision: Vision | null = null; // changes from null to vision to null when it rains / clear in awds
 
   constructor(
     players: PlayerInMatch[],
@@ -14,6 +15,23 @@ export class TeamWrapper {
     public index: number
   ) {
     this.players = players.map((p) => new PlayerInMatchWrapper(p, this));
+
+    if (match.isFow()) {
+      this.vision = new Vision(this);
+    }
+  }
+
+  isPositionVisible(position: Position) {
+    if (this.match.isFow()) {
+      if (this.vision === null) {
+        this.vision = new Vision(this); // that should not happen, but whatever
+      }
+
+      return this.vision.isPositionVisible(position);
+    }
+
+    // in clear weather all positions are visible
+    return true;
   }
 
   getUnits() {
@@ -26,6 +44,33 @@ export class TeamWrapper {
     return this.match.units.filter(
       (unit) => !playerSlotsOfTeam.includes(unit.data.playerSlot)
     );
+  }
+
+  canSeeUnitAtPosition(position: Position) {
+    const playerSlots = this.players.map((player) => player.data.slot);
+    const tile = this.match.getTile(position);
+    const unit = this.match.getUnit(position);
+
+    if (unit === undefined) {
+      return false; //no unit in specified position
+    }
+
+    if (playerSlots.includes(unit.player.data.slot)) {
+      return true; // own unit
+    }
+
+    if ("playerSlot" in tile && playerSlots.includes(tile.playerSlot)) {
+      return true; // on top of allied property
+    }
+
+    // sub or stealth ability
+    if ("hidden" in unit.data && unit.data.hidden) {
+      return unit
+        .getNeighbouringUnits()
+        .some((unit) => playerSlots.includes(unit.data.playerSlot));
+    }
+
+    return this.isPositionVisible(unit.data.position);
   }
 
   getEnemyUnitsInVision() {
@@ -42,16 +87,13 @@ export class TeamWrapper {
         }
 
         // sub or stealth ability
-        const isHiddenThroughAbility =
-          "hidden" in enemy.data && enemy.data.hidden;
-
-        if (isHiddenThroughAbility) {
+        if ("hidden" in enemy.data && enemy.data.hidden) {
           return enemy
             .getNeighbouringUnits()
             .some((unit) => playerSlots.includes(unit.data.playerSlot));
         }
 
-        return this.vision.isPositionVisible(enemy.data.position);
+        return this.isPositionVisible(enemy.data.position);
       })
       .map<WWUnit>((visibleEnemyUnit) => {
         if (visibleEnemyUnit.player.data.coId.name === "sonja") {
@@ -69,13 +111,5 @@ export class TeamWrapper {
     const playerWrapper = new PlayerInMatchWrapper(player, this)
     this.players.push(playerWrapper);
     return playerWrapper
-  }
-
-  refreshVision() {
-    this.vision = new Vision(this)
-  }
-
-  getVision() {
-    return this.vision;
   }
 }

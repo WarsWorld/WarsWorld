@@ -238,7 +238,7 @@ export const getOneTileFuelCost = (match: MatchWrapper, unit: UnitWrapper) => {
   // in AWDS, snow causes units to consume double fuel when moving (except for olaf)
   const gameVersion = match.rules.gameVersion ?? unit.player.data.coId.version;
 
-  return (match.currentWeather === "snow" && gameVersion === "AWDS" &&
+  return (match.getCurrentWeather() === "snow" && gameVersion === "AWDS" &&
     unit.player.data.coId.name !== "olaf") ? 2 : 1;
 }
 
@@ -299,8 +299,28 @@ export const applyMoveEvent = (match: MatchWrapper, event: MoveEvent) => {
 
     unit.remove();
   }
-
-  applySubEventToMatch(match, event);
-
-  unit.player.team.refreshVision(); // probably repeated twice in some cases. Not risking bugs for now
 };
+
+/**
+ * Call this AFTER creating the sub event but BEFORE applying it
+ */
+export const updateMoveVision = (match: MatchWrapper, event: MoveEvent) => {
+  if (event.path.length < 2) { // if didn't move no vision change
+    return;
+  }
+
+  const movedUnit = match.getUnitOrThrow(getFinalPositionSafe(event.path));
+
+  movedUnit.data.position = event.path[0]; // temporarily revert position
+  movedUnit.player.team.vision?.removeUnitVision(movedUnit); // remove vision from previous position
+  movedUnit.data.position = getFinalPositionSafe(event.path); // revert the reversion (xd)
+  movedUnit.player.team.vision?.addUnitVision(movedUnit); // add vision from new position
+
+  /*
+  Small side note: attack event works fine with this if the attacker dies, since
+  vision works by having how many units see a particular tile, and when a unit dies
+  it subtracts one from that counter. so attack event subtracts from final position,
+  and then move event adds back (so in the end the unit lost vision from previous
+  position, but didn't gain vision from new position (- +)
+   */
+}

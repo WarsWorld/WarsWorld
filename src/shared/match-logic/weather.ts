@@ -61,7 +61,7 @@ export function getRandomWeather(match: MatchWrapper): Weather {
  * sturm and lash are handled with a movementCost hook.
  */
 export const getWeatherSpecialMovement = (player: PlayerInMatchWrapper): Weather => {
-  const weather = player.match.currentWeather;
+  const weather = player.match.getCurrentWeather();
 
   switch (player.data.coId.name) {
     case "drake": {

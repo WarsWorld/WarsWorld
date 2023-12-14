@@ -129,7 +129,7 @@ export class PlayerInMatchWrapper {
 
     this.match.units.push(unit);
 
-    this.team.refreshVision();
+    this.team.vision?.addUnitVision(unit);
 
     return unit;
   }

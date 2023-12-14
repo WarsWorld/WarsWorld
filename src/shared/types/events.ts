@@ -18,17 +18,17 @@ import type { COID } from "shared/schemas/co";
 import type { Position } from "shared/schemas/position";
 import type { WWUnit } from "shared/schemas/unit";
 import type { Weather } from "shared/schemas/weather";
-import type { ChangeableTile } from "./server-match-state";
+import type { CapturableTile, ChangeableTile } from "./server-match-state";
 import type { PlayerSlot } from "shared/schemas/player-slot";
 
 /** player slot 0 implicity starts */
 export type MatchStartEvent = {
-  type: "match-start";
+  type: "matchStart";
   weather: Weather;
 };
 
 export type MatchEndEvent = {
-  type: "match-end";
+  type: "matchEnd";
   winningTeamPlayerIds: string[] | null; // null = draw
   // TODO this type can probably be made a lot more fine-grained later on
 };
@@ -119,7 +119,7 @@ export type SubEvent =
 
 type WithDiscoveries = {
   discoveredUnits?: WWUnit[];
-  discoveredChangeableTiles?: ChangeableTile[]; // TODO e.g. properties / pipeseam in fog of war
+  discoveredProperties?: CapturableTile[];
 }
 
 export type EmittableSubEvent =
@@ -127,7 +127,7 @@ export type EmittableSubEvent =
   | WaitEvent
   | RepairEvent
   | LaunchMissileEvent
-  | (UnloadWaitEvent & WithDiscoveries)
+  | UnloadWaitEvent
   | {
       type: "attack";
       attackerHP?: number;
@@ -137,7 +137,7 @@ export type EmittableSubEvent =
       defenderPosition?: Position;
       defenderPlayerSlot: PlayerSlot;
       defenderPowerCharge: number;
-    };
+    } & WithElimination<`all-${"attacker" | "defender"}-units-destroyed`>;
 
 export type EmittableMoveEvent = (Omit<MoveEvent, "subEvent"> & WithDiscoveries & {
   subEvent: EmittableSubEvent;
@@ -147,16 +147,17 @@ export type EmittableMoveEvent = (Omit<MoveEvent, "subEvent"> & WithDiscoveries 
   appearingUnit?: WWUnit
 });
 
-export type EmittableEvent = 
+export type EmittableEvent = (
   | MatchStartEvent
   | EmittableMoveEvent
-  | (UnloadNoWaitEvent & WithDiscoveries)
+  | UnloadNoWaitEvent
   | PlayerEliminatedEvent
-  | (COPowerEvent & WithDiscoveries)
+  | COPowerEvent
   | PassTurnEvent
-  | (BuildEvent & WithDiscoveries)
+  | BuildEvent
   | DeleteEvent
-  | MatchEndEvent;
+  | MatchEndEvent
+  ) & WithDiscoveries;
 
 export type NonStoredEvent = WithPlayer &
   WithMatchId &

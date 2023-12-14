@@ -39,7 +39,7 @@ export const matchRouter = router({
     id: match.id,
     leagueType: match.leagueType,
     changeableTiles: match.changeableTiles,
-    currentWeather: match.currentWeather,
+    currentWeather: match.getCurrentWeather(),
     map: match.map.data,
     players: match.getAllPlayers().map(player => player.data),
     rules: match.rules,

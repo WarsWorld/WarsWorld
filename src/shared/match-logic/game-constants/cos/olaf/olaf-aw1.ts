@@ -15,9 +15,7 @@ export const olafAW1: COProperties = {
       description: "Causes it to snow until next turn.",
       stars: 3,
       instantEffect(player) {
-        player.match.currentWeather = "snow";
-        player.match.playerToRemoveWeatherEffect = player;
-        player.match.weatherDaysLeft = 1;
+        player.match.setWeather("snow", 1);
       }
     },
   }

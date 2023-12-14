@@ -10,6 +10,7 @@ import type { ChangeableTile } from "shared/types/server-match-state";
 import type { MatchWrapper } from "shared/wrappers/match";
 import { addDirection } from "shared/schemas/position";
 import type { SubActionToEvent } from "../handler-types";
+import { position } from "unist-util-position";
 
 export function throwIfUnitCantBeUnloadedToTile(unit: { type: UnitType }, tile: Tile | ChangeableTile) {
   const loadedUnitMovementType = unitPropertiesMap[unit.type].movementType
@@ -114,7 +115,8 @@ export const applyUnloadWaitEvent = (match: MatchWrapper, event: UnloadWaitEvent
       });
 
       unit.data.loadedUnit2 = null;
-    } else if (!event.unloads[0].isSecondUnit && unit.isTransport()) {
+    }
+    else if (!event.unloads[0].isSecondUnit && unit.isTransport()) {
       if (unit.data.loadedUnit === null) {
         throw new Error("Can't unload from empty slot 1");
       }
@@ -128,7 +130,8 @@ export const applyUnloadWaitEvent = (match: MatchWrapper, event: UnloadWaitEvent
       if ("loadedUnit2" in unit.data) {
         unit.data.loadedUnit = unit.data.loadedUnit2;
         unit.data.loadedUnit2 = null;
-      } else {
+      }
+      else {
         unit.data.loadedUnit = null;
       }
     }

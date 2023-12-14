@@ -14,9 +14,7 @@ export const olafAW2: COProperties = {
       instantEffect(player) {
         player.team.getEnemyUnits().forEach((unit) => unit.damageUntil1HP(2));
 
-        player.match.currentWeather = "snow";
-        player.match.playerToRemoveWeatherEffect = player;
-        player.match.weatherDaysLeft = 1;
+        player.match.setWeather("snow", 1);
       }
     }
   }

@@ -153,7 +153,8 @@ export const applyPassTurnEvent: ApplyEvent<PassTurnEvent> = (match, event) => {
   }
 
   for (const team of match.teams) {
-    team.refreshVision();
+    // TODO improve this. maybe later. not prioritary
+    team.vision?.recalculateVision(team.getUnits());
   }
 };
 

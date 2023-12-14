@@ -9,7 +9,7 @@ export const sturmAW1Campaign: COProperties = {
       "Units have +30% firepower and -20% defense. All terrain movement cost is reduced to 1 (doesn't apply in snow).",
     hooks: {
       movementCost: (_value, { match }) => {
-        if (match.currentWeather !== "snow") {
+        if (match.getCurrentWeather() !== "snow") {
           return 1;
         }
       },

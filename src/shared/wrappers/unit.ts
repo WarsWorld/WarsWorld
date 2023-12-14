@@ -201,11 +201,12 @@ export class UnitWrapper<ThisUnitType extends UnitType = UnitType> {
   }
 
   remove() {
+    // TODO @function fix this error ¬¬'
+    this.player.team.vision?.removeUnitVision(this);
+
     this.match.units = this.match.units.filter((u) =>
       isSamePosition(u.data.position, this.data.position)
     );
-
-    this.player.team.refreshVision();
   }
 
   // UNIT TYPE CHECKS **********************************************************

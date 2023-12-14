@@ -1,17 +1,18 @@
 import type { Turn } from "shared/types/events";
 import type { PlayerInMatchWrapper } from "shared/wrappers/player-in-match";
 
-// TODO wip, i think player -1 should be playing the game as first player,
-//  and be responsible to set weather at the start of each day (day = turn cycle)
-// - Pau
-
 export function updateWeather(
   nextTurnPlayer: PlayerInMatchWrapper,
   newWeather: Turn["newWeather"]
 ) {
   const { match } = nextTurnPlayer;
 
-  match.currentWeather = newWeather ?? match.currentWeather;
+  if (newWeather !== null) {
+    // TODO maybe this gets the previous player instead of next turn player
+    //  but if it's the case, i think we should change current turn player before doing all these updates
+    match.setWeather(newWeather, 1);
+    return;
+  }
 
   if (
     match.playerToRemoveWeatherEffect !== null &&

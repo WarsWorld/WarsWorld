@@ -21,9 +21,11 @@ import { MapWrapper } from "./map";
 import type { PlayerInMatchWrapper } from "./player-in-match";
 import { TeamWrapper } from "./team";
 import { UnitWrapper } from "./unit";
+import { Vision } from "./vision";
 
 /** TODO: Add favorites, possibly spectators, also a timer */
 export class MatchWrapper {
+  private currentWeather: Weather = "clear"; // made private so no one changes currentWeather without setter on accident
   public playerToRemoveWeatherEffect: PlayerInMatchWrapper | null = null;
   public weatherDaysLeft = 0;
   public teams: TeamWrapper[] = [];
@@ -34,7 +36,6 @@ export class MatchWrapper {
    * just like Vision currently has.
    */
   public units: UnitWrapper[];
-  public currentWeather: Weather = "clear";
   public map: MapWrapper;
 
   constructor(
@@ -51,6 +52,28 @@ export class MatchWrapper {
     this.map = new MapWrapper(map);
     players.forEach(player => this.addUnwrappedPlayer(player));
     this.units = units.map(unit => new UnitWrapper(unit, this))
+  }
+
+  /**
+   * Returns if the match is currently in fog of war
+   */
+  isFow(): boolean {
+    return this.rules.fogOfWar || (this.rules.gameVersion === "AWDS" && this.currentWeather === "rain");
+  }
+
+  setWeather(weather: Weather, duration: number) {
+    this.currentWeather = weather;
+    this.playerToRemoveWeatherEffect = this.getCurrentTurnPlayer();
+    this.weatherDaysLeft = duration;
+
+    if (this.rules.gameVersion === "AWDS" && !this.rules.fogOfWar) { // check for rain/clear fog of war activation
+      for (const team of this.teams) {
+        team.vision = (weather === "rain") ? new Vision(team) : null;
+      }
+    }
+  }
+  getCurrentWeather(): Weather {
+    return this.currentWeather;
   }
 
   getTile(position: Position): Tile | ChangeableTile {

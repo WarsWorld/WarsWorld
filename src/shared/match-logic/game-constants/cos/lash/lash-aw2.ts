@@ -22,7 +22,7 @@ export const lashAW2: COProperties = {
       description: "All terrain movement cost is reduced to 1 (doesn't apply in snow).",
       hooks: {
         movementCost: (_value, {match}) => {
-          if (match.currentWeather !== "snow") {
+          if (match.getCurrentWeather() !== "snow") {
             return 1;
           }
         }
@@ -35,7 +35,7 @@ export const lashAW2: COProperties = {
       hooks: {
         terrainStars: (v) => v * 2,
         movementCost: (_value, {match}) => {
-          if (match.currentWeather !== "snow") {
+          if (match.getCurrentWeather() !== "snow") {
             return 1;
           }
         }

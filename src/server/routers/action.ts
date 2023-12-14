@@ -14,15 +14,32 @@ import {
   playerInMatchBaseProcedure,
   router
 } from "../trpc/trpc-setup";
+import { mainEventToEmittables } from "../../shared/match-logic/events/event-to-emittable";
+import { fillDiscoveredUnitsAndProperties } from "../../shared/match-logic/events/vision-update";
+import { updateMoveVision } from "../../shared/match-logic/events/handlers/move";
 
 export const actionRouter = router({
   send: playerInMatchBaseProcedure
     .input(mainActionSchema)
     .mutation(async ({ input, ctx: { match, player } }) => {
+      /**
+       * EXTREMELY IMPORTANT! This order MUST be followed, otherwise some things may not have required information:
+       * 1. Move action to event
+       * 2. Apply move event to match
+       * 3. Sub action to event
+       * 4. Sub event to emittable sub events
+       * 5. Move event to emittable move events
+       * 6. Update move event vision
+       * 7. Apply sub event to match and update sub event vision
+       * 8. Add new discovered info (vision) to emittable events
+       * 9. Emit emittable events
+       * 10. Save event
+       */
+
+      /* 1. Move action to event */
       const mainEvent = validateMainActionAndToEvent(match, input);
 
-      // IMPORTANT @FUNCTION IDIOT: we MUST apply the main event before validateSubActionAndToEvent
-      // because the subAction needs the match state to be changed already, otherwise it's going to break.
+      /* 2. Apply move event to match */
       applyMainEventToMatch(match, mainEvent);
 
       /**
@@ -34,9 +51,13 @@ export const actionRouter = router({
        * because we stop about here and don't store/emit.
        */
 
+      let emittableEvents: (EmittableEvent | undefined)[]; // undefined means that team doesn't receive the event
+
       if (mainEvent.type === "move" && input.type === "move") {
         // second condition is only needed for type-gating input event
 
+        /* 3. Sub action to event */
+        // if there was a trap or join/load, the default subEvent is "wait".
         const isJoinOrLoad = match.getUnit(
           getFinalPositionSafe(mainEvent.path)
         ) !== undefined;
@@ -48,34 +69,36 @@ export const actionRouter = router({
           );
         }
 
-        // if there was a trap or join/load, the default subEvent
-        // which must be "wait" gets applied here, otherwise the custom one.
+        /* 4. Sub event to emittable sub events (done inside, first)*/
+        /* 5. Move event to emittable move events */
+        emittableEvents = mainEventToEmittables(match, mainEvent);
+
+        /* 6. Update move event vision */
+        updateMoveVision(match, mainEvent);
+
+        /* 7. Apply sub event to match and update sub event vision */
         applySubEventToMatch(match, mainEvent);
       }
+      else {
+        emittableEvents = mainEventToEmittables(match, mainEvent);
+      }
 
+      /* 8. Update move vision (and add new vision in general to emittable events) */
+      fillDiscoveredUnitsAndProperties(match, emittableEvents);
+
+      /* 9. Emit emittable events */
+      // TODO @function either this function gets a list of emittables, or we iterate through them here.
+      //  undefined means that team shouldn't receive the event
+      //  emittableEvents[i] is from match.teams[i]. emittableEvents has one extra "no team"(spectator) at the end
+      emit(emittableEvents);
+
+      /* 10. Save event */
       const eventOnDB = await prisma.event.create({
         data: {
           matchId: input.matchId,
           content: mainEvent
         }
       });
-
-      const emittableEvent: EmittableEvent = {
-        ...mainEvent,
-        matchId: input.matchId,
-        index: eventOnDB.index
-      };
-      
-      emittableEvent.discoveredUnits = player.team.getEnemyUnitsInVision()
-
-      /**
-       * TODO
-       * right now we're emitting everything without checking if the receiver (observer)
-       * can see the event (fog of war). once we do, we need to check the event
-       * for any player elimination info and then send that part to all observers regardless
-       * of vision. (also affects e.g. last unit was a hidden sub/stealth and crashed)
-       */
-      emit(emittableEvent);
 
       // TODO we still need something like the following to handle timeout eliminations.
 

@@ -52,9 +52,7 @@ export const drakeAW2: COProperties = {
           unit.damageUntil1HP(2);
         });
 
-        player.match.currentWeather = "rain";
-        player.match.playerToRemoveWeatherEffect = player;
-        player.match.weatherDaysLeft = 1;
+        player.match.setWeather("rain", 1);
       }
     }
   }

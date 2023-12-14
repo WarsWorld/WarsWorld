@@ -80,19 +80,6 @@ export const applySubEventToMatch = (
       applyLaunchMissileEvent(match, subEvent);
       break;
     }
-    default: {
-      /**
-       * TODO since the switch is exhaustive,
-       * this could only possible run if there's incompatible data in a replay
-       * where when we read from it, the data isn't validated by zod.
-       * maybe remove?
-       *
-       * the exhaustiveness is the reason for `as SubEvent` because otherwise `event` is `never`.
-       */
-      throw new DispatchableError(
-        `Can't apply sub event type ${(subEvent as SubEvent).type}`
-      );
-    }
   }
 
   unit.data.isReady = false;

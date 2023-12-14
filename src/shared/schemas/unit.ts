@@ -11,8 +11,6 @@ import {
 
 //LAND UNITS:
 
-// TODO replace unit capture points with tile HP
-
 const infantrySchema = withTypeSchema("infantry")
   .extend(withNoAmmoUnitStats)
   .extend(withCapturePoints);
