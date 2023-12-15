@@ -84,6 +84,13 @@ export class MatchWrapper {
     );
 
     if (foundChangeableTile !== undefined) {
+      if ("hp" in foundChangeableTile && foundChangeableTile.hp < 1) {
+        return { // TODO if this is used in frontend, we need to see what type of broken pipe it is
+          type: "plain",
+          variant: "broken-pipe-right-left"
+        };
+      }
+
       return foundChangeableTile;
     }
 

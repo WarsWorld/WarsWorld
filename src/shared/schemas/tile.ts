@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { playerSlotForPropertiesSchema } from "./player-slot";
+import type { PipeSeamTile} from "./variable-tiles";
 import { variableTileSchema } from "./variable-tiles";
 
 export const isNotNeutralProperty = (propertyTile: PropertyTile) =>
@@ -10,7 +11,7 @@ export const isUnitProducingProperty = (tile: Tile): tile is PropertyTile =>
 
 export const willBeChangeableTile = (
   tile: Tile
-): tile is PropertyTile | UnusedSiloTile =>
+): tile is PropertyTile | UnusedSiloTile | PipeSeamTile =>
   [
     "city",
     "base",
@@ -19,7 +20,8 @@ export const willBeChangeableTile = (
     "lab",
     "commtower",
     "hq",
-    "unusedSilo"
+    "unusedSilo",
+    "pipeSeam",
   ].includes(tile.type);
 
 export const propertyTileSchema = z.object({

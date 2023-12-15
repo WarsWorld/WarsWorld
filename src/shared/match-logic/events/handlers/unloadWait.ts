@@ -10,7 +10,6 @@ import type { ChangeableTile } from "shared/types/server-match-state";
 import type { MatchWrapper } from "shared/wrappers/match";
 import { addDirection } from "shared/schemas/position";
 import type { SubActionToEvent } from "../handler-types";
-import { position } from "unist-util-position";
 
 export function throwIfUnitCantBeUnloadedToTile(unit: { type: UnitType }, tile: Tile | ChangeableTile) {
   const loadedUnitMovementType = unitPropertiesMap[unit.type].movementType

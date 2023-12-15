@@ -22,6 +22,13 @@ const getChangeableTilesFromMap = (map: WWMap): ChangeableTile[] => {
             fired: false
           });
         }
+        else if (tile.type === "pipeSeam") {
+          changeableTiles.push({
+            type: tile.type,
+            position: [x, y],
+            hp: 99
+          });
+        }
         else {
           changeableTiles.push({
             type: tile.type,

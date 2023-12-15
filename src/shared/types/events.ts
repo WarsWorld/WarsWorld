@@ -18,7 +18,7 @@ import type { COID } from "shared/schemas/co";
 import type { Position } from "shared/schemas/position";
 import type { WWUnit } from "shared/schemas/unit";
 import type { Weather } from "shared/schemas/weather";
-import type { CapturableTile, ChangeableTile } from "./server-match-state";
+import type { CapturableTile } from "./server-match-state";
 import type { PlayerSlot } from "shared/schemas/player-slot";
 
 /** player slot 0 implicity starts */

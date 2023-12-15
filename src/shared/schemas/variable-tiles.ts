@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { propertyTileSchema } from "./tile";
 
 const axisConnectionsSchema = z.enum(["right-left", "top-bottom"]);
 
@@ -39,6 +40,8 @@ export const pipeSeamTileSchema = z.object({
   variant: axisConnectionsSchema,
   hp: z.number().int().min(1).max(100)
 });
+export type PipeSeamTile = z.infer<typeof pipeSeamTileSchema>;
+export type PipeSeamTileType = z.infer<typeof pipeSeamTileSchema>["type"];
 
 export const plainTileSchema = z.object({
   type: z.literal("plain"),

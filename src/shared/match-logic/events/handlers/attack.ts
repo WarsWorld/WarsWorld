@@ -7,9 +7,10 @@ import type { Position } from "shared/schemas/position";
 import type { AttackEvent } from "shared/types/events";
 import type { SubActionToEvent } from "../handler-types";
 import { getDistance } from "shared/schemas/position";
-import type { UnitWrapper } from "../../../wrappers/unit";
+import { UnitWrapper } from "../../../wrappers/unit";
 import { canAttackWithPrimary, getBaseDamage } from "../../game-constants/base-damage";
 import type { PlayerInMatchWrapper } from "shared/wrappers/player-in-match";
+import type { WWUnit } from "../../../schemas/unit";
 
 export type LuckRoll = {
   goodLuck: number,
@@ -130,12 +131,6 @@ export const attackActionToEvent: (...params: Params) => AttackEvent = (
     throw new DispatchableError("You don't own this unit")
   }
 
-  const defender = match.getUnitOrThrow(action.defenderPosition);
-  
-  if (defender.player.team.index === player.team.index) {
-    throw new DispatchableError("The target unit is from your own team")
-  }
-
   //check if unit is in range
   const attackerProperties = unitPropertiesMap[attacker.data.type];
 
@@ -147,23 +142,11 @@ export const attackActionToEvent: (...params: Params) => AttackEvent = (
     throw new DispatchableError("Trying to move and attack with an indirect unit");
   }
 
-  if (!attacker.player.team.canSeeUnitAtPosition(defender.data.position)) {
-    throw new DispatchableError("The target unit is not in vision");
-  }
+  const attackDistance = getDistance(fromPosition, action.defenderPosition);
 
-  if (getBaseDamage(attacker, defender) === null) {
-    throw new DispatchableError("This unit cannot attack specified enemy unit");
-  }
-
-  const attackDistance = getDistance(
-    attacker.data.position,
-    defender.data.position
-  );
-
-
-  let maximumAttackRange = attackerProperties.attackRange[1] - (match.currentWeather === "sandstorm" ? 1 : 0);
+  let maximumAttackRange = attackerProperties.attackRange[1] - (match.getCurrentWeather() === "sandstorm" ? 1 : 0);
   maximumAttackRange =
-    attacker.player.getHook("attackRange")?.(maximumAttackRange, {attacker, defender}) ?? maximumAttackRange;
+    attacker.player.getHook("attackRange")?.(maximumAttackRange, attacker) ?? maximumAttackRange;
 
   // we'll need this logic to prevent e.g. Max from having
   // [2, 1] artillery attack range in sandstorms.
@@ -174,6 +157,61 @@ export const attackActionToEvent: (...params: Params) => AttackEvent = (
     attackDistance > maximumAttackRange
   ) {
     throw new DispatchableError("Unit is not in range to attack");
+  }
+
+  const defender = match.getUnit(action.defenderPosition);
+
+  if (defender === undefined) {
+    const attackedTile = match.getTile(action.defenderPosition);
+
+    if (attackedTile.type !== "pipeSeam") {
+      throw new DispatchableError("No unit found in target location to attack");
+    }
+
+    const usedVersion = match.rules.gameVersion ?? attacker.player.data.coId.version;
+    const unitEquivalent: WWUnit = {
+      type: ((usedVersion === "AW1") ? "mediumTank" : "neoTank"),
+      playerSlot: -1,
+      position: action.defenderPosition,
+      isReady: false,
+      stats: {
+        hp: attackedTile.hp,
+        fuel: 0,
+        ammo: 0
+      }
+    };
+
+    const wrappedUnit = new UnitWrapper(unitEquivalent, match);
+
+    if (getBaseDamage(attacker, wrappedUnit) === null) {
+      throw new DispatchableError("Unit cannot attack specified pipeseam");
+    }
+
+    const result = calculateEngagementOutcome(
+      attacker,
+      wrappedUnit,
+      {goodLuck: 0, badLuck: 0},
+      {goodLuck: 0, badLuck: 0}
+    );
+
+    return {
+      ...action,
+      defenderHP: result.defenderHP,
+    };
+
+  }
+
+  
+  if (defender.player.team.index === player.team.index) {
+    throw new DispatchableError("The target unit is from your own team")
+  }
+
+  if (!attacker.player.team.canSeeUnitAtPosition(defender.data.position)) {
+    throw new DispatchableError("The target unit is not in vision");
+  }
+
+  if (getBaseDamage(attacker, defender) === null) {
+    throw new DispatchableError("This unit cannot attack specified enemy unit");
   }
 
   // sonja scop exception (she attacks first when attacked)
@@ -248,7 +286,24 @@ export const applyAttackEvent = (
   position: Position
 ) => {
   const attacker = match.getUnitOrThrow(position);
-  const defender = match.getUnitOrThrow(event.defenderPosition);
+  const defender = match.getUnit(event.defenderPosition);
+
+  if (defender === undefined) { // pipe seam
+    const pipeTile = match.getTile(event.defenderPosition);
+    if (pipeTile.type !== "pipeSeam") {
+      throw new Error("Received pipe seam attack event, but no pipe seam was found");
+    }
+
+    const usedVersion = (match.rules.gameVersion ?? attacker.player.data.coId.version);
+    //ammo consumption
+    if (canAttackWithPrimary(attacker, ((usedVersion == "AW1") ? "mediumTank" : "neoTank"))) {
+      attacker.setAmmo((attacker.getAmmo() ?? 1) - 1);
+    }
+
+    // hp updates (0 means removed)
+    pipeTile.hp = event.defenderHP;
+    return;
+  }
 
   //Calculate visible hp difference:
   const attackerHpDiff = attacker.getVisualHP() - getVisualHPfromHP(event.attackerHP ?? attacker.getVisualHP());
@@ -263,6 +318,7 @@ export const applyAttackEvent = (
     defender.player.data.funds += attackerHpDiff * attacker.getBuildCost() / 10 * 0.5;
   }
 
+  //power charge
   const {attackerPowerCharge, defenderPowerCharge} = getPowerChargeGain(
     attacker,
     attackerHpDiff,
@@ -274,14 +330,13 @@ export const applyAttackEvent = (
   defender.player.gainPowerCharge(defenderPowerCharge);
 
   //ammo consumption
-  if (canAttackWithPrimary(attacker, defender)) {
+  if (canAttackWithPrimary(attacker, defender.data.type)) {
     attacker.setAmmo((attacker.getAmmo() ?? 1) - 1);
   }
 
-  if (event.attackerHP !== undefined && canAttackWithPrimary(defender, attacker)) {
+  if (event.attackerHP !== undefined && canAttackWithPrimary(defender, attacker.data.type)) {
     defender.setAmmo((defender.getAmmo() ?? 1) - 1);
   }
-
 
   // hp updates (+ removal if unit dies)
   if (event.defenderHP === 0) {

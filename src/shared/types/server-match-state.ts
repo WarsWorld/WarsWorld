@@ -5,6 +5,7 @@ import type { PlayerSlot } from "shared/schemas/player-slot";
 import type { Position } from "shared/schemas/position";
 import type { PropertyTileType, UnusedSiloTileType } from "shared/schemas/tile";
 import type { COPowerState } from "shared/match-logic/co";
+import type { PipeSeamTileType } from "../schemas/variable-tiles";
 
 type WithPosition = {
   position: Position;
@@ -21,8 +22,12 @@ type LaunchableSiloTile = WithPosition & {
   fired: boolean;
 };
 
-// TODO missing: pipeseams
-export type ChangeableTile = CapturableTile | LaunchableSiloTile;
+type PipeSeamTile = WithPosition & {
+  type: PipeSeamTileType;
+  hp: number;
+}
+
+export type ChangeableTile = CapturableTile | LaunchableSiloTile | PipeSeamTile;
 
 export type PlayerInMatch = {
   slot: PlayerSlot;

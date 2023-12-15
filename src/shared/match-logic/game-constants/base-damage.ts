@@ -1,4 +1,4 @@
-import type { UnitType } from "shared/schemas/unit";
+import type { UnitType, WWUnit } from "shared/schemas/unit";
 import type { UnitWrapper } from "shared/wrappers/unit";
 
 /**
@@ -6,14 +6,14 @@ import type { UnitWrapper } from "shared/wrappers/unit";
  */
 export const canAttackWithPrimary = (
   attacker: UnitWrapper,
-  defender: UnitWrapper
+  defenderType: UnitType
 ): boolean => {
   if (attacker.getAmmo() === 0 || attacker.getAmmo() === null) {
     return false;
   }
 
   return attacker.player.getVersionProperties().
-    damageChart[attacker.data.type]?.primary?.[defender.data.type] !== undefined;
+    damageChart[attacker.data.type]?.primary?.[defenderType] !== undefined;
 }
 
 export const getBaseDamage = (
@@ -26,7 +26,7 @@ export const getBaseDamage = (
     return null;
   }
 
-  // hardcoded: subs / stealth can only be damaged by cruiser+sub / fighter+stealth
+  // hardcoded: hidden subs / stealth can only be damaged by cruiser+sub / fighter+stealth
   if (defender.data.type === "sub" && "hidden" in defender.data && defender.data.hidden &&
       attacker.data.type !== "sub" && attacker.data.type !== "cruiser") {
     return null;

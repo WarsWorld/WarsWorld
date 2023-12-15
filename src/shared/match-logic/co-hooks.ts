@@ -18,11 +18,12 @@ export type Hooks = {
   ) => ReturnValue;
   vision: (baseVisionRange: number) => ReturnValue;
 
+  attackRange: (baseRange: number, attacker: UnitWrapper) => ReturnValue;
+
   terrainStars: (
     baseTerrainStars: number,
     combatProps: CombatProps
   ) => ReturnValue;
-  attackRange: (baseRange: number, combatProps: CombatProps) => ReturnValue;
 
   attack: (combatProps: CombatProps) => ReturnValue;
   defense: (combatProps: CombatProps) => ReturnValue;

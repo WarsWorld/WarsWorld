@@ -25,7 +25,21 @@ export const subEventToEmittables = (
   switch (subEvent.type) {
     case "attack": {
       const attacker = match.getUnitOrThrow(fromPosition);
-      const defender = match.getUnitOrThrow(subEvent.defenderPosition);
+      const defender = match.getUnit(subEvent.defenderPosition);
+
+      if (defender === undefined) { // pipe seam attack
+        for (let i = 0; i < teams.length; ++i) {
+          emittableSubEvents[i] = {
+            ...subEvent,
+            attackerPlayerSlot: attacker.data.playerSlot,
+            defenderPlayerSlot: -1,
+            attackerPowerCharge: 0,
+            defenderPowerCharge: 0
+          };
+        }
+
+        break;
+      }
 
       const attackerHpDiff = attacker.getVisualHP() - getVisualHPfromHP(subEvent.attackerHP ?? attacker.getVisualHP());
       const defenderHpDiff = defender.getVisualHP() - getVisualHPfromHP(subEvent.defenderHP);
