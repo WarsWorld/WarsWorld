@@ -16,5 +16,28 @@ export const lashAWDS: COProperties = {
         }
       }
     }
+  },
+  powers: {
+    ...lashAW2.powers,
+    superCOPower: {
+      name: "Prime Tactics",
+      stars: 7,
+      description: "Terrain stars are doubled, and all terrain movement cost is reduced to 1 (doesn't apply in snow).",
+      hooks: {
+        terrainStars: (v) => v * 2,
+        movementCost: (_value, {match}) => {
+          if (match.getCurrentWeather() !== "snow") {
+            return 1;
+          }
+        },
+        // needs a "redefinition" because bonus terrain stars is calculated after the firepower bonuses
+        attack({ attacker }) {
+          if (attacker.properties.facility !== "airport") {
+            const terrainStars = getTerrainDefenseStars(attacker.getTile().type);
+            return 100 + 10*terrainStars;
+          }
+        }
+      },
+    },
   }
 }

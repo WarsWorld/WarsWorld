@@ -38,6 +38,13 @@ export const lashAW2: COProperties = {
           if (match.getCurrentWeather() !== "snow") {
             return 1;
           }
+        },
+        // needs a "redefinition" because bonus terrain stars is calculated after the firepower bonuses
+        attack({ attacker }) {
+          if (attacker.properties.facility !== "airport") {
+            const terrainStars = getTerrainDefenseStars(attacker.getTile().type);
+            return 100 + 20*terrainStars;
+          }
         }
       },
     },

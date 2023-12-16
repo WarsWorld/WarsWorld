@@ -14,7 +14,7 @@ export const drakeAW1: COProperties = {
       },
       terrainStars: ( value, { defender }) => {
         if (defender.properties.facility === "port") {
-          return value + 2; // TODO is this correct? (like, if the implementation is correct or not. is it defender or attacker?)
+          return value + 2;
         }
       },
       attack: ({ attacker }) => {

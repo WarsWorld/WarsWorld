@@ -52,11 +52,12 @@ export const subEventToEmittables = (
       );
       
       for (let i = 0; i < teams.length; ++i) {
+        const canSeeAttacker = teams[i].canSeeUnitAtPosition(fromPosition);
         const canSeeDefender = teams[i].canSeeUnitAtPosition(subEvent.defenderPosition);
         const showDefenderHP = canSeeDefender &&
           (defender.player.team.index === teams[i].index || defender.player.data.coId.name !== "sonja" || subEvent.defenderHP === 0);
-        const showAttackerHP = 
-          attacker.player.team.index === teams[i].index || attacker.player.data.coId.name !== "sonja" || subEvent.attackerHP === 0;
+        const showAttackerHP = canSeeAttacker &&
+          (attacker.player.team.index === teams[i].index || attacker.player.data.coId.name !== "sonja" || subEvent.attackerHP === 0);
 
         emittableSubEvents[i] = {
           type: "attack",

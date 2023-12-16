@@ -45,10 +45,6 @@ const calculateEngagementOutcome = (
 
   //check if ded
   if (damageByAttacker >= defender.getHP()) {
-    /*
-     * TODO IMPORTANT i think we must have a "unit was destroyed" flag on an event
-     * bc a client can't tell on sonya units cuz they are effectively always full HP
-     */
     return {
       defenderHP: 0,
       attackerHP: undefined
