@@ -17,7 +17,7 @@ const roundUpTo = (value: number, step: number) => {
  * badLuck roll same as goodLuck roll (but not always used): 1 = max bad luck, 0 = no bad luck
  * @param isCounterAttack only used for sonja d2d and kanbei during scop (bonus counterattack damage).
  *
- * @see https://awbw.fandom.com/wiki/Damage_Formula?so=search
+ * @see https://awbw.fandom.com/wiki/Damage_Formula?so=search xdd
  */
 export const calculateDamage = (
   { attacker, defender }: CombatProps,
