@@ -40,9 +40,11 @@ export const unloadNoWaitActionToEvent: MainActionToEvent<UnloadNoWaitAction> = 
       throw new DispatchableError("Transport doesn't currently have a 2nd loaded unit");
     }
 
-    throwIfUnitCantBeUnloadedToTile(transportUnit.data.loadedUnit2, match.getTile(unloadPosition))
+    throwIfUnitCantBeUnloadedToTile(transportUnit.data.loadedUnit2, match.getTile(action.transportPosition));
+    throwIfUnitCantBeUnloadedToTile(transportUnit.data.loadedUnit2, match.getTile(unloadPosition));
   } else {
-    throwIfUnitCantBeUnloadedToTile(transportUnit.data.loadedUnit, match.getTile(unloadPosition))
+    throwIfUnitCantBeUnloadedToTile(transportUnit.data.loadedUnit, match.getTile(action.transportPosition));
+    throwIfUnitCantBeUnloadedToTile(transportUnit.data.loadedUnit, match.getTile(unloadPosition));
   }
 
   return action;

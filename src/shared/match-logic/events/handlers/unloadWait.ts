@@ -12,8 +12,8 @@ import { addDirection } from "shared/schemas/position";
 import type { SubActionToEvent } from "../handler-types";
 
 export function throwIfUnitCantBeUnloadedToTile(unit: { type: UnitType }, tile: Tile | ChangeableTile) {
-  const loadedUnitMovementType = unitPropertiesMap[unit.type].movementType
-  const tileType = tile.type
+  const loadedUnitMovementType = unitPropertiesMap[unit.type].movementType;
+  const tileType = tile.type;
 
   if (!(loadedUnitMovementType in terrainProperties[tileType])) {
     throw new DispatchableError("Cannot unload unit in desired position");
@@ -59,9 +59,11 @@ export const unloadWaitActionToEvent: SubActionToEvent<UnloadWaitAction> = (matc
         throw new DispatchableError("Transport doesn't currently have a 2nd loaded unit");
       }
 
-      throwIfUnitCantBeUnloadedToTile(transportUnit.data.loadedUnit2, match.getTile(unloadPosition))
+      throwIfUnitCantBeUnloadedToTile(transportUnit.data.loadedUnit2, match.getTile(action.transportPosition));
+      throwIfUnitCantBeUnloadedToTile(transportUnit.data.loadedUnit2, match.getTile(unloadPosition));
     } else {
-      throwIfUnitCantBeUnloadedToTile(transportUnit.data.loadedUnit, match.getTile(unloadPosition))
+      throwIfUnitCantBeUnloadedToTile(transportUnit.data.loadedUnit, match.getTile(action.transportPosition));
+      throwIfUnitCantBeUnloadedToTile(transportUnit.data.loadedUnit, match.getTile(unloadPosition));
     }
   } else if (action.unloads.length === 2) {
     if (!("loadedUnit2" in transportUnit.data)) {
@@ -83,7 +85,6 @@ export const unloadWaitActionToEvent: SubActionToEvent<UnloadWaitAction> = (matc
     if (action.unloads[0].isSecondUnit) {
       [action.unloads[0], action.unloads[1]] = [action.unloads[1], action.unloads[0]];
     }
-    //I LOVE PRETTIER! IT MAKES ALL THINGS SO MUCH PRETTIER!! (^ it's just a swap btw, so first unload is for first unit)
 
     const unloadPosition2 = addDirection(fromPosition, action.unloads[1].direction);
 
