@@ -24,6 +24,7 @@ export const matchRulesSchema = z.object({
    * the slot is assigned to.
    * 
    * team indexes start at 0, playerSlots as well but -1 is special value for neutral properties
+   * so teamMapping[0] would tell us the team for playerSlot 0 (which is the first player)
    */
   teamMapping: z.array(z.number().int().nonnegative())
 });

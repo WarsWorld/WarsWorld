@@ -175,7 +175,9 @@ async function main() {
         fogOfWar: true,
         fundsPerProperty: 1000,
         unitCapPerPlayer: 50,
-        weatherSetting: "clear"
+        weatherSetting: "clear",
+        labUnitTypes: [],
+        teamMapping: [0,1]
       },
       status: "playing",
       mapId: causticFinaleDBMap.id,
