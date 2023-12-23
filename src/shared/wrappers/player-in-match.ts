@@ -39,7 +39,13 @@ export class PlayerInMatchWrapper {
   }
 
   getUnits() {
-    return this.match.units.filter((u) => u.data.playerSlot === this.data.slot)
+
+    if (this.match.units !== undefined) {
+      return this.match.units.filter((u) => u.data.playerSlot === this.data.slot)
+    }
+
+    //TODO: If there are no units, is it okay to return an empty array?
+    return [];
   }
 
   getHook<HookType extends keyof Hooks>(hookType: HookType) {

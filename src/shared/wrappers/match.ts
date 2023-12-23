@@ -123,16 +123,24 @@ export class MatchWrapper {
   }
 
   addUnwrappedPlayer(player: PlayerInMatch): PlayerInMatchWrapper {
-    const teamIndex = this.rules.teamMapping[player.slot];
-    const foundTeam = this.teams.find((team) => team.index === teamIndex);
 
-    if (foundTeam === undefined) {
-      const team = new TeamWrapper([player], this, teamIndex)
-      this.teams.push(team);
-      return team.players[0];
+    //lets check if the rules have a teamMapping
+    if (this.rules.teamMapping !== undefined) {
+      //check for team
+      const teamIndex = this.rules.teamMapping[player.slot];
+      const foundTeam = this.teams?.find((team) => team.index === teamIndex);
+
+      //there is no team
+      if (foundTeam != undefined) {
+        return foundTeam.addUnwrappedPlayer(player);
+      }
     }
 
-    return foundTeam.addUnwrappedPlayer(player);
+    //no teamMapping
+    //TODO: if there's no teamMapping, I assume that then we can use the player.slot as the players default team index?
+    const team = new TeamWrapper([player], this, player.slot)
+    this.teams.push(team);
+    return team.players[0];
   }
 
   // UNIT STUFF ****************************************************************
