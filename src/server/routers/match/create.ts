@@ -10,6 +10,7 @@ export const createMatchProcedure = playerBaseProcedure
   .input(
     z.object({
       rules: matchRulesSchema,
+      mapId: z.string(),
     }),
   )
   .use(mapMiddleware)
@@ -18,7 +19,23 @@ export const createMatchProcedure = playerBaseProcedure
       data: {
         status: "setup",
         leagueType: "standard",
-        playerState: [],
+        playerState: [{
+          slot: 0,
+          hasCurrentTurn: true,
+          id: ctx.currentPlayer.id,
+          name: ctx.currentPlayer.name,
+          ready: true,
+          coId: {
+            name: "andy",
+            version: "AW2"
+          },
+          eliminated: false,
+          funds: 0,
+          powerMeter: 0,
+          timesPowerUsed: 0,
+          army: "orange-star",
+          COPowerState: "no-power"
+        },],
         map: {
           connect: {
             id: ctx.map.id,

@@ -1,9 +1,9 @@
 import type { Army } from "shared/schemas/army";
-import type { CO } from "shared/schemas/co";
+import type { COID } from "shared/schemas/co";
 
 type matchData = {
   name: string;
-  co: CO;
+  co: COID;
   country: Army;
   flipCO?: boolean;
   opponent?: boolean;
@@ -18,13 +18,14 @@ export default function MatchPlayer({
   opponent,
   playerReady
 }: matchData) {
-  //it might be the other player AND an unpicked spot (a greyed out opponent)
+//TODO: allow for changes in co versions (right now they are all AWDS verions
+  //opponent (non-current user) OR an unpicked spot (a greyed out upcoming "opponent")
   if (flipCO !== undefined) {
     return (
       <div className={"@truncate @text-right"}>
         <div
           style={{
-            backgroundImage: `url("/img/CO/pixelated/${co}-full.png")`
+            backgroundImage: `url("/img/CO/pixelated/${co.name}-full.png")`
           }}
           className={`@h-[200px] [image-rendering:pixelated] @bg-cover 
              ${opponent !== undefined ? "@brightness-[0.1]" : ""} 
@@ -48,16 +49,16 @@ export default function MatchPlayer({
       </div>
     );
   }
-  //it is a regular player
+  //it is the current player/user
   else {
     return (
       <div className={"@truncate @text-left"}>
         <div
           style={{
-            backgroundImage: `url("/img/CO/pixelated/${co}-full.png")`
+            backgroundImage: `url("/img/CO/pixelated/${co.name}-full.png")`
           }}
           className={`@h-[200px] [image-rendering:pixelated] @bg-cover @scale-x-[-1] ${
-            playerReady !== undefined ? "@contrast-[1]" : "@contrast-[0.5]"
+            (playerReady === true) ? "@contrast-[1]" : "@contrast-[0.5]"
           }`}
         ></div>
         <div className={`@flex @bg-${country}`}>

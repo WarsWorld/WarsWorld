@@ -1,9 +1,7 @@
 import MatchCardTop from "./MatchCardTop";
 import MatchPlayer from "./MatchPlayer";
 import type { FrontendMatch } from "shared/types/component-data";
-import type { CO } from "shared/schemas/co";
 import { coSchema } from "shared/schemas/co";
-import type { Army } from "shared/schemas/army";
 import { armySchema } from "shared/schemas/army";
 import MatchCardSetup from "./MatchCardSetup";
 import React, { useState } from "react";
@@ -43,19 +41,13 @@ export default function MatchCard({ match, inMatch }: matchData) {
 
   const [ready, setReady] = useState(firstPlayer.ready);
 
-  function changeCO(newCO: CO | null, army?: Army, status?: boolean) {
-    if (newCO !== null) {
-      setPlayerCO(newCO);
-    }
-
-    if (army) {
-      setArmy(army);
-    }
-
-    if (status != null) {
-      setReady(status);
-    }
-  }
+  //this function can change co, army or status (ready/not ready)
+  // it is purely visual
+  const setupActions = {
+    setPlayerCO,
+    setArmy,
+    setReady,
+  };
 
   let twoPlayerCheck = false;
 
@@ -76,7 +68,7 @@ export default function MatchCard({ match, inMatch }: matchData) {
         {twoPlayerCheck ? (
           <MatchPlayer
             name={secondPlayer.name}
-            co={secondPlayer.coId.name}
+            co={{ name: secondPlayer.coId.name, version: "AW2" }}
             country={secondPlayer.army}
             flipCO={true}
             playerReady={secondPlayer.ready}
@@ -84,7 +76,7 @@ export default function MatchCard({ match, inMatch }: matchData) {
         ) : (
           <MatchPlayer
             name={"Opponent"}
-            co={coSchema._def.values[Math.floor(Math.random() * coSchema._def.values.length)]}
+            co={{ name: coSchema._def.values[Math.floor(Math.random() * coSchema._def.values.length)] , version: "AW2"}}
             country={armySchema._def.values[Math.floor(Math.random() * armySchema._def.values.length)]}
             flipCO={true}
             opponent={true}
@@ -98,7 +90,7 @@ export default function MatchCard({ match, inMatch }: matchData) {
           ""
         ) : (
           <MatchCardSetup
-            functionCO={changeCO}
+            setupActions={setupActions}
             matchID={match.id}
             // TODO: how can we handle if a player is undefined? for now I put an empty string
             playerID={currentPlayer ? currentPlayer.id : ""}

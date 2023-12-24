@@ -193,8 +193,8 @@ async function main() {
             version: "AW2"
           },
           eliminated: false,
-          funds: 20000,
-          powerMeter: 10000,
+          funds: 0,
+          powerMeter: 0,
           timesPowerUsed: 0,
           army: "orange-star",
           COPowerState: "no-power"
@@ -206,14 +206,14 @@ async function main() {
           name: devPlayers[1].name,
           ready: true,
           coId: {
-            name: "max",
+            name: "flak",
             version: "AW2"
           },
           eliminated: false,
-          funds: 10000,
-          powerMeter: 10000,
+          funds: 0,
+          powerMeter: 0,
           timesPowerUsed: 0,
-          army: "blue-moon",
+          army: "black-hole",
           COPowerState: "no-power"
         }
       ]

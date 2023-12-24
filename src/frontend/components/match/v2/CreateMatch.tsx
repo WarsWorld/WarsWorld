@@ -33,7 +33,7 @@ export default function CreateMatch({
       },
     });
   const [currentMapId, setCurrentMapId] = useState<string>();
-  const createMutation = trpc.match.create.useMutation();
+  const createMatchMutation = trpc.match.create.useMutation();
 
   // Select Logic
   const players: SelectOption[] = [];
@@ -60,15 +60,25 @@ export default function CreateMatch({
   }, [currentPlayer]);
 
   const createMatchHandler = async () => {
-    const mapId = currentMapId;
-
-    if (mapId == undefined || !currentPlayer) {
+    if (currentMapId == null || !currentPlayer) {
       return;
     }
 
-    await createMutation.mutateAsync({
-      selectedCO: "lash",
-      mapId,
+    await createMatchMutation.mutateAsync({
+      rules: {
+        bannedUnitTypes: [],
+        captureLimit: 50,
+        dayLimit: 50,
+        fogOfWar: true,
+        fundsPerProperty: 1000,
+        unitCapPerPlayer: 50,
+        weatherSetting: "clear",
+        labUnitTypes: [],
+        //TODO: There needs to be more logic regarding how teamMapping will work, specially beyond 2 players
+        teamMapping: [0,1]
+
+      },
+      mapId: currentMapId,
       playerId: currentPlayer.id
     });
 

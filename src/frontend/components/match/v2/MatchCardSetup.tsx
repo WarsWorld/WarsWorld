@@ -3,13 +3,17 @@ import { trpc } from "frontend/utils/trpc-client";
 import { useState } from "react";
 import type { Army } from "shared/schemas/army";
 import { armySchema } from "shared/schemas/army";
-import type { CO } from "shared/schemas/co";
+import type { COID } from "shared/schemas/co";
 import { coSchema } from "shared/schemas/co";
 
 type matchData = {
   playerID: Player["id"];
   matchID: Match["id"];
-  functionCO: (co: CO | null, army?: Army, status?: boolean) => void;
+  setupActions: {
+    setPlayerCO: (newCO: COID) => void;
+    setArmy: (army: Army) => void;
+    setReady: (status: boolean) => void;
+  };
   inMatch: boolean;
   readyStatus: boolean;
 };
@@ -17,7 +21,7 @@ type matchData = {
 export default function MatchCardSetup({
   playerID,
   matchID,
-  functionCO,
+  setupActions,
   inMatch,
   readyStatus
 }: matchData) {
@@ -47,7 +51,7 @@ export default function MatchCardSetup({
                 return (
                   <div
                     onClick={() => {
-                      const selectedCO = co;
+                      const selectedCO: COID = { name: co, version: "AW2" };
                       void switchCO
                         .mutateAsync({
                           selectedCO,
@@ -55,7 +59,7 @@ export default function MatchCardSetup({
                           playerId: playerID
                         })
                         .then(() => {
-                          functionCO(selectedCO);
+                          setupActions.setPlayerCO(selectedCO);
                           setShowCO(false);
                         });
                     }}
@@ -100,7 +104,7 @@ export default function MatchCardSetup({
                           selectedArmy: army
                         })
                         .then(() => {
-                          functionCO(null, army);
+                          setupActions.setArmy(army);
                           setShowArmy(false);
                         });
                     }}
@@ -132,8 +136,8 @@ export default function MatchCardSetup({
                   readyState: !readyStatus
                 })
                 .then(() => {
-                  functionCO(null, undefined, !readyStatus);
-                  location.reload();
+                  setupActions.setReady(!readyStatus);
+
                 });
             }}
           >
@@ -155,7 +159,9 @@ export default function MatchCardSetup({
                 .mutateAsync({
                   matchId: matchID,
                   playerId: playerID,
-                  selectedCO: "sami"
+                  //TODO: This needs more logic for someone joining outside a 2 player match
+                  playerSlot: 1,
+                  selectedCO: {name: "sami", version: "AW2" }
                 })
                 .then(() => {
                   //lets reload the page
