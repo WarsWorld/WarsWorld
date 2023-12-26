@@ -30,7 +30,6 @@ export const coSchema = z.enum([
   "von-bolt",
   "sasha",
   "rachel",
-  "hadeez"
 ]);
 
 export const coIdSchema = z.strictObject({

@@ -55,17 +55,18 @@ export const matchRouter = router({
         playerSlot: z.number().int().nonnegative()
       })
     )
-    .mutation(({ input, ctx: { currentPlayer, match } }) => {
+    .mutation(async ({ input, ctx: { currentPlayer, match } }) => {
       throwIfMatchNotInSetupState(match);
 
       if (match.getPlayerById(currentPlayer.id) !== undefined) {
         throw new Error("You've already joined this match!");
       }
 
-      if (match.map.data.numberOfPlayers >= input.playerSlot) {
+      if (match.map.data.numberOfPlayers < input.playerSlot) {
+
         throw new DispatchableError("Invalid player slot given")
       }
-      
+
       if (match.getPlayerBySlot(input.playerSlot) !== undefined) {
         throw new DispatchableError("Player slot is occupied")
       }
@@ -80,12 +81,29 @@ export const matchRouter = router({
         funds: 0,
         timesPowerUsed: 0,
         powerMeter: 0,
-        army: "orange-star",
+        eliminated: false,
+        hasCurrentTurn: false,
+        army: "blue-moon",
         COPowerState: "no-power",
         name: currentPlayer.name
       });
 
       playerMatchIndex.onPlayerJoin(player);
+
+      await joinOrLeaveMatchPrisma(player.data.id, match.id, "join", input.playerSlot, { id: currentPlayer.id,
+        slot: input.playerSlot,
+        ready: false,
+        coId: input.selectedCO,
+        funds: 0,
+        timesPowerUsed: 0,
+        powerMeter: 0,
+        eliminated: false,
+        hasCurrentTurn: false,
+        army: "blue-moon",
+        COPowerState: "no-power",
+        name: currentPlayer.name
+      });
+
 
       emit({
         type: "player-joined",
@@ -94,12 +112,12 @@ export const matchRouter = router({
       });
     }),
   leave: playerInMatchBaseProcedure.mutation(
-    ({ ctx: { match, player } }) => {
+    async ({ ctx: { match, player } }) => {
       throwIfMatchNotInSetupState(match);
 
       const { team: teamToRemoveFrom } = player
       teamToRemoveFrom.players = teamToRemoveFrom.players.filter(player2 => player2.data.slot === player.data.slot)
-  
+
       if (teamToRemoveFrom.players.length === 0) {
         match.teams = match.teams.filter(team2 => team2 === teamToRemoveFrom)
       }
@@ -111,6 +129,8 @@ export const matchRouter = router({
         matchStore.removeMatchFromIndex(match);
         return;
       }
+
+      await joinOrLeaveMatchPrisma(player.data.id, match.id, "leave", player.data.slot, );
 
       emit({
         matchId: match.id,
@@ -154,7 +174,13 @@ export const matchRouter = router({
             matchId: match.id,
             index: eventOnDB.index
           });
-        } else {
+        }
+        //Both players are NOT ready, therefore match doesnt start
+        else {
+          const findMatch = await findMatchPrisma(match.id);
+          findMatch.playerState[player.data.slot].ready = input.readyState;
+          await updateMatchPrisma(match.id, findMatch.playerState)
+
           emit({
             type: "player-changed-ready-status",
             matchId: match.id,
@@ -170,10 +196,14 @@ export const matchRouter = router({
         selectedCO: coIdSchema
       })
     )
-    .mutation(({ input, ctx: { match, player } }) => {
+    .mutation( async ({ input, ctx: { match, player } }) => {
       throwIfMatchNotInSetupState(match);
 
       player.data.coId = input.selectedCO;
+
+      const findMatch = await findMatchPrisma(match.id);
+      findMatch.playerState[player.data.slot].coId = input.selectedCO;
+      await updateMatchPrisma(match.id, findMatch.playerState)
 
       emit({
         type: "player-picked-co",
@@ -188,10 +218,15 @@ export const matchRouter = router({
         selectedArmy: armySchema
       })
     )
-    .mutation(({ input, ctx: { match, player } }) => {
+    .mutation(async ({ input, ctx: { match, player } }) => {
       throwIfMatchNotInSetupState(match);
 
       player.data.army = input.selectedArmy;
+
+      const findMatch = await findMatchPrisma(match.id);
+      findMatch.playerState[player.data.slot].army = input.selectedArmy;
+      await updateMatchPrisma(match.id, findMatch.playerState)
+
 
       emit({
         type: "player-picked-army",
@@ -201,3 +236,86 @@ export const matchRouter = router({
       });
     })
 });
+
+async function findMatchPrisma(matchId: string) {
+  const findMatch = await prisma.match.findUnique({
+    where: { id: matchId },
+  });
+
+  if (!findMatch) {
+    throw new Error(`Match ID ${matchId} not found on Prisma.`);
+  } else {
+    return findMatch;
+  }
+}
+
+async function updateMatchPrisma(matchId: string, newPlayerState: PrismaJson.PrismaPlayerState) {
+  // Update the match with the modified playerState
+  await prisma.match.update({
+    where: { id: matchId },
+    data: { playerState: newPlayerState },
+  });
+}
+
+async function joinOrLeaveMatchPrisma(playerId: string, matchId:string, type:string, playerSlot: number, value?: PlayerInMatch ) {
+
+  const findMatch = await findMatchPrisma(matchId);
+
+  const findPlayer = await prisma.player.findUnique({
+    where: { id: playerId },
+  });
+
+  if (!findPlayer) {
+    throw new Error(`Player ID ${playerId} not found on Prisma.`);
+  }
+
+  switch (type) {
+    case 'join':
+      if (value) {
+        findMatch.playerState.push(value);
+      }
+
+      break;
+    case 'leave':
+      findMatch.playerState.splice(playerSlot, 1);
+
+      //TODO: This logic is only good for 1v1s (and its already bad)
+      // frontend or backend need to figure out how to update playerSlots
+      // right now frontend always assumes when a player joins their playerSlot is 1
+      // Therefore, if one playerSlot 0 leaves,
+      // then we need to make the other playerSlot 1 into playerSlot 0
+      // so we dont get errors when another playerSlot 1 tries to join
+      if (findMatch.playerState.length == 1) {
+        findMatch.playerState[0].slot = 0;
+      }
+
+      break;
+    default:
+      throw new Error('Invalid update type.');
+  }
+
+  await prisma.$transaction(async (tx)=>{
+    //If there are no players, then the match is deleted
+    if (findMatch.playerState.length === 0) {
+      await tx.match.delete({
+        where: { id: matchId },
+      })
+    }
+    //there is at least 1 player in the match
+    else {
+      //TODO: have to add player to the matches players[]
+      await tx.match.update({
+        where: { id: matchId },
+        data: { playerState: findMatch.playerState, /*Player[]: add player to match here if joining OR take out if leaving */ },
+      })
+    }
+
+    //TODO: Have to add match to the players matches[]
+
+    /*    tx.player.update({
+          where: { id: playerId },
+          data: { matches: [findMatch] },
+        })*/
+
+  })
+}

@@ -8,7 +8,7 @@ import { ProtectPage } from "frontend/components/ProtectPage";
 export default function YourMatches() {
   const { currentPlayer, setCurrentPlayer } = usePlayers();
 
-  // Get and make your, all, joinable, and spectateable matches
+  // Get and make your, all, joinable, and spectator matches
   const { data: yourMatchesQuery, refetch: refecthYourMatches } =
     trpc.match.getPlayerMatches.useQuery(
       { playerId: currentPlayer?.id ?? "" },
@@ -27,7 +27,7 @@ export default function YourMatches() {
       ).length == 0
   );
 
-  const spectateableMatches = allMatchesQuery?.filter(
+  const spectatorMatches = allMatchesQuery?.filter(
     (match) =>
       match.players.filter(
         (player) => player.id == currentPlayer?.id || match.players.length != 2
@@ -55,7 +55,7 @@ export default function YourMatches() {
         />
         <MatchSection
           title="Spectate a Match"
-          matches={spectateableMatches}
+          matches={spectatorMatches}
           description="Matches with two players (not you)."
         />
         <MatchSection

@@ -18,23 +18,17 @@ type matchData = {
   readyStatus: boolean;
 };
 
-export default function MatchCardSetup({
-  playerID,
-  matchID,
-  setupActions,
-  inMatch,
-  readyStatus
-}: matchData) {
+export default function MatchCardSetup({ playerID, matchID, setupActions, inMatch, readyStatus}: matchData) {
   const switchCO = trpc.match.switchCO.useMutation();
   const switchArmy = trpc.match.switchArmy.useMutation();
   const joinMatch = trpc.match.join.useMutation();
   const readyMatch = trpc.match.setReady.useMutation();
+  const leaveMatch = trpc.match.leave.useMutation();
   const [showCO, setShowCO] = useState(false);
   const [showArmy, setShowArmy] = useState(false);
 
   if (inMatch) {
-    return (
-      <div className="@flex  ">
+    return (<div className="@flex  ">
         <div>
           <button
             className="btnMenu"
@@ -45,11 +39,10 @@ export default function MatchCardSetup({
           >
             Switch CO
           </button>
-          {showCO ? (
-            <div className="@grid @grid-cols-4 @absolute  @z-10  @bg-bg-tertiary @outline-black @outline-2 @gap-2">
+          {showCO ? (<div
+              className="@overflow-visible @grid @grid-cols-4 @absolute  @z-10  @bg-bg-tertiary @outline-black @outline-2 @gap-2">
               {coSchema._def.values.map((co) => {
-                return (
-                  <div
+                return (<div
                     onClick={() => {
                       const selectedCO: COID = { name: co, version: "AW2" };
                       void switchCO
@@ -72,13 +65,9 @@ export default function MatchCardSetup({
                       alt=""
                     />
                     <p className="@capitalize @text-xs @px-1">{co}</p>
-                  </div>
-                );
+                  </div>);
               })}
-            </div>
-          ) : (
-            <></>
-          )}
+            </div>) : (<></>)}
         </div>
 
         <div>
@@ -94,8 +83,7 @@ export default function MatchCardSetup({
           {showArmy ? (
             <div className="@grid @grid-cols-2 @absolute  @z-10  @bg-bg-tertiary @outline-black @outline-2 @gap-2">
               {armySchema._def.values.map((army) => {
-                return (
-                  <div
+                return (<div
                     onClick={() => {
                       void switchArmy
                         .mutateAsync({
@@ -117,18 +105,15 @@ export default function MatchCardSetup({
                       alt=""
                     />
                     <p className="@capitalize @text-xs @px-1">{army}</p>
-                  </div>
-                );
+                  </div>);
               })}
-            </div>
-          ) : (
-            <></>
-          )}
+            </div>) : (<></>)}
         </div>
         <div>
           <button
             className=" btnMenu"
             onClick={() => {
+              //TODO: Should ask player confirmation that if readying up AND other player is ready, it will start the match
               void readyMatch
                 .mutateAsync({
                   matchId: matchID,
@@ -138,19 +123,38 @@ export default function MatchCardSetup({
                 .then(() => {
                   setupActions.setReady(!readyStatus);
 
+                  if (!readyStatus) {
+                    location.reload();
+                  }
+
                 });
             }}
           >
             {readyStatus ? "Unready" : "Ready up"}
           </button>
         </div>
-      </div>
-    );
+        <div>
+          <button
+            className=" btnMenu"
+            onClick={() => {
+              void leaveMatch
+                .mutateAsync({
+                  matchId: matchID,
+                  playerId: playerID,
+                })
+                .then(() => {
+                    location.reload();
+                });
+            }}
+          >
+            Leave
+          </button>
+        </div>
+      </div>);
   }
   // Not part of the game, can't change CO or Army or Ready
   else {
-    return (
-      <div className="@flex  ">
+    return (<div className="@flex  ">
         <div>
           <button
             className=" btnMenu"
@@ -172,7 +176,6 @@ export default function MatchCardSetup({
             Join Game
           </button>
         </div>
-      </div>
-    );
+      </div>);
   }
 }
