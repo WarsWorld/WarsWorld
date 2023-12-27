@@ -10,7 +10,7 @@ import { getDistance } from "shared/schemas/position";
 import { UnitWrapper } from "../../../wrappers/unit";
 import { canAttackWithPrimary, getBaseDamage } from "../../game-constants/base-damage";
 import type { PlayerInMatchWrapper } from "shared/wrappers/player-in-match";
-import type { WWUnit } from "../../../schemas/unit";
+import type { UnitType, WWUnit } from "../../../schemas/unit";
 
 export type LuckRoll = {
   goodLuck: number,
@@ -177,7 +177,7 @@ export const attackActionToEvent: (...params: Params) => AttackEvent = (
       }
     };
 
-    const wrappedUnit = new UnitWrapper(unitEquivalent, match);
+    const wrappedUnit = new UnitWrapper<UnitType>(unitEquivalent, match);
 
     if (getBaseDamage(attacker, wrappedUnit) === null) {
       throw new DispatchableError("Unit cannot attack specified pipeseam");

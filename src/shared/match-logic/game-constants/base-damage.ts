@@ -1,4 +1,4 @@
-import type { UnitType, WWUnit } from "shared/schemas/unit";
+import type { UnitType } from "shared/schemas/unit";
 import type { UnitWrapper } from "shared/wrappers/unit";
 
 /**
@@ -16,9 +16,9 @@ export const canAttackWithPrimary = (
     damageChart[attacker.data.type]?.primary?.[defenderType] !== undefined;
 }
 
-export const getBaseDamage = <T1 extends UnitType, T2 extends UnitType>(
-  attacker: UnitWrapper<T1>,
-  defender: UnitWrapper<T2>
+export const getBaseDamage = (
+  attacker: UnitWrapper,
+  defender: UnitWrapper
 ): number | null => {
   const damageValues = attacker.player.getVersionProperties().damageChart[attacker.data.type];
 
