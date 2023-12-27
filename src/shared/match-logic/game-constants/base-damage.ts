@@ -16,9 +16,9 @@ export const canAttackWithPrimary = (
     damageChart[attacker.data.type]?.primary?.[defenderType] !== undefined;
 }
 
-export const getBaseDamage = (
-  attacker: UnitWrapper,
-  defender: UnitWrapper
+export const getBaseDamage = <T1 extends UnitType, T2 extends UnitType>(
+  attacker: UnitWrapper<T1>,
+  defender: UnitWrapper<T2>
 ): number | null => {
   const damageValues = attacker.player.getVersionProperties().damageChart[attacker.data.type];
 
