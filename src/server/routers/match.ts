@@ -5,8 +5,8 @@ import { playerMatchIndex } from "server/player-match-index";
 import { prisma } from "server/prisma/prisma-client";
 import { DispatchableError } from "shared/DispatchedError";
 import { createMatchStartEvent } from "shared/match-logic/events/handlers/match-start";
-import { armySchema } from "shared/schemas/army";
-import { coIdSchema } from "shared/schemas/co";
+import { Army, armySchema } from "shared/schemas/army";
+import { COID, coIdSchema } from "shared/schemas/co";
 import { z } from "zod";
 import {
   matchBaseProcedure,
@@ -21,14 +21,23 @@ import {
   matchToFrontend,
   throwIfMatchNotInSetupState
 } from "./match/util";
+import { MatchWrapper } from "../../shared/wrappers/match";
+import { PlayerInMatch } from "../../shared/types/server-match-state";
+import { PlayerInMatchWrapper } from "shared/wrappers/player-in-match";
 
 export const matchRouter = router({
   create: createMatchProcedure,
+
   getAll: publicBaseProcedure
     .input(z.object({ pageNumber: z.number().int().nonnegative() }))
-    .query(({ input: { pageNumber } }) =>
-      pageMatchIndex.getPage(pageNumber).map(matchToFrontend)
+    .query(({ input: { pageNumber } }) => {
+
+      console.log("Page Match stuff");
+      console.log(pageMatchIndex);
+       return pageMatchIndex.getPage(pageNumber).map(matchToFrontend);
+      }
     ),
+
   getPlayerMatches: playerBaseProcedure.query(
     ({ ctx: { currentPlayer } }) =>
       playerMatchIndex
@@ -63,12 +72,11 @@ export const matchRouter = router({
       }
 
       if (match.map.data.numberOfPlayers < input.playerSlot) {
-
-        throw new DispatchableError("Invalid player slot given")
+        throw new DispatchableError("Invalid player slot given");
       }
 
       if (match.getPlayerBySlot(input.playerSlot) !== undefined) {
-        throw new DispatchableError("Player slot is occupied")
+        throw new DispatchableError("Player slot is occupied");
       }
 
       // TODO check if selectedCO is allowed for tier/league/match-blacklist
@@ -89,20 +97,29 @@ export const matchRouter = router({
       });
 
       playerMatchIndex.onPlayerJoin(player);
+      const newPlayer = player;
+      console.log(match.teams);
+      //TODO: Player is already on the team
 
-      await joinOrLeaveMatchPrisma(player.data.id, match.id, "join", input.playerSlot, { id: currentPlayer.id,
-        slot: input.playerSlot,
-        ready: false,
-        coId: input.selectedCO,
-        funds: 0,
-        timesPowerUsed: 0,
-        powerMeter: 0,
-        eliminated: false,
-        hasCurrentTurn: false,
-        army: "blue-moon",
-        COPowerState: "no-power",
-        name: currentPlayer.name
-      });
+      //lets create a playerState (what the db holds) to send it to the db.
+      // playerState is basically a PlayerInMatchWrapper[] (well, at least the properties of it)
+      const newPlayerState = match.teams.flatMap(team =>
+        team.players.map(teamPlayer => teamPlayer.data.id === player.data.id ? player.data : teamPlayer.data)
+      );
+
+      await prisma.$transaction(async (tx)=>{
+
+        //TODO: Have to add player to match.Player[]
+        await tx.match.update({ where: { id: match.id }, data: { playerState: newPlayerState, /*Player: [player] */} })
+
+        //TODO: Have to add match to the players matches[]
+
+        /*    await tx.player.update({
+              where: { id: playerId },
+              data: { matches: [findMatch] },
+            })*/
+
+      })
 
 
       emit({
@@ -115,28 +132,46 @@ export const matchRouter = router({
     async ({ ctx: { match, player } }) => {
       throwIfMatchNotInSetupState(match);
 
-      const { team: teamToRemoveFrom } = player
-      teamToRemoveFrom.players = teamToRemoveFrom.players.filter(player2 => player2.data.slot === player.data.slot)
+      const { team: teamToRemoveFrom } = player;
 
+      teamToRemoveFrom.players = teamToRemoveFrom.players.filter(teamPlayer => teamPlayer.data.slot === player.data.slot);
+
+      //TODO: Would this ever be true?
+      // wouldn't we always end up with at least with one player in the team
+      // since the player hasnt left the team/match yet and therefore there is still at least one player in it?
       if (teamToRemoveFrom.players.length === 0) {
-        match.teams = match.teams.filter(team2 => team2 === teamToRemoveFrom)
+        match.teams = match.teams.filter(team2 => team2 === teamToRemoveFrom);
       }
 
+      //This just removes the player from the matches index if they arent in any other matches
       playerMatchIndex.onPlayerLeave(player);
 
-      if (match.teams.length === 0) {
+      //There is only one player so, we can remove the whole match
+      if (match.teams.length === 1 && match.teams[0].players.length === 1) {
+        console.log("the length of team is 1---------------------");
         pageMatchIndex.removeMatch(match);
         matchStore.removeMatchFromIndex(match);
+        await prisma.match.delete({where: {id: match.id}})
         return;
+      } else {
+        //lets create a playerState (what the db holds) to send it to the db.
+        // playerState is basically a PlayerInMatchWrapper[] (well, at least the properties of it)
+        const newPlayerState = match.teams.flatMap(team =>
+          team.players.filter(teamPlayer => teamPlayer.data.id !== player.data.id)
+            .map(teamPlayer => teamPlayer.data)
+        );
+
+        await prisma.match.update({ where: { id: match.id }, data: { playerState: newPlayerState } })
+
+        match.teams = match.teams.filter(teamToRemove => teamToRemove.index === player.team.index )
+
+
+        emit({
+          matchId: match.id,
+          type: "player-left",
+          playerId: player.data.id
+        });
       }
-
-      await joinOrLeaveMatchPrisma(player.data.id, match.id, "leave", player.data.slot, );
-
-      emit({
-        matchId: match.id,
-        type: "player-left",
-        playerId: player.data.id
-      });
     }
   ),
   setReady: playerInMatchBaseProcedure
@@ -177,9 +212,20 @@ export const matchRouter = router({
         }
         //Both players are NOT ready, therefore match doesnt start
         else {
-          const findMatch = await findMatchPrisma(match.id);
-          findMatch.playerState[player.data.slot].ready = input.readyState;
-          await updateMatchPrisma(match.id, findMatch.playerState)
+          const newPlayerData: PlayerInMatch = {
+            ...player.data,
+            ready: input.readyState
+          }
+
+          //lets create a playerState (what the db holds) to send it to the db.
+          // playerState is basically a PlayerInMatchWrapper[] (well, at least the properties of it)
+          const newPlayerState = match.teams.flatMap(team =>
+            team.players.map(teamPlayer => teamPlayer.data.id === player.data.id ? newPlayerData : teamPlayer.data)
+          );
+
+          //lets update prisma first, if the database updates, then we update memory
+          await prisma.match.update({ where: { id: match.id }, data: { playerState: newPlayerState } })
+          player.data = newPlayerData
 
           emit({
             type: "player-changed-ready-status",
@@ -196,14 +242,23 @@ export const matchRouter = router({
         selectedCO: coIdSchema
       })
     )
-    .mutation( async ({ input, ctx: { match, player } }) => {
+    .mutation(async ({ input, ctx: { match, player } }) => {
       throwIfMatchNotInSetupState(match);
 
-      player.data.coId = input.selectedCO;
+      const newPlayerData: PlayerInMatch = {
+        ...player.data,
+        coId: input.selectedCO
+      }
 
-      const findMatch = await findMatchPrisma(match.id);
-      findMatch.playerState[player.data.slot].coId = input.selectedCO;
-      await updateMatchPrisma(match.id, findMatch.playerState)
+      //lets create a playerState (what the db holds) to send it to the db.
+      // playerState is basically a PlayerInMatchWrapper[] (well, at least the properties of it)
+      const newPlayerState = match.teams.flatMap(team =>
+        team.players.map(teamPlayer => teamPlayer.data.id === player.data.id ? newPlayerData : teamPlayer.data)
+      );
+
+      //lets update prisma first, if the database updates, then we update memory
+      await prisma.match.update({ where: { id: match.id }, data: { playerState: newPlayerState } })
+      player.data = newPlayerData
 
       emit({
         type: "player-picked-co",
@@ -221,12 +276,20 @@ export const matchRouter = router({
     .mutation(async ({ input, ctx: { match, player } }) => {
       throwIfMatchNotInSetupState(match);
 
-      player.data.army = input.selectedArmy;
+      const newPlayerData: PlayerInMatch = {
+        ...player.data,
+        army: input.selectedArmy
+      }
 
-      const findMatch = await findMatchPrisma(match.id);
-      findMatch.playerState[player.data.slot].army = input.selectedArmy;
-      await updateMatchPrisma(match.id, findMatch.playerState)
+      //lets create a playerState (what the db holds) to send it to the db.
+      // playerState is basically a PlayerInMatchWrapper[] (well, at least the properties of it)
+      const newPlayerState = match.teams.flatMap(team =>
+          team.players.map(teamPlayer => teamPlayer.data.id === player.data.id ? newPlayerData : teamPlayer.data)
+      );
 
+      //lets update prisma first, if the database updates, then we update memory
+      await prisma.match.update({ where: { id: match.id }, data: { playerState: newPlayerState } })
+      player.data = newPlayerData
 
       emit({
         type: "player-picked-army",
@@ -239,7 +302,7 @@ export const matchRouter = router({
 
 async function findMatchPrisma(matchId: string) {
   const findMatch = await prisma.match.findUnique({
-    where: { id: matchId },
+    where: { id: matchId }
   });
 
   if (!findMatch) {
@@ -249,13 +312,7 @@ async function findMatchPrisma(matchId: string) {
   }
 }
 
-async function updateMatchPrisma(matchId: string, newPlayerState: PrismaJson.PrismaPlayerState) {
-  // Update the match with the modified playerState
-  await prisma.match.update({
-    where: { id: matchId },
-    data: { playerState: newPlayerState },
-  });
-}
+
 
 async function joinOrLeaveMatchPrisma(playerId: string, matchId:string, type:string, playerSlot: number, value?: PlayerInMatch ) {
 

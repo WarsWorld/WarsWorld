@@ -16,9 +16,17 @@ export default function YourMatches() {
         enabled: currentPlayer !== undefined,
       }
     );
+  console.log("your matches");
+  console.log(yourMatchesQuery);
+
+
 
   const { data: allMatchesQuery, refetch: refecthAllMatches } =
     trpc.match.getAll.useQuery({ pageNumber: 0 });
+
+  console.log("all matches");
+  console.log(allMatchesQuery);
+
 
   const joinableMatchesQuery = allMatchesQuery?.filter(
     (match) =>
@@ -27,12 +35,18 @@ export default function YourMatches() {
       ).length == 0
   );
 
+  console.log("joinable matches");
+  console.log(joinableMatchesQuery);
+
   const spectatorMatches = allMatchesQuery?.filter(
     (match) =>
       match.players.filter(
         (player) => player.id == currentPlayer?.id || match.players.length != 2
       ).length == 0
   );
+
+  console.log("spectator matches");
+  console.log(spectatorMatches);
 
   return (
     <ProtectPage>
