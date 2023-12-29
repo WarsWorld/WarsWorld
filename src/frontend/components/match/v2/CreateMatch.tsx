@@ -107,17 +107,12 @@ export default function CreateMatch({
 
   return (
     <div className="@w-full">
-      <h1>Read Instructions!
+      <h1>Match Page
         </h1>
       <p>
-        To create a match, first change Current Player to any other player.
-        <br /><br/>
-        Then click on create game. Right now you can change CO, Army and ReadyState.
-        <br/><br/>
-        We can also join and leave a match. However, leaving is kinda buggy right now in the frontend (but not in the backend)
+        To create a match, first change Current Player to any other player. Then click on create game.
 
-        <br/><br/>
-        IMPORTANT!!!! DO NOT START A MATCH (Having both players ready up) OR THE APP WILL CRASH (Have to reset DB to fix since it can't handle match-start event)
+
       </p>
       <br />
       {ownedPlayers ? (
