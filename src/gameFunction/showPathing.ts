@@ -5,7 +5,7 @@
 import type { Spritesheet } from "pixi.js";
 import { Container, Sprite } from "pixi.js";
 import type { MovementType } from "shared/match-logic/unit-properties";
-import { unitPropertiesMap } from "shared/match-logic/unit-properties";
+import {unitPropertiesMap} from "../shared/match-logic/game-constants/unit-properties";
 import type { Tile, Weather } from "shared/schemas/tile.ts";
 import type { UnitWithVisibleStats } from "shared/schemas/unit";
 import type { Position } from "shared/schemas/position";

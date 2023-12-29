@@ -8,10 +8,7 @@ class PageMatchIndex {
   private list: MatchWrapper[] = [];
 
   getPage(pageNumber: number) {
-    console.log("This List");
-    console.log(this);
-    console.log(this.list);
-    //this list is a list of matches
+    //this.list is a list of matches, it returns 50 matches
     const start = pageNumber * 50;
     return this.list.slice(start, start + 50);
   }

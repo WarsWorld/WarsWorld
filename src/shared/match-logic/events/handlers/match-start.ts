@@ -4,7 +4,7 @@ import type { MatchWrapper } from "shared/wrappers/match";
 
 export function createMatchStartEvent(match: MatchWrapper): MatchStartEvent {
   return {
-    type: "match-start",
+    type: "matchStart",
     weather:
       match.rules.weatherSetting === "random"
         ? getRandomWeather(match)
