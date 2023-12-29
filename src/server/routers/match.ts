@@ -32,8 +32,8 @@ export const matchRouter = router({
     .input(z.object({ pageNumber: z.number().int().nonnegative() }))
     .query(({ input: { pageNumber } }) => {
 
-      console.log("Page Match stuff");
-      console.log(pageMatchIndex);
+     /* console.log("pageMatchIndex");
+      console.log(pageMatchIndex);*/
        return pageMatchIndex.getPage(pageNumber).map(matchToFrontend);
       }
     ),
@@ -144,6 +144,8 @@ export const matchRouter = router({
       }
 
       //This just removes the player from the matches index if they arent in any other matches
+      console.log("PLAYER MATCH INDEX");
+      console.log(playerMatchIndex);
       playerMatchIndex.onPlayerLeave(player);
 
       //There is only one player so, we can remove the whole match
@@ -162,8 +164,23 @@ export const matchRouter = router({
         );
 
         await prisma.match.update({ where: { id: match.id }, data: { playerState: newPlayerState } })
+        console.log("MATCH TEAMS");
+        match.teams.forEach(team => {
+          console.log("index");
+          console.log(team.index);
+          console.log("playerdata");
+          console.log(team.players[0].data);
+        })
 
-        match.teams = match.teams.filter(teamToRemove => teamToRemove.index === player.team.index )
+        match.teams = match.teams.filter(teamToRemove => teamToRemove.index !== player.team.index )
+
+        console.log("MATCH TEAMS");
+        match.teams.forEach(team => {
+          console.log("index");
+          console.log(team.index);
+          console.log("playerdata");
+          console.log(team.players[0].data);
+        })
 
 
         emit({
