@@ -14,7 +14,7 @@ import { useEffect, useRef, useState } from "react";
 import type { Tile } from "shared/schemas/tile";
 import type { PlayerInMatch } from "shared/types/server-match-state";
 
-import MatchPlayer from "frontend/components/match/v2/MatchPlayer";
+import MatchPlayer from "frontend/components/match/MatchPlayer";
 import { loadSpritesheets } from "frontend/pixi/load-spritesheet";
 import { trpc } from "frontend/utils/trpc-client";
 import { demoUnits } from "gameFunction/demoUnitList";

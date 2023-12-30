@@ -1,8 +1,8 @@
 import { usePlayers } from "frontend/context/players";
 import { trpc } from "frontend/utils/trpc-client";
 import Head from "next/head";
-import MatchSection from "frontend/components/match/v2/MatchSection";
-import CreateMatch from "frontend/components/match/v2/CreateMatch";
+import MatchSection from "frontend/components/match/MatchSection";
+import CreateMatch from "frontend/components/match/CreateMatch";
 import { ProtectPage } from "frontend/components/ProtectPage";
 
 export default function YourMatches() {
