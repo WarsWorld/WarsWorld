@@ -24,7 +24,7 @@ export const createMatchProcedure = playerBaseProcedure
           hasCurrentTurn: true,
           id: ctx.currentPlayer.id,
           name: ctx.currentPlayer.name,
-          ready: true,
+          ready: false,
           coId: {
             name: "andy",
             version: "AW2"

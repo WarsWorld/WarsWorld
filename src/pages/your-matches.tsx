@@ -27,6 +27,7 @@ export default function YourMatches() {
       ).length == 0
   );
 
+
   const spectatorMatches = allMatchesQuery?.filter(
     (match) =>
       match.players.filter(
