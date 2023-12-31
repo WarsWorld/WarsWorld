@@ -7,7 +7,7 @@ export const gritAW2: COProperties = {
     description:
       "Indirect units have +1 range and +20% firepower. Direct units have -20% firepower (footsoldiers are normal).",
     hooks: {
-      attackRange(value, { attacker }) {
+      attackRange(value, attacker) {
         if (attacker.isIndirect()) {
           return value + 1;
         }
@@ -29,7 +29,7 @@ export const gritAW2: COProperties = {
       description: "Indirect units gain +1 range and +30% firepower.",
       stars: 3,
       hooks: {
-        attackRange(value, { attacker }) {
+        attackRange(value, attacker) {
           if (attacker.isIndirect()) {
             return value + 2;
           }
@@ -50,7 +50,7 @@ export const gritAW2: COProperties = {
       description: "Indirect units gain +2 range and +30% firepower.",
       stars: 6,
       hooks: {
-        attackRange(value, { attacker }) {
+        attackRange(value, attacker) {
           if (attacker.isIndirect()) {
             return value + 3;
           }

@@ -26,7 +26,7 @@ export const jakeAWDS: COProperties = {
             return 120;
           }
         },
-        attackRange: (range, { attacker }) => {
+        attackRange: (range, attacker) => {
           if (
             attacker.properties.facility === "base" &&
             attacker.isIndirect()
@@ -47,7 +47,7 @@ export const jakeAWDS: COProperties = {
             return 140;
           }
         },
-        attackRange: (range, { attacker }) => {
+        attackRange: (range, attacker) => {
           if (
             attacker.properties.facility === "base" &&
             attacker.isIndirect()
