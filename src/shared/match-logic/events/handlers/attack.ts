@@ -10,7 +10,7 @@ import { getDistance } from "shared/schemas/position";
 import { UnitWrapper } from "../../../wrappers/unit";
 import { canAttackWithPrimary, getBaseDamage } from "../../game-constants/base-damage";
 import type { PlayerInMatchWrapper } from "shared/wrappers/player-in-match";
-import type { UnitType, WWUnit } from "../../../schemas/unit";
+import type { WWUnit } from "../../../schemas/unit";
 
 export type LuckRoll = {
   goodLuck: number,
@@ -286,13 +286,15 @@ export const applyAttackEvent = (
 
   if (defender === undefined) { // pipe seam
     const pipeTile = match.getTile(event.defenderPosition);
+  
     if (pipeTile.type !== "pipeSeam") {
       throw new Error("Received pipe seam attack event, but no pipe seam was found");
     }
 
     const usedVersion = (match.rules.gameVersion ?? attacker.player.data.coId.version);
+    
     //ammo consumption
-    if (canAttackWithPrimary(attacker, ((usedVersion == "AW1") ? "mediumTank" : "neoTank"))) {
+    if (canAttackWithPrimary(attacker, ((usedVersion === "AW1") ? "mediumTank" : "neoTank"))) {
       attacker.setAmmo((attacker.getAmmo() ?? 1) - 1);
     }
 
