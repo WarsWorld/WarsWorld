@@ -1,6 +1,6 @@
 import Image from "next/image";
 
-export function FeaturedNews() {
+export function FeaturedNewsCard() {
   return (
     <div className="@flex @justify-center @items-center @max-w-[90vw]">
       <div className="@flex @flex-col smallscreen:@flex-row @cursor-pointer @duration-300 tablet:hover:@z-10">

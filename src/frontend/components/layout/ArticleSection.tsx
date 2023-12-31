@@ -1,5 +1,5 @@
-import type { ICardInfo } from "./LinkCard";
-import LinkCard from "./LinkCard";
+import type { ICardInfo } from "../news/NewsCard";
+import LinkCard from "../news/NewsCard";
 import TitleColorBox from "./TitleColorBox";
 
 type Props = {

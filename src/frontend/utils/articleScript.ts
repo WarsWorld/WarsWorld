@@ -8,6 +8,15 @@ import { z } from "zod";
 // Creates a path from the cwd/current working directory to /article
 const articleDir = path.join(process.cwd(), "src/frontend/utils/articles");
 
+const metaDataSchema = z.object({
+  title: z.string(),
+  subtitle: z.string(),
+  date: z.string(),
+  category: z.string(),
+  image: z.string(),
+  imageAlt: z.string()
+});
+
 export function getSortedArticles() {
   const articleNames = fs.readdirSync(articleDir);
   const allArticlesData = articleNames.map((articleName) => {
@@ -21,18 +30,21 @@ export function getSortedArticles() {
     const metaData = matter(fileContents);
 
     return {
-      ...metaData.data
-    };
+      id: articleName.replace(/\.md$/, ""),
+      metaData: metaDataSchema.parse(metaData.data)
+    }
   });
   //sort articleData by date
   return allArticlesData.sort((a, b) => {
-    if (a.date < b.date) {
+    if (a.metaData.date < b.metaData.date) {
       return 1;
     } else {
       return -1;
     }
   });
 }
+
+export type ArticleMetaData = Awaited<ReturnType<typeof getSortedArticles>>;
 
 //gets the different articleIDs so we know which /article/pageName
 // are valid and which arent
@@ -47,15 +59,6 @@ export function getArticleIds() {
     };
   });
 }
-
-const metaDataSchema = z.object({
-  title: z.string(),
-  subtitle: z.string(),
-  date: z.string(),
-  type: z.string(),
-  category: z.string(),
-  image: z.string()
-});
 
 export async function getArticleData(id: string) {
   const fileContents = fs.readFileSync(`${articleDir}/${id}.md`, "utf-8");

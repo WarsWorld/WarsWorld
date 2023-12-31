@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/consistent-type-imports */
-import { ICardInfo } from "frontend/components/layout/LinkCard";
 import PageTitle from "frontend/components/layout/PageTitle";
-import { FeaturedNews } from "frontend/components/news/FeaturedNews";
-import { usePlayers } from "frontend/context/players";
+import { FeaturedNewsCard } from "frontend/components/news/FeaturedNewsCard";
+import NewsCard, { ICardInfo }  from "frontend/components/news/NewsCard";
+import { ArticleMetaData, getSortedArticles } from "frontend/utils/articleScript";
 import { trpc } from "frontend/utils/trpc-client";
 import Head from "next/head";
-import { useState } from "react";
+import type { GetStaticProps, InferGetStaticPropsType } from "next";
 
 /**
  * previous, the newsCardObjectList data and <LinkCard> component
@@ -17,95 +17,93 @@ import { useState } from "react";
 
 const newsCardsObjectList: ICardInfo[] = [
   {
-    imgSrc: "/img/layout/newsPage/newsPlaceholder1.png",
-    imgAlt: "News placeholderimage 1",
-    heading: "Blitz mode is active!",
-    text: "Introducing Blitz Mode: faster battles, reduced turn timers. Available now!",
-    link: "/"
+    id: "id",
+    image: "/img/layout/newsPage/newsPlaceholder1.png",
+    imageAlt: "News placeholderimage 1",
+    title: "Blitz mode is active!",
+    subtitle: "Introducing Blitz Mode: faster battles, reduced turn timers. Available now!",
+    date: "12-12-9999",
+    category: "Patch"
   },
   {
-    imgSrc: "/img/layout/newsPage/newsPlaceholder2.png",
-    imgAlt: "News placeholderimage 2",
-    heading: "Clans are out!",
-    text: "Join forces with friends in the new alliance system. Coordinate attacks, conquer together!",
-    link: "/"
+    id: "id",
+    image: "/img/layout/newsPage/newsPlaceholder2.png",
+    imageAlt: "News placeholderimage 2",
+    title: "Clans are out!",
+    subtitle: "Join forces with friends in the new alliance system. Coordinate attacks, conquer together!",
+    date: "12-12-9999",
+    category: "Patch"
   },
   {
-    imgSrc: "/img/layout/newsPage/newsPlaceholder3.png",
-    imgAlt: "News placeholderimage 3",
-    heading: "Commander Challenge",
-    text: "Test your skills in solo missions. Conquer challenges and earn exclusive rewards. Are you up for the challenge?",
-    link: "/"
+    id: "id",
+    image: "/img/layout/newsPage/newsPlaceholder3.png",
+    imageAlt: "News placeholderimage 3",
+    title: "Commander Challenge",
+    subtitle: "Test your skills in solo missions. Conquer challenges and earn exclusive rewards. Are you up for the challenge?",
+    date: "12-12-9999",
+    category: "Patch"
   },
   {
-    imgSrc: "/img/layout/newsPage/newsPlaceholder4.png",
-    imgAlt: "News placeholderimage 4",
-    heading: "Tournament Series",
-    text: " Battle the best in intense multiplayer matches. Compete for the championship and incredible prizes. Register soon!",
-    link: "/"
+    id: "id",
+    image: "/img/layout/newsPage/newsPlaceholder4.png",
+    imageAlt: "News placeholderimage 4",
+    title: "Tournament Series",
+    subtitle: " Battle the best in intense multiplayer matches. Compete for the championship and incredible prizes. Register soon!",
+    date: "12-12-9999",
+    category: "Patch"
   },
   {
-    imgSrc: "/img/layout/newsPage/newsPlaceholder1.png",
-    imgAlt: "News placeholderimage 1",
-    heading: "Blitz mode is active!",
-    text: "Introducing Blitz Mode: faster battles, reduced turn timers. Available now!",
-    link: "/"
+    id: "id",
+    image: "/img/layout/newsPage/newsPlaceholder1.png",
+    imageAlt: "News placeholderimage 1",
+    title: "Blitz mode is active!",
+    subtitle: "Introducing Blitz Mode: faster battles, reduced turn timers. Available now!",
+    date: "12-12-9999",
+    category: "Patch"
   },
   {
-    imgSrc: "/img/layout/newsPage/newsPlaceholder2.png",
-    imgAlt: "News placeholderimage 2",
-    heading: "Clans are out!",
-    text: "Join forces with friends in the new alliance system. Coordinate attacks, conquer together!",
-    link: "/"
+    id: "id",
+    image: "/img/layout/newsPage/newsPlaceholder2.png",
+    imageAlt: "News placeholderimage 2",
+    title: "Clans are out!",
+    subtitle: "Join forces with friends in the new alliance system. Coordinate attacks, conquer together!",
+    date: "12-12-9999",
+    category: "Patch"
   },
   {
-    imgSrc: "/img/layout/newsPage/newsPlaceholder3.png",
-    imgAlt: "News placeholderimage 3",
-    heading: "Commander Challenge",
-    text: "Test your skills in solo missions. Conquer challenges and earn exclusive rewards. Are you up for the challenge?",
-    link: "/"
+    id: "id",
+    image: "/img/layout/newsPage/newsPlaceholder3.png",
+    imageAlt: "News placeholderimage 3",
+    title: "Commander Challenge",
+    subtitle: "Test your skills in solo missions. Conquer challenges and earn exclusive rewards. Are you up for the challenge?",
+    date: "12-12-9999",
+    category: "Patch"
   },
   {
-    imgSrc: "/img/layout/newsPage/newsPlaceholder4.png",
-    imgAlt: "News placeholderimage 4",
-    heading: "Tournament Series",
-    text: " Battle the best in intense multiplayer matches. Compete for the championship and incredible prizes. Register soon!",
-    link: "/"
+    id: "id",
+    image: "/img/layout/newsPage/newsPlaceholder4.png",
+    imageAlt: "News placeholderimage 4",
+    title: "Tournament Series",
+    subtitle: " Battle the best in intense multiplayer matches. Compete for the championship and incredible prizes. Register soon!",
+    date: "12-12-9999",
+    category: "Patch"
   }
 ];
 
-export default function NewsPage() {
-  const allPostsQuery = trpc.post.all.useQuery();
+type Props = {
+  articlesData?: ArticleMetaData;
+};
 
-  const [newPostText, setNewPostText] = useState("imagine i typed something here");
-
-  const addPostMutation = trpc.post.add.useMutation({
-    onSuccess() {
-      // setNewPostText("");
-      void allPostsQuery.refetch();
+export const getStaticProps: GetStaticProps<Props> = () => {
+  const articlesData = getSortedArticles();
+  return {
+    props: {
+      articlesData
     }
-  });
-
-  const deletePostMutation = trpc.post.delete.useMutation({
-    onSuccess() {
-      void allPostsQuery.refetch();
-    }
-  });
-
-  const { currentPlayer } = usePlayers();
-
-  const handleClick = () => {
-    if (currentPlayer === undefined) {
-      return;
-    }
-
-    addPostMutation.mutate({
-      playerId: currentPlayer.id,
-      text: newPostText,
-      title: "sample text"
-    });
   };
+};
 
+export default function NewsPage({articlesData}: InferGetStaticPropsType<typeof getStaticProps>)  {
   return (
     <>
       <Head>
@@ -116,31 +114,24 @@ export default function NewsPage() {
         <PageTitle>News</PageTitle>
       </div>
       <div className="@flex @flex-col @p-5 @gap-10 @w-full @justify-center @items-center">
-        <FeaturedNews />
-        <button onClick={handleClick}>Create New Post</button>
+        <FeaturedNewsCard />
         <div className="@flex @flex-wrap @gap-8 @justify-center @items-center @max-w-[90vw] @mb-5">
-          {allPostsQuery.data?.map((post) => (
-            <div key={post.id}>
-              {post.authorId === currentPlayer?.id && (
-                <button
-                  onClick={() => {
-                    deletePostMutation.mutate({
-                      playerId: currentPlayer.id,
-                      postToDeleteId: post.id
-                    });
-                  }}
-                >
-                  x
-                </button>
-              )}
-              <h3>{post.title}</h3>
-              <h6>by {post.author.name}</h6>
-              <p>{post.text.slice(0, 60)} (...)</p>
-            </div>
-          ))}
+          {articlesData?.map((post, index) => (<NewsCard 
+          key={index} 
+          cardInfo={
+          {
+            id: post.id,    
+            image: "/img/layout/newsPage/newsPlaceholder4.png",
+            imageAlt: "News placeholder image 4",
+            title: post.metaData.title,
+            subtitle: post.metaData.subtitle,
+            date: post.metaData.date,
+            category: post.metaData.category
+          }
+          } />))}
 
-          {/* {newsCardsObjectList.map((item) => {
-            return <LinkCard key={uuidv4()} cardInfo={item} />;
+          {/* {newsCardsObjectList.map((item, index) => {
+            return <NewsCard key={index} cardInfo={item} />;
           })} */}
         </div>
       </div>

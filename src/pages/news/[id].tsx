@@ -29,7 +29,7 @@ export const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
   };
 };
 
-export default function Articles({ postData }: Props) {
+export default function Article({ postData }: Props) {
   //Lets make sure we have our parameters/data
   // before loading so we dont cause any errors
   if (typeof postData === "undefined") {
@@ -52,9 +52,10 @@ export default function Articles({ postData }: Props) {
         <Banner
           title={
             <div>
-              <h2 className="@bg-secondary @inline-block @p-2 @text-black @font-[500]">
+              {/* <h2 className="@bg-secondary @inline-block @p-2 @text-black @font-[500]">
                 {postData.metaData.type.toUpperCase()}
-              </h2>
+                Type here
+              </h2> */}
               <h2 className="@bg-white @inline-block @p-2 @text-black @font-[500]">
                 {postData.metaData.category.toUpperCase()}
               </h2>

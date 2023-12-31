@@ -2,9 +2,9 @@
 title: "Welcome back Flak! Patch 1.01"
 subtitle: "Through a re-work, his ban on global league is lifted!"
 date: "2023-06-12"
-type: "Patch"
-category: "News"
+category: "Patch"
 image: "https://i.ytimg.com/vi/P3AsOgkWe0w/maxresdefault.jpg?sqp=-oaymwEmCIAKENAF8quKqQMa8AEB-AH-CYAC0AWKAgwIABABGE4gUChlMA8=&rs=AOn4CLAObiL_Lv-D7ZaXFDlIHL_bpDFQUg"
+imageAlt: "image alternate text"
 ---
 
 # General Changes

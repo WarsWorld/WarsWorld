@@ -56,7 +56,7 @@ export default function Banner2(props: {
     }
   }, [screenWidth]);
   return (
-    <div className="@relative @h-[70vh] tablet:@h-[90vh] @overflow-hidden @shadow-black @shadow-2xl">
+    <div className="@relative @h-[70vh] @w-full tablet:@h-[90vh] @overflow-hidden @shadow-black @shadow-2xl">
       <Image
         className={`@object-cover @w-full @absolute @h-full @z-0`}
         alt=""
