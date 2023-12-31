@@ -177,7 +177,7 @@ export const attackActionToEvent: (...params: Params) => AttackEvent = (
       }
     };
 
-    const wrappedUnit = new UnitWrapper<UnitType>(unitEquivalent, match);
+    const wrappedUnit = new UnitWrapper(unitEquivalent, match);
 
     if (getBaseDamage(attacker, wrappedUnit) === null) {
       throw new DispatchableError("Unit cannot attack specified pipeseam");

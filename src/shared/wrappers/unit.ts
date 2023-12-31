@@ -7,13 +7,23 @@ import type { PlayerInMatchWrapper } from "./player-in-match";
 import { getBaseMovementCost } from "../match-logic/movement-cost";
 import { getWeatherSpecialMovement } from "../match-logic/weather";
 
-export class UnitWrapper<ThisUnitType extends UnitType = UnitType> {
+type ExtractUnit<T extends UnitType> = Extract<WWUnit, { type: T }>
+
+export class UnitWrapper<
+  Type extends UnitType = UnitType,
+  /**
+   * we need this second generic to contract `Type` to `Unit` which is the type for `this.data`.
+   * without this, issues arise when trying to assign `this` to `UnitWrapper` (without generic!)
+   * like a lot of utility functions do.
+   */
+  Unit extends ExtractUnit<Type> = ExtractUnit<Type>
+> {
   public player: PlayerInMatchWrapper;
 
-  public properties: typeof unitPropertiesMap[ThisUnitType];
+  public properties: typeof unitPropertiesMap[Type];
 
   constructor(
-    public data: Extract<WWUnit, { type: ThisUnitType }>,
+    public data: Unit,
     public match: MatchWrapper
   ) {
     const player = match.getPlayerBySlot(data.playerSlot);
@@ -201,7 +211,6 @@ export class UnitWrapper<ThisUnitType extends UnitType = UnitType> {
   }
 
   remove() {
-    // TODO @function fix this error ¬¬'
     this.player.team.vision?.removeUnitVision(this);
 
     this.match.units = this.match.units.filter((u) =>
