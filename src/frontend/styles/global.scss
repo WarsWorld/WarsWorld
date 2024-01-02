@@ -64,6 +64,16 @@
     font-weight: 400;
   }
 
+  // **** Used for articles
+  ul, ol {
+    list-style: revert;
+    list-style-position: outside;
+    > li {
+      margin-left: 10px;
+    }
+  }
+  // **** 
+
   .btn {
     @include m.clampSize(12, 16, 320, 1200);
     color: white;

@@ -1,11 +1,12 @@
 import type { ArticleData } from "frontend/utils/articleScript";
-import { getArticleData, getArticleIds } from "frontend/utils/articleScript";
+import { getArticleData, getArticleSlugs } from "frontend/utils/articleScript";
 import Banner from "frontend/components/layout/Banner";
 import styles from "frontend/styles/pages/articles.module.scss";
 import type { GetStaticProps } from "next";
+import Head from "next/head";
 
 export function getStaticPaths() {
-  const paths = getArticleIds();
+  const paths = getArticleSlugs();
   return {
     paths,
     fallback: false
@@ -30,16 +31,16 @@ export const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
 };
 
 export default function Article({ postData }: Props) {
-  //Lets make sure we have our parameters/data
+  // Lets make sure we have our parameters/data
   // before loading so we dont cause any errors
   if (typeof postData === "undefined") {
     return <h1>Loading...</h1>;
   } else {
-    //Get headers for index table
+    // Get headers for index table
     let theHTML = postData.contentHtml;
     const headers = [...theHTML.matchAll(/<h1+>(.*?)<\/h1*>/gm)];
 
-    //Put IDs on headers so /articleName#header links to the header
+    // Put IDs on headers so /articleName#header links to the header
     for (const header of headers) {
       theHTML = theHTML.replace(
         /<h1>/,
@@ -49,6 +50,11 @@ export default function Article({ postData }: Props) {
 
     return (
       <>
+        <Head>
+          <title>{postData.metaData.title}</title>
+          <meta name="description" content={postData.metaData.description}/>
+        </Head>
+
         <Banner
           title={
             <div>
@@ -60,7 +66,7 @@ export default function Article({ postData }: Props) {
                 {postData.metaData.category.toUpperCase()}
               </h2>
               <h1>{postData.metaData.title}</h1>
-              <p>{postData.metaData.subtitle}</p>
+              <p>{postData.metaData.description}</p>
             </div>
           }
           backgroundURL={postData.metaData.image}
@@ -72,7 +78,7 @@ export default function Article({ postData }: Props) {
           }
         >
           <div
-            className={`@col-span-12 smallscreen:@col-span-10 @bg-bg-tertiary smallscreen:@p-10 @p-2 @rounded-2xl ${styles.articleGrid} `}
+            className={`@col-span-12 smallscreen:@col-span-10 @bg-bg-tertiary smallscreen:@p-10 @p-2 @rounded-2xl ${styles.articleGrid} @list-disc [&>p]:inline`}
             dangerouslySetInnerHTML={{ __html: theHTML }}
           />
 

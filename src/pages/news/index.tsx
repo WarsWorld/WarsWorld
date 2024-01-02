@@ -17,76 +17,76 @@ import type { GetStaticProps, InferGetStaticPropsType } from "next";
 
 const newsCardsObjectList: ICardInfo[] = [
   {
-    id: "id",
     image: "/img/layout/newsPage/newsPlaceholder1.png",
     imageAlt: "News placeholderimage 1",
     title: "Blitz mode is active!",
-    subtitle: "Introducing Blitz Mode: faster battles, reduced turn timers. Available now!",
+    description: "Introducing Blitz Mode: faster battles, reduced turn timers. Available now!",
     date: "12-12-9999",
-    category: "Patch"
+    category: "Patch",
+    slug: "slug"
   },
   {
-    id: "id",
     image: "/img/layout/newsPage/newsPlaceholder2.png",
     imageAlt: "News placeholderimage 2",
     title: "Clans are out!",
-    subtitle: "Join forces with friends in the new alliance system. Coordinate attacks, conquer together!",
+    description: "Join forces with friends in the new alliance system. Coordinate attacks, conquer together!",
     date: "12-12-9999",
-    category: "Patch"
+    category: "Patch",
+    slug: "slug"
   },
   {
-    id: "id",
     image: "/img/layout/newsPage/newsPlaceholder3.png",
     imageAlt: "News placeholderimage 3",
     title: "Commander Challenge",
-    subtitle: "Test your skills in solo missions. Conquer challenges and earn exclusive rewards. Are you up for the challenge?",
+    description: "Test your skills in solo missions. Conquer challenges and earn exclusive rewards. Are you up for the challenge?",
     date: "12-12-9999",
-    category: "Patch"
+    category: "Patch",
+    slug: "slug"
   },
   {
-    id: "id",
     image: "/img/layout/newsPage/newsPlaceholder4.png",
     imageAlt: "News placeholderimage 4",
     title: "Tournament Series",
-    subtitle: " Battle the best in intense multiplayer matches. Compete for the championship and incredible prizes. Register soon!",
+    description: " Battle the best in intense multiplayer matches. Compete for the championship and incredible prizes. Register soon!",
     date: "12-12-9999",
-    category: "Patch"
+    category: "Patch",
+    slug: "slug"
   },
   {
-    id: "id",
     image: "/img/layout/newsPage/newsPlaceholder1.png",
     imageAlt: "News placeholderimage 1",
     title: "Blitz mode is active!",
-    subtitle: "Introducing Blitz Mode: faster battles, reduced turn timers. Available now!",
+    description: "Introducing Blitz Mode: faster battles, reduced turn timers. Available now!",
     date: "12-12-9999",
-    category: "Patch"
+    category: "Patch",
+    slug: "slug"
   },
   {
-    id: "id",
     image: "/img/layout/newsPage/newsPlaceholder2.png",
     imageAlt: "News placeholderimage 2",
     title: "Clans are out!",
-    subtitle: "Join forces with friends in the new alliance system. Coordinate attacks, conquer together!",
+    description: "Join forces with friends in the new alliance system. Coordinate attacks, conquer together!",
     date: "12-12-9999",
-    category: "Patch"
+    category: "Patch",
+    slug: "slug"
   },
   {
-    id: "id",
     image: "/img/layout/newsPage/newsPlaceholder3.png",
     imageAlt: "News placeholderimage 3",
     title: "Commander Challenge",
-    subtitle: "Test your skills in solo missions. Conquer challenges and earn exclusive rewards. Are you up for the challenge?",
+    description: "Test your skills in solo missions. Conquer challenges and earn exclusive rewards. Are you up for the challenge?",
     date: "12-12-9999",
-    category: "Patch"
+    category: "Patch",
+    slug: "slug"
   },
   {
-    id: "id",
     image: "/img/layout/newsPage/newsPlaceholder4.png",
     imageAlt: "News placeholderimage 4",
     title: "Tournament Series",
-    subtitle: " Battle the best in intense multiplayer matches. Compete for the championship and incredible prizes. Register soon!",
+    description: " Battle the best in intense multiplayer matches. Compete for the championship and incredible prizes. Register soon!",
     date: "12-12-9999",
-    category: "Patch"
+    category: "Patch",
+    slug: "slug"
   }
 ];
 
@@ -120,13 +120,13 @@ export default function NewsPage({articlesData}: InferGetStaticPropsType<typeof 
           key={index} 
           cardInfo={
           {
-            id: post.id,    
-            image: "/img/layout/newsPage/newsPlaceholder4.png",
-            imageAlt: "News placeholder image 4",
+            image: post.metaData.image,
+            imageAlt: post.metaData.imageAlt,
             title: post.metaData.title,
-            subtitle: post.metaData.subtitle,
+            description: post.metaData.description,
             date: post.metaData.date,
-            category: post.metaData.category
+            category: post.metaData.category,
+            slug: post.slug    
           }
           } />))}
 
