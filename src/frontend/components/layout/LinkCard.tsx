@@ -4,21 +4,21 @@ import Link from "next/link";
 export type ICardInfo = {
   title: string;
   description: string;
-  date: string;
-  category: string;
+  date?: string;
+  category?: string;
   image: string;
   imageAlt: string;
-  slug: string;
+  subdirectory: string;
 };
 
 type Props = {
   cardInfo: ICardInfo;
 };
 
-export default function NewsCard({ cardInfo }: Props) {
+export default function LinkCard({ cardInfo }: Props) {
   return (
-    <div className="@relative @bg-black/50 @object-cover @h-[450px] @w-[450px] @transform @cursor-pointer @duration-300 tablet:hover:@scale-110 tablet:hover:@z-10">
-      <Link href={`news/${cardInfo.slug}`} className="@absolute @h-full @w-full @z-10" />
+    <div className="@relative @bg-black/50 @object-cover @h-[450px] @w-full @transform @cursor-pointer @duration-300 tablet:hover:@scale-110 tablet:hover:@z-10">
+      <Link href={`${cardInfo.subdirectory}`} className="@absolute @h-full @w-full @z-10" />
       <div className="@grid @grid-rows-2 @h-full">
         <Image
           className="@grid-rows-1 @w-full @h-full @object-cover @object-top"

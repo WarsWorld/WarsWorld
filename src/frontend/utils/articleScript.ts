@@ -6,7 +6,7 @@ import html from "remark-html";
 import { string, z } from "zod";
 
 // Creates a path from the cwd/current working directory to /article
-const articleDir = path.join(process.cwd(), "src/frontend/utils/articles");
+const baseArticleDir = path.join(process.cwd(), "src/frontend/utils/articles");
 
 const metaDataSchema = z.object({
   title: z.string(), // This is the id
@@ -17,52 +17,55 @@ const metaDataSchema = z.object({
   imageAlt: z.string()
 });
 
-export function getSortedArticles() {
+export function getSortedArticles(directory: string) {
+  const articleDir = baseArticleDir + `/${directory}`
   const articleNames = fs.readdirSync(articleDir);
   const allArticlesData = articleNames.map((articleName) => {
     //read markdown as string
     const fileContents = fs.readFileSync(
       `${articleDir}/${articleName}`,
       "utf-8"
-    );
-
-    //use gray-matter dependency to parse the post metadata section
-    const metaData = matter(fileContents);
-    const title = articleName.replace(/\.md$/, "");
-    metaData.data.title = title
-    
-    return {
-      metaData: metaDataSchema.parse(metaData.data),
-      slug: stringToSlug(title)
-    }
-  });
-  //sort articleData by date
-  return allArticlesData.sort((a, b) => {
-    if (a.metaData.date < b.metaData.date) {
-      return 1;
-    } else {
-      return -1;
-    }
-  });
-}
-
-export type ArticleMetaData = Awaited<ReturnType<typeof getSortedArticles>>;
-
-// gets the different article slugs so we know which are valid and which arent
-export function getArticleSlugs() {
-  const articleNames = fs.readdirSync(articleDir);
-  return articleNames.map((articleName) => {
-    const title = articleName.replace(/\.md$/, "");
-    return {
-      params: {
-        //take out md so its just the id (title)
-        id: stringToSlug(title)
+      );
+      
+      //use gray-matter dependency to parse the post metadata section
+      const metaData = matter(fileContents);
+      const title = articleName.replace(/\.md$/, "");
+      metaData.data.title = title
+      
+      return {
+        metaData: metaDataSchema.parse(metaData.data),
+        slug: stringToSlug(title)
       }
-    };
-  });
-}
-
-export async function getArticleData(slug: string) {
+    });
+    //sort articleData by date
+    return allArticlesData.sort((a, b) => {
+      if (a.metaData.date < b.metaData.date) {
+        return 1;
+      } else {
+        return -1;
+      }
+    });
+  }
+  
+  export type ArticleMetaData = Awaited<ReturnType<typeof getSortedArticles>>;
+  
+  // gets the different article slugs so we know which are valid and which arent
+  export function getArticleSlugs(directory: string) {
+    const articleDir = baseArticleDir + `/${directory}`
+    const articleNames = fs.readdirSync(articleDir);
+    return articleNames.map((articleName) => {
+      const title = articleName.replace(/\.md$/, "");
+      return {
+        params: {
+          //take out md so its just the id (title)
+          id: stringToSlug(title)
+        }
+      };
+    });
+  }
+  
+  export async function getArticleData(directory: string, slug: string) {
+  const articleDir = baseArticleDir + `/${directory}`
   const articleNames = fs.readdirSync(articleDir);
 
   let originalFileName = ""

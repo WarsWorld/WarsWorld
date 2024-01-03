@@ -1,11 +1,12 @@
 /* eslint-disable @typescript-eslint/consistent-type-imports */
 import PageTitle from "frontend/components/layout/PageTitle";
 import { FeaturedNewsCard } from "frontend/components/news/FeaturedNewsCard";
-import NewsCard, { ICardInfo }  from "frontend/components/news/NewsCard";
+import LinkCard, { ICardInfo }  from "frontend/components/layout/LinkCard";
 import { ArticleMetaData, getSortedArticles } from "frontend/utils/articleScript";
 import { trpc } from "frontend/utils/trpc-client";
 import Head from "next/head";
 import type { GetStaticProps, InferGetStaticPropsType } from "next";
+import LinkCardContainer from "frontend/components/layout/LinkCardContainer";
 
 /**
  * previous, the newsCardObjectList data and <LinkCard> component
@@ -23,7 +24,7 @@ const newsCardsObjectList: ICardInfo[] = [
     description: "Introducing Blitz Mode: faster battles, reduced turn timers. Available now!",
     date: "12-12-9999",
     category: "Patch",
-    slug: "slug"
+    subdirectory: ""
   },
   {
     image: "/img/layout/newsPage/newsPlaceholder2.png",
@@ -32,7 +33,7 @@ const newsCardsObjectList: ICardInfo[] = [
     description: "Join forces with friends in the new alliance system. Coordinate attacks, conquer together!",
     date: "12-12-9999",
     category: "Patch",
-    slug: "slug"
+    subdirectory: ""
   },
   {
     image: "/img/layout/newsPage/newsPlaceholder3.png",
@@ -41,7 +42,7 @@ const newsCardsObjectList: ICardInfo[] = [
     description: "Test your skills in solo missions. Conquer challenges and earn exclusive rewards. Are you up for the challenge?",
     date: "12-12-9999",
     category: "Patch",
-    slug: "slug"
+    subdirectory: ""
   },
   {
     image: "/img/layout/newsPage/newsPlaceholder4.png",
@@ -50,7 +51,7 @@ const newsCardsObjectList: ICardInfo[] = [
     description: " Battle the best in intense multiplayer matches. Compete for the championship and incredible prizes. Register soon!",
     date: "12-12-9999",
     category: "Patch",
-    slug: "slug"
+    subdirectory: ""
   },
   {
     image: "/img/layout/newsPage/newsPlaceholder1.png",
@@ -59,7 +60,7 @@ const newsCardsObjectList: ICardInfo[] = [
     description: "Introducing Blitz Mode: faster battles, reduced turn timers. Available now!",
     date: "12-12-9999",
     category: "Patch",
-    slug: "slug"
+    subdirectory: ""
   },
   {
     image: "/img/layout/newsPage/newsPlaceholder2.png",
@@ -68,7 +69,7 @@ const newsCardsObjectList: ICardInfo[] = [
     description: "Join forces with friends in the new alliance system. Coordinate attacks, conquer together!",
     date: "12-12-9999",
     category: "Patch",
-    slug: "slug"
+    subdirectory: ""
   },
   {
     image: "/img/layout/newsPage/newsPlaceholder3.png",
@@ -77,7 +78,7 @@ const newsCardsObjectList: ICardInfo[] = [
     description: "Test your skills in solo missions. Conquer challenges and earn exclusive rewards. Are you up for the challenge?",
     date: "12-12-9999",
     category: "Patch",
-    slug: "slug"
+    subdirectory: ""
   },
   {
     image: "/img/layout/newsPage/newsPlaceholder4.png",
@@ -86,7 +87,7 @@ const newsCardsObjectList: ICardInfo[] = [
     description: " Battle the best in intense multiplayer matches. Compete for the championship and incredible prizes. Register soon!",
     date: "12-12-9999",
     category: "Patch",
-    slug: "slug"
+    subdirectory: ""
   }
 ];
 
@@ -95,7 +96,7 @@ type Props = {
 };
 
 export const getStaticProps: GetStaticProps<Props> = () => {
-  const articlesData = getSortedArticles();
+  const articlesData = getSortedArticles("news");
   return {
     props: {
       articlesData
@@ -104,6 +105,7 @@ export const getStaticProps: GetStaticProps<Props> = () => {
 };
 
 export default function NewsPage({articlesData}: InferGetStaticPropsType<typeof getStaticProps>)  {
+  const articles: ICardInfo[] = articlesData?.map((art) => ({...art.metaData, subdirectory: `news/${art.slug}`})) ?? []
   return (
     <>
       <Head>
@@ -115,25 +117,14 @@ export default function NewsPage({articlesData}: InferGetStaticPropsType<typeof 
       </div>
       <div className="@flex @flex-col @p-5 @gap-10 @w-full @justify-center @items-center">
         <FeaturedNewsCard />
-        <div className="@flex @flex-wrap @gap-8 @justify-center @items-center @max-w-[90vw] @mb-5">
-          {articlesData?.map((post, index) => (<NewsCard 
-          key={index} 
-          cardInfo={
-          {
-            image: post.metaData.image,
-            imageAlt: post.metaData.imageAlt,
-            title: post.metaData.title,
-            description: post.metaData.description,
-            date: post.metaData.date,
-            category: post.metaData.category,
-            slug: post.slug    
-          }
-          } />))}
+        <LinkCardContainer>
+          {articles.map((article, index) => (
+          <LinkCard key={index} cardInfo={article} />))}
 
           {/* {newsCardsObjectList.map((item, index) => {
             return <NewsCard key={index} cardInfo={item} />;
           })} */}
-        </div>
+        </LinkCardContainer>
       </div>
     </>
   );

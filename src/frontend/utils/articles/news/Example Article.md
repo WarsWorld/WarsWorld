@@ -8,6 +8,8 @@ imageAlt: "image alternate text"
 
 # Header
 
+(Paragraph) Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
 1. (Ordered List element 1) Flak's luck-based mechanics have been significantly reworked to make him more consistent and balanced within the Global League.
 2. (Ordered List element 2) These changes aim to preserve Flak's unique playstyle while reducing the impact of randomness on the outcome of battles.
    ![](https://149455152.v2.pressablecdn.com/wp-content/uploads/2023/04/Switch_Advance_Wars1_2Re-BootCamp_screen_01_png_jpgcopy.jpg)
@@ -39,7 +41,7 @@ imageAlt: "image alternate text"
 
 # Header
 
-(Paragraph) Flak, with the implementation of these balance changes, has been reevaluated and positioned as a Tier 4 CO in the Global League. This ranking reflects the CO's overall performance, strategic flexibility, and competitive viability within the metagame.
+(Paragraph) Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 
 - (Dash Here) Tier 4 COs are strong contenders in the Global League, offering unique playstyles and strategies that can be effective when utilized by skilled commanders.
 - (Dash Here) Flak's revised mechanics and adjusted abilities now provide a more balanced and fair gameplay experience, allowing players to rely more on their strategic prowess rather than luck alone.

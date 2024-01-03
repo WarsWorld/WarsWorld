@@ -4,7 +4,7 @@ import { getArticleData, getArticleSlugs } from "frontend/utils/articleScript";
 import type { GetStaticProps } from "next";
 
 export function getStaticPaths() {
-  const paths = getArticleSlugs("news");
+  const paths = getArticleSlugs("howtoplay");
   return {
     paths,
     fallback: false
@@ -20,7 +20,7 @@ export const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
     throw new Error("params id is not of type string");
   }
 
-  const postData = await getArticleData("news", params.id);
+  const postData = await getArticleData("howtoplay", params.id);
   return {
     props: {
       postData
@@ -28,7 +28,7 @@ export const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
   };
 };
 
-export default function NewsArticle({ postData }: Props) {
+export default function HowToPlayArticle({ postData }: Props) {
   return (
     <>
     <Article postData={postData}/>
