@@ -26,6 +26,20 @@ export default function Article({ postData }: Props) {
         `<h1 id="${header[1].replace(/\s/g, "-")}">`
       );
     }
+    
+    // List styling
+    theHTML = theHTML.replaceAll(
+      /<li>/g,
+      `<li class="@ml-5">`
+    );
+    theHTML = theHTML.replaceAll(
+      /<ol>/g,
+      `<ol class="@list-decimal">`
+    );
+    theHTML = theHTML.replaceAll(
+      /<ul>/g,
+      `<ul class="@list-disc">`
+    );
 
     return (
       <>
