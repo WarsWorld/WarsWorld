@@ -4,9 +4,10 @@ import Head from "next/head";
 import MatchSection from "frontend/components/match/MatchSection";
 import CreateMatch from "frontend/components/match/CreateMatch";
 import { ProtectPage } from "frontend/components/ProtectPage";
+import { useEffect } from "react";
 
 export default function YourMatches() {
-  const { currentPlayer, setCurrentPlayer } = usePlayers();
+  const { currentPlayer, setCurrentPlayer, refetchUser } = usePlayers();
 
   // Get and make your, all, joinable, and spectator matches
   const { data: yourMatchesQuery, refetch: refecthYourMatches } =
@@ -27,13 +28,19 @@ export default function YourMatches() {
       ).length == 0
   );
 
-
   const spectatorMatches = allMatchesQuery?.filter(
     (match) =>
       match.players.filter(
         (player) => player.id == currentPlayer?.id || match.players.length != 2
       ).length == 0
   );
+
+  // Checks once if there is user data avaliable when changing to this page.
+  useEffect(() => {
+    if(refetchUser && !currentPlayer) {
+      refetchUser();
+    }
+  }, []);
 
   return (
     <ProtectPage>

@@ -50,6 +50,7 @@ export default function CreateMatch({
     value: "",
   });
 
+  // Fills the players Select when every time ownedplayers is changed
   useEffect(() => {
     if (currentPlayer) {
       setSelectPlayer({
