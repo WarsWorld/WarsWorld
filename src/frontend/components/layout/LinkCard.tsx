@@ -17,7 +17,7 @@ type Props = {
 
 export default function LinkCard({ cardInfo }: Props) {
   return (
-    <div className="@relative @bg-black/50 @object-cover @h-[450px] @w-full @transform @cursor-pointer @duration-300 tablet:hover:@scale-110 tablet:hover:@z-10">
+    <div className="@relative @bg-black/50 @object-cover @h-[450px] @w-full @transform @cursor-pointer @duration-300 tablet:hover:@scale-[1.05] tablet:hover:@z-10">
       <Link href={`${cardInfo.subdirectory}`} className="@absolute @h-full @w-full @z-10" />
       <div className="@grid @grid-rows-2 @h-full">
         <Image

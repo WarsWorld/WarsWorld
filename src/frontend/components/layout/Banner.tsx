@@ -5,13 +5,14 @@ import { useEffect, useState } from "react";
 export default function Banner2(props: {
   title: React.ReactElement | React.ReactElement[];
   backgroundURL: string;
+  isHomeBanner?: boolean;
 }) {
   const screenWidth = useWindowWidth();
 
   const [cos, setCos] = useState(<></>);
 
   useEffect(() => {
-    if (screenWidth < 1024) {
+    if (props.isHomeBanner == true && screenWidth < 1024) {
       setCos(
         <div className="@relative @z-10">
           <Image
@@ -24,7 +25,7 @@ export default function Banner2(props: {
           />
         </div>
       );
-    } else {
+    } else if(props.isHomeBanner == true) {
       setCos(
         <div className="@relative @z-10">
           <Image
@@ -54,7 +55,7 @@ export default function Banner2(props: {
         </div>
       );
     }
-  }, [screenWidth]);
+  }, [screenWidth, props.isHomeBanner]);
   return (
     <div className="@relative @h-[70vh] @w-full tablet:@h-[90vh] @overflow-hidden @shadow-black @shadow-2xl">
       <Image
