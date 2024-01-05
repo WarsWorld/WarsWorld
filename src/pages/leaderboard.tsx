@@ -24,7 +24,7 @@ export default function IndexPage() {
         <title>Leaderboards | Wars World</title>
       </Head>
       <div className="@w-full @my-8">
-        <PageTitle>Leaderboards</PageTitle>
+        <PageTitle>Leaderboard</PageTitle>
       </div>
 
       <div className="@my-4">

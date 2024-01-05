@@ -32,6 +32,9 @@ export default function LoginSignupModal({ isOpen, setIsOpen, width }: Props) {
   const callbackUrl = searchParams.get("callbackUrl");
 
   useEffect(() => {
+    // NOTE: In production erase all the existing logic related to checking
+    // if the providers are correctly configured.
+    // This will make a request to check the proviers ever refresh.
     void getProviders().then((providers) => setCurrentProviders(providers));
   }, []);
 
