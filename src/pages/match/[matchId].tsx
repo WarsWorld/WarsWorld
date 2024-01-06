@@ -30,7 +30,7 @@ BaseTexture.defaultOptions.scaleMode = SCALE_MODES.NEAREST;
 type Props = { spriteData: ISpritesheetData[] };
 
 const Match = ({ spriteData }: Props) => {
-  console.log("spriteData", spriteData);
+
   const mutation = trpc.action.send.useMutation();
   const { currentPlayer } = usePlayers();
   const [players, setPlayers] = useState<PlayerInMatch[] | null | undefined>(
@@ -120,6 +120,8 @@ const Match = ({ spriteData }: Props) => {
       return;
     }
 
+    console.log(mapData);
+
     const mapScale = scale * 16;
     const mapMargin = scale * 32;
     const app = new Application({
@@ -149,27 +151,27 @@ const Match = ({ spriteData }: Props) => {
     app.stage.scale.set(scale, scale);
     app.stage.addChild(mapContainer);
 
+
     void loadSpritesheets(spriteData).then((spriteSheets) => {
       //Lets render our map!
       let tile;
 
       for (let rowIndex = 0; rowIndex < mapData.length; rowIndex++) {
-        const trueRow = mapData[rowIndex];
+        const currentRow = mapData[rowIndex];
 
-        for (let colIndex = 0; colIndex < trueRow.length; colIndex++) {
-          const tileSource = trueRow[colIndex];
-          const { type } = tileSource;
+        for (let colIndex = 0; colIndex < currentRow.length; colIndex++) {
+          const currentTile = currentRow[colIndex];
+          const { type } = currentTile;
 
           //ITS A PROPERTY
-          if ("playerSlot" in tileSource) {
-            const slot = tileSource.playerSlot;
+          if ("playerSlot" in currentTile) {
+            const slot = currentTile.playerSlot;
 
             //NEUTRAL
             if (slot === -1) {
               tile = new Sprite(spriteSheets[2].textures[type + "-0.png"]);
               //NOT NEUTRAL
             } else {
-              console.log("type", type, spriteSheets[slot]);
               tile = new AnimatedSprite(spriteSheets[slot].animations[type]);
 
               //if our building is able to produce units, it has a menu!
@@ -231,35 +233,37 @@ const Match = ({ spriteData }: Props) => {
             }
 
             //NOT A PROPERTY
-          } else if ("variant" in tileSource) {
+          } else if ("variant" in currentTile) {
             tile = new Sprite(
               spriteSheets[2].textures[
-                tileSource.type + "-" + tileSource.variant + ".png"
+                currentTile.type + "-" + currentTile.variant + ".png"
               ]
             );
           } else {
             tile = new Sprite(
-              spriteSheets[2].textures[tileSource.type + ".png"]
+              spriteSheets[2].textures[currentTile.type + ".png"]
             );
           }
 
           //makes our sprites render at the bottom, not from the top.
           tile.anchor.set(1, 1);
-          tile.x = (rowIndex + 1) * 16;
-          tile.y = (colIndex + 1) * 16;
+
+
+          tile.x = (colIndex + 1) * 16;
+          tile.y = (rowIndex + 1) * 16;
           mapContainer.addChild(tile);
         }
       }
 
       //Lets display units!
-      const units = showUnits(spriteSheets, mapData, demoUnits);
-      mapContainer.addChild(units);
+      /*const units = showUnits(spriteSheets, mapData, demoUnits);
+      mapContainer.addChild(units);*/
     });
 
     return () => {
       app.stop();
     };
-  }, [pixiCanvasRef, mapData, spriteData, scale]);
+  }, [pixiCanvasRef, mapData, spriteData, scale, mutation]);
 
   return (
     <div className="@grid @grid-cols-12 @text-center @my-20 @mx-2">
