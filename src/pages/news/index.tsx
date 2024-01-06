@@ -116,7 +116,7 @@ export default function NewsPage({articlesData}: InferGetStaticPropsType<typeof 
         <PageTitle>News</PageTitle>
       </div>
       <div className="@w-full @my-4">
-        <FeaturedNewsCard cardInfo={articles[0]}/>
+        <FeaturedNewsCard cardInfo={articles[2]}/>
       </div>
       <div className="@flex @flex-col @py-4 @gap-10 @w-[95vw] @justify-center @items-center @mb-10">
         <LinkCardContainer>
