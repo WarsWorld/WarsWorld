@@ -17,10 +17,10 @@ type Props = {
 
 export function FeaturedNewsCard({ cardInfo } : Props) {
   return (
-    <div className="@w-full @h-[70vh] @my-4 hover:@-translate-y-2 @duration-100 @ease-in">
+    <div className="@w-full @h-[70vh] hover:@-translate-y-2 @duration-100 @ease-in">
       <Link href={`${cardInfo?.subdirectory}`} className="@w-full @z-10">
       <div className="@h-1 @w-full @bg-gradient-to-r @from-primary-dark @from-10% @via-primary @to-primary-dark @to-90%" />
-      <div className="@flex @justify-between @items-center @w-full @bg-black/50 @h-full hover:@bg-bg-secondary/50 @duration-100 @ease-in">
+      <div className="@flex @justify-between @items-center @w-full @bg-black/50 @h-full hover:@bg-bg-primary/80 @duration-200 @ease-in">
         <div className="@relative @w-[30%] @h-full @py-8 @ml-20">
           <h2 className="@text-6xl @font-semibold @my-8">{cardInfo?.title}</h2>
           <div className="@text-white">
