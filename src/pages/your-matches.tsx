@@ -3,7 +3,7 @@ import { trpc } from "frontend/utils/trpc-client";
 import Head from "next/head";
 import MatchSection from "frontend/components/match/MatchSection";
 import CreateMatch from "frontend/components/match/CreateMatch";
-import { ProtectPage } from "frontend/components/ProtectPage";
+import { ProtectPage } from "frontend/components/auth/ProtectPage";
 import { useEffect } from "react";
 import SquareButton from "frontend/components/layout/SquareButton";
 import { useRouter } from "next/router";

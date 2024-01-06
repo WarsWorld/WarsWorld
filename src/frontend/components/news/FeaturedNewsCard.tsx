@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import OrangeGradientLine from "../layout/decorations/OrangeGradientLine";
 
 export type ICardInfo = {
   title: string;
@@ -19,7 +20,7 @@ export function FeaturedNewsCard({ cardInfo } : Props) {
   return (
     <div className="@w-[101%] @h-[70vh] @-translate-x-2 hover:@translate-x-0 @duration-200 @ease-in-out">
       <Link href={`${cardInfo?.subdirectory}`} className="@w-full @z-10">
-      <div className="@h-1 @w-full @bg-gradient-to-r @from-primary-dark @from-10% @via-primary @to-primary-dark @to-90%" />
+      <OrangeGradientLine />
       <div className="@flex @justify-between @items-center @w-full @bg-black/50 @h-full hover:@bg-bg-primary/90 @duration-200 @ease-in">
         <div className="@relative @w-[30%] @h-full @py-8 @ml-16">
           <h2 className="@text-6xl @font-semibold @my-8">{cardInfo?.title}</h2>
@@ -40,7 +41,7 @@ export function FeaturedNewsCard({ cardInfo } : Props) {
             />
         </div>
       </div>
-      <div className="@h-1 @w-full @bg-gradient-to-r @from-primary-dark @from-10% @via-primary @to-primary-dark @to-90%" />
+      <OrangeGradientLine />
       </Link>
     </div>
   );

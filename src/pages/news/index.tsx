@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/consistent-type-imports */
 import PageTitle from "frontend/components/layout/PageTitle";
 import { FeaturedNewsCard } from "frontend/components/news/FeaturedNewsCard";
-import LinkCard, { ICardInfo }  from "frontend/components/layout/LinkCard";
+import LinkCard, { ICardInfo }  from "frontend/components/layout/article/LinkCard";
 import { ArticleMetaData, getSortedArticles } from "frontend/utils/articleScript";
 import { trpc } from "frontend/utils/trpc-client";
 import Head from "next/head";
 import type { GetStaticProps, InferGetStaticPropsType } from "next";
-import LinkCardContainer from "frontend/components/layout/LinkCardContainer";
+import LinkCardContainer from "frontend/components/layout/article/LinkCardContainer";
 
 /**
  * previous, the newsCardObjectList data and <LinkCard> component

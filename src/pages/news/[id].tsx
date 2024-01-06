@@ -1,4 +1,4 @@
-import Article from "frontend/components/layout/Article";
+import Article from "frontend/components/layout/article/Article";
 import type { ArticleData } from "frontend/utils/articleScript";
 import { getArticleData, getArticleSlugs } from "frontend/utils/articleScript";
 import type { GetStaticProps } from "next";

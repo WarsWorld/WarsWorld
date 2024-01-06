@@ -1,10 +1,10 @@
 import PageTitle from "frontend/components/layout/PageTitle";
-import ArticleGroup from "frontend/components/layout/ArticleGroup";
+import ArticleGroup from "frontend/components/layout/article/ArticleGroup";
 import ThreeLinesText from "frontend/components/layout/ThreeLinesText";
 import Head from "next/head";
 import type { GetStaticProps, InferGetStaticPropsType } from "next";
 import { ArticleMetaData, getSortedArticles } from "frontend/utils/articleScript";
-import { ICardInfo } from "frontend/components/layout/LinkCard";
+import { ICardInfo } from "frontend/components/layout/article/LinkCard";
 
 const data = [
   {
@@ -131,7 +131,7 @@ export default function HowToPlay({articlesData}: InferGetStaticPropsType<typeof
         <PageTitle>How to Play</PageTitle>
       </div>
 
-      <div className="@flex @flex-col @max-w-[90vw] @px-4 @pb-8 laptop:@pb-12">
+      <div className="@flex @flex-col @max-w-[95vw] @px-4 @pb-8 laptop:@pb-12">
         <ThreeLinesText
           subtitle="You will finaly know what an airport is"
           title=""

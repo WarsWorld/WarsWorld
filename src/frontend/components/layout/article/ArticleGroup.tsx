@@ -1,7 +1,7 @@
 import type { ICardInfo } from "./LinkCard";
 import LinkCard from "./LinkCard";
 import LinkCardContainer from "./LinkCardContainer";
-import TitleColorBox from "./TitleColorBox";
+import TitleColorBox from "../TitleColorBox";
 
 type Props = {
   title: string;
