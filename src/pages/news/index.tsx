@@ -115,8 +115,10 @@ export default function NewsPage({articlesData}: InferGetStaticPropsType<typeof 
       <div className="@w-full @mt-8">
         <PageTitle>News</PageTitle>
       </div>
-      <div className="@flex @flex-col @p-5 @gap-10 @w-full @justify-center @items-center">
-        <FeaturedNewsCard />
+      <div className="@w-full @my-4">
+        <FeaturedNewsCard cardInfo={articles[0]}/>
+      </div>
+      <div className="@flex @flex-col @py-4 @gap-10 @w-[95vw] @justify-center @items-center @mb-10">
         <LinkCardContainer>
           {articles.map((article, index) => (
           <LinkCard key={index} cardInfo={article} />))}

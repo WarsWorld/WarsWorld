@@ -17,15 +17,16 @@ type Props = {
 
 export default function LinkCard({ cardInfo }: Props) {
   return (
-    <div className="@relative @bg-black/50 @object-cover @h-[450px] @w-full @transform @cursor-pointer @duration-300 tablet:hover:@scale-[1.05] tablet:hover:@z-10">
+    <div className="@relative @bg-black/50 @object-cover @h-[478px] @w-full @transform @cursor-pointer @border-transparent @border-2 hover:@-translate-y-1 hover:@border-primary tablet:hover:@z-10 hover:@bg-bg-secondary/50 @duration-100 @ease-in">
       <Link href={`${cardInfo.subdirectory}`} className="@absolute @h-full @w-full @z-10" />
       <div className="@grid @grid-rows-2 @h-full">
         <Image
           className="@grid-rows-1 @w-full @h-full @object-cover @object-top"
           src={cardInfo.image}
           alt={cardInfo.imageAlt}
-          width={300}
-          height={300}
+          width={0}
+          height={0}
+          sizes="100vw"
         />
         <div className="@relative @grid-rows-1 @h-full @px-2 laptop:@px-4 @py-2 laptop:@pb-4">
           <h2 className="@text-[2.5vh] @font-semibold">{cardInfo.title}</h2>

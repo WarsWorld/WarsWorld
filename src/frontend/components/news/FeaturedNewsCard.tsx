@@ -1,34 +1,47 @@
 import Image from "next/image";
+import Link from "next/link";
 
-export function FeaturedNewsCard() {
+export type ICardInfo = {
+  title: string;
+  description: string;
+  date?: string;
+  category?: string;
+  image: string;
+  imageAlt: string;
+  subdirectory: string;
+};
+
+type Props = {
+  cardInfo: ICardInfo;
+};
+
+export function FeaturedNewsCard({ cardInfo } : Props) {
   return (
-    <div className="@flex @justify-center @items-center @max-w-[90vw]">
-      <div className="@flex @flex-col smallscreen:@flex-row @cursor-pointer @duration-300 tablet:hover:@z-10">
-        <div className="@relatve @h-[300px] @w-full smallscreen:@w-[400px] laptop:@w-[60vw] @bg-cover @bg-[url(/img/layout/newsPage/featuredImg.png)]">
-          <div className="@h-full @w-full @overflow-hidden @backdrop-brightness-50">
-            <Image
-              className="@scale-x-[-1]"
-              src="/img/CO/smoothFull/Awds-Flak.webp"
-              alt="placeholder image for feature image"
-              width={250}
-              height={250}
-            />
+    <div className="@w-full @h-[70vh] @my-4 hover:@-translate-y-2 @duration-100 @ease-in">
+      <Link href={`${cardInfo?.subdirectory}`} className="@w-full @z-10">
+      <div className="@h-1 @w-full @bg-gradient-to-r @from-primary-dark @from-10% @via-primary @to-primary-dark @to-90%" />
+      <div className="@flex @justify-between @items-center @w-full @bg-black/50 @h-full hover:@bg-bg-secondary/50 @duration-100 @ease-in">
+        <div className="@relative @w-[30%] @h-full @py-8 @ml-20">
+          <h2 className="@text-6xl @font-semibold @my-8">{cardInfo?.title}</h2>
+          <div className="@text-white">
+            <p className="@text-2xl">{cardInfo?.description}</p>
+            <p className="@absolute @bottom-10 @text-2xl">{cardInfo?.date}</p>
+            <p className="@absolute @bottom-10 @right-12 @text-2xl">{cardInfo?.category}</p>
           </div>
         </div>
-        <div className="@flex @flex-col tablet:@min-w-[300px] @p-4 @gap-3 @justify-center @bg-black/50 smallscreen:@max-w-[300px] laptop:@max-w-[20vw]">
-          <div>
-            <h3 className="@font-normal">Welcome back Flak</h3>
-            <h2 className="@font-semibold">Patch 1.10 is out!</h2>
-          </div>
-          <p className="@text-xs @leading-loose">
-            The Balance Overhaul patch brings a renewed focus on strategic depth
-            and fair gameplay to Advance Wars. With careful adjustments made to
-            unit abilities and map layouts, commanders will find themselves
-            faced with more challenging decisions and a more balanced playing
-            field.
-          </p>
+        <div className="@w-auto @h-full @p-1 @mx-10 @mr-24">
+          <Image
+              className="@grid-rows-1 @w-auto @h-full @object-cover @object-top"
+              src={cardInfo?.image}
+              alt={cardInfo?.imageAlt}
+              width={0}
+              height={0}
+              sizes="100vw"
+            />
         </div>
       </div>
+      <div className="@h-1 @w-full @bg-gradient-to-r @from-primary-dark @from-10% @via-primary @to-primary-dark @to-90%" />
+      </Link>
     </div>
   );
 }
