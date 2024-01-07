@@ -20,10 +20,12 @@ export default function LinkCard({ cardInfo }: Props) {
     <div className="@relative @bg-black/50 @object-cover @h-[380px] laptop:@h-[478px] ultra:@h-[720px] @w-[320px] laptop:@w-[400px] ultra:@w-[640px] @transform @cursor-pointer @border-transparent @border-2 hover:@-translate-y-1 hover:@border-primary tablet:hover:@z-10 hover:@bg-bg-primary/90 @duration-200 @ease-in">
       <Link href={`${cardInfo.subdirectory}`} className="@absolute @h-full @w-full @z-10" />
       <div className="@grid @grid-rows-2 @h-full">
-        <img
+        <Image
           className="@grid-rows-1 @w-[320px] @h-[180px] laptop:@w-[400px] laptop:@h-[225px] ultra:@w-[640px] ultra:@h-[360px] @object-cover"
           src={cardInfo.image}
           alt={cardInfo.imageAlt}
+          width={640}
+          height={360}
         />
         <div className="@relative @grid-rows-1 @h-full @px-2 laptop:@px-4 laptop:@pb-4 ultra:@my-4">
           <h2 className="@text-2xl ultra:@text-4xl @font-semibold">{cardInfo.title}</h2>

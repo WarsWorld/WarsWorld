@@ -31,10 +31,13 @@ export function FeaturedNewsCard({ cardInfo } : Props) {
             </div>
           </div>
           <div className="@flex @flex-col @justify-center @items-end @w-full laptop:@h-full @p-1 laptop:@mr-20">
-            <img 
+            <Image 
               className="@w-full laptop:@w-[640px] desktop:@w-[672px] monitor:@w-[1024px] large_monitor:@w-[1280px] ultra:@w-[1920px] @h-full laptop:@h-[360px] desktop:@h-[378px] monitor:@h-[576px] large_monitor:@h-[720px] ultra:@h-[1080px] @object-cover"
               src={cardInfo?.image}
-              alt={cardInfo?.imageAlt} />
+              alt={cardInfo?.imageAlt} 
+              width={1920}
+              height={1080}
+              />
           </div>
         </div>
         <OrangeGradientLine />
