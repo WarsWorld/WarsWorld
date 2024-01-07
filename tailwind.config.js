@@ -43,6 +43,7 @@ module.exports = {
       desktop: "1280px",
       monitor: "1640px",
       large_monitor: "1980px",
+      ultra: "3600px",
       short: { raw: "(min-height: 600px)" },
       medium: { raw: "(min-height: 700px)" },
       

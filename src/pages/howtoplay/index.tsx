@@ -137,7 +137,7 @@ export default function HowToPlay({articlesData}: InferGetStaticPropsType<typeof
           title=""
           text="Learn all the fundamentals here and climb the ladder!"
         />
-        <div className="@flex @flex-col @gap-8 @my-2 smallscreen:@my-10">
+        <div className="@flex @flex-col @gap-8">
           {data.map((section, index) => {
             return (
               <ArticleGroup
