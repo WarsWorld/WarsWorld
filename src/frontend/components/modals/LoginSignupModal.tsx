@@ -5,8 +5,8 @@ import SquareButton from "../layout/SquareButton";
 import Link from "next/link";
 import LoginForm from "../auth/LoginForm";
 import SignupForm from "../auth/SignupForm";
-import SocialMediaSignInButton from "../layout/SocialMediaSignInButton";
-import ErrorSuccessBlock from "../layout/ErrorSuccessBlock";
+import SocialMediaSignInButton from "../layout/forms/SocialMediaSignInButton";
+import ErrorSuccessBlock from "../layout/forms/ErrorSuccessBlock";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/router";
 import { getProviders } from "next-auth/react";
@@ -32,6 +32,9 @@ export default function LoginSignupModal({ isOpen, setIsOpen, width }: Props) {
   const callbackUrl = searchParams.get("callbackUrl");
 
   useEffect(() => {
+    // NOTE: In production erase all the existing logic related to checking
+    // if the providers are correctly configured.
+    // This will make a request to check the proviers ever refresh.
     void getProviders().then((providers) => setCurrentProviders(providers));
   }, []);
 

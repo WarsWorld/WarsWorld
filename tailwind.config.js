@@ -37,12 +37,16 @@ module.exports = {
     screens: {
       cellphone: "360px",
       tablet: "480px",
+      large_tablet: "640px",
       smallscreen: "768px",
       laptop: "1024px",
-      monitor: "1518px",
+      desktop: "1280px",
+      monitor: "1640px",
       large_monitor: "1980px",
+      ultra: "3600px",
       short: { raw: "(min-height: 600px)" },
       medium: { raw: "(min-height: 700px)" },
+      
     },
   },
   safelist: [

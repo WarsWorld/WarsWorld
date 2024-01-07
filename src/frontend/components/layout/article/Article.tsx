@@ -1,65 +1,65 @@
 import type { ArticleData } from "frontend/utils/articleScript";
-import { getArticleData, getArticleIds } from "frontend/utils/articleScript";
+import { getArticleData, getArticleSlugs } from "frontend/utils/articleScript";
 import Banner from "frontend/components/layout/Banner";
 import styles from "frontend/styles/pages/articles.module.scss";
 import type { GetStaticProps } from "next";
-
-export function getStaticPaths() {
-  const paths = getArticleIds();
-  return {
-    paths,
-    fallback: false
-  };
-}
+import Head from "next/head";
 
 type Props = {
   postData: ArticleData;
 };
 
-export const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
-  if (typeof params?.id !== "string") {
-    throw new Error("params id is not of type string");
-  }
-
-  const postData = await getArticleData(params.id);
-  return {
-    props: {
-      postData
-    }
-  };
-};
-
-export default function Articles({ postData }: Props) {
-  //Lets make sure we have our parameters/data
+export default function Article({ postData }: Props) {
+  // Lets make sure we have our parameters/data
   // before loading so we dont cause any errors
   if (typeof postData === "undefined") {
     return <h1>Loading...</h1>;
   } else {
-    //Get headers for index table
+    // Get headers for index table
     let theHTML = postData.contentHtml;
     const headers = [...theHTML.matchAll(/<h1+>(.*?)<\/h1*>/gm)];
 
-    //Put IDs on headers so /articleName#header links to the header
+    // Put IDs on headers so /articleName#header links to the header
     for (const header of headers) {
       theHTML = theHTML.replace(
         /<h1>/,
         `<h1 id="${header[1].replace(/\s/g, "-")}">`
       );
     }
+    
+    // List styling
+    theHTML = theHTML.replaceAll(
+      /<li>/g,
+      `<li class="@ml-5">`
+    );
+    theHTML = theHTML.replaceAll(
+      /<ol>/g,
+      `<ol class="@list-decimal">`
+    );
+    theHTML = theHTML.replaceAll(
+      /<ul>/g,
+      `<ul class="@list-disc">`
+    );
 
     return (
       <>
+        <Head>
+          <title>{postData.metaData.title}</title>
+          <meta name="description" content={postData.metaData.description}/>
+        </Head>
+
         <Banner
           title={
             <div>
-              <h2 className="@bg-secondary @inline-block @p-2 @text-black @font-[500]">
+              {/* <h2 className="@bg-secondary @inline-block @p-2 @text-black @font-[500]">
                 {postData.metaData.type.toUpperCase()}
-              </h2>
+                Type here
+              </h2> */}
               <h2 className="@bg-white @inline-block @p-2 @text-black @font-[500]">
                 {postData.metaData.category.toUpperCase()}
               </h2>
               <h1>{postData.metaData.title}</h1>
-              <p>{postData.metaData.subtitle}</p>
+              <p>{postData.metaData.description}</p>
             </div>
           }
           backgroundURL={postData.metaData.image}
@@ -71,7 +71,7 @@ export default function Articles({ postData }: Props) {
           }
         >
           <div
-            className={`@col-span-12 smallscreen:@col-span-10 @bg-bg-tertiary smallscreen:@p-10 @p-2 @rounded-2xl ${styles.articleGrid} `}
+            className={`@col-span-12 smallscreen:@col-span-10 @bg-bg-tertiary smallscreen:@p-10 @p-2 @rounded-2xl ${styles.articleGrid} @list-disc [&>p]:inline`}
             dangerouslySetInnerHTML={{ __html: theHTML }}
           />
 

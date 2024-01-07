@@ -1,11 +1,11 @@
 ---
-title: "Good Girl Lash"
-subtitle: 'Our lass has been "fixed"'
-date: "20XX-06-12"
-type: "Patch"
-category: "News"
+description: 'Our lass has been "fixed"'
+date: "2050-06-12"
+category: "Patch"
 image: "https://i.ytimg.com/vi/V8rsIExfnEY/maxresdefault.jpg"
+imageAlt: "image alternate text"
 ---
+
 
 # Rise of the Resplendent Lash! Patch 1.01 - Balance Patch Notes
 

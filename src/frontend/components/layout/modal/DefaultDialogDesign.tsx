@@ -1,6 +1,7 @@
 import { Dialog } from "@headlessui/react";
 import type { ReactNode } from "react";
 import PageTitle from "../PageTitle";
+import OrangeGradientLine from "../decorations/OrangeGradientLine";
 
 type Props = {
   width?: string;
@@ -19,7 +20,7 @@ export default function DefaultDialogDesign({ children, width, title }: Props) {
               <Dialog.Panel className="@bg-bg-secondary">
                 <PageTitle>{title}</PageTitle>
                 {children}
-                <div className="@h-1 @w-full @bg-gradient-to-r @from-primary-dark @from-10% @via-primary @to-primary-dark @to-90%" />
+                <OrangeGradientLine />
               </Dialog.Panel>
             </div>
           </div>

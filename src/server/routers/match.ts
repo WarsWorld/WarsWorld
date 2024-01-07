@@ -57,7 +57,7 @@ export const matchRouter = router({
     .input(
       z.object({
         selectedCO: coIdSchema,
-        playerSlot: z.number().int().nonnegative()
+        playerSlot: z.number().int().nonnegative().nullable()
       })
     )
     .mutation(async ({ input, ctx: { currentPlayer, match } }) => {
@@ -69,11 +69,11 @@ export const matchRouter = router({
         throw new Error("You've already joined this match!");
       }
 
-      if (match.map.data.numberOfPlayers < input.playerSlot) {
+      if (input.playerSlot !== null && match.map.data.numberOfPlayers < input.playerSlot) {
         throw new DispatchableError("Invalid player slot given");
       }
 
-      if (match.getPlayerBySlot(input.playerSlot) !== undefined) {
+      if (input.playerSlot !== null && match.getPlayerBySlot(input.playerSlot) !== undefined) {
         throw new DispatchableError("Player slot is occupied | Frontend right now ALWAYS applies for playerSlot 1 (needs to be updated)");
       }
 
@@ -81,9 +81,16 @@ export const matchRouter = router({
       // (do players join a match with a CO pick already done or join then choose?)
       // this might not be necessary to do here but on switchCO
 
+      // When there is not a specified slot to join, loop from 0 until an open slot is found
+      let slotToJoin = 0;
+      
+      while(match.getPlayerBySlot(slotToJoin) !== undefined) {
+        slotToJoin += 1;
+      }
+
       const player = match.addUnwrappedPlayer({
         id: currentPlayer.id,
-        slot: input.playerSlot,
+        slot: input.playerSlot ?? slotToJoin,
         ready: false,
         coId: input.selectedCO,
         funds: 0,

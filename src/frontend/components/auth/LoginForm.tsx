@@ -1,10 +1,10 @@
 import SquareButton from "../layout/SquareButton";
-import FormInput from "../layout/FormInput";
+import FormInput from "../layout/forms/FormInput";
 import { useEffect, useState } from "react";
 import type { FormEvent } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/router";
-import ErrorSuccessBlock from "../layout/ErrorSuccessBlock";
+import ErrorSuccessBlock from "../layout/forms/ErrorSuccessBlock";
 import { useSearchParams } from "next/navigation";
 
 type Props = {

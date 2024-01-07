@@ -1,6 +1,6 @@
 import { usePlayers } from "frontend/context/players";
 import { useRouter } from "next/router";
-import type { ISpritesheetData } from "pixi.js";
+import type { ISpritesheetData, Spritesheet } from "pixi.js";
 import {
   AnimatedSprite,
   Application,
@@ -24,13 +24,24 @@ import { showUnits } from "gameFunction/showUnit";
 import { spriteConstructor } from "gameFunction/spriteConstructor";
 import type { GetServerSideProps } from "next";
 import { MatchWrapper } from "shared/wrappers/match";
+import { mapRender } from "../../interactiveMatchRenders/map-render";
 
 BaseTexture.defaultOptions.scaleMode = SCALE_MODES.NEAREST;
 
 type Props = { spriteData: ISpritesheetData[] };
 
 const Match = ({ spriteData }: Props) => {
-  console.log("spriteData", spriteData);
+
+  //This loads the textures once
+  const [spriteSheets, setSpriteSheets] = useState<Spritesheet[] | undefined>(undefined);
+  useEffect(() => {
+    const fetchData = async () => {
+        setSpriteSheets(await loadSpritesheets(spriteData));
+    };
+     fetchData();
+  }, [spriteData]);
+
+
   const mutation = trpc.action.send.useMutation();
   const { currentPlayer } = usePlayers();
   const [players, setPlayers] = useState<PlayerInMatch[] | null | undefined>(
@@ -82,6 +93,8 @@ const Match = ({ spriteData }: Props) => {
         )
       );
     });
+
+
   }, [currentPlayerId]);
 
   trpc.match.full.useQuery(
@@ -110,156 +123,58 @@ const Match = ({ spriteData }: Props) => {
     }
   );
 
-  //Important useEffect to make sure Pixi
-  // only gets updated when pixiCanvasRef or mapData changes
-  // we dont want it to be refreshed in react everytime something changes.
+
   const [scale, setScale] = useState<number>(2);
 
+  //Global variable that determines the size of tiles
+  const tileSize = 16
+
+//Important useEffect to make sure Pixi
+  // only gets updated when pixiCanvasRef or mapData changes
+  // we dont want it to be refreshed in react everytime something changes.
   useEffect(() => {
-    if (!mapData) {
+    if (!mapData || spriteSheets === undefined) {
       return;
     }
 
-    const mapScale = scale * 16;
-    const mapMargin = scale * 32;
+    const mapScale = scale * tileSize;
+    const mapMargin = scale * tileSize * 2;
+    const mapWidth = mapData[0].length * mapScale + mapMargin
+    const mapHeight = mapData.length * mapScale + mapMargin;
+
     const app = new Application({
       view: pixiCanvasRef.current ?? undefined,
       autoDensity: true,
       resolution: window.devicePixelRatio,
       backgroundColor: "#061838",
-      width: mapData[0].length * mapScale + mapMargin,
-      height: mapData.length * mapScale + mapMargin
+      width: mapWidth,
+      height: mapHeight
     });
     app.stage.position.set(0, 0);
     app.stage.sortableChildren = true;
-
+    app.stage.scale.set(scale, scale);
     //let render our specific cursor
     //TODO: Cursor stops working on half screen on google chrome (works on firefox).
     app.renderer.events.cursorStyles.default = {
       animation: "gameCursor 1200ms infinite"
     } as CSSStyleDeclaration;
 
+
     //the container that holds the map
     const mapContainer = new Container();
-    mapContainer.x = 16;
-    mapContainer.y = 16;
+    mapContainer.x = tileSize;
+    mapContainer.y = tileSize;
 
     //allows for us to use zIndex on the children of mapContainer
     mapContainer.sortableChildren = true;
-    app.stage.scale.set(scale, scale);
-    app.stage.addChild(mapContainer);
 
-    void loadSpritesheets(spriteData).then((spriteSheets) => {
-      //Lets render our map!
-      let tile;
-
-      for (let rowIndex = 0; rowIndex < mapData.length; rowIndex++) {
-        const trueRow = mapData[rowIndex];
-
-        for (let colIndex = 0; colIndex < trueRow.length; colIndex++) {
-          const tileSource = trueRow[colIndex];
-          const { type } = tileSource;
-
-          //ITS A PROPERTY
-          if ("playerSlot" in tileSource) {
-            const slot = tileSource.playerSlot;
-
-            //NEUTRAL
-            if (slot === -1) {
-              tile = new Sprite(spriteSheets[2].textures[type + "-0.png"]);
-              //NOT NEUTRAL
-            } else {
-              console.log("type", type, spriteSheets[slot]);
-              tile = new AnimatedSprite(spriteSheets[slot].animations[type]);
-
-              //if our building is able to produce units, it has a menu!
-              if (type !== "hq" && type !== "lab" && type !== "city") {
-                tile.eventMode = "static";
-                //Lets make menu appear
-                tile.on("pointerdown", () => {
-                  void (async () => {
-                    const menu = await showMenu(
-                      spriteSheets[slot],
-                      type,
-                      slot,
-                      rowIndex,
-                      colIndex,
-                      mapData.length - 1,
-                      mapData[0].length - 1,
-                      (input) => {
-                        void mutation.mutateAsync(input);
-                      }
-                    );
-
-                    //if there is a menu already out, lets remove it
-                    const menuContainer = mapContainer.getChildByName("menu");
-
-                    if (menuContainer !== null) {
-                      mapContainer.removeChild(menuContainer);
-                    }
-
-                    //lets create a transparent screen that covers everything.
-                    // if we click on it, we will delete the menu
-                    // therefore, achieving a quick way to delete menu if we click out of it
-                    const emptyScreen = spriteConstructor(
-                      Texture.WHITE,
-                      0,
-                      0,
-                      app.stage.width,
-                      app.stage.height,
-                      "static",
-                      -1
-                    );
-                    emptyScreen.alpha = 0;
-
-                    emptyScreen.on("pointerdown", () => {
-                      mapContainer.removeChild(menu);
-                      mapContainer.removeChild(emptyScreen);
-                    });
-
-                    mapContainer.addChild(menu);
-                    mapContainer.addChild(emptyScreen);
-                  })();
-                });
-              }
-
-              //TODO: Seems like properties/buildings have different animation speeds...
-              // gotta figure out how to make sure all buildings are animated properly
-              // or at least AWBW seems to have different speeds/frames than Daemon's replayer
-              tile.animationSpeed = 0.04;
-              tile.play();
-            }
-
-            //NOT A PROPERTY
-          } else if ("variant" in tileSource) {
-            tile = new Sprite(
-              spriteSheets[2].textures[
-                tileSource.type + "-" + tileSource.variant + ".png"
-              ]
-            );
-          } else {
-            tile = new Sprite(
-              spriteSheets[2].textures[tileSource.type + ".png"]
-            );
-          }
-
-          //makes our sprites render at the bottom, not from the top.
-          tile.anchor.set(1, 1);
-          tile.x = (rowIndex + 1) * 16;
-          tile.y = (colIndex + 1) * 16;
-          mapContainer.addChild(tile);
-        }
-      }
-
-      //Lets display units!
-      const units = showUnits(spriteSheets, mapData, demoUnits);
-      mapContainer.addChild(units);
-    });
+    //this creates our map
+    app.stage.addChild(mapRender(spriteSheets, mapData, tileSize, mapWidth, mapHeight, mutation));
 
     return () => {
       app.stop();
     };
-  }, [pixiCanvasRef, mapData, spriteData, scale]);
+  }, [pixiCanvasRef, mapData, spriteSheets, scale, mutation, spriteData]);
 
   return (
     <div className="@grid @grid-cols-12 @text-center @my-20 @mx-2">
