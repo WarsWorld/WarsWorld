@@ -13,7 +13,7 @@ export default function YourMatches() {
   const { currentPlayer, setCurrentPlayer, refetchUser } = usePlayers();
 
   // Get and make your, all, joinable, and spectator matches
-  const { data: yourMatchesQuery, refetch: refecthYourMatches } =
+  const { data: yourMatchesQuery, refetch: refetchYourMatches } =
     trpc.match.getPlayerMatches.useQuery(
       { playerId: currentPlayer?.id ?? "" },
       {
@@ -21,7 +21,7 @@ export default function YourMatches() {
       }
     );
 
-  const { data: allMatchesQuery, refetch: refecthAllMatches } =
+  const { data: allMatchesQuery, refetch: refetchAllMatches } =
     trpc.match.getAll.useQuery({ pageNumber: 0 });
 
   const joinableMatchesQuery = allMatchesQuery?.filter(
@@ -61,8 +61,8 @@ export default function YourMatches() {
           </SquareButton>
         </div>
         <CreateMatch
-          refecthYourMatches={refecthYourMatches}
-          refecthAllMatches={refecthAllMatches}
+          refetchYourMatches={refetchYourMatches}
+          refetchAllMatches={refetchAllMatches}
           currentPlayer={currentPlayer}
           setCurrentPlayer={setCurrentPlayer}
         />
