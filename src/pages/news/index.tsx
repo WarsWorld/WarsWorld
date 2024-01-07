@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/consistent-type-imports */
 import PageTitle from "frontend/components/layout/PageTitle";
 import { FeaturedNewsCard } from "frontend/components/news/FeaturedNewsCard";
-import LinkCard, { ICardInfo }  from "frontend/components/layout/LinkCard";
+import LinkCard, { ICardInfo }  from "frontend/components/layout/article/LinkCard";
 import { ArticleMetaData, getSortedArticles } from "frontend/utils/articleScript";
 import { trpc } from "frontend/utils/trpc-client";
 import Head from "next/head";
 import type { GetStaticProps, InferGetStaticPropsType } from "next";
-import LinkCardContainer from "frontend/components/layout/LinkCardContainer";
+import LinkCardContainer from "frontend/components/layout/article/LinkCardContainer";
 
 /**
  * previous, the newsCardObjectList data and <LinkCard> component
@@ -113,10 +113,14 @@ export default function NewsPage({articlesData}: InferGetStaticPropsType<typeof 
       </Head>
 
       <div className="@w-full @mt-8">
-        <PageTitle>News</PageTitle>
+        <PageTitle svgPathD="M160-120q-33 0-56.5-23.5T80-200v-640l67 67 66-67 67 67 67-67 66 67 67-67 67 67 66-67 67 67 67-67 66 67 67-67v640q0 33-23.5 56.5T800-120H160Zm0-80h280v-240H160v240Zm360 0h280v-80H520v80Zm0-160h280v-80H520v80ZM160-520h640v-120H160v120Z">News</PageTitle>
       </div>
-      <div className="@flex @flex-col @p-5 @gap-10 @w-full @justify-center @items-center">
-        <FeaturedNewsCard />
+      <div className="@w-full @overflow-hidden">
+        <div className="@w-full @my-4">
+          <FeaturedNewsCard cardInfo={articles[2]}/>
+        </div>
+      </div>
+      <div className="@flex @flex-col @py-4 @gap-10 @w-[95vw] @justify-center @items-center @mb-10">
         <LinkCardContainer>
           {articles.map((article, index) => (
           <LinkCard key={index} cardInfo={article} />))}

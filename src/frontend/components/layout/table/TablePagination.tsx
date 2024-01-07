@@ -1,4 +1,4 @@
-import SquareButton from "../layout/SquareButton";
+import SquareButton from "../SquareButton";
 import type { Table } from "@tanstack/react-table";
 
 type Props = {

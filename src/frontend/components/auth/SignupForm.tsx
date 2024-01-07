@@ -1,9 +1,9 @@
 import SquareButton from "../layout/SquareButton";
-import FormInput from "../layout/FormInput";
+import FormInput from "../layout/forms/FormInput";
 import { useState } from "react";
 import type { Dispatch, FormEvent, SetStateAction } from "react";
 import { trpc } from "frontend/utils/trpc-client";
-import ErrorSuccessBlock from "../layout/ErrorSuccessBlock";
+import ErrorSuccessBlock from "../layout/forms/ErrorSuccessBlock";
 
 type Props = {
   setIsSignupForm: (value: boolean, callbackUrl: string | null) => Promise<void>;
