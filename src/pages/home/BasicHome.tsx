@@ -49,6 +49,7 @@ export default function BasicHome() {
           </>
         }
         backgroundURL="/img/layout/homeBanner/gameCollage.jpg"
+        isHomeBanner
       />
       <div className="@my-1 tablet:@my-4">
         <ThreeLinesText

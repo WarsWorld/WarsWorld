@@ -4,12 +4,12 @@ import { useLocalStorage } from "frontend/utils/use-local-storage";
 import type { ReactNode } from "react";
 import { trpc } from "frontend/utils/trpc-client";
 
-
 type UserContext =
   | {
       ownedPlayers: Player[] | undefined;
       currentPlayerId: string | null;
       setCurrentPlayerId: (value: string) => void;
+      refetchUser: () => void;
     }
   | undefined;
 
@@ -21,7 +21,7 @@ export const ProvidePlayers = ({ children }: { children: ReactNode }) => {
     null
   );
 
-  const { data } = trpc.user.me.useQuery();
+  const { data, refetch } = trpc.user.me.useQuery();
 
   const [user, setUser] = useState<typeof data>();
 
@@ -36,6 +36,7 @@ export const ProvidePlayers = ({ children }: { children: ReactNode }) => {
 
   }, [data, currentPlayerId, setCurrentPlayerId]);
 
+  const refetchUser = () => void refetch();
 
   return (
     <playersContext.Provider
@@ -43,6 +44,7 @@ export const ProvidePlayers = ({ children }: { children: ReactNode }) => {
         ownedPlayers: user?.ownedPlayers,
         currentPlayerId,
         setCurrentPlayerId,
+        refetchUser
       }}
     >
       {children}
@@ -55,6 +57,7 @@ export const usePlayers = () => {
   const ownedPlayers = user?.ownedPlayers;
   const currentPlayerId = user?.currentPlayerId;
   const setCurrentPlayerId = user?.setCurrentPlayerId;
+  const refetchUser = user?.refetchUser;
   const currentPlayer = ownedPlayers?.find((p) => p.id === currentPlayerId);
 
   const setCurrentPlayer = (player: Player) => {
@@ -74,5 +77,6 @@ export const usePlayers = () => {
     currentPlayer,
     setCurrentPlayer,
     clearLSCurrentPlayer,
+    refetchUser,
   };
 };

@@ -164,7 +164,7 @@ export default function MatchCardSetup({ playerID, matchID, setupActions, inMatc
                   matchId: matchID,
                   playerId: playerID,
                   //TODO: This needs more logic for someone joining outside a 2 player match
-                  playerSlot: 1,
+                  playerSlot: null,
                   selectedCO: {name: "sami", version: "AW2" }
                 })
                 .then(() => {

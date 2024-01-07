@@ -34,7 +34,7 @@ export default function PlayerCard({
               </h4>
             </div>
             <img
-              className="@m-[2px] large_monitor:@m-[4px] [image-rendering:pixelated]"
+              className="@h-full @m-[2px] large_monitor:@m-[4px] [image-rendering:pixelated]"
               src={`img/nations/${country}.gif`}
               alt=""
             />

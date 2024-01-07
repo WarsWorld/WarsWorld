@@ -8,15 +8,15 @@ import { useEffect, useState } from "react";
 
 type Props = {
   currentPlayer: Player | undefined;
-  refecthYourMatches: () => void;
-  refecthAllMatches: () => void;
+  refetchYourMatches: () => void;
+  refetchAllMatches: () => void;
   setCurrentPlayer: (player: Player) => void;
 };
 
 export default function CreateMatch({
   currentPlayer,
-  refecthYourMatches,
-  refecthAllMatches,
+  refetchYourMatches,
+  refetchAllMatches,
   setCurrentPlayer,
 }: Props) {
   const { ownedPlayers } = usePlayers();
@@ -50,6 +50,7 @@ export default function CreateMatch({
     value: "",
   });
 
+  // Fills the players Select when every time ownedplayers is changed
   useEffect(() => {
     if (currentPlayer) {
       setSelectPlayer({
@@ -82,8 +83,8 @@ export default function CreateMatch({
       playerId: currentPlayer.id
     });
 
-    refecthAllMatches();
-    refecthYourMatches();
+    refetchAllMatches();
+    refetchYourMatches();
   };
 
   const selectPlayerHandler = (o: SelectOption | undefined) => {
