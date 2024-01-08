@@ -108,3 +108,9 @@ export function getSortedArticles(directory: string) {
 export type ArticleData = Awaited<ReturnType<typeof getArticleData>>;
 
 const stringToSlug = (title: string) => title.replace(/\s/g, "-").replace(/[^\w\s-]/gi, '').toLowerCase()
+
+export async function markdownStringToHTML(markdown : string) { 
+  const process = await remark().use(html).process(markdown);
+
+  return process.toString();
+}

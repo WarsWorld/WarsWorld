@@ -18,8 +18,8 @@ import LinkCardContainer from "frontend/components/layout/article/LinkCardContai
 
 const newsCardsObjectList: ICardInfo[] = [
   {
-    image: "/img/layout/newsPage/newsPlaceholder1.png",
-    imageAlt: "News placeholderimage 1",
+    thumbnail: "/img/layout/newsPage/newsPlaceholder1.png",
+    thumbnailAlt: "News placeholderimage 1",
     title: "Blitz mode is active!",
     description: "Introducing Blitz Mode: faster battles, reduced turn timers. Available now!",
     date: "12-12-9999",
@@ -27,8 +27,8 @@ const newsCardsObjectList: ICardInfo[] = [
     subdirectory: ""
   },
   {
-    image: "/img/layout/newsPage/newsPlaceholder2.png",
-    imageAlt: "News placeholderimage 2",
+    thumbnail: "/img/layout/newsPage/newsPlaceholder2.png",
+    thumbnailAlt: "News placeholderimage 2",
     title: "Clans are out!",
     description: "Join forces with friends in the new alliance system. Coordinate attacks, conquer together!",
     date: "12-12-9999",
@@ -36,8 +36,8 @@ const newsCardsObjectList: ICardInfo[] = [
     subdirectory: ""
   },
   {
-    image: "/img/layout/newsPage/newsPlaceholder3.png",
-    imageAlt: "News placeholderimage 3",
+    thumbnail: "/img/layout/newsPage/newsPlaceholder3.png",
+    thumbnailAlt: "News placeholderimage 3",
     title: "Commander Challenge",
     description: "Test your skills in solo missions. Conquer challenges and earn exclusive rewards. Are you up for the challenge?",
     date: "12-12-9999",
@@ -45,8 +45,8 @@ const newsCardsObjectList: ICardInfo[] = [
     subdirectory: ""
   },
   {
-    image: "/img/layout/newsPage/newsPlaceholder4.png",
-    imageAlt: "News placeholderimage 4",
+    thumbnail: "/img/layout/newsPage/newsPlaceholder4.png",
+    thumbnailAlt: "News placeholderimage 4",
     title: "Tournament Series",
     description: " Battle the best in intense multiplayer matches. Compete for the championship and incredible prizes. Register soon!",
     date: "12-12-9999",
@@ -54,8 +54,8 @@ const newsCardsObjectList: ICardInfo[] = [
     subdirectory: ""
   },
   {
-    image: "/img/layout/newsPage/newsPlaceholder1.png",
-    imageAlt: "News placeholderimage 1",
+    thumbnail: "/img/layout/newsPage/newsPlaceholder1.png",
+    thumbnailAlt: "News placeholderimage 1",
     title: "Blitz mode is active!",
     description: "Introducing Blitz Mode: faster battles, reduced turn timers. Available now!",
     date: "12-12-9999",
@@ -63,8 +63,8 @@ const newsCardsObjectList: ICardInfo[] = [
     subdirectory: ""
   },
   {
-    image: "/img/layout/newsPage/newsPlaceholder2.png",
-    imageAlt: "News placeholderimage 2",
+    thumbnail: "/img/layout/newsPage/newsPlaceholder2.png",
+    thumbnailAlt: "News placeholderimage 2",
     title: "Clans are out!",
     description: "Join forces with friends in the new alliance system. Coordinate attacks, conquer together!",
     date: "12-12-9999",
@@ -72,8 +72,8 @@ const newsCardsObjectList: ICardInfo[] = [
     subdirectory: ""
   },
   {
-    image: "/img/layout/newsPage/newsPlaceholder3.png",
-    imageAlt: "News placeholderimage 3",
+    thumbnail: "/img/layout/newsPage/newsPlaceholder3.png",
+    thumbnailAlt: "News placeholderimage 3",
     title: "Commander Challenge",
     description: "Test your skills in solo missions. Conquer challenges and earn exclusive rewards. Are you up for the challenge?",
     date: "12-12-9999",
@@ -81,8 +81,8 @@ const newsCardsObjectList: ICardInfo[] = [
     subdirectory: ""
   },
   {
-    image: "/img/layout/newsPage/newsPlaceholder4.png",
-    imageAlt: "News placeholderimage 4",
+    thumbnail: "/img/layout/newsPage/newsPlaceholder4.png",
+    thumbnailAlt: "News placeholderimage 4",
     title: "Tournament Series",
     description: " Battle the best in intense multiplayer matches. Compete for the championship and incredible prizes. Register soon!",
     date: "12-12-9999",
@@ -105,7 +105,10 @@ export const getStaticProps: GetStaticProps<Props> = () => {
 };
 
 export default function NewsPage({articlesData}: InferGetStaticPropsType<typeof getStaticProps>)  {
-  const articles: ICardInfo[] = articlesData?.map((art) => ({...art.metaData, subdirectory: `news/${art.slug}`})) ?? []
+  const articles: ICardInfo[] = articlesData?.map((art) => ({...art.metaData, subdirectory: `news/${art.slug}`})) ?? [];
+
+  const { data: articleNews } = trpc.post.getMetadataByType.useQuery({ type: "news" });
+
   return (
     <>
       <Head>
@@ -117,13 +120,32 @@ export default function NewsPage({articlesData}: InferGetStaticPropsType<typeof 
       </div>
       <div className="@w-full @overflow-hidden">
         <div className="@w-full @my-8">
-          <FeaturedNewsCard cardInfo={articles[2]}/>
+          {
+            articleNews && 
+            <FeaturedNewsCard cardInfo={{
+              subdirectory: `news/${articleNews?.[0].id}`,
+              title: articleNews?.[0].title,
+              description: articleNews?.[0].description,
+              thumbnail: articleNews?.[0].thumbnail ?? "",
+              thumbnailAlt: articleNews?.[0].title,
+              date: articleNews?.[0].createdAt.toDateString(),
+              category: articleNews?.[0].category[0].toUpperCase() + articleNews?.[0].category.slice(1),
+            }}/>
+          }
         </div>
       </div>
       <div className="@flex @flex-col @py-4 @gap-10 @w-[95vw] @justify-center @items-center @mb-10">
         <LinkCardContainer>
-          {articles.map((article, index) => (
-          <LinkCard key={index} cardInfo={article} />))}
+          {articleNews?.map((article, index) => (
+          <LinkCard key={index} cardInfo={{
+            subdirectory: `news/${article.id}`,
+            title: article.title,
+            description: article.description,
+            thumbnail: article.thumbnail ?? "",
+            thumbnailAlt: article.title,
+            date: article.createdAt.toDateString(),
+            category: article.category[0].toUpperCase() + article.category.slice(1),
+          }} />))}
 
           {/* {newsCardsObjectList.map((item, index) => {
             return <NewsCard key={index} cardInfo={item} />;

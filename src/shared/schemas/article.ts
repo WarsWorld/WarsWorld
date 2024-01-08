@@ -1,5 +1,10 @@
 import { z } from "zod";
 
+export const articleType = z.enum([
+  "news",
+  "guide",
+]);
+
 export const guideCategories = z.enum([
   "basics",
   "advance",
