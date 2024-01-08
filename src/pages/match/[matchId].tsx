@@ -1,14 +1,12 @@
+"use client"; // This is a client component 👈🏽
 import { usePlayers } from "frontend/context/players";
 import { useRouter } from "next/router";
 import type { ISpritesheetData, Spritesheet } from "pixi.js";
 import {
-  AnimatedSprite,
   Application,
   BaseTexture,
   Container,
   SCALE_MODES,
-  Sprite,
-  Texture
 } from "pixi.js";
 import { useEffect, useRef, useState } from "react";
 import type { Tile } from "shared/schemas/tile";
@@ -17,11 +15,7 @@ import type { PlayerInMatch } from "shared/types/server-match-state";
 import MatchPlayer from "frontend/components/match/MatchPlayer";
 import { loadSpritesheets } from "frontend/pixi/load-spritesheet";
 import { trpc } from "frontend/utils/trpc-client";
-import { demoUnits } from "gameFunction/demoUnitList";
 import getSpriteSheets from "gameFunction/get-sprite-sheets";
-import showMenu from "gameFunction/showMenu";
-import { showUnits } from "gameFunction/showUnit";
-import { spriteConstructor } from "gameFunction/spriteConstructor";
 import type { GetServerSideProps } from "next";
 import { MatchWrapper } from "shared/wrappers/match";
 import { mapRender } from "../../interactiveMatchRenders/map-render";
@@ -39,7 +33,7 @@ const Match = ({ spriteData }: Props) => {
         setSpriteSheets(await loadSpritesheets(spriteData));
     };
      fetchData();
-  }, [spriteData]);
+  }, []);
 
 
   const mutation = trpc.action.send.useMutation();
@@ -97,31 +91,27 @@ const Match = ({ spriteData }: Props) => {
 
   }, [currentPlayerId]);
 
-  trpc.match.full.useQuery(
-    { matchId, playerId: currentPlayer?.id ?? "" },
-    {
-      enabled: currentPlayer !== undefined,
-      onSuccess(data) {
-        if (data === null) {
-          throw new Error(`Match ${matchId} not found!`);
-        }
+  const {data} = trpc.match.full.useQuery({ matchId, playerId: currentPlayer?.id ?? "" })
 
-        if (data.status !== "playing") {
-          throw new Error(
-            `This match hasn't started yet. make sure to ready up!`
-          );
-        }
-
-        if (!players) {
-          setPlayers(data.players);
-        }
-
-        if (!mapData) {
-          setMapData(data.map.tiles);
-        }
-      }
+  if (!data) {
+    //throw new Error(`Match ${matchId} not found!`);
+  } else {
+    if (data.status !== "playing") {
+      throw new Error(
+        `This match hasn't started yet. make sure to ready up!`
+      );
     }
-  );
+    if (!players) {
+      setPlayers(data.players);
+    }
+
+    if (!mapData) {
+      setMapData(data.map.tiles);
+    }
+  }
+
+
+
 
 
   const [scale, setScale] = useState<number>(2);
@@ -133,6 +123,7 @@ const Match = ({ spriteData }: Props) => {
   // only gets updated when pixiCanvasRef or mapData changes
   // we dont want it to be refreshed in react everytime something changes.
   useEffect(() => {
+
     if (!mapData || spriteSheets === undefined) {
       return;
     }
