@@ -16,10 +16,10 @@ generator json {
 
 model Post {
   id          String          @id @default(cuid())
-  author      Player          @relation(fields: [authorId], references: [id])
-  authorId    String
+  Authors     PostAuthors[]
   title       String          @unique
   description String
+  type        ArticleType
   category    ArticleCategory
   thumbnail   String?
   body        String
@@ -30,12 +30,29 @@ model Post {
   updatedAt DateTime @default(now())
 }
 
+model PostAuthors {
+  post     Post   @relation(fields: [postId], references: [id])
+  postId   String
+  author   Player @relation(fields: [authorId], references: [id])
+  authorId String
+
+  @@id([postId, authorId])
+}
+
+enum ArticleType {
+  news
+  guide
+}
+
 enum ArticleCategory {
   basics
   advance
   site
   patch
-  community
+  events
+  news
+  maintenance
+  other
 }
 
 enum UserState {
@@ -127,7 +144,7 @@ model Player {
   user   User   @relation(fields: [userId], references: [id])
   userId String
 
-  Post Post[]
+  Posts PostAuthors[]
 
   /// [PrismaPreferences]
   preferences  Json?

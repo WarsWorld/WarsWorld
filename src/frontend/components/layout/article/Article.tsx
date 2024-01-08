@@ -62,7 +62,7 @@ export default function Article({ postData }: Props) {
               <p>{postData.metaData.description}</p>
             </div>
           }
-          backgroundURL={postData.metaData.image}
+          backgroundURL={postData.metaData.thumbnail}
         />
 
         <div

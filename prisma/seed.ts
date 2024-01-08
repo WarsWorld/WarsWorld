@@ -7,6 +7,9 @@ import { PrismaClient } from "@prisma/client";
 import { hashPassword } from "server/hashPassword";
 import { importAWBWMap } from "server/tools/map-importer-utilities";
 import { developmentPlayerNamePrefix as Prefix } from "server/trpc/middleware/player";
+import * as fs from "fs/promises";
+import matter from "gray-matter";
+import { articleSchema } from "shared/schemas/article";
 
 const prisma = new PrismaClient();
 
@@ -29,6 +32,43 @@ async function main() {
   });
 
   const devPlayers = await Promise.all(developmentPlayerNames.map((name) => prisma.player.create({ data: { name, userId } })));
+
+  const file = await fs.readFile("src/frontend/utils/articles/news/Example Article.md", "utf-8");
+  const metaData = matter(file);
+  metaData.data.title = "Example Article".replace(/\.md$/, "");
+  metaData.data.type = "News".toLowerCase();
+  metaData.data.category = "Patch".toLowerCase();
+  metaData.data.body = file;
+
+  const articleData = articleSchema.parse(metaData.data);
+  await prisma.post.create({
+    data: {
+      title: articleData.title,
+      description: articleData.description,
+      Authors: {
+        create: [
+          {
+            author: {
+              connect: {
+                id: devPlayers[0].id,
+              },
+            },
+          },
+          {
+            author: {
+              connect: {
+                id: devPlayers[1].id,
+              },
+            },
+          },
+        ]
+      },
+      thumbnail: articleData.thumbnail,
+      type: articleData.type,
+      category: articleData.category,
+      body: articleData.body,
+    }
+  });
 
   /**
    * author: "Hellraider",

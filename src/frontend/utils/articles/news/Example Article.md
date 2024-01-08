@@ -1,9 +1,9 @@
 ---
 description: "Subtitle of Example article"
-date: "2023-12-31"
+createdAt: "2023-12-31"
 category: "Patch"
-image: "https://i.ytimg.com/vi/P3AsOgkWe0w/maxresdefault.jpg?sqp=-oaymwEmCIAKENAF8quKqQMa8AEB-AH-CYAC0AWKAgwIABABGE4gUChlMA8=&rs=AOn4CLAObiL_Lv-D7ZaXFDlIHL_bpDFQUg"
-imageAlt: "image alternate text"
+thumbnail: "https://i.ytimg.com/vi/P3AsOgkWe0w/maxresdefault.jpg?sqp=-oaymwEmCIAKENAF8quKqQMa8AEB-AH-CYAC0AWKAgwIABABGE4gUChlMA8=&rs=AOn4CLAObiL_Lv-D7ZaXFDlIHL_bpDFQUg"
+thumbnailAlt: "image alternate text"
 ---
 
 # Header

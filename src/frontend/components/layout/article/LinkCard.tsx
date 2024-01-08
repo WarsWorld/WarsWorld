@@ -6,8 +6,8 @@ export type ICardInfo = {
   description: string;
   date?: string;
   category?: string;
-  image: string;
-  imageAlt: string;
+  thumbnail: string;
+  thumbnailAlt: string;
   subdirectory: string;
 };
 
@@ -22,8 +22,8 @@ export default function LinkCard({ cardInfo }: Props) {
       <div className="@grid @grid-rows-2 @h-full">
         <Image
           className="@grid-rows-1 @w-[320px] @h-[180px] laptop:@w-[400px] laptop:@h-[225px] ultra:@w-[640px] ultra:@h-[360px] @object-cover"
-          src={cardInfo.image}
-          alt={cardInfo.imageAlt}
+          src={cardInfo.thumbnail}
+          alt={cardInfo.thumbnailAlt}
           width={640}
           height={360}
         />
