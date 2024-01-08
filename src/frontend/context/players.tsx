@@ -9,7 +9,6 @@ type UserContext =
       ownedPlayers: Player[] | undefined;
       currentPlayerId: string | null;
       setCurrentPlayerId: (value: string) => void;
-      refetchUser: () => void;
     }
   | undefined;
 
@@ -21,12 +20,12 @@ export const ProvidePlayers = ({ children }: { children: ReactNode }) => {
     null
   );
 
-  const { data, refetch } = trpc.user.me.useQuery();
+  const { data } = trpc.user.me.useQuery();
 
   const [user, setUser] = useState<typeof data>();
 
   useEffect(() => {
-    if (data && data !== user) {
+    if (data && data.user && data !== user) {
       setUser(data);
 
       if (data.ownedPlayers?.[0] != undefined && currentPlayerId === "") {
@@ -36,15 +35,12 @@ export const ProvidePlayers = ({ children }: { children: ReactNode }) => {
 
   }, [data, currentPlayerId, setCurrentPlayerId]);
 
-  const refetchUser = () => void refetch();
-
   return (
     <playersContext.Provider
       value={{
         ownedPlayers: user?.ownedPlayers,
         currentPlayerId,
-        setCurrentPlayerId,
-        refetchUser
+        setCurrentPlayerId
       }}
     >
       {children}
@@ -57,7 +53,6 @@ export const usePlayers = () => {
   const ownedPlayers = user?.ownedPlayers;
   const currentPlayerId = user?.currentPlayerId;
   const setCurrentPlayerId = user?.setCurrentPlayerId;
-  const refetchUser = user?.refetchUser;
   const currentPlayer = ownedPlayers?.find((p) => p.id === currentPlayerId);
 
   const setCurrentPlayer = (player: Player) => {
@@ -77,6 +72,5 @@ export const usePlayers = () => {
     currentPlayer,
     setCurrentPlayer,
     clearLSCurrentPlayer,
-    refetchUser,
   };
 };

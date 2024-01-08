@@ -103,10 +103,10 @@ export default function MatchCard({ match, inMatch }: matchData) {
       {match.state != "setup" && match.players.length == 2 ? (
         //TODO: This should be using <Link> by nextjs but doing so will make the usePlayers used in match page to fail
         // I'm unsure why this happens, I couldnt find much in the documentation but I'm sure there is a fix.
-        <a href={`/match/${match.id}`} className="btnMenu @inline-block">
+        <Link href={`/match/${match.id}`} className="btnMenu @inline-block">
           {" "}
           Enter Match
-        </a>
+        </Link>
       ) : !inMatch && match.players.length == 2 ? (
         <div>{"Match hasn't started yet."}</div>
       ) : (

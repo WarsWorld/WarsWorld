@@ -4,13 +4,12 @@ import Head from "next/head";
 import MatchSection from "frontend/components/match/MatchSection";
 import CreateMatch from "frontend/components/match/CreateMatch";
 import { ProtectPage } from "frontend/components/auth/ProtectPage";
-import { useEffect } from "react";
 import SquareButton from "frontend/components/layout/SquareButton";
 import { useRouter } from "next/router";
 
 export default function YourMatches() {
   const route = useRouter();
-  const { currentPlayer, setCurrentPlayer, refetchUser } = usePlayers();
+  const { currentPlayer, setCurrentPlayer } = usePlayers();
 
   // Get and make your, all, joinable, and spectator matches
   const { data: yourMatchesQuery, refetch: refetchYourMatches } =
@@ -37,13 +36,6 @@ export default function YourMatches() {
         (player) => player.id == currentPlayer?.id || match.players.length != 2
       ).length == 0
   );
-
-  // Checks once if there is user data avaliable when changing to this page.
-  useEffect(() => {
-    if(refetchUser && !currentPlayer) {
-      refetchUser();
-    }
-  }, []);
 
   return (
     <ProtectPage>
