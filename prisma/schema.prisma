@@ -15,16 +15,27 @@ generator json {
 }
 
 model Post {
-  id       String @id @default(cuid())
-  author   Player @relation(fields: [authorId], references: [id])
-  authorId String
-  title    String
-  text     String
+  id          String          @id @default(cuid())
+  author      Player          @relation(fields: [authorId], references: [id])
+  authorId    String
+  title       String          @unique
+  description String
+  category    ArticleCategory
+  thumbnail   String?
+  body        String
 
   // To return `Date`s intact through the API we need to add data transformers
   // https://trpc.io/docs/data-transformers
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
+}
+
+enum ArticleCategory {
+  basics
+  advance
+  site
+  patch
+  community
 }
 
 enum UserState {
