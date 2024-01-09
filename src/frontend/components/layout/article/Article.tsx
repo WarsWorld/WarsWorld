@@ -1,8 +1,6 @@
 import type { ArticleData } from "frontend/utils/articleScript";
-import { getArticleData, getArticleSlugs } from "frontend/utils/articleScript";
 import Banner from "frontend/components/layout/Banner";
 import styles from "frontend/styles/pages/articles.module.scss";
-import type { GetStaticProps } from "next";
 import Head from "next/head";
 
 type Props = {
@@ -62,7 +60,7 @@ export default function Article({ postData }: Props) {
               <p>{postData.metaData.description}</p>
             </div>
           }
-          backgroundURL={postData.metaData.image}
+          backgroundURL={postData.metaData.thumbnail}
         />
 
         <div

@@ -1,9 +1,9 @@
 ---
 description: "Learn about unit types, terrain effects, and the turn-based gameplay."
-date: "2024-01-03"
+createdAt: "2024-01-03"
 category: "Basics"
-image: "/img/HowToPlay/pic1.jpg"
-imageAlt: "Master the Basics"
+thumbnail: "/img/HowToPlay/pic1.jpg"
+thumbnailAlt: "Master the Basics"
 ---
 
 # Header

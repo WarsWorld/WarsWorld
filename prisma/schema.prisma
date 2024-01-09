@@ -15,16 +15,44 @@ generator json {
 }
 
 model Post {
-  id       String @id @default(cuid())
-  author   Player @relation(fields: [authorId], references: [id])
-  authorId String
-  title    String
-  text     String
+  id          String          @id @default(cuid())
+  Authors     PostAuthors[]
+  title       String          @unique
+  description String
+  type        ArticleType
+  category    ArticleCategory
+  thumbnail   String?
+  body        String
 
   // To return `Date`s intact through the API we need to add data transformers
   // https://trpc.io/docs/data-transformers
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
+}
+
+model PostAuthors {
+  post     Post   @relation(fields: [postId], references: [id])
+  postId   String
+  author   Player @relation(fields: [authorId], references: [id])
+  authorId String
+
+  @@id([postId, authorId])
+}
+
+enum ArticleType {
+  news
+  guide
+}
+
+enum ArticleCategory {
+  basics
+  advance
+  site
+  patch
+  events
+  news
+  maintenance
+  other
 }
 
 enum UserState {
@@ -116,7 +144,7 @@ model Player {
   user   User   @relation(fields: [userId], references: [id])
   userId String
 
-  Post Post[]
+  Posts PostAuthors[]
 
   /// [PrismaPreferences]
   preferences  Json?

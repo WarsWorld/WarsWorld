@@ -1,9 +1,9 @@
 ---
 description: "Through a re-work, his ban on global league is lifted!"
-date: "2023-06-12"
+createdAt: "2023-06-12"
 category: "Patch"
-image: "https://i.ytimg.com/vi/P3AsOgkWe0w/maxresdefault.jpg?sqp=-oaymwEmCIAKENAF8quKqQMa8AEB-AH-CYAC0AWKAgwIABABGE4gUChlMA8=&rs=AOn4CLAObiL_Lv-D7ZaXFDlIHL_bpDFQUg"
-imageAlt: "image alternate text"
+thumbnail: "https://i.ytimg.com/vi/P3AsOgkWe0w/maxresdefault.jpg?sqp=-oaymwEmCIAKENAF8quKqQMa8AEB-AH-CYAC0AWKAgwIABABGE4gUChlMA8=&rs=AOn4CLAObiL_Lv-D7ZaXFDlIHL_bpDFQUg"
+thumbnailAlt: "image alternate text"
 ---
 
 # General Changes

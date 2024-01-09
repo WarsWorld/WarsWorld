@@ -1,9 +1,9 @@
 ---
 description: 'Our lass has been "fixed"'
-date: "2050-06-12"
+createdAt: "2050-06-12"
 category: "Patch"
-image: "https://i.ytimg.com/vi/V8rsIExfnEY/maxresdefault.jpg"
-imageAlt: "image alternate text"
+thumbnail: "https://i.ytimg.com/vi/V8rsIExfnEY/maxresdefault.jpg"
+thumbnailAlt: "image alternate text"
 ---
 
 
