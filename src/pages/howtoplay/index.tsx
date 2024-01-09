@@ -140,7 +140,8 @@ export default function HowToPlay({articlesData}: InferGetStaticPropsType<typeof
                 title={section.title}
                 description={section.description}
                 tailwind_color={section.color}
-                articles={articles.filter((article) => article.category?.toLowerCase() == section.title.toLowerCase())}
+                articles={articles.filter((article) => article.category?.toLowerCase() == section.title.toLowerCase() 
+                            || (section.title.toLowerCase() == "matches" && article.category?.toLowerCase() == "site"))}
               />
             );
           })}
