@@ -14,26 +14,26 @@ export default function NewsPage()  {
         <title>News | Wars World</title>
       </Head>
 
-      <div className="@w-full @mt-8">
+      <div className="@w-full @my-8">
         <PageTitle svgPathD="M160-120q-33 0-56.5-23.5T80-200v-640l67 67 66-67 67 67 67-67 66 67 67-67 67 67 66-67 67 67 67-67 66 67 67-67v640q0 33-23.5 56.5T800-120H160Zm0-80h280v-240H160v240Zm360 0h280v-80H520v80Zm0-160h280v-80H520v80ZM160-520h640v-120H160v120Z">News</PageTitle>
       </div>
-      <div className="@w-full @overflow-hidden">
-        <div className="@w-full @my-8">
-          {
-            articleNews && 
-            <FeaturedNewsCard cardInfo={{
-              subdirectory: `news/${articleNews?.[1].id}`,
-              title: articleNews?.[1].title,
-              description: articleNews?.[1].description,
-              thumbnail: articleNews?.[1].thumbnail ?? "",
-              thumbnailAlt: articleNews?.[1].title,
-              date: articleNews?.[1].createdAt.toDateString(),
-              category: articleNews?.[1].category[0].toUpperCase() + articleNews?.[1].category.slice(1),
-            }}/>
-          }
-        </div>
+
+      <div className="@w-full @h-full">
+        {
+          articleNews && 
+          <FeaturedNewsCard cardInfo={{
+            subdirectory: `news/${articleNews?.[1].id}`,
+            title: articleNews?.[1].title,
+            description: articleNews?.[1].description,
+            thumbnail: articleNews?.[1].thumbnail ?? "",
+            thumbnailAlt: articleNews?.[1].title,
+            date: articleNews?.[1].createdAt.toDateString(),
+            category: articleNews?.[1].category[0].toUpperCase() + articleNews?.[1].category.slice(1),
+          }}/>
+        }
       </div>
-      <div className="@flex @flex-col @py-4 @gap-10 @w-[95vw] @justify-center @items-center @mb-10">
+
+      <div className="@flex @flex-col @py-4 @gap-10 @w-[95vw] @justify-center @items-center @my-10">
         <LinkCardContainer>
           {articleNews?.map((article, index) => (
           <LinkCard key={index} cardInfo={{
