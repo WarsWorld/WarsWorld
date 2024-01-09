@@ -4,6 +4,7 @@ import type { PlayerInMatch } from "shared/types/server-match-state";
 import type { MatchStatus } from "@prisma/client";
 
 type Props = {
+  jump?: string;
   matches:
     | {
         id: string;
@@ -23,10 +24,10 @@ type Props = {
   isLoading?: boolean;
 }
 
-export default function MatchSection({ title, matches, inMatch = false, description, isLoading }: Props) {
+export default function MatchSection({ jump, title, matches, inMatch = false, description, isLoading }: Props) {
   return (
     <>
-      <div className="@w-full @my-2">
+      <div id={jump} className="@w-full @my-2">
         <PageTitle>{title}</PageTitle>
         <p className="@py-0 @mt-4">{description}</p>
       </div>

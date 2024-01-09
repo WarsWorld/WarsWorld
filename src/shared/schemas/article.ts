@@ -21,9 +21,9 @@ export const newsCategories = z.enum([
 ]);
 
 export const articleWithoutCategory = z.object({
-  title: z.string(),
-  description: z.string(),
-  body: z.string(),
+  title: z.string().min(1).max(100),
+  description: z.string().min(1).max(500),
+  body: z.string().min(1).max(7500),
   thumbnail: z.string(),
 });
 

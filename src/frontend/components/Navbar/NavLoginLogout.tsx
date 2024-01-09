@@ -37,7 +37,7 @@ export default function NavLoginLogout({ isOpen, setIsOpen, width }: Props) {
           <div className="@flex @flex-col @w-full @align-middle @text-center @justify-center">
             <p className="@text-md">{session.user.name}</p>
             <div
-              className="hover:@scale-[1.02] @text-lg @cursor-pointer @text-primary-light hover:@text-primary"
+              className="hover:@scale-[1.02] @text-base smallscreen:@text-lg @cursor-pointer @text-primary-light hover:@text-primary"
               onClick={() => {
                 clearLSCurrentPlayer();
                 void signOut();

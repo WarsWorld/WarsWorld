@@ -70,6 +70,7 @@ export default function YourMatches() {
           description="Matches with two players (not you)."
         />
         <MatchSection
+          jump="completedGames"
           title="Completed games"
           matches={undefined}
           description="Work is progress..."
