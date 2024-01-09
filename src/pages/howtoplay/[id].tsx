@@ -1,37 +1,39 @@
 import Article from "frontend/components/layout/article/Article";
-import type { ArticleData } from "frontend/utils/articleScript";
-import { getArticleData, getArticleSlugs } from "frontend/utils/articleScript";
-import type { GetStaticProps } from "next";
+import { trpc } from "frontend/utils/trpc-client";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
+import { remark } from "remark";
+import html from "remark-html";
+export default function NewsArticle() {
 
-export function getStaticPaths() {
-  const paths = getArticleSlugs("howtoplay");
-  return {
-    paths,
-    fallback: false
-  };
-}
+  const { query } = useRouter();
+  const id = query.id as string;
 
-type Props = {
-  postData: ArticleData;
-};
+  const { data: article } = trpc.post.getMarkdownByIdAndType.useQuery({ id, type: "guide" });
 
-export const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
-  if (typeof params?.id !== "string") {
-    throw new Error("params id is not of type string");
-  }
+  const [post, setPost] = useState("");
 
-  const postData = await getArticleData("howtoplay", params.id);
-  return {
-    props: {
-      postData
+  useEffect(() => {
+    if(article) {
+      const process = remark().use(html).processSync(article.body);
+      setPost(process.toString());
     }
-  };
-};
+  }, [article]);
 
-export default function HowToPlayArticle({ postData }: Props) {
   return (
     <>
-    <Article postData={postData}/>
+      { article && <Article postData={{
+          contentHtml: post,
+          metaData: {
+            title: article.title,
+            description: article.description,
+            category: article.category,
+            thumbnail: article.thumbnail ?? "",
+            thumbnailAlt: article.title,
+            createdAt: article.createdAt.toDateString(),
+          }
+        }}/>
+      }
     </>
   );
 }
