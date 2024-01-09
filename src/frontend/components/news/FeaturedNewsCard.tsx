@@ -37,6 +37,7 @@ export function FeaturedNewsCard({ cardInfo } : Props) {
               alt={cardInfo?.thumbnailAlt} 
               width={1920}
               height={1080}
+              priority
               />
           </div>
         </div>

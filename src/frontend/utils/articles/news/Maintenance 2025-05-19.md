@@ -1,12 +1,12 @@
 ---
-description: "Subtitle of Example article"
-createdAt: "2023-12-31"
-category: "Patch"
-thumbnail: "https://i.ytimg.com/vi/P3AsOgkWe0w/maxresdefault.jpg?sqp=-oaymwEmCIAKENAF8quKqQMa8AEB-AH-CYAC0AWKAgwIABABGE4gUChlMA8=&rs=AOn4CLAObiL_Lv-D7ZaXFDlIHL_bpDFQUg"
+description: 'June 19th Maintenance'
+createdAt: "2050-06-12"
+category: "Maintenance"
+thumbnail: "/img/HowToPlay/pic9.jpg"
 thumbnailAlt: "image alternate text"
 ---
 
-# Header
+# Header 1
 
 (Paragraph) Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 
@@ -14,7 +14,7 @@ thumbnailAlt: "image alternate text"
 2. (Ordered List element 2) These changes aim to preserve Flak's unique playstyle while reducing the impact of randomness on the outcome of battles.
    ![](https://149455152.v2.pressablecdn.com/wp-content/uploads/2023/04/Switch_Advance_Wars1_2Re-BootCamp_screen_01_png_jpgcopy.jpg)
 
-# Header
+# Header 2
 
 ## Subheader
 
@@ -39,7 +39,7 @@ thumbnailAlt: "image alternate text"
 
 ![](https://oyster.ignimgs.com/mediawiki/apis.ign.com/advance-wars-dual-strike/0/0b/Tutorial.jpg)
 
-# Header
+# Header 3
 
 (Paragraph) Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 

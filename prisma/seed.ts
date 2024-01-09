@@ -20,6 +20,62 @@ const developmentPlayerNames = [
   "Dev Player 4",
 ].map((name) => `${Prefix} ${name}`);
 
+const news = [
+  "Good Girl Lash",
+  "Maintenance 2025-05-19",
+  "Master League",
+  "Welcome back Flak! Patch 1.01",
+];
+
+const guides = [
+  "Resource Management",
+  "Create or join a match",
+  "Enter the Global League",
+  "Fog of War 2",
+  "Fog of War",
+  "Indirect Units",
+  "Map Awareness",
+  "Master the Basics",
+  "Play in a tournament",
+  "Tech-ups",
+];
+
+function seedArticles(articles: string[], type: string, authorId: string) {
+  articles.map(async (article) => {
+    const file = await fs.readFile(`src/frontend/utils/articles/${type.toLowerCase()}/${article}.md`, "utf-8");
+    const metaData = matter(file);
+    metaData.data.title = article;
+    metaData.data.type = type.toLowerCase();
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+    metaData.data.category = metaData.data.category.toLowerCase();
+    metaData.data.body = file;
+
+    const articleData = articleSchema.parse(metaData.data);
+
+    await prisma.post.create({
+      data: {
+        title: articleData.title,
+        description: articleData.description,
+        Authors: {
+          create: [
+            {
+              author: {
+                connect: {
+                  id: authorId,
+                },
+              },
+            },
+          ]
+        },
+        thumbnail: articleData.thumbnail,
+        type: articleData.type,
+        category: articleData.category,
+        body: articleData.body,
+      }
+    });
+  });
+}
+
 async function main() {
   const hashedPassword = await hashPassword("secret");
   
@@ -33,109 +89,8 @@ async function main() {
 
   const devPlayers = await Promise.all(developmentPlayerNames.map((name) => prisma.player.create({ data: { name, userId } })));
 
-  const file = await fs.readFile("src/frontend/utils/articles/news/Welcome back Flak! Patch 1.01.md", "utf-8");
-  const metaData = matter(file);
-  metaData.data.title = "Welcome back Flak! Patch 1.01".replace(/\.md$/, "");
-  metaData.data.type = "News".toLowerCase();
-  metaData.data.category = "Patch".toLowerCase();
-  metaData.data.body = file;
-
-  const articleData = articleSchema.parse(metaData.data);
-  await prisma.post.create({
-    data: {
-      title: articleData.title,
-      description: articleData.description,
-      Authors: {
-        create: [
-          {
-            author: {
-              connect: {
-                id: devPlayers[0].id,
-              },
-            },
-          },
-          {
-            author: {
-              connect: {
-                id: devPlayers[1].id,
-              },
-            },
-          },
-        ]
-      },
-      thumbnail: articleData.thumbnail,
-      type: articleData.type,
-      category: articleData.category,
-      body: articleData.body,
-    }
-  });
-
-  const file2 = await fs.readFile("src/frontend/utils/articles/news/Good Girl Lash.md", "utf-8");
-  const metaData2 = matter(file2);
-  metaData2.data.title = "Good Girl Lash".replace(/\.md$/, "");
-  metaData2.data.type = "News".toLowerCase();
-  metaData2.data.category = "Patch".toLowerCase();
-  metaData2.data.body = file;
-
-  const articleData2 = articleSchema.parse(metaData2.data);
-  await prisma.post.create({
-    data: {
-      title: articleData2.title,
-      description: articleData2.description,
-      Authors: {
-        create: [
-          {
-            author: {
-              connect: {
-                id: devPlayers[3].id,
-              },
-            },
-          },
-        ]
-      },
-      thumbnail: articleData2.thumbnail,
-      type: articleData2.type,
-      category: articleData2.category,
-      body: articleData2.body,
-    }
-  });
-
-  const file3 = await fs.readFile("src/frontend/utils/articles/howtoplay/Resource Management.md", "utf-8");
-  const metaData3 = matter(file3);
-  metaData3.data.title = "Resource Management".replace(/\.md$/, "");
-  metaData3.data.type = "Guide".toLowerCase();
-  metaData3.data.category = "Basics".toLowerCase();
-  metaData3.data.body = file;
-
-  const articleData3 = articleSchema.parse(metaData3.data);
-  await prisma.post.create({
-    data: {
-      title: articleData3.title,
-      description: articleData3.description,
-      Authors: {
-        create: [
-          {
-            author: {
-              connect: {
-                id: devPlayers[2].id,
-              },
-            },
-          },
-          {
-            author: {
-              connect: {
-                id: devPlayers[1].id,
-              },
-            },
-          },
-        ]
-      },
-      thumbnail: articleData3.thumbnail,
-      type: articleData3.type,
-      category: articleData3.category,
-      body: articleData3.body,
-    }
-  });
+  seedArticles(news, "News", devPlayers[0].id);
+  seedArticles(guides, "Guide", devPlayers[1].id);
 
   /**
    * author: "Hellraider",

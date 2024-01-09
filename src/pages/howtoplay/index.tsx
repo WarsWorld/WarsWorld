@@ -107,7 +107,7 @@ type Props = {
 };
 
 export const getStaticProps: GetStaticProps<Props> = () => {
-  const articlesData = getSortedArticles("howtoplay");
+  const articlesData = getSortedArticles("guide");
   return {
     props: {
       articlesData
