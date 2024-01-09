@@ -111,7 +111,7 @@ export class MatchWrapper {
   }
 
   getAllPlayers() {
-    return this.teams.flatMap((team) => team.players);
+    return this.teams.flatMap((team) => team.players).sort((p1, p2) => p1.data.slot - p2.data.slot);
   }
 
   getPlayerById(playerId: Player["id"]) {

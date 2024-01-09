@@ -31,14 +31,22 @@ export default function MatchSection({ jump, title, matches, inMatch = false, de
         <PageTitle>{title}</PageTitle>
         <p className="@py-0 @mt-4">{description}</p>
       </div>
-      <div className="@flex @flex-col @align-middle @items-center">
-        <div className="@w-[90vw]">
-          <div className="@grid [grid-template-columns:repeat(auto-fill,minmax(300px,1fr))] @gap-10">
-            {matches === undefined && (isLoading !== undefined && !isLoading)
-              ? "Loading..."
-              : matches?.map((match) => <MatchCard key={match.id} match={match} inMatch={inMatch} />)}
-          </div>
-        </div>
+      {/* <div> */}
+      <div className="
+        @max-w-[650px] @w-[100vw] @m-auto @px-auto @gap-5
+        tablet:@w-[90vw]
+        laptop:@w-auto @px-5 laptop:@grid laptop:@grid-cols-[repeat(2,minmax(100px,650px))] laptop:@max-w-[2500px]
+        monitor:@grid-cols-[repeat(3,minmax(100px,650px))]
+        large_monitor:@grid-cols-[repeat(4,minmax(100px,650px))]
+        ">
+        {matches === undefined && (isLoading !== undefined && !isLoading)
+          ? "Loading..."
+          : matches?.map((match) => (
+            // <div className="@flex @flex-col @items-center" key={match.id}>
+            //   <MatchCard match={match} inMatch={inMatch} />
+            // </div>
+              <MatchCard match={match} inMatch={inMatch} key={match.id}/>
+          ))}
       </div>
     </>
   );

@@ -69,12 +69,15 @@ export const matchRouter = router({
         throw new Error("You've already joined this match!");
       }
 
+      // Shouldn't the condition be '<=' not '<'?
+      // If numberOfPlayers is 2, then valid playerSlots are 0 and 1. 
+      // input.playerSlot of 2 would bypass this if statement.
       if (input.playerSlot !== null && match.map.data.numberOfPlayers < input.playerSlot) {
         throw new DispatchableError("Invalid player slot given");
       }
 
       if (input.playerSlot !== null && match.getPlayerBySlot(input.playerSlot) !== undefined) {
-        throw new DispatchableError("Player slot is occupied | Frontend right now ALWAYS applies for playerSlot 1 (needs to be updated)");
+        throw new DispatchableError("Player slot is occupied");
       }
 
       //TODO check if selectedCO is allowed for tier/league/match-blacklist
@@ -86,6 +89,11 @@ export const matchRouter = router({
       
       while(match.getPlayerBySlot(slotToJoin) !== undefined) {
         slotToJoin += 1;
+      }
+
+      // There should be code earlier in this flow that prevents this if statement from being true.
+      if (match.map.data.numberOfPlayers <= slotToJoin) {
+        throw new DispatchableError("Match is full");
       }
 
       const player = match.addUnwrappedPlayer({

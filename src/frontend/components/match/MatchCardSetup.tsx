@@ -29,6 +29,7 @@ export default function MatchCardSetup({ playerID, matchID, setupActions, inMatc
 
   if (inMatch) {
     return (<div className="@flex  ">
+        {/* **** CO Button and Menu **** */}
         <div>
           <button
             className="btnMenu"
@@ -36,7 +37,7 @@ export default function MatchCardSetup({ playerID, matchID, setupActions, inMatc
               setShowArmy(false);
               setShowCO(!showCO);
             }}
-          >
+            >
             Switch CO
           </button>
           {showCO ? (<div
@@ -70,6 +71,7 @@ export default function MatchCardSetup({ playerID, matchID, setupActions, inMatc
             </div>) : (<></>)}
         </div>
 
+        {/* **** Army Button and Menu **** */}
         <div>
           <button
             className=" btnMenu"
@@ -77,7 +79,7 @@ export default function MatchCardSetup({ playerID, matchID, setupActions, inMatc
               setShowCO(false);
               setShowArmy(!showArmy);
             }}
-          >
+            >
             Switch Army
           </button>
           {showArmy ? (
@@ -109,6 +111,49 @@ export default function MatchCardSetup({ playerID, matchID, setupActions, inMatc
               })}
             </div>) : (<></>)}
         </div>
+        
+        {/* **** Spawn Button and Menu **** */}
+        {/* <div>
+          <button
+            className=" btnMenu"
+            onClick={() => {
+              setShowCO(false);
+              setShowArmy(!showArmy);
+            }}
+            >
+            Switch Army
+          </button>
+          {showArmy ? (
+            <div className="@grid @grid-cols-2 @absolute  @z-10  @bg-bg-tertiary @outline-black @outline-2 @gap-2">
+              {armySchema._def.values.map((army) => {
+                return (<div
+                    onClick={() => {
+                      void switchArmy
+                        .mutateAsync({
+                          matchId: matchID,
+                          playerId: playerID,
+                          selectedArmy: army
+                        })
+                        .then(() => {
+                          setupActions.setArmy(army);
+                          setShowArmy(false);
+                        });
+                    }}
+                    key={army}
+                    className={`@flex @items-center @p-1 @bg-bg-primary hover:@bg-primary @cursor-pointer @duration-300`}
+                  >
+                    <img
+                      src={`/img/nations/${army}.gif`}
+                      className="[image-rendering:pixelated]"
+                      alt=""
+                    />
+                    <p className="@capitalize @text-xs @px-1">{army}</p>
+                  </div>);
+              })}
+            </div>) : (<></>)}
+        </div> */}
+
+        {/* Ready Button */}
         <div>
           <button
             className=" btnMenu"
@@ -133,6 +178,8 @@ export default function MatchCardSetup({ playerID, matchID, setupActions, inMatc
             {readyStatus ? "Unready" : "Ready up"}
           </button>
         </div>
+
+        {/* Leave Button */}
         <div>
           <button
             className=" btnMenu"
@@ -150,6 +197,7 @@ export default function MatchCardSetup({ playerID, matchID, setupActions, inMatc
             Leave
           </button>
         </div>
+
       </div>);
   }
   // Not part of the game, can't change CO or Army or Ready
