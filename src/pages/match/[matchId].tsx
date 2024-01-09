@@ -1,7 +1,6 @@
-"use client"; // This is a client component 👈🏽
 import { usePlayers } from "frontend/context/players";
 import { useRouter } from "next/router";
-import type { ISpritesheetData, Spritesheet } from "pixi.js";
+import { ISpritesheetData, Spritesheet, Texture } from "pixi.js";
 import {
   Application,
   BaseTexture,
@@ -19,6 +18,7 @@ import getSpriteSheets from "gameFunction/get-sprite-sheets";
 import type { GetServerSideProps } from "next";
 import { MatchWrapper } from "shared/wrappers/match";
 import { mapRender } from "../../interactiveMatchRenders/map-render";
+import { spriteConstructor } from "../../interactiveMatchRenders/sprite-constructor";
 
 BaseTexture.defaultOptions.scaleMode = SCALE_MODES.NEAREST;
 
@@ -110,24 +110,19 @@ const Match = ({ spriteData }: Props) => {
     }
   }
 
-
-
-
-
   const [scale, setScale] = useState<number>(2);
 
   //Global variable that determines the size of tiles
   const tileSize = 16
 
-//Important useEffect to make sure Pixi
-  // only gets updated when pixiCanvasRef or mapData changes
-  // we dont want it to be refreshed in react everytime something changes.
+  //const [app, setApp] = useState<Application | null>(null);
   useEffect(() => {
 
     if (!mapData || spriteSheets === undefined) {
       return;
     }
 
+    //TODO: Set app/mapContainer outside useEffect so we can grab them? maybeeee useState or something?
     const mapScale = scale * tileSize;
     const mapMargin = scale * tileSize * 2;
     const mapWidth = mapData[0].length * mapScale + mapMargin
@@ -152,7 +147,7 @@ const Match = ({ spriteData }: Props) => {
 
 
     //the container that holds the map
-    const mapContainer = new Container();
+    const mapContainer = mapRender(spriteSheets, mapData, tileSize, mapWidth, mapHeight, mutation);
     mapContainer.x = tileSize;
     mapContainer.y = tileSize;
 
@@ -160,7 +155,23 @@ const Match = ({ spriteData }: Props) => {
     mapContainer.sortableChildren = true;
 
     //this creates our map
-    app.stage.addChild(mapRender(spriteSheets, mapData, tileSize, mapWidth, mapHeight, mutation));
+    app.stage.addChild(mapContainer);
+
+    console.log(mapContainer.children);
+
+    //Invisible rectangle that serves as our eventListener that we are clicking outside the pathfinding so we need to remove the pathfinding
+    const whiteChild = spriteConstructor(
+      Texture.WHITE,
+      32,
+      0,
+      16,
+      16,
+      "static"
+    );
+
+    //mapContainer.removeChildAt(0);
+    mapContainer.removeChildAt(2);
+    mapContainer.addChildAt(whiteChild, 2)
 
     return () => {
       app.stop();
@@ -169,26 +180,14 @@ const Match = ({ spriteData }: Props) => {
 
   return (
     <div className="@grid @grid-cols-12 @text-center @my-20 @mx-2">
+      <h3 className="@col-span-12">Scale</h3>
       <div className="@col-span-12 @p-2">
-        <button
-          className={"btn @inline"}
-          onClick={() => {
-            setScale(scale + 0.2);
-          }}
-        >
-          +
-        </button>
+        <button className={"btn @inline"} onClick={() => {setScale(scale + 0.2);}}>+</button>
         <h2 className="@inline @align-middle">
           {" "}
           {Math.round(scale * 10) / 10}{" "}
         </h2>
-        <button
-          className={"btn"}
-          onClick={() => {
-            setScale(scale - 0.2);
-          }}
-        >
-          -
+        <button className={"btn"} onClick={() => {setScale(scale - 0.2);}}>-
         </button>
       </div>
       <div className="@mx-4 @w-48 @col-span-2 [image-rendering:pixelated]">
