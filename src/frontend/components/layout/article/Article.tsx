@@ -1,10 +1,21 @@
-import type { ArticleData } from "frontend/utils/articleScript";
+import { type ArticleType } from "@prisma/client";
 import Banner from "frontend/components/layout/Banner";
 import styles from "frontend/styles/pages/articles.module.scss";
 import Head from "next/head";
 
 type Props = {
-  postData: ArticleData;
+  postData: {
+    type: ArticleType;
+    contentHtml: string;
+    metaData: {
+        title: string;
+        description: string;
+        createdAt: string;
+        category: string;
+        thumbnail: string;
+        thumbnailAlt: string;
+    };
+  }
 };
 
 export default function Article({ postData }: Props) {
@@ -42,22 +53,21 @@ export default function Article({ postData }: Props) {
     return (
       <>
         <Head>
-          <title>{postData.metaData.title}</title>
+          <title>{`${postData.type[0].toUpperCase() + postData.type.slice(1)} | ${postData.metaData.title}`}</title>
           <meta name="description" content={postData.metaData.description}/>
         </Head>
 
         <Banner
           title={
             <div>
-              {/* <h2 className="@bg-secondary @inline-block @p-2 @text-black @font-[500]">
-                {postData.metaData.type.toUpperCase()}
-                Type here
-              </h2> */}
-              <h2 className="@bg-white @inline-block @p-2 @text-black @font-[500]">
+              <h2 className="@bg-bg-secondary @inline-block @py-2 @px-4 smallscreen:@py-4 smallscreen:@px-6 @text-xl smallscreen:@text-5xl @text-white @font-medium">
+                {postData.type.toUpperCase()}
+              </h2>
+              <h2 className="@bg-white @inline-block @py-2 @px-4 smallscreen:@py-4 smallscreen:@px-6 @text-xl smallscreen:@text-5xl @text-black @font-medium">
                 {postData.metaData.category.toUpperCase()}
               </h2>
-              <h1>{postData.metaData.title}</h1>
-              <p>{postData.metaData.description}</p>
+              <h1 className="@text-2xl smallscreen:@text-6xl large_monitor:@text-8xl @font-semibold @my-6">{postData.metaData.title}</h1>
+              <h1 className="@text-lg smallscreen:@text-3xl large_monitor:@text-6xl">{postData.metaData.description}</h1>
             </div>
           }
           backgroundURL={postData.metaData.thumbnail}
@@ -65,7 +75,7 @@ export default function Article({ postData }: Props) {
 
         <div
           className={
-            "@grid @grid-cols-12 smallscreen:@p-10 smallscreen:@gap-10 @gap-2 @relative @leading-10 "
+            "@grid @grid-cols-12 @p-6 smallscreen:@p-10 smallscreen:@gap-10 @gap-2 @relative @leading-10 "
           }
         >
           <div

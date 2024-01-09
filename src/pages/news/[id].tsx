@@ -23,6 +23,7 @@ export default function NewsArticle() {
   return (
     <>
       { article && <Article postData={{
+          type: "news",
           contentHtml: post,
           metaData: {
             title: article.title,

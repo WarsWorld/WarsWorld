@@ -33,7 +33,7 @@ export default function HowToPlay() {
     */
     <>
       <Head>
-        <title>Wars World Guides</title>
+        <title>Guides | Wars World</title>
       </Head>
 
       <div className="@w-full @mt-8">

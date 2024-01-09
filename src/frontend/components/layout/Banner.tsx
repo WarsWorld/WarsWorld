@@ -57,17 +57,17 @@ export default function Banner2(props: {
     }
   }, [screenWidth, props.isHomeBanner]);
   return (
-    <div className="@relative @h-[70vh] @w-full tablet:@h-[90vh] @overflow-hidden @shadow-black @shadow-2xl">
+    <div className="@relative @h-[65vh] @w-full tablet:@h-[90vh] @overflow-hidden @shadow-black @shadow-2xl">
       <Image
-        className={`@object-cover @w-full @absolute @h-full @z-0`}
+        className={`@object-cover @object-top @w-full @absolute @h-full @z-0`}
         alt=""
         src={props.backgroundURL}
         width={0}
         height={0}
         sizes="100vw"
       />
-      <div className="@absolute @flex @items-start @gap-10 @h-full @w-full @backdrop-brightness-[0.25] @z-10"></div>
-      <div className="@flex @items-start @gap-10 @h-full @top-[20vh] @left-[3.5vw] tablet:@left-[7.5vw] @absolute @z-20">
+      <div className="@absolute @flex @items-start @gap-10 @h-full @w-full @backdrop-brightness-[0.15] @z-10"></div>
+      <div className="@flex @items-start @gap-10 @h-full @top-[10vh] @left-[3.5vw] tablet:@left-[7.5vw] @absolute @z-20">
         <div>{props.title}</div>
       </div>
       {cos}
