@@ -22,13 +22,13 @@ export default function NewsPage()  {
           {
             articleNews && 
             <FeaturedNewsCard cardInfo={{
-              subdirectory: `news/${articleNews?.[0].id}`,
-              title: articleNews?.[0].title,
-              description: articleNews?.[0].description,
-              thumbnail: articleNews?.[0].thumbnail ?? "",
-              thumbnailAlt: articleNews?.[0].title,
-              date: articleNews?.[0].createdAt.toDateString(),
-              category: articleNews?.[0].category[0].toUpperCase() + articleNews?.[0].category.slice(1),
+              subdirectory: `news/${articleNews?.[1].id}`,
+              title: articleNews?.[1].title,
+              description: articleNews?.[1].description,
+              thumbnail: articleNews?.[1].thumbnail ?? "",
+              thumbnailAlt: articleNews?.[1].title,
+              date: articleNews?.[1].createdAt.toDateString(),
+              category: articleNews?.[1].category[0].toUpperCase() + articleNews?.[1].category.slice(1),
             }}/>
           }
         </div>
