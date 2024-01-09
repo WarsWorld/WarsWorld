@@ -35,7 +35,7 @@ export const articleSchema = z.discriminatedUnion("type", [
   articleWithoutCategory.extend({
     type: z.literal("guide"),
     category: guideCategories,
-  })
+  }),
 ]);
 
 export type ArticleMetaData = z.infer<typeof articleSchema>;

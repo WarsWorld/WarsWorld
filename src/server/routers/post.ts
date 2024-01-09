@@ -14,13 +14,6 @@ import html from "remark-html";
 const bannedWords = ["heck", "frick", "oof", "swag", "amongus"];
 
 export const postRouter = router({
-  all: publicBaseProcedure.query(() =>
-    prisma.post.findMany({
-      include: {
-        Authors: true,
-      },
-    })
-  ),
   getMetadataByType: publicBaseProcedure
     .input(
       z.object({
