@@ -122,6 +122,9 @@ export const mapRender = (
     }
   }
 
+  //allows for us to use zIndex on the children of mapContainer
+  mapContainer.sortableChildren = true;
+
   return mapContainer;
 
 };

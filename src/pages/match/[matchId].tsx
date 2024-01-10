@@ -1,14 +1,11 @@
 import { usePlayers } from "frontend/context/players";
 import { useRouter } from "next/router";
-import type { ISpritesheetData, Spritesheet } from "pixi.js";
+import { ICanvas, ISpritesheetData, Spritesheet, Texture } from "pixi.js";
 import {
-  AnimatedSprite,
   Application,
   BaseTexture,
   Container,
   SCALE_MODES,
-  Sprite,
-  Texture
 } from "pixi.js";
 import { useEffect, useRef, useState } from "react";
 import type { Tile } from "shared/schemas/tile";
@@ -17,14 +14,11 @@ import type { PlayerInMatch } from "shared/types/server-match-state";
 import MatchPlayer from "frontend/components/match/MatchPlayer";
 import { loadSpritesheets } from "frontend/pixi/load-spritesheet";
 import { trpc } from "frontend/utils/trpc-client";
-import { demoUnits } from "gameFunction/demoUnitList";
 import getSpriteSheets from "gameFunction/get-sprite-sheets";
-import showMenu from "gameFunction/showMenu";
-import { showUnits } from "gameFunction/showUnit";
-import { spriteConstructor } from "gameFunction/spriteConstructor";
 import type { GetServerSideProps } from "next";
 import { MatchWrapper } from "shared/wrappers/match";
 import { mapRender } from "../../interactiveMatchRenders/map-render";
+import { spriteConstructor } from "../../interactiveMatchRenders/sprite-constructor";
 
 BaseTexture.defaultOptions.scaleMode = SCALE_MODES.NEAREST;
 
@@ -39,18 +33,23 @@ const Match = ({ spriteData }: Props) => {
         setSpriteSheets(await loadSpritesheets(spriteData));
     };
      fetchData();
-  }, [spriteData]);
+  }, []);
 
 
-  const mutation = trpc.action.send.useMutation();
+  const actionMutation = trpc.action.send.useMutation();
+
   const { currentPlayer } = usePlayers();
+
   const [players, setPlayers] = useState<PlayerInMatch[] | null | undefined>(
     null
   );
+
   const [mapData, setMapData] = useState<Tile[][] | null | undefined>(null);
+
   const pixiCanvasRef = useRef<HTMLCanvasElement>(null);
 
   const { query } = useRouter();
+
   const matchId = query.matchId as string;
 
   const matchQuery = trpc.match.full.useQuery(
@@ -97,41 +96,35 @@ const Match = ({ spriteData }: Props) => {
 
   }, [currentPlayerId]);
 
-  trpc.match.full.useQuery(
-    { matchId, playerId: currentPlayer?.id ?? "" },
-    {
-      enabled: currentPlayer !== undefined,
-      onSuccess(data) {
-        if (data === null) {
-          throw new Error(`Match ${matchId} not found!`);
-        }
+  const {data} = trpc.match.full.useQuery({ matchId, playerId: currentPlayer?.id ?? "" })
 
-        if (data.status !== "playing") {
-          throw new Error(
-            `This match hasn't started yet. make sure to ready up!`
-          );
-        }
-
-        if (!players) {
-          setPlayers(data.players);
-        }
-
-        if (!mapData) {
-          setMapData(data.map.tiles);
-        }
-      }
+  if (data) {
+    if (data.status !== "playing") {
+      throw new Error(
+        `This match hasn't started yet. make sure to ready up!`
+      );
     }
-  );
 
+    if (!players) {
+      setPlayers(data.players);
+    }
+
+    if (!mapData) {
+      setMapData(data.map.tiles);
+    }
+  }
 
   const [scale, setScale] = useState<number>(2);
 
   //Global variable that determines the size of tiles
   const tileSize = 16
 
-//Important useEffect to make sure Pixi
-  // only gets updated when pixiCanvasRef or mapData changes
-  // we dont want it to be refreshed in react everytime something changes.
+
+  //This references are here so we can just say "mapContainer.current" somewhere else
+  // and modify our mapContainer or something else without using useState
+  const pixiApp = useRef<Application | null>(null);
+  const mapContainer = useRef<Container | null>(null);
+
   useEffect(() => {
     if (!mapData || spriteSheets === undefined) {
       return;
@@ -139,10 +132,10 @@ const Match = ({ spriteData }: Props) => {
 
     const mapScale = scale * tileSize;
     const mapMargin = scale * tileSize * 2;
-    const mapWidth = mapData[0].length * mapScale + mapMargin
+    const mapWidth = mapData[0].length * mapScale + mapMargin;
     const mapHeight = mapData.length * mapScale + mapMargin;
 
-    const app = new Application({
+    pixiApp.current = new Application({
       view: pixiCanvasRef.current ?? undefined,
       autoDensity: true,
       resolution: window.devicePixelRatio,
@@ -150,92 +143,95 @@ const Match = ({ spriteData }: Props) => {
       width: mapWidth,
       height: mapHeight
     });
-    app.stage.position.set(0, 0);
-    app.stage.sortableChildren = true;
-    app.stage.scale.set(scale, scale);
-    //let render our specific cursor
-    //TODO: Cursor stops working on half screen on google chrome (works on firefox).
-    app.renderer.events.cursorStyles.default = {
+
+    pixiApp.current.stage.position.set(0, 0);
+    pixiApp.current.stage.sortableChildren = true;
+    pixiApp.current.stage.scale.set(scale, scale);
+
+    //let render our game cursor
+    //TODO: Cursor stops working on second screen on google chrome (works on firefox).
+    pixiApp.current.renderer.events.cursorStyles.default = {
       animation: "gameCursor 1200ms infinite"
     } as CSSStyleDeclaration;
 
+    //lets create a mapContainer
+    mapContainer.current = mapRender(spriteSheets, mapData, tileSize, mapWidth, mapHeight, actionMutation);
 
-    //the container that holds the map
-    const mapContainer = new Container();
-    mapContainer.x = tileSize;
-    mapContainer.y = tileSize;
+    pixiApp.current.stage.addChild(mapContainer.current);
 
-    //allows for us to use zIndex on the children of mapContainer
-    mapContainer.sortableChildren = true;
-
-    //this creates our map
-    app.stage.addChild(mapRender(spriteSheets, mapData, tileSize, mapWidth, mapHeight, mutation));
+    //this is just a test for now...
+    const whiteChild = spriteConstructor(
+      Texture.WHITE,
+      32,
+      0,
+      16,
+      16,
+      "static"
+    );
+    mapContainer.current.removeChildAt(2);
+    mapContainer.current.addChildAt(whiteChild, 2)
 
     return () => {
-      app.stop();
+      pixiApp.current.stop();
     };
-  }, [pixiCanvasRef, mapData, spriteSheets, scale, mutation, spriteData]);
+  }, [mapData, spriteSheets, scale, actionMutation]);
 
-  return (
-    <div className="@grid @grid-cols-12 @text-center @my-20 @mx-2">
-      <div className="@col-span-12 @p-2">
-        <button
-          className={"btn @inline"}
-          onClick={() => {
-            setScale(scale + 0.2);
-          }}
-        >
-          +
-        </button>
-        <h2 className="@inline @align-middle">
-          {" "}
-          {Math.round(scale * 10) / 10}{" "}
-        </h2>
-        <button
-          className={"btn"}
-          onClick={() => {
-            setScale(scale - 0.2);
-          }}
-        >
-          -
-        </button>
-      </div>
-      <div className="@mx-4 @w-48 @col-span-2 [image-rendering:pixelated]">
-        {players ? (
-          <MatchPlayer
-            name={players[0].name}
-            co={players[0].coId.name}
-            country={players[0].army}
-            playerReady={true}
-          />
-        ) : (
-          "loading"
-        )}
-      </div>
-      <div className="@col-span-8">
-        <canvas
-          className="@inline"
-          style={{
-            imageRendering: "pixelated"
-          }}
-          ref={pixiCanvasRef}
-        ></canvas>
-      </div>
-      <div className="@mx-4 @w-48 @col-span-2 [image-rendering:pixelated]">
-        {players ? (
-          <MatchPlayer
-            name={players[1].name}
-            co={players[1].coId.name}
-            country={players[1].army}
-            playerReady={true}
-            flipCO={true}
-          />
-        ) : (
-          "loading"
-        )}
-      </div>
-    </div>
-  );
+
+    if (mapContainer.current) {
+      console.log("mapContainer ref");
+      console.log(mapContainer.current);
+    }
+
+   if (!mapData || !players) {
+     return <></>
+   } else {
+     return (
+       <div className="@grid @grid-cols-12 @text-center @my-20 @mx-2">
+         <h3 className="@col-span-12">Scale</h3>
+         <div className="@col-span-12 @p-2">
+           <button className={"btn @inline"} onClick={() => {
+             setScale(scale + 0.2);
+           }}>+
+           </button>
+           <h2 className="@inline @align-middle">
+             {" "}
+             {Math.round(scale * 10) / 10}{" "}
+           </h2>
+           <button className={"btn"} onClick={() => {
+             setScale(scale - 0.2);
+           }}>-
+           </button>
+         </div>
+         <div className="@mx-4 @w-48 @col-span-2 [image-rendering:pixelated]">
+             <MatchPlayer
+               name={players[0].name}
+               co={players[0].coId}
+               country={players[0].army}
+               playerReady={true}
+             />
+
+         </div>
+         <div className="@col-span-8">
+           <canvas
+             className="@inline"
+             style={{
+               imageRendering: "pixelated"
+             }}
+             ref={pixiCanvasRef}
+           ></canvas>
+         </div>
+         <div className="@mx-4 @w-48 @col-span-2 [image-rendering:pixelated]">
+             <MatchPlayer
+               name={players[1].name}
+               co={players[1].coId}
+               country={players[1].army}
+               playerReady={true}
+               flipCO={true}
+             />
+         </div>
+       </div>
+     );
+   }
 };
 export default Match;
 
