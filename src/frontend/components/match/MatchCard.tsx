@@ -60,6 +60,7 @@ export default function MatchCard({ match, inMatch }: matchData) {
     if (firstPlayer) {
       setPlayerCO(firstPlayer.coId);
       setArmy(firstPlayer.army);
+      setReady(firstPlayer.ready);
     }
   }, [firstPlayer])
 

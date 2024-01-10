@@ -98,6 +98,9 @@ export default function CreateMatch({
     if (newCurrentPlayer) {
       setCurrentPlayer(newCurrentPlayer);
     }
+    
+    refetchAllMatches();
+    refetchYourMatches();
   };
 
   const selectMapHandler = (o: SelectOption | undefined) => {
