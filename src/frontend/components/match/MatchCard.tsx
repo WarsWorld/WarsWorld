@@ -4,9 +4,10 @@ import type { FrontendMatch } from "shared/types/component-data";
 import { coSchema } from "shared/schemas/co";
 import { armySchema } from "shared/schemas/army";
 import MatchCardSetup from "./MatchCardSetup";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { usePlayers } from "frontend/context/players";
 import Link from "next/link";
+import type { PlayerInMatch } from "shared/types/server-match-state";
 
 type matchData = {
   match: FrontendMatch;
@@ -16,9 +17,9 @@ type matchData = {
 export default function MatchCard({ match, inMatch }: matchData) {
   const { currentPlayer } = usePlayers();
 
-  let firstPlayer;
+  let firstPlayer: PlayerInMatch | undefined;
   let playerIndex;
-  let secondPlayer;
+  let secondPlayer: PlayerInMatch | undefined;
 
   if (currentPlayer != undefined) {
     match.players.forEach((player, index) => {
@@ -54,6 +55,13 @@ export default function MatchCard({ match, inMatch }: matchData) {
   if (secondPlayer !== undefined) {
     twoPlayerCheck = true;
   }
+
+  useEffect(() => {
+    if (firstPlayer) {
+      setPlayerCO(firstPlayer.coId);
+      setArmy(firstPlayer.army);
+    }
+  }, [firstPlayer])
 
   return (
     <div className="@grid @bg-bg-primary @relative">
