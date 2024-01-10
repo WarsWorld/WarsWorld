@@ -15,9 +15,9 @@ generator json {
 }
 
 model Post {
-  id          String          @id @default(cuid())
+  id          Int             @id @default(autoincrement())
   Authors     PostAuthors[]
-  title       String          @unique
+  title       String
   description String
   type        ArticleType
   category    ArticleCategory
@@ -32,7 +32,7 @@ model Post {
 
 model PostAuthors {
   post     Post   @relation(fields: [postId], references: [id])
-  postId   String
+  postId   Int
   author   Player @relation(fields: [authorId], references: [id])
   authorId String
 

@@ -5,6 +5,7 @@ import LinkCard  from "frontend/components/layout/article/LinkCard";
 import { trpc } from "frontend/utils/trpc-client";
 import Head from "next/head";
 import LinkCardContainer from "frontend/components/layout/article/LinkCardContainer";
+import { stringToSlug } from "pages/posts/[...slug]";
 export default function NewsPage()  {
   const { data: articleNews } = trpc.post.getMetadataByType.useQuery({ type: "news" });
 
@@ -22,7 +23,7 @@ export default function NewsPage()  {
         {
           articleNews && 
           <FeaturedNewsCard cardInfo={{
-            subdirectory: `news/${articleNews?.[1].id}`,
+            subdirectory: `posts/${articleNews?.[1].id}/${stringToSlug(articleNews?.[1].title)}`,
             title: articleNews?.[1].title,
             description: articleNews?.[1].description,
             thumbnail: articleNews?.[1].thumbnail ?? "",
@@ -37,7 +38,7 @@ export default function NewsPage()  {
         <LinkCardContainer>
           {articleNews?.map((article, index) => (
           <LinkCard key={index} cardInfo={{
-            subdirectory: `news/${article.id}`,
+            subdirectory: `posts/${article.id}/${stringToSlug(article.title)}`,
             title: article.title,
             description: article.description,
             thumbnail: article.thumbnail ?? "",

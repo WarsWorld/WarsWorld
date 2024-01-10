@@ -3,6 +3,7 @@ import ArticleGroup from "frontend/components/layout/article/ArticleGroup";
 import Head from "next/head";
 import { trpc } from "frontend/utils/trpc-client";
 import { type ICardInfo } from "frontend/components/news/FeaturedNewsCard";
+import { stringToSlug } from "pages/posts/[...slug]";
 
 const data = [
   {
@@ -51,7 +52,7 @@ export default function HowToPlay() {
                 tailwind_color={section.color}
                 articles={articleGuides?.map(guide => {
                   return {
-                    subdirectory: `howtoplay/${guide.id}`,
+                    subdirectory: `posts/${guide.id}/${stringToSlug(guide.title)}`,
                     title: guide.title,
                     description: guide.description,
                     thumbnail: guide.thumbnail ?? "",

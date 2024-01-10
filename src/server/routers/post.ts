@@ -36,11 +36,10 @@ export const postRouter = router({
         },
       })
   ),
-  getMarkdownByIdAndType: publicBaseProcedure
+  getMarkdownById: publicBaseProcedure
     .input(
       z.object({
         id: z.string(),
-        type: articleType,
       })
     )
     .query(async ({ input }) => {
@@ -56,8 +55,7 @@ export const postRouter = router({
         },
         where: {
           AND: {
-            id: input.id,
-            type: input.type,
+            id: parseInt(input.id),
           }
         }
       });
