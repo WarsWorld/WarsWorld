@@ -28,9 +28,13 @@ footer {
   height: $FooterHeightSmallScreen;
 }
 
-.mainContent {
+.mainContainer {
   margin-top: $HeaderHeightSmallScreen;
   margin-bottom: $FooterHeightSmallScreen;
+}
+
+.mainHeight {
+  min-height: calc(100vh - $HeaderHeightSmallScreen - $FooterHeightSmallScreen);
 }
 
 @screen smallscreen {
@@ -42,8 +46,12 @@ footer {
     height: $FooterHeightSmallScreen;
   }
 
-  .mainContent {
+  .mainContainer {
     margin-top: $HeaderHeightBigScreen;
     margin-bottom: $FooterHeightSmallScreen;
+  }
+
+  .mainHeight {
+    min-height: calc(100vh - $HeaderHeightBigScreen - $FooterHeightSmallScreen);
   }
 }
