@@ -29,14 +29,14 @@ export default function MatchCard({ match, inMatch }: matchData) {
       }
     });
   }
-
+  
   if (firstPlayer === undefined) {
     firstPlayer = match.players[0];
     secondPlayer = match.players[1];
   } else {
     playerIndex === 0 ? (secondPlayer = match.players[1]) : (secondPlayer = match.players[0]);
   }
-
+  
   //this function can change co, army or status (ready/not ready)
   // it is purely visual
   const [currentPlayerOptions, setCurrentPlayerOptions] = useState({
@@ -44,6 +44,10 @@ export default function MatchCard({ match, inMatch }: matchData) {
     army: firstPlayer.army,
     ready: firstPlayer.ready,
     slot: firstPlayer.slot
+  })
+  const [selectedOptions, setSelectedOptions] = useState({
+    selectedArmies: match.players.map((player) => player.army),
+    selectedSlots: match.players.map((player) => player.slot)
   })
 
   let twoPlayerCheck = false;
@@ -106,6 +110,9 @@ export default function MatchCard({ match, inMatch }: matchData) {
             playerID={currentPlayer ? currentPlayer.id : ""}
             inMatch={inMatch}
             readyStatus={currentPlayerOptions.ready ?? false}
+            selectedOptions={selectedOptions}
+            setSelectedOptions={setSelectedOptions}
+            maxNumberOfPlayers={match.map.numberOfPlayers}
           />
         )
       }

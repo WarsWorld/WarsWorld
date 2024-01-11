@@ -17,9 +17,27 @@ type matchData = {
   }>>,
   inMatch: boolean;
   readyStatus: boolean;
+  selectedOptions: {
+    selectedArmies: Army[],
+    selectedSlots: number[],
+  },
+  setSelectedOptions: React.Dispatch<React.SetStateAction<{
+    selectedArmies: Army[];
+    selectedSlots: number[];
+  }>>,
+  maxNumberOfPlayers: number;
 };
 
-export default function MatchCardSetup({ playerID, matchID, setCurrentPlayerOptions, inMatch, readyStatus}: matchData) {
+export default function MatchCardSetup({ 
+  playerID, 
+  matchID, 
+  setCurrentPlayerOptions, 
+  inMatch, 
+  readyStatus, 
+  selectedOptions,
+  setSelectedOptions,
+  maxNumberOfPlayers
+}: matchData) {
   const switchCO = trpc.match.switchCO.useMutation();
   const switchArmy = trpc.match.switchArmy.useMutation();
   const switchSlot = trpc.match.switchSlot.useMutation();
@@ -58,7 +76,8 @@ export default function MatchCardSetup({ playerID, matchID, setCurrentPlayerOpti
                         });
                     }}
                     key={co}
-                    className={`@flex @items-center @p-1 @bg-bg-primary hover:@bg-primary @cursor-pointer @duration-300`}
+                    className={`@flex @items-center @p-1 @bg-bg-primary hover:@bg-primary 
+                    @cursor-pointer @duration-300`}
                   >
                     <img
                       src={`/img/CO/pixelated/${co}-small.png`}
@@ -86,19 +105,33 @@ export default function MatchCardSetup({ playerID, matchID, setCurrentPlayerOpti
               {armySchema._def.values.map((army) => {
                 return (<div
                     onClick={() => {
-                      void switchArmy
+                      if (!selectedOptions.selectedArmies.includes(army)){
+                        void switchArmy
                         .mutateAsync({
                           matchId: matchID,
                           playerId: playerID,
                           selectedArmy: army
                         })
                         .then(() => {
-                          setCurrentPlayerOptions((prevState) => {return {...prevState, army: army}})
+                          let prevArmy: Army;
+                          setCurrentPlayerOptions((prevState) => {
+                            prevArmy = prevState.army
+                            return {...prevState, army: army}
+                          })
+                          setSelectedOptions((prevState) => {
+                            const selectedArmiesWithoutPrevArmy = prevState.selectedArmies.filter((army) => army != prevArmy)
+                            return { 
+                              ...prevState,
+                              selectedArmies: [...selectedArmiesWithoutPrevArmy, army]
+                            }
+                          })
                           setShowDropdown("");
                         });
+                      }
                     }}
                     key={army}
-                    className={`@flex @items-center @p-1 @bg-bg-primary hover:@bg-primary @cursor-pointer @duration-300`}
+                    className={`@flex @items-center @p-1 @bg-bg-primary 
+                    ${selectedOptions.selectedArmies.includes(army) ? "@brightness-50" : "hover:@bg-primary @cursor-pointer @duration-300" }`}
                   >
                     <img
                       src={`/img/nations/${army}.gif`}
@@ -123,22 +156,37 @@ export default function MatchCardSetup({ playerID, matchID, setCurrentPlayerOpti
           </button>
           {showDropdown == "slot" ? (
             <div className="@absolute @z-10 @bg-bg-tertiary @outline-black @outline-2">
-              {[0,1].map((slot) => {
+              {[...Array(maxNumberOfPlayers).keys()].map((slot) => {
                 return (<div
                     onClick={() => {
-                      void switchSlot
+                      if (!selectedOptions.selectedSlots.includes(slot)){
+                        void switchSlot
                         .mutateAsync({
                           matchId: matchID,
                           playerId: playerID,
                           selectedSlot: slot
                         })
                         .then(() => {
-                          setCurrentPlayerOptions((prevState) => {return {...prevState, slot: slot}})
+                          let prevSlot: number;
+                          setCurrentPlayerOptions((prevState) => {
+                            prevSlot = prevState.slot
+                            return {...prevState, slot: slot}
+                          })
+                          setSelectedOptions((prevState) => {
+                            const selectedSlotsWithoutPrevSlot = prevState.selectedSlots.filter((slot) => slot != prevSlot)
+                            return { 
+                              ...prevState,
+                              selectedSlots: [...selectedSlotsWithoutPrevSlot, slot]
+                            }
+                          })
                           setShowDropdown("");
                         });
+                      }
                     }}
                     key={slot}
-                    className={`@flex @items-center @p-1 @bg-bg-primary hover:@bg-primary @cursor-pointer @duration-300`}
+                    className={`@flex @items-center @p-1 @bg-bg-primary
+                      ${selectedOptions.selectedSlots.includes(slot) ? "@brightness-50" : "hover:@bg-primary @cursor-pointer @duration-300" }
+                    `}
                   >
                     <p className="@capitalize @text-xs @px-1">{slot}</p>
                   </div>);
