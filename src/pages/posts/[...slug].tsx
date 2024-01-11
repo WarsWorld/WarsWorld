@@ -77,7 +77,7 @@ export const getStaticProps = (
     // Render the page
     return { 
       props: { 
-        postId: postId ?? "",
+        postId: postId,
         title: title,
       },
       revalidate: 10,
@@ -87,7 +87,7 @@ export const getStaticProps = (
 export default function NewsArticle(
   { postId }: InferGetStaticPropsType<typeof getStaticProps>,
 ) {
-  const { data: article } = trpc.post.getMarkdownById.useQuery({ id: postId });
+  const { data: article } = trpc.post.getMarkdownById.useQuery({ id: postId }, { enabled: postId != undefined });
   const [post, setPost] = useState("");
 
   useEffect(() => {
