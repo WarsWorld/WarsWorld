@@ -1,7 +1,7 @@
 // createMap.js
 import type { ISpritesheetData, Spritesheet} from "pixi.js";
 import { AnimatedSprite, Container, Sprite, Texture } from "pixi.js";
-import showMenu from "../gameFunction/showMenu";
+import showBuildMenu from "./show-build-menu";
 import { spriteConstructor } from "../gameFunction/spriteConstructor";
 import type { Tile } from "../shared/schemas/tile";
 import type { UseTRPCMutationResult } from "@trpc/react-query/shared";
@@ -47,7 +47,7 @@ export const mapRender = (
             //Lets make menu appear
             tile.on("pointerdown", () => {
               void (async () => {
-                const menu = await showMenu(
+                const menu = await showBuildMenu(
                   spriteSheets[slot],
                   type,
                   slot,
@@ -57,7 +57,8 @@ export const mapRender = (
                   mapData[0].length - 1,
                   (input) => {
                     void mutation.mutateAsync(input);
-                  }
+                  },
+                  99999 //TODO: put real funds here
                 );
 
                 //if there is a menu already out, lets remove it

@@ -46,7 +46,7 @@ const Match = ({ spriteData }: Props) => {
 
   const [mapData, setMapData] = useState<Tile[][] | null | undefined>(null);
 
-  const pixiCanvasRef = useRef<HTMLCanvasElement>(null);
+
 
   const { query } = useRouter();
 
@@ -122,6 +122,7 @@ const Match = ({ spriteData }: Props) => {
 
   //This references are here so we can just say "mapContainer.current" somewhere else
   // and modify our mapContainer or something else without using useState
+  const pixiCanvasRef = useRef<HTMLCanvasElement>(null);
   const pixiApp = useRef<Application | null>(null);
   const mapContainer = useRef<Container | null>(null);
 
