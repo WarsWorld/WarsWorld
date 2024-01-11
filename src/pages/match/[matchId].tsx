@@ -46,7 +46,7 @@ const Match = ({ spriteData }: Props) => {
 
   const [mapData, setMapData] = useState<Tile[][] | null | undefined>(null);
 
-  const pixiCanvasRef = useRef<HTMLCanvasElement>(null);
+
 
   const { query } = useRouter();
 
@@ -119,11 +119,7 @@ const Match = ({ spriteData }: Props) => {
   //Global variable that determines the size of tiles
   const tileSize = 16
 
-
-  //This references are here so we can just say "mapContainer.current" somewhere else
-  // and modify our mapContainer or something else without using useState
-  const pixiApp = useRef<Application | null>(null);
-  const mapContainer = useRef<Container | null>(null);
+  const pixiCanvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
     if (!mapData || spriteSheets === undefined) {
@@ -135,29 +131,29 @@ const Match = ({ spriteData }: Props) => {
     const mapWidth = mapData[0].length * mapScale + mapMargin;
     const mapHeight = mapData.length * mapScale + mapMargin;
 
-    pixiApp.current = new Application({
+   const app = new Application({
       view: pixiCanvasRef.current ?? undefined,
       autoDensity: true,
       resolution: window.devicePixelRatio,
-      backgroundColor: "#061838",
+      backgroundColor: "#142546",
       width: mapWidth,
       height: mapHeight
     });
 
-    pixiApp.current.stage.position.set(0, 0);
-    pixiApp.current.stage.sortableChildren = true;
-    pixiApp.current.stage.scale.set(scale, scale);
+    app.stage.position.set(0, 0);
+    app.stage.sortableChildren = true;
+    app.stage.scale.set(scale, scale);
 
     //let render our game cursor
     //TODO: Cursor stops working on second screen on google chrome (works on firefox).
-    pixiApp.current.renderer.events.cursorStyles.default = {
+    app.renderer.events.cursorStyles.default = {
       animation: "gameCursor 1200ms infinite"
     } as CSSStyleDeclaration;
 
     //lets create a mapContainer
-    mapContainer.current = mapRender(spriteSheets, mapData, tileSize, mapWidth, mapHeight, actionMutation);
+    const mapContainer = mapRender(spriteSheets, mapData, tileSize, mapWidth, mapHeight, actionMutation);
 
-    pixiApp.current.stage.addChild(mapContainer.current);
+    app.stage.addChild(mapContainer);
 
     //this is just a test for now...
     const whiteChild = spriteConstructor(
@@ -168,19 +164,14 @@ const Match = ({ spriteData }: Props) => {
       16,
       "static"
     );
-    mapContainer.current.removeChildAt(2);
-    mapContainer.current.addChildAt(whiteChild, 2)
+    mapContainer.removeChildAt(2);
+    mapContainer.addChildAt(whiteChild, 2)
 
     return () => {
-      pixiApp.current.stop();
+      app.stop();
     };
   }, [mapData, spriteSheets, scale, actionMutation]);
 
-
-    if (mapContainer.current) {
-      console.log("mapContainer ref");
-      console.log(mapContainer.current);
-    }
 
    if (!mapData || !players) {
      return <></>

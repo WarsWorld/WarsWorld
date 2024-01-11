@@ -11,6 +11,7 @@ export type MovementType =
 export type Facility = "base" | "airport" | "port";
 
 type UnitPropertiesWithoutWeapon = {
+  displayName: string;
   cost: number;
   facility: Facility;
   movementType: MovementType;
@@ -37,6 +38,7 @@ export type UnitProperties =
   | UnitPropertiesWithoutWeapon;
 
 const infantry: UnitPropertiesWithoutAmmo = {
+  displayName: "Infantry",
   cost: 1000,
   facility: "base",
   movementType: "foot",
@@ -47,6 +49,7 @@ const infantry: UnitPropertiesWithoutAmmo = {
 };
 
 const mech: UnitPropertiesWithAmmo = {
+  displayName: "Mech",
   cost: 3000,
   facility: "base",
   movementType: "boots",
@@ -58,6 +61,7 @@ const mech: UnitPropertiesWithAmmo = {
 };
 
 const recon: UnitPropertiesWithoutAmmo = {
+  displayName: "Recon",
   cost: 4000,
   facility: "base",
   vision: 5,
@@ -68,6 +72,7 @@ const recon: UnitPropertiesWithoutAmmo = {
 };
 
 const apc: UnitPropertiesWithoutWeapon = {
+  displayName: "APC",
   cost: 5000,
   facility: "base",
   movementPoints: 5,
@@ -77,6 +82,7 @@ const apc: UnitPropertiesWithoutWeapon = {
 };
 
 const artillery: UnitPropertiesWithAmmo = {
+  displayName: "Artillery",
   cost: 6000,
   facility: "base",
   vision: 1,
@@ -88,6 +94,7 @@ const artillery: UnitPropertiesWithAmmo = {
 };
 
 const tank: UnitPropertiesWithAmmo = {
+  displayName: "Tank",
   cost: 7000,
   facility: "base",
   movementPoints: 6,
@@ -99,6 +106,7 @@ const tank: UnitPropertiesWithAmmo = {
 };
 
 const antiAir: UnitPropertiesWithAmmo = {
+  displayName: "Anti-Air",
   cost: 8000,
   facility: "base",
   vision: 2,
@@ -110,6 +118,7 @@ const antiAir: UnitPropertiesWithAmmo = {
 };
 
 const missile: UnitPropertiesWithAmmo = {
+  displayName: "Missile",
   cost: 12000,
   facility: "base",
   movementType: "tires",
@@ -121,6 +130,7 @@ const missile: UnitPropertiesWithAmmo = {
 };
 
 const rocket: UnitPropertiesWithAmmo = {
+  displayName: "Rocket",
   cost: 15000,
   facility: "base",
   movementType: "tires",
@@ -132,6 +142,7 @@ const rocket: UnitPropertiesWithAmmo = {
 };
 
 const mediumTank: UnitPropertiesWithAmmo = {
+  displayName: "MdTank",
   cost: 16000,
   facility: "base",
   vision: 1,
@@ -143,6 +154,7 @@ const mediumTank: UnitPropertiesWithAmmo = {
 };
 
 const pipeRunner: UnitPropertiesWithAmmo = {
+  displayName: "PipeRunner",
   cost: 20000,
   facility: "base",
   attackRange: [2, 5],
@@ -154,6 +166,7 @@ const pipeRunner: UnitPropertiesWithAmmo = {
 };
 
 const neoTank: UnitPropertiesWithAmmo = {
+  displayName: "NeoTank",
   cost: 22000,
   facility: "base",
   initialAmmo: 9,
@@ -165,6 +178,7 @@ const neoTank: UnitPropertiesWithAmmo = {
 };
 
 const megaTank: UnitPropertiesWithAmmo = {
+  displayName: "MegaTank",
   cost: 28000,
   facility: "base",
   initialAmmo: 3,
@@ -176,6 +190,7 @@ const megaTank: UnitPropertiesWithAmmo = {
 };
 
 const transportCopter: UnitPropertiesWithoutWeapon = {
+  displayName: "T-Copter",
   cost: 5000,
   movementPoints: 6,
   vision: 2,
@@ -185,6 +200,7 @@ const transportCopter: UnitPropertiesWithoutWeapon = {
 };
 
 const battleCopter: UnitPropertiesWithAmmo = {
+  displayName: "B-Copter",
   cost: 9000,
   vision: 3,
   initialFuel: 99,
@@ -196,6 +212,7 @@ const battleCopter: UnitPropertiesWithAmmo = {
 };
 
 const fighter: UnitPropertiesWithAmmo = {
+  displayName: "Fighter",
   cost: 20000,
   vision: 2,
   initialFuel: 99,
@@ -207,6 +224,7 @@ const fighter: UnitPropertiesWithAmmo = {
 };
 
 const bomber: UnitPropertiesWithAmmo = {
+  displayName: "Bomber",
   cost: 22000,
   vision: 2,
   initialAmmo: 9,
@@ -218,6 +236,7 @@ const bomber: UnitPropertiesWithAmmo = {
 };
 
 const stealth: UnitPropertiesWithAmmo = {
+  displayName: "Stealth",
   cost: 24000,
   vision: 4,
   initialFuel: 60,
@@ -229,6 +248,7 @@ const stealth: UnitPropertiesWithAmmo = {
 };
 
 const blackBomb: UnitPropertiesWithoutWeapon = {
+  displayName: "BlackBomb",
   cost: 25000,
   vision: 1,
   movementPoints: 9,
@@ -238,6 +258,7 @@ const blackBomb: UnitPropertiesWithoutWeapon = {
 };
 
 const blackBoat: UnitPropertiesWithoutWeapon = {
+  displayName: "BlackBoat",
   cost: 7500,
   vision: 1,
   movementPoints: 7,
@@ -247,6 +268,7 @@ const blackBoat: UnitPropertiesWithoutWeapon = {
 };
 
 const lander: UnitPropertiesWithoutWeapon = {
+  displayName: "Lander",
   cost: 12000,
   vision: 1,
   movementType: "lander",
@@ -256,6 +278,7 @@ const lander: UnitPropertiesWithoutWeapon = {
 };
 
 const cruiser: UnitPropertiesWithAmmo = {
+  displayName: "Cruiser",
   cost: 18000,
   vision: 3,
   movementPoints: 6,
@@ -267,6 +290,7 @@ const cruiser: UnitPropertiesWithAmmo = {
 };
 
 const sub: UnitPropertiesWithAmmo = {
+  displayName: "Sub",
   cost: 20000,
   vision: 5,
   movementPoints: 5,
@@ -278,6 +302,7 @@ const sub: UnitPropertiesWithAmmo = {
 };
 
 const battleship: UnitPropertiesWithAmmo = {
+  displayName: "Battleship",
   cost: 28000,
   attackRange: [2, 6],
   vision: 2,
@@ -289,6 +314,7 @@ const battleship: UnitPropertiesWithAmmo = {
 };
 
 const carrier: UnitPropertiesWithAmmo = {
+  displayName: "Carrier",
   cost: 30000,
   attackRange: [3, 8],
   vision: 4,

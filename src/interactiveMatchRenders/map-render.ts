@@ -1,7 +1,6 @@
-// createMap.js
 import type { ISpritesheetData, Spritesheet} from "pixi.js";
 import { AnimatedSprite, Container, Sprite, Texture } from "pixi.js";
-import showMenu from "../gameFunction/showMenu";
+import showBuildMenu from "./show-build-menu";
 import { spriteConstructor } from "../gameFunction/spriteConstructor";
 import type { Tile } from "../shared/schemas/tile";
 import type { UseTRPCMutationResult } from "@trpc/react-query/shared";
@@ -15,6 +14,7 @@ export const mapRender = (
   mapWidth: number,
   mapHeight: number,
   mutation:  UseTRPCMutationResult<never, never, never, never>, ) => {
+
   //the container that holds the map
   const mapContainer = new Container();
   mapContainer.x = tileSize;
@@ -42,26 +42,27 @@ export const mapRender = (
           tile = new AnimatedSprite(spriteSheets[slot].animations[type]);
 
           //if our building is able to produce units, it has a menu!
-          if (type !== "hq" && type !== "lab" && type !== "city") {
+          if (type === "base" || type === "airport" || type === "port") {
             tile.eventMode = "static";
             //Lets make menu appear
             tile.on("pointerdown", () => {
               void (async () => {
-                const menu = await showMenu(
+                const menu = await showBuildMenu(
                   spriteSheets[slot],
                   type,
                   slot,
-                  rowIndex,
                   colIndex,
+                  rowIndex,
                   mapData.length - 1,
                   mapData[0].length - 1,
                   (input) => {
                     void mutation.mutateAsync(input);
-                  }
+                  },
+                  99999 //TODO: put real funds here
                 );
 
                 //if there is a menu already out, lets remove it
-                const menuContainer = mapContainer.getChildByName("menu");
+                const menuContainer = mapContainer.getChildByName("buildMenu");
 
                 if (menuContainer !== null) {
                   mapContainer.removeChild(menuContainer);
