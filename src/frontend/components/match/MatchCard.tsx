@@ -37,19 +37,14 @@ export default function MatchCard({ match, inMatch }: matchData) {
     playerIndex === 0 ? (secondPlayer = match.players[1]) : (secondPlayer = match.players[0]);
   }
 
-  const [playerCO, setPlayerCO] = useState(firstPlayer.coId);
-  const [army, setArmy] = useState(firstPlayer.army);
-  const [ready, setReady] = useState(firstPlayer.ready);
-  const [slot, setSlot] = useState(firstPlayer.slot);
-
   //this function can change co, army or status (ready/not ready)
   // it is purely visual
-  const setupActions = {
-    setPlayerCO,
-    setArmy,
-    setReady,
-    setSlot,
-  };
+  const [currentPlayerOptions, setCurrentPlayerOptions] = useState({
+    CO: firstPlayer.coId,
+    army: firstPlayer.army,
+    ready: firstPlayer.ready,
+    slot: firstPlayer.slot
+  })
 
   let twoPlayerCheck = false;
 
@@ -59,10 +54,12 @@ export default function MatchCard({ match, inMatch }: matchData) {
 
   useEffect(() => {
     if (firstPlayer) {
-      setPlayerCO(firstPlayer.coId);
-      setArmy(firstPlayer.army);
-      setReady(firstPlayer.ready);
-      setSlot(firstPlayer.slot);
+      setCurrentPlayerOptions({
+        CO: firstPlayer.coId,
+        army: firstPlayer.army,
+        ready: firstPlayer.ready,
+        slot: firstPlayer.slot
+      })
     }
   }, [firstPlayer])
 
@@ -72,10 +69,10 @@ export default function MatchCard({ match, inMatch }: matchData) {
       <div className="@grid @grid-cols-2 @gap-3">
         <MatchPlayer
           name={firstPlayer.name}
-          co={playerCO}
-          country={army}
-          playerReady={ready}
-          slot={slot}
+          co={currentPlayerOptions.CO}
+          country={currentPlayerOptions.army}
+          playerReady={currentPlayerOptions.ready}
+          slot={currentPlayerOptions.slot}
         />
         {twoPlayerCheck ? (
           <MatchPlayer
@@ -103,12 +100,12 @@ export default function MatchCard({ match, inMatch }: matchData) {
           ""
         ) : (
           <MatchCardSetup
-            setupActions={setupActions}
+            setCurrentPlayerOptions={setCurrentPlayerOptions}
             matchID={match.id}
             // TODO: how can we handle if a player is undefined? for now I put an empty string
             playerID={currentPlayer ? currentPlayer.id : ""}
             inMatch={inMatch}
-            readyStatus={ready ?? false}
+            readyStatus={currentPlayerOptions.ready ?? false}
           />
         )
       }

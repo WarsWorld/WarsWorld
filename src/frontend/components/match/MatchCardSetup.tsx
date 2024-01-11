@@ -9,17 +9,17 @@ import { coSchema } from "shared/schemas/co";
 type matchData = {
   playerID: Player["id"];
   matchID: Match["id"];
-  setupActions: {
-    setPlayerCO: (newCO: COID) => void;
-    setArmy: (army: Army) => void;
-    setReady: (status: boolean) => void;
-    setSlot: (slot: number) => void;
-  };
+  setCurrentPlayerOptions: React.Dispatch<React.SetStateAction<{
+    CO: COID;
+    army: Army;
+    ready: boolean | undefined;
+    slot: number;
+  }>>,
   inMatch: boolean;
   readyStatus: boolean;
 };
 
-export default function MatchCardSetup({ playerID, matchID, setupActions, inMatch, readyStatus}: matchData) {
+export default function MatchCardSetup({ playerID, matchID, setCurrentPlayerOptions, inMatch, readyStatus}: matchData) {
   const switchCO = trpc.match.switchCO.useMutation();
   const switchArmy = trpc.match.switchArmy.useMutation();
   const switchSlot = trpc.match.switchSlot.useMutation();
@@ -53,7 +53,7 @@ export default function MatchCardSetup({ playerID, matchID, setupActions, inMatc
                           playerId: playerID
                         })
                         .then(() => {
-                          setupActions.setPlayerCO(selectedCO);
+                          setCurrentPlayerOptions((prevState) => {return {...prevState, CO: selectedCO}})
                           setShowDropdown("");
                         });
                     }}
@@ -93,7 +93,7 @@ export default function MatchCardSetup({ playerID, matchID, setupActions, inMatc
                           selectedArmy: army
                         })
                         .then(() => {
-                          setupActions.setArmy(army);
+                          setCurrentPlayerOptions((prevState) => {return {...prevState, army: army}})
                           setShowDropdown("");
                         });
                     }}
@@ -133,7 +133,7 @@ export default function MatchCardSetup({ playerID, matchID, setupActions, inMatc
                           selectedSlot: slot
                         })
                         .then(() => {
-                          setupActions.setSlot(slot)
+                          setCurrentPlayerOptions((prevState) => {return {...prevState, slot: slot}})
                           setShowDropdown("");
                         });
                     }}
@@ -159,12 +159,11 @@ export default function MatchCardSetup({ playerID, matchID, setupActions, inMatc
                   readyState: !readyStatus
                 })
                 .then(() => {
-                  setupActions.setReady(!readyStatus);
-
+                  setCurrentPlayerOptions((prevState) => {return {...prevState, ready: !readyStatus}})
+                  
                   if (!readyStatus) {
                     location.reload();
                   }
-
                 });
             }}
           >
