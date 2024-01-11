@@ -13,6 +13,7 @@ type matchData = {
     setPlayerCO: (newCO: COID) => void;
     setArmy: (army: Army) => void;
     setReady: (status: boolean) => void;
+    setSlot: (slot: number) => void;
   };
   inMatch: boolean;
   readyStatus: boolean;
@@ -21,26 +22,25 @@ type matchData = {
 export default function MatchCardSetup({ playerID, matchID, setupActions, inMatch, readyStatus}: matchData) {
   const switchCO = trpc.match.switchCO.useMutation();
   const switchArmy = trpc.match.switchArmy.useMutation();
+  const switchSlot = trpc.match.switchSlot.useMutation();
   const joinMatch = trpc.match.join.useMutation();
   const readyMatch = trpc.match.setReady.useMutation();
   const leaveMatch = trpc.match.leave.useMutation();
-  const [showCO, setShowCO] = useState(false);
-  const [showArmy, setShowArmy] = useState(false);
+  const [showDropdown, setShowDropdown] = useState("")
 
   if (inMatch) {
-    return (<div className="@flex  ">
+    return (<div className="@flex">
         {/* **** CO Button and Menu **** */}
         <div>
           <button
             className="btnMenu"
             onClick={() => {
-              setShowArmy(false);
-              setShowCO(!showCO);
+              setShowDropdown(prev => prev == "co" ? "" : "co");
             }}
             >
             Switch CO
           </button>
-          {showCO ? (<div
+          {showDropdown == "co" ? (<div
               className="@overflow-visible @grid @grid-cols-4 @absolute  @z-10  @bg-bg-tertiary @outline-black @outline-2 @gap-2">
               {coSchema._def.values.map((co) => {
                 return (<div
@@ -54,7 +54,7 @@ export default function MatchCardSetup({ playerID, matchID, setupActions, inMatc
                         })
                         .then(() => {
                           setupActions.setPlayerCO(selectedCO);
-                          setShowCO(false);
+                          setShowDropdown("");
                         });
                     }}
                     key={co}
@@ -76,13 +76,12 @@ export default function MatchCardSetup({ playerID, matchID, setupActions, inMatc
           <button
             className=" btnMenu"
             onClick={() => {
-              setShowCO(false);
-              setShowArmy(!showArmy);
+              setShowDropdown(prev => prev == "army" ? "" : "army");
             }}
             >
             Switch Army
           </button>
-          {showArmy ? (
+          {showDropdown == "army"  ? (
             <div className="@grid @grid-cols-2 @absolute  @z-10  @bg-bg-tertiary @outline-black @outline-2 @gap-2">
               {armySchema._def.values.map((army) => {
                 return (<div
@@ -95,7 +94,7 @@ export default function MatchCardSetup({ playerID, matchID, setupActions, inMatc
                         })
                         .then(() => {
                           setupActions.setArmy(army);
-                          setShowArmy(false);
+                          setShowDropdown("");
                         });
                     }}
                     key={army}
@@ -112,46 +111,40 @@ export default function MatchCardSetup({ playerID, matchID, setupActions, inMatc
             </div>) : (<></>)}
         </div>
         
-        {/* **** Spawn Button and Menu **** */}
-        {/* <div>
+        {/* **** Slot Button and Menu **** */}
+        <div>
           <button
             className=" btnMenu"
             onClick={() => {
-              setShowCO(false);
-              setShowArmy(!showArmy);
+              setShowDropdown(prev => prev == "slot" ? "" : "slot");
             }}
             >
-            Switch Army
+            Switch Slot
           </button>
-          {showArmy ? (
-            <div className="@grid @grid-cols-2 @absolute  @z-10  @bg-bg-tertiary @outline-black @outline-2 @gap-2">
-              {armySchema._def.values.map((army) => {
+          {showDropdown == "slot" ? (
+            <div className="@absolute @z-10 @bg-bg-tertiary @outline-black @outline-2">
+              {[0,1].map((slot) => {
                 return (<div
                     onClick={() => {
-                      void switchArmy
+                      void switchSlot
                         .mutateAsync({
                           matchId: matchID,
                           playerId: playerID,
-                          selectedArmy: army
+                          selectedSlot: slot
                         })
                         .then(() => {
-                          setupActions.setArmy(army);
-                          setShowArmy(false);
+                          setupActions.setSlot(slot)
+                          setShowDropdown("");
                         });
                     }}
-                    key={army}
+                    key={slot}
                     className={`@flex @items-center @p-1 @bg-bg-primary hover:@bg-primary @cursor-pointer @duration-300`}
                   >
-                    <img
-                      src={`/img/nations/${army}.gif`}
-                      className="[image-rendering:pixelated]"
-                      alt=""
-                    />
-                    <p className="@capitalize @text-xs @px-1">{army}</p>
+                    <p className="@capitalize @text-xs @px-1">{slot}</p>
                   </div>);
               })}
             </div>) : (<></>)}
-        </div> */}
+        </div>
 
         {/* Ready Button */}
         <div>

@@ -45,7 +45,7 @@ export default function MatchSection({ jump, title, matches, inMatch = false, de
             // <div className="@flex @flex-col @items-center" key={match.id}>
             //   <MatchCard match={match} inMatch={inMatch} />
             // </div>
-              <MatchCard match={match} inMatch={inMatch} key={match.id}/>
+            <MatchCard match={match} inMatch={inMatch} key={match.id}/>
           ))}
       </div>
     </>

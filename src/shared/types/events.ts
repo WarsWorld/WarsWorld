@@ -174,6 +174,10 @@ export type NonStoredEvent = WithPlayer &
         army: Army;
       }
     | {
+        type: "player-picked-slot";
+        slot: PlayerSlot;
+      }
+    | {
         type: "player-left";
       }
     | {

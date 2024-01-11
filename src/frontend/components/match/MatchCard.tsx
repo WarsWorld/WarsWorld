@@ -39,8 +39,8 @@ export default function MatchCard({ match, inMatch }: matchData) {
 
   const [playerCO, setPlayerCO] = useState(firstPlayer.coId);
   const [army, setArmy] = useState(firstPlayer.army);
-
   const [ready, setReady] = useState(firstPlayer.ready);
+  const [slot, setSlot] = useState(firstPlayer.slot);
 
   //this function can change co, army or status (ready/not ready)
   // it is purely visual
@@ -48,6 +48,7 @@ export default function MatchCard({ match, inMatch }: matchData) {
     setPlayerCO,
     setArmy,
     setReady,
+    setSlot,
   };
 
   let twoPlayerCheck = false;
@@ -61,6 +62,7 @@ export default function MatchCard({ match, inMatch }: matchData) {
       setPlayerCO(firstPlayer.coId);
       setArmy(firstPlayer.army);
       setReady(firstPlayer.ready);
+      setSlot(firstPlayer.slot);
     }
   }, [firstPlayer])
 
@@ -73,6 +75,7 @@ export default function MatchCard({ match, inMatch }: matchData) {
           co={playerCO}
           country={army}
           playerReady={ready}
+          slot={slot}
         />
         {twoPlayerCheck ? (
           <MatchPlayer
@@ -81,6 +84,7 @@ export default function MatchCard({ match, inMatch }: matchData) {
             country={secondPlayer.army}
             flipCO={true}
             playerReady={secondPlayer.ready}
+            slot={secondPlayer.slot}
           />
         ) : (
           <MatchPlayer

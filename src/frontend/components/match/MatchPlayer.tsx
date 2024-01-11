@@ -8,6 +8,7 @@ type matchData = {
   flipCO?: boolean;
   opponent?: boolean;
   playerReady?: boolean;
+  slot?: number
 };
 
 export default function MatchPlayer({
@@ -16,7 +17,8 @@ export default function MatchPlayer({
   country,
   flipCO,
   opponent,
-  playerReady
+  playerReady,
+  slot
 }: matchData) {
 //TODO: allow for changes in co versions (right now they are all AWDS verions
   //opponent (non-current user) OR an unpicked spot (a greyed out upcoming "opponent")
@@ -44,7 +46,7 @@ export default function MatchPlayer({
             className="@h-7 [image-rendering:pixelated]"
             alt="opponent chosen CO"
           />
-          <p className="@truncate @px-0.5 @text-sm">{name}</p>
+          <p className="@truncate @px-0.5 @text-sm">{slot !== undefined ? `${name} slot: ${slot}`: name}</p>
         </div>
       </div>
     );
@@ -67,7 +69,7 @@ export default function MatchPlayer({
             className="@h-7 [image-rendering:pixelated]"
             alt="opponent chosen CO"
           />
-          <p className="@truncate @px-0.5 @text-sm">{name}</p>
+          <p className="@truncate @px-0.5 @text-sm">{slot !== undefined ? `${name} slot: ${slot}`: name}</p>
         </div>
       </div>
     );

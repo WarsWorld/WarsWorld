@@ -22,6 +22,7 @@ import {
   throwIfMatchNotInSetupState
 } from "./match/util";
 import { PlayerInMatch } from "../../shared/types/server-match-state";
+import { playerSlotForUnitsSchema } from "shared/schemas/player-slot";
 
 
 export const matchRouter = router({
@@ -315,6 +316,37 @@ export const matchRouter = router({
       emit({
         type: "player-picked-army",
         army: input.selectedArmy,
+        matchId: match.id,
+        playerId: player.data.id
+      });
+    }),
+    switchSlot: playerInMatchBaseProcedure
+    .input(
+      z.object({
+        selectedSlot: playerSlotForUnitsSchema
+      })
+    )
+    .mutation(async ({ input, ctx: { match, player } }) => {
+      throwIfMatchNotInSetupState(match);
+
+      const newPlayerData: PlayerInMatch = {
+        ...player.data,
+        slot: input.selectedSlot
+      }
+
+      //lets create a playerState (what the db holds) to send it to the db.
+      // playerState is basically a PlayerInMatchWrapper[] (well, at least the properties of it)
+      const newPlayerState = match.teams.flatMap(team =>
+          team.players.map(teamPlayer => teamPlayer.data.id === player.data.id ? newPlayerData : teamPlayer.data)
+      );
+
+      //lets update prisma first, if the database updates, then we update memory
+      await prisma.match.update({ where: { id: match.id }, data: { playerState: newPlayerState } })
+      player.data = newPlayerData
+
+      emit({
+        type: "player-picked-slot",
+        slot: input.selectedSlot,
         matchId: match.id,
         playerId: player.data.id
       });
