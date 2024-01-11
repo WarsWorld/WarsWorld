@@ -24,26 +24,29 @@ export default async function showBuildMenu(spriteSheet: Spritesheet, type: Faci
   menuContainer.eventMode = "static";
   menuContainer.sortableChildren = true;
 
-  if (x > mapWidth / 2) {
-    console.log();
-    menuContainer.x = x * 16 + 16 - 100;
+  //lets check if we are past the middle, if so, lets move our menu
+  if (x >= mapWidth / 2) {
+    menuContainer.x = x * 16 - 87;
   } else {
-    menuContainer.x = x * 16 + 16;
+    menuContainer.x = x * 16 + 18;
   }
 
   //the name lets us find the menu easily with getChildByName for easy removal
-  menuContainer.name = "menu";
+  menuContainer.name = "buildMenu";
 
   //unitInfo brings back an array with all the data we need (such as infantry name, cost, etc).
-  // TODO lets go broken code! instead of getting info from unit data, get info from unitPropertiesMap and store by facility
+
   // TODO also need to check for banned units in match and exclude those
+  const unitBanned = false;
+
   const unitInfo = [];
+
 
   Object.keys(unitPropertiesMap).forEach(key => {
     const childObject = unitPropertiesMap[key];
 
     // Now you can work with childObject, which is one of the nested objects
-    if (childObject.facility === type) {
+    if (childObject.facility === type && !unitBanned ) {
       unitInfo.push(childObject)
 
     }
@@ -72,9 +75,10 @@ export default async function showBuildMenu(spriteSheet: Spritesheet, type: Faci
 
     const yValue = index * 12;
 
-    //our unit image
+    //TODO: Refactor all of this random numbers spread across
 
-    const unitSprite = new AnimatedSprite(spriteSheet.animations[unit.name]);
+    //our unit image
+    const unitSprite = new AnimatedSprite(spriteSheet.animations[unit.displayName.toLowerCase()]);
     unitSprite.y = yValue;
     unitSprite.width = 8;
     unitSprite.height = 8;
@@ -106,14 +110,15 @@ export default async function showBuildMenu(spriteSheet: Spritesheet, type: Faci
     unitBG.height = 10;
 
     unitBG.eventMode = "static";
-    unitBG.tint = "#ffffff";
-    unitBG.alpha = 0.5;
+    unitBG.tint = "#ffd2c5";
+
 
     //lets add a hover effect to our elements
     menuElement.on("pointerenter", () => {
-      unitBG.alpha = 1;
+      unitBG.tint = "#fff3ed";
     });
 
+    //TODO: Actually use playerId and matchId
     menuElement.on("pointerdown", () => buildMutation({
       type: "build",
       unitType: "infantry",
@@ -123,7 +128,7 @@ export default async function showBuildMenu(spriteSheet: Spritesheet, type: Faci
     }));
 
     menuElement.on("pointerleave", () => {
-      unitBG.alpha = 0.5;
+      unitBG.tint = "#ffd2c5";
     });
 
     menuElement.addChild(unitBG);
@@ -135,13 +140,13 @@ export default async function showBuildMenu(spriteSheet: Spritesheet, type: Faci
   //The extra border we see around the menu
   //TODO: Change outerborder color depending on country/army color
   const outerBorder = new Sprite(Texture.WHITE);
-  outerBorder.tint = "#8c8c8c";
+  outerBorder.tint = "#d34f26";
   outerBorder.x = -2;
   outerBorder.y = -2;
   outerBorder.width = 89;
   outerBorder.height = (unitInfo.length - 1) * 12 + 14;
   outerBorder.zIndex = -1;
-  outerBorder.alpha = 0.8;
+  outerBorder.alpha = 1;
   menuContainer.addChild(outerBorder);
   return menuContainer;
 }

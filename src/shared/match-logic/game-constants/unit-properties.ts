@@ -212,7 +212,7 @@ const battleCopter: UnitPropertiesWithAmmo = {
 };
 
 const fighter: UnitPropertiesWithAmmo = {
-  displayName: "Figther",
+  displayName: "Fighter",
   cost: 20000,
   vision: 2,
   initialFuel: 99,
@@ -248,7 +248,7 @@ const stealth: UnitPropertiesWithAmmo = {
 };
 
 const blackBomb: UnitPropertiesWithoutWeapon = {
-  displayName: "Black-Bomb",
+  displayName: "BlackBomb",
   cost: 25000,
   vision: 1,
   movementPoints: 9,
@@ -258,7 +258,7 @@ const blackBomb: UnitPropertiesWithoutWeapon = {
 };
 
 const blackBoat: UnitPropertiesWithoutWeapon = {
-  displayName: "Black-Boat",
+  displayName: "BlackBoat",
   cost: 7500,
   vision: 1,
   movementPoints: 7,
