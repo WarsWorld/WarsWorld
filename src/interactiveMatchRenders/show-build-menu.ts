@@ -110,12 +110,12 @@ export default async function showBuildMenu(spriteSheet: Spritesheet, type: Faci
     unitBG.height = 10;
 
     unitBG.eventMode = "static";
-    unitBG.tint = "#ffd2c5";
+    unitBG.tint = "#d7d7d7";
 
 
     //lets add a hover effect to our elements
     menuElement.on("pointerenter", () => {
-      unitBG.tint = "#fff3ed";
+      unitBG.tint = "#ffffff";
     });
 
     //TODO: Actually use playerId and matchId
@@ -128,7 +128,7 @@ export default async function showBuildMenu(spriteSheet: Spritesheet, type: Faci
     }));
 
     menuElement.on("pointerleave", () => {
-      unitBG.tint = "#ffd2c5";
+      unitBG.tint = "#d7d7d7";
     });
 
     menuElement.addChild(unitBG);
@@ -140,7 +140,7 @@ export default async function showBuildMenu(spriteSheet: Spritesheet, type: Faci
   //The extra border we see around the menu
   //TODO: Change outerborder color depending on country/army color
   const outerBorder = new Sprite(Texture.WHITE);
-  outerBorder.tint = "#d34f26";
+  outerBorder.tint = "#868686";
   outerBorder.x = -2;
   outerBorder.y = -2;
   outerBorder.width = 89;
