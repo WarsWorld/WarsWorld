@@ -13,7 +13,7 @@ import html from "remark-html";
 
 const bannedWords = ["heck", "frick", "oof", "swag", "amongus"];
 
-export const postRouter = router({
+export const articleRouter = router({
   getMetadataByType: publicBaseProcedure
     .input(
       z.object({
@@ -21,7 +21,7 @@ export const postRouter = router({
       })
     )
     .query((input) => 
-      prisma.post.findMany({
+      prisma.article.findMany({
         select: {
           id: true,
           title: true,
@@ -43,7 +43,7 @@ export const postRouter = router({
       })
     )
     .query(async ({ input }) => {
-      const post = await prisma.post.findFirst({
+      const article = await prisma.article.findFirst({
         select: {
           body: true,
           title: true,
@@ -60,14 +60,14 @@ export const postRouter = router({
         }
       });
 
-      if(post == null) {
+      if(article == null) {
         return null;
       }
       
-      const content = matter(post.body).content;
+      const content = matter(article.body).content;
 
       return {
-        ...post,
+        ...article,
         body: content,
       };
     }

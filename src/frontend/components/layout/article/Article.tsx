@@ -4,7 +4,7 @@ import styles from "frontend/styles/pages/articles.module.scss";
 import Head from "next/head";
 
 type Props = {
-  postData: {
+  articleData: {
     type: ArticleType;
     contentHtml: string;
     metaData: {
@@ -18,14 +18,14 @@ type Props = {
   }
 };
 
-export default function Article({ postData }: Props) {
+export default function Article({ articleData }: Props) {
   // Lets make sure we have our parameters/data
   // before loading so we dont cause any errors
-  if (typeof postData === "undefined") {
+  if (typeof articleData === "undefined") {
     return <h1>Loading...</h1>;
   } else {
     // Get headers for index table
-    let theHTML = postData.contentHtml;
+    let theHTML = articleData.contentHtml;
     const headers = [...theHTML.matchAll(/<h1+>(.*?)<\/h1*>/gm)];
 
     // Put IDs on headers so /articleName#header links to the header
@@ -53,24 +53,24 @@ export default function Article({ postData }: Props) {
     return (
       <>
         <Head>
-          <title>{`${postData.type[0].toUpperCase() + postData.type.slice(1)} | ${postData.metaData.title}`}</title>
-          <meta name="description" content={postData.metaData.description}/>
+          <title>{`${articleData.type[0].toUpperCase() + articleData.type.slice(1)} | ${articleData.metaData.title}`}</title>
+          <meta name="description" content={articleData.metaData.description}/>
         </Head>
 
         <Banner
           title={
             <div>
               <h2 className="@bg-bg-secondary @inline-block @py-2 @px-4 smallscreen:@py-4 smallscreen:@px-6 @text-xl smallscreen:@text-5xl @text-white @font-medium">
-                {postData.type.toUpperCase()}
+                {articleData.type.toUpperCase()}
               </h2>
               <h2 className="@bg-white @inline-block @py-2 @px-4 smallscreen:@py-4 smallscreen:@px-6 @text-xl smallscreen:@text-5xl @text-black @font-medium">
-                {postData.metaData.category.toUpperCase()}
+                {articleData.metaData.category.toUpperCase()}
               </h2>
-              <h1 className="@text-2xl smallscreen:@text-6xl large_monitor:@text-8xl @font-semibold @my-6">{postData.metaData.title}</h1>
-              <h1 className="@text-lg smallscreen:@text-3xl large_monitor:@text-6xl">{postData.metaData.description}</h1>
+              <h1 className="@text-2xl smallscreen:@text-6xl large_monitor:@text-8xl @font-semibold @my-6">{articleData.metaData.title}</h1>
+              <h1 className="@text-lg smallscreen:@text-3xl large_monitor:@text-6xl">{articleData.metaData.description}</h1>
             </div>
           }
-          backgroundURL={postData.metaData.thumbnail}
+          backgroundURL={articleData.metaData.thumbnail}
         />
 
         <div

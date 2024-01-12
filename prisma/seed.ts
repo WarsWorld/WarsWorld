@@ -52,7 +52,7 @@ function seedArticles(articles: string[], type: string, authorId: string) {
 
     const articleData = articleSchema.parse(metaData.data);
 
-    await prisma.post.create({
+    await prisma.article.create({
       data: {
         title: articleData.title,
         description: articleData.description,

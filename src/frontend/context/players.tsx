@@ -25,7 +25,7 @@ export const ProvidePlayers = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<typeof data>();
 
   useEffect(() => {
-    if (data && data.user && data !== user) {
+    if (data?.user && data !== user) {
       setUser(data);
 
       if (data.ownedPlayers?.[0] != undefined && currentPlayerId === "") {

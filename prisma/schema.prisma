@@ -14,9 +14,9 @@ generator json {
   provider = "prisma-json-types-generator"
 }
 
-model Post {
-  id          Int             @id @default(autoincrement())
-  Authors     PostAuthors[]
+model Article {
+  id          Int              @id @default(autoincrement())
+  Authors     ArticleAuthors[]
   title       String
   description String
   type        ArticleType
@@ -30,13 +30,13 @@ model Post {
   updatedAt DateTime @default(now())
 }
 
-model PostAuthors {
-  post     Post   @relation(fields: [postId], references: [id])
-  postId   Int
-  author   Player @relation(fields: [authorId], references: [id])
-  authorId String
+model ArticleAuthors {
+  article   Article @relation(fields: [articleId], references: [id])
+  articleId Int
+  author    Player  @relation(fields: [authorId], references: [id])
+  authorId  String
 
-  @@id([postId, authorId])
+  @@id([articleId, authorId])
 }
 
 enum ArticleType {
@@ -144,7 +144,7 @@ model Player {
   user   User   @relation(fields: [userId], references: [id])
   userId String
 
-  Posts PostAuthors[]
+  Posts ArticleAuthors[]
 
   /// [PrismaPreferences]
   preferences  Json?

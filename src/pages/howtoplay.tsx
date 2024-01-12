@@ -3,7 +3,7 @@ import ArticleGroup from "frontend/components/layout/article/ArticleGroup";
 import Head from "next/head";
 import { trpc } from "frontend/utils/trpc-client";
 import { type ICardInfo } from "frontend/components/news/FeaturedNewsCard";
-import { stringToSlug } from "pages/posts/[...slug]";
+import { stringToSlug } from "pages/articles/[...slug]";
 
 const data = [
   {
@@ -25,7 +25,7 @@ const data = [
 ];
 
 export default function HowToPlay() {
-  const { data: articleGuides } = trpc.post.getMetadataByType.useQuery({ type: "guide" });
+  const { data: articleGuides } = trpc.article.getMetadataByType.useQuery({ type: "guide" });
 
   return (
     /*  
@@ -52,7 +52,7 @@ export default function HowToPlay() {
                 tailwind_color={section.color}
                 articles={articleGuides?.map(guide => {
                   return {
-                    subdirectory: `posts/${guide.id}/${stringToSlug(guide.title)}`,
+                    subdirectory: `articles/${guide.id}/${stringToSlug(guide.title)}`,
                     title: guide.title,
                     description: guide.description,
                     thumbnail: guide.thumbnail ?? "",

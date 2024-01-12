@@ -9,7 +9,7 @@ import { prisma } from "server/prisma/prisma-client";
 export const stringToSlug = (title: string) => title.replace(/\s/g, "-").replace(/[^\w\s-]/gi, '').toLowerCase();
 
 export const getStaticPaths = (async () => {
-  const articles = await prisma.post.findMany({
+  const articles = await prisma.article.findMany({
     select: {
       id: true,
       title: true,
@@ -34,23 +34,23 @@ export const getStaticProps = (
   async (context: GetStaticPropsContext<{ slug: string[] }>) => 
   {
     // These params are the ones you put on the url
-    const postId = context.params?.slug[0];
+    const articleId = context.params?.slug[0];
     const paramSlug = context.params?.slug[1];
 
     // If the url Id is invalid
-    if(postId == undefined || !/^[0-9]+$/.test(postId)) {
+    if(articleId == undefined || !/^[0-9]+$/.test(articleId)) {
       return {
         notFound: true,
       }
     }
 
     // Get article title to compare it with the one that's on the url
-    const article = await prisma.post.findFirst({
+    const article = await prisma.article.findFirst({
       select: {
         title: true,
       },
       where: {
-        id: parseInt(postId),
+        id: parseInt(articleId),
       }
     });
 
@@ -68,7 +68,7 @@ export const getStaticProps = (
     if(title != paramSlug || context.params?.slug[2] != undefined) {
       return {
         redirect: {
-          destination: `/posts/${postId}/${title}`,
+          destination: `/articles/${articleId}/${title}`,
           permanent: false,
         },
       }
@@ -77,7 +77,7 @@ export const getStaticProps = (
     // Render the page
     return { 
       props: { 
-        postId: postId,
+        articleId: articleId,
         title: title,
       },
       revalidate: 10,
@@ -85,30 +85,30 @@ export const getStaticProps = (
 });
 
 export default function NewsArticle(
-  { postId }: InferGetStaticPropsType<typeof getStaticProps>,
+  { articleId }: InferGetStaticPropsType<typeof getStaticProps>,
 ) {
-  const { data: article } = trpc.post.getMarkdownById.useQuery({ id: postId }, { enabled: postId != undefined });
-  const [post, setPost] = useState("");
+  const { data: articleData } = trpc.article.getMarkdownById.useQuery({ id: articleId }, { enabled: articleId != undefined });
+  const [articleBody, setArticleBody] = useState("");
 
   useEffect(() => {
-    if(article) {
-      const process = remark().use(html).processSync(article.body);
-      setPost(process.toString());
+    if(articleData) {
+      const process = remark().use(html).processSync(articleData.body);
+      setArticleBody(process.toString());
     }
-  }, [article]);
+  }, [articleData]);
 
   return (
     <>
-      { article && <Article postData={{
-          type: article.type,
-          contentHtml: post,
+      { articleData && <Article articleData={{
+          type: articleData.type,
+          contentHtml: articleBody,
           metaData: {
-            title: article.title,
-            description: article.description,
-            category: article.category,
-            thumbnail: article.thumbnail ?? "",
-            thumbnailAlt: article.title,
-            createdAt: article.createdAt.toDateString(),
+            title: articleData.title,
+            description: articleData.description,
+            category: articleData.category,
+            thumbnail: articleData.thumbnail ?? "",
+            thumbnailAlt: articleData.title,
+            createdAt: articleData.createdAt.toDateString(),
           }
         }}/>
       }
