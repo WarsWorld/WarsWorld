@@ -5,7 +5,7 @@ import { playerMatchIndex } from "server/player-match-index";
 import { prisma } from "server/prisma/prisma-client";
 import { DispatchableError } from "shared/DispatchedError";
 import { createMatchStartEvent } from "shared/match-logic/events/handlers/match-start";
-import { armySchema } from "shared/schemas/army";
+import { Army, armySchema } from "shared/schemas/army";
 import { coIdSchema } from "shared/schemas/co";
 import { z } from "zod";
 import {
@@ -21,7 +21,7 @@ import {
   matchToFrontend,
   throwIfMatchNotInSetupState
 } from "./match/util";
-import { PlayerInMatch } from "../../shared/types/server-match-state";
+import type { PlayerInMatch } from "../../shared/types/server-match-state";
 import { playerSlotForUnitsSchema } from "shared/schemas/player-slot";
 
 
@@ -64,8 +64,6 @@ export const matchRouter = router({
     .mutation(async ({ input, ctx: { currentPlayer, match } }) => {
       throwIfMatchNotInSetupState(match);
 
-      //TODO: Should player be able to choose slot on the frontend, or should backend just provide user with the available playerSlot?
-      // What sort of interface would be needed for players to choose a playerSlot (which I suppose is the spot on the map they start)
       if (match.getPlayerById(currentPlayer.id) !== undefined) {
         throw new Error("You've already joined this match!");
       }
@@ -97,6 +95,9 @@ export const matchRouter = router({
         throw new DispatchableError("Match is full");
       }
 
+      const armiesOccupied = match.getAllPlayers().map((player) => player.data.army as string)
+      const availableArmies = Object.keys(armySchema.Values).filter((army) => !armiesOccupied.includes(army))
+
       const player = match.addUnwrappedPlayer({
         id: currentPlayer.id,
         slot: input.playerSlot ?? slotToJoin,
@@ -107,7 +108,8 @@ export const matchRouter = router({
         powerMeter: 0,
         eliminated: false,
         hasCurrentTurn: false,
-        army: "blue-moon",
+        army: availableArmies[Math.random() * availableArmies.length | 0] as Army, 
+        // army: availableArmies[0] as Army, // use this if there are performance concerns with Math.random
         COPowerState: "no-power",
         name: currentPlayer.name
       });
@@ -258,51 +260,37 @@ export const matchRouter = router({
         }
       }
     ),
-  switchCO: playerInMatchBaseProcedure
+    switchOptions: playerInMatchBaseProcedure
     .input(
       z.object({
-        selectedCO: coIdSchema
+        selectedCO: coIdSchema.optional(),
+        selectedArmy: armySchema.optional(),
+        selectedSlot: playerSlotForUnitsSchema.optional()
       })
     )
     .mutation(async ({ input, ctx: { match, player } }) => {
       throwIfMatchNotInSetupState(match);
 
-      const newPlayerData: PlayerInMatch = {
-        ...player.data,
-        coId: input.selectedCO
+      const newPlayerData: PlayerInMatch = {...player.data}
+      newPlayerData.coId = input.selectedCO ?? newPlayerData.coId
+      newPlayerData.army = input.selectedArmy ?? newPlayerData.army
+      newPlayerData.slot = input.selectedSlot ?? newPlayerData.slot
+
+      const armiesOccupied = match.getAllPlayers().map((player) => player.data.army as string)
+      const slotsOccupied = match.getAllPlayers().map((player) => player.data.slot)
+
+      // ERROR CHECKING
+      // make sures that the ARMY picked by the player is different from all other players
+      if (input.selectedArmy !== undefined && armiesOccupied.includes(input.selectedArmy)) {
+        throw new DispatchableError("Army is already picked by another player");
       }
 
-      //lets create a playerState (what the db holds) to send it to the db.
-      // playerState is basically a PlayerInMatchWrapper[] (well, at least the properties of it)
-      const newPlayerState = match.teams.flatMap(team =>
-        team.players.map(teamPlayer => teamPlayer.data.id === player.data.id ? newPlayerData : teamPlayer.data)
-      );
-
-      //lets update prisma first, if the database updates, then we update memory
-      await prisma.match.update({ where: { id: match.id }, data: { playerState: newPlayerState } })
-      player.data = newPlayerData
-
-      emit({
-        type: "player-picked-co",
-        coId: input.selectedCO,
-        matchId: match.id,
-        playerId: player.data.id
-      });
-    }),
-  switchArmy: playerInMatchBaseProcedure
-    .input(
-      z.object({
-        selectedArmy: armySchema
-      })
-    )
-    .mutation(async ({ input, ctx: { match, player } }) => {
-      throwIfMatchNotInSetupState(match);
-
-      const newPlayerData: PlayerInMatch = {
-        ...player.data,
-        army: input.selectedArmy
+      // make sures that the SLOT picked by the player is different from all other players
+      if (input.selectedSlot !== undefined && slotsOccupied.includes(input.selectedSlot)) {
+        throw new DispatchableError("Slot is already picked by another player");
       }
 
+      // UPDATING STATE
       //lets create a playerState (what the db holds) to send it to the db.
       // playerState is basically a PlayerInMatchWrapper[] (well, at least the properties of it)
       const newPlayerState = match.teams.flatMap(team =>
@@ -313,42 +301,31 @@ export const matchRouter = router({
       await prisma.match.update({ where: { id: match.id }, data: { playerState: newPlayerState } })
       player.data = newPlayerData
 
-      emit({
-        type: "player-picked-army",
-        army: input.selectedArmy,
-        matchId: match.id,
-        playerId: player.data.id
-      });
-    }),
-    switchSlot: playerInMatchBaseProcedure
-    .input(
-      z.object({
-        selectedSlot: playerSlotForUnitsSchema
-      })
-    )
-    .mutation(async ({ input, ctx: { match, player } }) => {
-      throwIfMatchNotInSetupState(match);
-
-      const newPlayerData: PlayerInMatch = {
-        ...player.data,
-        slot: input.selectedSlot
+      if(input.selectedCO !== undefined) {
+        emit({
+          type: "player-picked-co",
+          coId: input.selectedCO,
+          matchId: match.id,
+          playerId: player.data.id
+        });
       }
-
-      //lets create a playerState (what the db holds) to send it to the db.
-      // playerState is basically a PlayerInMatchWrapper[] (well, at least the properties of it)
-      const newPlayerState = match.teams.flatMap(team =>
-          team.players.map(teamPlayer => teamPlayer.data.id === player.data.id ? newPlayerData : teamPlayer.data)
-      );
-
-      //lets update prisma first, if the database updates, then we update memory
-      await prisma.match.update({ where: { id: match.id }, data: { playerState: newPlayerState } })
-      player.data = newPlayerData
-
-      emit({
-        type: "player-picked-slot",
-        slot: input.selectedSlot,
-        matchId: match.id,
-        playerId: player.data.id
-      });
-    })
+      
+      if(input.selectedArmy !== undefined) {
+        emit({
+          type: "player-picked-army",
+          army: input.selectedArmy,
+          matchId: match.id,
+          playerId: player.data.id
+        });
+      }
+      
+      if(input.selectedSlot !== undefined) {
+        emit({
+          type: "player-picked-slot",
+          slot: input.selectedSlot,
+          matchId: match.id,
+          playerId: player.data.id
+        });
+      }
+    }),
 });

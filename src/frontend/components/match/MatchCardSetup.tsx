@@ -38,9 +38,7 @@ export default function MatchCardSetup({
   setSelectedOptions,
   maxNumberOfPlayers
 }: matchData) {
-  const switchCO = trpc.match.switchCO.useMutation();
-  const switchArmy = trpc.match.switchArmy.useMutation();
-  const switchSlot = trpc.match.switchSlot.useMutation();
+  const switchOptions = trpc.match.switchOptions.useMutation();
   const joinMatch = trpc.match.join.useMutation();
   const readyMatch = trpc.match.setReady.useMutation();
   const leaveMatch = trpc.match.leave.useMutation();
@@ -64,7 +62,7 @@ export default function MatchCardSetup({
                 return (<div
                     onClick={() => {
                       const selectedCO: COID = { name: co, version: "AW2" };
-                      void switchCO
+                      void switchOptions
                         .mutateAsync({
                           selectedCO,
                           matchId: matchID,
@@ -106,7 +104,7 @@ export default function MatchCardSetup({
                 return (<div
                     onClick={() => {
                       if (!selectedOptions.selectedArmies.includes(army)){
-                        void switchArmy
+                        void switchOptions
                         .mutateAsync({
                           matchId: matchID,
                           playerId: playerID,
@@ -160,7 +158,7 @@ export default function MatchCardSetup({
                 return (<div
                     onClick={() => {
                       if (!selectedOptions.selectedSlots.includes(slot)){
-                        void switchSlot
+                        void switchOptions
                         .mutateAsync({
                           matchId: matchID,
                           playerId: playerID,
