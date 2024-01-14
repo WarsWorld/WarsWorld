@@ -255,7 +255,7 @@ async function main() {
             version: "AW2"
           },
           eliminated: false,
-          funds: 0,
+          funds: 10000,
           powerMeter: 0,
           timesPowerUsed: 0,
           army: "orange-star",
@@ -272,7 +272,7 @@ async function main() {
             version: "AW2"
           },
           eliminated: false,
-          funds: 0,
+          funds: 10000,
           powerMeter: 0,
           timesPowerUsed: 0,
           army: "black-hole",

@@ -103,7 +103,8 @@ export const matchRouter = router({
         slot: input.playerSlot ?? slotToJoin,
         ready: false,
         coId: input.selectedCO,
-        funds: 0,
+        //TODO: Handle funds correctly
+        funds: 10000,
         timesPowerUsed: 0,
         powerMeter: 0,
         eliminated: false,

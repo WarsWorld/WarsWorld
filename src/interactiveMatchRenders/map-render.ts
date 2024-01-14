@@ -1,24 +1,19 @@
-import type { ISpritesheetData, Spritesheet} from "pixi.js";
+import type { ISpritesheetData, Spritesheet } from "pixi.js";
 import { AnimatedSprite, Container, Sprite, Texture } from "pixi.js";
 import showBuildMenu from "./show-build-menu";
 import { spriteConstructor } from "../gameFunction/spriteConstructor";
 import type { Tile } from "../shared/schemas/tile";
 import type { UseTRPCMutationResult } from "@trpc/react-query/shared";
+import { PlayerInMatch } from "../shared/types/server-match-state";
 
 
 
-export const mapRender = (
-  spriteSheets:  Spritesheet<ISpritesheetData>[], 
-  mapData: Tile[][],
-  tileSize: number, 
-  mapWidth: number,
-  mapHeight: number,
-  mutation:  UseTRPCMutationResult<never, never, never, never>, ) => {
+export const mapRender = (spriteSheets: Spritesheet<ISpritesheetData>[], mapData: Tile[][], tileSize: number, mapWidth: number, mapHeight: number, mutation: UseTRPCMutationResult<never, never, never, never>, player: PlayerInMatch | undefined) => {
 
   //the container that holds the map
   const mapContainer = new Container();
-  mapContainer.x = tileSize;
-  mapContainer.y = tileSize;
+  mapContainer.x = tileSize /2;
+  mapContainer.y = tileSize /2;
 
   //Lets render our map!
   let tile;
@@ -42,24 +37,23 @@ export const mapRender = (
           tile = new AnimatedSprite(spriteSheets[slot].animations[type]);
 
           //if our building is able to produce units, it has a menu!
-          if (type === "base" || type === "airport" || type === "port") {
+          if ((player?.slot === slot && player?.hasCurrentTurn === true) && (type === "port"  || type === "base" || type === "airport")) {
+
             tile.eventMode = "static";
             //Lets make menu appear
             tile.on("pointerdown", () => {
               void (async () => {
-                const menu = await showBuildMenu(
-                  spriteSheets[slot],
-                  type,
-                  slot,
-                  colIndex,
-                  rowIndex,
-                  mapData.length - 1,
-                  mapData[0].length - 1,
-                  (input) => {
-                    void mutation.mutateAsync(input);
-                  },
-                  99999 //TODO: put real funds here
-                );
+                const menu = await showBuildMenu({
+                  player: player,
+                  spriteSheet: spriteSheets[slot],
+                  facility: type,
+                  x: colIndex,
+                  y: rowIndex,
+                  mapHeight: mapData.length - 1,
+                  mapWidth: mapData[0].length - 1,
+                  buildMutation: mutation
+
+                });
 
                 //if there is a menu already out, lets remove it
                 const menuContainer = mapContainer.getChildByName("buildMenu");
@@ -71,15 +65,7 @@ export const mapRender = (
                 //lets create a transparent screen that covers everything.
                 // if we click on it, we will delete the menu
                 // therefore, achieving a quick way to delete menu if we click out of it
-                const emptyScreen = spriteConstructor(
-                  Texture.WHITE,
-                  0,
-                  0,
-                  mapWidth,
-                  mapHeight,
-                  "static",
-                  -1
-                );
+                const emptyScreen = spriteConstructor(Texture.WHITE, 0, 0, mapWidth, mapHeight, "static", -1);
                 emptyScreen.alpha = 0;
 
                 emptyScreen.on("pointerdown", () => {
@@ -102,15 +88,9 @@ export const mapRender = (
 
         //NOT A PROPERTY
       } else if ("variant" in currentTile) {
-        tile = new Sprite(
-          spriteSheets[2].textures[
-          currentTile.type + "-" + currentTile.variant + ".png"
-            ]
-        );
+        tile = new Sprite(spriteSheets[2].textures[currentTile.type + "-" + currentTile.variant + ".png"]);
       } else {
-        tile = new Sprite(
-          spriteSheets[2].textures[currentTile.type + ".png"]
-        );
+        tile = new Sprite(spriteSheets[2].textures[currentTile.type + ".png"]);
       }
 
       //makes our sprites render at the bottom, not from the top.

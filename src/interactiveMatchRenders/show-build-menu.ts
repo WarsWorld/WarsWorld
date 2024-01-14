@@ -5,22 +5,37 @@ import {
 import type { inferProcedureInput } from "@trpc/server";
 import type { AppRouter } from "server/routers/app";
 import type {
-  Facility} from "../shared/match-logic/game-constants/unit-properties";
+  Facility, UnitProperties, UnitPropertiesWithoutWeapon
+} from "../shared/match-logic/game-constants/unit-properties";
 import { unitPropertiesMap,
 } from "../shared/match-logic/game-constants/unit-properties";
+import type { PlayerInMatch } from "../shared/types/server-match-state";
 
 export type OurSpriteSheetData = ISpritesheetData & {
   animations: Record<string, string[]>; countries: Record<string, string[]>;
 };
 
-export default async function showBuildMenu(spriteSheet: Spritesheet, type: Facility, slot: number, x: number, y: number, mapHeight: number, mapWidth: number, buildMutation: (input: inferProcedureInput<AppRouter["action"]["send"]>) => void, funds: number) {
+type Props = {
+  player: PlayerInMatch
+  spriteSheet: Spritesheet;
+  facility: Facility;
+  x: number;
+  y: number;
+  mapHeight: number;
+  mapWidth: number;
+  buildMutation: (input: inferProcedureInput<AppRouter["action"]["send"]>) => void;
+}
+
+export default async function showBuildMenu(
+  { spriteSheet, facility, x,y,mapWidth,mapHeight,buildMutation, player }: Props) {
+
   //TODO: Gotta add a "funds" value to our parameters
   // from there, include it here and any unit above our funds,
   // will be darkened out.
 
   //The big container holding everything
-  //set its eventmode to static for interactivity and sortable for zIndex
   const menuContainer = new Container();
+  //set its eventmode to static for interactivity and sortable for zIndex
   menuContainer.eventMode = "static";
   menuContainer.sortableChildren = true;
 
@@ -39,14 +54,14 @@ export default async function showBuildMenu(spriteSheet: Spritesheet, type: Faci
   // TODO also need to check for banned units in match and exclude those
   const unitBanned = false;
 
-  const unitInfo = [];
+  const unitInfo: UnitPropertiesWithoutWeapon[] = [];
 
 
+  //lets loop through our units and only get the ones that can be built in this facility
   Object.keys(unitPropertiesMap).forEach(key => {
-    const childObject = unitPropertiesMap[key];
+    const childObject: UnitPropertiesWithoutWeapon = unitPropertiesMap[key];
 
-    // Now you can work with childObject, which is one of the nested objects
-    if (childObject.facility === type && !unitBanned ) {
+    if (childObject.facility === facility && !unitBanned ) {
       unitInfo.push(childObject)
 
     }
@@ -68,14 +83,13 @@ export default async function showBuildMenu(spriteSheet: Spritesheet, type: Faci
   await Assets.load("/aw2Font.fnt");
 
   //lets loop through every unit we can produce.
-  unitInfo.forEach((unit, index) => {
+  unitInfo.forEach((unit: UnitProperties, index) => {
     //child container to hold all the text and sprite into one place
     const menuElement = new Container();
     menuElement.eventMode = "static";
 
     const yValue = index * 12;
 
-    //TODO: Refactor all of this random numbers spread across
 
     //our unit image
     const unitSprite = new AnimatedSprite(spriteSheet.animations[unit.displayName.toLowerCase()]);
@@ -89,7 +103,8 @@ export default async function showBuildMenu(spriteSheet: Spritesheet, type: Faci
     unitSprite.play();
 
     const unitName = new BitmapText(`${unit.displayName}`, {
-      fontName: "awFont", fontSize: 12
+      fontName: "awFont", fontSize: 12,
+
     });
     unitName.y = yValue;
     unitName.x = 15;
@@ -109,26 +124,36 @@ export default async function showBuildMenu(spriteSheet: Spritesheet, type: Faci
     unitBG.width = 85;
     unitBG.height = 10;
 
-    unitBG.eventMode = "static";
-    unitBG.tint = "#d7d7d7";
-
+    //if the player can't afford it, darken the unit
+    if (player.funds < unit.cost) {
+      unitBG.tint = "#9f9f9f";
+      unitSprite.alpha = 0.5
+      unitSprite.stop()
+      unitName.alpha = 0.6
+      unitCost.alpha = 0.6
+      menuElement.eventMode = "none";
+    }
+    //player can afford it
+    else {
+      unitBG.eventMode = "static";
+      unitBG.tint = "#d0d0d0";
+      //TODO: Actually use playerId and matchId
+      menuElement.on("pointerdown", () => buildMutation({
+        type: "build",
+        unitType: unit.displayName.toLowerCase(),
+        position: [x, y],
+        playerId: player.id,
+        matchId: "cljw16lea0000jscweoeop1ct"
+      }));
+    }
 
     //lets add a hover effect to our elements
     menuElement.on("pointerenter", () => {
-      unitBG.tint = "#ffffff";
+      unitBG.tint = "#f9f9f9";
     });
 
-    //TODO: Actually use playerId and matchId
-    menuElement.on("pointerdown", () => buildMutation({
-      type: "build",
-      unitType: "infantry",
-      position: [x, y],
-      playerId: "cljvrs6nc0002js2wl5g3jo5m",
-      matchId: "cljw16lea0000jscweoeop1ct"
-    }));
-
     menuElement.on("pointerleave", () => {
-      unitBG.tint = "#d7d7d7";
+      unitBG.tint = "#d0d0d0";
     });
 
     menuElement.addChild(unitBG);
@@ -140,7 +165,7 @@ export default async function showBuildMenu(spriteSheet: Spritesheet, type: Faci
   //The extra border we see around the menu
   //TODO: Change outerborder color depending on country/army color
   const outerBorder = new Sprite(Texture.WHITE);
-  outerBorder.tint = "#868686";
+  outerBorder.tint = "#737373";
   outerBorder.x = -2;
   outerBorder.y = -2;
   outerBorder.width = 89;

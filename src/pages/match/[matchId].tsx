@@ -1,11 +1,8 @@
 import { usePlayers } from "frontend/context/players";
 import { useRouter } from "next/router";
-import { ICanvas, ISpritesheetData, Spritesheet, Texture } from "pixi.js";
+import type { ISpritesheetData, Spritesheet} from "pixi.js";
 import {
-  Application,
-  BaseTexture,
-  Container,
-  SCALE_MODES,
+  Application, BaseTexture, Container, SCALE_MODES
 } from "pixi.js";
 import { useEffect, useRef, useState } from "react";
 import type { Tile } from "shared/schemas/tile";
@@ -18,7 +15,6 @@ import getSpriteSheets from "gameFunction/get-sprite-sheets";
 import type { GetServerSideProps } from "next";
 import { MatchWrapper } from "shared/wrappers/match";
 import { mapRender } from "../../interactiveMatchRenders/map-render";
-import { spriteConstructor } from "../../interactiveMatchRenders/sprite-constructor";
 
 BaseTexture.defaultOptions.scaleMode = SCALE_MODES.NEAREST;
 
@@ -46,8 +42,6 @@ const Match = ({ spriteData }: Props) => {
 
   const [mapData, setMapData] = useState<Tile[][] | null | undefined>(null);
 
-
-
   const { query } = useRouter();
 
   const matchId = query.matchId as string;
@@ -71,9 +65,7 @@ const Match = ({ spriteData }: Props) => {
 
     void matchQuery.refetch().then((result) => {
       if (!result.isSuccess) {
-        throw new Error(
-          "Loading of match failed: " + result.failureReason?.message
-        );
+        throw new Error("Loading of match failed: " + result.failureReason?.message);
       }
 
       const rawMatch = result.data;
@@ -96,13 +88,11 @@ const Match = ({ spriteData }: Props) => {
 
   }, [currentPlayerId]);
 
-  const {data} = trpc.match.full.useQuery({ matchId, playerId: currentPlayer?.id ?? "" })
+  const { data } = trpc.match.full.useQuery({ matchId, playerId: currentPlayer?.id ?? "default" });
 
   if (data) {
     if (data.status !== "playing") {
-      throw new Error(
-        `This match hasn't started yet. make sure to ready up!`
-      );
+      throw new Error(`This match hasn't started yet. make sure to ready up!`);
     }
 
     if (!players) {
@@ -117,25 +107,25 @@ const Match = ({ spriteData }: Props) => {
   const [scale, setScale] = useState<number>(2);
 
   //Global variable that determines the size of tiles
-  const tileSize = 16
+  const tileSize = 16;
 
   const pixiCanvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
-    if (!mapData || spriteSheets === undefined) {
+    if (!mapData || !spriteSheets|| !currentPlayer || !players) {
       return;
     }
 
     const mapScale = scale * tileSize;
-    const mapMargin = scale * tileSize * 2;
+    const mapMargin = scale * tileSize;
     const mapWidth = mapData[0].length * mapScale + mapMargin;
     const mapHeight = mapData.length * mapScale + mapMargin;
 
-   const app = new Application({
+    const app = new Application({
       view: pixiCanvasRef.current ?? undefined,
       autoDensity: true,
       resolution: window.devicePixelRatio,
-      backgroundColor: "#142546",
+      backgroundColor: "#000b2c",
       width: mapWidth,
       height: mapHeight
     });
@@ -150,22 +140,19 @@ const Match = ({ spriteData }: Props) => {
       animation: "gameCursor 1200ms infinite"
     } as CSSStyleDeclaration;
 
+
+    //lets find out which of the two players is the current player
+    let playerCurrent: PlayerInMatch | undefined;
+    players?.forEach((player, index) => {
+      if (currentPlayerId === player.id) {
+        playerCurrent = player;
+      }
+    });
+
     //lets create a mapContainer
-    const mapContainer = mapRender(spriteSheets, mapData, tileSize, mapWidth, mapHeight, actionMutation);
+    const mapContainer = mapRender(spriteSheets, mapData, tileSize, mapWidth, mapHeight, actionMutation, playerCurrent);
 
     app.stage.addChild(mapContainer);
-
-    //this is just a test for now...
-    const whiteChild = spriteConstructor(
-      Texture.WHITE,
-      32,
-      0,
-      16,
-      16,
-      "static"
-    );
-    mapContainer.removeChildAt(2);
-    mapContainer.addChildAt(whiteChild, 2)
 
     return () => {
       app.stop();
@@ -173,56 +160,60 @@ const Match = ({ spriteData }: Props) => {
   }, [mapData, spriteSheets, scale, actionMutation]);
 
 
-   if (!mapData || !players) {
-     return <></>
-   } else {
-     return (
-       <div className="@grid @grid-cols-12 @text-center @my-20 @mx-2">
-         <h3 className="@col-span-12">Scale</h3>
-         <div className="@col-span-12 @p-2">
-           <button className={"btn @inline"} onClick={() => {
-             setScale(scale + 0.2);
-           }}>+
-           </button>
-           <h2 className="@inline @align-middle">
-             {" "}
-             {Math.round(scale * 10) / 10}{" "}
-           </h2>
-           <button className={"btn"} onClick={() => {
-             setScale(scale - 0.2);
-           }}>-
-           </button>
-         </div>
-         <div className="@mx-4 @w-48 @col-span-2 [image-rendering:pixelated]">
-             <MatchPlayer
-               name={players[0].name}
-               co={players[0].coId}
-               country={players[0].army}
-               playerReady={true}
-             />
+  if (!mapData || !players) {
+    return <></>;
+  } else {
+    return (<div className="@grid @grid-cols-12 @text-center @my-20 @mx-2">
+        <h3 className="@col-span-12">Scale</h3>
+        <div className="@col-span-12 @p-2">
+          <button className={"btn @inline"} onClick={() => {
+            setScale(scale + 0.2);
+          }}>+
+          </button>
+          <h2 className="@inline @align-middle">
+            {" "}
+            {Math.round(scale * 10) / 10}{" "}
+          </h2>
+          <button className={"btn"} onClick={() => {
+            setScale(scale - 0.2);
+          }}>-
+          </button>
+        </div>
+        <div className="@mx-4 @w-48 @col-span-2 [image-rendering:pixelated]">
+          <MatchPlayer
+            name={players[0].name}
+            co={players[0].coId}
+            country={players[0].army}
+            playerReady={true}
+          />
+          Funds: {players[0].funds}
+          <br />
+          HasTurn: {players[0].hasCurrentTurn ? "true" : "false"}
 
-         </div>
-         <div className="@col-span-8">
-           <canvas
-             className="@inline"
-             style={{
-               imageRendering: "pixelated"
-             }}
-             ref={pixiCanvasRef}
-           ></canvas>
-         </div>
-         <div className="@mx-4 @w-48 @col-span-2 [image-rendering:pixelated]">
-             <MatchPlayer
-               name={players[1].name}
-               co={players[1].coId}
-               country={players[1].army}
-               playerReady={true}
-               flipCO={true}
-             />
-         </div>
-       </div>
-     );
-   }
+        </div>
+        <div className="@col-span-8">
+          <canvas
+            className="@inline"
+            style={{
+              imageRendering: "pixelated"
+            }}
+            ref={pixiCanvasRef}
+          ></canvas>
+        </div>
+        <div className="@mx-4 @w-48 @col-span-2 [image-rendering:pixelated]">
+          <MatchPlayer
+            name={players[1].name}
+            co={players[1].coId}
+            country={players[1].army}
+            playerReady={true}
+            flipCO={true}
+          />
+          Funds: {players[1].funds}
+          <br />
+          HasTurn: {players[1].hasCurrentTurn ? "true" : "false"}
+        </div>
+      </div>);
+  }
 };
 export default Match;
 

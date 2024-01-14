@@ -10,7 +10,7 @@ export type MovementType =
 
 export type Facility = "base" | "airport" | "port";
 
-type UnitPropertiesWithoutWeapon = {
+export type UnitPropertiesWithoutWeapon = {
   displayName: string;
   cost: number;
   facility: Facility;

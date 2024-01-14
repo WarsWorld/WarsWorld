@@ -30,7 +30,8 @@ export const createMatchProcedure = playerBaseProcedure
             version: "AW2"
           },
           eliminated: false,
-          funds: 0,
+          //TODO: Handle funds correctly
+          funds: 10000,
           powerMeter: 0,
           timesPowerUsed: 0,
           army: "orange-star",
