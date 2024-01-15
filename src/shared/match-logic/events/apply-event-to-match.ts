@@ -46,7 +46,6 @@ export const applyMainEventToMatch = (
     //TODO: Starting a match breaks the app because it can't apply "matchStart" event.
     // Does MatchStart really need an event here? Because this is what fixes it
     case "matchStart": {
-      console.log("-------matchStart event logged in (does not apply anything, this needs to be fixed-------");
       break;
     }
     default: {

@@ -31,9 +31,6 @@ const Match = ({ spriteData }: Props) => {
      fetchData();
   }, []);
 
-
-  const actionMutation = trpc.action.send.useMutation();
-
   const { currentPlayer } = usePlayers();
 
   const [players, setPlayers] = useState<PlayerInMatch[] | null | undefined>(
@@ -88,7 +85,7 @@ const Match = ({ spriteData }: Props) => {
 
   }, [currentPlayerId]);
 
-  const { data } = trpc.match.full.useQuery({ matchId, playerId: currentPlayer?.id ?? "default" });
+  const { data } = trpc.match.full.useQuery({ matchId, playerId: currentPlayer?.id ?? "" });
 
   if (data) {
     if (data.status !== "playing") {
@@ -104,6 +101,8 @@ const Match = ({ spriteData }: Props) => {
     }
   }
 
+  const actionMutation = trpc.action.send.useMutation();
+
   const [scale, setScale] = useState<number>(2);
 
   //Global variable that determines the size of tiles
@@ -112,9 +111,11 @@ const Match = ({ spriteData }: Props) => {
   const pixiCanvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
-    if (!mapData || !spriteSheets|| !currentPlayer || !players) {
+    if (!mapData || !spriteSheets|| !currentPlayer || !players ||!match) {
       return;
     }
+
+    console.log("MAP RENDERED------");
 
     const mapScale = scale * tileSize;
     const mapMargin = scale * tileSize;
@@ -140,24 +141,36 @@ const Match = ({ spriteData }: Props) => {
       animation: "gameCursor 1200ms infinite"
     } as CSSStyleDeclaration;
 
-
-    //lets find out which of the two players is the current player
-    let playerCurrent: PlayerInMatch | undefined;
-    players?.forEach((player, index) => {
-      if (currentPlayerId === player.id) {
-        playerCurrent = player;
-      }
-    });
-
     //lets create a mapContainer
-    const mapContainer = mapRender(spriteSheets, mapData, tileSize, mapWidth, mapHeight, actionMutation, playerCurrent);
+    const mapContainer = mapRender({
+      spriteSheets,
+      mapData,
+      tileSize,
+      mapWidth,
+      mapHeight,
+      mutation: actionMutation,
+      player: match.getCurrentTurnPlayer().data,
+      match: match
+    });
 
     app.stage.addChild(mapContainer);
 
     return () => {
       app.stop();
     };
-  }, [mapData, spriteSheets, scale, actionMutation]);
+  }, [mapData, spriteSheets, scale, actionMutation, currentPlayer, players, match]);
+
+
+
+  //TODO: This is more or less what we would do to handle events
+  // right now it doesnt seem to be working...
+  const eventStuff = trpc.action.onEvent.useSubscription( { matchId: "clrf2h6qv000111deih12dxi0", playerId: "clrbbcyzd000214l310lzd92q" },{
+    onData(data) {
+      console.log("eventStuff-----");
+      console.log(data);
+    }
+  });
+  console.log(eventStuff);
 
 
   if (!mapData || !players) {

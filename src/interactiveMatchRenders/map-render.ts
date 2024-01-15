@@ -4,11 +4,31 @@ import showBuildMenu from "./show-build-menu";
 import { spriteConstructor } from "../gameFunction/spriteConstructor";
 import type { Tile } from "../shared/schemas/tile";
 import type { UseTRPCMutationResult } from "@trpc/react-query/shared";
-import { PlayerInMatch } from "../shared/types/server-match-state";
+import type { PlayerInMatch } from "../shared/types/server-match-state";
+import { MatchWrapper } from "../shared/wrappers/match";
 
+type Props = {
+  spriteSheets: Spritesheet<ISpritesheetData>[],
+  mapData: Tile[][],
+  tileSize: number,
+  mapWidth: number,
+  mapHeight: number,
+  mutation: UseTRPCMutationResult<never, never, never, never>,
+  player: PlayerInMatch | undefined
+  match: MatchWrapper
+}
 
-
-export const mapRender = (spriteSheets: Spritesheet<ISpritesheetData>[], mapData: Tile[][], tileSize: number, mapWidth: number, mapHeight: number, mutation: UseTRPCMutationResult<never, never, never, never>, player: PlayerInMatch | undefined) => {
+export const mapRender = (
+  {
+    spriteSheets,
+    mapData,
+    tileSize,
+    mapWidth,
+    mapHeight,
+    mutation,
+    player,
+    match
+  }: Props) => {
 
   //the container that holds the map
   const mapContainer = new Container();
@@ -44,15 +64,15 @@ export const mapRender = (spriteSheets: Spritesheet<ISpritesheetData>[], mapData
             tile.on("pointerdown", () => {
               void (async () => {
                 const menu = await showBuildMenu({
-                  player: player,
+                  player,
+                  match,
                   spriteSheet: spriteSheets[slot],
                   facility: type,
                   x: colIndex,
                   y: rowIndex,
                   mapHeight: mapData.length - 1,
                   mapWidth: mapData[0].length - 1,
-                  buildMutation: mutation
-
+                  buildMutation: mutation,
                 });
 
                 //if there is a menu already out, lets remove it

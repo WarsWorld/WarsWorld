@@ -30,7 +30,7 @@ const getLoggedInUserPlayers = (session: Session | null) => {
 export const playerMiddleware = t.middleware(async ({ ctx, next, input }) => {
   const parseResult = withPlayerIdSchema.safeParse(input);
 
-  if (!parseResult.success) {
+  if (!parseResult.success || parseResult.data.playerId === "") {
     throw new TRPCError({
       code: "BAD_REQUEST",
       message: "No playerId specified",

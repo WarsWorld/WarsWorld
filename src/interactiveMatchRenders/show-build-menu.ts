@@ -2,36 +2,36 @@ import type { ISpritesheetData, Spritesheet } from "pixi.js";
 import {
   AnimatedSprite, Assets, BitmapText, Container, Sprite, Texture
 } from "pixi.js";
-import type { inferProcedureInput } from "@trpc/server";
-import type { AppRouter } from "server/routers/app";
 import type {
   Facility, UnitProperties, UnitPropertiesWithoutWeapon
 } from "../shared/match-logic/game-constants/unit-properties";
 import { unitPropertiesMap,
 } from "../shared/match-logic/game-constants/unit-properties";
 import type { PlayerInMatch } from "../shared/types/server-match-state";
+import { MatchWrapper } from "../shared/wrappers/match";
 
 export type OurSpriteSheetData = ISpritesheetData & {
   animations: Record<string, string[]>; countries: Record<string, string[]>;
 };
 
 type Props = {
-  player: PlayerInMatch
+  player: PlayerInMatch,
+  match: MatchWrapper,
   spriteSheet: Spritesheet;
   facility: Facility;
   x: number;
   y: number;
   mapHeight: number;
   mapWidth: number;
-  buildMutation: (input: inferProcedureInput<AppRouter["action"]["send"]>) => void;
+  buildMutation;
 }
 
 export default async function showBuildMenu(
-  { spriteSheet, facility, x,y,mapWidth,mapHeight,buildMutation, player }: Props) {
+  { spriteSheet, facility, x,y,mapWidth,mapHeight,buildMutation, player, match }: Props) {
 
-  //TODO: Gotta add a "funds" value to our parameters
-  // from there, include it here and any unit above our funds,
-  // will be darkened out.
+  const positionX = x;
+  const positionY = y;
+
 
   //The big container holding everything
   const menuContainer = new Container();
@@ -55,13 +55,15 @@ export default async function showBuildMenu(
   const unitBanned = false;
 
   const unitInfo: UnitPropertiesWithoutWeapon[] = [];
+  const unitNames: string[] = []
 
 
   //lets loop through our units and only get the ones that can be built in this facility
-  Object.keys(unitPropertiesMap).forEach(key => {
+  Object.keys(unitPropertiesMap).forEach((key) => {
     const childObject: UnitPropertiesWithoutWeapon = unitPropertiesMap[key];
 
     if (childObject.facility === facility && !unitBanned ) {
+      unitNames.push(key)
       unitInfo.push(childObject)
 
     }
@@ -138,13 +140,15 @@ export default async function showBuildMenu(
       unitBG.eventMode = "static";
       unitBG.tint = "#d0d0d0";
       //TODO: Actually use playerId and matchId
-      menuElement.on("pointerdown", () => buildMutation({
-        type: "build",
-        unitType: unit.displayName.toLowerCase(),
-        position: [x, y],
-        playerId: player.id,
-        matchId: "cljw16lea0000jscweoeop1ct"
-      }));
+      menuElement.on("pointerdown", () => {
+        buildMutation.mutateAsync({
+          type: "build",
+          unitType: unitNames[index],
+          position: [positionX, positionY],
+          playerId: player.id,
+          matchId: match.id
+        })
+      });
     }
 
     //lets add a hover effect to our elements
