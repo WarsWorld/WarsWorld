@@ -43,19 +43,19 @@ export default function YourMatches() {
   const { data: allMatchesQuery, refetch: refetchAllMatches } =
     trpc.match.getAll.useQuery({ pageNumber: 0 });
 
-    const joinableMatchesQuery = allMatchesQuery?.filter(
-      (match) =>
-        match.players.filter(
-          (player) => player.id == currentPlayer?.id || match.players.length == 2
-        ).length == 0
-    );
+  const joinableMatchesQuery = allMatchesQuery?.filter(
+    (match) =>
+      match.players.filter(
+        (player) => player.id == currentPlayer?.id || match.players.length == 2
+      ).length == 0
+  );
 
-    const spectatorMatches = allMatchesQuery?.filter(
-      (match) =>
-        match.players.filter(
-          (player) => player.id == currentPlayer?.id || match.players.length != 2
-        ).length == 0
-    );
+  const spectatorMatches = allMatchesQuery?.filter(
+    (match) =>
+      match.players.filter(
+        (player) => player.id == currentPlayer?.id || match.players.length != 2
+      ).length == 0
+  );
 
   return (
     <ProtectPage>
