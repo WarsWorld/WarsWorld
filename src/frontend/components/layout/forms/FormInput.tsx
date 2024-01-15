@@ -2,6 +2,7 @@ import type { ChangeEventHandler } from "react";
 
 type Props = {
   text: string;
+  className?: string;
   isError?: boolean;
   errorMessage?: string;
   value?: string | number | readonly string[];
@@ -18,10 +19,11 @@ export default function FormInput({
   isError,
   errorMessage,
   onChange,
+  className,
 }: Props) {
   return (
     <>
-      <div className="@my-1">
+      <div className={className}>
         <label
           htmlFor={id ?? ""}
           className={`@text-xl smallscreen:@text-2xl ${

@@ -122,9 +122,12 @@ export default function CreateMatch({
       {ownedPlayers ? (
         <div className="@flex @flex-col smallscreen:@flex-row @justify-center @items-center @py-2 @pb-6">
           <p className="@px-0 smallscreen:@pr-8">Current Player: </p>
-          <div className="@relative @w-64 @my-4 smallscreen:@m-0">
-            <Select options={players} value={selectPlayer} onChange={selectPlayerHandler} />
-          </div>
+          <Select 
+            className="@relative @w-64 @my-4 smallscreen:@m-0" 
+            options={players} 
+            value={selectPlayer} 
+            onChange={selectPlayerHandler} 
+          />
         </div>
       ) : (
         <p>Loading Players...</p>
@@ -135,9 +138,12 @@ export default function CreateMatch({
           <p>Loading maps...</p>
         ) : (
           <div className="@flex @flex-col @items-center">
-            <div className="@w-64 smallscreen:@w-96">
-              <Select options={maps} value={selectMap} onChange={selectMapHandler} />
-            </div>
+            <Select 
+              className="@w-64 smallscreen:@w-96" 
+              options={maps} 
+              value={selectMap} 
+              onChange={selectMapHandler} 
+            />
           </div>
         )}
         <div className="@pt-4 smallscreen:@py-0 @px-2 @w-64 @h-16 smallscreen:@h-12">
