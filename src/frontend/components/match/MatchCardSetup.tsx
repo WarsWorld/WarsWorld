@@ -1,5 +1,6 @@
 import type { Match, Player } from "@prisma/client";
 import { trpc } from "frontend/utils/trpc-client";
+import { useMatches } from "pages/your-matches";
 import { useState } from "react";
 import type { Army } from "shared/schemas/army";
 import { armySchema } from "shared/schemas/army";
@@ -43,6 +44,7 @@ export default function MatchCardSetup({
   const readyMatch = trpc.match.setReady.useMutation();
   const leaveMatch = trpc.match.leave.useMutation();
   const [showDropdown, setShowDropdown] = useState("")
+  const { refetchYourMatches, refetchAllMatches } = useMatches();
 
   if (inMatch) {
     return (<div className="@flex">
@@ -208,7 +210,8 @@ export default function MatchCardSetup({
                   setCurrentPlayerOptions((prevState) => {return {...prevState, ready: !readyStatus}})
                   
                   if (!readyStatus) {
-                    location.reload();
+                    refetchAllMatches();
+                    refetchYourMatches();
                   }
                 });
             }}
@@ -228,7 +231,8 @@ export default function MatchCardSetup({
                   playerId: playerID,
                 })
                 .then(() => {
-                    location.reload();
+                    refetchAllMatches();
+                    refetchYourMatches();
                 });
             }}
           >
@@ -255,7 +259,8 @@ export default function MatchCardSetup({
                 })
                 .then(() => {
                   //lets reload the page
-                  location.reload();
+                  refetchAllMatches();
+                  refetchYourMatches();
                 });
             }}
           >

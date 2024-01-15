@@ -4,22 +4,20 @@ import Select from "frontend/components/layout/Select";
 import SquareButton from "frontend/components/layout/SquareButton";
 import { usePlayers } from "frontend/context/players";
 import { trpc } from "frontend/utils/trpc-client";
+import { useMatches } from "pages/your-matches";
 import { useEffect, useState } from "react";
 
 type Props = {
   currentPlayer: Player | undefined;
-  refetchYourMatches: () => void;
-  refetchAllMatches: () => void;
   setCurrentPlayer: (player: Player) => void;
 };
 
 export default function CreateMatch({
   currentPlayer,
-  refetchYourMatches,
-  refetchAllMatches,
   setCurrentPlayer,
 }: Props) {
   const { ownedPlayers } = usePlayers();
+  const { refetchYourMatches, refetchAllMatches } = useMatches();
 
   // Get map data
   const { data: mapQuery, isLoading: isLoadingMapQuery } =
