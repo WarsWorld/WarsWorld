@@ -1,4 +1,3 @@
-import type { ISpritesheetData, Spritesheet } from "pixi.js";
 import { AnimatedSprite, Container, Sprite, Texture } from "pixi.js";
 import showBuildMenu from "./show-build-menu";
 import { spriteConstructor } from "../gameFunction/spriteConstructor";
@@ -7,6 +6,7 @@ import type { UseTRPCMutationResult } from "@trpc/react-query/shared";
 import type { PlayerInMatch } from "../shared/types/server-match-state";
 import { MatchWrapper } from "../shared/wrappers/match";
 import { LoadedSpriteSheet } from "../frontend/pixi/load-spritesheet";
+import {Player} from "@prisma/client";
 
 type Props = {
   spriteSheets: LoadedSpriteSheet,
@@ -15,6 +15,7 @@ type Props = {
   mapWidth: number,
   mapHeight: number,
   mutation: UseTRPCMutationResult<never, never, never, never>,
+  currentPlayer: Player,
   players: PlayerInMatch[]
   match: MatchWrapper
 }
@@ -28,10 +29,11 @@ export const mapRender = (
     mapHeight,
     mutation,
     players,
+    currentPlayer,
     match
   }: Props) => {
 
-  const currentPlayer = match.getCurrentTurnPlayer().data;
+  const playerWithTurn = match.getCurrentTurnPlayer().data;
 
   //the container that holds the map
   const mapContainer = new Container();
@@ -61,11 +63,12 @@ export const mapRender = (
           //todo: get player
           const slotPlayer: PlayerInMatch = players[slot]
 
+          // @ts-ignore
           tile = new AnimatedSprite(spriteSheets[slotPlayer.army].animations[type]);
 
 
           //if player has turn and building can produce units, show buildMenu
-          if ((currentPlayer.slot === slot) && (type === "port"  || type === "base" || type === "airport")) {
+          if ((playerWithTurn.slot === slot && currentPlayer.id === playerWithTurn.id) && (type === "port"  || type === "base" || type === "airport")) {
 
             tile.eventMode = "static";
             //Lets make menu appear
@@ -133,6 +136,7 @@ export const mapRender = (
 
   //allows for us to use zIndex on the children of mapContainer
   mapContainer.sortableChildren = true;
+  mapContainer.name = "mapContainer";
 
   return mapContainer;
 

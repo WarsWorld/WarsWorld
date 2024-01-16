@@ -9,6 +9,7 @@ import { unitPropertiesMap,
 } from "../shared/match-logic/game-constants/unit-properties";
 import type { PlayerInMatch } from "../shared/types/server-match-state";
 import { MatchWrapper } from "../shared/wrappers/match";
+import {Army} from "../shared/schemas/army";
 
 export type OurSpriteSheetData = ISpritesheetData & {
   animations: Record<string, string[]>; countries: Record<string, string[]>;

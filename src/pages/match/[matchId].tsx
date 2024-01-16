@@ -152,6 +152,7 @@ const Match = ({ spriteData }: Props) => {
       mapWidth,
       mapHeight,
       mutation: actionMutation,
+      currentPlayer,
       players,
       match: match
     });
