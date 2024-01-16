@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { remark } from "remark";
 import html from "remark-html";
 import { prisma } from "server/prisma/prisma-client";
+import { ArticleType } from "shared/schemas/article";
 
 export const stringToSlug = (title: string) => title.replace(/\s/g, "-").replace(/[^\w\s-]/gi, '').toLowerCase();
 
@@ -100,7 +101,7 @@ export default function NewsArticle(
   return (
     <>
       { articleData && <Article articleData={{
-          type: articleData.type,
+          type: articleData.type as ArticleType,
           contentHtml: articleBody,
           metaData: {
             title: articleData.title,

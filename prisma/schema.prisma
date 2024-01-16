@@ -19,7 +19,6 @@ model Article {
   Authors     ArticleAuthors[]
   title       String
   description String
-  type        ArticleType
   category    ArticleCategory
   thumbnail   String?
   body        String
@@ -37,11 +36,6 @@ model ArticleAuthors {
   authorId  String
 
   @@id([articleId, authorId])
-}
-
-enum ArticleType {
-  news
-  guide
 }
 
 enum ArticleCategory {

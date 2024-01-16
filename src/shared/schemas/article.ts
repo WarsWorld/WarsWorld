@@ -1,41 +1,29 @@
 import { z } from "zod";
 
-export const articleType = z.enum([
+export const articleTypeSchema = z.enum([
   "news",
   "guide",
 ]);
 
-export const guideCategories = z.enum([
+export const articleCategoriesSchema = z.enum([
   "basics",
   "advance",
   "site",
   "other",
-]);
-
-export const newsCategories = z.enum([
   "patch",
   "events",
   "news",
   "maintenance",
-  "other",
 ]);
 
-export const articleWithoutCategory = z.object({
+export const articleSchema = z.object({
   title: z.string().min(1).max(100),
   description: z.string().min(1).max(500),
   body: z.string().min(1).max(7500),
   thumbnail: z.string(),
+  category: articleCategoriesSchema,
 });
 
-export const articleSchema = z.discriminatedUnion("type", [
-  articleWithoutCategory.extend({
-    type: z.literal("news"),
-    category: newsCategories,
-  }),
-  articleWithoutCategory.extend({
-    type: z.literal("guide"),
-    category: guideCategories,
-  }),
-]);
-
 export type ArticleMetaData = z.infer<typeof articleSchema>;
+export type ArticleCategories = z.infer<typeof articleCategoriesSchema>;
+export type ArticleType = z.infer<typeof articleTypeSchema>;

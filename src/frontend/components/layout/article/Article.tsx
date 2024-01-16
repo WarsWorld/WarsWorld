@@ -1,7 +1,8 @@
-import { type ArticleType } from "@prisma/client";
+
 import Banner from "frontend/components/layout/Banner";
 import Head from "next/head";
 import ArticleContent from "./ArticleContent";
+import type { ArticleType } from "shared/schemas/article";
 
 type Props = {
   articleData: {

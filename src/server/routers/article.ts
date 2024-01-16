@@ -6,35 +6,40 @@ import {
 } from "../trpc/trpc-setup";
 import { TRPCError } from "@trpc/server";
 import { prisma } from "server/prisma/prisma-client";
-import { articleType } from "shared/schemas/article";
+import { type ArticleCategories, type ArticleType, articleTypeSchema } from "shared/schemas/article";
 import matter from "gray-matter";
-import { remark } from "remark";
-import html from "remark-html";
 
 const bannedWords = ["heck", "frick", "oof", "swag", "amongus"];
+const NEWS_CATEGORIES: ArticleCategories[] = ["patch", "events", "news", "maintenance"];
+const GUIDE_CATEGORIES: ArticleCategories[] = ["basics", "advance", "site"];
 
 export const articleRouter = router({
   getMetadataByType: publicBaseProcedure
     .input(
       z.object({
-        type: articleType
+        type: articleTypeSchema
       })
     )
-    .query((input) => 
-      prisma.article.findMany({
+    .query(({ input }) => {
+      const categories = 
+        input.type == "news" ? NEWS_CATEGORIES : GUIDE_CATEGORIES;
+
+      return prisma.article.findMany({
         select: {
           id: true,
           title: true,
           description: true,
           thumbnail: true,
           category: true,
-          type: true,
           createdAt: true,
         },
         where: {
-          type: input.input.type,
+          category: {
+            in: categories,
+          },
         },
       })
+    }   
   ),
   getMarkdownById: publicBaseProcedure
     .input(
@@ -50,7 +55,6 @@ export const articleRouter = router({
           description: true,
           thumbnail: true,
           category: true,
-          type: true,
           createdAt: true,
         },
         where: {
@@ -63,11 +67,13 @@ export const articleRouter = router({
       if(article == null) {
         return null;
       }
-      
+
+      const type: ArticleType = (NEWS_CATEGORIES.includes(article.category)) ? "news" : "guide";
       const content = matter(article.body).content;
 
       return {
         ...article,
+        type: type,
         body: content,
       };
     }

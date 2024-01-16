@@ -42,7 +42,7 @@ export default function ArticleContent({ contentHTML }: Props) {
   }
 
   return (
-    <div className="@grid @grid-cols-12 @py-8 @px-4 smallscreen:@pl-16 @relative @leading-10">
+    <div className="@grid @grid-cols-12 @py-12 @px-4 smallscreen:@pl-16 @relative @leading-10">
       <div className="@relative @col-span-12 smallscreen:@col-span-10">
         <article
           className={`@relative @bg-bg-tertiary @z-20 smallscreen:@p-10 @p-2 ${styles.articleGrid} @list-disc [&>p]:inline @rounded-2xl @shadow-xl @shadow-black`}
@@ -52,14 +52,14 @@ export default function ArticleContent({ contentHTML }: Props) {
         <div className="@absolute @top-12 @left-8 @w-full @h-[95%] @-rotate-[5deg] @bg-bg-primary @rounded-2xl @shadow-xl @shadow-black" />
       </div>
 
-      <div className="@z-30 @my-8 smallscreen:@my-0 @mx-0 smallscreen:@mx-2 @col-span-12 smallscreen:@col-span-2 @bg-primary @sticky @top-[10vw] @h-max @rounded-xl @shadow-lg @shadow-black">
+      <div className="@z-30 @my-8 smallscreen:@my-0 @mx-0 smallscreen:@mx-2 @col-span-12 smallscreen:@col-span-2 @bg-black/70 @sticky @top-[10vw] @h-max @rounded-xl @shadow-lg @shadow-black">
         <h1 className="@text-3xl @text-center @my-2 ">INDEX</h1>
         {headers.map((item, index) => {
           return (
             <a
               key={item[1]}
               href={`#${item[1].replace(/\s/g, "-")}`}
-              className={`@text-white ${index%2 == 0 ? "@bg-bg-tertiary" : "@bg-bg-secondary"} @text-base monitor:@text-xl @block @py-2 @px-2 hover:@text-white hover:@text-2xl @border-t-4 @border-white`}
+              className={`@text-white ${index%2 == 0 ? "@bg-bg-tertiary" : "@bg-bg-secondary"} @text-base monitor:@text-xl @block @py-2 @px-2 hover:@text-white hover:@text-[1.3rem] @border-t-4 @border-white`}
             >
               {item[1]}
             </a>

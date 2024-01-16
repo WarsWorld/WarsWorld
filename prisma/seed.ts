@@ -68,7 +68,6 @@ function seedArticles(articles: string[], type: string, authorId: string) {
           ]
         },
         thumbnail: articleData.thumbnail,
-        type: articleData.type,
         category: articleData.category,
         body: articleData.body,
       }
