@@ -6,15 +6,16 @@ import type { Tile } from "../shared/schemas/tile";
 import type { UseTRPCMutationResult } from "@trpc/react-query/shared";
 import type { PlayerInMatch } from "../shared/types/server-match-state";
 import { MatchWrapper } from "../shared/wrappers/match";
+import { LoadedSpriteSheet } from "../frontend/pixi/load-spritesheet";
 
 type Props = {
-  spriteSheets: Spritesheet<ISpritesheetData>[],
+  spriteSheets: LoadedSpriteSheet,
   mapData: Tile[][],
   tileSize: number,
   mapWidth: number,
   mapHeight: number,
   mutation: UseTRPCMutationResult<never, never, never, never>,
-  player: PlayerInMatch | undefined
+  players: PlayerInMatch[]
   match: MatchWrapper
 }
 
@@ -26,15 +27,18 @@ export const mapRender = (
     mapWidth,
     mapHeight,
     mutation,
-    player,
+    players,
     match
   }: Props) => {
+
+  const currentPlayer = match.getCurrentTurnPlayer().data;
 
   //the container that holds the map
   const mapContainer = new Container();
   mapContainer.x = tileSize /2;
   mapContainer.y = tileSize /2;
 
+  console.log("player-------",players);
   //Lets render our map!
   let tile;
 
@@ -51,22 +55,26 @@ export const mapRender = (
 
         //NEUTRAL
         if (slot === -1) {
-          tile = new Sprite(spriteSheets[2].textures[type + "-0.png"]);
+          tile = new Sprite(spriteSheets.neutral.textures[type + "-0.png"]);
           //NOT NEUTRAL
         } else {
-          tile = new AnimatedSprite(spriteSheets[slot].animations[type]);
+          //todo: get player
+          const slotPlayer: PlayerInMatch = players[slot]
 
-          //if our building is able to produce units, it has a menu!
-          if ((player?.slot === slot && player?.hasCurrentTurn === true) && (type === "port"  || type === "base" || type === "airport")) {
+          tile = new AnimatedSprite(spriteSheets[slotPlayer.army].animations[type]);
+
+
+          //if player has turn and building can produce units, show buildMenu
+          if ((currentPlayer.slot === slot) && (type === "port"  || type === "base" || type === "airport")) {
 
             tile.eventMode = "static";
             //Lets make menu appear
             tile.on("pointerdown", () => {
               void (async () => {
                 const menu = await showBuildMenu({
-                  player,
+                  player: slotPlayer,
                   match,
-                  spriteSheet: spriteSheets[slot],
+                  spriteSheet: spriteSheets[slotPlayer.army],
                   facility: type,
                   x: colIndex,
                   y: rowIndex,
@@ -108,9 +116,9 @@ export const mapRender = (
 
         //NOT A PROPERTY
       } else if ("variant" in currentTile) {
-        tile = new Sprite(spriteSheets[2].textures[currentTile.type + "-" + currentTile.variant + ".png"]);
+        tile = new Sprite(spriteSheets.neutral.textures[currentTile.type + "-" + currentTile.variant + ".png"]);
       } else {
-        tile = new Sprite(spriteSheets[2].textures[currentTile.type + ".png"]);
+        tile = new Sprite(spriteSheets.neutral.textures[currentTile.type + ".png"]);
       }
 
       //makes our sprites render at the bottom, not from the top.

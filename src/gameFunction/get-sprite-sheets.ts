@@ -3,20 +3,27 @@ import path from "path";
 import type { ISpritesheetData } from "pixi.js";
 import type { Army } from "shared/schemas/army";
 
-export default async function getSpriteSheets(countryNames: Army[]) {
-  //Find the absolute path of the json directory
+//export type AnimationsPropertyPatch = { animations: Record<string, string[]> };
 
+export type SheetNames = Army | "neutral" | "arrow"
+
+export type SpriteMap = Record<Army | "neutral" | "arrow", (ISpritesheetData)>;
+
+//this function is getting all the json spritesheets, nothing else, this happens on the server side
+export default async function getSpriteSheets(countryNames: Army[]): Promise<SpriteMap> {
   const jsonDirectory = path.join(process.cwd(), "public/img/spriteSheet");
 
-  const allCountryNames = [...countryNames, "neutral", "arrow"];
-  const spritesheetPromises = allCountryNames.map(async (country) => {
+  const returnObj: SpriteMap   = {};
+  const allCountryNames: SheetNames[] =  [...countryNames, "neutral", "arrow"];
+
+  for (const country of allCountryNames) {
     const fileData = await fs.readFile(
-      jsonDirectory + `/${country}.json`,
+      `${jsonDirectory}/${country}.json`,
       "utf-8"
     );
+    returnObj[country] = JSON.parse(fileData) as ISpritesheetData;
+  }
 
-    return JSON.parse(fileData) as ISpritesheetData;
-  });
-
-  return Promise.all(spritesheetPromises);
+  return returnObj;
 }
+

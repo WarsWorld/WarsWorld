@@ -9,21 +9,23 @@ import type { Tile } from "shared/schemas/tile";
 import type { PlayerInMatch } from "shared/types/server-match-state";
 
 import MatchPlayer from "frontend/components/match/MatchPlayer";
-import { loadSpritesheets } from "frontend/pixi/load-spritesheet";
+import { LoadedSpriteSheet, loadSpritesheets } from "frontend/pixi/load-spritesheet";
 import { trpc } from "frontend/utils/trpc-client";
-import getSpriteSheets from "gameFunction/get-sprite-sheets";
+import getSpriteSheets, { SpriteMap } from "gameFunction/get-sprite-sheets";
 import type { GetServerSideProps } from "next";
 import { MatchWrapper } from "shared/wrappers/match";
 import { mapRender } from "../../interactiveMatchRenders/map-render";
 
 BaseTexture.defaultOptions.scaleMode = SCALE_MODES.NEAREST;
 
-type Props = { spriteData: ISpritesheetData[] };
+type Props = { spriteData: SpriteMap };
+
+
 
 const Match = ({ spriteData }: Props) => {
 
   //This loads the textures once
-  const [spriteSheets, setSpriteSheets] = useState<Spritesheet[] | undefined>(undefined);
+  const [spriteSheets, setSpriteSheets] = useState<LoadedSpriteSheet | undefined>(undefined);
   useEffect(() => {
     const fetchData = async () => {
         setSpriteSheets(await loadSpritesheets(spriteData));
@@ -116,6 +118,7 @@ const Match = ({ spriteData }: Props) => {
     }
 
     console.log("MAP RENDERED------");
+    console.log(spriteSheets);
 
     const mapScale = scale * tileSize;
     const mapMargin = scale * tileSize;
@@ -149,7 +152,7 @@ const Match = ({ spriteData }: Props) => {
       mapWidth,
       mapHeight,
       mutation: actionMutation,
-      player: match.getCurrentTurnPlayer().data,
+      players,
       match: match
     });
 
@@ -170,7 +173,7 @@ const Match = ({ spriteData }: Props) => {
       console.log(data);
     }
   });
-  console.log(eventStuff);
+  //console.log(eventStuff);
 
 
   if (!mapData || !players) {
@@ -234,6 +237,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async () => {
   //TODO: Should we call all the spritesheets or just the ones the players will need?
   // Unsure how we would know which players are playing what before even loading the match
   // (which right now we do this call before the tRPC call that gets the match data...)
-  const spriteData = await getSpriteSheets(["orange-star", "blue-moon"]);
+  const spriteData = await getSpriteSheets(["yellow-comet", "green-earth", "black-hole", "orange-star", "blue-moon", ]);
+
   return { props: { spriteData } };
 };

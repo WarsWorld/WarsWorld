@@ -1,29 +1,25 @@
-import type { ISpritesheetData } from "pixi.js";
 import { BaseTexture, Spritesheet } from "pixi.js";
+import { SheetNames, SpriteMap } from "../../gameFunction/get-sprite-sheets";
 
-export async function loadSpritesheets(spritesheetDatas: ISpritesheetData[]) {
-  const spritesheets = spritesheetDatas.map((spritesheetData) => {
-    if (spritesheetData.meta.image === undefined) {
-      throw new Error("No spritesheet thing");
+
+export type LoadedSpriteSheet = Record<SheetNames, Spritesheet>
+
+//This function transforms our RAW spritesheets into finer spritesheets pixi can read well, this is client-side
+export async function loadSpritesheets(rawSpriteSheet: SpriteMap) {
+
+  const pixiSpriteSheets: LoadedSpriteSheet = {};
+
+  for (const sheetName in rawSpriteSheet) {
+    if (rawSpriteSheet[sheetName as SheetNames].meta.image === undefined) {
+      throw new Error(`No spritesheet image found for ${sheetName}`);
     }
 
-    /**
-     * This stupid patch is needed because our data is not "well typed"
-     * which is kind of impossible to achieve with tons of filenames
-     * that we might not want to store anywhere in TS files.
-     * Without this type information, because of Pixi's type definitions,
-     * the `spritesheet.animations` property becomes `Record<never, Texture[]>`
-     * or something like that.
-     */
-    type AnimationsPropertPatch = { animations: Record<string, string[]> };
+    const pixiSheet = new Spritesheet(
+      BaseTexture.from(`/img/spriteSheet/${rawSpriteSheet[sheetName as SheetNames].meta.image}`),
+      rawSpriteSheet[sheetName as SheetNames]);
+    await pixiSheet.parse();
+    pixiSpriteSheets[sheetName as SheetNames] = pixiSheet;
+  }
 
-    return new Spritesheet(
-      BaseTexture.from(spritesheetData.meta.image),
-      spritesheetData as ISpritesheetData & AnimationsPropertPatch
-    );
-  });
-
-  await Promise.all(spritesheets.map((sheet) => sheet.parse()));
-
-  return spritesheets;
+  return pixiSpriteSheets;
 }

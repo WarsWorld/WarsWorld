@@ -3131,7 +3131,7 @@
   "meta": {
     "app": "https://www.codeandweb.com/texturepacker",
     "version": "1.1",
-    "image": "/img/spriteSheet/blue-moon.png",
+    "image": "blue-moon.png",
     "format": "RGBA8888",
     "size": { "w": 925, "h": 127 },
     "scale": "1",
