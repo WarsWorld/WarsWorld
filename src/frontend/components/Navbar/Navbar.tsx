@@ -21,11 +21,15 @@ export function Navbar() {
   const setIsOpen = async (value: boolean, callbackUrl?: string) => {
     if (value) {
       await router.replace("", {
+        pathname: window.location.pathname,
         query: "authModalOpen",
       });
     }  
     else {
-      await router.replace(callbackUrl ?? "");
+      await router.replace(callbackUrl ?? {
+        pathname: window.location.pathname,
+        query: "",
+      });
     }
   };
 
@@ -42,7 +46,7 @@ export function Navbar() {
   }, [windowWidth]);
 
   return (
-    <header className="@w-screen @fixed @top-0 @z-30 @shadow-lg @shadow-bg-primary">
+    <header className="@w-screen @fixed @top-0 @z-40 @shadow-lg @shadow-bg-primary">
       <nav className="@flex @h-full @justify-between @items-center @bg-gradient-to-r @from-bg-primary @via-bg-secondary @to-bg-primary @mx-auto @px-4 smallscreen:@px-8 laptop:@px-6">
         <div className="@h-full @w-[25vw] smallscreen:@w-[10vw] @flex @flex-col @justify-center @align-middle">
           <Link className="@flex @align-middle @justify-start" href="/">

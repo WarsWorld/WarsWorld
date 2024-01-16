@@ -42,6 +42,7 @@ export default function LoginSignupModal({ isOpen, setIsOpen, width }: Props) {
     if (value) 
     {
       await router.replace("", {
+        pathname: window.location.pathname,
         query: `authModalOpen&SignUpForm${
           callbackUrl !== null ? "&callbackUrl=" + encodeURIComponent(callbackUrl) : ""
         }`,
@@ -50,6 +51,7 @@ export default function LoginSignupModal({ isOpen, setIsOpen, width }: Props) {
     else
     {
       await router.replace("", {
+        pathname: window.location.pathname,
         query: `authModalOpen${
           callbackUrl !== null ? "&callbackUrl=" + encodeURIComponent(callbackUrl) : ""
         }`,
