@@ -39,11 +39,11 @@ export default function FormInput({
           content="Hello"
           onChange={onChange}
           value={value}
-          className={`@text-black @border-[2.5px] @text-xl smallscreen:@text-2xl @w-full @p-3 @mt-2 @rounded-xl ${
+          className={`@text-black @border-[2.5px] @text-xl smallscreen:@text-2xl @w-full @h-auto @p-3 @mt-2 @rounded-xl ${
             isError == true ? "@border-orange-star" : "@border-primary"
           }`}
         />
-        {isError == true && <p className="@text-orange-star @pt-2">{errorMessage}</p>}
+        {isError == true && errorMessage != "" && <p className="@text-orange-star @pt-2">{errorMessage}</p>}
       </div>
     </>
   );
