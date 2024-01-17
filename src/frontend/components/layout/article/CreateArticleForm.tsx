@@ -45,6 +45,8 @@ export default function CreateArticleForm({ articleData, setArticleData } : Prop
     event.preventDefault();
 
     try {
+
+      // TODO: Success Screen
       await createArticle({
         title: articleData.title,
         description: articleData.description,
@@ -110,16 +112,20 @@ export default function CreateArticleForm({ articleData, setArticleData } : Prop
                 onChangeGenericHandler("category", o?.value.toString() ?? "");
               }}/>
           </div>
-          <FormInput 
-            onChange={(event) => 
-              onChangeGenericHandler(
-                "description", 
-                (event.target as HTMLInputElement).value
-              )
-            }
-            className="@mt-8 @col-span-4 @h-64" 
-            text="Description" 
-          />
+          <div className="@col-span-4 @mt-8">
+            <label
+              htmlFor=""
+              className={`@text-xl smallscreen:@text-2xl @text-white`}
+            >
+              Description
+            </label>
+            <textarea 
+              className="@my-4 @w-full @h-72 @text-black @p-4 @text-xl @border-4 @border-primary @rounded-2xl" 
+              placeholder="Write here... "
+              value={articleData.description}
+              onChange={(event) => onChangeGenericHandler("description", event.target.value)}
+            />
+          </div>
           <FormInput 
             onChange={(event) => 
               onChangeGenericHandler(
