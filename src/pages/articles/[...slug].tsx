@@ -1,7 +1,6 @@
 import Article from "frontend/components/layout/article/Article";
 import { trpc } from "frontend/utils/trpc-client";
 import type { InferGetStaticPropsType, GetStaticPaths, GetStaticPropsContext } from 'next';
-import { useEffect, useState } from "react";
 import { remark } from "remark";
 import html from "remark-html";
 import { prisma } from "server/prisma/prisma-client";
@@ -89,14 +88,9 @@ export default function NewsArticle(
   { articleId }: InferGetStaticPropsType<typeof getStaticProps>,
 ) {
   const { data: articleData } = trpc.article.getMarkdownById.useQuery({ id: articleId }, { enabled: articleId != undefined });
-  const [articleBody, setArticleBody] = useState("");
 
-  useEffect(() => {
-    if(articleData) {
-      const process = remark().use(html).processSync(articleData.body);
-      setArticleBody(process.toString());
-    }
-  }, [articleData]);
+  const process = remark().use(html).processSync(articleData?.body);
+  const articleBody = process.toString();
 
   return (
     <>
