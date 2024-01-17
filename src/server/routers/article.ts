@@ -6,7 +6,7 @@ import {
 } from "../trpc/trpc-setup";
 import { TRPCError } from "@trpc/server";
 import { prisma } from "server/prisma/prisma-client";
-import { type ArticleCategories, type ArticleType, articleTypeSchema } from "shared/schemas/article";
+import { type ArticleCategories, type ArticleType, articleTypeSchema, articleSchema } from "shared/schemas/article";
 import matter from "gray-matter";
 
 const bannedWords = ["heck", "frick", "oof", "swag", "amongus"];
@@ -78,17 +78,10 @@ export const articleRouter = router({
       };
     }
   ),
-  /*
-  add: playerBaseProcedure
-    .input(
-      z.object({
-        id: z.string().uuid().optional(),
-        text: z.string().min(1).max(5000),
-        title: z.string().min(1).max(100),
-      })
-    )
+  create: playerBaseProcedure
+    .input(articleSchema)
     .mutation(async ({ input, ctx }) => {
-      const lines = input.text.split("\n");
+      const lines = input.body.split("\n");
       const words = lines.map((l) => l.split(" ")).flat();
 
       if (
@@ -100,24 +93,29 @@ export const articleRouter = router({
         });
       }
 
-      const containsBannedCharacters = /[^\w\.!\?\-\_\n ]/.test(input.text);
-
-      if (containsBannedCharacters) {
-        throw new TRPCError({
-          code: "BAD_REQUEST",
-          message:
-            "The post you were trying to created contains banned characters",
-        });
-      }
-
-      return prisma.post.create({
+      return prisma.article.create({
         data: {
-          text: input.text.trimEnd(),
-          title: input.title.trim(),
-          authorId: ctx.currentPlayer.id,
-        },
+          title: input.title,
+          description: input.description,
+          Authors: {
+            create: [
+              {
+                author: {
+                  connect: {
+                    id: ctx.currentPlayer.id,
+                  },
+                },
+              },
+            ]
+          },
+          thumbnail: input.thumbnail,
+          category: input.category,
+          body: input.body,
+        }
       });
-    }),
+    }
+  ),
+/*
   delete: playerBaseProcedure
     .input(
       z.object({
