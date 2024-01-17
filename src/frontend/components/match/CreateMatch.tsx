@@ -4,7 +4,6 @@ import Select from "frontend/components/layout/Select";
 import SquareButton from "frontend/components/layout/SquareButton";
 import { usePlayers } from "frontend/context/players";
 import { trpc } from "frontend/utils/trpc-client";
-import { useMatches } from "pages/your-matches";
 import { useEffect, useState } from "react";
 
 type Props = {
@@ -17,7 +16,7 @@ export default function CreateMatch({
   setCurrentPlayer,
 }: Props) {
   const { ownedPlayers } = usePlayers();
-  const { refetchYourMatches, refetchAllMatches } = useMatches();
+  const utils = trpc.useUtils();
 
   // Get map data
   const { data: mapQuery, isLoading: isLoadingMapQuery } =
@@ -31,7 +30,11 @@ export default function CreateMatch({
       },
     });
   const [currentMapId, setCurrentMapId] = useState<string>();
-  const createMatchMutation = trpc.match.create.useMutation();
+  const createMatchMutation = trpc.match.create.useMutation({
+    onSuccess() {
+      void utils.match.invalidate()
+    }
+  });
 
   // Select Logic
   const players: SelectOption[] = [];
@@ -80,9 +83,6 @@ export default function CreateMatch({
       mapId: currentMapId,
       playerId: currentPlayer.id
     });
-
-    refetchAllMatches();
-    refetchYourMatches();
   };
 
   const selectPlayerHandler = (o: SelectOption | undefined) => {
@@ -97,8 +97,7 @@ export default function CreateMatch({
       setCurrentPlayer(newCurrentPlayer);
     }
     
-    refetchAllMatches();
-    refetchYourMatches();
+    void utils.match.invalidate()
   };
 
   const selectMapHandler = (o: SelectOption | undefined) => {
