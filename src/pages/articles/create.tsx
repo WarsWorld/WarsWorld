@@ -21,7 +21,7 @@ export default function Create() {
   return (
     <ProtectPage>
       <Head>
-        <title>Create Artcile | Wars World</title>
+        <title>Create Article | Wars World</title>
       </Head>
 
       <div className="@my-8 @w-full" >
