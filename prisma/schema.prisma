@@ -27,15 +27,180 @@ model Article {
   // https://trpc.io/docs/data-transformers
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
+  Comments    ArticleComment[]
 }
 
 model ArticleAuthors {
-  article   Article @relation(fields: [articleId], references: [id])
   articleId Int
-  author    Player  @relation(fields: [authorId], references: [id])
   authorId  String
+  article   Article @relation(fields: [articleId], references: [id])
+  author    Player  @relation(fields: [authorId], references: [id])
 
   @@id([articleId, authorId])
+}
+
+model ArticleComment {
+  id        String   @id @default(cuid())
+  articleId Int
+  playerId  String
+  createdAt DateTime @default(now())
+  body      String
+  article   Article  @relation(fields: [articleId], references: [id])
+  player    Player   @relation(fields: [playerId], references: [id])
+}
+
+model User {
+  id            String    @id @default(cuid())
+  state         UserState @default(active)
+  role          Role?
+  name          String?
+  password      String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  accounts      Account[]
+  identities    Player[]
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Clan {
+  id          String   @id @default(cuid())
+  name        String
+  description String
+  ownerId     String
+  owner       Player   @relation("owner", fields: [ownerId], references: [id])
+  members     Player[] @relation("member")
+}
+
+model Player {
+  id            String           @id @default(cuid())
+  name          String
+  secret        Boolean          @default(false)
+  userId        String
+  /// [PrismaPreferences]
+  preferences   Json?
+  achievements  Achievement[]
+  Posts         ArticleAuthors[]
+  Comments      ArticleComment[]
+  ChatMessage   ChatMessage[]
+  ownedClans    Clan[]           @relation("owner")
+  MMR           MMR[]
+  Notes         Notes[]
+  user          User             @relation(fields: [userId], references: [id])
+  MatchToPlayer MatchToPlayer[]
+  clans         Clan[]           @relation("member")
+}
+
+model WWMap {
+  id               String   @id @default(cuid())
+  name             String
+  /// [PrismaTiles]
+  tiles            Json
+  /// [PrismaUnits]
+  predeployedUnits Json
+  numberOfPlayers  Int
+  createdAt        DateTime @default(now())
+  matches          Match[]
+
+  @@map("Map")
+}
+
+model ChatMessage {
+  id        String   @id @default(cuid())
+  content   String
+  createdAt DateTime @default(now())
+  authorId  String
+  matchId   String?  @map("matchId")
+  author    Player   @relation(fields: [authorId], references: [id])
+  match     Match?   @relation(fields: [matchId], references: [id])
+}
+
+model Notes {
+  content  String
+  public   Boolean @default(false)
+  playerId String
+  matchId  String
+  Match    Match   @relation(fields: [matchId], references: [id])
+  Player   Player  @relation(fields: [playerId], references: [id])
+
+  @@id([playerId, matchId])
+}
+
+model MMR {
+  leagueType LeagueType
+  playerId   String
+  mmr        Int        @default(800)
+  topMmr     Int        @default(800)
+  Player     Player     @relation(fields: [playerId], references: [id])
+
+  @@id([leagueType, playerId])
+}
+
+model Match {
+  id            String          @id @default(cuid())
+  leagueType    LeagueType
+  /// [PrismaMatchRules]
+  rules         Json
+  status        MatchStatus
+  mapId         String
+  /// [PrismaPlayerState]
+  playerState   Json
+  chatIsPublic  Boolean         @default(false)
+  createdAt     DateTime        @default(now())
+  chatMessages  ChatMessage[]
+  Event         Event[]
+  Notes         Notes[]
+  MatchToPlayer MatchToPlayer[]
+  map           WWMap           @relation(fields: [mapId], references: [id])
+
+  @@map("match")
+}
+
+model Event {
+  matchId   String
+  /// the index describes the order of events. they are not universally unique, but unique per match.
+  index     Int      @default(autoincrement()) @map("eventIndex")
+  /// [PrismaEvent]
+  content   Json
+  createdAt DateTime @default(now())
+  match     Match    @relation(fields: [matchId], references: [id])
+
+  @@id([matchId, index])
+}
+
+model MatchToPlayer {
+  A      String
+  B      String
+  match  Match  @relation(fields: [A], references: [id], onDelete: Cascade)
+  Player Player @relation(fields: [B], references: [id], onDelete: Cascade)
+
+  @@unique([A, B], map: "_MatchToPlayer_AB_unique")
+  @@index([B], map: "_MatchToPlayer_B_index")
+  @@map("_MatchToPlayer")
+}
+
+enum ArticleType {
+  news
+  guide
 }
 
 enum ArticleCategory {
@@ -58,40 +223,6 @@ enum UserState {
 enum Role {
   admin
   moderator
-}
-
-model User {
-  id            String    @id @default(cuid())
-  state         UserState @default(active)
-  role          Role?
-  name          String?
-  password      String?
-  email         String?   @unique
-  emailVerified DateTime?
-  image         String?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-  identities    Player[]
-  accounts      Account[]
-}
-
-model Account {
-  id                String  @id @default(cuid())
-  userId            String
-  type              String
-  provider          String
-  providerAccountId String
-  refresh_token     String? @db.Text
-  access_token      String? @db.Text
-  expires_at        Int?
-  token_type        String?
-  scope             String?
-  id_token          String? @db.Text
-  session_state     String?
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@unique([provider, providerAccountId])
 }
 
 enum CO {
@@ -119,71 +250,6 @@ enum Achievement {
   grizzledYet
 }
 
-model Clan {
-  id          String   @id @default(cuid())
-  name        String
-  description String
-  owner       Player   @relation("owner", fields: [ownerId], references: [id])
-  ownerId     String
-  members     Player[] @relation("member")
-}
-
-model Player {
-  id          String        @id @default(cuid())
-  MMR         MMR[]
-  name        String
-  secret      Boolean       @default(false) // secret = true means that parent user is hidden on profile
-  ChatMessage ChatMessage[]
-
-  user   User   @relation(fields: [userId], references: [id])
-  userId String
-
-  Posts ArticleAuthors[]
-
-  /// [PrismaPreferences]
-  preferences  Json?
-  achievements Achievement[]
-
-  matches Match[]
-
-  Notes Notes[]
-
-  ownedClans Clan[] @relation(name: "owner")
-  clans      Clan[] @relation(name: "member")
-}
-
-// Right now maps need to be immutable but we
-// probably want to add revisions later on so that they can be "edited".
-model WWMap {
-  id   String @id @default(cuid())
-  name String
-
-  /// [PrismaTiles]
-  tiles            Json
-  /// [PrismaUnits]
-  predeployedUnits Json
-  numberOfPlayers  Int
-  matches          Match[]
-  createdAt        DateTime @default(now())
-
-  // TODO maps should have different sets of captureLimits and bannedUnitTypes
-  // per league type.
-
-  @@map("Map")
-}
-
-model ChatMessage {
-  id        String   @id @default(cuid())
-  content   String
-  createdAt DateTime @default(now())
-
-  author   Player @relation(fields: [authorId], references: [id])
-  authorId String
-
-  match   Match?  @relation(fields: [matchId], references: [id]) // if no match, it's the public channel
-  matchId String? @map("matchId")
-}
-
 enum MatchStatus {
   setup
   playing
@@ -198,77 +264,3 @@ enum LeagueType {
   standardTeams
   broken
 }
-
-model Notes {
-  content String
-  public  Boolean @default(false)
-
-  Player   Player @relation(fields: [playerId], references: [id])
-  playerId String
-
-  Match   Match  @relation(fields: [matchId], references: [id])
-  matchId String
-
-  @@id([playerId, matchId])
-}
-
-model MMR {
-  leagueType LeagueType
-  Player     Player     @relation(fields: [playerId], references: [id])
-  playerId   String
-  mmr        Int        @default(800)
-  topMmr     Int        @default(800)
-
-  @@id([leagueType, playerId])
-}
-
-model Match {
-  id         String     @id @default(cuid())
-  leagueType LeagueType
-
-  /// [PrismaMatchRules]
-  rules  Json
-  status MatchStatus
-
-  map   WWMap  @relation(fields: [mapId], references: [id])
-  mapId String
-
-  /// [PrismaPlayerState]
-  playerState Json
-  // playersConsentingToPublishChat Player[]
-
-  chatMessages ChatMessage[]
-  chatIsPublic Boolean       @default(false)
-
-  createdAt DateTime @default(now())
-  Notes     Notes[]
-  Event     Event[]
-  Player    Player[]
-
-  @@map("match")
-}
-
-model Event {
-  match   Match  @relation(fields: [matchId], references: [id])
-  matchId String
-
-  /// the index describes the order of events. they are not universally unique, but unique per match.
-  index Int @default(autoincrement()) @map("eventIndex")
-
-  /// [PrismaEvent]
-  content Json
-
-  // at some point i considered removing the "index" field/column and using this createdAt
-  // instead, but then it'd have to be part of the id and unique and
-  // that will probably become awkward at some point.
-  // so i decided to keep the index, even though createdAt *should*
-  // in theory always be usable for processing events in order as well.
-  // - Function
-
-  createdAt DateTime @default(now())
-
-  @@id([matchId, index])
-}
-
-// 2. move/map data structures
-// 3. tiers in general, map/league tiers?

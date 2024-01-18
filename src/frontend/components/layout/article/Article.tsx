@@ -3,6 +3,11 @@ import Banner from "frontend/components/layout/Banner";
 import Head from "next/head";
 import ArticleContent from "./ArticleContent";
 import type { ArticleType } from "shared/schemas/article";
+import type { inferRouterOutputs } from "@trpc/server";
+import type { articleRouter } from "server/routers/article";
+import ArticleComments from "./ArticleComments";
+
+type ArticleCommentsWithPlayer = NonNullable<inferRouterOutputs<typeof articleRouter>["getMarkdownById"]>["Comments"];
 
 type Props = {
   articleData: {
@@ -16,6 +21,7 @@ type Props = {
         thumbnail: string;
         thumbnailAlt: string;
     };
+    comments: ArticleCommentsWithPlayer;
   }
 };
 
@@ -51,6 +57,8 @@ export default function Article({ articleData }: Props) {
         />
         
         <ArticleContent contentHTML={articleData.contentHtml} />
+        
+        <ArticleComments comments={articleData.comments} />
       </>
     );
   }
