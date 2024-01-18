@@ -9,6 +9,8 @@ import { usePlayers } from "frontend/context/players";
 import { trpc } from "frontend/utils/trpc-client";
 import type { ZodError } from "zod";
 import type { ArticleCategories } from "shared/schemas/article";
+import { stringToSlug } from "pages/articles/[...slug]";
+import Link from "next/link";
 
 const CATEGORIES = [
   { label: "News", value: "news" },
@@ -37,17 +39,27 @@ export default function CreateArticleForm({ articleData, setArticleData } : Prop
   const { currentPlayer } = usePlayers();
 
   const [categoryOption, setCategoryOption] = useState<SelectOption | undefined>({ label: "Patch", value: "patch" });
-  const [shownError, setShownError] = useState("");
+  const [shownErrors, setShownErrors] = useState<ZodError[]>();
+  const [newstCreatedArticleLink, setNewestCreatedArticleLink] = useState("");
 
-  const { mutateAsync: createArticle, error, isError } = trpc.article.create.useMutation();
+  const { mutateAsync: createArticle, error, isError, isSuccess } = trpc.article.create.useMutation();
+
+  const clearForm = () => {
+    setArticleData({
+      title: "",
+      description: "",
+      category: "patch",
+      body: "",
+      thumbnail: "",
+    });
+    setCategoryOption({ label: "Patch", value: "patch" })
+  }
 
   const onSubmitArticleForm = async (event: FormEvent) => {
     event.preventDefault();
 
     try {
-
-      // TODO: Success Screen
-      await createArticle({
+      const newArticle = await createArticle({
         title: articleData.title,
         description: articleData.description,
         body: articleData.body,
@@ -55,16 +67,19 @@ export default function CreateArticleForm({ articleData, setArticleData } : Prop
         category: articleData.category as ArticleCategory,
         playerId: currentPlayer?.id ?? "",
       });
-    } catch (e) {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-      return;
-    }
+
+      setNewestCreatedArticleLink(`${newArticle.id}/${stringToSlug(newArticle.title)}`);
+      clearForm();
+
+    } catch (e) {}
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   useEffect(() => {
     if(error?.data?.zodError) {
       const parsedErrors = JSON.parse(error?.message) as ZodError[];
-      setShownError(parsedErrors[0].message);
+      setShownErrors(parsedErrors);
     }
   }, [error])
 
@@ -74,7 +89,7 @@ export default function CreateArticleForm({ articleData, setArticleData } : Prop
       [identifier]: value,
     }));
   };
-
+  
   return(
     <>
       <OrangeGradientLine />
@@ -84,16 +99,26 @@ export default function CreateArticleForm({ articleData, setArticleData } : Prop
           void onSubmitArticleForm(event);
         }}
       >
-        {isError && <ErrorSuccessBlock className="@h-20 @mb-8" title={shownError} isError />}
+        {isSuccess && (
+          <Link className="@text-white hover:@text-white" href={newstCreatedArticleLink}>
+            <ErrorSuccessBlock 
+              className="@h-28 @mb-8 hover:@translate-y-1 @duration-300" 
+              title="Article successfully created" 
+              message="Click this box to see the newest article." 
+            />
+          </Link>
+        )}
+        {isError && shownErrors?.map((error, index) => <ErrorSuccessBlock key={`error-${index}`} className="@h-20 @mb-8" title={error?.message} isError />)}
         <div className="@grid @grid-flow-row @grid-cols-4">
           <FormInput 
+            value={articleData.title}
             onChange={(event) => 
                         onChangeGenericHandler(
                           "title", 
                           (event.target as HTMLInputElement).value
                         )
                       }
-            className="@my-4 @w-full @h-20 @mb-8 @col-span-4 smallscreen:@col-span-3" 
+            className="@my-4 @w-full @mb-8 @col-span-4 smallscreen:@col-span-3" 
             text="Title" 
           />
           <div className="@my-4 smallscreen:@my-0 smallscreen:@ml-12 @col-span-4 smallscreen:@col-span-1">
@@ -127,13 +152,14 @@ export default function CreateArticleForm({ articleData, setArticleData } : Prop
             />
           </div>
           <FormInput 
+            value={articleData.thumbnail}
             onChange={(event) => 
               onChangeGenericHandler(
                 "thumbnail", 
                 (event.target as HTMLInputElement).value
               )
             }
-            className="@mt-8 @col-span-4 @h-20" 
+            className="@mt-8 @col-span-4" 
             text="Thumbnail" 
           />
 

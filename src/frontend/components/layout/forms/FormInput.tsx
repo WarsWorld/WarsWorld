@@ -39,7 +39,7 @@ export default function FormInput({
           content="Hello"
           onChange={onChange}
           value={value}
-          className={`@text-black @border-[2.5px] @text-xl smallscreen:@text-2xl @w-full @h-[80%] @p-3 @mt-2 @rounded-xl ${
+          className={`@text-black @border-[2.5px] @text-xl smallscreen:@text-2xl @w-full @p-3 @mt-2 @rounded-xl ${
             isError == true ? "@border-orange-star" : "@border-primary"
           }`}
         />

@@ -93,7 +93,7 @@ export const articleRouter = router({
         });
       }
 
-      return prisma.article.create({
+      const newArticle = await prisma.article.create({
         data: {
           title: input.title,
           description: input.description,
@@ -113,7 +113,13 @@ export const articleRouter = router({
           body: input.body,
         }
       });
+
+      return {
+        id: newArticle.id,
+        title: newArticle.title,
+      }
     }
+ 
   ),
 /*
   delete: playerBaseProcedure

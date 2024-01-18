@@ -1,7 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
 
-const MAX_DESC_LENGTH = 150;
+const MAX_DESC_LENGTH = 148;
+const MAX_TITLE_LENGTH = 56;
 
 export type ICardInfo = {
   title: string;
@@ -18,6 +19,7 @@ type Props = {
 };
 
 export default function LinkCard({ cardInfo }: Props) {
+  const trimmedTitle = cardInfo.title.length > MAX_TITLE_LENGTH ? cardInfo.title.substring(0, MAX_TITLE_LENGTH - 3) + "..." : cardInfo.title;
   const trimmedDescription = cardInfo.description.length > MAX_DESC_LENGTH ? cardInfo.description.substring(0, MAX_DESC_LENGTH - 3) + "..." : cardInfo.description;
 
   return (
@@ -32,7 +34,7 @@ export default function LinkCard({ cardInfo }: Props) {
           height={360}
         />
         <div className="@relative @grid-rows-1 @h-full @px-2 laptop:@px-4 laptop:@pb-4 ultra:@my-4">
-          <h2 className="@text-2xl ultra:@text-4xl @font-semibold">{cardInfo.title}</h2>
+          <h2 className="@text-2xl ultra:@text-4xl @font-semibold">{trimmedTitle}</h2>
           <p className="ultra:@text-2xl ultra:@mt-4">{trimmedDescription}</p>
           <p className="@absolute @bottom-2 ultra:@text-2xl laptop:@bottom-4 @right-2 laptop:@right-4 ultra:@bottom-8">{cardInfo.date}</p>
           <p className="@absolute @bottom-2 ultra:@text-2xl laptop:@bottom-4 @left-2 laptop:@left-4 ultra:@bottom-8">{cardInfo.category}</p>
