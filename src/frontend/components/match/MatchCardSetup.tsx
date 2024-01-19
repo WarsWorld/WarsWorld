@@ -1,6 +1,5 @@
 import type { Match, Player } from "@prisma/client";
 import { trpc } from "frontend/utils/trpc-client";
-import { useMatches } from "pages/your-matches";
 import { useState } from "react";
 import type { Army } from "shared/schemas/army";
 import { armySchema } from "shared/schemas/army";
@@ -39,12 +38,26 @@ export default function MatchCardSetup({
   setSelectedOptions,
   maxNumberOfPlayers
 }: matchData) {
+  const utils = trpc.useUtils();
   const switchOptions = trpc.match.switchOptions.useMutation();
-  const joinMatch = trpc.match.join.useMutation();
-  const readyMatch = trpc.match.setReady.useMutation();
-  const leaveMatch = trpc.match.leave.useMutation();
+
+  const joinMatch = trpc.match.join.useMutation({
+    onSuccess() {
+      void utils.match.invalidate()
+    },
+  });
+  const readyMatch = trpc.match.setReady.useMutation({
+    onSuccess() {
+      void utils.match.invalidate()
+    },
+  });
+  const leaveMatch = trpc.match.leave.useMutation({
+    onSuccess() {
+      void utils.match.invalidate()
+    },
+  });
+
   const [showDropdown, setShowDropdown] = useState("")
-  const { refetchYourMatches, refetchAllMatches } = useMatches();
 
   if (inMatch) {
     return (<div className="@flex">
@@ -208,11 +221,6 @@ export default function MatchCardSetup({
                 })
                 .then(() => {
                   setCurrentPlayerOptions((prevState) => {return {...prevState, ready: !readyStatus}})
-                  
-                  if (!readyStatus) {
-                    refetchAllMatches();
-                    refetchYourMatches();
-                  }
                 });
             }}
           >
@@ -230,10 +238,6 @@ export default function MatchCardSetup({
                   matchId: matchID,
                   playerId: playerID,
                 })
-                .then(() => {
-                    refetchAllMatches();
-                    refetchYourMatches();
-                });
             }}
           >
             Leave
@@ -257,11 +261,6 @@ export default function MatchCardSetup({
                   playerSlot: null,
                   selectedCO: {name: "sami", version: "AW2" }
                 })
-                .then(() => {
-                  //lets reload the page
-                  refetchAllMatches();
-                  refetchYourMatches();
-                });
             }}
           >
             Join Game
