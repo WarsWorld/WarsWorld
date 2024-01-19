@@ -8,7 +8,7 @@ export const ProtectPage = ({ children }: { children: ReactNode }) => {
     required: true,
     onUnauthenticated() {
       void router.push(".", {
-        pathname: "./",
+        pathname: "/.",
         query: `authModalOpen&error=ProtectedPage&callbackUrl=${encodeURIComponent(
           window.location.href
         )}`,

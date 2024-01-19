@@ -33,7 +33,7 @@ export default function Select({ value, onChange, options, className }: Props) {
         onBlur={() => setIsOpen(false)}
         onClick={() => setIsOpen((prev) => !prev)}
         tabIndex={0}
-        className="@relative @cursor-pointer @w-full @min-h-2 @border @border-bg-tertiary @flex @items-center @gap-2 @p-2 @rounded @outline-none @bg-bg-tertiary @shadow-black/70 @shadow-md"
+        className="@relative @cursor-pointer @w-full @h-full @border @border-bg-tertiary @flex @items-center @gap-2 @p-2 @rounded @outline-none @bg-bg-tertiary @shadow-black/70 @shadow-md"
       >
         <span className="@grow @text-white @pl-2">{value?.label}</span>
         <div className="@bg-bg-secondary @w-0.5 @self-stretch"></div>
