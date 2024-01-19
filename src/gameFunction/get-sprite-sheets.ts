@@ -7,13 +7,13 @@ import type { Army } from "shared/schemas/army";
 
 export type SheetNames = Army | "neutral" | "arrow"
 
-export type SpriteMap = Record<Army | "neutral" | "arrow", (ISpritesheetData)>;
+export type SpriteMap = Partial<Record<SheetNames, ISpritesheetData | undefined>>;
 
 //this function is getting all the json spritesheets, nothing else, this happens on the server side
 export default async function getSpriteSheets(countryNames: Army[]): Promise<SpriteMap> {
   const jsonDirectory = path.join(process.cwd(), "public/img/spriteSheet");
 
-  const returnObj: SpriteMap   = {};
+  const returnObj: SpriteMap = {};
   const allCountryNames: SheetNames[] =  [...countryNames, "neutral", "arrow"];
 
   for (const country of allCountryNames) {

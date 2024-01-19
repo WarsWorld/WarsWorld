@@ -1,24 +1,28 @@
 import { BaseTexture, Spritesheet } from "pixi.js";
-import { SheetNames, SpriteMap } from "../../gameFunction/get-sprite-sheets";
+import type { SheetNames, SpriteMap } from "../../gameFunction/get-sprite-sheets";
 
-
-export type LoadedSpriteSheet = Record<SheetNames, Spritesheet>
+export type LoadedSpriteSheet = Partial<Record<SheetNames, Spritesheet>>
 
 //This function transforms our RAW spritesheets into finer spritesheets pixi can read well, this is client-side
-export async function loadSpritesheets(rawSpriteSheet: SpriteMap) {
+export async function loadSpritesheets(spriteMap: SpriteMap): Promise<LoadedSpriteSheet> {
 
   const pixiSpriteSheets: LoadedSpriteSheet = {};
 
-  for (const sheetName in rawSpriteSheet) {
-    if (rawSpriteSheet[sheetName as SheetNames].meta.image === undefined) {
-      throw new Error(`No spritesheet image found for ${sheetName}`);
-    }
+  for (const sheetName in spriteMap) {
+    const rawSpriteSheet = spriteMap[sheetName as SheetNames]
 
-    const pixiSheet = new Spritesheet(
-      BaseTexture.from(`/img/spriteSheet/${rawSpriteSheet[sheetName as SheetNames].meta.image}`),
-      rawSpriteSheet[sheetName as SheetNames]);
-    await pixiSheet.parse();
-    pixiSpriteSheets[sheetName as SheetNames] = pixiSheet;
+    if(rawSpriteSheet !== undefined)
+    {
+      if (rawSpriteSheet.meta.image === undefined) {
+        throw new Error(`No spritesheet image found for ${sheetName}`);
+      }
+
+      const pixiSheet = new Spritesheet(
+        BaseTexture.from(`/img/spriteSheet/${rawSpriteSheet.meta.image}`),
+        rawSpriteSheet);
+      await pixiSheet.parse();
+      pixiSpriteSheets[sheetName as SheetNames] = pixiSheet;
+    }
   }
 
   return pixiSpriteSheets;

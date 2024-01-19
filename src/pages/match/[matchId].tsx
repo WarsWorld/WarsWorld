@@ -1,17 +1,18 @@
 import { usePlayers } from "frontend/context/players";
 import { useRouter } from "next/router";
-import type { ISpritesheetData, Spritesheet} from "pixi.js";
 import {
-  Application, BaseTexture, Container, SCALE_MODES
+  Application, BaseTexture, SCALE_MODES
 } from "pixi.js";
 import { useEffect, useRef, useState } from "react";
 import type { Tile } from "shared/schemas/tile";
 import type { PlayerInMatch } from "shared/types/server-match-state";
 
 import MatchPlayer from "frontend/components/match/MatchPlayer";
-import { LoadedSpriteSheet, loadSpritesheets } from "frontend/pixi/load-spritesheet";
+import type { LoadedSpriteSheet } from "frontend/pixi/load-spritesheet";
+import { loadSpritesheets } from "frontend/pixi/load-spritesheet";
 import { trpc } from "frontend/utils/trpc-client";
-import getSpriteSheets, { SpriteMap } from "gameFunction/get-sprite-sheets";
+import getSpriteSheets from "gameFunction/get-sprite-sheets";
+import type { SpriteMap } from "gameFunction/get-sprite-sheets";
 import type { GetServerSideProps } from "next";
 import { MatchWrapper } from "shared/wrappers/match";
 import { mapRender } from "../../interactiveMatchRenders/map-render";
@@ -19,7 +20,6 @@ import { mapRender } from "../../interactiveMatchRenders/map-render";
 BaseTexture.defaultOptions.scaleMode = SCALE_MODES.NEAREST;
 
 type Props = { spriteData: SpriteMap };
-
 
 
 const Match = ({ spriteData }: Props) => {
@@ -30,8 +30,9 @@ const Match = ({ spriteData }: Props) => {
     const fetchData = async () => {
         setSpriteSheets(await loadSpritesheets(spriteData));
     };
-     fetchData();
-  }, []);
+
+    void fetchData();
+  }, [setSpriteSheets, spriteData]);
 
   const { currentPlayer } = usePlayers();
 
@@ -205,7 +206,7 @@ const Match = ({ spriteData }: Props) => {
           />
           Funds: {players[0].funds}
           <br />
-          HasTurn: {players[0].hasCurrentTurn ? "true" : "false"}
+          HasTurn: {String(players[0].hasCurrentTurn)}
 
         </div>
         <div className="@col-span-8">
@@ -227,7 +228,7 @@ const Match = ({ spriteData }: Props) => {
           />
           Funds: {players[1].funds}
           <br />
-          HasTurn: {players[1].hasCurrentTurn ? "true" : "false"}
+          HasTurn: {String(players[1].hasCurrentTurn)}
         </div>
       </div>);
   }
@@ -238,7 +239,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async () => {
   //TODO: Should we call all the spritesheets or just the ones the players will need?
   // Unsure how we would know which players are playing what before even loading the match
   // (which right now we do this call before the tRPC call that gets the match data...)
-  const spriteData = await getSpriteSheets(["yellow-comet", "green-earth", "black-hole", "orange-star", "blue-moon", ]);
+  const spriteData = await getSpriteSheets(["yellow-comet", "green-earth", "black-hole", "orange-star", "blue-moon"]);
 
   return { props: { spriteData } };
 };

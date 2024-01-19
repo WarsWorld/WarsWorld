@@ -4,9 +4,10 @@ import { spriteConstructor } from "../gameFunction/spriteConstructor";
 import type { Tile } from "../shared/schemas/tile";
 import type { UseTRPCMutationResult } from "@trpc/react-query/shared";
 import type { PlayerInMatch } from "../shared/types/server-match-state";
-import { MatchWrapper } from "../shared/wrappers/match";
-import { LoadedSpriteSheet } from "../frontend/pixi/load-spritesheet";
-import {Player} from "@prisma/client";
+import type { MatchWrapper } from "../shared/wrappers/match";
+import type { LoadedSpriteSheet } from "../frontend/pixi/load-spritesheet";
+import type {Player} from "@prisma/client";
+import type { SheetNames } from "gameFunction/get-sprite-sheets";
 
 type Props = {
   spriteSheets: LoadedSpriteSheet,
@@ -43,71 +44,74 @@ export const mapRender = (
   console.log("player-------",players);
   //Lets render our map!
   let tile;
-
+  
   for (let rowIndex = 0; rowIndex < mapData.length; rowIndex++) {
     const currentRow = mapData[rowIndex];
-
+    
     for (let colIndex = 0; colIndex < currentRow.length; colIndex++) {
       const currentTile = currentRow[colIndex];
       const { type } = currentTile;
-
+      
       //ITS A PROPERTY
       if ("playerSlot" in currentTile) {
         const slot = currentTile.playerSlot;
-
+        
         //NEUTRAL
         if (slot === -1) {
-          tile = new Sprite(spriteSheets.neutral.textures[type + "-0.png"]);
+          tile = new Sprite(spriteSheets.neutral?.textures[type + "-0.png"]);
           //NOT NEUTRAL
         } else {
           //todo: get player
           const slotPlayer: PlayerInMatch = players[slot]
+          const armySpriteSheet = spriteSheets[slotPlayer.army as SheetNames];
 
-          // @ts-ignore
-          tile = new AnimatedSprite(spriteSheets[slotPlayer.army].animations[type]);
-
+          tile = new AnimatedSprite(armySpriteSheet.animations[type]);
 
           //if player has turn and building can produce units, show buildMenu
           if ((playerWithTurn.slot === slot && currentPlayer.id === playerWithTurn.id) && (type === "port"  || type === "base" || type === "airport")) {
 
             tile.eventMode = "static";
             //Lets make menu appear
-            tile.on("pointerdown", () => {
-              void (async () => {
-                const menu = await showBuildMenu({
-                  player: slotPlayer,
-                  match,
-                  spriteSheet: spriteSheets[slotPlayer.army],
-                  facility: type,
-                  x: colIndex,
-                  y: rowIndex,
-                  mapHeight: mapData.length - 1,
-                  mapWidth: mapData[0].length - 1,
-                  buildMutation: mutation,
+            
+            if (armySpriteSheet !== undefined)
+              {
+                tile.on("pointerdown", () => {
+                  void (async () => {
+                    const menu = await showBuildMenu({
+                      player: slotPlayer,
+                      match,
+                      spriteSheet: armySpriteSheet,
+                      facility: type,
+                      x: colIndex,
+                      y: rowIndex,
+                      mapHeight: mapData.length - 1,
+                      mapWidth: mapData[0].length - 1,
+                      buildMutation: mutation,
+                    });
+
+                    //if there is a menu already out, lets remove it
+                    const menuContainer = mapContainer.getChildByName("buildMenu");
+
+                    if (menuContainer !== null) {
+                      mapContainer.removeChild(menuContainer);
+                    }
+
+                    //lets create a transparent screen that covers everything.
+                    // if we click on it, we will delete the menu
+                    // therefore, achieving a quick way to delete menu if we click out of it
+                    const emptyScreen = spriteConstructor(Texture.WHITE, 0, 0, mapWidth, mapHeight, "static", -1);
+                    emptyScreen.alpha = 0;
+
+                    emptyScreen.on("pointerdown", () => {
+                      mapContainer.removeChild(menu);
+                      mapContainer.removeChild(emptyScreen);
+                    });
+
+                    mapContainer.addChild(menu);
+                    mapContainer.addChild(emptyScreen);
+                  })();
                 });
-
-                //if there is a menu already out, lets remove it
-                const menuContainer = mapContainer.getChildByName("buildMenu");
-
-                if (menuContainer !== null) {
-                  mapContainer.removeChild(menuContainer);
-                }
-
-                //lets create a transparent screen that covers everything.
-                // if we click on it, we will delete the menu
-                // therefore, achieving a quick way to delete menu if we click out of it
-                const emptyScreen = spriteConstructor(Texture.WHITE, 0, 0, mapWidth, mapHeight, "static", -1);
-                emptyScreen.alpha = 0;
-
-                emptyScreen.on("pointerdown", () => {
-                  mapContainer.removeChild(menu);
-                  mapContainer.removeChild(emptyScreen);
-                });
-
-                mapContainer.addChild(menu);
-                mapContainer.addChild(emptyScreen);
-              })();
-            });
+              }
           }
 
           //TODO: Seems like properties/buildings have different animation speeds...
@@ -119,9 +123,9 @@ export const mapRender = (
 
         //NOT A PROPERTY
       } else if ("variant" in currentTile) {
-        tile = new Sprite(spriteSheets.neutral.textures[currentTile.type + "-" + currentTile.variant + ".png"]);
+        tile = new Sprite(spriteSheets.neutral?.textures[currentTile.type + "-" + currentTile.variant + ".png"]);
       } else {
-        tile = new Sprite(spriteSheets.neutral.textures[currentTile.type + ".png"]);
+        tile = new Sprite(spriteSheets.neutral?.textures[currentTile.type + ".png"]);
       }
 
       //makes our sprites render at the bottom, not from the top.
