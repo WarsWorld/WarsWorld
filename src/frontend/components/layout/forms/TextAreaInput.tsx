@@ -4,22 +4,22 @@ type Props = {
   text: string;
   className?: string;
   isError?: boolean;
+  height?: string;
   errorMessage?: string;
   value?: string | number | readonly string[];
   id?: string;
-  type?: string;
-  onChange?: ChangeEventHandler<HTMLInputElement>;
+  onChange?: ChangeEventHandler<HTMLTextAreaElement>;
 }
 
-export default function FormInput({
+export default function TextAreaInput({
   text,
   id,
-  type,
   value,
   isError,
   errorMessage,
   onChange,
   className,
+  height,
 }: Props) {
   return (
     <>
@@ -32,18 +32,16 @@ export default function FormInput({
         >
           {text}
         </label>
-        <input
-          id={id ?? ""}
-          name={id ?? ""}
-          type={type ?? ""}
-          content="Hello"
-          onChange={onChange}
-          value={value}
-          className={`@text-black @border-[2.5px] @text-xl smallscreen:@text-2xl @w-full @p-3 @mt-2 @rounded-xl ${
+        <textarea 
+          className={`@mt-2 @w-full @text-black @p-4 @text-xl smallscreen:@text-2xl @border-4 @rounded-2xl ${
             isError == true ? "@border-orange-star" : "@border-primary"
           }`}
+          style={{ height }}
+          placeholder="Write here... "
+          value={value}
+          onChange={onChange}
         />
-        {isError == true && errorMessage != "" && <p className="@text-orange-star @pt-2">{errorMessage}</p>}
+        {isError == true && errorMessage != "" && <p className="@text-orange-star">{errorMessage}</p>}
       </div>
     </>
   );

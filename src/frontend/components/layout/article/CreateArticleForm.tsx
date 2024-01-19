@@ -7,10 +7,12 @@ import FormInput from "../forms/FormInput";
 import type{ ArticleCategory } from "@prisma/client";
 import { usePlayers } from "frontend/context/players";
 import { trpc } from "frontend/utils/trpc-client";
-import type { ZodError } from "zod";
 import type { ArticleCategories } from "shared/schemas/article";
 import { stringToSlug } from "pages/articles/[...slug]";
 import Link from "next/link";
+import TextAreaInput from "../forms/TextAreaInput";
+import type { ZodIssue } from "zod";
+
 
 const CATEGORIES = [
   { label: "News", value: "news" },
@@ -39,7 +41,7 @@ export default function CreateArticleForm({ articleData, setArticleData } : Prop
   const { currentPlayer } = usePlayers();
 
   const [categoryOption, setCategoryOption] = useState<SelectOption | undefined>({ label: "Patch", value: "patch" });
-  const [shownErrors, setShownErrors] = useState<ZodError[]>();
+  const [shownErrors, setShownErrors] = useState<ZodIssue[]>();
   const [newstCreatedArticleLink, setNewestCreatedArticleLink] = useState("");
 
   const { mutateAsync: createArticle, error, isError, isSuccess } = trpc.article.create.useMutation();
@@ -78,7 +80,7 @@ export default function CreateArticleForm({ articleData, setArticleData } : Prop
 
   useEffect(() => {
     if(error?.data?.zodError) {
-      const parsedErrors = JSON.parse(error?.message) as ZodError[];
+      const parsedErrors = JSON.parse(error?.message) as ZodIssue[];
       setShownErrors(parsedErrors);
     }
   }, [error])
@@ -108,18 +110,18 @@ export default function CreateArticleForm({ articleData, setArticleData } : Prop
             />
           </Link>
         )}
-        {isError && shownErrors?.map((error, index) => <ErrorSuccessBlock key={`error-${index}`} className="@h-20 @mb-8" title={error?.message} isError />)}
+        {isError && <ErrorSuccessBlock className="@h-20 @mb-8" title="There are validation errors." isError />}
         <div className="@grid @grid-flow-row @grid-cols-4">
           <FormInput 
             value={articleData.title}
             onChange={(event) => 
-                        onChangeGenericHandler(
-                          "title", 
-                          (event.target as HTMLInputElement).value
-                        )
+                        onChangeGenericHandler("title", event.target.value)
                       }
             className="@my-4 @w-full @mb-8 @col-span-4 smallscreen:@col-span-3" 
-            text="Title" 
+            text="Title"
+            type="text"
+            isError={shownErrors?.find(error => error.path[0] == "title") != undefined} 
+            errorMessage={shownErrors?.find(error => error.path[0] == "title")?.message}
           />
           <div className="@my-4 smallscreen:@my-0 smallscreen:@ml-12 @col-span-4 smallscreen:@col-span-1">
             <label
@@ -137,46 +139,40 @@ export default function CreateArticleForm({ articleData, setArticleData } : Prop
                 onChangeGenericHandler("category", o?.value.toString() ?? "");
               }}/>
           </div>
-          <div className="@col-span-4 @mt-8">
-            <label
-              htmlFor=""
-              className={`@text-xl smallscreen:@text-2xl @text-white`}
-            >
-              Description
-            </label>
-            <textarea 
-              className="@my-4 @w-full @h-72 @text-black @p-4 @text-xl @border-4 @border-primary @rounded-2xl" 
-              placeholder="Write here... "
-              value={articleData.description}
-              onChange={(event) => onChangeGenericHandler("description", event.target.value)}
-            />
-          </div>
+          <TextAreaInput 
+            value={articleData.description}
+            onChange={(event) => 
+              onChangeGenericHandler("description", event.target.value)
+            }
+            className="@col-span-4"
+            text="Description" 
+            height="20rem"
+            isError={shownErrors?.find(error => error.path[0] == "description") != undefined} 
+            errorMessage={shownErrors?.find(error => error.path[0] == "description")?.message}
+          />
           <FormInput 
             value={articleData.thumbnail}
             onChange={(event) => 
-              onChangeGenericHandler(
-                "thumbnail", 
-                (event.target as HTMLInputElement).value
-              )
+              onChangeGenericHandler("thumbnail", event.target.value)
             }
             className="@mt-8 @col-span-4" 
+            type="text"
             text="Thumbnail" 
+            isError={shownErrors?.find(error => error.path[0] == "thumbnail") != undefined} 
+            errorMessage={shownErrors?.find(error => error.path[0] == "thumbnail")?.message}
           />
 
-          <div className="@col-span-4 @mt-20">
-            <label
-              htmlFor=""
-              className={`@text-xl smallscreen:@text-2xl @text-white`}
-            >
-              Content
-            </label>
-            <textarea 
-              className="@my-4 @w-full @h-[100vh] @text-black @p-4 @text-xl @border-4 @border-primary @rounded-2xl" 
-              placeholder="Write here... "
-              value={articleData.body}
-              onChange={(event) => onChangeGenericHandler("body", event.target.value)}
-            />
-          </div>
+          <TextAreaInput 
+            value={articleData.body}
+            onChange={(event) => 
+              onChangeGenericHandler("body", event.target.value)
+            }
+            className="@col-span-4 @mt-12"
+            text="Content" 
+            height="50rem"
+            isError={shownErrors?.find(error => error.path[0] == "body") != undefined} 
+            errorMessage={shownErrors?.find(error => error.path[0] == "body")?.message}
+          />
         </div>
 
         <div className="@flex @flex-col @items-center @justify-center @pt-4 @px-10">

@@ -1,8 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
 
-const MAX_DESC_LENGTH = 148;
-const MAX_TITLE_LENGTH = 56;
+const MAX_DESC_LENGTH = 120;
+const MAX_TITLE_LENGTH = 48;
 
 export type ICardInfo = {
   title: string;
