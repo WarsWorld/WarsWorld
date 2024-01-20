@@ -20,7 +20,7 @@ export const articleSchema = z.object({
   title: z.string().min(1, "Title is empty.").max(100, "Title exceeded 100 characters."),
   description: z.string().min(1, "Description is empty.").max(500, "Description exceeded 500 characters."),
   body: z.string().min(1, "Body is empty.").max(7500, "Body exceeded 7500 characters."),
-  thumbnail: z.string().min(1, "Image url is empty.").max(125, "Image url exceeded 125 characters."),
+  thumbnail: z.string().min(1, "Image url is empty.").max(200, "Image url exceeded 200 characters."),
   category: articleCategoriesSchema,
 });
 
