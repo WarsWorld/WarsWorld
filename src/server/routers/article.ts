@@ -123,7 +123,7 @@ export const articleRouter = router({
           articleId: input.articleId
         },
       });
-    }),
+  }),
   create: playerBaseProcedure
     .input(articleSchema)
     .mutation(async ({ input, ctx }) => {

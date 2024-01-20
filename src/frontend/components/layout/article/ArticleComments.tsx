@@ -1,13 +1,10 @@
-import type { inferRouterOutputs } from "@trpc/server";
 import { usePlayers } from "frontend/context/players";
 import { trpc } from "frontend/utils/trpc-client";
 import { useParams } from "next/navigation";
-import type { TextareaHTMLAttributes, FormEvent } from "react";
-import type { articleRouter } from "server/routers/article";
-
-type ArticleCommentsWithPlayer = NonNullable<
-  inferRouterOutputs<typeof articleRouter>["getMarkdownById"]
->["Comments"];
+import { type TextareaHTMLAttributes, type FormEvent, useState } from "react";
+import TextAreaInput from "../forms/TextAreaInput";
+import ErrorSuccessBlock from "../forms/ErrorSuccessBlock";
+import { type ArticleCommentsWithPlayer } from "shared/schemas/article";
 
 type Props = {
   comments: ArticleCommentsWithPlayer;
@@ -38,14 +35,21 @@ export default function ArticleContent({ comments }: Props) {
   const mtx = trpc.article.addComment.useMutation();
   const trpcUtils = trpc.useUtils();
   const { currentPlayer } = usePlayers();
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleSubmitComment = async (event: FormEvent) => {
     event.preventDefault();
-    const target = event.target as typeof event.target & {
-      body: TextareaHTMLAttributes<HTMLTextAreaElement>;
-    };
+    const target = event.target as typeof event.target &
+      HTMLFormElement & {
+        body: TextareaHTMLAttributes<HTMLTextAreaElement>;
+      };
 
     const body = target.body.value;
+
+    if (body === "") {
+      setErrorMessage("The comment cannot be empty.");
+      return;
+    }
 
     await mtx
       .mutateAsync({
@@ -55,18 +59,34 @@ export default function ArticleContent({ comments }: Props) {
       })
       .then(async () => {
         await trpcUtils.article.invalidate();
+        setErrorMessage("");
+        target.reset();
       })
-      .catch(() => {});
+      .catch(() => {
+        setErrorMessage("There was an error posting your comment. Please try again.");
+      });
   };
 
   return (
     <section className="@w-full @py-8 @px-4 smallscreen:@pl-16 @relative @leading-10">
       <h2 className="@font-bold">Comments</h2>
 
-      <form onSubmit={handleSubmitComment} method="post">
-        <textarea name="body" placeholder={"foo"}></textarea>
-        <button type="submit">Sub</button>
-      </form>
+      {currentPlayer ? <div>
+        {errorMessage && <ErrorSuccessBlock className="@h-20 @my-4" title={errorMessage} isError />}
+
+        <form
+          onSubmit={(event) => {
+            void handleSubmitComment(event);
+          }}
+          method="post"
+          className="@flex @flex-col"
+        >
+          <TextAreaInput name="body" text="" />
+          <button className="btn @mb-4 @self-end" type="submit">
+            Add comment
+          </button>
+        </form>
+      </div> : <div>Please login to write a comment.</div>}
 
       <div className="@flex @flex-col @gap-4">
         {comments.map((comment) => {
