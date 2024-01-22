@@ -16,6 +16,7 @@ import type { SpriteMap } from "gameFunction/get-sprite-sheets";
 import type { GetServerSideProps } from "next";
 import { MatchWrapper } from "shared/wrappers/match";
 import { mapRender } from "../../interactiveMatchRenders/map-render";
+import Calculator from "../../frontend/components/calculator/Calculator";
 
 BaseTexture.defaultOptions.scaleMode = SCALE_MODES.NEAREST;
 
@@ -182,6 +183,9 @@ const Match = ({ spriteData }: Props) => {
     return <></>;
   } else {
     return (<div className="@grid @grid-cols-12 @text-center @my-20 @mx-2">
+      <div className="@col-span-12">
+        <Calculator/>
+      </div>
         <h3 className="@col-span-12">Scale</h3>
         <div className="@col-span-12 @p-2">
           <button className={"btn @inline"} onClick={() => {
