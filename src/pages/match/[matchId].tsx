@@ -6,7 +6,6 @@ import {
 import { useEffect, useRef, useState } from "react";
 import type { Tile } from "shared/schemas/tile";
 import type { PlayerInMatch } from "shared/types/server-match-state";
-
 import MatchPlayer from "frontend/components/match/MatchPlayer";
 import type { LoadedSpriteSheet } from "frontend/pixi/load-spritesheet";
 import { loadSpritesheets } from "frontend/pixi/load-spritesheet";
@@ -17,6 +16,7 @@ import type { GetServerSideProps } from "next";
 import { MatchWrapper } from "shared/wrappers/match";
 import { mapRender } from "../../interactiveMatchRenders/map-render";
 import Calculator from "../../frontend/components/calculator/Calculator";
+import type { UnitType } from "shared/schemas/unit";
 
 BaseTexture.defaultOptions.scaleMode = SCALE_MODES.NEAREST;
 
@@ -47,7 +47,7 @@ const Match = ({ spriteData }: Props) => {
 
   const matchId = query.matchId as string;
 
-  const matchQuery = trpc.match.full.useQuery(
+  const { data, refetch } = trpc.match.full.useQuery(
     { matchId, playerId: currentPlayer?.id ?? "" },
     {
       enabled: false // no autoload
@@ -64,7 +64,7 @@ const Match = ({ spriteData }: Props) => {
       return;
     }
 
-    void matchQuery.refetch().then((result) => {
+    void refetch().then((result) => {
       if (!result.isSuccess) {
         throw new Error("Loading of match failed: " + result.failureReason?.message);
       }
@@ -87,9 +87,9 @@ const Match = ({ spriteData }: Props) => {
     });
 
 
-  }, [currentPlayerId]);
+  }, [currentPlayerId, refetch]);
 
-  const { data } = trpc.match.full.useQuery({ matchId, playerId: currentPlayer?.id ?? "" });
+  // const { data } = trpc.match.full.useQuery({ matchId, playerId: currentPlayer?.id ?? "" });
 
   if (data) {
     if (data.status !== "playing") {
@@ -146,6 +146,16 @@ const Match = ({ spriteData }: Props) => {
       animation: "gameCursor 1200ms infinite"
     } as CSSStyleDeclaration;
 
+    const actionMutateAsync = (input: {
+      unitType: UnitType,
+      position: [number, number],
+      playerId: string,
+      matchId: string
+    }) => {
+      const type = "build"
+      void actionMutation.mutateAsync({type, ...input})
+    }
+
     //lets create a mapContainer
     const mapContainer = mapRender({
       spriteSheets,
@@ -153,7 +163,7 @@ const Match = ({ spriteData }: Props) => {
       tileSize,
       mapWidth,
       mapHeight,
-      mutation: actionMutation,
+      mutation: actionMutateAsync,
       currentPlayer,
       players,
       match: match
@@ -170,12 +180,12 @@ const Match = ({ spriteData }: Props) => {
 
   //TODO: This is more or less what we would do to handle events
   // right now it doesnt seem to be working...
-  const eventStuff = trpc.action.onEvent.useSubscription( { matchId: "clrf2h6qv000111deih12dxi0", playerId: "clrbbcyzd000214l310lzd92q" },{
-    onData(data) {
-      console.log("eventStuff-----");
-      console.log(data);
-    }
-  });
+  // const eventStuff = trpc.action.onEvent.useSubscription( { matchId: "clrf2h6qv000111deih12dxi0", playerId: "clrbbcyzd000214l310lzd92q" },{
+  //   onData(data) {
+  //     console.log("eventStuff-----");
+  //     console.log(data);
+  //   }
+  // });
   //console.log(eventStuff);
 
 
