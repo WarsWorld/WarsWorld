@@ -1,4 +1,5 @@
 import { BaseTexture, Spritesheet } from "pixi.js";
+import { utils } from "pixi.js";
 import type { SheetNames, SpriteMap } from "../../gameFunction/get-sprite-sheets";
 
 export type LoadedSpriteSheet = Partial<Record<SheetNames, Spritesheet>>
@@ -22,6 +23,7 @@ export async function loadSpritesheets(spriteMap: SpriteMap): Promise<LoadedSpri
         rawSpriteSheet);
       await pixiSheet.parse();
       pixiSpriteSheets[sheetName as SheetNames] = pixiSheet;
+      utils.clearTextureCache()
     }
   }
 
