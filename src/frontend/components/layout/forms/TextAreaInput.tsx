@@ -2,6 +2,7 @@ import type { ChangeEventHandler } from "react";
 
 type Props = {
   text: string;
+  name?: string;
   className?: string;
   isError?: boolean;
   height?: string;
@@ -13,6 +14,7 @@ type Props = {
 
 export default function TextAreaInput({
   text,
+  name,
   id,
   value,
   isError,
@@ -36,6 +38,7 @@ export default function TextAreaInput({
           className={`@mt-2 @w-full @text-black @p-4 @text-xl smallscreen:@text-2xl @border-4 @rounded-2xl ${
             isError == true ? "@border-orange-star" : "@border-primary"
           }`}
+          name={name}
           style={{ height }}
           placeholder="Write here... "
           value={value}

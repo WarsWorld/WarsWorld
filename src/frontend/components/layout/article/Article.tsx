@@ -2,7 +2,8 @@
 import Banner from "frontend/components/layout/Banner";
 import Head from "next/head";
 import ArticleContent from "./ArticleContent";
-import type { ArticleType } from "shared/schemas/article";
+import type { ArticleCommentsWithPlayer, ArticleType } from "shared/schemas/article";
+import ArticleComments from "./ArticleComments";
 
 type Props = {
   articleData: {
@@ -16,6 +17,7 @@ type Props = {
         thumbnail: string;
         thumbnailAlt: string;
     };
+    comments: ArticleCommentsWithPlayer;
   }
 };
 
@@ -51,6 +53,8 @@ export default function Article({ articleData }: Props) {
         />
         
         <ArticleContent contentHTML={articleData.contentHtml} />
+        
+        <ArticleComments comments={articleData.comments} />
       </>
     );
   }

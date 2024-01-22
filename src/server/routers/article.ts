@@ -56,6 +56,14 @@ export const articleRouter = router({
           thumbnail: true,
           category: true,
           createdAt: true,
+          Comments: {
+            include: {
+              player: true
+            },
+            orderBy: {
+              createdAt: "desc"
+            }
+          },
         },
         where: {
           AND: {
@@ -78,6 +86,44 @@ export const articleRouter = router({
       };
     }
   ),
+  addComment: playerBaseProcedure
+    .input(
+      z.object({
+        body: z.string().min(1).max(5000),
+        articleId: z.number().min(1),
+      })
+    )
+    .mutation(async ({ input, ctx }) => {
+      const lines = input.body.split("\n");
+      const words = lines.map((l) => l.split(" ")).flat();
+
+      if (
+        words.find((w) => bannedWords.includes(w.toLowerCase())) !== undefined
+      ) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "The post you were trying to created contains banned words",
+        });
+      }
+
+      const containsBannedCharacters = /[^\w\.!\?\-\_\n ]/.test(input.body);
+
+      if (containsBannedCharacters) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message:
+            "The post you were trying to created contains banned characters",
+        });
+      }
+
+      return prisma.articleComment.create({
+        data: {
+          body: input.body.trimEnd(),
+          playerId: ctx.currentPlayer.id,
+          articleId: input.articleId
+        },
+      });
+  }),
   create: playerBaseProcedure
     .input(articleSchema)
     .mutation(async ({ input, ctx }) => {
@@ -121,33 +167,31 @@ export const articleRouter = router({
     }
  
   ),
-/*
-  delete: playerBaseProcedure
-    .input(
-      z.object({
-        postToDeleteId: z.string(),
-      })
-    )
-    .mutation(async ({ input, ctx }) => {
-      const post = await prisma.post.findUniqueOrThrow({
-        where: {
-          id: input.postToDeleteId,
-        },
-      });
+  // delete: playerBaseProcedure
+  //   .input(
+  //     z.object({
+  //       postToDeleteId: z.string(),
+  //     })
+  //   )
+  //   .mutation(async ({ input, ctx }) => {
+  //     const post = await prisma.post.findUniqueOrThrow({
+  //       where: {
+  //         id: input.postToDeleteId,
+  //       },
+  //     });
 
-      if (post.authorId !== ctx.currentPlayer.id) {
-        throw new TRPCError({
-          code: "UNAUTHORIZED",
-          message:
-            "You can't delete this post because it doesn't belong to your player",
-        });
-      }
+  //     if (post.authorId !== ctx.currentPlayer.id) {
+  //       throw new TRPCError({
+  //         code: "UNAUTHORIZED",
+  //         message:
+  //           "You can't delete this post because it doesn't belong to your player",
+  //       });
+  //     }
 
-      await prisma.post.delete({
-        where: {
-          id: input.postToDeleteId,
-        },
-      });
-    }),
-    */
+  //     await prisma.post.delete({
+  //       where: {
+  //         id: input.postToDeleteId,
+  //       },
+  //     });
+  //   }),
 });
