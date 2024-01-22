@@ -6,7 +6,7 @@ import {
 } from "../trpc/trpc-setup";
 import { TRPCError } from "@trpc/server";
 import { prisma } from "server/prisma/prisma-client";
-import { type ArticleCategories, type ArticleType, articleTypeSchema, articleSchema } from "shared/schemas/article";
+import { type ArticleCategories, type ArticleType, articleTypeSchema, articleSchema, articleCommentSchema } from "shared/schemas/article";
 import matter from "gray-matter";
 
 const bannedWords = ["heck", "frick", "oof", "swag", "amongus"];
@@ -87,14 +87,9 @@ export const articleRouter = router({
     }
   ),
   addComment: playerBaseProcedure
-    .input(
-      z.object({
-        body: z.string().min(1).max(5000),
-        articleId: z.number().min(1),
-      })
-    )
+    .input(articleCommentSchema)
     .mutation(async ({ input, ctx }) => {
-      const lines = input.body.split("\n");
+      const lines = input.comment.split("\n");
       const words = lines.map((l) => l.split(" ")).flat();
 
       if (
@@ -102,23 +97,23 @@ export const articleRouter = router({
       ) {
         throw new TRPCError({
           code: "BAD_REQUEST",
-          message: "The post you were trying to created contains banned words",
+          message: "The comment you were trying to create contains banned words",
         });
       }
 
-      const containsBannedCharacters = /[^\w\.!\?\-\_\n ]/.test(input.body);
+      const containsBannedCharacters = /[^\w\.!\?\-\_\n ]/.test(input.comment);
 
       if (containsBannedCharacters) {
         throw new TRPCError({
           code: "BAD_REQUEST",
           message:
-            "The post you were trying to created contains banned characters",
+            "The comment you were trying to create contains banned characters",
         });
       }
 
       return prisma.articleComment.create({
         data: {
-          body: input.body.trimEnd(),
+          body: input.comment.trimEnd(),
           playerId: ctx.currentPlayer.id,
           articleId: input.articleId
         },
@@ -135,7 +130,7 @@ export const articleRouter = router({
       ) {
         throw new TRPCError({
           code: "BAD_REQUEST",
-          message: "The post you were trying to created contains banned words",
+          message: "The post you were trying to create contains banned words",
         });
       }
 

@@ -4,7 +4,10 @@ import { useParams } from "next/navigation";
 import { type TextareaHTMLAttributes, type FormEvent, useState } from "react";
 import TextAreaInput from "../forms/TextAreaInput";
 import ErrorSuccessBlock from "../forms/ErrorSuccessBlock";
-import { type ArticleCommentsWithPlayer } from "shared/schemas/article";
+import { articleCommentSchema, type ArticleCommentsWithPlayer } from "shared/schemas/article";
+import SquareButton from "../SquareButton";
+import { ZodError } from "zod";
+import { TRPCClientError } from "@trpc/client";
 
 type Props = {
   comments: ArticleCommentsWithPlayer;
@@ -32,7 +35,7 @@ const getFormattedTime = (createdAt: Date) => {
 export default function ArticleContent({ comments }: Props) {
   const { slug: params } = useParams<{ slug: string[] }>();
   const articleId = params[0];
-  const mtx = trpc.article.addComment.useMutation();
+  const { mutateAsync: createComment } = trpc.article.addComment.useMutation();
   const trpcUtils = trpc.useUtils();
   const { currentPlayer } = usePlayers();
   const [errorMessage, setErrorMessage] = useState("");
@@ -41,52 +44,65 @@ export default function ArticleContent({ comments }: Props) {
     event.preventDefault();
     const target = event.target as typeof event.target &
       HTMLFormElement & {
-        body: TextareaHTMLAttributes<HTMLTextAreaElement>;
+        comment: TextareaHTMLAttributes<HTMLTextAreaElement>;
       };
 
-    const body = target.body.value;
+    const comment = target.comment.value;
 
-    if (body === "") {
-      setErrorMessage("The comment cannot be empty.");
-      return;
-    }
-
-    await mtx
-      .mutateAsync({
+    try {
+      const parsedComment = articleCommentSchema.parse({
         articleId: Number(articleId),
-        body: String(body),
+        comment: String(comment).trim(),
+      })
+  
+      await createComment({
+        ...parsedComment,
         playerId: currentPlayer!.id,
       })
-      .then(async () => {
-        await trpcUtils.article.invalidate();
-        setErrorMessage("");
-        target.reset();
-      })
-      .catch(() => {
+
+      await trpcUtils.article.invalidate();
+      setErrorMessage("");
+      target.reset();
+
+    } catch (err) {
+      if(err instanceof ZodError) {
+        setErrorMessage(err.issues[0].message);
+      } else if(err instanceof TRPCClientError) {
+        setErrorMessage(err.message);
+      } else {
         setErrorMessage("There was an error posting your comment. Please try again.");
-      });
+      }
+    }
   };
 
   return (
     <section className="@w-full @py-8 @px-4 smallscreen:@pl-16 @relative @leading-10">
       <h2 className="@font-bold">Comments</h2>
 
-      {currentPlayer ? <div>
-        {errorMessage && <ErrorSuccessBlock className="@h-20 @my-4" title={errorMessage} isError />}
+      {currentPlayer ? 
+        <div>
+          {errorMessage && <ErrorSuccessBlock className="@h-20 @my-4" title={errorMessage} isError />}
 
-        <form
-          onSubmit={(event) => {
-            void handleSubmitComment(event);
-          }}
-          method="post"
-          className="@flex @flex-col"
-        >
-          <TextAreaInput name="body" text="" />
-          <button className="btn @mb-4 @self-end" type="submit">
-            Add comment
-          </button>
-        </form>
-      </div> : <div>Please login to write a comment.</div>}
+          <form
+            onSubmit={(event) => {
+              void handleSubmitComment(event);
+            }}
+            method="post"
+            className="@flex @flex-col"
+          >
+            <TextAreaInput 
+              name="comment" 
+              text="" 
+              height="16vh"
+            />
+            <div className="@mb-4 @self-end">
+              <SquareButton type="submit">Add comment</SquareButton>
+            </div>
+          </form>
+        </div> 
+        : 
+        <div>Please login to write a comment.</div>
+      }
 
       <div className="@flex @flex-col @gap-4">
         {comments.map((comment) => {

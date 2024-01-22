@@ -1,4 +1,4 @@
-import { type FormEvent, useState, useEffect, type Dispatch, type SetStateAction } from "react";
+import { type FormEvent, useState, type Dispatch, type SetStateAction } from "react";
 import Select, { type SelectOption } from "../Select";
 import SquareButton from "../SquareButton";
 import OrangeGradientLine from "../decorations/OrangeGradientLine";
@@ -7,11 +7,12 @@ import FormInput from "../forms/FormInput";
 import type{ ArticleCategory } from "@prisma/client";
 import { usePlayers } from "frontend/context/players";
 import { trpc } from "frontend/utils/trpc-client";
-import type { ArticleCategories } from "shared/schemas/article";
+import { articleSchema, type ArticleCategories } from "shared/schemas/article";
 import { stringToSlug } from "pages/articles/[...slug]";
 import Link from "next/link";
 import TextAreaInput from "../forms/TextAreaInput";
-import type { ZodIssue } from "zod";
+import { ZodError } from "zod";
+import { TRPCClientError } from "@trpc/client";
 
 
 const CATEGORIES = [
@@ -41,10 +42,11 @@ export default function CreateArticleForm({ articleData, setArticleData } : Prop
   const { currentPlayer } = usePlayers();
 
   const [categoryOption, setCategoryOption] = useState<SelectOption | undefined>({ label: "Patch", value: "patch" });
-  const [shownErrors, setShownErrors] = useState<ZodIssue[]>();
+  const [formErrors, setFormErrors] = useState<ZodError>();
+  const [error, setError] = useState("");
   const [newstCreatedArticleLink, setNewestCreatedArticleLink] = useState("");
 
-  const { mutateAsync: createArticle, error, isError, isSuccess } = trpc.article.create.useMutation();
+  const { mutateAsync: createArticle, isSuccess } = trpc.article.create.useMutation();
 
   const clearForm = () => {
     setArticleData({
@@ -54,36 +56,43 @@ export default function CreateArticleForm({ articleData, setArticleData } : Prop
       body: "",
       thumbnail: "",
     });
-    setCategoryOption({ label: "Patch", value: "patch" })
+    setCategoryOption({ label: "Patch", value: "patch" });
+    setError("");
   }
 
   const onSubmitArticleForm = async (event: FormEvent) => {
     event.preventDefault();
 
     try {
-      const newArticle = await createArticle({
-        title: articleData.title,
-        description: articleData.description,
-        body: articleData.body,
-        thumbnail: articleData.thumbnail,
+      const parsedArticle = articleSchema.parse({
+        title: articleData.title.trim(),
+        description: articleData.description.trim(),
+        body: articleData.body.trim(),
+        thumbnail: articleData.thumbnail.trim(),
         category: articleData.category as ArticleCategory,
+      });
+
+      const newArticle = await createArticle({
+        ...parsedArticle,
         playerId: currentPlayer?.id ?? "",
       });
 
       setNewestCreatedArticleLink(`${newArticle.id}/${stringToSlug(newArticle.title)}`);
+      setFormErrors(undefined);
       clearForm();
 
-    } catch (e) {}
+    } catch (err) {
+      if(err instanceof ZodError) {
+        setFormErrors(err);
+      } else if(err instanceof TRPCClientError) {
+        setError(err.message);
+      } else {
+        setError("There was an error while trying to post the article. Please try again.");
+      }
+    }
 
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
-
-  useEffect(() => {
-    if(error?.data?.zodError) {
-      const parsedErrors = JSON.parse(error?.message) as ZodIssue[];
-      setShownErrors(parsedErrors);
-    }
-  }, [error])
 
   const onChangeGenericHandler = (identifier: string, value: string) => {
     setArticleData((prevData) => ({
@@ -91,7 +100,12 @@ export default function CreateArticleForm({ articleData, setArticleData } : Prop
       [identifier]: value,
     }));
   };
-  
+
+  const titleError = formErrors?.issues?.find(error => error.path[0] == "title");
+  const descriptionError = formErrors?.issues?.find(error => error.path[0] == "description");
+  const thumbnailError = formErrors?.issues?.find(error => error.path[0] == "thumbnail");
+  const bodyError = formErrors?.issues?.find(error => error.path[0] == "body") ;
+
   return(
     <>
       <OrangeGradientLine />
@@ -110,7 +124,7 @@ export default function CreateArticleForm({ articleData, setArticleData } : Prop
             />
           </Link>
         )}
-        {isError && <ErrorSuccessBlock className="@h-20 @mb-8" title="There are validation errors." isError />}
+        {error && <ErrorSuccessBlock className="@h-20 @mb-8" title={error} isError />}
         <div className="@grid @grid-flow-row @grid-cols-4">
           <FormInput 
             value={articleData.title}
@@ -120,8 +134,8 @@ export default function CreateArticleForm({ articleData, setArticleData } : Prop
             className="@my-4 @w-full @mb-8 @col-span-4 smallscreen:@col-span-3" 
             text="Title"
             type="text"
-            isError={shownErrors?.find(error => error.path[0] == "title") != undefined} 
-            errorMessage={shownErrors?.find(error => error.path[0] == "title")?.message}
+            isError={titleError != undefined} 
+            errorMessage={titleError?.message}
           />
           <div className="@my-4 smallscreen:@my-0 smallscreen:@ml-12 @col-span-4 smallscreen:@col-span-1">
             <label
@@ -147,8 +161,8 @@ export default function CreateArticleForm({ articleData, setArticleData } : Prop
             className="@col-span-4"
             text="Description" 
             height="20rem"
-            isError={shownErrors?.find(error => error.path[0] == "description") != undefined} 
-            errorMessage={shownErrors?.find(error => error.path[0] == "description")?.message}
+            isError={descriptionError != undefined} 
+            errorMessage={descriptionError?.message}
           />
           <FormInput 
             value={articleData.thumbnail}
@@ -158,8 +172,8 @@ export default function CreateArticleForm({ articleData, setArticleData } : Prop
             className="@mt-8 @col-span-4" 
             type="text"
             text="Thumbnail" 
-            isError={shownErrors?.find(error => error.path[0] == "thumbnail") != undefined} 
-            errorMessage={shownErrors?.find(error => error.path[0] == "thumbnail")?.message}
+            isError={thumbnailError != undefined} 
+            errorMessage={thumbnailError?.message}
           />
 
           <TextAreaInput 
@@ -170,8 +184,8 @@ export default function CreateArticleForm({ articleData, setArticleData } : Prop
             className="@col-span-4 @mt-12"
             text="Content" 
             height="50rem"
-            isError={shownErrors?.find(error => error.path[0] == "body") != undefined} 
-            errorMessage={shownErrors?.find(error => error.path[0] == "body")?.message}
+            isError={bodyError != undefined} 
+            errorMessage={bodyError?.message}
           />
         </div>
 
