@@ -1,5 +1,5 @@
 import { observable } from "@trpc/server/observable";
-import { emit, subscribe } from "server/emitter/event-emitter";
+import { emit, subscribe, unsubscribe } from "server/emitter/event-emitter";
 import { prisma } from "server/prisma/prisma-client";
 import {
   validateMainActionAndToEvent,
@@ -90,10 +90,15 @@ export const actionRouter = router({
       // TODO @function either this function gets a list of emittables, or we iterate through them here.
       //  undefined means that team shouldn't receive the event
       //  emittableEvents[i] is from match.teams[i]. emittableEvents has one extra "no team"(spectator) at the end
-      emit(emittableEvents);
+      emittableEvents.forEach((event) => {
+        if(event !== undefined) {
+          emit({...event, matchId: match.id});
+        }
+      });
 
       /* 10. Save event */
-      const eventOnDB = await prisma.event.create({
+      // const eventOnDB = await prisma.event.create({
+      await prisma.event.create({
         data: {
           matchId: input.matchId,
           content: mainEvent
@@ -121,17 +126,19 @@ export const actionRouter = router({
       //   emit(emittableEliminationEvent)
       // }
     }),
-  onEvent: matchBaseProcedure.subscription(({ input, ctx: { currentPlayer, match } }) =>
+  onEvent: matchBaseProcedure.subscription(({ ctx: { match } }) =>
     {
-      const player = match.getPlayerById(currentPlayer.id);
-      
-      
-
       return observable<Emittable>((emit) => {
-        const unsubscribe = subscribe(input.matchId, emittable => {
+        const onAdd = (emittable: Emittable) => {
+          // emit emittable to client
           emit.next(emittable);
-        });
-        return () => unsubscribe();
+        };
+
+        subscribe(match.id, onAdd);
+
+        return () => {
+          unsubscribe(match.id, onAdd)
+        };
       });
     }
   )

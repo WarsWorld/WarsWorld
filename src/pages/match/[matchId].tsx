@@ -56,6 +56,7 @@ const Match = ({ spriteData }: Props) => {
 
   // put into a variable for proper type-gating
   const currentPlayerId = currentPlayer?.id;
+  const [isSubscribed, setIsSubscribed] = useState(false)
 
   const [match, setMatch] = useState<MatchWrapper | null>(null);
 
@@ -64,6 +65,7 @@ const Match = ({ spriteData }: Props) => {
       return;
     }
 
+    setIsSubscribed((prev) => !prev)
     void refetch().then((result) => {
       if (!result.isSuccess) {
         throw new Error("Loading of match failed: " + result.failureReason?.message);
@@ -119,9 +121,6 @@ const Match = ({ spriteData }: Props) => {
       return;
     }
 
-    console.log("MAP RENDERED------");
-    console.log(spriteSheets);
-
     const mapScale = scale * tileSize;
     const mapMargin = scale * tileSize;
     const mapWidth = mapData[0].length * mapScale + mapMargin;
@@ -176,17 +175,16 @@ const Match = ({ spriteData }: Props) => {
     };
   }, [mapData, spriteSheets, scale, actionMutation, currentPlayer, players, match]);
 
-
-
-  //TODO: This is more or less what we would do to handle events
-  // right now it doesnt seem to be working...
-  // const eventStuff = trpc.action.onEvent.useSubscription( { matchId: "clrf2h6qv000111deih12dxi0", playerId: "clrbbcyzd000214l310lzd92q" },{
-  //   onData(data) {
-  //     console.log("eventStuff-----");
-  //     console.log(data);
-  //   }
-  // });
-  //console.log(eventStuff);
+  trpc.action.onEvent.useSubscription( { 
+    matchId: matchId, 
+    playerId: currentPlayerId!, 
+  },{
+    onData(data) {
+      console.log("eventStuff-----");
+      console.log(data);
+    },
+    enabled: isSubscribed
+  });
 
 
   if (!mapData || !players) {

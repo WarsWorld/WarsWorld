@@ -5,3 +5,4 @@ const wwEmitter = createEmitter<Emittable>();
 
 export const emit = wwEmitter.emit;
 export const subscribe = wwEmitter.subscribe;
+export const unsubscribe = wwEmitter.unsubscribe;

@@ -15,7 +15,7 @@ export const authMiddleware = t.middleware(({ next, ctx }) => {
     });
   }
 
-  if (!user?.name) {
+  if (user?.name == undefined || user?.name == null) {
     throw new TRPCError({ code: "UNAUTHORIZED" });
   }
 
