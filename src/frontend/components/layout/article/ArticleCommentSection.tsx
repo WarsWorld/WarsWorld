@@ -3,7 +3,6 @@ import { trpc } from "frontend/utils/trpc-client";
 import { useParams } from "next/navigation";
 import { type TextareaHTMLAttributes, type FormEvent, useState } from "react";
 import TextAreaInput from "../forms/TextAreaInput";
-import ErrorSuccessBlock from "../forms/ErrorSuccessBlock";
 import { articleCommentSchema, type ArticleCommentsWithPlayer } from "shared/schemas/article";
 import SquareButton from "../SquareButton";
 import { ZodError } from "zod";
@@ -32,7 +31,7 @@ const getFormattedTime = (createdAt: Date) => {
   }).format(-timeSinceComment, isMoreThanADayAgo ? "day" : "hour");
 };
 
-export default function ArticleContent({ comments }: Props) {
+export default function ArticleCommentSection({ comments }: Props) {
   const { slug: params } = useParams<{ slug: string[] }>();
   const articleId = params[0];
   const { mutateAsync: createComment } = trpc.article.addComment.useMutation();
@@ -76,13 +75,11 @@ export default function ArticleContent({ comments }: Props) {
   };
 
   return (
-    <section className="@w-full @py-8 @px-4 smallscreen:@pl-16 @relative @leading-10">
+    <section className="@w-full @p-12 @relative @leading-10">
       <h2 className="@font-bold">Comments</h2>
 
       {currentPlayer ? 
-        <div>
-          {errorMessage && <ErrorSuccessBlock className="@h-20 @my-4" title={errorMessage} isError />}
-
+        <div className="@w-full">
           <form
             onSubmit={(event) => {
               void handleSubmitComment(event);
@@ -92,10 +89,12 @@ export default function ArticleContent({ comments }: Props) {
           >
             <TextAreaInput 
               name="comment" 
-              text="" 
               height="16vh"
+              text=""
+              isError={errorMessage != ""}
+              errorMessage={errorMessage}
             />
-            <div className="@mb-4 @self-end">
+            <div className="@self-end @my-4">
               <SquareButton type="submit">Add comment</SquareButton>
             </div>
           </form>

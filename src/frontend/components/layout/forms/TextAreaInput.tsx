@@ -28,14 +28,12 @@ export default function TextAreaInput({
       <div className={className}>
         <label
           htmlFor={id ?? ""}
-          className={`@text-xl smallscreen:@text-2xl ${
-            isError == true ? "@text-orange-star" : "@text-white"
-          }`}
+          className="@text-xl smallscreen:@text-2xl @text-white"
         >
           {text}
         </label>
         <textarea 
-          className={`@mt-2 @w-full @text-black @p-4 @text-xl smallscreen:@text-2xl @border-4 @rounded-2xl ${
+          className={`@mt-2 @w-full @text-white @p-4 @text-xl smallscreen:@text-2xl @border-[2.5px] @rounded-2xl @bg-black/50 ${
             isError == true ? "@border-orange-star" : "@border-primary"
           }`}
           name={name}
@@ -44,7 +42,9 @@ export default function TextAreaInput({
           value={value}
           onChange={onChange}
         />
-        {isError == true && errorMessage != "" && <p className="@text-orange-star">{errorMessage}</p>}
+        {isError == true && errorMessage != "" && 
+          <p className="@text-white @bg-orange-star/80 @my-2 @px-2 @rounded-lg">{errorMessage}</p>
+        }
       </div>
     </>
   );

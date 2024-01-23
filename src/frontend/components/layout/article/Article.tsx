@@ -3,7 +3,7 @@ import Banner from "frontend/components/layout/Banner";
 import Head from "next/head";
 import ArticleContent from "./ArticleContent";
 import type { ArticleCommentsWithPlayer, ArticleType } from "shared/schemas/article";
-import ArticleComments from "./ArticleComments";
+import ArticleCommentSection from "./ArticleCommentSection";
 
 type Props = {
   articleData: {
@@ -54,7 +54,7 @@ export default function Article({ articleData }: Props) {
         
         <ArticleContent contentHTML={articleData.contentHtml} />
         
-        <ArticleComments comments={articleData.comments} />
+        <ArticleCommentSection comments={articleData.comments} />
       </>
     );
   }
