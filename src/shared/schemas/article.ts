@@ -2,11 +2,6 @@ import type { inferRouterOutputs } from "@trpc/server";
 import type { articleRouter } from "server/routers/article";
 import { z } from "zod";
 
-export const articleTypeSchema = z.enum([
-  "news",
-  "guide",
-]);
-
 export const articleCategoriesSchema = z.enum([
   "basics",
   "advance",
@@ -31,7 +26,5 @@ export const articleCommentSchema = z.object({
   articleId: z.number().min(1),
 });
 
-export type ArticleMetaData = z.infer<typeof articleSchema>;
 export type ArticleCategories = z.infer<typeof articleCategoriesSchema>;
-export type ArticleType = z.infer<typeof articleTypeSchema>;
 export type ArticleCommentsWithPlayer = NonNullable<inferRouterOutputs<typeof articleRouter>["getMarkdownById"]>["Comments"];

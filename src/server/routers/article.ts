@@ -6,12 +6,20 @@ import {
 } from "../trpc/trpc-setup";
 import { TRPCError } from "@trpc/server";
 import { prisma } from "server/prisma/prisma-client";
-import { type ArticleCategories, type ArticleType, articleTypeSchema, articleSchema, articleCommentSchema } from "shared/schemas/article";
-import matter from "gray-matter";
+import { type ArticleCategories, articleSchema, articleCommentSchema } from "shared/schemas/article";
 
 const bannedWords = ["heck", "frick", "oof", "swag", "amongus"];
-const NEWS_CATEGORIES: ArticleCategories[] = ["patch", "events", "news", "maintenance"];
-const GUIDE_CATEGORIES: ArticleCategories[] = ["basics", "advance", "site"];
+
+export const articleTypeSchema = z.enum([
+  "news",
+  "guide",
+]);
+export type ArticleType = z.infer<typeof articleTypeSchema>;
+
+const TYPES: Record<ArticleType, ArticleCategories[]> = {
+  "news": ["patch", "events", "news", "maintenance"],
+  "guide": ["basics", "advance", "site"],
+}
 
 export const articleRouter = router({
   getMetadataByType: publicBaseProcedure
@@ -21,8 +29,7 @@ export const articleRouter = router({
       })
     )
     .query(({ input }) => {
-      const categories = 
-        input.type == "news" ? NEWS_CATEGORIES : GUIDE_CATEGORIES;
+      const categories = TYPES[input.type];
 
       return prisma.article.findMany({
         select: {
@@ -76,13 +83,11 @@ export const articleRouter = router({
         return null;
       }
 
-      const type: ArticleType = (NEWS_CATEGORIES.includes(article.category)) ? "news" : "guide";
-      const content = matter(article.body).content;
-
+      const type = (Object.keys(TYPES) as ArticleType[]).find(key => TYPES[key].includes(article.category));
+      
       return {
         ...article,
         type: type,
-        body: content,
       };
     }
   ),

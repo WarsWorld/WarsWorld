@@ -5,7 +5,8 @@ import LinkCard  from "frontend/components/layout/article/LinkCard";
 import { trpc } from "frontend/utils/trpc-client";
 import Head from "next/head";
 import LinkCardContainer from "frontend/components/layout/article/LinkCardContainer";
-import { stringToSlug } from "pages/articles/[...slug]";
+import { stringToSlug } from "frontend/utils/articleUtils";
+
 export default function NewsPage()  {
   const { data: articleNews } = trpc.article.getMetadataByType.useQuery({ type: "news" });
 

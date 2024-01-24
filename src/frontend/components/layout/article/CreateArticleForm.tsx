@@ -8,11 +8,11 @@ import type{ ArticleCategory } from "@prisma/client";
 import { usePlayers } from "frontend/context/players";
 import { trpc } from "frontend/utils/trpc-client";
 import { articleSchema, type ArticleCategories } from "shared/schemas/article";
-import { stringToSlug } from "pages/articles/[...slug]";
 import Link from "next/link";
 import TextAreaInput from "../forms/TextAreaInput";
 import { ZodError } from "zod";
 import { TRPCClientError } from "@trpc/client";
+import { stringToSlug } from "frontend/utils/articleUtils";
 
 
 const CATEGORIES = [

@@ -1,17 +1,13 @@
 import Article from "frontend/components/layout/article/Article";
+import { markdownToHTML, stringToSlug } from "frontend/utils/articleUtils";
 import { trpc } from "frontend/utils/trpc-client";
 import type { GetServerSideProps } from 'next';
-import { remark } from "remark";
-import html from "remark-html";
 import { prisma } from "server/prisma/prisma-client";
-import { ArticleType } from "shared/schemas/article";
 
 type Props = { 
   articleId: string,
   title: string,
 };
-
-export const stringToSlug = (title: string) => title.replace(/\s/g, "-").replace(/[^\w\s-]/gi, '').toLowerCase();
 
 export const getServerSideProps: GetServerSideProps<Props> = async ({ params }) => {
     // These params are the ones you put on the url
@@ -69,14 +65,11 @@ export default function NewsArticle(
 ) {
   const { data: articleData } = trpc.article.getMarkdownById.useQuery({ id: articleId }, { enabled: articleId != undefined });
 
-  const process = remark().use(html).processSync(articleData?.body);
-  const articleBody = process.toString();
-
   return (
     <>
       { articleData && <Article articleData={{
-          type: articleData.type as ArticleType,
-          contentHtml: articleBody,
+          type: articleData.type,
+          contentHtml: markdownToHTML(articleData.body),
           comments: articleData.Comments,
           metaData: {
             title: articleData.title,
