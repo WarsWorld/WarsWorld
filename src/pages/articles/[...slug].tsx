@@ -68,7 +68,7 @@ export default function NewsArticle(
   return (
     <>
       { articleData && <Article articleData={{
-          type: articleData.type,
+          type: articleData.type ?? "news",
           contentHtml: markdownToHTML(articleData.body),
           comments: articleData.Comments,
           metaData: {

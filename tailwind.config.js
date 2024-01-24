@@ -8,6 +8,9 @@ module.exports = {
   theme: {
     extend: {
       sans: ["Proxima Nova", ...defaultTheme.fontFamily.sans],
+      fontFamily: {
+        russoOne: ["RussoOne", "sans-serif"],
+      },
       colors: {
         primary: "#E47220",
         "primary-dark": "#943E15FF",

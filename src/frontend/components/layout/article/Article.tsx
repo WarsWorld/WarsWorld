@@ -2,8 +2,9 @@
 import Banner from "frontend/components/layout/Banner";
 import Head from "next/head";
 import ArticleContent from "./ArticleContent";
-import type { ArticleCommentsWithPlayer, ArticleType } from "shared/schemas/article";
+import type { ArticleCommentsWithPlayer } from "shared/schemas/article";
 import ArticleCommentSection from "./ArticleCommentSection";
+import type { ArticleType } from "server/routers/article";
 
 type Props = {
   articleData: {
@@ -38,7 +39,7 @@ export default function Article({ articleData }: Props) {
 
         <Banner
           title={
-            <div>
+            <div className="@my-16">
               <h2 className="@bg-bg-secondary @inline-block @py-2 @px-4 smallscreen:@py-4 smallscreen:@px-6 @text-xl smallscreen:@text-5xl @text-white @font-medium">
                 {articleData.type.toUpperCase()}
               </h2>
