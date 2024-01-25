@@ -25,50 +25,54 @@ type Props = { spriteData: SpriteMap };
 
 const Match = ({ spriteData }: Props) => {
 
-  //This loads the textures once
+  // ---- TEXTURE LOADING ----
   const [spriteSheets, setSpriteSheets] = useState<LoadedSpriteSheet | undefined>(undefined);
   useEffect(() => {
     const fetchData = async () => {
-        setSpriteSheets(await loadSpritesheets(spriteData));
+      setSpriteSheets(await loadSpritesheets(spriteData));
     };
-
+    
     void fetchData();
   }, [setSpriteSheets, spriteData]);
-
-  const { currentPlayer } = usePlayers();
-
-  const [players, setPlayers] = useState<PlayerInMatch[] | null | undefined>(
-    null
-  );
-
-  const [mapData, setMapData] = useState<Tile[][] | null | undefined>(null);
-
+  
+  // ---- DATA SETUP ----
+  // We wait for usePlayers() to return the currentPlayer
+  // Once we have currentPlayer, the useEffect below will run 
+  // and fill in the necessary data for the match.
   const { query } = useRouter();
-
+  const { currentPlayer } = usePlayers();
   const matchId = query.matchId as string;
-
-  const { data, refetch } = trpc.match.full.useQuery(
-    { matchId, playerId: currentPlayer?.id ?? "" },
+  const currentPlayerId = currentPlayer?.id;
+  const { refetch } = trpc.match.full.useQuery(
+    { matchId, playerId: currentPlayerId ?? "" },
     {
       enabled: false // no autoload
     }
   );
 
-  // put into a variable for proper type-gating
-  const currentPlayerId = currentPlayer?.id;
-  const [isSubscribed, setIsSubscribed] = useState(false)
-
+  // depends on trpc.match.full.useQuery
+  const [players, setPlayers] = useState<PlayerInMatch[] | null | undefined>(null);
+  const [mapData, setMapData] = useState<Tile[][] | null | undefined>(null);
   const [match, setMatch] = useState<MatchWrapper | null>(null);
+
+  const [isSubscribed, setIsSubscribed] = useState(false)
 
   useEffect(() => {
     if (currentPlayerId === undefined) {
       return;
     }
 
+    // enable receiving events
     setIsSubscribed((prev) => !prev)
+
     void refetch().then((result) => {
+
       if (!result.isSuccess) {
         throw new Error("Loading of match failed: " + result.failureReason?.message);
+      }
+
+      if (result.data.status !== "playing") {
+        throw new Error(`This match hasn't started yet. make sure to ready up!`);
       }
 
       const rawMatch = result.data;
@@ -86,36 +90,36 @@ const Match = ({ spriteData }: Props) => {
           rawMatch.turn
         )
       );
+      setPlayers(result.data.players);
+      setMapData(result.data.map.tiles);
     });
-
 
   }, [currentPlayerId, refetch]);
 
+  // For listening to events
+  // Encompasses game events and chat messages
+  trpc.action.onEvent.useSubscription( { 
+    matchId: matchId, 
+    playerId: currentPlayerId!, 
+  },{
+    onData(data) {
+      console.log("eventStuff-----");
+      console.log(data);
+    },
+    enabled: isSubscribed
+  });
+
+
+  // To be removed, kept here in case we need it again
   // const { data } = trpc.match.full.useQuery({ matchId, playerId: currentPlayer?.id ?? "" });
 
-  if (data) {
-    if (data.status !== "playing") {
-      throw new Error(`This match hasn't started yet. make sure to ready up!`);
-    }
-
-    if (!players) {
-      setPlayers(data.players);
-    }
-
-    if (!mapData) {
-      setMapData(data.map.tiles);
-    }
-  }
-
+  // ---- PIXI STUFF ----
   const actionMutation = trpc.action.send.useMutation();
 
-  const [scale, setScale] = useState<number>(2);
-
   //Global variable that determines the size of tiles
+  const [scale, setScale] = useState<number>(2);
   const tileSize = 16;
-
   const pixiCanvasRef = useRef<HTMLCanvasElement>(null);
-
   useEffect(() => {
     if (!mapData || !spriteSheets|| !currentPlayer || !players ||!match) {
       return;
@@ -145,6 +149,7 @@ const Match = ({ spriteData }: Props) => {
       animation: "gameCursor 1200ms infinite"
     } as CSSStyleDeclaration;
 
+    // for type safety
     const actionMutateAsync = (input: {
       unitType: UnitType,
       position: [number, number],
@@ -175,74 +180,65 @@ const Match = ({ spriteData }: Props) => {
     };
   }, [mapData, spriteSheets, scale, actionMutation, currentPlayer, players, match]);
 
-  trpc.action.onEvent.useSubscription( { 
-    matchId: matchId, 
-    playerId: currentPlayerId!, 
-  },{
-    onData(data) {
-      console.log("eventStuff-----");
-      console.log(data);
-    },
-    enabled: isSubscribed
-  });
-
-
   if (!mapData || !players) {
     return <></>;
   } else {
-    return (<div className="@grid @grid-cols-12 @text-center @my-20 @mx-2">
-      <div className="@col-span-12">
-        <Calculator/>
-      </div>
-        <h3 className="@col-span-12">Scale</h3>
-        <div className="@col-span-12 @p-2">
-          <button className={"btn @inline"} onClick={() => {
-            setScale(scale + 0.2);
-          }}>+
-          </button>
-          <h2 className="@inline @align-middle">
-            {" "}
-            {Math.round(scale * 10) / 10}{" "}
-          </h2>
-          <button className={"btn"} onClick={() => {
-            setScale(scale - 0.2);
-          }}>-
-          </button>
+    return (
+      <>
+        <div className="@grid @grid-cols-12 @text-center @my-20 @mx-2">
+          <div className="@col-span-12">
+            <Calculator/>
+          </div>
+          <h3 className="@col-span-12">Scale</h3>
+          <div className="@col-span-12 @p-2">
+            <button className={"btn @inline"} onClick={() => {
+              setScale(scale + 0.2);
+            }}>+
+            </button>
+            <h2 className="@inline @align-middle">
+              {" "}
+              {Math.round(scale * 10) / 10}{" "}
+            </h2>
+            <button className={"btn"} onClick={() => {
+              setScale(scale - 0.2);
+            }}>-
+            </button>
+          </div>
+          <div className="@mx-4 @w-48 @col-span-2 [image-rendering:pixelated]">
+            <MatchPlayer
+              name={players[0].name}
+              co={players[0].coId}
+              country={players[0].army}
+              playerReady={true}
+            />
+            Funds: {players[0].funds}
+            <br />
+            HasTurn: {String(players[0].hasCurrentTurn)}
+          </div>
+          <div className="@col-span-8">
+            <canvas
+              className="@inline"
+              style={{
+                imageRendering: "pixelated"
+              }}
+              ref={pixiCanvasRef}
+            ></canvas>
+          </div>
+          <div className="@mx-4 @w-48 @col-span-2 [image-rendering:pixelated]">
+            <MatchPlayer
+              name={players[1].name}
+              co={players[1].coId}
+              country={players[1].army}
+              playerReady={true}
+              flipCO={true}
+            />
+            Funds: {players[1].funds}
+            <br />
+            HasTurn: {String(players[1].hasCurrentTurn)}
+          </div>
         </div>
-        <div className="@mx-4 @w-48 @col-span-2 [image-rendering:pixelated]">
-          <MatchPlayer
-            name={players[0].name}
-            co={players[0].coId}
-            country={players[0].army}
-            playerReady={true}
-          />
-          Funds: {players[0].funds}
-          <br />
-          HasTurn: {String(players[0].hasCurrentTurn)}
-
-        </div>
-        <div className="@col-span-8">
-          <canvas
-            className="@inline"
-            style={{
-              imageRendering: "pixelated"
-            }}
-            ref={pixiCanvasRef}
-          ></canvas>
-        </div>
-        <div className="@mx-4 @w-48 @col-span-2 [image-rendering:pixelated]">
-          <MatchPlayer
-            name={players[1].name}
-            co={players[1].coId}
-            country={players[1].army}
-            playerReady={true}
-            flipCO={true}
-          />
-          Funds: {players[1].funds}
-          <br />
-          HasTurn: {String(players[1].hasCurrentTurn)}
-        </div>
-      </div>);
+      </>
+      );
   }
 };
 export default Match;
