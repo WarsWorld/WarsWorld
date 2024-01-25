@@ -48,7 +48,7 @@ export function Navbar() {
   return (
     <header className="@w-screen @fixed @top-0 @z-40 @shadow-lg @shadow-bg-primary">
       <nav className="@flex @h-full @justify-between @items-center @bg-gradient-to-r @from-bg-primary @via-bg-secondary @to-bg-primary @mx-auto @px-4 smallscreen:@px-8 laptop:@px-6">
-        <div className="@h-full @w-[25vw] smallscreen:@w-[10vw] @flex @flex-col @justify-center @align-middle">
+        <div className="@h-full @w-[25%] smallscreen:@w-[10%] @flex @flex-col @justify-center @align-middle">
           <Link className="@flex @align-middle @justify-start" href="/">
             <Image
               className="@w-16 smallscreen:@w-20"

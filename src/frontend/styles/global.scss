@@ -131,6 +131,17 @@
     -ms-overflow-style: none; /* IE and Edge */
     scrollbar-width: none; /* Firefox */
   }
+
+  $CornerSize: 1rem;
+  $CornerRadius: $CornerSize / 2;
+
+  .octagon-box {
+    clip-path: polygon(0 $CornerSize,$CornerRadius $CornerRadius,$CornerSize 0,calc(100% - $CornerSize) 0,calc(100% - $CornerRadius) $CornerRadius,100% $CornerSize,100% calc(100% - $CornerSize),calc(100% - $CornerRadius) calc(100% - $CornerRadius),calc(100% - $CornerSize) 100%,$CornerSize 100%,$CornerRadius calc(100% - $CornerRadius),0 calc(100% - $CornerSize));
+  }
+
+  .filter-shadow-wrap {
+    filter: drop-shadow(10px 10px rgba(0, 0, 0, 0.8));
+  }
 }
 
 @keyframes gameCursor {

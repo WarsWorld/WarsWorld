@@ -3,6 +3,7 @@ import { NavItem } from "./NavItem";
 import { NavMenuMatches } from "./NavMenuMatches";
 import NavButton from "./NavButton";
 import NavLoginLogout from "./NavLoginLogout";
+import PlayButton from "../layout/PlayButton";
 
 type Props = {
   showMatchLinks: boolean;
@@ -68,7 +69,7 @@ export function NavGroup({
           <NavItem key={item.text} text={item.text} location={item.location} />
         ))}
       </div>
-      <div className="@flex @h-12 @w-[15vw] @justify-end @items-center @relative">
+      <div className="@flex @h-12 @w-[15%] @justify-end @items-center @relative">
         <NavLoginLogout isOpen={isOpen} setIsOpen={setIsOpen} />
       </div>
     </>

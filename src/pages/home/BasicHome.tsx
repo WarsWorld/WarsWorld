@@ -34,7 +34,7 @@ export default function BasicHome() {
       <Banner
         title={
           <div className="@flex @flex-col @h-full @items-center @justify-center">
-            <div className="@flex @items-center @mb-12 smallscreen:@mb-20 @space-x-6 smallscreen:@space-x-12 @h-auto">
+            <div className="@flex @items-center @mb-8 smallscreen:@mb-12 laptop:@mb-24 @space-x-6 smallscreen:@space-x-12 @h-auto">
               <Image
                 className="@w-16 cellphone:@w-24 smallscreen:@w-36 monitor:@w-48"
                 src="/img/layout/logo.webp"
@@ -46,9 +46,8 @@ export default function BasicHome() {
               <h1 className="@text-[1.2rem] cellphone:@text-[2rem] smallscreen:@text-7xl laptop:@text-8xl monitor:@text-9xl @font-russoOne">WARSWORLD</h1>
             </div>
             <PlayButton onClick={() => {
-              void router.push("/your-matches");
-            }}>
-              
+                void router.push("/your-matches");
+              }}>
               PLAY NOW
             </PlayButton>
           </div>
