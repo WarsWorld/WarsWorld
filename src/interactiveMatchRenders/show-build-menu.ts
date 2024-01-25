@@ -10,6 +10,7 @@ import { unitPropertiesMap,
 import type { PlayerInMatch } from "../shared/types/server-match-state";
 import { MatchWrapper } from "../shared/wrappers/match";
 import {Army} from "../shared/schemas/army";
+import { UnitType } from "shared/schemas/unit";
 
 export type OurSpriteSheetData = ISpritesheetData & {
   animations: Record<string, string[]>; countries: Record<string, string[]>;
@@ -24,7 +25,12 @@ type Props = {
   y: number;
   mapHeight: number;
   mapWidth: number;
-  buildMutation;
+  buildMutation: (input: {
+    unitType: UnitType;
+    position: [number, number];
+    playerId: string;
+    matchId: string;
+}) => void;
 }
 
 export default async function showBuildMenu(
@@ -142,9 +148,8 @@ export default async function showBuildMenu(
       unitBG.tint = "#d0d0d0";
       //TODO: Actually use playerId and matchId
       menuElement.on("pointerdown", () => {
-        buildMutation.mutateAsync({
-          type: "build",
-          unitType: unitNames[index],
+        buildMutation({
+          unitType: unitNames[index] as UnitType,
           position: [positionX, positionY],
           playerId: player.id,
           matchId: match.id

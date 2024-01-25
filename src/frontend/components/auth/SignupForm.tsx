@@ -4,6 +4,9 @@ import { useState } from "react";
 import type { Dispatch, FormEvent, SetStateAction } from "react";
 import { trpc } from "frontend/utils/trpc-client";
 import ErrorSuccessBlock from "../layout/forms/ErrorSuccessBlock";
+import { passwordSchema, signUpSchema } from "shared/schemas/auth";
+import { ZodError, z } from "zod";
+import { TRPCClientError } from "@trpc/client";
 
 type Props = {
   setIsSignupForm: (value: boolean, callbackUrl: string | null) => Promise<void>;
@@ -22,22 +25,11 @@ export default function SignupForm({
     password: "",
     confirmPassword: "",
   });
-
-  const areInputsFilled =
-    signupData.password.trim() !== "" &&
-    signupData.confirmPassword.trim() !== "" &&
-    signupData.email.trim() !== "" &&
-    signupData.user.trim() !== "";
-
-  const showPasswordsDoNotMatch =
-    signupData.password !== signupData.confirmPassword &&
-    signupData.password.trim() !== "" &&
-    signupData.confirmPassword.trim() !== "";
+  const [formErrors, setFormErrors] = useState<ZodError>();
+  const [error, setError] = useState("");
 
   const {
     mutateAsync: registerAsync,
-    isError,
-    error,
   } = trpc.user.registerUser.useMutation();
 
   const onChangeGenericHandler = (identifier: string, value: string) => {
@@ -51,40 +43,58 @@ export default function SignupForm({
     event.preventDefault();
 
     try {
-      await registerAsync({
+      const parsedCredentials = signUpSchema.extend({
+        confirmPassword: passwordSchema,
+      }).parse({
         email: signupData.email,
         name: signupData.user,
         password: signupData.password,
+        confirmPassword: signupData.confirmPassword,
       });
-    } catch (e) {
-      return e;
+
+      setFormErrors(undefined);
+
+      if(signupData.password !== signupData.confirmPassword) {
+        throw new Error("Passwords do not match");
+      }
+        
+      await registerAsync(parsedCredentials);
+
+    } catch (err) {
+      if(err instanceof ZodError) {
+        if(signupData.password !== signupData.confirmPassword) {
+          setError("Passwords do not match");
+        } else {
+          setError("");
+        }
+        
+        setFormErrors(err);
+      } else if(err instanceof TRPCClientError || err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError("There was an error posting your comment. Please try again.");
+      }
+
+      return;
     }
 
+    setError("");
     void setIsSignupForm(false, callbackUrl);
     setDidSignUp(true);
   };
 
-  const defineErrorMessage = () => {
-    if (error?.data?.zodError) {
-      return "Data validation error";
-    }
-
-    if (error) {
-      return error.message;
-    }
-    
-    if (showPasswordsDoNotMatch) {
-      return "Passwords do not match";
-    }
-  };
+  const nameError = formErrors?.issues?.find(error => error.path[0] == "name");
+  const emailError = formErrors?.issues?.find(error => error.path[0] == "email");
+  const passwordError = formErrors?.issues?.find(error => error.path[0] == "password");
+  const confirmPasswordError = formErrors?.issues?.find(error => error.path[0] == "confirmPassword");
 
   return (
     <>
-      {(showPasswordsDoNotMatch || isError) && (
+      {error && (
         <ErrorSuccessBlock
           isError
-          title={showPasswordsDoNotMatch ? "Warning" : "Couldn't sign up"}
-          message={defineErrorMessage()}
+          title="Warning"
+          message={error}
         />
       )}
       <form className="@flex @flex-col @gap-6">
@@ -94,6 +104,8 @@ export default function SignupForm({
           id="email"
           type="email"
           value={signupData.email}
+          isError={emailError != undefined}
+          errorMessage={emailError?.message}
           onChange={(event) =>
             onChangeGenericHandler(
               "email",
@@ -107,6 +119,8 @@ export default function SignupForm({
           id="username"
           type="text"
           value={signupData.user}
+          isError={nameError != undefined}
+          errorMessage={nameError?.message}
           onChange={(event) =>
             onChangeGenericHandler(
               "user",
@@ -120,6 +134,8 @@ export default function SignupForm({
           id="password"
           type="password"
           value={signupData.password}
+          isError={passwordError != undefined}
+          errorMessage={passwordError?.message}
           onChange={(event) =>
             onChangeGenericHandler(
               "password",
@@ -133,6 +149,8 @@ export default function SignupForm({
           id="confirm_password"
           type="password"
           value={signupData.confirmPassword}
+          isError={confirmPasswordError != undefined}
+          errorMessage={confirmPasswordError?.message}
           onChange={(event) =>
             onChangeGenericHandler(
               "confirmPassword",
@@ -143,10 +161,6 @@ export default function SignupForm({
         <div className="@flex @flex-col @items-center @justify-center @py-4 @px-10">
           <div className="@w-[80vw] smallscreen:@w-96 @h-16 @text-3xl @my-2">
             <SquareButton
-              disabled={
-                signupData.password !== signupData.confirmPassword ||
-                !areInputsFilled
-              }
               onClick={(event: FormEvent) => {
                 void onSubmitSignupForm(event);
               }}

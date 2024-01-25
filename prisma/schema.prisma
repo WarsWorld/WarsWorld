@@ -22,6 +22,7 @@ model Article {
   category    ArticleCategory
   thumbnail   String?
   body        String
+  Comments    ArticleComment[]
 
   // To return `Date`s intact through the API we need to add data transformers
   // https://trpc.io/docs/data-transformers
@@ -36,6 +37,16 @@ model ArticleAuthors {
   authorId  String
 
   @@id([articleId, authorId])
+}
+
+model ArticleComment {
+  id        String   @id @default(cuid())
+  articleId Int
+  playerId  String
+  createdAt DateTime @default(now())
+  body      String
+  article   Article  @relation(fields: [articleId], references: [id])
+  player    Player   @relation(fields: [playerId], references: [id])
 }
 
 enum ArticleCategory {
@@ -148,6 +159,7 @@ model Player {
 
   Notes Notes[]
 
+  Comments   ArticleComment[]
   ownedClans Clan[] @relation(name: "owner")
   clans      Clan[] @relation(name: "member")
 }

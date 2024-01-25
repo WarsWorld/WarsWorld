@@ -54,6 +54,7 @@ const map: WWMap = {
 
 const players: PlayerInMatch[] = [
   {
+    name: "Grimm Guy",
     army: "orange-star",
     coId: {
       name: "andy",
@@ -68,6 +69,7 @@ const players: PlayerInMatch[] = [
     hasCurrentTurn: true
   },
   {
+    name: "Incuggarch",
     army: "blue-moon",
     coId: {
       name: "andy",
@@ -87,13 +89,17 @@ const match = new MatchWrapper(
   "standard",
   [],
   {
-    bannedUnitTypes: [],
-    captureLimit: 0,
-    dayLimit: 0,
+    unitCapPerPlayer: 0,
     fogOfWar: false,
     fundsPerProperty: 1000,
-    unitCapPerPlayer: 0,
-    weatherSetting: "clear"
+    labUnitTypes: ["infantry"],
+    bannedUnitTypes: ["apc"],
+    captureLimit: 0,
+    dayLimit: 0,
+    weatherSetting: "clear",
+    teamMapping: [0,1] 
+    // playerslot 0 (1st index of teamMapping) is Grimm Guy and is a part of team 0 
+    // playerslot 1 (2nd index of teamMapping) is Incuggarch and is a part of team 1 
   },
   "playing",
   map,
@@ -102,8 +108,8 @@ const match = new MatchWrapper(
   0
 );
 
-const p1 = match.players.getBySlotOrThrow(0);
-const p2 = match.players.getBySlotOrThrow(1);
+const p1 = match.getPlayerBySlot(0)!;
+const p2 = match.getPlayerBySlot(1)!;
 
 const u1 = p1.addUnwrappedUnit({
   type: "infantry",
@@ -132,8 +138,15 @@ const { attackerHP, defenderHP } = attackActionToEvent(
     defenderPosition: u2.data.position
   },
   u1.data.position,
-  0,
-  0
+  true,
+  {
+    goodLuck: 50,
+    badLuck: 50
+  },
+  {
+    goodLuck: 50,
+    badLuck: 50
+  }
 );
 
 console.log(

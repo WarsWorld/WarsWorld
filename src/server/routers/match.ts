@@ -71,7 +71,7 @@ export const matchRouter = router({
       // Shouldn't the condition be '<=' not '<'?
       // If numberOfPlayers is 2, then valid playerSlots are 0 and 1. 
       // input.playerSlot of 2 would bypass this if statement.
-      if (input.playerSlot !== null && match.map.data.numberOfPlayers < input.playerSlot) {
+      if (input.playerSlot !== null && match.map.data.numberOfPlayers <= input.playerSlot) {
         throw new DispatchableError("Invalid player slot given");
       }
 
@@ -239,10 +239,9 @@ export const matchRouter = router({
               ...matchStartEvent,
               //TODO: Fix this type-error with matchId
               matchId: match.id,
-              index: eventIndex
+              // index: eventIndex
             });
           }
-
         }
         //Both players are NOT ready, therefore match doesnt start
         else {

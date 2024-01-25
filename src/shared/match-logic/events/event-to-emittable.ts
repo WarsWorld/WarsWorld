@@ -229,7 +229,16 @@ export const mainEventToEmittables = (
 
       break;
     }
-    case "build":
+    case "build": {
+      // NOTE: THIS IS JUST FOR TESTING
+      // I suspect that Fog Of War will stop certain players from receiving these events and thus 
+      // this switch case will have a different implementation.
+      for (let i = 0; i < match.teams.length + 1; ++i) {
+        emittableEvents[i] = event;
+      }
+
+      break;
+    }
     case "delete": {
       for (let i = 0; i < match.teams.length + 1; ++i) {
         // slight inaccuracy: we send the delete position that causes the player to lose

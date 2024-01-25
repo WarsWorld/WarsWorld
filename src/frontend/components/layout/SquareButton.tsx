@@ -2,9 +2,10 @@ type Props = {
   disabled?: boolean;
   onClick?: React.MouseEventHandler;
   children: React.ReactNode;
+  type?: "button" | "submit" | "reset" | undefined;
 }
 
-export default function SquareButton({ disabled, onClick, children }: Props) {
+export default function SquareButton({ disabled, onClick, children, type }: Props) {
   return (
     <button
       className={`@rounded @w-full @h-full @py-1 @px-3 cellphone:@px-4 @text-inherit @font-semibold @shadow-black/50 @shadow-md ${
@@ -12,6 +13,7 @@ export default function SquareButton({ disabled, onClick, children }: Props) {
       } active:@bg-primary-dark`}
       onClick={onClick}
       disabled={disabled}
+      type={type}
     >
       {children}
     </button>

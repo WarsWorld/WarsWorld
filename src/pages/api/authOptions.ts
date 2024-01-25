@@ -69,7 +69,7 @@ const providers: Provider[] = [
         where: { name: loginParse.data.name },
       });
 
-      if (!dbUser?.password) {
+      if (dbUser?.password == undefined) {
         return null;
       }
 
@@ -157,7 +157,7 @@ export const authOptions: NextAuthOptions = {
       return baseUrl; // redirect callback
     },
     jwt({ token, user }) {
-      if (user) {
+      if (user != undefined) {
         token.id = user.id;
       }
       

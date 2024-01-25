@@ -33,7 +33,7 @@ export const ProvidePlayers = ({ children }: { children: ReactNode }) => {
       }
     }
 
-  }, [data, currentPlayerId, setCurrentPlayerId]);
+  }, [data, currentPlayerId, setCurrentPlayerId, user]);
 
   return (
     <playersContext.Provider

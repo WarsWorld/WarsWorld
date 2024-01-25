@@ -3,6 +3,8 @@ import Banner from "frontend/components/layout/Banner";
 import SmallContainer from "frontend/components/layout/SmallContainer";
 import ThreeLinesText from "frontend/components/layout/ThreeLinesText";
 import { useRouter } from "next/router";
+import PlayButton from "frontend/components/layout/PlayButton";
+import Image from "next/image";
 
 const homePageCards = [
   {
@@ -31,25 +33,27 @@ export default function BasicHome() {
     <div className="@w-full">
       <Banner
         title={
-          <>
-            <h1 className="@text-[1.25rem] tablet:@text-[3rem] smallscreen:@text-[3.5rem] monitor:@text-[5rem] large_monitor:@text-[7rem]">
-              Relive the <strong>Nostalgia</strong>
-              <br />
-              Rewrite the Tactics
-            </h1>
-            <div className="@flex @justify-center">
-              <div className="@mt-4 tablet:@mt-12 @h-12 tablet:@h-20 monitor:@h-24 large_monitor:@h-28 @text-xl tablet:@text-4xl monitor:@text-5xl large_monitor:@text-6xl @w-[50vw] tablet:@w-[50%] @shadow-lg @shadow-black">
-                <SquareButton onClick={() => {
-                  void router.push("/your-matches");
-                }}>
-                  Play Now
-                </SquareButton>
-              </div>
+          <div className="@flex @flex-col @h-full @items-center @justify-center">
+            <div className="@flex @items-center @mb-12 smallscreen:@mb-20 @space-x-6 smallscreen:@space-x-12 @h-auto">
+              <Image
+                className="@w-16 cellphone:@w-24 smallscreen:@w-36 monitor:@w-48"
+                src="/img/layout/logo.webp"
+                alt="AW Logo"
+                width={0}
+                height={0}
+                sizes="100vw"
+              /> 
+              <h1 className="@text-[1.2rem] cellphone:@text-[2rem] smallscreen:@text-7xl laptop:@text-8xl monitor:@text-9xl @font-russoOne">WARSWORLD</h1>
             </div>
-          </>
+            <PlayButton onClick={() => {
+              void router.push("/your-matches");
+            }}>
+              
+              PLAY NOW
+            </PlayButton>
+          </div>
         }
-        backgroundURL="/img/layout/homeBanner/gameCollage.jpg"
-        isHomeBanner
+        backgroundURL="/img/layout/homeBanner/Banner.jpg"
       />
       <div className="@my-1 tablet:@my-4">
         <ThreeLinesText

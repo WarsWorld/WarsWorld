@@ -26,9 +26,7 @@ export default function FormInput({
       <div className={className}>
         <label
           htmlFor={id ?? ""}
-          className={`@text-xl smallscreen:@text-2xl ${
-            isError == true ? "@text-orange-star" : "@text-white"
-          }`}
+          className="@text-xl smallscreen:@text-2xl @text-white"
         >
           {text}
         </label>
@@ -36,14 +34,15 @@ export default function FormInput({
           id={id ?? ""}
           name={id ?? ""}
           type={type ?? ""}
-          content="Hello"
           onChange={onChange}
           value={value}
-          className={`@text-black @border-[2.5px] @text-xl smallscreen:@text-2xl @w-full @p-3 @mt-2 @rounded-xl ${
+          className={`@text-white @border-[2.5px] @text-xl smallscreen:@text-2xl @w-full @p-3 @mt-2 @rounded-xl @bg-black/50 ${
             isError == true ? "@border-orange-star" : "@border-primary"
           }`}
         />
-        {isError == true && errorMessage != "" && <p className="@text-orange-star @pt-2">{errorMessage}</p>}
+        {isError == true && errorMessage != "" && 
+          <p className="@text-white @bg-orange-star/80 @my-2 @px-2 @rounded-lg">{errorMessage}</p>
+        }
       </div>
     </>
   );

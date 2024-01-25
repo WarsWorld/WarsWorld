@@ -2,12 +2,12 @@ import { AnimatedSprite, Container, Sprite, Texture } from "pixi.js";
 import showBuildMenu from "./show-build-menu";
 import { spriteConstructor } from "../gameFunction/spriteConstructor";
 import type { Tile } from "../shared/schemas/tile";
-import type { UseTRPCMutationResult } from "@trpc/react-query/shared";
 import type { PlayerInMatch } from "../shared/types/server-match-state";
 import type { MatchWrapper } from "../shared/wrappers/match";
 import type { LoadedSpriteSheet } from "../frontend/pixi/load-spritesheet";
 import type {Player} from "@prisma/client";
 import type { SheetNames } from "gameFunction/get-sprite-sheets";
+import { UnitType } from "shared/schemas/unit";
 
 type Props = {
   spriteSheets: LoadedSpriteSheet,
@@ -15,7 +15,12 @@ type Props = {
   tileSize: number,
   mapWidth: number,
   mapHeight: number,
-  mutation: UseTRPCMutationResult<never, never, never, never>,
+  mutation: (input: {
+    unitType: UnitType;
+    position: [number, number];
+    playerId: string;
+    matchId: string;
+}) => void,
   currentPlayer: Player,
   players: PlayerInMatch[]
   match: MatchWrapper
