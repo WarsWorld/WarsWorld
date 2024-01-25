@@ -5,9 +5,9 @@ export default function Calculator() {
 
     return (<>
             <h1>Calculator</h1>
-        <div className="@grid @grid-cols-12">
+        <div className="@grid @grid-cols-12 @gap-2 @bg-bg-primary">
 
-            <div className="@col-span-12 @flex @bg-bg-primary @align-middle @justify-between @p-4">
+            <div className="@col-span-12 @flex @bg-bg-tertiary @align-middle @justify-between @p-2">
                 <p>Attacker</p>
                 <button className="btn ">Swap</button>
                 <p>Defender</p>
@@ -15,7 +15,7 @@ export default function Calculator() {
 
 
             <COCalculator/>
-
+            <COCalculator/>
             <div className="@col-span-6 @flex-row @bg-bg-secondary">
                 <div className="@flex">
                     UNIT ATTACKER #1
@@ -46,11 +46,11 @@ export default function Calculator() {
             </div>
 
 
-            <div className="@col-span-6 @flex @bg-bg-primary">
+            <div className="@col-span-6 @flex @bg-bg-secondary">
                 TOTAL Gold/Bar made #1
             </div>
 
-            <div className="@col-span-6 @flex @bg-bg-primary">
+            <div className="@col-span-6 @flex @bg-bg-secondary">
                 TOTAL Gold/Bar made #2
             </div>
 
