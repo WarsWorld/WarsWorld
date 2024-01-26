@@ -33,23 +33,25 @@ export default function BasicHome() {
     <div className="@w-full">
       <Banner
         title={
-          <div className="@flex @flex-col @h-full @items-center @justify-center">
-            <div className="@flex @items-center @mb-8 smallscreen:@mb-12 laptop:@mb-24 @space-x-6 smallscreen:@space-x-12 @h-auto">
-              <Image
-                className="@w-16 cellphone:@w-24 smallscreen:@w-36 monitor:@w-48"
-                src="/img/layout/logo.webp"
-                alt="AW Logo"
-                width={0}
-                height={0}
-                sizes="100vw"
-              /> 
-              <h1 className="@text-[1.2rem] cellphone:@text-[2rem] smallscreen:@text-7xl laptop:@text-8xl monitor:@text-9xl @font-russoOne">WARSWORLD</h1>
+          <div className="@flex @flex-col @w-full @h-full @items-center @justify-center smallscreen:@items-start smallscreen:@mx-[5vw]">
+            <div className="@flex @flex-col @items-center">
+              <div className="@flex @items-center @mb-8 smallscreen:@mb-12 laptop:@mb-24 @space-x-6 smallscreen:@space-x-12 @h-auto">
+                <Image
+                  className="@w-16 cellphone:@w-24 smallscreen:@w-36 monitor:@w-48"
+                  src="/img/layout/logo.webp"
+                  alt="AW Logo"
+                  width={0}
+                  height={0}
+                  sizes="100vw"
+                /> 
+                <h1 className="@text-[1.2rem] cellphone:@text-[2rem] smallscreen:@text-7xl laptop:@text-8xl monitor:@text-9xl @font-russoOne">WARSWORLD</h1>
+              </div>
+              <PlayButton onClick={() => {
+                  void router.push("/your-matches");
+                }}>
+                PLAY NOW
+              </PlayButton>
             </div>
-            <PlayButton onClick={() => {
-                void router.push("/your-matches");
-              }}>
-              PLAY NOW
-            </PlayButton>
           </div>
         }
         backgroundURL="/img/layout/homeBanner/Banner.jpg"

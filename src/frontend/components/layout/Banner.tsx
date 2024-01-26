@@ -15,8 +15,8 @@ export default function Banner2(props: {
         sizes="100vw"
       />
       <div className="@absolute @flex @items-start @gap-10 @h-full @w-full @backdrop-brightness-[0.15] @z-10"></div>
-      <div className="@flex @items-start @gap-10 @h-full tablet:@left-[7.5vw] @absolute @z-20">
-        <div className="@h-full">{props.title}</div>
+      <div className="@flex @items-start @gap-10 @h-full @w-full @absolute @z-20">
+        <div className="@h-full @w-full">{props.title}</div>
       </div>
     </div>
   );

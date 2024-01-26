@@ -39,7 +39,7 @@ export default function Article({ articleData }: Props) {
 
         <Banner
           title={
-            <div className="@my-16">
+            <div className="@mx-[5vw] @my-[7.5vh]">
               <h2 className="@bg-bg-secondary @inline-block @py-2 @px-4 smallscreen:@py-4 smallscreen:@px-6 @text-xl smallscreen:@text-5xl @text-white @font-medium">
                 {articleData.type.toUpperCase()}
               </h2>
