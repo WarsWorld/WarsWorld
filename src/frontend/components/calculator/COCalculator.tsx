@@ -1,21 +1,31 @@
-import {CO} from "../../../shared/schemas/co";
+import { CO } from "../../../shared/schemas/co";
+import IconText from "./IconText";
+import COSelect from "./COSelect";
 
 type Props = {
-    player: CO
+  co: CO
+  commtower: number
+  gold: number
+  capture: number
+  coPower: boolean
 }
 
 
-export default function COCalculator({player}:Props) {
-    return (<>
-            <div className="@col-span-6 @flex @bg-bg-tertiary @justify-between">
-                <img src="/img/CO/pixelated/sami-small.png" alt=""/>
-                <img src="/img/CO/redstar.gif" alt=""/>
-                <img src="/img/CO/bluestar.gif" alt=""/>
-                <p>ComTowers</p>
-                <p>Gold</p>
+export default function COCalculator({ co,coPower,capture,commtower,gold }: Props) {
+  return (<>
+    <div className="@col-span-6 @flex @bg-bg-tertiary @justify-between @align-middle @items-center ">
+      <div className="@flex">
+        <COSelect CO={co}/>
+        <IconText icon={"redstar"} />
+        <IconText icon={"bluestar"} />
+      </div>
+
+      <IconText icon={"commtower"} text={commtower}/>
+      <IconText icon={"coin"} text={gold}/>
+      <IconText icon={"capture"} text={capture}/>
 
 
 
-            </div>
-        </>)
+    </div>
+  </>);
 }

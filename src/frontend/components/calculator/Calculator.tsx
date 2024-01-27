@@ -1,6 +1,13 @@
 import COCalculator from "./COCalculator";
+import { CO } from "../../../shared/schemas/co";
+import type { PlayerInMatch } from "shared/types/server-match-state";
 
-export default function Calculator() {
+
+type Props = {
+    player: PlayerInMatch
+}
+
+export default function Calculator({player}:Props) {
 
 
     return (<>
@@ -14,8 +21,8 @@ export default function Calculator() {
             </div>
 
 
-            <COCalculator/>
-            <COCalculator/>
+            <COCalculator gold={player.funds} co={player.coId.name} capture={10} commtower={1} coPower={false}/>
+            <COCalculator gold={player.funds} co={player.coId.name} capture={10} commtower={1} coPower={false}/>
             <div className="@col-span-6 @flex-row @bg-bg-secondary">
                 <div className="@flex">
                     UNIT ATTACKER #1
