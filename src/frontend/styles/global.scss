@@ -112,6 +112,16 @@
   a:hover {
     color: theme("colors.primary-light");
   }
+
+  // Replace the stupid banana autofill color to white
+  input:-webkit-autofill,
+  textarea:-webkit-autofill,
+  select:-webkit-autofill {
+    &, &:hover, &:focus, &:active{
+      color: black;
+      -webkit-box-shadow: 0 0 0px 1000px white inset !important;
+    }
+  }
 }
 
 @layer components {
@@ -143,6 +153,7 @@
     filter: drop-shadow(10px 10px rgba(0, 0, 0, 0.8));
   }
 }
+
 
 @keyframes gameCursor {
   0% {
