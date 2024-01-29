@@ -1,10 +1,4 @@
-import type {
-  LeagueType,
-  Match,
-  MatchStatus,
-  Player,
-  WWMap
-} from "@prisma/client";
+import type { LeagueType, Match, MatchStatus, Player, WWMap } from "@prisma/client";
 import { DispatchableError } from "shared/DispatchedError";
 import type { MatchRules } from "shared/schemas/match-rules";
 import type { PlayerSlot } from "shared/schemas/player-slot";
@@ -13,10 +7,7 @@ import { getDistance, isSamePosition } from "shared/schemas/position";
 import type { Tile } from "shared/schemas/tile";
 import type { WWUnit } from "shared/schemas/unit";
 import type { Weather } from "shared/schemas/weather";
-import type {
-  ChangeableTile,
-  PlayerInMatch
-} from "shared/types/server-match-state";
+import type { ChangeableTile, PlayerInMatch } from "shared/types/server-match-state";
 import { MapWrapper } from "./map";
 import type { PlayerInMatchWrapper } from "./player-in-match";
 import { TeamWrapper } from "./team";
@@ -62,18 +53,20 @@ export class MatchWrapper<
     players: PlayerInMatch[],
     units: WWUnit[],
     UnitWrapperClass: new (unit: WWUnit, match: MatchWrapper) => UnitWrapperType,
-    public turn: number
+    public turn: number,
   ) {
     this.map = new MapWrapper(map);
-    players.forEach(player => this.addUnwrappedPlayer(player));
-    this.units = units.map(unit => new UnitWrapperClass(unit, this));
+    players.forEach((player) => this.addUnwrappedPlayer(player));
+    this.units = units.map((unit) => new UnitWrapperClass(unit, this));
   }
 
   /**
    * Returns if the match is currently in fog of war
    */
   isFow(): boolean {
-    return this.rules.fogOfWar || (this.rules.gameVersion === "AWDS" && this.currentWeather === "rain");
+    return (
+      this.rules.fogOfWar || (this.rules.gameVersion === "AWDS" && this.currentWeather === "rain")
+    );
   }
 
   setWeather(weather: Weather, duration: number) {
@@ -81,9 +74,10 @@ export class MatchWrapper<
     this.playerToRemoveWeatherEffect = this.getCurrentTurnPlayer();
     this.weatherDaysLeft = duration;
 
-    if (this.rules.gameVersion === "AWDS" && !this.rules.fogOfWar) { // check for rain/clear fog of war activation
+    if (this.rules.gameVersion === "AWDS" && !this.rules.fogOfWar) {
+      // check for rain/clear fog of war activation
       for (const team of this.teams) {
-        team.vision = (weather === "rain") ? new Vision(team) : null;
+        team.vision = weather === "rain" ? new Vision(team) : null;
       }
     }
   }
@@ -95,14 +89,15 @@ export class MatchWrapper<
     this.map.throwIfOutOfBounds(position);
 
     const foundChangeableTile = this.changeableTiles.find((t) =>
-      isSamePosition(t.position, position)
+      isSamePosition(t.position, position),
     );
 
     if (foundChangeableTile !== undefined) {
       if ("hp" in foundChangeableTile && foundChangeableTile.hp < 1) {
-        return { // TODO if this is used in frontend, we need to see what type of broken pipe it is
+        return {
+          // TODO if this is used in frontend, we need to see what type of broken pipe it is
           type: "plain",
-          variant: "broken-pipe-right-left"
+          variant: "broken-pipe-right-left",
         };
       }
 
@@ -142,7 +137,7 @@ export class MatchWrapper<
     const foundTeam = this.teams.find((team) => team.index === teamIndex);
 
     if (foundTeam === undefined) {
-      const team = new TeamWrapper([player], this, teamIndex)
+      const team = new TeamWrapper([player], this, teamIndex);
       this.teams.push(team);
       return team.players[0];
     }
@@ -159,9 +154,7 @@ export class MatchWrapper<
     const unit = this.getUnit(position);
 
     if (unit === undefined) {
-      throw new DispatchableError(
-        `No unit found at ${JSON.stringify(position)}`
-      );
+      throw new DispatchableError(`No unit found at ${JSON.stringify(position)}`);
     }
 
     return unit;
@@ -175,7 +168,7 @@ export class MatchWrapper<
   damageUntil1HPInRadius({
     radius,
     visualHpAmount,
-    epicenter
+    epicenter,
   }: {
     radius: number;
     visualHpAmount: number;

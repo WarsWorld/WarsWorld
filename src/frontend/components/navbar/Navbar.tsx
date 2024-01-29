@@ -24,12 +24,13 @@ export function Navbar() {
         pathname: window.location.pathname,
         query: "authModalOpen",
       });
-    }  
-    else {
-      await router.replace(callbackUrl ?? {
-        pathname: window.location.pathname,
-        query: "",
-      });
+    } else {
+      await router.replace(
+        callbackUrl ?? {
+          pathname: window.location.pathname,
+          query: "",
+        },
+      );
     }
   };
 
@@ -75,18 +76,11 @@ export function Navbar() {
                 </div>
               </button>
               <div className="@flex @h-full @justify-center @items-center @relative">
-                <NavLoginLogout
-                  isOpen={isOpen}
-                  setIsOpen={setIsOpen}
-                  width="95vw"
-                />
+                <NavLoginLogout isOpen={isOpen} setIsOpen={setIsOpen} width="95vw" />
               </div>
             </div>
 
-            <NavGroupMobile
-              showLinks={showLinks}
-              handleBurgerMenu={handleBurgerMenu}
-            />
+            <NavGroupMobile showLinks={showLinks} handleBurgerMenu={handleBurgerMenu} />
           </>
         ) : (
           <>

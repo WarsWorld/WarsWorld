@@ -8,8 +8,8 @@ export const hachiAW2: COProperties = {
     hooks: {
       buildCost: (baseCost) => {
         return baseCost * 0.9;
-      }
-    }
+      },
+    },
   },
   powers: {
     COPower: {
@@ -19,8 +19,8 @@ export const hachiAW2: COProperties = {
       hooks: {
         buildCost: (baseCost) => {
           return baseCost * 0.5;
-        }
-      }
+        },
+      },
     },
     superCOPower: {
       name: "Merchant Union",
@@ -30,8 +30,8 @@ export const hachiAW2: COProperties = {
         //building in cities is handled somewhere else (build action / event)
         buildCost: (baseCost) => {
           return baseCost * 0.5;
-        }
-      }
-    }
-  }
+        },
+      },
+    },
+  },
 };

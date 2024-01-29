@@ -20,8 +20,8 @@ export const gritAW2: COProperties = {
         if (!attacker.isInfantryOrMech()) {
           return 80;
         }
-      }
-    }
+      },
+    },
   },
   powers: {
     COPower: {
@@ -42,8 +42,8 @@ export const gritAW2: COProperties = {
           if (!attacker.isInfantryOrMech()) {
             return 80;
           }
-        }
-      }
+        },
+      },
     },
     superCOPower: {
       name: "Super Snipe",
@@ -63,8 +63,8 @@ export const gritAW2: COProperties = {
           if (!attacker.isInfantryOrMech()) {
             return 80;
           }
-        }
-      }
-    }
-  }
+        },
+      },
+    },
+  },
 };

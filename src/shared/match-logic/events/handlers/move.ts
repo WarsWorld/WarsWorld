@@ -14,18 +14,15 @@ export const createNoMoveEvent = (): MoveEvent => ({
   type: "move",
   path: [],
   trap: false,
-  subEvent: { type: "wait" }
+  subEvent: { type: "wait" },
 });
 
-export const moveActionToEvent: MainActionToEvent<MoveAction> = (
-  match,
-  action
-) => {
+export const moveActionToEvent: MainActionToEvent<MoveAction> = (match, action) => {
   const player = match.getCurrentTurnPlayer();
   const unit = match.getUnitOrThrow(action.path[0]);
 
   if (!player.owns(unit)) {
-    throw new DispatchableError("You don't own this unit")
+    throw new DispatchableError("You don't own this unit");
   }
 
   if (!unit.data.isReady) {
@@ -54,9 +51,7 @@ export const moveActionToEvent: MainActionToEvent<MoveAction> = (
     }
 
     if (result.path.find((pos) => isSamePosition(pos, position))) {
-      throw new DispatchableError(
-        "The given path passes through the same position twice"
-      );
+      throw new DispatchableError("The given path passes through the same position twice");
     }
 
     const unitInPosition = match.getUnit(position);
@@ -77,7 +72,6 @@ export const moveActionToEvent: MainActionToEvent<MoveAction> = (
       unitInPosition !== undefined &&
       unitInPosition.data.playerSlot === unit.data.playerSlot
     ) {
-
       if (unitInPosition.data.type === unit.data.type) {
         // trying to join (same unit type)
         // join logic: if neither unit has loaded units, and the unit at join destination is not 10 hp
@@ -92,16 +86,17 @@ export const moveActionToEvent: MainActionToEvent<MoveAction> = (
         if ("loadedUnit" in unit && unit.loadedUnit !== null) {
           throw new DispatchableError("Trying to join while having a unit loaded");
         }
-
       } else {
         // trying to load (different unit type)
         if (!("loadedUnit" in unitInPosition)) {
-          throw new DispatchableError("Move action ending position is overlapping with an allied unit");
+          throw new DispatchableError(
+            "Move action ending position is overlapping with an allied unit",
+          );
         }
 
         if (
-          unitInPosition.loadedUnit !== null
-          && (!("loadedUnit2" in unitInPosition) || unitInPosition.loadedUnit2 !== null)
+          unitInPosition.loadedUnit !== null &&
+          (!("loadedUnit2" in unitInPosition) || unitInPosition.loadedUnit2 !== null)
         ) {
           throw new DispatchableError("Transport already occupied");
         }
@@ -112,9 +107,7 @@ export const moveActionToEvent: MainActionToEvent<MoveAction> = (
           case "apc":
           case "blackBoat": {
             if (unit.data.type !== "infantry" && unit.data.type !== "mech") {
-              throw new DispatchableError(
-                "Can't load non-soldier in apc / transport / black boat"
-              );
+              throw new DispatchableError("Can't load non-soldier in apc / transport / black boat");
             }
 
             break;
@@ -127,10 +120,7 @@ export const moveActionToEvent: MainActionToEvent<MoveAction> = (
             break;
           }
           case "cruiser": {
-            if (
-              unit.data.type !== "transportCopter" &&
-              unit.data.type !== "battleCopter"
-            ) {
+            if (unit.data.type !== "transportCopter" && unit.data.type !== "battleCopter") {
               throw new DispatchableError("Can't load non-copter in cruiser");
             }
 
@@ -153,10 +143,7 @@ export const moveActionToEvent: MainActionToEvent<MoveAction> = (
   return result;
 };
 
-const loadUnitInto = (
-  unitToLoad: UnitWithVisibleStats,
-  transportUnit: UnitWithVisibleStats
-) => {
+const loadUnitInto = (unitToLoad: UnitWithVisibleStats, transportUnit: UnitWithVisibleStats) => {
   switch (transportUnit.type) {
     case "transportCopter":
     case "apc": {
@@ -202,10 +189,7 @@ const loadUnitInto = (
       break;
     }
     case "cruiser": {
-      if (
-        unitToLoad.type === "transportCopter" ||
-        unitToLoad.type === "battleCopter"
-      ) {
+      if (unitToLoad.type === "transportCopter" || unitToLoad.type === "battleCopter") {
         if (transportUnit.loadedUnit === null) {
           transportUnit.loadedUnit = unitToLoad;
         } else {
@@ -238,9 +222,12 @@ export const getOneTileFuelCost = (match: MatchWrapper, unit: UnitWrapper) => {
   // in AWDS, snow causes units to consume double fuel when moving (except for olaf)
   const gameVersion = match.rules.gameVersion ?? unit.player.data.coId.version;
 
-  return (match.getCurrentWeather() === "snow" && gameVersion === "AWDS" &&
-    unit.player.data.coId.name !== "olaf") ? 2 : 1;
-}
+  return match.getCurrentWeather() === "snow" &&
+    gameVersion === "AWDS" &&
+    unit.player.data.coId.name !== "olaf"
+    ? 2
+    : 1;
+};
 
 export const applyMoveEvent = (match: MatchWrapper, event: MoveEvent) => {
   //check if unit is moving or just standing still
@@ -258,9 +245,7 @@ export const applyMoveEvent = (match: MatchWrapper, event: MoveEvent) => {
 
   unit.drainFuel((event.path.length - 1) * getOneTileFuelCost(match, unit));
 
-  const unitAtDestination = match.getUnit(
-    getFinalPositionSafe(event.path)
-  );
+  const unitAtDestination = match.getUnit(getFinalPositionSafe(event.path));
 
   if (unitAtDestination === undefined) {
     unit.data.position = getFinalPositionSafe(event.path);
@@ -270,10 +255,7 @@ export const applyMoveEvent = (match: MatchWrapper, event: MoveEvent) => {
       const unitProperties = unitPropertiesMap[unit.data.type];
 
       unitAtDestination.setFuel(
-        Math.min(
-          unit.getFuel() + unitAtDestination.getFuel(),
-          unitProperties.initialFuel
-        )
+        Math.min(unit.getFuel() + unitAtDestination.getFuel(), unitProperties.initialFuel),
       );
 
       // yes, this "generates" hp, but it's how it works in game
@@ -286,14 +268,10 @@ export const applyMoveEvent = (match: MatchWrapper, event: MoveEvent) => {
 
       unitAtDestination.setHp(Math.min(newVisualHP, 10) * 10);
 
-      const newAmmo =
-        (unit.getAmmo() ?? 0) + (unitAtDestination.getAmmo() ?? 0);
+      const newAmmo = (unit.getAmmo() ?? 0) + (unitAtDestination.getAmmo() ?? 0);
 
       unitAtDestination.setAmmo(newAmmo);
-    } else if (
-      unit.data.stats !== "hidden" &&
-      unitAtDestination.data.stats !== "hidden"
-    ) {
+    } else if (unit.data.stats !== "hidden" && unitAtDestination.data.stats !== "hidden") {
       loadUnitInto(unit.data, unitAtDestination.data);
     }
 
@@ -305,7 +283,8 @@ export const applyMoveEvent = (match: MatchWrapper, event: MoveEvent) => {
  * Call this AFTER creating the sub event but BEFORE applying it
  */
 export const updateMoveVision = (match: MatchWrapper, event: MoveEvent) => {
-  if (event.path.length < 2) { // if didn't move no vision change
+  if (event.path.length < 2) {
+    // if didn't move no vision change
     return;
   }
 
@@ -323,4 +302,4 @@ export const updateMoveVision = (match: MatchWrapper, event: MoveEvent) => {
   and then move event adds back (so in the end the unit lost vision from previous
   position, but didn't gain vision from new position (- +)
    */
-}
+};

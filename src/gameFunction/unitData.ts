@@ -8,10 +8,7 @@ type UnitData = {
   facility: string;
 };
 
-export default function unitData(
-  unitIndex: number,
-  returnData: string
-): UnitData[] {
+export default function unitData(unitIndex: number, returnData: string): UnitData[] {
   console.log(unitIndex);
   console.log(returnData);
   // Here are our units, their names, menu name, cost, move, move type, etc

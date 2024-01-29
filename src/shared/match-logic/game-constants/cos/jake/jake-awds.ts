@@ -4,15 +4,14 @@ export const jakeAWDS: COProperties = {
   displayName: "Jake",
   gameVersion: "AWDS",
   dayToDay: {
-    description:
-      "Units have +10% firepower on top of plains (air units included).",
+    description: "Units have +10% firepower on top of plains (air units included).",
     hooks: {
       attack: ({ attacker }) => {
         if (attacker.getTile().type === "plain") {
           return 110;
         }
-      }
-    }
+      },
+    },
   },
   powers: {
     COPower: {
@@ -27,14 +26,11 @@ export const jakeAWDS: COProperties = {
           }
         },
         attackRange: (range, attacker) => {
-          if (
-            attacker.properties.facility === "base" &&
-            attacker.isIndirect()
-          ) {
+          if (attacker.properties.facility === "base" && attacker.isIndirect()) {
             return range + 1;
           }
-        }
-      }
+        },
+      },
     },
     superCOPower: {
       name: "Block Rock",
@@ -48,10 +44,7 @@ export const jakeAWDS: COProperties = {
           }
         },
         attackRange: (range, attacker) => {
-          if (
-            attacker.properties.facility === "base" &&
-            attacker.isIndirect()
-          ) {
+          if (attacker.properties.facility === "base" && attacker.isIndirect()) {
             return range + 1;
           }
         },
@@ -59,8 +52,8 @@ export const jakeAWDS: COProperties = {
           if (unit.properties.facility === "base" && !unit.isInfantryOrMech()) {
             return points + 2;
           }
-        }
-      }
-    }
-  }
+        },
+      },
+    },
+  },
 };

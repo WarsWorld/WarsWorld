@@ -2712,79 +2712,25 @@
   },
   "animations": {
     "airport": ["airport-0.png", "airport-1.png", "airport-2.png"],
-    "airport_rain": [
-      "airport_rain-0.png",
-      "airport_rain-1.png",
-      "airport_rain-2.png"
-    ],
-    "airport_snow": [
-      "airport_snow-0.png",
-      "airport_snow-1.png",
-      "airport_snow-2.png"
-    ],
-    "anti-air": [
-      "anti-air-0.png",
-      "anti-air-1.png",
-      "anti-air-2.png",
-      "anti-air-3.png"
-    ],
-    "anti-air_mdown": [
-      "anti-air_mdown-0.png",
-      "anti-air_mdown-1.png",
-      "anti-air_mdown-2.png"
-    ],
-    "anti-air_mside": [
-      "anti-air_mside-0.png",
-      "anti-air_mside-1.png",
-      "anti-air_mside-2.png"
-    ],
-    "anti-air_mup": [
-      "anti-air_mup-0.png",
-      "anti-air_mup-1.png",
-      "anti-air_mup-2.png"
-    ],
+    "airport_rain": ["airport_rain-0.png", "airport_rain-1.png", "airport_rain-2.png"],
+    "airport_snow": ["airport_snow-0.png", "airport_snow-1.png", "airport_snow-2.png"],
+    "anti-air": ["anti-air-0.png", "anti-air-1.png", "anti-air-2.png", "anti-air-3.png"],
+    "anti-air_mdown": ["anti-air_mdown-0.png", "anti-air_mdown-1.png", "anti-air_mdown-2.png"],
+    "anti-air_mside": ["anti-air_mside-0.png", "anti-air_mside-1.png", "anti-air_mside-2.png"],
+    "anti-air_mup": ["anti-air_mup-0.png", "anti-air_mup-1.png", "anti-air_mup-2.png"],
     "apc": ["apc-0.png", "apc-1.png", "apc-2.png", "apc-3.png"],
     "apc_mdown": ["apc_mdown-0.png", "apc_mdown-1.png", "apc_mdown-2.png"],
     "apc_mside": ["apc_mside-0.png", "apc_mside-1.png", "apc_mside-2.png"],
     "apc_mup": ["apc_mup-0.png", "apc_mup-1.png", "apc_mup-2.png"],
-    "artillery": [
-      "artillery-0.png",
-      "artillery-1.png",
-      "artillery-2.png",
-      "artillery-3.png"
-    ],
-    "artillery_mdown": [
-      "artillery_mdown-0.png",
-      "artillery_mdown-1.png",
-      "artillery_mdown-2.png"
-    ],
-    "artillery_mside": [
-      "artillery_mside-0.png",
-      "artillery_mside-1.png",
-      "artillery_mside-2.png"
-    ],
-    "artillery_mup": [
-      "artillery_mup-0.png",
-      "artillery_mup-1.png",
-      "artillery_mup-2.png"
-    ],
-    "b-copter": [
-      "b-copter-0.png",
-      "b-copter-1.png",
-      "b-copter-2.png",
-      "b-copter-3.png"
-    ],
+    "artillery": ["artillery-0.png", "artillery-1.png", "artillery-2.png", "artillery-3.png"],
+    "artillery_mdown": ["artillery_mdown-0.png", "artillery_mdown-1.png", "artillery_mdown-2.png"],
+    "artillery_mside": ["artillery_mside-0.png", "artillery_mside-1.png", "artillery_mside-2.png"],
+    "artillery_mup": ["artillery_mup-0.png", "artillery_mup-1.png", "artillery_mup-2.png"],
+    "b-copter": ["b-copter-0.png", "b-copter-1.png", "b-copter-2.png", "b-copter-3.png"],
     "b-copter_mdown": ["b-copter_mdown-0.png", "b-copter_mdown-1.png"],
     "b-copter_mside": ["b-copter_mside-0.png", "b-copter_mside-1.png"],
     "b-copter_mup": ["b-copter_mup-0.png", "b-copter_mup-1.png"],
-    "base": [
-      "base-0.png",
-      "base-1.png",
-      "base-2.png",
-      "base-3.png",
-      "base-4.png",
-      "base-5.png"
-    ],
+    "base": ["base-0.png", "base-1.png", "base-2.png", "base-3.png", "base-4.png", "base-5.png"],
     "base_rain": [
       "base_rain-0.png",
       "base_rain-1.png",
@@ -2805,47 +2751,17 @@
     "battleship_mdown": ["battleship_mdown-0.png", "battleship_mdown-1.png"],
     "battleship_mside": ["battleship_mside-0.png", "battleship_mside-1.png"],
     "battleship_mup": ["battleship_mup-0.png", "battleship_mup-1.png"],
-    "blackboat": [
-      "blackboat-0.png",
-      "blackboat-1.png",
-      "blackboat-2.png",
-      "blackboat-3.png"
-    ],
+    "blackboat": ["blackboat-0.png", "blackboat-1.png", "blackboat-2.png", "blackboat-3.png"],
     "blackboat_mdown": ["blackboat_mdown-0.png", "blackboat_mdown-1.png"],
     "blackboat_mside": ["blackboat_mside-0.png", "blackboat_mside-1.png"],
     "blackboat_mup": ["blackboat_mup-0.png", "blackboat_mup-1.png"],
-    "blackbomb": [
-      "blackbomb-0.png",
-      "blackbomb-1.png",
-      "blackbomb-2.png",
-      "blackbomb-3.png"
-    ],
-    "blackbomb_mdown": [
-      "blackbomb_mdown-0.png",
-      "blackbomb_mdown-1.png",
-      "blackbomb_mdown-2.png"
-    ],
-    "blackbomb_mside": [
-      "blackbomb_mside-0.png",
-      "blackbomb_mside-1.png",
-      "blackbomb_mside-2.png"
-    ],
-    "blackbomb_mup": [
-      "blackbomb_mup-0.png",
-      "blackbomb_mup-1.png",
-      "blackbomb_mup-2.png"
-    ],
+    "blackbomb": ["blackbomb-0.png", "blackbomb-1.png", "blackbomb-2.png", "blackbomb-3.png"],
+    "blackbomb_mdown": ["blackbomb_mdown-0.png", "blackbomb_mdown-1.png", "blackbomb_mdown-2.png"],
+    "blackbomb_mside": ["blackbomb_mside-0.png", "blackbomb_mside-1.png", "blackbomb_mside-2.png"],
+    "blackbomb_mup": ["blackbomb_mup-0.png", "blackbomb_mup-1.png", "blackbomb_mup-2.png"],
     "bomber": ["bomber-0.png", "bomber-1.png"],
-    "bomber_mdown": [
-      "bomber_mdown-0.png",
-      "bomber_mdown-1.png",
-      "bomber_mdown-2.png"
-    ],
-    "bomber_mside": [
-      "bomber_mside-0.png",
-      "bomber_mside-1.png",
-      "bomber_mside-2.png"
-    ],
+    "bomber_mdown": ["bomber_mdown-0.png", "bomber_mdown-1.png", "bomber_mdown-2.png"],
+    "bomber_mside": ["bomber_mside-0.png", "bomber_mside-1.png", "bomber_mside-2.png"],
     "bomber_mup": ["bomber_mup-0.png", "bomber_mup-1.png", "bomber_mup-2.png"],
     "carrier": ["carrier-0.png", "carrier-1.png"],
     "carrier_mdown": ["carrier_mdown-0.png", "carrier_mdown-1.png"],
@@ -2855,45 +2771,20 @@
     "city_rain": ["city_rain-0.png", "city_rain-1.png", "city_rain-2.png"],
     "city_snow": ["city_snow-0.png", "city_snow-1.png", "city_snow-2.png"],
     "commtower": ["commtower-0.png", "commtower-1.png", "commtower-2.png"],
-    "commtower_rain": [
-      "commtower_rain-0.png",
-      "commtower_rain-1.png",
-      "commtower_rain-2.png"
-    ],
-    "commtower_snow": [
-      "commtower_snow-0.png",
-      "commtower_snow-1.png",
-      "commtower_snow-2.png"
-    ],
+    "commtower_rain": ["commtower_rain-0.png", "commtower_rain-1.png", "commtower_rain-2.png"],
+    "commtower_snow": ["commtower_snow-0.png", "commtower_snow-1.png", "commtower_snow-2.png"],
     "cruiser": ["cruiser-0.png", "cruiser-1.png"],
     "cruiser_mdown": ["cruiser_mdown-0.png", "cruiser_mdown-1.png"],
     "cruiser_mside": ["cruiser_mside-0.png", "cruiser_mside-1.png"],
     "cruiser_mup": ["cruiser_mup-0.png", "cruiser_mup-1.png"],
     "fighter": ["fighter-0.png", "fighter-1.png"],
-    "fighter_mdown": [
-      "fighter_mdown-0.png",
-      "fighter_mdown-1.png",
-      "fighter_mdown-2.png"
-    ],
-    "fighter_mside": [
-      "fighter_mside-0.png",
-      "fighter_mside-1.png",
-      "fighter_mside-2.png"
-    ],
-    "fighter_mup": [
-      "fighter_mup-0.png",
-      "fighter_mup-1.png",
-      "fighter_mup-2.png"
-    ],
+    "fighter_mdown": ["fighter_mdown-0.png", "fighter_mdown-1.png", "fighter_mdown-2.png"],
+    "fighter_mside": ["fighter_mside-0.png", "fighter_mside-1.png", "fighter_mside-2.png"],
+    "fighter_mup": ["fighter_mup-0.png", "fighter_mup-1.png", "fighter_mup-2.png"],
     "hq": ["hq-0.png", "hq-1.png", "hq-2.png"],
     "hq_rain": ["hq_rain-0.png", "hq_rain-1.png", "hq_rain-2.png"],
     "hq_snow": ["hq_snow-0.png", "hq_snow-1.png", "hq_snow-2.png"],
-    "infantry": [
-      "infantry-0.png",
-      "infantry-1.png",
-      "infantry-2.png",
-      "infantry-3.png"
-    ],
+    "infantry": ["infantry-0.png", "infantry-1.png", "infantry-2.png", "infantry-3.png"],
     "infantry-bluemoon": [
       "infantry-bluemoon-0.png",
       "infantry-bluemoon-1.png",
@@ -2944,16 +2835,8 @@
     "lander_mside": ["lander_mside-0.png", "lander_mside-1.png"],
     "lander_mup": ["lander_mup-0.png", "lander_mup-1.png"],
     "mdtank": ["mdtank-0.png", "mdtank-1.png", "mdtank-2.png", "mdtank-3.png"],
-    "mdtank_mdown": [
-      "mdtank_mdown-0.png",
-      "mdtank_mdown-1.png",
-      "mdtank_mdown-2.png"
-    ],
-    "mdtank_mside": [
-      "mdtank_mside-0.png",
-      "mdtank_mside-1.png",
-      "mdtank_mside-2.png"
-    ],
+    "mdtank_mdown": ["mdtank_mdown-0.png", "mdtank_mdown-1.png", "mdtank_mdown-2.png"],
+    "mdtank_mside": ["mdtank_mside-0.png", "mdtank_mside-1.png", "mdtank_mside-2.png"],
     "mdtank_mup": ["mdtank_mup-0.png", "mdtank_mup-1.png", "mdtank_mup-2.png"],
     "mech": ["mech-0.png", "mech-1.png"],
     "mech-bluemoon": ["mech-bluemoon-0.png", "mech-bluemoon-1.png"],
@@ -2975,82 +2858,21 @@
       "mech-bluemoon-mup-2.png",
       "mech-bluemoon-mup-3.png"
     ],
-    "mech_mdown": [
-      "mech_mdown-0.png",
-      "mech_mdown-1.png",
-      "mech_mdown-2.png",
-      "mech_mdown-3.png"
-    ],
-    "mech_mside": [
-      "mech_mside-0.png",
-      "mech_mside-1.png",
-      "mech_mside-2.png",
-      "mech_mside-3.png"
-    ],
-    "mech_mup": [
-      "mech_mup-0.png",
-      "mech_mup-1.png",
-      "mech_mup-2.png",
-      "mech_mup-3.png"
-    ],
-    "megatank": [
-      "megatank-0.png",
-      "megatank-1.png",
-      "megatank-2.png",
-      "megatank-3.png"
-    ],
-    "megatank_mdown": [
-      "megatank_mdown-0.png",
-      "megatank_mdown-1.png",
-      "megatank_mdown-2.png"
-    ],
-    "megatank_mside": [
-      "megatank_mside-0.png",
-      "megatank_mside-1.png",
-      "megatank_mside-2.png"
-    ],
-    "megatank_mup": [
-      "megatank_mup-0.png",
-      "megatank_mup-1.png",
-      "megatank_mup-2.png"
-    ],
+    "mech_mdown": ["mech_mdown-0.png", "mech_mdown-1.png", "mech_mdown-2.png", "mech_mdown-3.png"],
+    "mech_mside": ["mech_mside-0.png", "mech_mside-1.png", "mech_mside-2.png", "mech_mside-3.png"],
+    "mech_mup": ["mech_mup-0.png", "mech_mup-1.png", "mech_mup-2.png", "mech_mup-3.png"],
+    "megatank": ["megatank-0.png", "megatank-1.png", "megatank-2.png", "megatank-3.png"],
+    "megatank_mdown": ["megatank_mdown-0.png", "megatank_mdown-1.png", "megatank_mdown-2.png"],
+    "megatank_mside": ["megatank_mside-0.png", "megatank_mside-1.png", "megatank_mside-2.png"],
+    "megatank_mup": ["megatank_mup-0.png", "megatank_mup-1.png", "megatank_mup-2.png"],
     "missile": ["missile-0.png", "missile-1.png"],
-    "missile_mdown": [
-      "missile_mdown-0.png",
-      "missile_mdown-1.png",
-      "missile_mdown-2.png"
-    ],
-    "missile_mside": [
-      "missile_mside-0.png",
-      "missile_mside-1.png",
-      "missile_mside-2.png"
-    ],
-    "missile_mup": [
-      "missile_mup-0.png",
-      "missile_mup-1.png",
-      "missile_mup-2.png"
-    ],
-    "neotank": [
-      "neotank-0.png",
-      "neotank-1.png",
-      "neotank-2.png",
-      "neotank-3.png"
-    ],
-    "neotank_mdown": [
-      "neotank_mdown-0.png",
-      "neotank_mdown-1.png",
-      "neotank_mdown-2.png"
-    ],
-    "neotank_mside": [
-      "neotank_mside-0.png",
-      "neotank_mside-1.png",
-      "neotank_mside-2.png"
-    ],
-    "neotank_mup": [
-      "neotank_mup-0.png",
-      "neotank_mup-1.png",
-      "neotank_mup-2.png"
-    ],
+    "missile_mdown": ["missile_mdown-0.png", "missile_mdown-1.png", "missile_mdown-2.png"],
+    "missile_mside": ["missile_mside-0.png", "missile_mside-1.png", "missile_mside-2.png"],
+    "missile_mup": ["missile_mup-0.png", "missile_mup-1.png", "missile_mup-2.png"],
+    "neotank": ["neotank-0.png", "neotank-1.png", "neotank-2.png", "neotank-3.png"],
+    "neotank_mdown": ["neotank_mdown-0.png", "neotank_mdown-1.png", "neotank_mdown-2.png"],
+    "neotank_mside": ["neotank_mside-0.png", "neotank_mside-1.png", "neotank_mside-2.png"],
+    "neotank_mup": ["neotank_mup-0.png", "neotank_mup-1.png", "neotank_mup-2.png"],
     "piperunner": ["piperunner-0.png", "piperunner-1.png"],
     "piperunner_mdown": [
       "piperunner_mdown-0.png",
@@ -3062,64 +2884,27 @@
       "piperunner_mside-1.png",
       "piperunner_mside-2.png"
     ],
-    "piperunner_mup": [
-      "piperunner_mup-0.png",
-      "piperunner_mup-1.png",
-      "piperunner_mup-2.png"
-    ],
+    "piperunner_mup": ["piperunner_mup-0.png", "piperunner_mup-1.png", "piperunner_mup-2.png"],
     "port": ["port-0.png", "port-1.png", "port-2.png"],
     "port_rain": ["port_rain-0.png", "port_rain-1.png", "port_rain-2.png"],
     "port_snow": ["port_snow-0.png", "port_snow-1.png", "port_snow-2.png"],
     "recon": ["recon-0.png", "recon-1.png", "recon-2.png", "recon-3.png"],
-    "recon_mdown": [
-      "recon_mdown-0.png",
-      "recon_mdown-1.png",
-      "recon_mdown-2.png"
-    ],
-    "recon_mside": [
-      "recon_mside-0.png",
-      "recon_mside-1.png",
-      "recon_mside-2.png"
-    ],
+    "recon_mdown": ["recon_mdown-0.png", "recon_mdown-1.png", "recon_mdown-2.png"],
+    "recon_mside": ["recon_mside-0.png", "recon_mside-1.png", "recon_mside-2.png"],
     "recon_mup": ["recon_mup-0.png", "recon_mup-1.png", "recon_mup-2.png"],
     "rocket": ["rocket-0.png", "rocket-1.png"],
-    "rocket_mdown": [
-      "rocket_mdown-0.png",
-      "rocket_mdown-1.png",
-      "rocket_mdown-2.png"
-    ],
-    "rocket_mside": [
-      "rocket_mside-0.png",
-      "rocket_mside-1.png",
-      "rocket_mside-2.png"
-    ],
+    "rocket_mdown": ["rocket_mdown-0.png", "rocket_mdown-1.png", "rocket_mdown-2.png"],
+    "rocket_mside": ["rocket_mside-0.png", "rocket_mside-1.png", "rocket_mside-2.png"],
     "rocket_mup": ["rocket_mup-0.png", "rocket_mup-1.png", "rocket_mup-2.png"],
     "stealth": ["stealth-0.png", "stealth-1.png"],
-    "stealth_mdown": [
-      "stealth_mdown-0.png",
-      "stealth_mdown-1.png",
-      "stealth_mdown-2.png"
-    ],
-    "stealth_mside": [
-      "stealth_mside-0.png",
-      "stealth_mside-1.png",
-      "stealth_mside-2.png"
-    ],
-    "stealth_mup": [
-      "stealth_mup-0.png",
-      "stealth_mup-1.png",
-      "stealth_mup-2.png"
-    ],
+    "stealth_mdown": ["stealth_mdown-0.png", "stealth_mdown-1.png", "stealth_mdown-2.png"],
+    "stealth_mside": ["stealth_mside-0.png", "stealth_mside-1.png", "stealth_mside-2.png"],
+    "stealth_mup": ["stealth_mup-0.png", "stealth_mup-1.png", "stealth_mup-2.png"],
     "sub": ["sub-0.png", "sub-1.png", "sub-2.png", "sub-3.png"],
     "sub_mdown": ["sub_mdown-0.png", "sub_mdown-1.png"],
     "sub_mside": ["sub_mside-0.png", "sub_mside-1.png"],
     "sub_mup": ["sub_mup-0.png", "sub_mup-1.png"],
-    "t-copter": [
-      "t-copter-0.png",
-      "t-copter-1.png",
-      "t-copter-2.png",
-      "t-copter-3.png"
-    ],
+    "t-copter": ["t-copter-0.png", "t-copter-1.png", "t-copter-2.png", "t-copter-3.png"],
     "t-copter_mdown": ["t-copter_mdown-0.png", "t-copter_mdown-1.png"],
     "t-copter_mside": ["t-copter_mside-0.png", "t-copter_mside-1.png"],
     "t-copter_mup": ["t-copter_mup-0.png", "t-copter_mup-1.png"],

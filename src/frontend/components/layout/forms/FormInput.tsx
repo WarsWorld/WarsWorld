@@ -9,7 +9,7 @@ type Props = {
   id?: string;
   type?: string;
   onChange?: ChangeEventHandler<HTMLInputElement>;
-}
+};
 
 export default function FormInput({
   text,
@@ -24,10 +24,7 @@ export default function FormInput({
   return (
     <>
       <div className={className}>
-        <label
-          htmlFor={id ?? ""}
-          className="@text-xl smallscreen:@text-2xl @text-white"
-        >
+        <label htmlFor={id ?? ""} className="@text-xl smallscreen:@text-2xl @text-white">
           {text}
         </label>
         <input
@@ -40,9 +37,9 @@ export default function FormInput({
             isError == true ? "@border-orange-star" : "@border-primary"
           }`}
         />
-        {isError == true && errorMessage != "" && 
+        {isError == true && errorMessage != "" && (
           <p className="@text-white @bg-orange-star/80 @my-2 @px-2 @rounded-lg">{errorMessage}</p>
-        }
+        )}
       </div>
     </>
   );

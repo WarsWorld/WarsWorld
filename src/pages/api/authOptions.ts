@@ -73,10 +73,7 @@ const providers: Provider[] = [
         return null;
       }
 
-      const doPasswordsMatch = await compare(
-        loginParse.data.password,
-        dbUser.password
-      );
+      const doPasswordsMatch = await compare(loginParse.data.password, dbUser.password);
 
       if (!doPasswordsMatch) {
         return null;
@@ -96,7 +93,7 @@ if (githubEnvParsed.success) {
     GithubProvider({
       clientId: process.env.GITHUB_CLIENT_ID!,
       clientSecret: process.env.GITHUB_CLIENT_SECRET!,
-    })
+    }),
   );
 }
 
@@ -105,7 +102,7 @@ if (googleEnvParsed.success) {
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-    })
+    }),
   );
 }
 
@@ -128,10 +125,9 @@ if (discordEnvParsed.success) {
           emailVerified: null,
         };
       },
-    })
+    }),
   );
 }
-  
 
 export const authOptions: NextAuthOptions = {
   secret: process.env.NEXTAUTH_SECRET,
@@ -148,9 +144,7 @@ export const authOptions: NextAuthOptions = {
     redirect({ url, baseUrl }) {
       if (url.startsWith("/")) {
         return `${baseUrl}${url}`;
-      }
-      
-      else if (new URL(url).origin === baseUrl) {
+      } else if (new URL(url).origin === baseUrl) {
         return url;
       }
 
@@ -160,7 +154,7 @@ export const authOptions: NextAuthOptions = {
       if (user != undefined) {
         token.id = user.id;
       }
-      
+
       token.userRole = "admin";
       return token;
     },

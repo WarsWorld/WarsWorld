@@ -15,7 +15,7 @@ const WS_URL = process.env.NEXT_PUBLIC_WS_URL;
 
 if (APP_URL === undefined || WS_URL === undefined) {
   throw new Error(
-    "NEXT_PUBLIC_APP_URL or NEXT_PUBLIC_WS_URL environment variable is undefined. tRPC client can't be set up."
+    "NEXT_PUBLIC_APP_URL or NEXT_PUBLIC_WS_URL environment variable is undefined. tRPC client can't be set up.",
   );
 }
 
@@ -64,8 +64,7 @@ export const trpc = createTRPCNext<AppRouter>({
         loggerLink({
           // enabled: () => false,
           enabled: (opts) =>
-            (process.env.NODE_ENV === "development" &&
-              typeof window !== "undefined") ||
+            (process.env.NODE_ENV === "development" && typeof window !== "undefined") ||
             (opts.direction === "down" && opts.result instanceof Error),
         }),
         getEndingLink(ctx),
@@ -88,7 +87,8 @@ export const trpc = createTRPCNext<AppRouter>({
 
 export type inferTRPCOutput<
   TopLevelProcedureKeys extends keyof AppRouter["_def"]["procedures"],
-  SecondLevelProcedureKeys extends keyof AppRouter["_def"]["procedures"][TopLevelProcedureKeys]["_def"]["procedures"]
+  SecondLevelProcedureKeys extends
+    keyof AppRouter["_def"]["procedures"][TopLevelProcedureKeys]["_def"]["procedures"],
 > = inferProcedureOutput<
   AppRouter["_def"]["procedures"][TopLevelProcedureKeys]["_def"]["procedures"][SecondLevelProcedureKeys]
 >;

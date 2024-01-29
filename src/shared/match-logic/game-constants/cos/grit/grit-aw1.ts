@@ -16,8 +16,8 @@ export const gritAW1: COProperties = {
         if (!attacker.isIndirect()) {
           return 80;
         }
-      }
-    }
+      },
+    },
   },
   powers: {
     COPower: {
@@ -34,8 +34,8 @@ export const gritAW1: COProperties = {
           if (attacker.isIndirect()) {
             return 150;
           }
-        }
-      }
-    }
-  }
+        },
+      },
+    },
+  },
 };

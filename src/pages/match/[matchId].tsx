@@ -1,8 +1,6 @@
 import { usePlayers } from "frontend/context/players";
 import { useRouter } from "next/router";
-import {
-  Application, BaseTexture, SCALE_MODES
-} from "pixi.js";
+import { Application, BaseTexture, SCALE_MODES } from "pixi.js";
 import { useEffect, useRef, useState } from "react";
 import type { Tile } from "shared/schemas/tile";
 import type { PlayerInMatch } from "shared/types/server-match-state";
@@ -22,22 +20,20 @@ BaseTexture.defaultOptions.scaleMode = SCALE_MODES.NEAREST;
 
 type Props = { spriteData: SpriteMap };
 
-
 const Match = ({ spriteData }: Props) => {
-
   // ---- TEXTURE LOADING ----
   const [spriteSheets, setSpriteSheets] = useState<LoadedSpriteSheet | undefined>(undefined);
   useEffect(() => {
     const fetchData = async () => {
       setSpriteSheets(await loadSpritesheets(spriteData));
     };
-    
+
     void fetchData();
   }, [setSpriteSheets, spriteData]);
-  
+
   // ---- DATA SETUP ----
   // We wait for usePlayers() to return the currentPlayer
-  // Once we have currentPlayer, the useEffect below will run 
+  // Once we have currentPlayer, the useEffect below will run
   // and fill in the necessary data for the match.
   const { query } = useRouter();
   const { currentPlayer } = usePlayers();
@@ -46,8 +42,8 @@ const Match = ({ spriteData }: Props) => {
   const { refetch } = trpc.match.full.useQuery(
     { matchId, playerId: currentPlayerId ?? "" },
     {
-      enabled: false // no autoload
-    }
+      enabled: false, // no autoload
+    },
   );
 
   // depends on trpc.match.full.useQuery
@@ -55,7 +51,7 @@ const Match = ({ spriteData }: Props) => {
   const [mapData, setMapData] = useState<Tile[][] | null | undefined>(null);
   const [match, setMatch] = useState<MatchWrapper | null>(null);
 
-  const [isSubscribed, setIsSubscribed] = useState(false)
+  const [isSubscribed, setIsSubscribed] = useState(false);
 
   useEffect(() => {
     if (currentPlayerId === undefined) {
@@ -63,10 +59,9 @@ const Match = ({ spriteData }: Props) => {
     }
 
     // enable receiving events
-    setIsSubscribed((prev) => !prev)
+    setIsSubscribed((prev) => !prev);
 
     void refetch().then((result) => {
-
       if (!result.isSuccess) {
         throw new Error("Loading of match failed: " + result.failureReason?.message);
       }
@@ -87,28 +82,29 @@ const Match = ({ spriteData }: Props) => {
           rawMatch.map,
           rawMatch.players,
           rawMatch.units,
-          rawMatch.turn
-        )
+          rawMatch.turn,
+        ),
       );
       setPlayers(result.data.players);
       setMapData(result.data.map.tiles);
     });
-
   }, [currentPlayerId, refetch]);
 
   // For listening to events
   // Encompasses game events and chat messages
-  trpc.action.onEvent.useSubscription( { 
-    matchId: matchId, 
-    playerId: currentPlayerId!, 
-  },{
-    onData(data) {
-      console.log("eventStuff-----");
-      console.log(data);
+  trpc.action.onEvent.useSubscription(
+    {
+      matchId: matchId,
+      playerId: currentPlayerId!,
     },
-    enabled: isSubscribed
-  });
-
+    {
+      onData(data) {
+        console.log("eventStuff-----");
+        console.log(data);
+      },
+      enabled: isSubscribed,
+    },
+  );
 
   // To be removed, kept here in case we need it again
   // const { data } = trpc.match.full.useQuery({ matchId, playerId: currentPlayer?.id ?? "" });
@@ -121,7 +117,7 @@ const Match = ({ spriteData }: Props) => {
   const tileSize = 16;
   const pixiCanvasRef = useRef<HTMLCanvasElement>(null);
   useEffect(() => {
-    if (!mapData || !spriteSheets|| !currentPlayer || !players ||!match) {
+    if (!mapData || !spriteSheets || !currentPlayer || !players || !match) {
       return;
     }
 
@@ -136,7 +132,7 @@ const Match = ({ spriteData }: Props) => {
       resolution: window.devicePixelRatio,
       backgroundColor: "#000b2c",
       width: mapWidth,
-      height: mapHeight
+      height: mapHeight,
     });
 
     app.stage.position.set(0, 0);
@@ -146,19 +142,19 @@ const Match = ({ spriteData }: Props) => {
     //let render our game cursor
     //TODO: Cursor stops working on second screen on google chrome (works on firefox).
     app.renderer.events.cursorStyles.default = {
-      animation: "gameCursor 1200ms infinite"
+      animation: "gameCursor 1200ms infinite",
     } as CSSStyleDeclaration;
 
     // for type safety
     const actionMutateAsync = (input: {
-      unitType: UnitType,
-      position: [number, number],
-      playerId: string,
-      matchId: string
+      unitType: UnitType;
+      position: [number, number];
+      playerId: string;
+      matchId: string;
     }) => {
-      const type = "build"
-      void actionMutation.mutateAsync({type, ...input})
-    }
+      const type = "build";
+      void actionMutation.mutateAsync({ type, ...input });
+    };
 
     //lets create a mapContainer
     const mapContainer = mapRender({
@@ -170,7 +166,7 @@ const Match = ({ spriteData }: Props) => {
       mutation: actionMutateAsync,
       currentPlayer,
       players,
-      match: match
+      match: match,
     });
 
     app.stage.addChild(mapContainer);
@@ -187,21 +183,26 @@ const Match = ({ spriteData }: Props) => {
       <>
         <div className="@grid @grid-cols-12 @text-center @my-20 @mx-2">
           <div className="@col-span-12">
-            <Calculator player={players[0]}/>
+            <Calculator player={players[0]} />
           </div>
           <h3 className="@col-span-12">Scale</h3>
           <div className="@col-span-12 @p-2">
-            <button className={"btn @inline"} onClick={() => {
-              setScale(scale + 0.2);
-            }}>+
+            <button
+              className={"btn @inline"}
+              onClick={() => {
+                setScale(scale + 0.2);
+              }}
+            >
+              +
             </button>
-            <h2 className="@inline @align-middle">
-              {" "}
-              {Math.round(scale * 10) / 10}{" "}
-            </h2>
-            <button className={"btn"} onClick={() => {
-              setScale(scale - 0.2);
-            }}>-
+            <h2 className="@inline @align-middle"> {Math.round(scale * 10) / 10} </h2>
+            <button
+              className={"btn"}
+              onClick={() => {
+                setScale(scale - 0.2);
+              }}
+            >
+              -
             </button>
           </div>
           <div className="@mx-4 @w-48 @col-span-2 [image-rendering:pixelated]">
@@ -219,7 +220,7 @@ const Match = ({ spriteData }: Props) => {
             <canvas
               className="@inline"
               style={{
-                imageRendering: "pixelated"
+                imageRendering: "pixelated",
               }}
               ref={pixiCanvasRef}
             ></canvas>
@@ -238,7 +239,7 @@ const Match = ({ spriteData }: Props) => {
           </div>
         </div>
       </>
-      );
+    );
   }
 };
 export default Match;
@@ -247,7 +248,13 @@ export const getServerSideProps: GetServerSideProps<Props> = async () => {
   //TODO: Should we call all the spritesheets or just the ones the players will need?
   // Unsure how we would know which players are playing what before even loading the match
   // (which right now we do this call before the tRPC call that gets the match data...)
-  const spriteData = await getSpriteSheets(["yellow-comet", "green-earth", "black-hole", "orange-star", "blue-moon"]);
+  const spriteData = await getSpriteSheets([
+    "yellow-comet",
+    "green-earth",
+    "black-hole",
+    "orange-star",
+    "blue-moon",
+  ]);
 
   return { props: { spriteData } };
 };

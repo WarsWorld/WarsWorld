@@ -12,7 +12,7 @@ export class TeamWrapper {
   constructor(
     players: PlayerInMatch[],
     public match: MatchWrapper,
-    public index: number
+    public index: number,
   ) {
     this.players = players.map((p) => new PlayerInMatchWrapper(p, this));
 
@@ -41,9 +41,7 @@ export class TeamWrapper {
   getEnemyUnits() {
     const playerSlotsOfTeam = this.players.map((p) => p.data.slot);
 
-    return this.match.units.filter(
-      (unit) => !playerSlotsOfTeam.includes(unit.data.playerSlot)
-    );
+    return this.match.units.filter((unit) => !playerSlotsOfTeam.includes(unit.data.playerSlot));
   }
 
   canSeeUnitAtPosition(position: Position) {
@@ -65,16 +63,13 @@ export class TeamWrapper {
 
     // sub or stealth ability
     if ("hidden" in unit.data && unit.data.hidden) {
-      return unit
-        .getNeighbouringUnits()
-        .some((unit) => playerSlots.includes(unit.data.playerSlot));
+      return unit.getNeighbouringUnits().some((unit) => playerSlots.includes(unit.data.playerSlot));
     }
 
     return this.isPositionVisible(unit.data.position);
   }
 
   getEnemyUnitsInVision() {
-
     const playerSlots = this.players.map((player) => player.data.slot);
 
     return this.getEnemyUnits()
@@ -99,7 +94,7 @@ export class TeamWrapper {
         if (visibleEnemyUnit.player.data.coId.name === "sonja") {
           return {
             ...visibleEnemyUnit.data,
-            stats: "hidden"
+            stats: "hidden",
           };
         }
 
@@ -108,8 +103,8 @@ export class TeamWrapper {
   }
 
   addUnwrappedPlayer(player: PlayerInMatch): PlayerInMatchWrapper {
-    const playerWrapper = new PlayerInMatchWrapper(player, this)
+    const playerWrapper = new PlayerInMatchWrapper(player, this);
     this.players.push(playerWrapper);
-    return playerWrapper
+    return playerWrapper;
   }
 }

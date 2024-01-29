@@ -23,7 +23,7 @@ const commonOceanMovementCosts = {
   treads: null,
   tires: null,
   air: 1,
-  pipe: null
+  pipe: null,
 } satisfies Partial<TileMovementCosts>;
 
 /**
@@ -37,7 +37,7 @@ const commonLandMovementCosts = {
   air: 1,
   pipe: null,
   sea: null,
-  lander: null
+  lander: null,
 } satisfies Partial<TileMovementCosts>;
 
 /**
@@ -53,13 +53,13 @@ const manMadeMovementCosts: TileMovementCosts = {
   ...commonLandMovementCosts,
   foot: 1,
   treads: 1,
-  tires: 1
+  tires: 1,
 };
 
 const buildingTileProperties: TileProperties = {
   /** All buildings provide 3 defense, except for the HQ which provides 4. */
   defenseStars: 3,
-  movementCosts: manMadeMovementCosts
+  movementCosts: manMadeMovementCosts,
 };
 
 /** Pipes and (unbroken) pipe seams are exactly the same */
@@ -73,8 +73,8 @@ const pipeTileProperties: TileProperties = {
     air: null,
     pipe: 1,
     sea: null,
-    lander: null
-  }
+    lander: null,
+  },
 };
 
 /**
@@ -94,8 +94,8 @@ export const terrainProperties: Record<TileType, TileProperties> = {
       ...commonLandMovementCosts,
       foot: 1,
       treads: 1,
-      tires: 2
-    }
+      tires: 2,
+    },
   },
   forest: {
     defenseStars: 2,
@@ -103,8 +103,8 @@ export const terrainProperties: Record<TileType, TileProperties> = {
       ...commonLandMovementCosts,
       foot: 1,
       treads: 2,
-      tires: 3
-    }
+      tires: 3,
+    },
   },
   mountain: {
     defenseStars: 4,
@@ -112,8 +112,8 @@ export const terrainProperties: Record<TileType, TileProperties> = {
       ...commonLandMovementCosts,
       foot: 2,
       treads: null,
-      tires: null
-    }
+      tires: null,
+    },
   },
   river: {
     defenseStars: 0,
@@ -121,20 +121,20 @@ export const terrainProperties: Record<TileType, TileProperties> = {
       ...commonLandMovementCosts,
       foot: 2,
       treads: null,
-      tires: null
-    }
+      tires: null,
+    },
   },
   road: {
     defenseStars: 0,
-    movementCosts: manMadeMovementCosts
+    movementCosts: manMadeMovementCosts,
   },
   sea: {
     defenseStars: 0,
     movementCosts: {
       ...commonOceanMovementCosts,
       sea: 1,
-      lander: 1
-    }
+      lander: 1,
+    },
   },
   shoal: {
     defenseStars: 0,
@@ -145,16 +145,16 @@ export const terrainProperties: Record<TileType, TileProperties> = {
       tires: 1,
       // This is a beach, so navy *transports* can go here
       // but no other navy units!
-      lander: 1
-    }
+      lander: 1,
+    },
   },
   reef: {
     defenseStars: 1,
     movementCosts: {
       ...commonOceanMovementCosts,
       sea: 2,
-      lander: 2
-    }
+      lander: 2,
+    },
   },
   pipe: pipeTileProperties,
   pipeSeam: pipeTileProperties,
@@ -165,8 +165,8 @@ export const terrainProperties: Record<TileType, TileProperties> = {
       // Any building which *could have* produced a unit has
       // a movement cost of 1 for that unit.
       // Bases build piperunners.
-      pipe: 1
-    }
+      pipe: 1,
+    },
   },
   port: {
     defenseStars: buildingTileProperties.defenseStars,
@@ -176,23 +176,23 @@ export const terrainProperties: Record<TileType, TileProperties> = {
       // a movement cost of 1 for that unit.
       // Ports build ships.
       sea: 1,
-      lander: 1
-    }
+      lander: 1,
+    },
   },
   airport: buildingTileProperties,
   city: buildingTileProperties,
   hq: {
     defenseStars: 4,
-    movementCosts: manMadeMovementCosts
+    movementCosts: manMadeMovementCosts,
   },
   bridge: {
     defenseStars: 0,
-    movementCosts: manMadeMovementCosts
+    movementCosts: manMadeMovementCosts,
   },
   lab: buildingTileProperties,
   commtower: buildingTileProperties,
   unusedSilo: buildingTileProperties,
-  usedSilo: buildingTileProperties
+  usedSilo: buildingTileProperties,
 };
 
 /**
@@ -200,4 +200,5 @@ export const terrainProperties: Record<TileType, TileProperties> = {
  * an integer between 0 and 4 which modifies the amount of damage
  * a unit on that tile takes from attacks.
  */
-export const getTerrainDefenseStars = (tileType: TileType) => terrainProperties[tileType].defenseStars;
+export const getTerrainDefenseStars = (tileType: TileType) =>
+  terrainProperties[tileType].defenseStars;

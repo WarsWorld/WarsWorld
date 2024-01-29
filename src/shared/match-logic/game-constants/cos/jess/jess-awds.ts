@@ -4,20 +4,16 @@ export const jessAWDS: COProperties = {
   displayName: "Jess",
   gameVersion: "AWDS",
   dayToDay: {
-    description:
-      "Ground vehicles have +20% firepower. Air and naval units have -10% firepower.",
+    description: "Ground vehicles have +20% firepower. Air and naval units have -10% firepower.",
     hooks: {
       attack: ({ attacker }) => {
-        if (
-          attacker.properties.facility === "base" &&
-          !attacker.isInfantryOrMech()
-        ) {
+        if (attacker.properties.facility === "base" && !attacker.isInfantryOrMech()) {
           return 120;
         }
 
         return 90;
-      }
-    }
+      },
+    },
   },
   powers: {
     COPower: {
@@ -30,24 +26,18 @@ export const jessAWDS: COProperties = {
       },
       hooks: {
         attack: ({ attacker }) => {
-          if (
-            attacker.properties.facility === "base" &&
-            !attacker.isInfantryOrMech()
-          ) {
+          if (attacker.properties.facility === "base" && !attacker.isInfantryOrMech()) {
             return 140;
           }
-  
+
           return 90;
         },
         movementPoints: (points, unit) => {
-          if (
-            unit.properties.facility === "base" &&
-            !unit.isInfantryOrMech()
-          ) {
+          if (unit.properties.facility === "base" && !unit.isInfantryOrMech()) {
             return points + 1;
           }
-        }
-      }
+        },
+      },
     },
     superCOPower: {
       name: "Overdrive",
@@ -59,24 +49,18 @@ export const jessAWDS: COProperties = {
       },
       hooks: {
         attack: ({ attacker }) => {
-          if (
-            attacker.properties.facility === "base" &&
-            !attacker.isInfantryOrMech()
-          ) {
+          if (attacker.properties.facility === "base" && !attacker.isInfantryOrMech()) {
             return 160;
           }
-  
+
           return 90;
         },
         movementPoints: (points, unit) => {
-          if (
-            unit.properties.facility === "base" &&
-            !unit.isInfantryOrMech()
-          ) {
+          if (unit.properties.facility === "base" && !unit.isInfantryOrMech()) {
             return points + 2;
           }
-        }
-      }
-    }
-  }
+        },
+      },
+    },
+  },
 };

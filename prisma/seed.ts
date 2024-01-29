@@ -13,12 +13,9 @@ import { articleSchema } from "shared/schemas/article";
 
 const prisma = new PrismaClient();
 
-const developmentPlayerNames = [
-  "Grimm Guy",
-  "Incuggarch",
-  "Master Chief Z",
-  "Dev Player 4",
-].map((name) => `${Prefix} ${name}`);
+const developmentPlayerNames = ["Grimm Guy", "Incuggarch", "Master Chief Z", "Dev Player 4"].map(
+  (name) => `${Prefix} ${name}`,
+);
 
 const news = [
   "Good Girl Lash",
@@ -42,7 +39,10 @@ const guides = [
 
 function seedArticles(articles: string[], type: string, authorId: string) {
   articles.map(async (article) => {
-    const file = await fs.readFile(`src/frontend/utils/articles/${type.toLowerCase()}/${article}.md`, "utf-8");
+    const file = await fs.readFile(
+      `src/frontend/utils/articles/${type.toLowerCase()}/${article}.md`,
+      "utf-8",
+    );
     const metaData = matter(file);
     metaData.data.title = article;
     metaData.data.type = type.toLowerCase();
@@ -65,19 +65,19 @@ function seedArticles(articles: string[], type: string, authorId: string) {
                 },
               },
             },
-          ]
+          ],
         },
         thumbnail: articleData.thumbnail,
         category: articleData.category,
         body: articleData.body,
-      }
+      },
     });
   });
 }
 
 async function main() {
   const hashedPassword = await hashPassword("secret");
-  
+
   const { id: userId } = await prisma.user.create({
     data: {
       name: "development_user",
@@ -86,7 +86,9 @@ async function main() {
     },
   });
 
-  const devPlayers = await Promise.all(developmentPlayerNames.map((name) => prisma.player.create({ data: { name, userId } })));
+  const devPlayers = await Promise.all(
+    developmentPlayerNames.map((name) => prisma.player.create({ data: { name, userId } })),
+  );
 
   seedArticles(news, "News", devPlayers[0].id);
   seedArticles(guides, "Guide", devPlayers[1].id);
@@ -118,7 +120,7 @@ async function main() {
     133,2,1,21,19,28,8,1,1,3,34,1,2,3,1,26,34,1
     110,105,2,3,21,15,26,1,39,1,1,1,1,34,7,9,1,3
     111,109,133,1,34,2,5,3,2,1,3,35,15,15,26,3,1,34
-    `
+    `,
   });
 
   void importAWBWMap({
@@ -146,7 +148,7 @@ async function main() {
   31,1,2,1,16,3,1,34,1,3,1,16,2,1,34,15,22,20,29,28,28
   31,18,15,15,23,1,1,21,15,15,22,20,1,29,29,2,16,29,28,30,28
   28,34,1,3,21,34,1,3,1,1,34,29,28,28,28,31,39,32,28,34,32
-  `
+  `,
   });
 
   void importAWBWMap({
@@ -169,7 +171,7 @@ async function main() {
 2,3,2,34,1,1,18,34,15,20,1,1,28,1,1,2,3,44,1
 3,1,1,2,1,18,20,1,1,1,1,28,28,1,34,1,1,21,19
 32,44,3,1,34,20,110,113,105,3,32,31,1,3,21,19,1,3,34
-32,30,1,1,1,3,3,45,103,108,28,1,34,1,2,34,1,2,2`
+32,30,1,1,1,3,3,45,103,108,28,1,34,1,2,34,1,2,2`,
   });
 
   void importAWBWMap({
@@ -199,7 +201,7 @@ async function main() {
 28,28,46,32,28,28,28,31,112,34,20,32,31,34,1,1,32,34,31,3,16,1,1,3,32,28,30,28,33
 28,28,29,28,28,33,28,28,29,29,29,28,28,29,29,29,28,29,28,29,46,29,29,29,28,28,34,32,28
 33,28,28,28,28,28,28,28,28,28,28,33,28,28,28,28,28,28,33,28,28,28,28,28,28,33,28,28,28
-`
+`,
   });
 
   void importAWBWMap({
@@ -223,7 +225,7 @@ async function main() {
   32,45,116,3,16,1,1,1,1,1,1,3,21,15,112,10,8,34,3,1,3,32
   32,31,34,1,44,1,1,1,3,34,29,29,29,29,3,1,26,24,19,1,32,31
   32,31,2,112,1,34,1,2,2,3,30,34,30,30,29,2,5,1,44,3,32,34
-`
+`,
   });
 
   await prisma.match.create({
@@ -238,7 +240,7 @@ async function main() {
         unitCapPerPlayer: 50,
         weatherSetting: "clear",
         labUnitTypes: [],
-        teamMapping: [0,1]
+        teamMapping: [0, 1],
       },
       status: "playing",
       mapId: causticFinaleDBMap.id,
@@ -251,14 +253,14 @@ async function main() {
           ready: true,
           coId: {
             name: "andy",
-            version: "AW2"
+            version: "AW2",
           },
           eliminated: false,
           funds: 10000,
           powerMeter: 0,
           timesPowerUsed: 0,
           army: "orange-star",
-          COPowerState: "no-power"
+          COPowerState: "no-power",
         },
         {
           slot: 1,
@@ -268,17 +270,17 @@ async function main() {
           ready: true,
           coId: {
             name: "flak",
-            version: "AW2"
+            version: "AW2",
           },
           eliminated: false,
           funds: 10000,
           powerMeter: 0,
           timesPowerUsed: 0,
           army: "black-hole",
-          COPowerState: "no-power"
-        }
-      ]
-    }
+          COPowerState: "no-power",
+        },
+      ],
+    },
   });
 }
 

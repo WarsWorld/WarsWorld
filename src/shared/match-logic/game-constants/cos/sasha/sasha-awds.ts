@@ -7,12 +7,13 @@ export const sashaAWDS: COProperties = {
     description: "Properties that give funds give an extra 100 funds per turn.",
     hooks: {
       // handled in passTurn -> gainFunds
-    }
+    },
   },
   powers: {
     COPower: {
       name: "Market Crash",
-      description: "Reduces all enemies' power charge by 10% for every 5000 funds Sasha currently has.",
+      description:
+        "Reduces all enemies' power charge by 10% for every 5000 funds Sasha currently has.",
       stars: 2,
       instantEffect(player) {
         //power meter decrease in percentage. 1 means 100% decrease
@@ -23,10 +24,12 @@ export const sashaAWDS: COProperties = {
             continue; //not an enemy
           }
 
-          enemy.data.powerMeter = Math.max(0,
-            enemy.data.powerMeter - (powerMeterDecrease * enemy.getMaxPowerMeter()));
+          enemy.data.powerMeter = Math.max(
+            0,
+            enemy.data.powerMeter - powerMeterDecrease * enemy.getMaxPowerMeter(),
+          );
         }
-      }
+      },
     },
     superCOPower: {
       name: "War Bonds",
@@ -34,7 +37,7 @@ export const sashaAWDS: COProperties = {
       stars: 6,
       hooks: {
         // handled in attack event
-      }
-    }
-  }
+      },
+    },
+  },
 };

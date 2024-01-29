@@ -11,29 +11,25 @@ type Props = {
   setCurrentPlayer: (player: Player) => void;
 };
 
-export default function CreateMatch({
-  currentPlayer,
-  setCurrentPlayer,
-}: Props) {
+export default function CreateMatch({ currentPlayer, setCurrentPlayer }: Props) {
   const { ownedPlayers } = usePlayers();
   const utils = trpc.useUtils();
 
   // Get map data
-  const { data: mapQuery, isLoading: isLoadingMapQuery } =
-    trpc.map.getAll.useQuery(undefined, {
-      onSuccess: (onSuccessMaps) => {
-        setCurrentMapId(onSuccessMaps[0].id);
-        setSelectMap({
-          label: onSuccessMaps[0].name,
-          value: onSuccessMaps[0].id,
-        });
-      },
-    });
+  const { data: mapQuery, isLoading: isLoadingMapQuery } = trpc.map.getAll.useQuery(undefined, {
+    onSuccess: (onSuccessMaps) => {
+      setCurrentMapId(onSuccessMaps[0].id);
+      setSelectMap({
+        label: onSuccessMaps[0].name,
+        value: onSuccessMaps[0].id,
+      });
+    },
+  });
   const [currentMapId, setCurrentMapId] = useState<string>();
   const createMatchMutation = trpc.match.create.useMutation({
     onSuccess() {
-      void utils.match.invalidate()
-    }
+      void utils.match.invalidate();
+    },
   });
 
   // Select Logic
@@ -44,7 +40,7 @@ export default function CreateMatch({
 
   const [selectPlayer, setSelectPlayer] = useState<SelectOption | undefined>({
     label: "No player selected",
-    value: ""
+    value: "",
   });
   const [selectMap, setSelectMap] = useState<SelectOption | undefined>({
     label: "No map selected",
@@ -56,7 +52,7 @@ export default function CreateMatch({
     if (currentPlayer) {
       setSelectPlayer({
         label: currentPlayer.name,
-        value: currentPlayer.id
+        value: currentPlayer.id,
       });
     }
   }, [currentPlayer]);
@@ -77,11 +73,10 @@ export default function CreateMatch({
         weatherSetting: "clear",
         labUnitTypes: [],
         //TODO: There needs to be more logic regarding how teamMapping will work, specially beyond 2 players
-        teamMapping: [0,1]
-
+        teamMapping: [0, 1],
       },
       mapId: currentMapId,
-      playerId: currentPlayer.id
+      playerId: currentPlayer.id,
     });
   };
 
@@ -96,8 +91,8 @@ export default function CreateMatch({
     if (newCurrentPlayer) {
       setCurrentPlayer(newCurrentPlayer);
     }
-    
-    void utils.match.invalidate()
+
+    void utils.match.invalidate();
   };
 
   const selectMapHandler = (o: SelectOption | undefined) => {
@@ -108,22 +103,20 @@ export default function CreateMatch({
 
   return (
     <div className="@w-full">
-      <h1>Match Page
-        </h1>
+      <h1>Match Page</h1>
       <p>
-        To create a match, first change Current Player to any other player. Then click on create game.
-
-
+        To create a match, first change Current Player to any other player. Then click on create
+        game.
       </p>
       <br />
       {ownedPlayers ? (
         <div className="@flex @flex-col smallscreen:@flex-row @justify-center @items-center @py-2 @pb-6">
           <p className="@px-0 smallscreen:@pr-8">Current Player: </p>
-          <Select 
-            className="@relative @w-64 @my-4 smallscreen:@m-0" 
-            options={players} 
-            value={selectPlayer} 
-            onChange={selectPlayerHandler} 
+          <Select
+            className="@relative @w-64 @my-4 smallscreen:@m-0"
+            options={players}
+            value={selectPlayer}
+            onChange={selectPlayerHandler}
           />
         </div>
       ) : (
@@ -135,11 +128,11 @@ export default function CreateMatch({
           <p>Loading maps...</p>
         ) : (
           <div className="@flex @flex-col @items-center">
-            <Select 
-              className="@w-64 smallscreen:@w-96" 
-              options={maps} 
-              value={selectMap} 
-              onChange={selectMapHandler} 
+            <Select
+              className="@w-64 smallscreen:@w-96"
+              options={maps}
+              value={selectMap}
+              onChange={selectMapHandler}
             />
           </div>
         )}

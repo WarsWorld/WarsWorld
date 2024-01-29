@@ -1,5 +1,5 @@
 ---
-description: 'June 19th Maintenance'
+description: "June 19th Maintenance"
 createdAt: "2050-06-12"
 category: "Maintenance"
 thumbnail: "/img/HowToPlay/pic9.jpg"

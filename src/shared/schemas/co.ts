@@ -34,7 +34,7 @@ export const coSchema = z.enum([
 
 export const coIdSchema = z.strictObject({
   name: coSchema,
-  version: gameVersionSchema
+  version: gameVersionSchema,
 });
 
 export type COID = z.infer<typeof coIdSchema>;

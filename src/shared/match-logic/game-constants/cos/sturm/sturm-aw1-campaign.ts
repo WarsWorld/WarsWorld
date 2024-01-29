@@ -14,8 +14,8 @@ export const sturmAW1Campaign: COProperties = {
         }
       },
       attack: () => 130,
-      defense: () => 80
-    }
+      defense: () => 80,
+    },
   },
   powers: {
     COPower: {
@@ -32,13 +32,12 @@ export const sturmAW1Campaign: COProperties = {
         player.match.damageUntil1HPInRadius({
           radius: 2,
           visualHpAmount: 8,
-          epicenter: positions[0]
+          epicenter: positions[0],
         });
       },
       hooks: {
-        attack: () => 140 //and +10% with non-accurate (xdd) passive power boost
-      }
-    }
-  }
+        attack: () => 140, //and +10% with non-accurate (xdd) passive power boost
+      },
+    },
+  },
 };
-

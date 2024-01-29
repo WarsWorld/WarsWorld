@@ -21,23 +21,22 @@ export const drakeAW2: COProperties = {
         if (attacker.properties.facility === "airport") {
           return 70;
         }
-      }
-    }
+      },
+    },
   },
   powers: {
     COPower: {
       name: "Tsunami",
-      description:
-        "All enemy units lose 1 HP (to a minimum of 0.1HP) and half their current fuel.",
+      description: "All enemy units lose 1 HP (to a minimum of 0.1HP) and half their current fuel.",
       stars: 4,
       instantEffect(player) {
         const enemyUnits = player.team.getEnemyUnits();
 
-        enemyUnits.forEach(unit => {
+        enemyUnits.forEach((unit) => {
           unit.drainFuel(Math.floor(unit.getFuel() / 2)); // half fuel till 0 and round down
           unit.damageUntil1HP(1);
         });
-      }
+      },
     },
     superCOPower: {
       name: "Typhoon",
@@ -47,13 +46,13 @@ export const drakeAW2: COProperties = {
       instantEffect(player) {
         const enemyUnits = player.team.getEnemyUnits();
 
-        enemyUnits.forEach(unit => {
+        enemyUnits.forEach((unit) => {
           unit.drainFuel(Math.floor(unit.getFuel() / 2)); // half fuel till 0 and round down
           unit.damageUntil1HP(2);
         });
 
         player.match.setWeather("rain", 1);
-      }
-    }
-  }
+      },
+    },
+  },
 };

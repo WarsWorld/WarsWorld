@@ -2,10 +2,7 @@ import { unitPropertiesMap } from "shared/match-logic/game-constants/unit-proper
 import type { Position } from "shared/schemas/position";
 import type { PlayerInMatchWrapper } from "shared/wrappers/player-in-match";
 
-export function applySenseiPowerSpawn(
-  player: PlayerInMatchWrapper,
-  unitType: "infantry" | "mech"
-) {
+export function applySenseiPowerSpawn(player: PlayerInMatchWrapper, unitType: "infantry" | "mech") {
   const { match } = player;
 
   // it's faster to track the unitCount with a variable here than
@@ -26,11 +23,7 @@ export function applySenseiPowerSpawn(
       const position: Position = [x, y];
       const tile = match.getTile(position);
 
-      if (
-        tile.type !== "city" ||
-        !player.owns(tile) ||
-        match.getUnit(position) !== undefined
-      ) {
+      if (tile.type !== "city" || !player.owns(tile) || match.getUnit(position) !== undefined) {
         continue;
       }
 
@@ -41,8 +34,8 @@ export function applySenseiPowerSpawn(
           isReady: true,
           stats: {
             hp: 9,
-            fuel: unitPropertiesMap.infantry.initialFuel
-          }
+            fuel: unitPropertiesMap.infantry.initialFuel,
+          },
         });
       } else {
         player.addUnwrappedUnit({
@@ -52,8 +45,8 @@ export function applySenseiPowerSpawn(
           stats: {
             hp: 9,
             fuel: unitPropertiesMap.mech.initialFuel,
-            ammo: unitPropertiesMap.mech.initialAmmo
-          }
+            ammo: unitPropertiesMap.mech.initialAmmo,
+          },
         });
       }
 

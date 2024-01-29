@@ -22,7 +22,7 @@ const roundUpTo = (value: number, step: number) => {
 export const calculateDamage = (
   { attacker, defender }: CombatProps,
   luckRoll: LuckRoll,
-  isCounterAttack: boolean
+  isCounterAttack: boolean,
 ) => {
   const baseDamage = getBaseDamage(attacker, defender);
 
@@ -38,9 +38,7 @@ export const calculateDamage = (
 
   // attack and defense multipliers
   const attackHook = attacker.player.getHook("attack");
-  let attackModifier =
-    attackHook?.(hookProps) ?? 100
-    + attacker.player.getCommtowerAttackBoost();
+  let attackModifier = attackHook?.(hookProps) ?? 100 + attacker.player.getCommtowerAttackBoost();
 
   if (isCounterAttack) {
     const dCoId = defender.player.data.coId;
@@ -49,7 +47,7 @@ export const calculateDamage = (
       attackModifier += 50; //aw1 and aw2 sonja d2d is +50% firepower on counters
     } else if (dCoId.name === "kanbei" && defender.player.data.COPowerState === "super-co-power") {
       if (dCoId.version === "AW2") {
-        attackModifier *= 5/3; //aw2 kanbei with super deals x5/3 dmg on counters
+        attackModifier *= 5 / 3; //aw2 kanbei with super deals x5/3 dmg on counters
       } else {
         attackModifier *= 2; //awds kanbei with super deals double dmg on counters
       }
@@ -79,16 +77,13 @@ export const calculateDamage = (
   const badLuckValue = luckRoll.badLuck * maxBadLuck;
 
   // terrain stars calculations
-  const baseTerrainStars = getTerrainDefenseStars(
-    defender.getTile().type
-  );
+  const baseTerrainStars = getTerrainDefenseStars(defender.getTile().type);
 
   const terrainStarsDefenderHook = defender.player.getHook("terrainStars");
   let defenderTerrainStars =
     terrainStarsDefenderHook?.(baseTerrainStars, hookProps) ?? baseTerrainStars;
 
-  if (attacker.player.data.coId.name === "sonja" &&
-    attacker.player.data.coId.version === "AWDS") {
+  if (attacker.player.data.coId.name === "sonja" && attacker.player.data.coId.version === "AWDS") {
     // hmm ackshually, if sonja pops powers before lash, outcome is different than popping after lash
     switch (attacker.player.data.COPowerState) {
       case "no-power": {
@@ -110,12 +105,9 @@ export const calculateDamage = (
   // damage formula application
   const luckModifier = goodLuckValue - badLuckValue;
   const attackFactor = baseDamage * (attackModifier / 100) + luckModifier;
-  const defenseFactor =
-    (200 - (defenseModifier + defenderTerrainStars * visualHPOfDefender)) /
-    100;
+  const defenseFactor = (200 - (defenseModifier + defenderTerrainStars * visualHPOfDefender)) / 100;
 
-  const dirtyDamageAsPercentage =
-    attackFactor * (visualHPOfAttacker / 10) * defenseFactor;
+  const dirtyDamageAsPercentage = attackFactor * (visualHPOfAttacker / 10) * defenseFactor;
 
   return Math.floor(roundUpTo(dirtyDamageAsPercentage, 0.05));
 };

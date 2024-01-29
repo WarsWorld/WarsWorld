@@ -17,7 +17,7 @@ type Props = {
   width?: string;
   isOpen: boolean;
   setIsOpen: (value: boolean, callbackUrl?: string) => Promise<void>;
-}
+};
 
 export default function LoginSignupModal({ isOpen, setIsOpen, width }: Props) {
   const [currentProviders, setCurrentProviders] =
@@ -39,17 +39,14 @@ export default function LoginSignupModal({ isOpen, setIsOpen, width }: Props) {
   }, []);
 
   const setIsSignupForm = async (value: boolean, callbackUrl: string | null) => {
-    if (value) 
-    {
+    if (value) {
       await router.replace("", {
         pathname: window.location.pathname,
         query: `authModalOpen&SignUpForm${
           callbackUrl !== null ? "&callbackUrl=" + encodeURIComponent(callbackUrl) : ""
         }`,
       });
-    } 
-    else
-    {
+    } else {
       await router.replace("", {
         pathname: window.location.pathname,
         query: `authModalOpen${
@@ -60,14 +57,11 @@ export default function LoginSignupModal({ isOpen, setIsOpen, width }: Props) {
   };
 
   const onLoginSuccess = async () =>
-    await setIsOpen(
-      false,
-      callbackUrl === null ? undefined : decodeURIComponent(callbackUrl)
-    );
+    await setIsOpen(false, callbackUrl === null ? undefined : decodeURIComponent(callbackUrl));
 
   const onClose = () => {
     void setIsOpen(false);
-  }
+  };
 
   return (
     <>
@@ -76,9 +70,7 @@ export default function LoginSignupModal({ isOpen, setIsOpen, width }: Props) {
           /* SIGNUP */
           <DefaultDialogDesign title="Signup" width={width ?? "50vw"}>
             <div className="@pt-4 smallscreen:@pt-8 @px-4 smallscreen:@px-20">
-              {didSignUp && (
-                <ErrorSuccessBlock title="Successfully signed up" />
-              )}
+              {didSignUp && <ErrorSuccessBlock title="Successfully signed up" />}
               <SignupForm
                 setIsSignupForm={setIsSignupForm}
                 setDidSignUp={setDidSignUp}
@@ -86,15 +78,9 @@ export default function LoginSignupModal({ isOpen, setIsOpen, width }: Props) {
               />
               <div className="@flex @flex-col @items-center @justify-center @pb-6 @px-10 @gap-2">
                 <div className="@h-[0.15rem] @w-full @bg-bg-primary @my-2" />
-                <p className="@text-lg smallscreen:@text">
-                  Already have an account?
-                </p>
+                <p className="@text-lg smallscreen:@text">Already have an account?</p>
                 <div className="@my-2 @w-[80vw] smallscreen:@w-80 @h-14 @text-2xl">
-                  <SquareButton
-                    onClick={() =>
-                      void setIsSignupForm(false, callbackUrl)
-                    }
-                  >
+                  <SquareButton onClick={() => void setIsSignupForm(false, callbackUrl)}>
                     Login
                   </SquareButton>
                 </div>
@@ -105,9 +91,7 @@ export default function LoginSignupModal({ isOpen, setIsOpen, width }: Props) {
           /* LOGIN */
           <DefaultDialogDesign title="Login" width={width ?? "50vw"}>
             <div className="@pt-4 smallscreen:@pt-8 @px-4 smallscreen:@px-20">
-              {didSignUp && (
-                <ErrorSuccessBlock title="Successfully signed up" />
-              )}
+              {didSignUp && <ErrorSuccessBlock title="Successfully signed up" />}
               <LoginForm onLoginSuccess={onLoginSuccess} />
               <div className="@flex @flex-col @items-center @justify-center @pb-6 smallscreen:@px-10 @gap-2">
                 <Link
@@ -118,9 +102,7 @@ export default function LoginSignupModal({ isOpen, setIsOpen, width }: Props) {
                   Forgot password?
                 </Link>
 
-                <p className="@pt-4 @text-lg smallscreen:@text">
-                  You can also sign in with:
-                </p>
+                <p className="@pt-4 @text-lg smallscreen:@text">You can also sign in with:</p>
                 <div className="@flex @flex-wrap @justify-center @w-full @gap-4">
                   {possibleProviders.map((socialMedia) => (
                     <div
@@ -129,28 +111,19 @@ export default function LoginSignupModal({ isOpen, setIsOpen, width }: Props) {
                     >
                       <SocialMediaSignInButton
                         name={socialMedia}
-                        disabled={
-                          !currentProviders?.[socialMedia]
-                        }
+                        disabled={!currentProviders?.[socialMedia]}
                       />
                     </div>
                   ))}
                 </div>
                 <p className="@pt-6 @text-lg smallscreen:@text @text-center">
-                  Developer note: If you want to sign in with one of these
-                  proviers, you must follow the respective directions on
-                  README.md to set it up.
+                  Developer note: If you want to sign in with one of these proviers, you must follow
+                  the respective directions on README.md to set it up.
                 </p>
                 <div className="@h-[0.15rem] @w-full @bg-bg-primary @my-2" />
-                <p className="@text-lg smallscreen:@text">
-                  Don&apos;t have an account?
-                </p>
+                <p className="@text-lg smallscreen:@text">Don&apos;t have an account?</p>
                 <div className="@my-2 @w-[80vw] smallscreen:@w-80 @h-20 cellphone:@h-14 @text-2xl">
-                  <SquareButton
-                    onClick={() =>
-                      void setIsSignupForm(true, callbackUrl)
-                    }
-                  >
+                  <SquareButton onClick={() => void setIsSignupForm(true, callbackUrl)}>
                     Create New Account
                   </SquareButton>
                 </div>

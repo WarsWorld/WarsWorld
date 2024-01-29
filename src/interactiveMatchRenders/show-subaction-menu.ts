@@ -1,12 +1,5 @@
 import type { Spritesheet } from "pixi.js";
-import {
-  AnimatedSprite,
-  Assets,
-  BitmapText,
-  Container,
-  Sprite,
-  Texture,
-} from "pixi.js";
+import { AnimatedSprite, Assets, BitmapText, Container, Sprite, Texture } from "pixi.js";
 import type { MatchWrapper } from "../shared/wrappers/match";
 import type { UnitWrapper } from "../shared/wrappers/unit";
 import { unitTypes } from "shared/schemas/unit";
@@ -19,7 +12,7 @@ export default async function showSubactionMenu(
   spriteSheet: Spritesheet<ArmySpritesheetData>,
   match: MatchWrapper,
   unit: UnitWrapper,
-  [x, y]: Position
+  [x, y]: Position,
 ) {
   //The big container holding everything
   //set its eventmode to static for interactivity and sortable for zIndex
@@ -37,18 +30,15 @@ export default async function showSubactionMenu(
   //the name lets us find the menu easily with getChildByName for easy removal
   menuContainer.name = "menu";
 
-  const allowedUnits = unitTypes.filter(t => !match.rules.bannedUnitTypes.includes(t))
+  const allowedUnits = unitTypes.filter((t) => !match.rules.bannedUnitTypes.includes(t));
 
   const buildableUnitTypes = allowedUnits.filter(
-    (type) => unitPropertiesMap[type].facility === facility
+    (type) => unitPropertiesMap[type].facility === facility,
   );
 
   //if our menu would appear below the middle of the map, we need to bring it up!
   // Otherwise, our user will have to scroll down to see all the units, which is a poor experience
-  if (
-    y > match.map.height / 2 &&
-    match.map.height - y < buildableUnitTypes.length * 0.675
-  ) {
+  if (y > match.map.height / 2 && match.map.height - y < buildableUnitTypes.length * 0.675) {
     const spaceLeft = match.map.height - y;
     //now if you wonder about 0.675, it basically means the
     // menu element is 67.5% of a tile, so we only move that much
@@ -190,4 +180,4 @@ const createCaptureOption = (match: MatchWrapper): Container => {
   //sprite
 
   return menuElement;
-}
+};

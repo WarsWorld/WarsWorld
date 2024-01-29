@@ -3,7 +3,7 @@ import type { PlayerInMatchWrapper } from "shared/wrappers/player-in-match";
 
 export function updateWeather(
   nextTurnPlayer: PlayerInMatchWrapper,
-  newWeather: Turn["newWeather"]
+  newWeather: Turn["newWeather"],
 ) {
   const { match } = nextTurnPlayer;
 

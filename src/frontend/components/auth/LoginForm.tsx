@@ -9,7 +9,7 @@ import { useSearchParams } from "next/navigation";
 
 type Props = {
   onLoginSuccess: () => Promise<void>;
-}
+};
 
 export default function LoginForm({ onLoginSuccess }: Props) {
   const router = useRouter();
@@ -34,7 +34,6 @@ export default function LoginForm({ onLoginSuccess }: Props) {
         message: "Error trying to login with that provider.",
       });
     }
-      
 
     if (isOAuthAccountNotLinked) {
       setError({
@@ -42,14 +41,13 @@ export default function LoginForm({ onLoginSuccess }: Props) {
         message: "There is already an user with that email",
       });
     }
-      
+
     if (isProtectionError) {
       setError({
         isError: true,
         message: "You must be logged in to access this page.",
       });
     }
-      
   }, [isOAuthAccountNotLinked, isProviderCallback, isProtectionError]);
 
   const onChangeGenericHandler = (identifier: string, value: string) => {
@@ -84,7 +82,7 @@ export default function LoginForm({ onLoginSuccess }: Props) {
         });
         throw "User or password are incorrect";
       }
-        
+
       if (loginResponse.ok) {
         setError({
           isError: false,
@@ -95,9 +93,7 @@ export default function LoginForm({ onLoginSuccess }: Props) {
           router.reload();
         });
       }
-    } catch (e: unknown) {
-      
-    }
+    } catch (e: unknown) {}
   };
 
   return (
@@ -117,10 +113,7 @@ export default function LoginForm({ onLoginSuccess }: Props) {
           type="text"
           value={loginData.user}
           onChange={(event) =>
-            onChangeGenericHandler(
-              "user",
-              (event.target as HTMLInputElement).value
-            )
+            onChangeGenericHandler("user", (event.target as HTMLInputElement).value)
           }
         />
         <FormInput
@@ -130,10 +123,7 @@ export default function LoginForm({ onLoginSuccess }: Props) {
           type="password"
           value={loginData.password}
           onChange={(event) =>
-            onChangeGenericHandler(
-              "password",
-              (event.target as HTMLInputElement).value
-            )
+            onChangeGenericHandler("password", (event.target as HTMLInputElement).value)
           }
         />
         <div className="@flex @flex-col @items-center @justify-center @pt-4 @px-10">

@@ -3,17 +3,16 @@ import { emit, subscribe, unsubscribe } from "server/emitter/event-emitter";
 import { prisma } from "server/prisma/prisma-client";
 import {
   validateMainActionAndToEvent,
-  validateSubActionAndToEvent
+  validateSubActionAndToEvent,
 } from "shared/match-logic/events/action-to-event";
-import { applyMainEventToMatch, applySubEventToMatch } from "shared/match-logic/events/apply-event-to-match";
+import {
+  applyMainEventToMatch,
+  applySubEventToMatch,
+} from "shared/match-logic/events/apply-event-to-match";
 import { mainActionSchema } from "shared/schemas/action";
 import { getFinalPositionSafe } from "shared/schemas/position";
 import type { Emittable, EmittableEvent } from "shared/types/events";
-import {
-  matchBaseProcedure,
-  playerInMatchBaseProcedure,
-  router
-} from "../trpc/trpc-setup";
+import { matchBaseProcedure, playerInMatchBaseProcedure, router } from "../trpc/trpc-setup";
 import { mainEventToEmittables } from "../../shared/match-logic/events/event-to-emittable";
 import { fillDiscoveredUnitsAndProperties } from "../../shared/match-logic/events/vision-update";
 import { updateMoveVision } from "../../shared/match-logic/events/handlers/move";
@@ -58,15 +57,10 @@ export const actionRouter = router({
 
         /* 3. Sub action to event */
         // if there was a trap or join/load, the default subEvent is "wait".
-        const isJoinOrLoad = match.getUnit(
-          getFinalPositionSafe(mainEvent.path)
-        ) !== undefined;
+        const isJoinOrLoad = match.getUnit(getFinalPositionSafe(mainEvent.path)) !== undefined;
 
         if (!mainEvent.trap && !isJoinOrLoad) {
-          mainEvent.subEvent = validateSubActionAndToEvent(
-            match,
-            input
-          );
+          mainEvent.subEvent = validateSubActionAndToEvent(match, input);
         }
 
         /* 4. Sub event to emittable sub events (done inside, first)*/
@@ -78,8 +72,7 @@ export const actionRouter = router({
 
         /* 7. Apply sub event to match and update sub event vision */
         applySubEventToMatch(match, mainEvent);
-      }
-      else {
+      } else {
         emittableEvents = mainEventToEmittables(match, mainEvent);
       }
 
@@ -91,8 +84,8 @@ export const actionRouter = router({
       //  undefined means that team shouldn't receive the event
       //  emittableEvents[i] is from match.teams[i]. emittableEvents has one extra "no team"(spectator) at the end
       emittableEvents.forEach((event) => {
-        if(event !== undefined) {
-          emit({...event, matchId: match.id});
+        if (event !== undefined) {
+          emit({ ...event, matchId: match.id });
         }
       });
 
@@ -101,8 +94,8 @@ export const actionRouter = router({
       await prisma.event.create({
         data: {
           matchId: input.matchId,
-          content: mainEvent
-        }
+          content: mainEvent,
+        },
       });
 
       // TODO we still need something like the following to handle timeout eliminations.
@@ -126,22 +119,20 @@ export const actionRouter = router({
       //   emit(emittableEliminationEvent)
       // }
     }),
-  onEvent: matchBaseProcedure.subscription(({ ctx: { match } }) =>
-    {
-      return observable<Emittable>((emit) => {
-        const onAdd = (emittable: Emittable) => {
-          // emit emittable to client
-          emit.next(emittable);
-        };
+  onEvent: matchBaseProcedure.subscription(({ ctx: { match } }) => {
+    return observable<Emittable>((emit) => {
+      const onAdd = (emittable: Emittable) => {
+        // emit emittable to client
+        emit.next(emittable);
+      };
 
-        subscribe(match.id, onAdd);
+      subscribe(match.id, onAdd);
 
-        return () => {
-          unsubscribe(match.id, onAdd)
-        };
-      });
-    }
-  )
+      return () => {
+        unsubscribe(match.id, onAdd);
+      };
+    });
+  }),
   // TODO create procedure for anonymous users to observe games
   // (they get their own special "-1" team or something)
 });

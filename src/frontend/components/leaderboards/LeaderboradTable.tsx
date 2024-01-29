@@ -37,7 +37,7 @@ type Props = {
   setBestPlayers: React.Dispatch<React.SetStateAction<PlayerLeaderboard[]>>;
   gamemode: SelectOption | undefined;
   timeMode: SelectOption | undefined;
-}
+};
 
 export default function LeaderboardTable({ setBestPlayers }: Props) {
   const screenWidth = useWindowWidth();
@@ -51,11 +51,11 @@ export default function LeaderboardTable({ setBestPlayers }: Props) {
     data,
     columns,
     state: {
-      columnVisibility
+      columnVisibility,
     },
     onColumnVisibilityChange: setColumnVisibility,
     getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel()
+    getPaginationRowModel: getPaginationRowModel(),
   });
 
   useEffect(() => {

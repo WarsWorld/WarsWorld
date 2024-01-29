@@ -11,7 +11,10 @@ import type { ChangeableTile } from "shared/types/server-match-state";
 import type { MatchWrapper } from "shared/wrappers/match";
 import type { SubActionToEvent } from "../handler-types";
 
-export function throwIfUnitCantBeUnloadedToTile(unit: { type: UnitType }, tile: Tile | ChangeableTile) {
+export function throwIfUnitCantBeUnloadedToTile(
+  unit: { type: UnitType },
+  tile: Tile | ChangeableTile,
+) {
   const loadedUnitMovementType = unitPropertiesMap[unit.type].movementType;
   const tileType = tile.type;
 
@@ -20,7 +23,11 @@ export function throwIfUnitCantBeUnloadedToTile(unit: { type: UnitType }, tile: 
   }
 }
 
-export const unloadWaitActionToEvent: SubActionToEvent<UnloadWaitAction> = (match, action, fromPosition) => {
+export const unloadWaitActionToEvent: SubActionToEvent<UnloadWaitAction> = (
+  match,
+  action,
+  fromPosition,
+) => {
   const player = match.getCurrentTurnPlayer();
 
   if (!player.getVersionProperties().unloadOnlyAfterMove) {
@@ -30,7 +37,7 @@ export const unloadWaitActionToEvent: SubActionToEvent<UnloadWaitAction> = (matc
   const transportUnit = match.getUnitOrThrow(fromPosition);
 
   if (!player.owns(transportUnit)) {
-    throw new DispatchableError("You don't own this unit")
+    throw new DispatchableError("You don't own this unit");
   }
 
   if (action.unloads.length < 1) {
@@ -60,14 +67,19 @@ export const unloadWaitActionToEvent: SubActionToEvent<UnloadWaitAction> = (matc
       }
 
       throwIfUnitCantBeUnloadedToTile(transportUnit.data.loadedUnit2, match.getTile(fromPosition));
-      throwIfUnitCantBeUnloadedToTile(transportUnit.data.loadedUnit2, match.getTile(unloadPosition));
+      throwIfUnitCantBeUnloadedToTile(
+        transportUnit.data.loadedUnit2,
+        match.getTile(unloadPosition),
+      );
     } else {
       throwIfUnitCantBeUnloadedToTile(transportUnit.data.loadedUnit, match.getTile(fromPosition));
       throwIfUnitCantBeUnloadedToTile(transportUnit.data.loadedUnit, match.getTile(unloadPosition));
     }
   } else if (action.unloads.length === 2) {
     if (!("loadedUnit2" in transportUnit.data)) {
-      throw new DispatchableError("Tried to unload 2 units, but only one can be put in a transport");
+      throw new DispatchableError(
+        "Tried to unload 2 units, but only one can be put in a transport",
+      );
     }
 
     if (transportUnit.data.loadedUnit2 === null) {
@@ -90,8 +102,8 @@ export const unloadWaitActionToEvent: SubActionToEvent<UnloadWaitAction> = (matc
 
     match.map.throwIfOutOfBounds(unloadPosition2);
 
-    throwIfUnitCantBeUnloadedToTile(transportUnit.data.loadedUnit, match.getTile(unloadPosition))
-    throwIfUnitCantBeUnloadedToTile(transportUnit.data.loadedUnit2, match.getTile(unloadPosition2))
+    throwIfUnitCantBeUnloadedToTile(transportUnit.data.loadedUnit, match.getTile(unloadPosition));
+    throwIfUnitCantBeUnloadedToTile(transportUnit.data.loadedUnit2, match.getTile(unloadPosition2));
   } else {
     throw new DispatchableError("Trying to unload more than 2 units");
   }
@@ -99,7 +111,11 @@ export const unloadWaitActionToEvent: SubActionToEvent<UnloadWaitAction> = (matc
   return action;
 };
 
-export const applyUnloadWaitEvent = (match: MatchWrapper, event: UnloadWaitEvent, transportPosition: Position) => {
+export const applyUnloadWaitEvent = (
+  match: MatchWrapper,
+  event: UnloadWaitEvent,
+  transportPosition: Position,
+) => {
   const unit = match.getUnitOrThrow(transportPosition);
 
   if (event.unloads.length === 1) {
@@ -111,12 +127,11 @@ export const applyUnloadWaitEvent = (match: MatchWrapper, event: UnloadWaitEvent
       unit.player.addUnwrappedUnit({
         ...unit.data.loadedUnit2,
         isReady: false,
-        position: addDirection(transportPosition, event.unloads[1].direction)
+        position: addDirection(transportPosition, event.unloads[1].direction),
       });
 
       unit.data.loadedUnit2 = null;
-    }
-    else if (!event.unloads[0].isSecondUnit && unit.isTransport()) {
+    } else if (!event.unloads[0].isSecondUnit && unit.isTransport()) {
       if (unit.data.loadedUnit === null) {
         throw new Error("Can't unload from empty slot 1");
       }
@@ -124,14 +139,13 @@ export const applyUnloadWaitEvent = (match: MatchWrapper, event: UnloadWaitEvent
       unit.player.addUnwrappedUnit({
         ...unit.data.loadedUnit,
         isReady: false,
-        position: addDirection(transportPosition, event.unloads[0].direction)
+        position: addDirection(transportPosition, event.unloads[0].direction),
       });
 
       if ("loadedUnit2" in unit.data) {
         unit.data.loadedUnit = unit.data.loadedUnit2;
         unit.data.loadedUnit2 = null;
-      }
-      else {
+      } else {
         unit.data.loadedUnit = null;
       }
     }
@@ -147,13 +161,13 @@ export const applyUnloadWaitEvent = (match: MatchWrapper, event: UnloadWaitEvent
       unit.player.addUnwrappedUnit({
         ...unit.data.loadedUnit,
         isReady: false,
-        position: addDirection(transportPosition, event.unloads[0].direction)
+        position: addDirection(transportPosition, event.unloads[0].direction),
       });
 
       unit.player.addUnwrappedUnit({
         ...unit.data.loadedUnit2,
         isReady: false,
-        position: addDirection(transportPosition, event.unloads[1].direction)
+        position: addDirection(transportPosition, event.unloads[1].direction),
       });
 
       unit.data.loadedUnit = null;

@@ -9,7 +9,7 @@ export function spriteConstructor(
   height: number,
   eventMode?: Sprite["eventMode"],
   zIndex?: number,
-  tint?: string
+  tint?: string,
 ) {
   const sprite = new Sprite(texture);
   sprite.x = x;
@@ -41,7 +41,7 @@ export function animatedSpriteConstructor(
   height: number,
   eventMode?: Sprite["eventMode"],
   zIndex?: number,
-  tint?: string
+  tint?: string,
 ) {
   const sprite = new AnimatedSprite(texture);
   sprite.x = x;

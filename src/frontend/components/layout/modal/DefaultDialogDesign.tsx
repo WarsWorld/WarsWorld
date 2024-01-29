@@ -7,7 +7,7 @@ type Props = {
   width?: string;
   title?: string;
   children: ReactNode;
-}
+};
 
 export default function DefaultDialogDesign({ children, width, title }: Props) {
   return (

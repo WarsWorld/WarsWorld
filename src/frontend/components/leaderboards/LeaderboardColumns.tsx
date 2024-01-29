@@ -8,12 +8,12 @@ export const columns = [
   columnHelper.accessor("rank", {
     id: "Rank",
     header: () => "Rank",
-    cell: (info) => info.getValue()
+    cell: (info) => info.getValue(),
   }),
   columnHelper.accessor("rating", {
     id: "Rating",
     header: () => "Rating",
-    cell: (info) => info.getValue()
+    cell: (info) => info.getValue(),
   }),
   columnHelper.accessor(
     (row) => (
@@ -34,13 +34,13 @@ export const columns = [
     {
       id: "Player",
       header: "Player",
-      cell: (info) => info.getValue()
-    }
+      cell: (info) => info.getValue(),
+    },
   ),
   columnHelper.accessor("games", {
     id: "Games",
     header: () => "Games",
-    cell: (info) => info.getValue()
+    cell: (info) => info.getValue(),
   }),
   columnHelper.accessor("winRate", {
     id: "Win Rate",
@@ -55,7 +55,7 @@ export const columns = [
           style={{ width: `${info.getValue()}%` }}
         ></div>
       </div>
-    )
+    ),
   }),
   columnHelper.accessor("streak", {
     id: "Streak",
@@ -81,6 +81,6 @@ export const columns = [
           </div>
         )}
       </>
-    )
-  })
+    ),
+  }),
 ];

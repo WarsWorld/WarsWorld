@@ -15,7 +15,10 @@ export const articleCategoriesSchema = z.enum([
 
 export const articleSchema = z.object({
   title: z.string().min(1, "Title is empty.").max(100, "Title exceeds 100 characters."),
-  description: z.string().min(1, "Description is empty.").max(500, "Description exceeds 500 characters."),
+  description: z
+    .string()
+    .min(1, "Description is empty.")
+    .max(500, "Description exceeds 500 characters."),
   body: z.string().min(1, "Content is empty.").max(7500, "Content exceeds 7500 characters."),
   thumbnail: z.string().min(1, "Image url is empty.").max(200, "Image url exceeds 200 characters."),
   category: articleCategoriesSchema,
@@ -27,4 +30,6 @@ export const articleCommentSchema = z.object({
 });
 
 export type ArticleCategories = z.infer<typeof articleCategoriesSchema>;
-export type ArticleCommentsWithPlayer = NonNullable<inferRouterOutputs<typeof articleRouter>["getMarkdownById"]>["Comments"];
+export type ArticleCommentsWithPlayer = NonNullable<
+  inferRouterOutputs<typeof articleRouter>["getMarkdownById"]
+>["Comments"];

@@ -21,9 +21,7 @@ class PageMatchIndex {
     const listIndex = this.list.findIndex((m) => m.id === match.id);
 
     if (listIndex === -1) {
-      throw new Error(
-        `Tried to remove match ${match.id} from idIndex but wasn't found`
-      );
+      throw new Error(`Tried to remove match ${match.id} from idIndex but wasn't found`);
     }
 
     this.list.splice(listIndex, 1);

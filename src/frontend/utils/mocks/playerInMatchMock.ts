@@ -8,7 +8,7 @@ export const playerInMatch1: PlayerInMatch = {
   ready: true,
   coId: {
     name: "adder",
-    version: "AW2"
+    version: "AW2",
   },
   eliminated: false,
   funds: 1000,
@@ -26,7 +26,7 @@ export const playerInMatch2: PlayerInMatch = {
   ready: false,
   coId: {
     name: "sami",
-    version: "AW2"
+    version: "AW2",
   },
   eliminated: false,
   funds: 2000,

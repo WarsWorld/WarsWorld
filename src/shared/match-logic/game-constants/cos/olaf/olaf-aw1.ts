@@ -7,7 +7,7 @@ export const olafAW1: COProperties = {
     description: "Units have clear movement costs in snow, and snow movement costs in rain.",
     hooks: {
       //handled in "getWeatherSpecialMovement"
-    }
+    },
   },
   powers: {
     COPower: {
@@ -16,7 +16,7 @@ export const olafAW1: COProperties = {
       stars: 3,
       instantEffect(player) {
         player.match.setWeather("snow", 1);
-      }
+      },
     },
-  }
+  },
 };

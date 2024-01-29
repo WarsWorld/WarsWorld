@@ -3,7 +3,7 @@ import { NavItem } from "./NavItem";
 type Props = {
   showMatchLinks: boolean;
   handleBurgerMenu?: () => void;
-}
+};
 
 const navItemObject = [
   { text: "YOUR GAMES", location: "/your-matches" },

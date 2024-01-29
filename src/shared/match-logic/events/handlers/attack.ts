@@ -13,30 +13,29 @@ import type { PlayerInMatchWrapper } from "shared/wrappers/player-in-match";
 import type { WWUnit } from "../../../schemas/unit";
 
 export type LuckRoll = {
-  goodLuck: number,
-  badLuck: number
+  goodLuck: number;
+  badLuck: number;
 };
 type Params = [
   ...Parameters<SubActionToEvent<AttackAction>>,
   unitHasMoved: boolean,
   attackerLuck: LuckRoll,
-  defenderLuck: LuckRoll
+  defenderLuck: LuckRoll,
 ];
 
 const calculateEngagementOutcome = (
   attacker: UnitWrapper,
   defender: UnitWrapper,
   attackerLuck: LuckRoll,
-  defenderLuck: LuckRoll
-): {defenderHP: number, attackerHP: number | undefined} => {
-
+  defenderLuck: LuckRoll,
+): { defenderHP: number; attackerHP: number | undefined } => {
   let damageByAttacker = calculateDamage(
     {
       attacker,
-      defender
+      defender,
     },
     attackerLuck,
-    false
+    false,
   );
 
   if (damageByAttacker === null) {
@@ -47,16 +46,13 @@ const calculateEngagementOutcome = (
   if (damageByAttacker >= defender.getHP()) {
     return {
       defenderHP: 0,
-      attackerHP: undefined
+      attackerHP: undefined,
     };
   }
 
   //check if defender can counterattack
   if (getDistance(attacker.data.position, defender.data.position) === 1) {
-    if (
-      "attackRange" in defender.properties &&
-      defender.properties.attackRange[1] === 1
-    ) {
+    if ("attackRange" in defender.properties && defender.properties.attackRange[1] === 1) {
       //defender is melee, maybe can counterattack
       //temporarily subtract hp to calculate counter dmg
       const originalHP = defender.getHP();
@@ -65,10 +61,10 @@ const calculateEngagementOutcome = (
       const damageByDefender = calculateDamage(
         {
           attacker: defender,
-          defender: attacker
+          defender: attacker,
         },
         defenderLuck,
-        true
+        true,
       );
 
       defender.setHp(originalHP);
@@ -77,7 +73,7 @@ const calculateEngagementOutcome = (
         //return event with counter-attack
         return {
           defenderHP: defender.getHP() - damageByAttacker,
-          attackerHP: Math.max(0, attacker.getHP() - damageByDefender)
+          attackerHP: Math.max(0, attacker.getHP() - damageByDefender),
         };
       }
     }
@@ -85,7 +81,7 @@ const calculateEngagementOutcome = (
 
   return {
     defenderHP: defender.getHP() - damageByAttacker,
-    attackerHP: undefined
+    attackerHP: undefined,
   };
 };
 
@@ -93,7 +89,7 @@ function getEliminationReason({
   attacker,
   defender,
   attackerHP,
-  defenderHP
+  defenderHP,
 }: {
   attacker: PlayerInMatchWrapper;
   defender: PlayerInMatchWrapper;
@@ -117,14 +113,14 @@ export const attackActionToEvent: (...params: Params) => AttackEvent = (
   fromPosition,
   unitHasMoved, // for indirects not attacking and shooting
   attackerLuck,
-  defenderLuck
+  defenderLuck,
 ) => {
   const player = match.getCurrentTurnPlayer();
 
   const attacker = match.getUnitOrThrow(fromPosition);
 
   if (attacker.data.playerSlot !== player.data.slot) {
-    throw new DispatchableError("You don't own this unit")
+    throw new DispatchableError("You don't own this unit");
   }
 
   //check if unit is in range
@@ -140,7 +136,8 @@ export const attackActionToEvent: (...params: Params) => AttackEvent = (
 
   const attackDistance = getDistance(fromPosition, action.defenderPosition);
 
-  let maximumAttackRange = attackerProperties.attackRange[1] - (match.getCurrentWeather() === "sandstorm" ? 1 : 0);
+  let maximumAttackRange =
+    attackerProperties.attackRange[1] - (match.getCurrentWeather() === "sandstorm" ? 1 : 0);
   maximumAttackRange =
     attacker.player.getHook("attackRange")?.(maximumAttackRange, attacker) ?? maximumAttackRange;
 
@@ -148,10 +145,7 @@ export const attackActionToEvent: (...params: Params) => AttackEvent = (
   // [2, 1] artillery attack range in sandstorms.
   maximumAttackRange = Math.max(attackerProperties.attackRange[0], maximumAttackRange);
 
-  if (
-    attackerProperties.attackRange[0] > attackDistance ||
-    attackDistance > maximumAttackRange
-  ) {
+  if (attackerProperties.attackRange[0] > attackDistance || attackDistance > maximumAttackRange) {
     throw new DispatchableError("Unit is not in range to attack");
   }
 
@@ -166,15 +160,15 @@ export const attackActionToEvent: (...params: Params) => AttackEvent = (
 
     const usedVersion = match.rules.gameVersion ?? attacker.player.data.coId.version;
     const unitEquivalent: WWUnit = {
-      type: ((usedVersion === "AW1") ? "mediumTank" : "neoTank"),
+      type: usedVersion === "AW1" ? "mediumTank" : "neoTank",
       playerSlot: -1,
       position: action.defenderPosition,
       isReady: false,
       stats: {
         hp: attackedTile.hp,
         fuel: 0,
-        ammo: 0
-      }
+        ammo: 0,
+      },
     };
 
     const wrappedUnit = new UnitWrapper(unitEquivalent, match);
@@ -186,20 +180,18 @@ export const attackActionToEvent: (...params: Params) => AttackEvent = (
     const result = calculateEngagementOutcome(
       attacker,
       wrappedUnit,
-      {goodLuck: 0, badLuck: 0},
-      {goodLuck: 0, badLuck: 0}
+      { goodLuck: 0, badLuck: 0 },
+      { goodLuck: 0, badLuck: 0 },
     );
 
     return {
       ...action,
       defenderHP: result.defenderHP,
     };
-
   }
 
-  
   if (defender.player.team.index === player.team.index) {
-    throw new DispatchableError("The target unit is from your own team")
+    throw new DispatchableError("The target unit is from your own team");
   }
 
   if (!attacker.player.team.canSeeUnitAtPosition(defender.data.position)) {
@@ -211,14 +203,12 @@ export const attackActionToEvent: (...params: Params) => AttackEvent = (
   }
 
   // sonja scop exception (she attacks first when attacked)
-  if (defender.player.data.coId.name === "sonja" && defender.player.data.COPowerState === "super-co-power") {
+  if (
+    defender.player.data.coId.name === "sonja" &&
+    defender.player.data.COPowerState === "super-co-power"
+  ) {
     // "defender" is sonja unit with scop, "attacker" is unit that attacked sonja unit
-    const result = calculateEngagementOutcome(
-      defender,
-      attacker,
-      defenderLuck,
-      attackerLuck
-    );
+    const result = calculateEngagementOutcome(defender, attacker, defenderLuck, attackerLuck);
 
     if (result.attackerHP === undefined) {
       // that means sonja scop unit killed attacker, so they couldn't "counterattack" the sonja unit
@@ -234,17 +224,12 @@ export const attackActionToEvent: (...params: Params) => AttackEvent = (
         attacker: attacker.player, // TODO not sure if this is the correct way around...
         defender: defender.player,
         attackerHP: result.defenderHP,
-        defenderHP: result.attackerHP
-      })
+        defenderHP: result.attackerHP,
+      }),
     };
   }
 
-  const result = calculateEngagementOutcome(
-    attacker,
-    defender,
-    attackerLuck,
-    defenderLuck
-  );
+  const result = calculateEngagementOutcome(attacker, defender, attackerLuck, defenderLuck);
   return {
     ...action,
     defenderHP: result.defenderHP,
@@ -253,8 +238,8 @@ export const attackActionToEvent: (...params: Params) => AttackEvent = (
       attacker: attacker.player,
       defender: defender.player,
       attackerHP: result.attackerHP,
-      defenderHP: result.defenderHP
-    })
+      defenderHP: result.defenderHP,
+    }),
   };
 };
 
@@ -262,39 +247,42 @@ export const getPowerChargeGain = (
   attacker: UnitWrapper,
   attackerHpDiff: number,
   defender: UnitWrapper,
-  defenderHpDiff: number
+  defenderHpDiff: number,
 ) => {
   //power meter charge
   const attackerVP = attacker.player.getVersionProperties();
   const defenderVP = defender.player.getVersionProperties();
 
   return {
-    attackerPowerCharge: attackerVP.powerMeterIncreasePerHP(attacker) * attackerHpDiff +
-      attackerVP.powerMeterIncreasePerHP(defender) * defenderHpDiff * attackerVP.offensivePowerGenMult,
-    defenderPowerCharge: defenderVP.powerMeterIncreasePerHP(defender) * defenderHpDiff +
-      defenderVP.powerMeterIncreasePerHP(attacker) * attackerHpDiff * defenderVP.offensivePowerGenMult
+    attackerPowerCharge:
+      attackerVP.powerMeterIncreasePerHP(attacker) * attackerHpDiff +
+      attackerVP.powerMeterIncreasePerHP(defender) *
+        defenderHpDiff *
+        attackerVP.offensivePowerGenMult,
+    defenderPowerCharge:
+      defenderVP.powerMeterIncreasePerHP(defender) * defenderHpDiff +
+      defenderVP.powerMeterIncreasePerHP(attacker) *
+        attackerHpDiff *
+        defenderVP.offensivePowerGenMult,
   };
-}
+};
 
-export const applyAttackEvent = (
-  match: MatchWrapper,
-  event: AttackEvent,
-  position: Position
-) => {
+export const applyAttackEvent = (match: MatchWrapper, event: AttackEvent, position: Position) => {
   const attacker = match.getUnitOrThrow(position);
   const defender = match.getUnit(event.defenderPosition);
 
-  if (defender === undefined) { // pipe seam
+  if (defender === undefined) {
+    // pipe seam
     const pipeTile = match.getTile(event.defenderPosition);
-  
+
     if (pipeTile.type !== "pipeSeam") {
       throw new Error("Received pipe seam attack event, but no pipe seam was found");
     }
 
-    const usedVersion = (match.rules.gameVersion ?? attacker.player.data.coId.version);
-    
+    const usedVersion = match.rules.gameVersion ?? attacker.player.data.coId.version;
+
     //ammo consumption
-    if (canAttackWithPrimary(attacker, ((usedVersion === "AW1") ? "mediumTank" : "neoTank"))) {
+    if (canAttackWithPrimary(attacker, usedVersion === "AW1" ? "mediumTank" : "neoTank")) {
       attacker.setAmmo((attacker.getAmmo() ?? 1) - 1);
     }
 
@@ -304,24 +292,31 @@ export const applyAttackEvent = (
   }
 
   //Calculate visible hp difference:
-  const attackerHpDiff = attacker.getVisualHP() - getVisualHPfromHP(event.attackerHP ?? attacker.getVisualHP());
+  const attackerHpDiff =
+    attacker.getVisualHP() - getVisualHPfromHP(event.attackerHP ?? attacker.getVisualHP());
   const defenderHpDiff = defender.getVisualHP() - getVisualHPfromHP(event.defenderHP);
 
   //sasha scop funds
-  if (attacker.player.data.coId.name === "sasha" && attacker.player.data.COPowerState === "super-co-power") {
-    attacker.player.data.funds += defenderHpDiff * defender.getBuildCost() / 10 * 0.5;
+  if (
+    attacker.player.data.coId.name === "sasha" &&
+    attacker.player.data.COPowerState === "super-co-power"
+  ) {
+    attacker.player.data.funds += ((defenderHpDiff * defender.getBuildCost()) / 10) * 0.5;
   }
 
-  if (defender.player.data.coId.name === "sasha" && defender.player.data.COPowerState === "super-co-power") {
-    defender.player.data.funds += attackerHpDiff * attacker.getBuildCost() / 10 * 0.5;
+  if (
+    defender.player.data.coId.name === "sasha" &&
+    defender.player.data.COPowerState === "super-co-power"
+  ) {
+    defender.player.data.funds += ((attackerHpDiff * attacker.getBuildCost()) / 10) * 0.5;
   }
 
   //power charge
-  const {attackerPowerCharge, defenderPowerCharge} = getPowerChargeGain(
+  const { attackerPowerCharge, defenderPowerCharge } = getPowerChargeGain(
     attacker,
     attackerHpDiff,
     defender,
-    defenderHpDiff
+    defenderHpDiff,
   );
 
   attacker.player.gainPowerCharge(attackerPowerCharge);

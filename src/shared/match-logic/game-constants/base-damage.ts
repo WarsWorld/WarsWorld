@@ -4,22 +4,19 @@ import type { UnitWrapper } from "shared/wrappers/unit";
 /**
  * Returns if unit is going to attack enemy unit with primary weapon or not
  */
-export const canAttackWithPrimary = (
-  attacker: UnitWrapper,
-  defenderType: UnitType
-): boolean => {
+export const canAttackWithPrimary = (attacker: UnitWrapper, defenderType: UnitType): boolean => {
   if (attacker.getAmmo() === 0 || attacker.getAmmo() === null) {
     return false;
   }
 
-  return attacker.player.getVersionProperties().
-    damageChart[attacker.data.type]?.primary?.[defenderType] !== undefined;
-}
+  return (
+    attacker.player.getVersionProperties().damageChart[attacker.data.type]?.primary?.[
+      defenderType
+    ] !== undefined
+  );
+};
 
-export const getBaseDamage = (
-  attacker: UnitWrapper,
-  defender: UnitWrapper
-): number | null => {
+export const getBaseDamage = (attacker: UnitWrapper, defender: UnitWrapper): number | null => {
   const damageValues = attacker.player.getVersionProperties().damageChart[attacker.data.type];
 
   if (damageValues === undefined) {
@@ -27,23 +24,31 @@ export const getBaseDamage = (
   }
 
   // hardcoded: hidden subs / stealth can only be damaged by cruiser+sub / fighter+stealth
-  if (defender.data.type === "sub" && "hidden" in defender.data && defender.data.hidden &&
-      attacker.data.type !== "sub" && attacker.data.type !== "cruiser") {
+  if (
+    defender.data.type === "sub" &&
+    "hidden" in defender.data &&
+    defender.data.hidden &&
+    attacker.data.type !== "sub" &&
+    attacker.data.type !== "cruiser"
+  ) {
     return null;
   }
 
-  if (defender.data.type === "stealth" && "hidden" in defender.data && defender.data.hidden &&
-      attacker.data.type !== "stealth" && attacker.data.type !== "fighter") {
+  if (
+    defender.data.type === "stealth" &&
+    "hidden" in defender.data &&
+    defender.data.hidden &&
+    attacker.data.type !== "stealth" &&
+    attacker.data.type !== "fighter"
+  ) {
     return null;
   }
 
   const primaryDamage = damageValues.primary?.[defender.data.type] ?? null;
   const secondaryDamage = damageValues.secondary?.[defender.data.type] ?? null;
-  const cantUsePrimaryWeapon = (attacker.getAmmo() === 0 || attacker.getAmmo() === null);
+  const cantUsePrimaryWeapon = attacker.getAmmo() === 0 || attacker.getAmmo() === null;
 
-  return cantUsePrimaryWeapon
-    ? secondaryDamage
-    : primaryDamage ?? secondaryDamage;
+  return cantUsePrimaryWeapon ? secondaryDamage : primaryDamage ?? secondaryDamage;
 };
 
 type DamageValues = Partial<Record<UnitType, number>>;
@@ -75,10 +80,10 @@ const infantryWeaponry = {
     missile: 25,
     pipeRunner: 5,
     battleCopter: 7,
-    transportCopter: 30
-  }
+    transportCopter: 30,
+  },
 };
-const mechWeaponry =  {
+const mechWeaponry = {
   primary: {
     recon: 85,
     tank: 55,
@@ -90,7 +95,7 @@ const mechWeaponry =  {
     rocket: 85,
     antiAir: 65,
     missile: 85,
-    pipeRunner: 55
+    pipeRunner: 55,
   },
   secondary: {
     infantry: 65,
@@ -107,8 +112,8 @@ const mechWeaponry =  {
     missile: 35,
     pipeRunner: 6,
     battleCopter: 9,
-    transportCopter: 35
-  }
+    transportCopter: 35,
+  },
 };
 const reconWeaponry = {
   secondary: {
@@ -126,8 +131,8 @@ const reconWeaponry = {
     missile: 28,
     pipeRunner: 6,
     battleCopter: 10,
-    transportCopter: 35
-  }
+    transportCopter: 35,
+  },
 };
 const artilleryWeaponryAWDS = {
   primary: {
@@ -149,14 +154,14 @@ const artilleryWeaponryAWDS = {
     sub: 60,
     battleship: 40,
     carrier: 45,
-    blackBoat: 55
-  }
+    blackBoat: 55,
+  },
 };
 const artilleryWeaponryAW2 = {
   primary: {
     ...artilleryWeaponryAWDS.primary,
-    cruiser: 65
-  }
+    cruiser: 65,
+  },
 };
 const tankWeaponry = {
   primary: {
@@ -176,7 +181,7 @@ const tankWeaponry = {
     sub: 1,
     battleship: 1,
     carrier: 1,
-    blackBoat: 10
+    blackBoat: 10,
   },
   secondary: {
     infantry: 75,
@@ -193,8 +198,8 @@ const tankWeaponry = {
     missile: 30,
     pipeRunner: 6,
     battleCopter: 10,
-    transportCopter: 40
-  }
+    transportCopter: 40,
+  },
 };
 const antiAirWeaponryAWDS = {
   primary: {
@@ -216,15 +221,15 @@ const antiAirWeaponryAWDS = {
     fighter: 65,
     bomber: 75,
     stealth: 75,
-    blackBomb: 120
-  }
+    blackBomb: 120,
+  },
 };
 const antiAirWeaponryAW2 = {
   primary: {
     ...antiAirWeaponryAWDS.primary,
     battleCopter: 120,
-    transportCopter: 120
-  }
+    transportCopter: 120,
+  },
 };
 const missileWeaponry = {
   primary: {
@@ -233,8 +238,8 @@ const missileWeaponry = {
     fighter: 100,
     bomber: 100,
     stealth: 100,
-    blackBomb: 120
-  }
+    blackBomb: 120,
+  },
 };
 const rocketWeaponryAWDS = {
   primary: {
@@ -256,15 +261,15 @@ const rocketWeaponryAWDS = {
     sub: 85,
     battleship: 55,
     carrier: 60,
-    blackBoat: 60
-  }
+    blackBoat: 60,
+  },
 };
 const rocketWeaponryAW2 = {
   primary: {
     ...rocketWeaponryAWDS.primary,
     tank: 85,
-    cruiser: 85
-  }
+    cruiser: 85,
+  },
 };
 const mediumTankWeaponryAWDS = {
   primary: {
@@ -284,7 +289,7 @@ const mediumTankWeaponryAWDS = {
     sub: 10,
     battleship: 10,
     carrier: 10,
-    blackBoat: 35
+    blackBoat: 35,
   },
   secondary: {
     infantry: 105,
@@ -301,27 +306,28 @@ const mediumTankWeaponryAWDS = {
     missile: 35,
     pipeRunner: 7,
     battleCopter: 12,
-    transportCopter: 45
-  }
+    transportCopter: 45,
+  },
 };
 const mediumTankWeaponryAW2 = {
   primary: {
     ...mediumTankWeaponryAWDS.primary,
-    cruiser: 45
+    cruiser: 45,
   },
   secondary: {
-    ...mediumTankWeaponryAWDS.secondary
-  }
+    ...mediumTankWeaponryAWDS.secondary,
+  },
 };
-const mediumTankWeaponryAW1 = { //xdd
+const mediumTankWeaponryAW1 = {
+  //xdd
   primary: {
     ...mediumTankWeaponryAWDS.primary,
-    cruiser: 55
+    cruiser: 55,
   },
   secondary: {
-    ...mediumTankWeaponryAWDS.secondary
-  }
-}
+    ...mediumTankWeaponryAWDS.secondary,
+  },
+};
 const pipeRunnerWeaponry = {
   primary: {
     infantry: 95,
@@ -348,8 +354,8 @@ const pipeRunnerWeaponry = {
     sub: 85,
     battleship: 55,
     carrier: 60,
-    blackBoat: 60
-  }
+    blackBoat: 60,
+  },
 };
 const neoTankWeaponryAWDS = {
   primary: {
@@ -369,7 +375,7 @@ const neoTankWeaponryAWDS = {
     sub: 15,
     battleship: 15,
     carrier: 15,
-    blackBoat: 40
+    blackBoat: 40,
   },
   secondary: {
     infantry: 125,
@@ -386,19 +392,19 @@ const neoTankWeaponryAWDS = {
     missile: 55,
     pipeRunner: 17,
     battleCopter: 22,
-    transportCopter: 55
-  }
+    transportCopter: 55,
+  },
 };
 const neoTankWeaponryAW2 = {
   primary: {
     ...neoTankWeaponryAWDS.primary,
     cruiser: 50,
-    battleship: 10
+    battleship: 10,
   },
   secondary: {
-    ...neoTankWeaponryAWDS.secondary
-  }
-}
+    ...neoTankWeaponryAWDS.secondary,
+  },
+};
 const megaTankWeaponry = {
   primary: {
     recon: 185,
@@ -417,7 +423,7 @@ const megaTankWeaponry = {
     sub: 45,
     battleship: 45,
     carrier: 45,
-    blackBoat: 105
+    blackBoat: 105,
   },
   secondary: {
     infantry: 135,
@@ -434,8 +440,8 @@ const megaTankWeaponry = {
     missile: 55,
     pipeRunner: 17,
     battleCopter: 22,
-    transportCopter: 55
-  }
+    transportCopter: 55,
+  },
 };
 const battleCopterWeaponryAWDS = {
   primary: {
@@ -455,7 +461,7 @@ const battleCopterWeaponryAWDS = {
     sub: 25,
     battleship: 25,
     carrier: 25,
-    blackBoat: 25
+    blackBoat: 25,
   },
   secondary: {
     infantry: 75,
@@ -472,17 +478,17 @@ const battleCopterWeaponryAWDS = {
     missile: 35,
     pipeRunner: 6,
     battleCopter: 65,
-    transportCopter: 95
-  }
+    transportCopter: 95,
+  },
 };
 const battleCopterWeaponryAW2 = {
   primary: {
     ...battleCopterWeaponryAWDS.primary,
-    cruiser: 55
+    cruiser: 55,
   },
   secondary: {
-    ...battleCopterWeaponryAWDS.secondary
-  }
+    ...battleCopterWeaponryAWDS.secondary,
+  },
 };
 const fighterWeaponryAWDS = {
   primary: {
@@ -491,15 +497,15 @@ const fighterWeaponryAWDS = {
     fighter: 55,
     bomber: 100,
     stealth: 85,
-    blackBomb: 120
-  }
+    blackBomb: 120,
+  },
 };
 const fighterWeaponryAW2 = {
   primary: {
     ...fighterWeaponryAWDS.primary,
     battleCopter: 100,
-    transportCopter: 100
-  }
+    transportCopter: 100,
+  },
 };
 const bomberWeaponryAWDS = {
   primary: {
@@ -521,14 +527,14 @@ const bomberWeaponryAWDS = {
     sub: 95,
     battleship: 75,
     carrier: 75,
-    blackBoat: 105
-  }
+    blackBoat: 105,
+  },
 };
 const bomberWeaponryAW2 = {
   primary: {
     ...bomberWeaponryAWDS.primary,
-    cruiser: 85
-  }
+    cruiser: 85,
+  },
 };
 const stealthWeaponry = {
   primary: {
@@ -556,8 +562,8 @@ const stealthWeaponry = {
     sub: 55,
     battleship: 45,
     carrier: 45,
-    blackBoat: 65
-  }
+    blackBoat: 65,
+  },
 };
 const cruiserWeaponryAWDS = {
   primary: {
@@ -566,7 +572,7 @@ const cruiserWeaponryAWDS = {
     sub: 90,
     battleship: 5,
     carrier: 5,
-    blackBoat: 25
+    blackBoat: 25,
   },
   secondary: {
     battleCopter: 105,
@@ -574,21 +580,22 @@ const cruiserWeaponryAWDS = {
     fighter: 85,
     bomber: 100,
     stealth: 100,
-    blackBomb: 120
-  }
+    blackBomb: 120,
+  },
 };
 const cruiserWeaponryAW2 = {
-  primary: { // aw2 (and aw1) cruisers can only attack subs
-    sub: 90
+  primary: {
+    // aw2 (and aw1) cruisers can only attack subs
+    sub: 90,
   },
   secondary: {
     ...cruiserWeaponryAWDS.secondary,
     battleCopter: 115,
     transportCopter: 115,
     fighter: 55,
-    bomber: 65
-  }
-}
+    bomber: 65,
+  },
+};
 const subWeaponryAWDS = {
   primary: {
     lander: 95,
@@ -596,15 +603,15 @@ const subWeaponryAWDS = {
     sub: 55,
     battleship: 65,
     carrier: 75,
-    blackBoat: 95
-  }
+    blackBoat: 95,
+  },
 };
 const subWeaponryAW2 = {
   primary: {
     ...subWeaponryAWDS.primary,
-    battleship: 55
-  }
-}
+    battleship: 55,
+  },
+};
 const battleshipWeaponryAWDS = {
   primary: {
     infantry: 95,
@@ -625,15 +632,15 @@ const battleshipWeaponryAWDS = {
     sub: 95,
     battleship: 50,
     carrier: 60,
-    blackBoat: 95
-  }
+    blackBoat: 95,
+  },
 };
 const battleshipWeaponryAW2 = {
   primary: {
     ...battleshipWeaponryAWDS.primary,
-    tank: 85
-  }
-}
+    tank: 85,
+  },
+};
 const carrierWeaponry = {
   primary: {
     battleCopter: 115,
@@ -641,8 +648,8 @@ const carrierWeaponry = {
     fighter: 100,
     bomber: 100,
     stealth: 100,
-    blackBomb: 120
-  }
+    blackBomb: 120,
+  },
 };
 
 export const damageChartAWDS: DamageChart = {
@@ -665,10 +672,11 @@ export const damageChartAWDS: DamageChart = {
   cruiser: cruiserWeaponryAWDS,
   sub: subWeaponryAWDS,
   battleship: battleshipWeaponryAWDS,
-  carrier: carrierWeaponry
+  carrier: carrierWeaponry,
 };
 
-export const damageChartAW2: DamageChart = { //including more units than the game has cause whatever
+export const damageChartAW2: DamageChart = {
+  //including more units than the game has cause whatever
   ...damageChartAWDS,
   mediumTank: mediumTankWeaponryAW2,
   neoTank: neoTankWeaponryAW2,
@@ -683,7 +691,8 @@ export const damageChartAW2: DamageChart = { //including more units than the gam
   battleship: battleshipWeaponryAW2,
 };
 
-export const damageChartAW1: DamageChart = { //including more units than the game has cause whatever
+export const damageChartAW1: DamageChart = {
+  //including more units than the game has cause whatever
   ...damageChartAW2,
-  mediumTank: mediumTankWeaponryAW1
+  mediumTank: mediumTankWeaponryAW1,
 };

@@ -3,18 +3,13 @@ import type { CreatableMap } from "shared/schemas/map";
 import { mapSchema } from "shared/schemas/map";
 import type { PlayerSlot } from "shared/schemas/player-slot";
 import type { Tile, TileType } from "shared/schemas/tile";
-import {
-  isNotNeutralProperty,
-  isUnitProducingProperty
-} from "shared/schemas/tile";
+import { isNotNeutralProperty, isUnitProducingProperty } from "shared/schemas/tile";
 import { publicBaseProcedure, router } from "../trpc/trpc-setup";
 
 export const getPlayerAmountOfMap = (map: CreatableMap) => {
   const seenPlayerSlots: PlayerSlot[] = [];
 
-  const addToPlayerSlotsIfNotAddedAlready = (item: {
-    playerSlot: PlayerSlot;
-  }) => {
+  const addToPlayerSlotsIfNotAddedAlready = (item: { playerSlot: PlayerSlot }) => {
     if (!seenPlayerSlots.includes(item.playerSlot)) {
       seenPlayerSlots.push(item.playerSlot);
     }
@@ -41,13 +36,14 @@ const propertyTileTypes = [
   "airport",
   "commtower",
   "lab",
-  "port"
+  "port",
 ] satisfies TileType[];
 
 type PropertyStatsType = Record<(typeof propertyTileTypes)[number], number>;
 
 export const mapRouter = router({
-  getAll: publicBaseProcedure.query(async () => { // TODO pagination / filter / search
+  getAll: publicBaseProcedure.query(async () => {
+    // TODO pagination / filter / search
     const allMaps = await prisma.wWMap.findMany();
 
     return allMaps.map((map) => {
@@ -62,16 +58,16 @@ export const mapRouter = router({
         // TODO which armies exactly?
         size: {
           width: tiles[0].length,
-          height: tiles.length
+          height: tiles.length,
         },
         propertyStats: propertyTileTypes.reduce<PropertyStatsType>(
           (prev, cur) => ({
             ...prev,
-            [cur]: tilesFlat.filter((tile) => tile.type === cur).length
+            [cur]: tilesFlat.filter((tile) => tile.type === cur).length,
           }),
-          {} as PropertyStatsType
+          {} as PropertyStatsType,
         ),
-        created: map.createdAt
+        created: map.createdAt,
       };
     });
   }),
@@ -91,8 +87,8 @@ export const mapRouter = router({
     return prisma.wWMap.create({
       data: {
         ...input,
-        numberOfPlayers
-      }
+        numberOfPlayers,
+      },
     });
-  })
+  }),
 });

@@ -7,8 +7,8 @@ export const colinAW2: COProperties = {
     description: "Units cost 20% less to build, but have -10% firepower.",
     hooks: {
       buildCost: (value) => value * 0.8,
-      attack: () => 90
-    }
+      attack: () => 90,
+    },
   },
   powers: {
     COPower: {
@@ -17,7 +17,7 @@ export const colinAW2: COProperties = {
       stars: 2,
       instantEffect: (player) => {
         player.data.funds = player.data.funds * 1.5;
-      }
+      },
     },
     superCOPower: {
       name: "Power of Money",
@@ -25,12 +25,10 @@ export const colinAW2: COProperties = {
       stars: 6,
       hooks: {
         attack({ attacker }) {
-          const attackBonusPercent = Math.floor(
-            attacker.player.data.funds / 300
-          );
+          const attackBonusPercent = Math.floor(attacker.player.data.funds / 300);
           return 100 + attackBonusPercent;
-        }
-      }
-    }
-  }
+        },
+      },
+    },
+  },
 };

@@ -19,24 +19,26 @@ export const createMatchProcedure = playerBaseProcedure
       data: {
         status: "setup",
         leagueType: "standard",
-        playerState: [{
-          slot: 0,
-          hasCurrentTurn: true,
-          id: ctx.currentPlayer.id,
-          name: ctx.currentPlayer.name,
-          ready: false,
-          coId: {
-            name: "andy",
-            version: "AW2"
+        playerState: [
+          {
+            slot: 0,
+            hasCurrentTurn: true,
+            id: ctx.currentPlayer.id,
+            name: ctx.currentPlayer.name,
+            ready: false,
+            coId: {
+              name: "andy",
+              version: "AW2",
+            },
+            eliminated: false,
+            //TODO: Handle funds correctly
+            funds: 10000,
+            powerMeter: 0,
+            timesPowerUsed: 0,
+            army: "orange-star",
+            COPowerState: "no-power",
           },
-          eliminated: false,
-          //TODO: Handle funds correctly
-          funds: 10000,
-          powerMeter: 0,
-          timesPowerUsed: 0,
-          army: "orange-star",
-          COPowerState: "no-power"
-        },],
+        ],
         map: {
           connect: {
             id: ctx.map.id,

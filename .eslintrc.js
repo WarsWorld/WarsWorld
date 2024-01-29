@@ -9,7 +9,7 @@ module.exports = {
     "plugin:@typescript-eslint/stylistic-type-checked",
     "plugin:react/recommended",
     "plugin:react-hooks/recommended",
-    "plugin:prettier/recommended"
+    "plugin:prettier/recommended",
   ],
   parser: "@typescript-eslint/parser",
   plugins: ["@stylistic/ts", "@typescript-eslint"],
@@ -18,12 +18,12 @@ module.exports = {
     ecmaVersion: 2018,
     sourceType: "module",
     project: true,
-    tsconfigRootDir: __dirname
+    tsconfigRootDir: __dirname,
   },
   settings: {
     react: {
-      version: "detect"
-    }
+      version: "detect",
+    },
   },
   ignorePatterns: ["dist"],
   rules: {
@@ -34,14 +34,14 @@ module.exports = {
       {
         blankLine: "always",
         prev: "block",
-        next: padded
+        next: padded,
       },
       { blankLine: "always", prev: padded, next: "block-like" },
       {
         blankLine: "always",
         prev: "block-like",
-        next: padded
-      }
+        next: padded,
+      },
     ],
     "@typescript-eslint/explicit-function-return-type": "off",
     "@typescript-eslint/no-explicit-any": "error",
@@ -51,8 +51,8 @@ module.exports = {
       {
         varsIgnorePattern: "^_",
         argsIgnorePattern: "^_",
-        caughtErrorsIgnorePattern: "^_"
-      }
+        caughtErrorsIgnorePattern: "^_",
+      },
     ],
     "@typescript-eslint/explicit-module-boundary-types": "off",
     "@typescript-eslint/consistent-type-imports": "warn",
@@ -68,8 +68,8 @@ module.exports = {
         ignoreComments: false,
         ignoreUrls: true,
         ignoreStrings: true,
-        ignoreTemplateLiterals: true
-      }
+        ignoreTemplateLiterals: true,
+      },
     ],
     "prettier/prettier": [
       isProdEnvironment ? "error" : "off",
@@ -78,8 +78,8 @@ module.exports = {
         // maybe we can look into this another time.
         // looks like it's not interpreting this property correctly
         // from package.json prettier config..? (es5 should be default value)
-        trailingComma: "es5"
-      }
+        trailingComma: "es5",
+      },
     ],
     /**
      * TODO
@@ -87,7 +87,7 @@ module.exports = {
      * go with <img> yet. when a conclusion is made, one or the other
      * should be banned through linting.
      */
-    "@next/next/no-img-element": "off"
+    "@next/next/no-img-element": "off",
   },
   overrides: [
     {
@@ -102,19 +102,18 @@ module.exports = {
             patterns: [
               {
                 group: ["**/server/**", "**/frontend/**"],
-                message:
-                  "Don't import non-type server or frontend code into shared",
-                allowTypeImports: true
+                message: "Don't import non-type server or frontend code into shared",
+                allowTypeImports: true,
               },
               {
                 group: ["@prisma*"],
                 message: "Don't import non-type prisma / DB stuff into shared",
-                allowTypeImports: true
-              }
-            ]
-          }
-        ]
-      }
-    }
-  ]
+                allowTypeImports: true,
+              },
+            ],
+          },
+        ],
+      },
+    },
+  ],
 };

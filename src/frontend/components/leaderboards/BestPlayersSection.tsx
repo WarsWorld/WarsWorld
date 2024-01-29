@@ -3,7 +3,7 @@ import type { PlayerLeaderboard } from "./LeaderboardData";
 
 type Props = {
   bestPlayers: PlayerLeaderboard[];
-}
+};
 
 export default function BestPlayersSection({ bestPlayers }: Props) {
   return (

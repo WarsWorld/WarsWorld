@@ -4,7 +4,8 @@ export const maxAWDS: COProperties = {
   displayName: "Max",
   gameVersion: "AWDS",
   dayToDay: {
-    description: "Non-footsoldier direct units have +20% firepower, but indirect units have -1 range.",
+    description:
+      "Non-footsoldier direct units have +20% firepower, but indirect units have -1 range.",
     hooks: {
       attack: ({ attacker }) => {
         if (!attacker.isIndirect() && !attacker.isInfantryOrMech()) {
@@ -16,7 +17,7 @@ export const maxAWDS: COProperties = {
           return value - 1;
         }
       },
-    }
+    },
   },
   powers: {
     COPower: {
@@ -42,6 +43,6 @@ export const maxAWDS: COProperties = {
           }
         },
       },
-    }
+    },
   },
 };

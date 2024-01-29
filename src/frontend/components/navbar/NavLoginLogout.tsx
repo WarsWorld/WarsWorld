@@ -8,7 +8,7 @@ type Props = {
   setIsOpen: (value: boolean, callbackUrl?: string) => Promise<void>;
   isOpen: boolean;
   width?: string;
-}
+};
 
 export default function NavLoginLogout({ isOpen, setIsOpen, width }: Props) {
   const { clearLSCurrentPlayer } = usePlayers();
@@ -20,17 +20,15 @@ export default function NavLoginLogout({ isOpen, setIsOpen, width }: Props) {
         {!session && (
           <>
             <div className="@w-32">
-              <SquareButton onClick={() => {
-                void setIsOpen(true)
-              }}>
+              <SquareButton
+                onClick={() => {
+                  void setIsOpen(true);
+                }}
+              >
                 LOGIN
               </SquareButton>
             </div>
-            <LoginSignupModal
-              isOpen={isOpen}
-              setIsOpen={setIsOpen}
-              width={width ?? "50vw"}
-            />
+            <LoginSignupModal isOpen={isOpen} setIsOpen={setIsOpen} width={width ?? "50vw"} />
           </>
         )}
         {session?.user && (

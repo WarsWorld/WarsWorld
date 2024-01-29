@@ -6,9 +6,9 @@ export const demoUnit: UnitWithVisibleStats = {
   position: [5, 5],
   stats: {
     hp: 9,
-    fuel: 99
+    fuel: 99,
   },
-  isReady: true
+  isReady: true,
 };
 export const demoUnits: UnitWithVisibleStats[] = [
   {
@@ -17,9 +17,9 @@ export const demoUnits: UnitWithVisibleStats[] = [
     position: [3, 2],
     stats: {
       hp: 9,
-      fuel: 99
+      fuel: 99,
     },
-    isReady: true
+    isReady: true,
   },
 
   {
@@ -29,9 +29,9 @@ export const demoUnits: UnitWithVisibleStats[] = [
     stats: {
       hp: 9,
       fuel: 99,
-      ammo: 9
+      ammo: 9,
     },
-    isReady: true
+    isReady: true,
   },
 
   {
@@ -40,9 +40,9 @@ export const demoUnits: UnitWithVisibleStats[] = [
     position: [0, 1],
     stats: {
       hp: 9,
-      fuel: 99
+      fuel: 99,
     },
-    isReady: true
+    isReady: true,
   },
 
   {
@@ -52,9 +52,9 @@ export const demoUnits: UnitWithVisibleStats[] = [
     stats: {
       hp: 9,
       fuel: 99,
-      ammo: 3
+      ammo: 3,
     },
-    isReady: true
+    isReady: true,
   },
 
   {
@@ -64,8 +64,8 @@ export const demoUnits: UnitWithVisibleStats[] = [
     stats: {
       hp: 9,
       fuel: 99,
-      ammo: 3
+      ammo: 3,
     },
-    isReady: true
-  }
+    isReady: true,
+  },
 ];

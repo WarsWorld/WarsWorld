@@ -5,64 +5,64 @@ import type { DamageChart } from "./base-damage";
 import { damageChartAW1, damageChartAW2, damageChartAWDS } from "./base-damage";
 
 type VersionProperties = {
-  gameVersion: GameVersion,
+  gameVersion: GameVersion;
   /**
    * Max good luck possible (usually 10 or 15)
    */
-  baseGoodLuck: number,
+  baseGoodLuck: number;
   /**
    * Max bad luck possible (usually 0)
    */
-  baseBadLuck: number,
+  baseBadLuck: number;
   /**
    * Weathers that can appear in a match (either randomly, forced or by default)
    * currently unused, maybe useful for checking match settings validity?
    */
-  existingWeathers: Weather[],
+  existingWeathers: Weather[];
   /**
    * Damage Chart (attack engagement "base damage" for unit types)
    */
-  damageChart: DamageChart,
+  damageChart: DamageChart;
   /**
    * Allow AWBW unload mechanics if set to false
    */
-  unloadOnlyAfterMove: boolean,
+  unloadOnlyAfterMove: boolean;
   /**
    * Highly dependant on game version, the amount of power charge needed to fill a star
    * (AW1 star is arbitrarily 10.000 for compatibility reasons)
    */
-  baseStarValue: number,
+  baseStarValue: number;
   /**
    * Multiplicative scaling of star cost/value after popping power
    * Number between 0 and 1 (usually 0.2 = 20%)
    */
-  powerMeterScaling: number,
+  powerMeterScaling: number;
   /**
    * In AW games, activating power reduces power bar by the amount is costs after
    * applying the scaling value (this results in a 120% power bar spent of the actual
    * amount it takes to use it), so this boolean is set to true (raise power cost,
    * then spend power meter). In AWBW it's false, for example.
    */
-  raisePowerCostBeforeUsing: boolean,
+  raisePowerCostBeforeUsing: boolean;
   /**
    * multiplier for when dealing damage instead of taking damage
    * (taking dmg is always 100% power generated)
    * Number between 0 and 1 (0.25 in AW1, 0.5 in AW2 and AWDS)
    */
-  offensivePowerGenMult: number,
+  offensivePowerGenMult: number;
   /**
    * Power generation algorithm
    */
-  powerMeterIncreasePerHP: (affectedUnit: UnitWrapper) => number,
+  powerMeterIncreasePerHP: (affectedUnit: UnitWrapper) => number;
   /**
    * Additional firepower gained when using CO Power/Super
    */
-  powerFirepowerMod: (baseFirepower: number) => number,
+  powerFirepowerMod: (baseFirepower: number) => number;
   /**
    * Additional defense gained when using CO Power/Super
    */
-  powerDefenseMod: (baseDefense: number) => number
-}
+  powerDefenseMod: (baseDefense: number) => number;
+};
 
 const AW1Properties: VersionProperties = {
   gameVersion: "AW1",
@@ -76,8 +76,8 @@ const AW1Properties: VersionProperties = {
   raisePowerCostBeforeUsing: true,
   offensivePowerGenMult: 0.25,
   powerMeterIncreasePerHP: (affectedUnit) => affectedUnit.getBuildCost() / 10,
-  powerFirepowerMod: (baseFirepower) => (baseFirepower * 1.1),
-  powerDefenseMod: (baseDefense) => (baseDefense * 1.1)
+  powerFirepowerMod: (baseFirepower) => baseFirepower * 1.1,
+  powerDefenseMod: (baseDefense) => baseDefense * 1.1,
 };
 
 const AW2Properties: VersionProperties = {
@@ -92,8 +92,8 @@ const AW2Properties: VersionProperties = {
   raisePowerCostBeforeUsing: true,
   offensivePowerGenMult: 0.5,
   powerMeterIncreasePerHP: (affectedUnit) => affectedUnit.getBuildCost() / 10,
-  powerFirepowerMod: (baseFirepower) => (baseFirepower),
-  powerDefenseMod: (baseDefense) => (baseDefense + 10)
+  powerFirepowerMod: (baseFirepower) => baseFirepower,
+  powerDefenseMod: (baseDefense) => baseDefense + 10,
 };
 
 const AWDSProperties: VersionProperties = {
@@ -146,8 +146,8 @@ const AWDSProperties: VersionProperties = {
         return 0;
     }
   },
-  powerFirepowerMod: (baseFirepower) => (baseFirepower + 10),
-  powerDefenseMod: (baseDefense) => (baseDefense + 10)
+  powerFirepowerMod: (baseFirepower) => baseFirepower + 10,
+  powerDefenseMod: (baseDefense) => baseDefense + 10,
 };
 
 // as proof of concept:
@@ -163,12 +163,12 @@ const AWBWProperties: VersionProperties = {
   raisePowerCostBeforeUsing: false,
   offensivePowerGenMult: 0.5,
   powerMeterIncreasePerHP: (affectedUnit) => affectedUnit.getBuildCost() / 10,
-  powerFirepowerMod: (baseFirepower) => (baseFirepower + 10),
-  powerDefenseMod: (baseDefense) => (baseDefense + 10)
+  powerFirepowerMod: (baseFirepower) => baseFirepower + 10,
+  powerDefenseMod: (baseDefense) => baseDefense + 10,
 };
 
 export const versionPropertiesMap: Record<GameVersion, VersionProperties> = {
   AW1: AW1Properties,
   AW2: AW2Properties,
-  AWDS: AWDSProperties
+  AWDS: AWDSProperties,
 };

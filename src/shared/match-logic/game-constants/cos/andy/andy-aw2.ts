@@ -15,8 +15,8 @@ export const andyAW2: COProperties = {
       },
       hooks: {
         movementPoints: (value) => value + 1,
-        attack: () => 120
-      }
-    }
-  }
+        attack: () => 120,
+      },
+    },
+  },
 };

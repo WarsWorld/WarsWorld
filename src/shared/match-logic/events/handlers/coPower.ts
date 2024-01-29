@@ -6,28 +6,19 @@ import type { COProperties } from "../../co";
 import { getCOProperties } from "../../co";
 import type { MainActionToEvent } from "../handler-types";
 
-export const coPowerActionToEvent: MainActionToEvent<COPowerAction> = (
-  match,
-  action
-) => {
+export const coPowerActionToEvent: MainActionToEvent<COPowerAction> = (match, action) => {
   const player = match.getCurrentTurnPlayer();
-  const powerType: keyof COProperties["powers"] = action.isSuper
-    ? "superCOPower"
-    : "COPower";
+  const powerType: keyof COProperties["powers"] = action.isSuper ? "superCOPower" : "COPower";
 
   if (player.data.COPowerState !== "no-power") {
-    throw new DispatchableError(
-      `Can't use ${powerType} with a power already active`
-    );
+    throw new DispatchableError(`Can't use ${powerType} with a power already active`);
   }
 
   const coProperties = getCOProperties(player.data.coId);
   const power = coProperties.powers[powerType];
 
   if (power === undefined) {
-    throw new DispatchableError(
-      `Your CO (${coProperties.displayName}) doesn't have ${powerType}`
-    );
+    throw new DispatchableError(`Your CO (${coProperties.displayName}) doesn't have ${powerType}`);
   }
 
   const powerCost = power.stars * player.getPowerStarCost();
@@ -39,7 +30,7 @@ export const coPowerActionToEvent: MainActionToEvent<COPowerAction> = (
   if (power.calculatePositions !== undefined) {
     return {
       ...action,
-      positions: power.calculatePositions(player)
+      positions: power.calculatePositions(player),
     };
   }
 
@@ -49,14 +40,12 @@ export const coPowerActionToEvent: MainActionToEvent<COPowerAction> = (
 export const applyCOPowerEvent = (match: MatchWrapper, event: COPowerEvent) => {
   const player = match.getCurrentTurnPlayer();
   const COProperties = getCOProperties(player.data.coId);
-  const powerType: keyof COProperties["powers"] = event.isSuper
-    ? "superCOPower"
-    : "COPower";
+  const powerType: keyof COProperties["powers"] = event.isSuper ? "superCOPower" : "COPower";
   const power = COProperties.powers[powerType];
 
   if (power === undefined) {
     throw new Error(
-      `Unexpectedly didn't find power ${powerType} on CO ${COProperties.displayName}`
+      `Unexpectedly didn't find power ${powerType} on CO ${COProperties.displayName}`,
     );
   }
 

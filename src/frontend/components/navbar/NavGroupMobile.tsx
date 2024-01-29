@@ -3,7 +3,7 @@ import { NavItem } from "./NavItem";
 type Props = {
   showLinks: boolean;
   handleBurgerMenu: () => void;
-}
+};
 
 const navItemObject = [
   { text: "YOUR GAMES", location: "/your-matches" },
@@ -14,29 +14,29 @@ const navItemObject = [
     location: "/",
     iconPath: "/img/layout/NeoTank_MSide-0.png",
     iconAlt: "Teal Galaxy Neo Tank",
-    flip: true
+    flip: true,
   },
   {
     text: "NEWS",
     location: "/news",
     iconPath: "/img/layout/Sub-0.png",
     iconAlt: "Yellow Comet Sub",
-    flip: false
+    flip: false,
   },
   {
     text: "HOW TO PLAY",
     location: "/howtoplay",
     iconPath: "/img/layout/APC_MSide-0.png",
     iconAlt: "Jade Sun APC",
-    flip: true
+    flip: true,
   },
   {
     text: "COMMUNITY",
     location: "/",
     iconPath: "/img/layout/Cruiser-0.png",
     iconAlt: "Blue Moon Cruiser",
-    flip: false
-  }
+    flip: false,
+  },
 ];
 
 export function NavGroupMobile({ showLinks, handleBurgerMenu }: Props) {
@@ -48,8 +48,15 @@ export function NavGroupMobile({ showLinks, handleBurgerMenu }: Props) {
           ${showLinks ? "@max-h-[100vh]" : "@max-h-0"}`}
       >
         {navItemObject.map((option) => (
-          <li key={option.text} className={`@py-3 @px-4 large_monitor:@py-4 @cursor-pointer @border-primary-dark @border-b-[1px]`}>
-            <NavItem text={option.text} location={option.location} handleBurgerMenu={handleBurgerMenu} />
+          <li
+            key={option.text}
+            className={`@py-3 @px-4 large_monitor:@py-4 @cursor-pointer @border-primary-dark @border-b-[1px]`}
+          >
+            <NavItem
+              text={option.text}
+              location={option.location}
+              handleBurgerMenu={handleBurgerMenu}
+            />
           </li>
         ))}
       </ul>

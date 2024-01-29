@@ -18,7 +18,7 @@ import { deleteActionToEvent } from "./handlers/delete";
 
 export const validateMainActionAndToEvent = (
   match: MatchWrapper,
-  action: MainAction
+  action: MainAction,
 ): MainEvent => {
   switch (action.type) {
     case "build":
@@ -35,15 +35,13 @@ export const validateMainActionAndToEvent = (
       return passTurnActionToEvent(match, action);
     default:
       /** this would only run for bad data from DB because of zod when validating user data */
-      throw new DispatchableError(
-        `Can't handle action type ${(action as MainAction).type}`
-      );
+      throw new DispatchableError(`Can't handle action type ${(action as MainAction).type}`);
   }
 };
 
 export const validateSubActionAndToEvent = (
   match: MatchWrapper,
-  { subAction, path }: MoveAction
+  { subAction, path }: MoveAction,
 ): SubEvent => {
   const unitPosition = getFinalPositionSafe(path);
 
@@ -53,9 +51,9 @@ export const validateSubActionAndToEvent = (
         match,
         subAction,
         unitPosition,
-        (path.length > 1),
-        {goodLuck: Math.random(), badLuck: Math.random()},
-        {goodLuck: Math.random(), badLuck: Math.random()}
+        path.length > 1,
+        { goodLuck: Math.random(), badLuck: Math.random() },
+        { goodLuck: Math.random(), badLuck: Math.random() },
       );
     case "ability":
       return abilityActionToEvent(match, subAction, unitPosition);

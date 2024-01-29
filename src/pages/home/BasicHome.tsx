@@ -43,12 +43,16 @@ export default function BasicHome() {
                   width={0}
                   height={0}
                   sizes="100vw"
-                /> 
-                <h1 className="@text-[1.2rem] cellphone:@text-[2rem] smallscreen:@text-7xl laptop:@text-8xl monitor:@text-9xl @font-russoOne">WARSWORLD</h1>
+                />
+                <h1 className="@text-[1.2rem] cellphone:@text-[2rem] smallscreen:@text-7xl laptop:@text-8xl monitor:@text-9xl @font-russoOne">
+                  WARSWORLD
+                </h1>
               </div>
-              <PlayButton onClick={() => {
+              <PlayButton
+                onClick={() => {
                   void router.push("/your-matches");
-                }}>
+                }}
+              >
                 PLAY NOW
               </PlayButton>
             </div>

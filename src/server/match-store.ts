@@ -5,7 +5,10 @@ import { pageMatchIndex } from "./page-match-index";
 import { playerMatchIndex } from "./player-match-index";
 import type { ChangeableTile } from "../shared/types/server-match-state";
 import { willBeChangeableTile } from "../shared/schemas/tile";
-import { applyMainEventToMatch, applySubEventToMatch } from "../shared/match-logic/events/apply-event-to-match";
+import {
+  applyMainEventToMatch,
+  applySubEventToMatch,
+} from "../shared/match-logic/events/apply-event-to-match";
 import { UnitWrapper } from "shared/wrappers/unit";
 
 const getChangeableTilesFromMap = (map: WWMap): ChangeableTile[] => {
@@ -20,21 +23,19 @@ const getChangeableTilesFromMap = (map: WWMap): ChangeableTile[] => {
           changeableTiles.push({
             type: tile.type,
             position: [x, y],
-            fired: false
+            fired: false,
           });
-        }
-        else if (tile.type === "pipeSeam") {
+        } else if (tile.type === "pipeSeam") {
           changeableTiles.push({
             type: tile.type,
             position: [x, y],
-            hp: 99
+            hp: 99,
           });
-        }
-        else {
+        } else {
           changeableTiles.push({
             type: tile.type,
             position: [x, y],
-            playerSlot: tile.playerSlot
+            playerSlot: tile.playerSlot,
           });
         }
       }
@@ -43,7 +44,6 @@ const getChangeableTilesFromMap = (map: WWMap): ChangeableTile[] => {
 
   return changeableTiles;
 };
-
 
 export class MatchStore {
   private index = new Map<Match["id"], MatchWrapper>();
@@ -59,7 +59,7 @@ export class MatchStore {
       rawMatch.playerState,
       rawMap.predeployedUnits,
       UnitWrapper,
-      0
+      0,
     );
 
     this.index.set(match.id, match);
@@ -79,25 +79,24 @@ export class MatchStore {
     const rawMatches = await prisma.match.findMany({
       where: {
         status: {
-          not: "finished"
-        }
+          not: "finished",
+        },
       },
       include: {
         map: true,
-        Event: true
-      }
+        Event: true,
+      },
     });
 
     rawMatches.forEach((rawMatch) => {
       const match = this.createMatchAndIndex(rawMatch, rawMatch.map);
       rawMatch.Event.forEach((dbEvent) => {
-          applyMainEventToMatch(match, dbEvent.content);
+        applyMainEventToMatch(match, dbEvent.content);
 
-          if (dbEvent.content.type === "move") {
-            applySubEventToMatch(match, dbEvent.content);
-          }
+        if (dbEvent.content.type === "move") {
+          applySubEventToMatch(match, dbEvent.content);
         }
-      );
+      });
     });
 
     console.log("Rebuilding server state done.");

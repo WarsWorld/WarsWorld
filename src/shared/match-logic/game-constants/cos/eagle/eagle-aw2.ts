@@ -19,8 +19,8 @@ export const eagleAW2: COProperties = {
         if (attacker.properties.facility === "airport") {
           return 110;
         }
-      }
-    }
+      },
+    },
   },
   powers: {
     COPower: {
@@ -37,8 +37,8 @@ export const eagleAW2: COProperties = {
           if (attacker.properties.facility === "airport") {
             return 120;
           }
-        }
-      }
+        },
+      },
     },
     superCOPower: {
       name: "Lightning Strike",
@@ -48,9 +48,7 @@ export const eagleAW2: COProperties = {
       instantEffect(player) {
         player
           .getUnits()
-          .filter(
-          (unit) => unit.data.type !== "infantry" && unit.data.type !== "mech"
-        )
+          .filter((unit) => unit.data.type !== "infantry" && unit.data.type !== "mech")
           .forEach((unit) => {
             unit.data.isReady = true;
           });
@@ -65,8 +63,8 @@ export const eagleAW2: COProperties = {
           if (attacker.properties.facility === "airport") {
             return 120;
           }
-        }
-      }
-    }
-  }
+        },
+      },
+    },
+  },
 };

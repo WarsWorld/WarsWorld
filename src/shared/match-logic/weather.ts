@@ -21,7 +21,7 @@ function getChanceOfRain(match: MatchWrapper) {
   //AWDS Drake doesn't increase weather chances
   const numberOfDrakes = match
     .getAllPlayers()
-    .filter((p) => (p.data.coId.name === "drake" && p.data.coId.version !== "AWDS")).length;
+    .filter((p) => p.data.coId.name === "drake" && p.data.coId.version !== "AWDS").length;
 
   return weatherBaseChance(match) + numberOfDrakes * 7;
 }
@@ -34,8 +34,7 @@ export function getRandomWeather(match: MatchWrapper): Weather {
   const snowThreshold = weatherBaseChance(match);
   const rainThreshold = getChanceOfRain(match) + snowThreshold;
   const sandstormThreshold =
-    (match.rules.gameVersion === "AWDS" ? weatherBaseChance(match) : 0)
-    + rainThreshold;
+    (match.rules.gameVersion === "AWDS" ? weatherBaseChance(match) : 0) + rainThreshold;
 
   if (roll < snowThreshold) {
     return "snow";
@@ -51,7 +50,6 @@ export function getRandomWeather(match: MatchWrapper): Weather {
 
   return "clear";
 }
-
 
 /**
  * some COs use the movement factors of different weather
@@ -85,4 +83,4 @@ export const getWeatherSpecialMovement = (player: PlayerInMatchWrapper): Weather
       return weather;
     }
   }
-}
+};

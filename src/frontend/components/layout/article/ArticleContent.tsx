@@ -1,8 +1,8 @@
 import styles from "frontend/styles/pages/articles.module.scss";
 
 type Props = {
-  contentHTML: string,
-}
+  contentHTML: string;
+};
 
 export default function ArticleContent({ contentHTML }: Props) {
   const headers = [...contentHTML.matchAll(/<h1+>(.*?)<\/h1*>/gm)];
@@ -10,34 +10,25 @@ export default function ArticleContent({ contentHTML }: Props) {
   // Styling
   contentHTML = contentHTML.replaceAll(
     /<h2>/g,
-    `<h2 class="smallscreen:@py-4 @px-2 @text-3xl smallscreen:@text-5xl @font-light">`
+    `<h2 class="smallscreen:@py-4 @px-2 @text-3xl smallscreen:@text-5xl @font-light">`,
   );
   contentHTML = contentHTML.replaceAll(
     /<p>/g,
-    `<p class="@my-4 @px-2 @text-xl smallscreen:@text-2xl @font-light">`
+    `<p class="@my-4 @px-2 @text-xl smallscreen:@text-2xl @font-light">`,
   );
-  contentHTML = contentHTML.replaceAll(
-    /<img/g,
-    `<img class="@my-6"`
-  );
-  contentHTML = contentHTML.replaceAll(
-    /<li>/g,
-    `<li class="@ml-10 @my-4 @px-4 @text-xl">`
-  );
-  contentHTML = contentHTML.replaceAll(
-    /<ol>/g,
-    `<ol class="smallscreen:@ml-10 @list-disc">`
-  );
-  contentHTML = contentHTML.replaceAll(
-    /<ul>/g,
-    `<ul class="@list-disc">`
-  );
+  contentHTML = contentHTML.replaceAll(/<img/g, `<img class="@my-6"`);
+  contentHTML = contentHTML.replaceAll(/<li>/g, `<li class="@ml-10 @my-4 @px-4 @text-xl">`);
+  contentHTML = contentHTML.replaceAll(/<ol>/g, `<ol class="smallscreen:@ml-10 @list-disc">`);
+  contentHTML = contentHTML.replaceAll(/<ul>/g, `<ul class="@list-disc">`);
 
   // Put IDs on headers so /articleName#header links to the header
   for (const header of headers) {
     contentHTML = contentHTML.replace(
       /<h1>/,
-      `<h1 class="smallscreen:@py-5 @px-2 @text-4xl smallscreen:@text-6xl @font-medium " id="${header[1].replace(/\s/g, "-")}">`
+      `<h1 class="smallscreen:@py-5 @px-2 @text-4xl smallscreen:@text-6xl @font-medium " id="${header[1].replace(
+        /\s/g,
+        "-",
+      )}">`,
     );
   }
 
@@ -60,7 +51,9 @@ export default function ArticleContent({ contentHTML }: Props) {
               <a
                 key={item[1] + index}
                 href={`#${item[1].replace(/\s/g, "-")}`}
-                className={`@text-white ${index%2 == 0 ? "@bg-bg-tertiary" : "@bg-bg-secondary"} @text-base monitor:@text-xl @block @py-2 @px-2 hover:@text-white hover:@text-[1.3rem] @border-t-4 @border-white`}
+                className={`@text-white ${
+                  index % 2 == 0 ? "@bg-bg-tertiary" : "@bg-bg-secondary"
+                } @text-base monitor:@text-xl @block @py-2 @px-2 hover:@text-white hover:@text-[1.3rem] @border-t-4 @border-white`}
               >
                 {item[1]}
               </a>
@@ -68,7 +61,7 @@ export default function ArticleContent({ contentHTML }: Props) {
           })}
           <div className="@h-6 @border-t-4 @border-white" />
         </div>
-      </div>   
+      </div>
     </div>
-  )
+  );
 }

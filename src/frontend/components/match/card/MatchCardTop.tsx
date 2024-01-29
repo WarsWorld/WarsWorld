@@ -24,16 +24,10 @@ export default function MatchCardTop({ mapName, day, state }: matchData) {
 
       <div className="@grid  [grid-template-columns:repeat(auto-fit,minmax(50px,1fr))] @items-center @justify-center @outline @outline-black @outline-2 @bg-bg-primary @h-max">
         {state == "setup" ? (
-          <div className="@col-span-2  @bg-secondary @text-black @font-bold ">
-            SETUP
-          </div>
+          <div className="@col-span-2  @bg-secondary @text-black @font-bold ">SETUP</div>
         ) : (
           <div className="@col-span-2 @bg-bg-match-live @font-bold ">
-            <img
-              className="@h-4 @inline-block"
-              src="/img/matchCard/liveDot.png"
-              alt="live dot"
-            />
+            <img className="@h-4 @inline-block" src="/img/matchCard/liveDot.png" alt="live dot" />
             LIVE
           </div>
         )}
@@ -41,29 +35,14 @@ export default function MatchCardTop({ mapName, day, state }: matchData) {
         <div className="@col-span-1 ">STD</div>
 
         <div className="@col-span-1 @bg-bg-secondary">
-          <img
-            className="@h-4 @inline-block"
-            src="/img/matchCard/eye.png"
-            alt="eye"
-          />{" "}
-          0
+          <img className="@h-4 @inline-block" src="/img/matchCard/eye.png" alt="eye" /> 0
         </div>
 
         <div className="@col-span-1  ">
-          <img
-            className="@h-4 @inline-block "
-            src="/img/matchCard/star.png"
-            alt="star"
-          />{" "}
-          0
+          <img className="@h-4 @inline-block " src="/img/matchCard/star.png" alt="star" /> 0
         </div>
         <div className="@col-span-2 @bg-bg-secondary">
-          <img
-            className="@h-4 @inline-block "
-            src="/img/matchCard/clock.png"
-            alt="clock"
-          />{" "}
-          15m:00s
+          <img className="@h-4 @inline-block " src="/img/matchCard/clock.png" alt="clock" /> 15m:00s
         </div>
       </div>
     </>

@@ -5,9 +5,10 @@ export const senseiAW2: COProperties = {
   displayName: "Sensei",
   gameVersion: "AW2",
   dayToDay: {
-    description: "Footsoldiers have +40% firepower, B-Copters have +50% firepower, and transport units have +1 movement. Ground vehicles and naval units have -10% firepower.",
+    description:
+      "Footsoldiers have +40% firepower, B-Copters have +50% firepower, and transport units have +1 movement. Ground vehicles and naval units have -10% firepower.",
     hooks: {
-      attack: ( {attacker} ) => {
+      attack: ({ attacker }) => {
         if (attacker.isInfantryOrMech()) {
           return 140;
         }
@@ -24,19 +25,20 @@ export const senseiAW2: COProperties = {
         if (unit.isTransport()) {
           return value + 1;
         }
-      }
-    }
+      },
+    },
   },
   powers: {
     COPower: {
       name: "Copter Command",
-      description: "B-Copters gain +25% firepower. Spawns 9 HP infantry units on top of unoccupied owned cities, ready to move.",
+      description:
+        "B-Copters gain +25% firepower. Spawns 9 HP infantry units on top of unoccupied owned cities, ready to move.",
       stars: 2,
       instantEffect(player) {
-        applySenseiPowerSpawn(player, "infantry")
+        applySenseiPowerSpawn(player, "infantry");
       },
       hooks: {
-        attack: ( {attacker} ) => {
+        attack: ({ attacker }) => {
           if (attacker.isInfantryOrMech()) {
             return 140;
           }
@@ -49,17 +51,18 @@ export const senseiAW2: COProperties = {
             return 90;
           }
         },
-      }
+      },
     },
     superCOPower: {
       name: "Airborne Assault",
-      description: "B-Copters gain +25% firepower. Spawns 9 HP mech units on top of unoccupied owned cities, ready to move.",
+      description:
+        "B-Copters gain +25% firepower. Spawns 9 HP mech units on top of unoccupied owned cities, ready to move.",
       stars: 2,
       instantEffect(player) {
-        applySenseiPowerSpawn(player, "mech")
+        applySenseiPowerSpawn(player, "mech");
       },
       hooks: {
-        attack: ( {attacker} ) => {
+        attack: ({ attacker }) => {
           if (attacker.isInfantryOrMech()) {
             return 140;
           }
@@ -72,7 +75,7 @@ export const senseiAW2: COProperties = {
             return 90;
           }
         },
-      }
-    }
-  }
-}
+      },
+    },
+  },
+};

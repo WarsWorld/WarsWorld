@@ -41,12 +41,12 @@ const newPlayer = (): Player => {
   const co = faker.helpers.arrayElement(
     Object.keys(coSchema.Enum).filter((item) => {
       return isNaN(Number(item));
-    })
+    }),
   ) as CO;
   const army = faker.helpers.arrayElement(
     Object.keys(armySchema.Enum).filter((item) => {
       return isNaN(Number(item));
-    })
+    }),
   ) as Army;
   const profileLink = "/";
   return {
@@ -88,9 +88,7 @@ function transformData(data: Player[]): PlayerLeaderboard[] {
   return transformedData;
 }
 
-export default function getLeaderboardData(
-  amount: number
-): PlayerLeaderboard[] {
+export default function getLeaderboardData(amount: number): PlayerLeaderboard[] {
   const data: Player[] = [];
 
   for (let i = 0; i < amount; i++) {

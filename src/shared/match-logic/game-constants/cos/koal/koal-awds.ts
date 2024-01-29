@@ -6,12 +6,12 @@ export const koalAWDS: COProperties = {
   dayToDay: {
     description: "Units have +10% firepower on top of roads (air units included).",
     hooks: {
-      attack: ( {attacker} ) => {
+      attack: ({ attacker }) => {
         if (attacker.getTile().type === "road") {
           return 110;
         }
       },
-    }
+    },
   },
   powers: {
     COPower: {
@@ -19,26 +19,26 @@ export const koalAWDS: COProperties = {
       description: "Units gain +1 movement and +10% more firepower on top of roads.",
       stars: 3,
       hooks: {
-        attack: ( {attacker} ) => {
+        attack: ({ attacker }) => {
           if (attacker.getTile().type === "road") {
             return 120;
           }
         },
-        movementPoints: (points) => points + 1
-      }
+        movementPoints: (points) => points + 1,
+      },
     },
     superCOPower: {
       name: "Trail of Woe",
       description: "Units gain +2 movement and +20% more firepower on top of roads.",
       stars: 5,
       hooks: {
-        attack: ( {attacker} ) => {
+        attack: ({ attacker }) => {
           if (attacker.getTile().type === "road") {
             return 130;
           }
         },
-        movementPoints: (points) => points + 2
-      }
-    }
-  }
+        movementPoints: (points) => points + 2,
+      },
+    },
+  },
 };

@@ -3,8 +3,8 @@ import type { MatchWrapper } from "../../wrappers/match";
 import type { CapturableTile } from "../../types/server-match-state";
 
 export const fillDiscoveredUnitsAndProperties = (
-  match: MatchWrapper, 
-  emittableEvents: (EmittableEvent | undefined)[]
+  match: MatchWrapper,
+  emittableEvents: (EmittableEvent | undefined)[],
 ) => {
   // emittableEvents.length = math.teams.length + 1, since it has "no team" in the end
   for (let i = 0; i < match.teams.length; ++i) {
@@ -18,17 +18,20 @@ export const fillDiscoveredUnitsAndProperties = (
     // TODO this condition can be thinned out more (for example, only update sonja's own team,
     //  or pass turn only when cop deactivates or weather changes
     //  AND more importantly, skip if no fog of war (in previous turn (?))
-    const recalculateVision = emittableEvent.type === "matchStart"
-      || emittableEvent.type === "passTurn"
-      || (emittableEvent.type === "coPower" &&
-        (match.getCurrentTurnPlayer().data.coId.name === "sonja" || match.getCurrentTurnPlayer().data.coId.name === "drake"));
+    const recalculateVision =
+      emittableEvent.type === "matchStart" ||
+      emittableEvent.type === "passTurn" ||
+      (emittableEvent.type === "coPower" &&
+        (match.getCurrentTurnPlayer().data.coId.name === "sonja" ||
+          match.getCurrentTurnPlayer().data.coId.name === "drake"));
 
     if (recalculateVision) {
       emittableEvent.discoveredUnits = team.getEnemyUnitsInVision();
       return;
     }
 
-    if (team.vision === null) { // no fog of war
+    if (team.vision === null) {
+      // no fog of war
       return;
     }
 
@@ -46,7 +49,7 @@ export const fillDiscoveredUnitsAndProperties = (
       if ("playerSlot" in tile) {
         discoveredProperties.push({
           ...tile,
-          position: position
+          position: position,
         });
       }
     }
@@ -64,4 +67,4 @@ export const fillDiscoveredUnitsAndProperties = (
   }
 
   // TODO handle player-eliminated changing properties clientside
-}
+};

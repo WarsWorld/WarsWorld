@@ -1,6 +1,9 @@
 import { z } from "zod";
 
-export const passwordSchema = z.string().min(4, "Password Needs to be at least 4 characters long.").max(40, "Password exceeds 40 characters.");
+export const passwordSchema = z
+  .string()
+  .min(4, "Password Needs to be at least 4 characters long.")
+  .max(40, "Password exceeds 40 characters.");
 
 export const loginSchema = z.object({
   name: z.string().min(1, "Name is empty."),

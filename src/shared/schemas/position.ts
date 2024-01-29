@@ -9,7 +9,7 @@ import { z } from "zod";
 
 export const positionSchema = z.tuple([
   z.number().int().nonnegative(),
-  z.number().int().nonnegative()
+  z.number().int().nonnegative(),
 ]);
 
 export type Position = z.infer<typeof positionSchema>;
@@ -28,10 +28,7 @@ export const getFinalPositionSafe = (path: Path) => {
 export const isSamePosition = (positionA: Position, positionB: Position) =>
   positionA[0] === positionB[0] && positionA[1] === positionB[1];
 
-export const positionsAreNeighbours = (
-  positionA: Position,
-  positionB: Position
-) => {
+export const positionsAreNeighbours = (positionA: Position, positionB: Position) => {
   const xDiff = Math.abs(positionA[0] - positionB[0]);
   const yDiff = Math.abs(positionA[1] - positionB[1]);
 
@@ -42,17 +39,11 @@ export const getNeighbourPositions = (p: Position): Position[] => [
   [p[0] + 1, p[1]],
   [p[0] - 1, p[1]],
   [p[0], p[1] + 1],
-  [p[0], p[1] - 1]
+  [p[0], p[1] - 1],
 ];
 
-export const getDistance = (
-  positionA: Position,
-  positionB: Position
-): number => {
-  return (
-    Math.abs(positionA[0] - positionB[0]) +
-    Math.abs(positionA[1] - positionB[1])
-  );
+export const getDistance = (positionA: Position, positionB: Position): number => {
+  return Math.abs(positionA[0] - positionB[0]) + Math.abs(positionA[1] - positionB[1]);
 };
 
 // === PATH ===
@@ -69,10 +60,7 @@ export type Direction = z.infer<typeof directionSchema>;
 
 export const allDirections: Direction[] = ["up", "down", "left", "right"];
 
-export const addDirection = (
-  position: Position,
-  direction: Direction
-): Position => {
+export const addDirection = (position: Position, direction: Direction): Position => {
   switch (direction) {
     case "up":
       return [position[0], position[1] - 1];

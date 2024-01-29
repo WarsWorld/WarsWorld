@@ -20,18 +20,21 @@ class PlayerMatchIndex {
   }
 
   onPlayerLeave(player: PlayerInMatchWrapper) {
-
     //Lets get all the matches this player is on
     const playerMatches = this.index.get(player.data.id);
 
     if (playerMatches === undefined) {
-      throw new Error(`Tried to remove a match for player ${player.data.id} from playerIdIndex but index entry wasn't found`);
+      throw new Error(
+        `Tried to remove a match for player ${player.data.id} from playerIdIndex but index entry wasn't found`,
+      );
     }
 
     const matchIndex = playerMatches.findIndex((m) => m.id === player.match.id);
 
     if (matchIndex === -1) {
-      throw new Error(`Tried to remove match ${player.match.id} for player ${player.data.id} from playerIdIndex but match wasn't found in index`);
+      throw new Error(
+        `Tried to remove match ${player.match.id} for player ${player.data.id} from playerIdIndex but match wasn't found in index`,
+      );
     }
 
     playerMatches.splice(matchIndex, 1);

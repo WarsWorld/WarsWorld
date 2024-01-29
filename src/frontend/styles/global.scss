@@ -117,7 +117,10 @@
   input:-webkit-autofill,
   textarea:-webkit-autofill,
   select:-webkit-autofill {
-    &, &:hover, &:focus, &:active{
+    &,
+    &:hover,
+    &:focus,
+    &:active {
       color: black;
       -webkit-box-shadow: 0 0 0px 1000px white inset !important;
     }
@@ -146,14 +149,26 @@
   $CornerRadius: $CornerSize / 2;
 
   .octagon-box {
-    clip-path: polygon(0 $CornerSize,$CornerRadius $CornerRadius,$CornerSize 0,calc(100% - $CornerSize) 0,calc(100% - $CornerRadius) $CornerRadius,100% $CornerSize,100% calc(100% - $CornerSize),calc(100% - $CornerRadius) calc(100% - $CornerRadius),calc(100% - $CornerSize) 100%,$CornerSize 100%,$CornerRadius calc(100% - $CornerRadius),0 calc(100% - $CornerSize));
+    clip-path: polygon(
+      0 $CornerSize,
+      $CornerRadius $CornerRadius,
+      $CornerSize 0,
+      calc(100% - $CornerSize) 0,
+      calc(100% - $CornerRadius) $CornerRadius,
+      100% $CornerSize,
+      100% calc(100% - $CornerSize),
+      calc(100% - $CornerRadius) calc(100% - $CornerRadius),
+      calc(100% - $CornerSize) 100%,
+      $CornerSize 100%,
+      $CornerRadius calc(100% - $CornerRadius),
+      0 calc(100% - $CornerSize)
+    );
   }
 
   .filter-shadow-wrap {
     filter: drop-shadow(10px 10px rgba(0, 0, 0, 0.8));
   }
 }
-
 
 @keyframes gameCursor {
   0% {

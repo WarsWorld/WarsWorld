@@ -10,7 +10,7 @@ type Props = {
   value?: string | number | readonly string[];
   id?: string;
   onChange?: ChangeEventHandler<HTMLTextAreaElement>;
-}
+};
 
 export default function TextAreaInput({
   text,
@@ -26,13 +26,10 @@ export default function TextAreaInput({
   return (
     <>
       <div className={className}>
-        <label
-          htmlFor={id ?? ""}
-          className="@text-xl smallscreen:@text-2xl @text-white"
-        >
+        <label htmlFor={id ?? ""} className="@text-xl smallscreen:@text-2xl @text-white">
           {text}
         </label>
-        <textarea 
+        <textarea
           className={`@mt-2 @w-full @text-white @p-4 @text-xl smallscreen:@text-2xl @border-[2.5px] @rounded-2xl @bg-black/50 ${
             isError == true ? "@border-orange-star" : "@border-primary"
           }`}
@@ -42,9 +39,9 @@ export default function TextAreaInput({
           value={value}
           onChange={onChange}
         />
-        {isError == true && errorMessage != "" && 
+        {isError == true && errorMessage != "" && (
           <p className="@text-white @bg-orange-star/80 @my-2 @px-2 @rounded-lg">{errorMessage}</p>
-        }
+        )}
       </div>
     </>
   );

@@ -1,25 +1,25 @@
 import type { ISpritesheetData, Spritesheet } from "pixi.js";
-import {
-  AnimatedSprite, Assets, BitmapText, Container, Sprite, Texture
-} from "pixi.js";
+import { AnimatedSprite, Assets, BitmapText, Container, Sprite, Texture } from "pixi.js";
 import type {
-  Facility, UnitProperties, UnitPropertiesWithoutWeapon
+  Facility,
+  UnitProperties,
+  UnitPropertiesWithoutWeapon,
 } from "../shared/match-logic/game-constants/unit-properties";
-import { unitPropertiesMap,
-} from "../shared/match-logic/game-constants/unit-properties";
+import { unitPropertiesMap } from "../shared/match-logic/game-constants/unit-properties";
 import type { PlayerInMatch } from "../shared/types/server-match-state";
 import type { MatchWrapper } from "../shared/wrappers/match";
-import {Army} from "../shared/schemas/army";
+import { Army } from "../shared/schemas/army";
 import type { UnitType } from "shared/schemas/unit";
 import type { ArmySpritesheetData } from "gameFunction/get-sprite-sheets";
 
 export type OurSpriteSheetData = ISpritesheetData & {
-  animations: Record<string, string[]>; countries: Record<string, string[]>;
+  animations: Record<string, string[]>;
+  countries: Record<string, string[]>;
 };
 
 type Props = {
-  player: PlayerInMatch,
-  match: MatchWrapper,
+  player: PlayerInMatch;
+  match: MatchWrapper;
   spriteSheet: Spritesheet<ArmySpritesheetData>;
   facility: Facility;
   x: number;
@@ -31,15 +31,22 @@ type Props = {
     position: [number, number];
     playerId: string;
     matchId: string;
-}) => void;
-}
+  }) => void;
+};
 
-export default async function showBuildMenu(
-  { spriteSheet, facility, x,y,mapWidth,mapHeight,buildMutation, player, match }: Props) {
-
+export default async function showBuildMenu({
+  spriteSheet,
+  facility,
+  x,
+  y,
+  mapWidth,
+  mapHeight,
+  buildMutation,
+  player,
+  match,
+}: Props) {
   const positionX = x;
   const positionY = y;
-
 
   //The big container holding everything
   const menuContainer = new Container();
@@ -63,17 +70,14 @@ export default async function showBuildMenu(
   const unitBanned = false;
 
   const unitInfo: UnitPropertiesWithoutWeapon[] = [];
-  const unitNames: string[] = []
-
+  const unitNames: string[] = [];
 
   //lets loop through our units and only get the ones that can be built in this facility
   Object.entries(unitPropertiesMap).forEach(([key, childObject]) => {
-    if (childObject.facility === facility && !unitBanned ) {
-      unitNames.push(key)
-      unitInfo.push(childObject)
-
+    if (childObject.facility === facility && !unitBanned) {
+      unitNames.push(key);
+      unitInfo.push(childObject);
     }
-
   });
 
   //if our menu would appear below the middle of the map, we need to bring it up!
@@ -98,7 +102,6 @@ export default async function showBuildMenu(
 
     const yValue = index * 12;
 
-
     //our unit image
     const unitSprite = new AnimatedSprite(spriteSheet.animations[unit.displayName.toLowerCase()]);
     unitSprite.y = yValue;
@@ -111,15 +114,16 @@ export default async function showBuildMenu(
     unitSprite.play();
 
     const unitName = new BitmapText(`${unit.displayName}`, {
-      fontName: "awFont", fontSize: 12,
-
+      fontName: "awFont",
+      fontSize: 12,
     });
     unitName.y = yValue;
     unitName.x = 15;
     unitName.anchor.set(0, -0.1);
 
     const unitCost = new BitmapText(`${unit.cost}`, {
-      fontName: "awFont", fontSize: 10
+      fontName: "awFont",
+      fontSize: 10,
     });
     unitCost.y = yValue;
     unitCost.x = 60;
@@ -135,10 +139,10 @@ export default async function showBuildMenu(
     //if the player can't afford it, darken the unit
     if (player.funds < unit.cost) {
       unitBG.tint = "#9f9f9f";
-      unitSprite.alpha = 0.5
-      unitSprite.stop()
-      unitName.alpha = 0.6
-      unitCost.alpha = 0.6
+      unitSprite.alpha = 0.5;
+      unitSprite.stop();
+      unitName.alpha = 0.6;
+      unitCost.alpha = 0.6;
       menuElement.eventMode = "none";
     }
     //player can afford it
@@ -151,8 +155,8 @@ export default async function showBuildMenu(
           unitType: unitNames[index] as UnitType,
           position: [positionX, positionY],
           playerId: player.id,
-          matchId: match.id
-        })
+          matchId: match.id,
+        });
       });
     }
 

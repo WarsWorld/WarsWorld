@@ -8,16 +8,13 @@ export const jessAW2: COProperties = {
       "Ground vehicles have +10% firepower. Other units (including footsoldiers) have -10% firepower.",
     hooks: {
       attack: ({ attacker }) => {
-        if (
-          attacker.properties.facility === "base" &&
-          !attacker.isInfantryOrMech()
-        ) {
+        if (attacker.properties.facility === "base" && !attacker.isInfantryOrMech()) {
           return 110;
         }
 
         return 90;
-      }
-    }
+      },
+    },
   },
   powers: {
     COPower: {
@@ -30,24 +27,18 @@ export const jessAW2: COProperties = {
       },
       hooks: {
         attack: ({ attacker }) => {
-          if (
-            attacker.properties.facility === "base" &&
-            !attacker.isInfantryOrMech()
-          ) {
+          if (attacker.properties.facility === "base" && !attacker.isInfantryOrMech()) {
             return 130;
           }
 
           return 90;
         },
         movementPoints: (points, unit) => {
-          if (
-            unit.properties.facility === "base" &&
-            !unit.isInfantryOrMech()
-          ) {
+          if (unit.properties.facility === "base" && !unit.isInfantryOrMech()) {
             return points + 1;
           }
-        }
-      }
+        },
+      },
     },
     superCOPower: {
       name: "Overdrive",
@@ -59,24 +50,18 @@ export const jessAW2: COProperties = {
       },
       hooks: {
         attack: ({ attacker }) => {
-          if (
-            attacker.properties.facility === "base" &&
-            !attacker.isInfantryOrMech()
-          ) {
+          if (attacker.properties.facility === "base" && !attacker.isInfantryOrMech()) {
             return 150;
           }
 
           return 90;
         },
         movementPoints: (points, unit) => {
-          if (
-            unit.properties.facility === "base" &&
-            !unit.isInfantryOrMech()
-          ) {
+          if (unit.properties.facility === "base" && !unit.isInfantryOrMech()) {
             return points + 2;
           }
-        }
-      }
-    }
-  }
+        },
+      },
+    },
+  },
 };

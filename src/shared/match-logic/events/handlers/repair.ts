@@ -10,21 +10,19 @@ import { getVisualHPfromHP } from "shared/match-logic/calculate-damage";
 export const repairActionToEvent: SubActionToEvent<RepairAction> = (
   match,
   action,
-  fromPosition
+  fromPosition,
 ) => {
   const player = match.getCurrentTurnPlayer();
   const unit = match.getUnitOrThrow(fromPosition);
 
   if (!player.owns(unit)) {
-    throw new DispatchableError("You don't own this unit")
+    throw new DispatchableError("You don't own this unit");
   }
 
   // TESTED: if trying to repair but no funds, unit will get resupplied but not repaired
 
   if (unit.data.type !== "blackBoat") {
-    throw new DispatchableError(
-      "Trying to repair with a unit that is not a black boat"
-    );
+    throw new DispatchableError("Trying to repair with a unit that is not a black boat");
   }
 
   const repairPosition = addDirection(fromPosition, action.direction);
@@ -33,7 +31,7 @@ export const repairActionToEvent: SubActionToEvent<RepairAction> = (
   const repairedUnit = match.getUnitOrThrow(repairPosition);
 
   if (!player.owns(repairedUnit)) {
-    throw new DispatchableError("You don't own the repaired unit")
+    throw new DispatchableError("You don't own the repaired unit");
   }
 
   return action;
@@ -42,13 +40,11 @@ export const repairActionToEvent: SubActionToEvent<RepairAction> = (
 export const applyRepairEvent = (
   match: MatchWrapper,
   event: RepairEvent,
-  fromPosition: Position
+  fromPosition: Position,
 ) => {
   const player = match.getCurrentTurnPlayer();
 
-  const repairedUnit = match.getUnitOrThrow(
-    addDirection(fromPosition, event.direction)
-  );
+  const repairedUnit = match.getUnitOrThrow(addDirection(fromPosition, event.direction));
 
   repairedUnit.resupply();
 

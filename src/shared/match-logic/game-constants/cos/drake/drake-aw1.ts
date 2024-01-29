@@ -12,7 +12,7 @@ export const drakeAW1: COProperties = {
           return value + 1;
         }
       },
-      terrainStars: ( value, { defender }) => {
+      terrainStars: (value, { defender }) => {
         if (defender.properties.facility === "port") {
           return value + 2;
         }
@@ -21,19 +21,18 @@ export const drakeAW1: COProperties = {
         if (attacker.properties.facility === "airport") {
           return 80;
         }
-      }
-    }
+      },
+    },
   },
   powers: {
     COPower: {
       name: "Tsunami",
-      description:
-        "All enemy units lose 1 HP (to a minimum of 0.1HP).",
+      description: "All enemy units lose 1 HP (to a minimum of 0.1HP).",
       stars: 4,
       instantEffect(player) {
         const enemyUnits = player.team.getEnemyUnits();
-        enemyUnits.forEach(unit => unit.damageUntil1HP(1));
-      }
+        enemyUnits.forEach((unit) => unit.damageUntil1HP(1));
+      },
     },
-  }
+  },
 };

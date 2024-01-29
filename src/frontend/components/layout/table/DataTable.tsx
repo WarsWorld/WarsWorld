@@ -3,13 +3,12 @@ import type { Table } from "@tanstack/react-table";
 import { flexRender } from "@tanstack/react-table";
 
 type Props = {
-
   // Need any or another generic type to make this component work with any table
   // regardless of what type the data has.
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   table: Table<any>;
   hasFooter?: boolean;
-}
+};
 
 export default function DataTable({ table, hasFooter = false }: Props) {
   return (
@@ -18,8 +17,17 @@ export default function DataTable({ table, hasFooter = false }: Props) {
         {table.getHeaderGroups().map((headerGroup) => (
           <tr className="@bg-bg-secondary" key={headerGroup.id}>
             {headerGroup.headers.map((header) => (
-              <th className={`@py-2 @border-b-2 @uppercase ${header.index % 2 === 0 ? "@bg-bg-tertiary" : ""}`} key={header.id}>
-                <h3 className="@font-medium">{header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}</h3>
+              <th
+                className={`@py-2 @border-b-2 @uppercase ${
+                  header.index % 2 === 0 ? "@bg-bg-tertiary" : ""
+                }`}
+                key={header.id}
+              >
+                <h3 className="@font-medium">
+                  {header.isPlaceholder
+                    ? null
+                    : flexRender(header.column.columnDef.header, header.getContext())}
+                </h3>
               </th>
             ))}
           </tr>
@@ -43,8 +51,17 @@ export default function DataTable({ table, hasFooter = false }: Props) {
           {table.getFooterGroups().map((footerGroup) => (
             <tr className="@bg-bg-secondary" key={footerGroup.id}>
               {footerGroup.headers.map((header) => (
-                <th className={`@py-2 @border-t-2 @uppercase ${header.index % 2 === 0 ? "@bg-bg-tertiary" : ""}`} key={header.id}>
-                  <h3 className="@font-medium">{header.isPlaceholder ? null : flexRender(header.column.columnDef.footer, header.getContext())}</h3>
+                <th
+                  className={`@py-2 @border-t-2 @uppercase ${
+                    header.index % 2 === 0 ? "@bg-bg-tertiary" : ""
+                  }`}
+                  key={header.id}
+                >
+                  <h3 className="@font-medium">
+                    {header.isPlaceholder
+                      ? null
+                      : flexRender(header.column.columnDef.footer, header.getContext())}
+                  </h3>
                 </th>
               ))}
             </tr>

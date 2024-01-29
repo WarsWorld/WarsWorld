@@ -8,8 +8,8 @@ export const kanbeiAW2: COProperties = {
     hooks: {
       buildCost: (value) => value * 1.2,
       attack: () => 130,
-      defense: () => 130
-    }
+      defense: () => 130,
+    },
   },
   powers: {
     COPower: {
@@ -17,18 +17,19 @@ export const kanbeiAW2: COProperties = {
       description: "Units gain +20% firepower.",
       stars: 4,
       hooks: {
-        attack: () => 150
-      }
+        attack: () => 150,
+      },
     },
     superCOPower: {
       name: "Samurai Spirit",
-      description: "Units gain +20% firepower and defense, and their counterattacks are 50% stronger.",
+      description:
+        "Units gain +20% firepower and defense, and their counterattacks are 50% stronger.",
       stars: 7,
       hooks: {
         attack: () => 150,
         defense: () => 150,
         // counters handled in calculateDamage
-      }
-    }
-  }
+      },
+    },
+  },
 };

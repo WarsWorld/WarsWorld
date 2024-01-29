@@ -10,13 +10,9 @@ export const javierAWDS: COProperties = {
       defense({ attacker, defender }) {
         const bonusFromIndirectAttacks = attacker.isIndirect() ? 20 : 0;
 
-        return (
-          100 +
-          defender.player.getCommtowerAttackBoost() +
-          bonusFromIndirectAttacks
-        );
-      }
-    }
+        return 100 + defender.player.getCommtowerAttackBoost() + bonusFromIndirectAttacks;
+      },
+    },
   },
   powers: {
     COPower: {
@@ -28,16 +24,12 @@ export const javierAWDS: COProperties = {
         defense({ attacker, defender }) {
           const bonusFromIndirectAttacks = attacker.isIndirect() ? 40 : 0;
 
-          return (
-            100 +
-            defender.player.getCommtowerAttackBoost() * 2 +
-            bonusFromIndirectAttacks
-          );
+          return 100 + defender.player.getCommtowerAttackBoost() * 2 + bonusFromIndirectAttacks;
         },
         attack({ attacker }) {
           return 100 + attacker.player.getCommtowerAttackBoost(); //one boost is already applied automatically by default
-        }
-      }
+        },
+      },
     },
     superCOPower: {
       name: "Tower of Power",
@@ -48,16 +40,12 @@ export const javierAWDS: COProperties = {
         defense({ attacker, defender }) {
           const bonusFromIndirectAttacks = attacker.isIndirect() ? 60 : 0;
 
-          return (
-            100 +
-            defender.player.getCommtowerAttackBoost() * 3 +
-            bonusFromIndirectAttacks
-          );
+          return 100 + defender.player.getCommtowerAttackBoost() * 3 + bonusFromIndirectAttacks;
         },
         attack({ attacker }) {
           return 100 + attacker.player.getCommtowerAttackBoost() * 2;
-        }
-      }
-    }
-  }
+        },
+      },
+    },
+  },
 };

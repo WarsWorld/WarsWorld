@@ -23,20 +23,18 @@ type TileAnimationVariants = `${PropertyTileType}_${"rain" | "snow"}`;
 type UnitMoveDirection = "down" | "side" | "up";
 type UnitAnimationVariants = `${UnitType}-m${UnitMoveDirection}`;
 
-export default async function getSpriteSheets(countryNames: Army[]): Promise<SpritesheetDataByArmy> {
+export default async function getSpriteSheets(
+  countryNames: Army[],
+): Promise<SpritesheetDataByArmy> {
   const jsonDirectory = path.join(process.cwd(), "public/img/spriteSheet");
 
   const returnObj: Partial<SpritesheetDataByArmy> = {};
-  const allCountryNames: SheetNames[] =  [...countryNames, "neutral", "arrow"];
+  const allCountryNames: SheetNames[] = [...countryNames, "neutral", "arrow"];
 
   for (const country of allCountryNames) {
-    const fileData = await fs.readFile(
-      `${jsonDirectory}/${country}.json`,
-      "utf-8"
-    );
+    const fileData = await fs.readFile(`${jsonDirectory}/${country}.json`, "utf-8");
     returnObj[country] = JSON.parse(fileData) as ArmySpritesheetData;
   }
 
   return returnObj as SpritesheetDataByArmy;
 }
-

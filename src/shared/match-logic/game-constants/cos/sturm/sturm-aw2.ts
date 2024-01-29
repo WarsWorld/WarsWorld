@@ -8,14 +8,14 @@ export const sturmAW2: COProperties = {
     description:
       "Units have +20% firepower and +20% defense. All terrain movement cost is reduced to 1 (doesn't apply in snow).",
     hooks: {
-      movementCost: (_value, {match}) => {
+      movementCost: (_value, { match }) => {
         if (match.getCurrentWeather() !== "snow") {
           return 1;
         }
       },
       attack: () => 120,
-      defense: () => 120
-    }
+      defense: () => 120,
+    },
   },
   powers: {
     superCOPower: {
@@ -32,13 +32,13 @@ export const sturmAW2: COProperties = {
         player.match.damageUntil1HPInRadius({
           radius: 2,
           visualHpAmount: 8,
-          epicenter: positions[0]
+          epicenter: positions[0],
         });
       },
       hooks: {
         attack: () => 140,
-        defense: () => 140
-      }
-    }
-  }
+        defense: () => 140,
+      },
+    },
+  },
 };

@@ -4,7 +4,8 @@ export const samiAW2: COProperties = {
   displayName: "Sami",
   gameVersion: "AW2",
   dayToDay: {
-    description: "Footsoldiers have +30% firepower and capture at 1.5 times the normal rate (rounded down). Transport units have +1 movement point. Other direct units have -10% firepower.",
+    description:
+      "Footsoldiers have +30% firepower and capture at 1.5 times the normal rate (rounded down). Transport units have +1 movement point. Other direct units have -10% firepower.",
     hooks: {
       movementPoints: (points, unit) => {
         if (unit.isTransport()) {
@@ -19,8 +20,8 @@ export const samiAW2: COProperties = {
         if (!attacker.isIndirect()) {
           return 90;
         }
-      }
-    }
+      },
+    },
   },
   powers: {
     COPower: {
@@ -33,7 +34,7 @@ export const samiAW2: COProperties = {
             return points + 1;
           }
 
-          if (unit.isInfantryOrMech()){
+          if (unit.isInfantryOrMech()) {
             return points + 1;
           }
         },
@@ -45,12 +46,13 @@ export const samiAW2: COProperties = {
           if (!attacker.isIndirect()) {
             return 90;
           }
-        }
-      }
+        },
+      },
     },
     superCOPower: {
       name: "Victory March",
-      description: "Footsoldiers gain 2 movement, +50% firepower and the ability to capture instantly.",
+      description:
+        "Footsoldiers gain 2 movement, +50% firepower and the ability to capture instantly.",
       stars: 8,
       hooks: {
         // capturing handled in abiltiy event
@@ -59,7 +61,7 @@ export const samiAW2: COProperties = {
             return points + 1;
           }
 
-          if (unit.isInfantryOrMech()){
+          if (unit.isInfantryOrMech()) {
             return points + 2;
           }
         },
@@ -71,8 +73,8 @@ export const samiAW2: COProperties = {
           if (!attacker.isIndirect()) {
             return 90;
           }
-        }
-      }
-    }
-  }
+        },
+      },
+    },
+  },
 };

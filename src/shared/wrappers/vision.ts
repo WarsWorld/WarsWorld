@@ -6,21 +6,17 @@ import type { UnitWrapper } from "./unit";
 const getUnitVisionRange = (unit: UnitWrapper) => {
   const { vision: baseVision } = unitPropertiesMap[unit.data.type];
 
-  const hasMountainBonus =
-    unit.isInfantryOrMech() && unit.getTile().type === "mountain";
+  const hasMountainBonus = unit.isInfantryOrMech() && unit.getTile().type === "mountain";
 
   const modifiedVision = unit.player.getHook("vision")?.(baseVision);
 
-  const coVisionRange =
-    (modifiedVision ?? baseVision) + (hasMountainBonus ? 3 : 0);
+  const coVisionRange = (modifiedVision ?? baseVision) + (hasMountainBonus ? 3 : 0);
 
   const weatherVisionRange =
-    unit.player.match.getCurrentWeather() === "rain"
-      ? coVisionRange - 1
-      : coVisionRange;
+    unit.player.match.getCurrentWeather() === "rain" ? coVisionRange - 1 : coVisionRange;
 
   return Math.max(weatherVisionRange, 0);
-}
+};
 
 /**
  * Only used for when fog of war!
@@ -42,14 +38,16 @@ export class Vision {
     this.visionArray = new Uint16Array(visionArraySize);
     this.ownedProperties = new Set<Position>();
 
-
     // add property and pipeSeam vision
     for (let y = 0; y < map.height; y++) {
       for (let x = 0; x < this.mapWidth; x++) {
         const tile = team.match.getTile([x, y]);
 
-        if (("playerSlot" in tile && team.match.getPlayerBySlot(tile.playerSlot)?.team.index === team.index)
-            || tile.type === "pipeSeam") {
+        if (
+          ("playerSlot" in tile &&
+            team.match.getPlayerBySlot(tile.playerSlot)?.team.index === team.index) ||
+          tile.type === "pipeSeam"
+        ) {
           this.addOwnedProperty([x, y]);
         }
       }
@@ -83,7 +81,7 @@ export class Vision {
   addOwnedProperty(position: Position) {
     this.ownedProperties.add(position);
     // you will always have vision of a property you just captured cause a unit has to be on top
-    this.changeVision(position, false)
+    this.changeVision(position, false);
   }
 
   /**
@@ -109,13 +107,16 @@ export class Vision {
         }
 
         // if not next to forest or reef and sonja power not active, skip
-        if ((matchMap.data.tiles[pos[1]][pos[0]].type === "forest" || matchMap.data.tiles[pos[1]][pos[0]].type === "reef")
-          && !activeSonjaPower
-          && (Math.abs(i) + Math.abs(j) > 1)) {
+        if (
+          (matchMap.data.tiles[pos[1]][pos[0]].type === "forest" ||
+            matchMap.data.tiles[pos[1]][pos[0]].type === "reef") &&
+          !activeSonjaPower &&
+          Math.abs(i) + Math.abs(j) > 1
+        ) {
           continue;
         }
 
-        this.changeVision(pos, addVision)
+        this.changeVision(pos, addVision);
       }
     }
   }
@@ -174,8 +175,7 @@ export class Vision {
    * Returns is a position is visible, !supposing fog of war is activated!
    */
   isPositionVisible(position: Position): boolean {
-    const result: number | undefined =
-      this.visionArray[position[1] * this.mapWidth + position[0]];
+    const result: number | undefined = this.visionArray[position[1] * this.mapWidth + position[0]];
 
     if (result === undefined) {
       throw new Error("Position for visible check is out of bounds");

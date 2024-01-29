@@ -10,7 +10,7 @@ export const ProtectPage = ({ children }: { children: ReactNode }) => {
       void router.push(".", {
         pathname: "/.",
         query: `authModalOpen&error=ProtectedPage&callbackUrl=${encodeURIComponent(
-          window.location.href
+          window.location.href,
         )}`,
       });
     },

@@ -15,10 +15,7 @@ type UserContext =
 const playersContext = createContext<UserContext>(undefined);
 
 export const ProvidePlayers = ({ children }: { children: ReactNode }) => {
-  const [currentPlayerId, setCurrentPlayerId] = useLocalStorage(
-    "currentPlayerId",
-    null
-  );
+  const [currentPlayerId, setCurrentPlayerId] = useLocalStorage("currentPlayerId", null);
 
   const { data } = trpc.user.me.useQuery();
 
@@ -32,7 +29,6 @@ export const ProvidePlayers = ({ children }: { children: ReactNode }) => {
         setCurrentPlayerId(data.ownedPlayers[0].id);
       }
     }
-
   }, [data, currentPlayerId, setCurrentPlayerId, user]);
 
   return (
@@ -40,7 +36,7 @@ export const ProvidePlayers = ({ children }: { children: ReactNode }) => {
       value={{
         ownedPlayers: user?.ownedPlayers,
         currentPlayerId,
-        setCurrentPlayerId
+        setCurrentPlayerId,
       }}
     >
       {children}

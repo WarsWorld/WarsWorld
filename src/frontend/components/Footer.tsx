@@ -54,8 +54,8 @@ export function Footer() {
       </nav>*/}
 
       <p className="@text-center @text-base-p @p-0 @mx-1">
-        Advance Wars is (c) 1990-2001 Nintendo and (c) 2001 Intelligent Systems.
-        All images are copyright of their respective owners.
+        Advance Wars is (c) 1990-2001 Nintendo and (c) 2001 Intelligent Systems. All images are
+        copyright of their respective owners.
       </p>
     </footer>
   );

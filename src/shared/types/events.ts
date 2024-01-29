@@ -4,7 +4,8 @@ import type {
   AbilityAction,
   AttackAction,
   BuildAction,
-  COPowerAction, DeleteAction,
+  COPowerAction,
+  DeleteAction,
   LaunchMissileAction,
   MoveAction,
   PassTurnAction,
@@ -87,8 +88,7 @@ export type PassTurnEvent = PassTurnAction & { turns: Turn[] };
 export type AbilityEvent = AbilityAction &
   WithElimination<"hq-or-labs-captured" | "property-goal-reached">;
 
-export type DeleteEvent = DeleteAction &
-  WithElimination<`all-units-destroyed`>;
+export type DeleteEvent = DeleteAction & WithElimination<`all-units-destroyed`>;
 
 export type BuildEvent = BuildAction;
 export type LaunchMissileEvent = LaunchMissileAction;
@@ -116,11 +116,10 @@ export type SubEvent =
   | UnloadWaitEvent
   | AttackEvent;
 
-
 type WithDiscoveries = {
   discoveredUnits?: WWUnit[];
   discoveredProperties?: CapturableTile[];
-}
+};
 
 export type EmittableSubEvent =
   | AbilityEvent
@@ -128,7 +127,7 @@ export type EmittableSubEvent =
   | RepairEvent
   | LaunchMissileEvent
   | UnloadWaitEvent
-  | {
+  | ({
       type: "attack";
       attackerHP?: number;
       attackerPlayerSlot: PlayerSlot;
@@ -137,15 +136,16 @@ export type EmittableSubEvent =
       defenderPosition?: Position;
       defenderPlayerSlot: PlayerSlot;
       defenderPowerCharge: number;
-    } & WithElimination<`all-${"attacker" | "defender"}-units-destroyed`>;
+    } & WithElimination<`all-${"attacker" | "defender"}-units-destroyed`>);
 
-export type EmittableMoveEvent = (Omit<MoveEvent, "subEvent"> & WithDiscoveries & {
-  subEvent: EmittableSubEvent;
-  /**
-   * e.g. for when a unit moves from FoW into vision or when it's unloaded into vision
-   */
-  appearingUnit?: WWUnit
-});
+export type EmittableMoveEvent = Omit<MoveEvent, "subEvent"> &
+  WithDiscoveries & {
+    subEvent: EmittableSubEvent;
+    /**
+     * e.g. for when a unit moves from FoW into vision or when it's unloaded into vision
+     */
+    appearingUnit?: WWUnit;
+  };
 
 export type EmittableEvent = (
   | MatchStartEvent
@@ -157,7 +157,8 @@ export type EmittableEvent = (
   | BuildEvent
   | DeleteEvent
   | MatchEndEvent
-  ) & WithDiscoveries;
+) &
+  WithDiscoveries;
 
 export type NonStoredEvent = WithPlayer &
   WithMatchId &
@@ -186,4 +187,4 @@ export type NonStoredEvent = WithPlayer &
       }
   );
 
-export type Emittable = (EmittableEvent | NonStoredEvent) & {matchId: string};
+export type Emittable = (EmittableEvent | NonStoredEvent) & { matchId: string };

@@ -4,11 +4,12 @@ export const juggerAWDS: COProperties = {
   displayName: "Flak",
   gameVersion: "AW2",
   dayToDay: {
-    description: "Units have 30% good luck and 15% bad luck (instead of 10% good luck and 0% bad luck).",
+    description:
+      "Units have 30% good luck and 15% bad luck (instead of 10% good luck and 0% bad luck).",
     hooks: {
       maxGoodLuck: () => 30,
-      maxBadLuck: () => 15
-    }
+      maxBadLuck: () => 15,
+    },
   },
   powers: {
     COPower: {
@@ -17,8 +18,8 @@ export const juggerAWDS: COProperties = {
       stars: 3,
       hooks: {
         maxGoodLuck: () => 55,
-        maxBadLuck: () => 25
-      }
+        maxBadLuck: () => 25,
+      },
     },
     superCOPower: {
       name: "System Crash",
@@ -26,8 +27,8 @@ export const juggerAWDS: COProperties = {
       stars: 7,
       hooks: {
         maxGoodLuck: () => 95,
-        maxBadLuck: () => 45
-      }
-    }
-  }
-}
+        maxBadLuck: () => 45,
+      },
+    },
+  },
+};

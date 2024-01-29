@@ -5,7 +5,7 @@ type Props = {
   text: string;
   location: string;
   handleBurgerMenu?: () => void;
-}
+};
 
 export function NavItem({ text, location, handleBurgerMenu }: Props) {
   return (

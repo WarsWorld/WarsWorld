@@ -3,7 +3,7 @@ type Props = {
   children: ReactNode;
   hasArrow?: boolean;
   isOpen?: boolean;
-}
+};
 export default function NavButton({ children, isOpen, hasArrow }: Props) {
   return (
     <div className="@flex @h-full">

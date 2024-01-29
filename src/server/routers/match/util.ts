@@ -6,8 +6,7 @@ export const throwIfMatchNotInSetupState = (match: MatchWrapper) => {
   if (match.status !== "setup") {
     throw new TRPCError({
       code: "BAD_REQUEST",
-      message:
-        "This action requires the match to be in 'setup' state, but it isn't"
+      message: "This action requires the match to be in 'setup' state, but it isn't",
     });
   }
 };
@@ -15,7 +14,7 @@ export const throwIfMatchNotInSetupState = (match: MatchWrapper) => {
 const mapToFrontend = (map: MapWrapper) => ({
   id: map.data.id,
   name: map.data.name,
-  numberOfPlayers: map.data.numberOfPlayers
+  numberOfPlayers: map.data.numberOfPlayers,
 });
 
 export const matchToFrontend = (match: MatchWrapper) => ({
@@ -23,7 +22,7 @@ export const matchToFrontend = (match: MatchWrapper) => ({
   map: mapToFrontend(match.map),
   players: match.getAllPlayers().map((player) => player.data),
   state: match.status,
-  turn: match.turn
+  turn: match.turn,
 });
 
 export function allMatchSlotsReady(match: MatchWrapper) {

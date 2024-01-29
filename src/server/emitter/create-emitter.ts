@@ -11,10 +11,7 @@ export const createEmitter = <D extends { matchId: Match["id"] }>() => {
   const listenerMap = new Map<Match["id"], Listener[]>();
 
   const unsubscribe = (matchId: Match["id"], listenerToUnsub: Listener) => {
-    listenerMap.set(
-      matchId,
-      listenerMap.get(matchId)?.filter((l) => l !== listenerToUnsub) ?? []
-    );
+    listenerMap.set(matchId, listenerMap.get(matchId)?.filter((l) => l !== listenerToUnsub) ?? []);
   };
 
   return {
@@ -27,7 +24,7 @@ export const createEmitter = <D extends { matchId: Match["id"] }>() => {
     },
     unsubscribe,
     emit: (dispatched?: D) => {
-      if(dispatched) {
+      if (dispatched) {
         listenerMap.get(dispatched.matchId)?.forEach((l) => l(dispatched));
       }
     },

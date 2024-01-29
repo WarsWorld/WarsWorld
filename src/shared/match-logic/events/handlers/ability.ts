@@ -26,7 +26,7 @@ function willCaptureTile(unit: UnitWrapper<"infantry" | "mech">): boolean {
 
 function infantryOrMechAbilityToEvent(
   match: MatchWrapper,
-  unit: UnitWrapper<"infantry" | "mech">
+  unit: UnitWrapper<"infantry" | "mech">,
 ): AbilityEvent {
   const capturingTile = unit.getTile();
 
@@ -35,7 +35,7 @@ function infantryOrMechAbilityToEvent(
   }
 
   const basicEvent: AbilityEvent = {
-    type: "ability"
+    type: "ability",
   };
 
   if (!willCaptureTile(unit)) {
@@ -43,13 +43,13 @@ function infantryOrMechAbilityToEvent(
   }
 
   const currentPlayerPropertiesBeforeCapture = match.changeableTiles.filter((tile) =>
-    unit.player.owns(tile)
+    unit.player.owns(tile),
   );
 
   if (currentPlayerPropertiesBeforeCapture.length + 1 >= match.rules.captureLimit) {
     return {
       ...basicEvent,
-      eliminationReason: "property-goal-reached"
+      eliminationReason: "property-goal-reached",
     };
   }
 
@@ -60,15 +60,15 @@ function infantryOrMechAbilityToEvent(
   }
 
   const previousOwnerPropertiesBeforeCapture = match.changeableTiles.filter((tile) =>
-    previousOwner.owns(tile)
+    previousOwner.owns(tile),
   );
 
   const previousOwnerHasNoHQ = !previousOwnerPropertiesBeforeCapture.some(
-    (tile) => tile.type === "hq"
+    (tile) => tile.type === "hq",
   );
 
   const previousOwnerLabs = previousOwnerPropertiesBeforeCapture.filter(
-    (tile) => tile.type === "lab"
+    (tile) => tile.type === "lab",
   );
 
   const previousOwnerIsEliminated =
@@ -78,7 +78,7 @@ function infantryOrMechAbilityToEvent(
   if (previousOwnerIsEliminated) {
     return {
       ...basicEvent,
-      eliminationReason: "hq-or-labs-captured"
+      eliminationReason: "hq-or-labs-captured",
     };
   }
 
@@ -91,7 +91,7 @@ function infantryOrMechAbilityToEvent(
 export const abilityActionToEvent: SubActionToEvent<AbilityAction> = (
   match,
   action,
-  fromPosition
+  fromPosition,
 ) => {
   const player = match.getCurrentTurnPlayer();
   const unit = match.getUnitOrThrow(fromPosition);
@@ -127,7 +127,7 @@ const eliminatePlayerByCapture = (match: MatchWrapper, capturingUnit: UnitWrappe
 
   if (playerToEliminate === undefined) {
     throw new Error(
-      `Could not eliminate player by slot ${capturedTile.playerSlot} because they could not be found`
+      `Could not eliminate player by slot ${capturedTile.playerSlot} because they could not be found`,
     );
   }
 
@@ -193,12 +193,14 @@ export const applyAbilityEvent: ApplySubEvent<AbilityEvent> = (match, event, fro
         if (!("playerSlot" in tile)) {
           throw new Error(
             `Could not capture tile at ${JSON.stringify(
-              unit.data.position
-            )}: no playerSlot property! (Not changeable tile?)`
+              unit.data.position,
+            )}: no playerSlot property! (Not changeable tile?)`,
           );
         }
 
-        match.getPlayerBySlot(tile.playerSlot)?.team.vision?.removeOwnedProperty(unit.data.position);
+        match
+          .getPlayerBySlot(tile.playerSlot)
+          ?.team.vision?.removeOwnedProperty(unit.data.position);
         tile.playerSlot = unit.data.playerSlot;
         unit.player.team.vision?.addOwnedProperty(unit.data.position);
       }
@@ -217,7 +219,7 @@ export const applyAbilityEvent: ApplySubEvent<AbilityEvent> = (match, event, fro
       match.damageUntil1HPInRadius({
         radius: 3,
         visualHpAmount: 5,
-        epicenter: unit.data.position
+        epicenter: unit.data.position,
       });
       unit.remove();
       break;

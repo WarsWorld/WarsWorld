@@ -8,7 +8,7 @@ type matchData = {
   flipCO?: boolean;
   opponent?: boolean;
   playerReady?: boolean;
-  slot?: number
+  slot?: number;
 };
 
 export default function MatchPlayer({
@@ -18,16 +18,16 @@ export default function MatchPlayer({
   flipCO,
   opponent,
   playerReady,
-  slot
+  slot,
 }: matchData) {
-//TODO: allow for changes in co versions (right now they are all AWDS verions
+  //TODO: allow for changes in co versions (right now they are all AWDS verions
   //opponent (non-current user) OR an unpicked spot (a greyed out upcoming "opponent")
   if (flipCO !== undefined) {
     return (
       <div className={"@truncate @text-right"}>
         <div
           style={{
-            backgroundImage: `url("/img/CO/pixelated/${co.name}-full.png")`
+            backgroundImage: `url("/img/CO/pixelated/${co.name}-full.png")`,
           }}
           className={`@h-[200px] [image-rendering:pixelated] @bg-cover 
              ${opponent !== undefined ? "@brightness-[0.1]" : ""} 
@@ -39,14 +39,14 @@ export default function MatchPlayer({
         >
           <img
             src={
-              opponent !== undefined
-                ? `/img/nations/black-hole.gif`
-                : `/img/nations/${country}.gif`
+              opponent !== undefined ? `/img/nations/black-hole.gif` : `/img/nations/${country}.gif`
             }
             className="@h-7 [image-rendering:pixelated]"
             alt="opponent chosen CO"
           />
-          <p className="@truncate @px-0.5 @text-sm">{slot !== undefined ? `${name} slot: ${slot}`: name}</p>
+          <p className="@truncate @px-0.5 @text-sm">
+            {slot !== undefined ? `${name} slot: ${slot}` : name}
+          </p>
         </div>
       </div>
     );
@@ -57,10 +57,10 @@ export default function MatchPlayer({
       <div className={"@truncate @text-left"}>
         <div
           style={{
-            backgroundImage: `url("/img/CO/pixelated/${co.name}-full.png")`
+            backgroundImage: `url("/img/CO/pixelated/${co.name}-full.png")`,
           }}
           className={`@h-[200px] [image-rendering:pixelated] @bg-cover @scale-x-[-1] ${
-            (playerReady === true) ? "@contrast-[1]" : "@contrast-[0.5]"
+            playerReady === true ? "@contrast-[1]" : "@contrast-[0.5]"
           }`}
         ></div>
         <div className={`@flex @bg-${country}`}>
@@ -69,7 +69,9 @@ export default function MatchPlayer({
             className="@h-7 [image-rendering:pixelated]"
             alt="opponent chosen CO"
           />
-          <p className="@truncate @px-0.5 @text-sm">{slot !== undefined ? `${name} slot: ${slot}`: name}</p>
+          <p className="@truncate @px-0.5 @text-sm">
+            {slot !== undefined ? `${name} slot: ${slot}` : name}
+          </p>
         </div>
       </div>
     );

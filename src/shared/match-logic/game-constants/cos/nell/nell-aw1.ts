@@ -6,8 +6,8 @@ export const nellAW1: COProperties = {
   dayToDay: {
     description: "Luck is increased by 10% (for a total of 20%).",
     hooks: {
-      maxGoodLuck: () => 20
-    }
+      maxGoodLuck: () => 20,
+    },
   },
   powers: {
     COPower: {
@@ -15,8 +15,8 @@ export const nellAW1: COProperties = {
       description: "Luck is increased by an extra 40% (for a total of 60%).",
       stars: 3,
       hooks: {
-        maxGoodLuck: () => 60
-      }
+        maxGoodLuck: () => 60,
+      },
     },
-  }
+  },
 };

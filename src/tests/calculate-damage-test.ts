@@ -43,14 +43,14 @@ const map: WWMap = {
     [
       {
         type: "road",
-        variant: "right-left"
+        variant: "right-left",
       },
       {
         type: "road",
-        variant: "right-left"
-      }
-    ]
-  ]
+        variant: "right-left",
+      },
+    ],
+  ],
 };
 
 const players: PlayerInMatch[] = [
@@ -59,7 +59,7 @@ const players: PlayerInMatch[] = [
     army: "orange-star",
     coId: {
       name: "andy",
-      version: "AW1"
+      version: "AW1",
     },
     COPowerState: "no-power",
     funds: 0,
@@ -67,22 +67,22 @@ const players: PlayerInMatch[] = [
     powerMeter: 0,
     slot: 0,
     timesPowerUsed: 0,
-    hasCurrentTurn: true
+    hasCurrentTurn: true,
   },
   {
     name: "Incuggarch",
     army: "blue-moon",
     coId: {
       name: "andy",
-      version: "AW1"
+      version: "AW1",
     },
     COPowerState: "no-power",
     funds: 0,
     id: "0",
     powerMeter: 0,
     slot: 1,
-    timesPowerUsed: 0
-  }
+    timesPowerUsed: 0,
+  },
 ];
 
 const match = new MatchWrapper(
@@ -98,16 +98,16 @@ const match = new MatchWrapper(
     captureLimit: 0,
     dayLimit: 0,
     weatherSetting: "clear",
-    teamMapping: [0,1] 
-    // playerslot 0 (1st index of teamMapping) is Grimm Guy and is a part of team 0 
-    // playerslot 1 (2nd index of teamMapping) is Incuggarch and is a part of team 1 
+    teamMapping: [0, 1],
+    // playerslot 0 (1st index of teamMapping) is Grimm Guy and is a part of team 0
+    // playerslot 1 (2nd index of teamMapping) is Incuggarch and is a part of team 1
   },
   "playing",
   map,
   players,
   [],
   UnitWrapper,
-  0
+  0,
 );
 
 const p1 = match.getPlayerBySlot(0)!;
@@ -119,8 +119,8 @@ const u1 = p1.addUnwrappedUnit({
   position: [0, 0],
   stats: {
     fuel: 99,
-    hp: 100
-  }
+    hp: 100,
+  },
 });
 
 const u2 = p2.addUnwrappedUnit({
@@ -129,32 +129,27 @@ const u2 = p2.addUnwrappedUnit({
   position: [1, 0],
   stats: {
     fuel: 99,
-    hp: 100
-  }
+    hp: 100,
+  },
 });
 
 const { attackerHP, defenderHP } = attackActionToEvent(
   match,
   {
     type: "attack",
-    defenderPosition: u2.data.position
+    defenderPosition: u2.data.position,
   },
   u1.data.position,
   true,
   {
     goodLuck: 50,
-    badLuck: 50
+    badLuck: 50,
   },
   {
     goodLuck: 50,
-    badLuck: 50
-  }
+    badLuck: 50,
+  },
 );
 
-console.log(
-  "attacker HP:",
-  u1.getHP(),
-  "=>",
-  attackerHP === null ? "(no counter)" : attackerHP
-);
+console.log("attacker HP:", u1.getHP(), "=>", attackerHP === null ? "(no counter)" : attackerHP);
 console.log("defender HP:", u2.getHP(), "=>", defenderHP);

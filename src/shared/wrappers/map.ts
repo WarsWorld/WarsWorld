@@ -12,19 +12,14 @@ export class MapWrapper {
 
   isOutOfBounds(position: Position) {
     return (
-      position[0] < 0 ||
-      position[0] >= this.width ||
-      position[1] < 0 ||
-      position[1] >= this.height
+      position[0] < 0 || position[0] >= this.width || position[1] < 0 || position[1] >= this.height
     );
   }
 
   throwIfOutOfBounds(position: Position) {
     if (this.isOutOfBounds(position)) {
       throw new Error(
-        `Out of bounds position ${JSON.stringify(position)} for map ${
-          this.data.name
-        }`
+        `Out of bounds position ${JSON.stringify(position)} for map ${this.data.name}`,
       );
     }
   }

@@ -14,10 +14,7 @@ import { applyUnloadNoWaitEvent } from "./handlers/unloadNoWait";
 import { applyUnloadWaitEvent } from "./handlers/unloadWait";
 import { applyDeleteEvent } from "./handlers/delete";
 
-export const applyMainEventToMatch = (
-  match: MatchWrapper,
-  event: MainEvent
-): void => {
+export const applyMainEventToMatch = (match: MatchWrapper, event: MainEvent): void => {
   switch (event.type) {
     case "build": {
       applyBuildEvent(match, event);
@@ -54,10 +51,7 @@ export const applyMainEventToMatch = (
   }
 };
 
-export const applySubEventToMatch = (
-  match: MatchWrapper,
-  { subEvent, path }: MoveEvent
-) => {
+export const applySubEventToMatch = (match: MatchWrapper, { subEvent, path }: MoveEvent) => {
   const fromPosition = getFinalPositionSafe(path);
   const unit = match.getUnitOrThrow(fromPosition);
 

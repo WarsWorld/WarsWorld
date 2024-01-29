@@ -7,7 +7,6 @@ import type { CreateNextContextOptions } from "@trpc/server/src/adapters/next";
 import { getSession } from "next-auth/react";
 
 export async function createContext(opts: CreateNextContextOptions | CreateWSSContextFnOptions) {
-
   const session = await getSession({ req: opts.req });
   console.log("createContext for", session?.user?.name ?? "unknown user");
   return {
@@ -16,4 +15,3 @@ export async function createContext(opts: CreateNextContextOptions | CreateWSSCo
 }
 
 export type Context = Awaited<ReturnType<typeof createContext>>;
-

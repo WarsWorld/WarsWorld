@@ -1,14 +1,9 @@
 import { getCOProperties } from "shared/match-logic/co";
 import type { Hooks } from "shared/match-logic/co-hooks";
 import type { Tile } from "shared/schemas/tile";
-import type {
-  UnitWithVisibleStats
-} from "shared/schemas/unit";
+import type { UnitWithVisibleStats } from "shared/schemas/unit";
 import type { Weather } from "shared/schemas/weather";
-import type {
-  ChangeableTile,
-  PlayerInMatch
-} from "shared/types/server-match-state";
+import type { ChangeableTile, PlayerInMatch } from "shared/types/server-match-state";
 import type { MatchWrapper } from "./match";
 import type { TeamWrapper } from "./team";
 import { UnitWrapper } from "./unit";
@@ -17,7 +12,10 @@ import { versionPropertiesMap } from "../match-logic/game-constants/version-prop
 export class PlayerInMatchWrapper {
   public match: MatchWrapper;
 
-  constructor(public data: PlayerInMatch, public team: TeamWrapper) {
+  constructor(
+    public data: PlayerInMatch,
+    public team: TeamWrapper,
+  ) {
     this.match = team.match;
   }
 
@@ -25,22 +23,26 @@ export class PlayerInMatchWrapper {
    * returns amount of commtowers owned * 10 (since 1 commtower gives 10% attack boost)
    */
   getCommtowerAttackBoost() {
-    return 10 * this.match.changeableTiles.reduce(
-      (prev, cur) =>
-        cur.type === "commtower" && cur.playerSlot === this.data.slot
-          ? prev + 1
-          : prev,
-      0
+    return (
+      10 *
+      this.match.changeableTiles.reduce(
+        (prev, cur) =>
+          cur.type === "commtower" && cur.playerSlot === this.data.slot ? prev + 1 : prev,
+        0,
+      )
     );
   }
 
   possessesLab() {
-    return this.match.changeableTiles.find((tile) => tile.type === "lab" && tile.playerSlot === this.data.slot) !== undefined;
+    return (
+      this.match.changeableTiles.find(
+        (tile) => tile.type === "lab" && tile.playerSlot === this.data.slot,
+      ) !== undefined
+    );
   }
 
   getUnits() {
-
-  //TODO: If the match.units is undefined, this throws an error. The error kills usePlayers() which stops FrontEnd work.
+    //TODO: If the match.units is undefined, this throws an error. The error kills usePlayers() which stops FrontEnd work.
     if (this.match.units !== undefined) {
       return this.match.units.filter((u) => u.data.playerSlot === this.data.slot);
     } else {
@@ -74,14 +76,9 @@ export class PlayerInMatchWrapper {
    * if needed until current player slot.
    */
   getNextAlivePlayer(): PlayerInMatchWrapper | null {
-    const nextSlot = (n: number) =>
-      (n + 1) % this.match.map.data.numberOfPlayers;
+    const nextSlot = (n: number) => (n + 1) % this.match.map.data.numberOfPlayers;
 
-    for (
-      let i = nextSlot(this.data.slot);
-      i !== this.data.slot;
-      i = nextSlot(i)
-    ) {
+    for (let i = nextSlot(this.data.slot); i !== this.data.slot; i = nextSlot(i)) {
       const player = this.match.getPlayerBySlot(i);
 
       if (player?.data.eliminated === true) {
@@ -94,7 +91,10 @@ export class PlayerInMatchWrapper {
 
   getPowerStarCost() {
     const versionProperties = this.getVersionProperties();
-    return versionProperties.baseStarValue * (1 + versionProperties.powerMeterScaling * Math.min(this.data.timesPowerUsed, 10));
+    return (
+      versionProperties.baseStarValue *
+      (1 + versionProperties.powerMeterScaling * Math.min(this.data.timesPowerUsed, 10))
+    );
   }
 
   getMaxPowerMeter() {
@@ -130,7 +130,7 @@ export class PlayerInMatchWrapper {
   addUnwrappedUnit(rawUnit: Omit<UnitWithVisibleStats, "playerSlot">) {
     const unit = new UnitWrapper(
       { ...rawUnit, playerSlot: this.data.slot } as UnitWithVisibleStats,
-      this.match
+      this.match,
     );
 
     this.match.units.push(unit);

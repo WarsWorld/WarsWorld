@@ -8,7 +8,7 @@ import { Container, Texture } from "pixi.js";
 import { isSamePosition } from "shared/schemas/position";
 import type { Tile } from "shared/schemas/tile";
 import type { UnitWithVisibleStats } from "shared/schemas/unit";
-import {unitPropertiesMap} from "../shared/match-logic/game-constants/unit-properties";
+import { unitPropertiesMap } from "../shared/match-logic/game-constants/unit-properties";
 import type { PathNode } from "./showPathing";
 import {
   getAccessibleNodes,
@@ -16,18 +16,14 @@ import {
   showAttackableTiles,
   showPassableTiles,
   showPath,
-  updatePath
+  updatePath,
 } from "./showPathing";
-import {
-  animatedSpriteConstructor,
-  spriteConstructor,
-  tileConstructor
-} from "./spriteConstructor";
+import { animatedSpriteConstructor, spriteConstructor, tileConstructor } from "./spriteConstructor";
 
 // Creates the sprite of an unit
 export function getUnitSprite(
   spriteSheet: Spritesheet,
-  unit: UnitWithVisibleStats
+  unit: UnitWithVisibleStats,
 ): AnimatedSprite {
   return animatedSpriteConstructor(
     spriteSheet.animations[unit.type] as Texture<Resource>[],
@@ -37,14 +33,14 @@ export function getUnitSprite(
     16,
     16,
     "static",
-    10
+    10,
   );
 }
 
 export function showUnits(
   spriteSheets: Spritesheet[],
   mapData: Tile[][],
-  units: UnitWithVisibleStats[]
+  units: UnitWithVisibleStats[],
 ): Container {
   const returnContainer = new Container();
   returnContainer.sortableChildren = true;
@@ -69,9 +65,7 @@ export function showUnits(
           //TODO Run show menu function on current spot (don't have to do anything else )
           secondTimeClickingUnit = false;
           console.log("Displaying menu on same spot");
-          const layerName = returnContainer.getChildByName(
-            "arrowAndSquaresContainer"
-          );
+          const layerName = returnContainer.getChildByName("arrowAndSquaresContainer");
 
           if (layerName !== null) {
             returnContainer.removeChild(layerName);
@@ -94,12 +88,9 @@ export function showUnits(
             //original node
             pos: [unit.position[0], unit.position[1]],
             dist: 0,
-            parent: null
+            parent: null,
           });
-          let currentPathDisplay = showPath(
-            spriteSheets[spriteSheets.length - 1],
-            path
-          );
+          let currentPathDisplay = showPath(spriteSheets[spriteSheets.length - 1], path);
 
           const accessibleNodes = getAccessibleNodes(
             mapData,
@@ -108,7 +99,7 @@ export function showUnits(
             unitPropertiesMap[unit.type].movementPoints,
             unitPropertiesMap[unit.type].movementType,
             unit.position[0],
-            unit.position[1]
+            unit.position[1],
           );
           const attackableTiles = getAttackableTiles(
             mapData,
@@ -118,13 +109,11 @@ export function showUnits(
             unitPropertiesMap[unit.type].movementType,
             unit.position[0],
             unit.position[1],
-            accessibleNodes
+            accessibleNodes,
           );
 
           //We clicked an unit, lets clean up other tiles/arrows/paths from previous unit clicked
-          const layerName = returnContainer.getChildByName(
-            "arrowAndSquaresContainer"
-          );
+          const layerName = returnContainer.getChildByName("arrowAndSquaresContainer");
 
           if (layerName !== null) {
             returnContainer.removeChild(layerName);
@@ -145,12 +134,7 @@ export function showUnits(
           arrowAndSquaresContainer.addChild(interactiveSquaresContainer);
 
           //create the visual passable tiles layer and the unit sprite layer
-          const tilesShown = showPassableTiles(
-            mapData,
-            unit,
-            enemyUnits,
-            accessibleNodes
-          );
+          const tilesShown = showPassableTiles(mapData, unit, enemyUnits, accessibleNodes);
           squareContainer.addChild(tilesShown);
 
           //create the interactive, transparent tiles layer
@@ -168,13 +152,10 @@ export function showUnits(
                 unitPropertiesMap[unit.type].movementType,
                 accessibleNodes,
                 path,
-                pos
+                pos,
               );
               //update path display layer also has the name arrows
-              currentPathDisplay = showPath(
-                spriteSheets[spriteSheets.length - 1],
-                path
-              );
+              currentPathDisplay = showPath(spriteSheets[spriteSheets.length - 1], path);
 
               invisibleSquare.on("click", () => {
                 //TODO: Through a function called showUnitMenu or something outside this file
@@ -192,8 +173,7 @@ export function showUnits(
                 returnContainer.removeChild(arrowAndSquaresContainer);
               });
               //lets cleanup previous arrows.
-              const arrowName =
-                arrowAndSquaresContainer.getChildByName("arrows");
+              const arrowName = arrowAndSquaresContainer.getChildByName("arrows");
 
               if (arrowName !== null) {
                 arrowAndSquaresContainer.removeChild(arrowName);
@@ -221,10 +201,7 @@ export function showUnits(
               //probably can improve efficiency on that
               attackableTiles.some((t) => isSamePosition(t, enemyUnit.position))
             ) {
-              const enemySquare = tileConstructor(
-                enemyUnit.position,
-                "#932f2f"
-              );
+              const enemySquare = tileConstructor(enemyUnit.position, "#932f2f");
 
               enemySquare.on("pointerover", () => {
                 //TODO: show dmg forecast/preview/%s checking current units and current terrains
@@ -248,7 +225,7 @@ export function showUnits(
             0,
             mapData[0].length * 16,
             mapData.length * 16,
-            "static"
+            "static",
           );
           outsideOfPath.alpha = 0;
           outsideOfPath.zIndex = -1;

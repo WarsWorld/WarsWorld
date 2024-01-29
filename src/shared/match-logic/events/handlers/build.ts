@@ -7,10 +7,7 @@ import type { MainActionToEvent } from "../handler-types";
 import type { PlayerSlot } from "../../../schemas/player-slot";
 import type { UnitWithVisibleStats } from "../../../schemas/unit";
 
-export const buildActionToEvent: MainActionToEvent<BuildAction> = (
-  match,
-  action
-) => {
+export const buildActionToEvent: MainActionToEvent<BuildAction> = (match, action) => {
   const player = match.getCurrentTurnPlayer();
 
   if (match.rules.bannedUnitTypes.includes(action.unitType)) {
@@ -18,7 +15,9 @@ export const buildActionToEvent: MainActionToEvent<BuildAction> = (
   }
 
   if (match.rules.labUnitTypes.includes(action.unitType) && !player.possessesLab()) {
-    throw new DispatchableError("Trying to build a unit type that requires a lab, but no lab is owned");
+    throw new DispatchableError(
+      "Trying to build a unit type that requires a lab, but no lab is owned",
+    );
   }
 
   // TODO discuss how we handle "existing unit types" for each version
@@ -32,9 +31,7 @@ export const buildActionToEvent: MainActionToEvent<BuildAction> = (
   const effectiveCost = modifiedCost ?? cost;
 
   if (effectiveCost > player.data.funds) {
-    throw new DispatchableError(
-      "You don't have enough funds to build this unit"
-    );
+    throw new DispatchableError("You don't have enough funds to build this unit");
   }
 
   if (match.getUnit(action.position) !== undefined) {
@@ -44,9 +41,7 @@ export const buildActionToEvent: MainActionToEvent<BuildAction> = (
   const tile = match.getTile(action.position);
 
   if (!player.owns(tile)) {
-    throw new DispatchableError(
-      "You don't own this tile or this tile cannot be owned"
-    );
+    throw new DispatchableError("You don't own this tile or this tile cannot be owned");
   }
 
   const hachiScopLandUnit =
@@ -61,13 +56,13 @@ export const buildActionToEvent: MainActionToEvent<BuildAction> = (
   return {
     type: "build",
     unitType: action.unitType,
-    position: action.position
+    position: action.position,
   };
 };
 
 const createUnitFromBuildEvent = (
   playerSlot: PlayerSlot,
-  event: BuildEvent
+  event: BuildEvent,
 ): UnitWithVisibleStats => {
   const { unitType } = event;
 
@@ -78,9 +73,9 @@ const createUnitFromBuildEvent = (
     position: event.position,
     stats: {
       fuel: unitProperties.initialFuel,
-      hp: 100
+      hp: 100,
     },
-    isReady: false
+    isReady: false,
   } satisfies Partial<UnitWithVisibleStats>;
 
   if ("initialAmmo" in unitProperties) {
@@ -88,8 +83,8 @@ const createUnitFromBuildEvent = (
       ...partialUnit,
       stats: {
         ...partialUnit.stats,
-        ammo: unitProperties.initialAmmo
-      }
+        ammo: unitProperties.initialAmmo,
+      },
     } satisfies Partial<UnitWithVisibleStats>;
 
     switch (unitType) {
@@ -109,14 +104,14 @@ const createUnitFromBuildEvent = (
       case "antiAir":
         return {
           type: unitType,
-          ...partialUnitWithAmmo
+          ...partialUnitWithAmmo,
         };
       case "stealth":
       case "sub":
         return {
           type: unitType,
           ...partialUnitWithAmmo,
-          hidden: false
+          hidden: false,
         };
       case "carrier":
       case "cruiser":
@@ -124,7 +119,7 @@ const createUnitFromBuildEvent = (
           type: unitType,
           ...partialUnitWithAmmo,
           loadedUnit: null,
-          loadedUnit2: null
+          loadedUnit2: null,
         };
     }
   }
@@ -135,14 +130,14 @@ const createUnitFromBuildEvent = (
     case "blackBomb":
       return {
         type: unitType,
-        ...partialUnit
+        ...partialUnit,
       };
     case "apc":
     case "transportCopter":
       return {
         type: unitType,
         ...partialUnit,
-        loadedUnit: null
+        loadedUnit: null,
       };
     case "blackBoat":
     case "lander":
@@ -150,7 +145,7 @@ const createUnitFromBuildEvent = (
         type: unitType,
         ...partialUnit,
         loadedUnit: null,
-        loadedUnit2: null
+        loadedUnit2: null,
       };
     default:
       /** TODO only so that typescript doesn't error / break CI, but still a TODO */
@@ -161,7 +156,5 @@ const createUnitFromBuildEvent = (
 export const applyBuildEvent = (match: MatchWrapper, event: BuildEvent) => {
   const player = match.getCurrentTurnPlayer();
 
-  player.addUnwrappedUnit(
-    createUnitFromBuildEvent(player.data.slot, event)
-  );
+  player.addUnwrappedUnit(createUnitFromBuildEvent(player.data.slot, event));
 };

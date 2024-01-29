@@ -10,7 +10,7 @@ export const andyAW1: COProperties = {
       stars: 3,
       instantEffect(player) {
         player.getUnits().forEach((unit) => unit.heal(2));
-      }
-    }
-  }
+      },
+    },
+  },
 };

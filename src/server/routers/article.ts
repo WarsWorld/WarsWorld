@@ -1,32 +1,29 @@
 import { z } from "zod";
-import {
-  playerBaseProcedure,
-  publicBaseProcedure,
-  router,
-} from "../trpc/trpc-setup";
+import { playerBaseProcedure, publicBaseProcedure, router } from "../trpc/trpc-setup";
 import { TRPCError } from "@trpc/server";
 import { prisma } from "server/prisma/prisma-client";
-import { type ArticleCategories, articleSchema, articleCommentSchema } from "shared/schemas/article";
+import {
+  type ArticleCategories,
+  articleSchema,
+  articleCommentSchema,
+} from "shared/schemas/article";
 
 const bannedWords = ["heck", "frick", "oof", "swag", "amongus"];
 
-export const articleTypeSchema = z.enum([
-  "news",
-  "guide",
-]);
+export const articleTypeSchema = z.enum(["news", "guide"]);
 export type ArticleType = z.infer<typeof articleTypeSchema>;
 
 const TYPES: Record<ArticleType, ArticleCategories[]> = {
-  "news": ["patch", "events", "news", "maintenance"],
-  "guide": ["basics", "advance", "site"],
-}
+  news: ["patch", "events", "news", "maintenance"],
+  guide: ["basics", "advance", "site"],
+};
 
 export const articleRouter = router({
   getMetadataByType: publicBaseProcedure
     .input(
       z.object({
-        type: articleTypeSchema
-      })
+        type: articleTypeSchema,
+      }),
     )
     .query(({ input }) => {
       const categories = TYPES[input.type];
@@ -45,14 +42,13 @@ export const articleRouter = router({
             in: categories,
           },
         },
-      })
-    }   
-  ),
+      });
+    }),
   getMarkdownById: publicBaseProcedure
     .input(
       z.object({
         id: z.string(),
-      })
+      }),
     )
     .query(async ({ input }) => {
       const article = await prisma.article.findFirst({
@@ -65,108 +61,98 @@ export const articleRouter = router({
           createdAt: true,
           Comments: {
             include: {
-              player: true
+              player: true,
             },
             orderBy: {
-              createdAt: "desc"
-            }
+              createdAt: "desc",
+            },
           },
         },
         where: {
           AND: {
             id: parseInt(input.id),
-          }
-        }
+          },
+        },
       });
 
-      if(article == null) {
+      if (article == null) {
         return null;
       }
 
-      const type = (Object.keys(TYPES) as ArticleType[]).find(key => TYPES[key].includes(article.category));
-      
+      const type = (Object.keys(TYPES) as ArticleType[]).find((key) =>
+        TYPES[key].includes(article.category),
+      );
+
       return {
         ...article,
         type: type,
       };
-    }
-  ),
-  addComment: playerBaseProcedure
-    .input(articleCommentSchema)
-    .mutation(async ({ input, ctx }) => {
-      const lines = input.comment.split("\n");
-      const words = lines.map((l) => l.split(" ")).flat();
+    }),
+  addComment: playerBaseProcedure.input(articleCommentSchema).mutation(async ({ input, ctx }) => {
+    const lines = input.comment.split("\n");
+    const words = lines.map((l) => l.split(" ")).flat();
 
-      if (
-        words.find((w) => bannedWords.includes(w.toLowerCase())) !== undefined
-      ) {
-        throw new TRPCError({
-          code: "BAD_REQUEST",
-          message: "The comment you were trying to create contains banned words",
-        });
-      }
-
-      const containsBannedCharacters = /[^\w\.!\?\-\_\n ]/.test(input.comment);
-
-      if (containsBannedCharacters) {
-        throw new TRPCError({
-          code: "BAD_REQUEST",
-          message:
-            "The comment you were trying to create contains banned characters",
-        });
-      }
-
-      return prisma.articleComment.create({
-        data: {
-          body: input.comment.trimEnd(),
-          playerId: ctx.currentPlayer.id,
-          articleId: input.articleId
-        },
+    if (words.find((w) => bannedWords.includes(w.toLowerCase())) !== undefined) {
+      throw new TRPCError({
+        code: "BAD_REQUEST",
+        message: "The comment you were trying to create contains banned words",
       });
+    }
+
+    const containsBannedCharacters = /[^\w\.!\?\-\_\n ]/.test(input.comment);
+
+    if (containsBannedCharacters) {
+      throw new TRPCError({
+        code: "BAD_REQUEST",
+        message: "The comment you were trying to create contains banned characters",
+      });
+    }
+
+    return prisma.articleComment.create({
+      data: {
+        body: input.comment.trimEnd(),
+        playerId: ctx.currentPlayer.id,
+        articleId: input.articleId,
+      },
+    });
   }),
-  create: playerBaseProcedure
-    .input(articleSchema)
-    .mutation(async ({ input, ctx }) => {
-      const lines = input.body.split("\n");
-      const words = lines.map((l) => l.split(" ")).flat();
+  create: playerBaseProcedure.input(articleSchema).mutation(async ({ input, ctx }) => {
+    const lines = input.body.split("\n");
+    const words = lines.map((l) => l.split(" ")).flat();
 
-      if (
-        words.find((w) => bannedWords.includes(w.toLowerCase())) !== undefined
-      ) {
-        throw new TRPCError({
-          code: "BAD_REQUEST",
-          message: "The post you were trying to create contains banned words",
-        });
-      }
+    if (words.find((w) => bannedWords.includes(w.toLowerCase())) !== undefined) {
+      throw new TRPCError({
+        code: "BAD_REQUEST",
+        message: "The post you were trying to create contains banned words",
+      });
+    }
 
-      const newArticle = await prisma.article.create({
-        data: {
-          title: input.title,
-          description: input.description,
-          Authors: {
-            create: [
-              {
-                author: {
-                  connect: {
-                    id: ctx.currentPlayer.id,
-                  },
+    const newArticle = await prisma.article.create({
+      data: {
+        title: input.title,
+        description: input.description,
+        Authors: {
+          create: [
+            {
+              author: {
+                connect: {
+                  id: ctx.currentPlayer.id,
                 },
               },
-            ]
-          },
-          thumbnail: input.thumbnail,
-          category: input.category,
-          body: input.body,
-        }
-      });
+            },
+          ],
+        },
+        thumbnail: input.thumbnail,
+        category: input.category,
+        body: input.body,
+      },
+    });
 
-      return {
-        id: newArticle.id,
-        title: newArticle.title,
-      }
-    }
- 
-  ),
+    return {
+      id: newArticle.id,
+      title: newArticle.title,
+    };
+  }),
   // delete: playerBaseProcedure
   //   .input(
   //     z.object({

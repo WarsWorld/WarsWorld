@@ -3,7 +3,7 @@ import { signIn } from "next-auth/react";
 type Props = {
   disabled?: boolean;
   name: string;
-}
+};
 
 const SocialMedia = [
   {
@@ -36,9 +36,7 @@ const SocialMedia = [
 ];
 
 export default function SocialMediaSignInButton({ disabled, name }: Props) {
-  const socialMedia = SocialMedia.find(
-    (x) => x.name.toLowerCase() === name.toLowerCase()
-  );
+  const socialMedia = SocialMedia.find((x) => x.name.toLowerCase() === name.toLowerCase());
   const displayName = socialMedia?.name ?? "";
   const imgSrc = socialMedia?.imgSrc ?? "";
   const imgAlt = socialMedia?.imgAlt ?? "";

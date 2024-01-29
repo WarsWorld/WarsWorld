@@ -15,8 +15,8 @@ export const eagleAWDS: COProperties = {
           case "port":
             return 90;
         }
-      }
-    }
+      },
+    },
   },
   powers: {
     COPower: {
@@ -27,9 +27,7 @@ export const eagleAWDS: COProperties = {
       instantEffect(player) {
         player
           .getUnits()
-          .filter(
-          (unit) => unit.data.type !== "infantry" && unit.data.type !== "mech"
-        )
+          .filter((unit) => unit.data.type !== "infantry" && unit.data.type !== "mech")
           .forEach((unit) => {
             unit.data.isReady = true;
           });
@@ -46,23 +44,20 @@ export const eagleAWDS: COProperties = {
               return 50;
           }
         },
-      }
+      },
     },
     superCOPower: {
       name: "Lightning Strike",
-      description:
-        "All non-footsoldier units may move and fire again, even if built this turn.",
+      description: "All non-footsoldier units may move and fire again, even if built this turn.",
       stars: 9,
       instantEffect(player) {
         player
           .getUnits()
-          .filter(
-          (unit) => unit.data.type !== "infantry" && unit.data.type !== "mech"
-        )
+          .filter((unit) => unit.data.type !== "infantry" && unit.data.type !== "mech")
           .forEach((unit) => {
             unit.data.isReady = true;
           });
       },
-    }
-  }
-}
+    },
+  },
+};

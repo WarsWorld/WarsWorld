@@ -3,7 +3,7 @@ type Props = {
   title: string;
   message?: string;
   className?: string;
-}
+};
 
 export default function ErrorSuccessBlock({ isError, message, title, className }: Props) {
   const color = isError == true ? "@bg-orange-star" : "@bg-green-earth";
@@ -18,9 +18,7 @@ export default function ErrorSuccessBlock({ isError, message, title, className }
           >
             {isError == true ? <>✗</> : <>✓</>}
           </div>
-          <p className="@text-white @text-center @h-auto @text-2xl @px-4">
-            {title}
-          </p>
+          <p className="@text-white @text-center @h-auto @text-2xl @px-4">{title}</p>
         </div>
         {message !== undefined && <p className="@text-sm">{message}</p>}
       </div>

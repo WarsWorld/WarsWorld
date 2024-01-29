@@ -4,15 +4,17 @@ import type { MatchWrapper } from "shared/wrappers/match";
 import type { LaunchMissileEvent } from "shared/types/events";
 import type { SubActionToEvent } from "../handler-types";
 
-export const launchMissileActionToEvent: SubActionToEvent<
-  LaunchMissileAction
-> = (match, action, fromPosition) => {
+export const launchMissileActionToEvent: SubActionToEvent<LaunchMissileAction> = (
+  match,
+  action,
+  fromPosition,
+) => {
   const player = match.getCurrentTurnPlayer();
-  
+
   const unit = match.getUnitOrThrow(fromPosition);
 
   if (!player.owns(unit)) {
-    throw new DispatchableError("You don't own this unit")
+    throw new DispatchableError("You don't own this unit");
   }
 
   const tile = match.getTile(fromPosition);
@@ -22,9 +24,7 @@ export const launchMissileActionToEvent: SubActionToEvent<
   }
 
   if (unit.data.type !== "infantry" && unit.data.type !== "mech") {
-    throw new DispatchableError(
-      "Trying to launch a missile with a non valid unit type"
-    );
+    throw new DispatchableError("Trying to launch a missile with a non valid unit type");
   }
 
   match.map.throwIfOutOfBounds(action.targetPosition);
@@ -32,10 +32,7 @@ export const launchMissileActionToEvent: SubActionToEvent<
   return action;
 };
 
-export const applyLaunchMissileEvent = (
-  match: MatchWrapper,
-  event: LaunchMissileEvent
-) => {
+export const applyLaunchMissileEvent = (match: MatchWrapper, event: LaunchMissileEvent) => {
   match.damageUntil1HPInRadius({
     radius: 3,
     visualHpAmount: 3,

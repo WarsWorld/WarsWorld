@@ -9,8 +9,8 @@ export const sonjaAWDS: COProperties = {
     hooks: {
       // terrain stars handled in calculateDamage
       maxBadLuck: () => 5,
-      vision: (value) => value + 1
-    }
+      vision: (value) => value + 1,
+    },
   },
   powers: {
     COPower: {
@@ -19,8 +19,8 @@ export const sonjaAWDS: COProperties = {
         "Units gain +1 additional vision range (for a total of +2), and all woods and reefs inside vision range are revealed. Enemy terrain stars are reduced by 2 instead.",
       stars: 3,
       hooks: {
-        vision: (value) => value + 2
-      }
+        vision: (value) => value + 2,
+      },
     },
     superCOPower: {
       name: "Counter Break",
@@ -28,8 +28,8 @@ export const sonjaAWDS: COProperties = {
         "Units gain +1 additional vision range (for a total of +2), and all woods and reefs inside vision range are revealed. Enemy terrain stars are reduced by 3 instead. Units attack first when being attacked.",
       stars: 5,
       hooks: {
-        vision: (value) => value + 2
-      }
-    }
-  }
+        vision: (value) => value + 2,
+      },
+    },
+  },
 };

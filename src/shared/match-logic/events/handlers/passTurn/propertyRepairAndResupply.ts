@@ -14,7 +14,7 @@ export function propertyRepairAndResupply(unit: UnitWrapper) {
   const hpHealed = Math.min(
     maxHeal,
     Math.floor(player.data.funds / oneHpRepairCost),
-    10 - unit.getVisualHP()
+    10 - unit.getVisualHP(),
   );
 
   player.data.funds -= hpHealed * oneHpRepairCost;

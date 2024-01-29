@@ -6,7 +6,6 @@ thumbnail: "https://i.ytimg.com/vi/V8rsIExfnEY/maxresdefault.jpg"
 thumbnailAlt: "image alternate text"
 ---
 
-
 # Rise of the Resplendent Lash! Patch 1.01 - Balance Patch Notes
 
 **General Changes:**

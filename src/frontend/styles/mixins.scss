@@ -1,13 +1,8 @@
 // Compute values using px inputs
 @mixin clampSize($minSize, $maxSize, $minScreen, $maxScreen) {
   $viewportWidth: (100 * ($maxSize - $minSize)) / ($maxScreen - $minScreen);
-  $relativeSize: (($minScreen * $maxSize) - ($maxScreen * $minSize)) /
-    ($minScreen - $maxScreen);
+  $relativeSize: (($minScreen * $maxSize) - ($maxScreen * $minSize)) / ($minScreen - $maxScreen);
 
   font-size: $minSize;
-  font-size: clamp(
-    #{$minSize}px,
-    #{$viewportWidth}vw + #{$relativeSize / 16}rem,
-    #{$maxSize}px
-  );
+  font-size: clamp(#{$minSize}px, #{$viewportWidth}vw + #{$relativeSize / 16}rem, #{$maxSize}px);
 }

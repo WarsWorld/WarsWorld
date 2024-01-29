@@ -22,10 +22,8 @@ export default function WarsWorldAdapter(p: PrismaClient): Adapter {
       });
       return user as Awaitable<AdapterUser>;
     },
-    getUser: (id) =>
-      p.user.findUnique({ where: { id } }) as Awaitable<AdapterUser>,
-    getUserByEmail: (email) =>
-      p.user.findUnique({ where: { email } }) as Awaitable<AdapterUser>,
+    getUser: (id) => p.user.findUnique({ where: { id } }) as Awaitable<AdapterUser>,
+    getUserByEmail: (email) => p.user.findUnique({ where: { email } }) as Awaitable<AdapterUser>,
     async getUserByAccount(provider_providerAccountId) {
       const account = await p.account.findUnique({
         where: { provider_providerAccountId },
@@ -35,10 +33,8 @@ export default function WarsWorldAdapter(p: PrismaClient): Adapter {
     },
     updateUser: ({ id, ...data }) =>
       p.user.update({ where: { id }, data }) as Awaitable<AdapterUser>,
-    deleteUser: (id) =>
-      p.user.delete({ where: { id } }) as Awaitable<AdapterUser>,
-    linkAccount: (data) =>
-      p.account.create({ data }) as unknown as AdapterAccount,
+    deleteUser: (id) => p.user.delete({ where: { id } }) as Awaitable<AdapterUser>,
+    linkAccount: (data) => p.account.create({ data }) as unknown as AdapterAccount,
     unlinkAccount: (provider_providerAccountId) =>
       p.account.delete({
         where: { provider_providerAccountId },

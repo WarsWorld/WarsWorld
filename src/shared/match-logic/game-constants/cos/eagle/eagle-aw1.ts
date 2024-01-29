@@ -19,8 +19,8 @@ export const eagleAW1: COProperties = {
         if (attacker.properties.facility === "airport") {
           return 110;
         }
-      }
-    }
+      },
+    },
   },
   powers: {
     COPower: {
@@ -31,9 +31,7 @@ export const eagleAW1: COProperties = {
       instantEffect(player) {
         player
           .getUnits()
-          .filter(
-          (unit) => unit.data.type !== "infantry" && unit.data.type !== "mech"
-        )
+          .filter((unit) => unit.data.type !== "infantry" && unit.data.type !== "mech")
           .forEach((unit) => {
             unit.data.isReady = true;
           });
@@ -55,8 +53,8 @@ export const eagleAW1: COProperties = {
           }
 
           return 60;
-        }
-      }
-    }
-  }
-}
+        },
+      },
+    },
+  },
+};

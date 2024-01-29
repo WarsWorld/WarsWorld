@@ -5,22 +5,22 @@ import type { MatchWrapper } from "shared/wrappers/match";
 
 export type MainActionToEvent<T extends MainAction> = (
   match: MatchWrapper,
-  action: T
+  action: T,
 ) => Extract<MainEvent, { type: T["type"] }>;
 
 export type SubActionToEvent<T extends SubAction> = (
   match: MatchWrapper,
   action: T,
-  fromPosition: Position
+  fromPosition: Position,
 ) => Extract<SubEvent, { type: T["type"] }>;
 
 export type ApplyEvent<Event extends MainEvent | SubEvent> = (
   match: MatchWrapper,
-  event: Event
+  event: Event,
 ) => void;
 
 export type ApplySubEvent<Event extends SubEvent> = (
   match: MatchWrapper,
   subEvent: Event,
-  fromPosition: Position
+  fromPosition: Position,
 ) => void;

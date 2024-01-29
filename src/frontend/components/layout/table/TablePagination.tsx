@@ -6,7 +6,7 @@ type Props = {
   // regardless of what type the data has.
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   table: Table<any>;
-}
+};
 
 export default function TablePagination({ table }: Props) {
   return (
@@ -31,7 +31,10 @@ export default function TablePagination({ table }: Props) {
       <SquareButton onClick={() => table.nextPage()} disabled={!table.getCanNextPage()}>
         {">"}
       </SquareButton>
-      <SquareButton onClick={() => table.setPageIndex(table.getPageCount() - 1)} disabled={!table.getCanNextPage()}>
+      <SquareButton
+        onClick={() => table.setPageIndex(table.getPageCount() - 1)}
+        disabled={!table.getCanNextPage()}
+      >
         {">>"}
       </SquareButton>
     </div>

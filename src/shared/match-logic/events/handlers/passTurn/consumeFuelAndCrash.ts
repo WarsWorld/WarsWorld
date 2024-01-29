@@ -6,10 +6,7 @@ export function getTurnFuelConsumption(unit: UnitWrapper): number {
   if (unit.properties.facility === "airport") {
     fuelConsumed = 5;
 
-    if (
-      unit.data.type === "transportCopter" ||
-      unit.data.type === "battleCopter"
-    ) {
+    if (unit.data.type === "transportCopter" || unit.data.type === "battleCopter") {
       fuelConsumed = 2;
     } else if ("hidden" in unit.data && unit.data.hidden) {
       // hidden stealth
@@ -28,5 +25,5 @@ export function getTurnFuelConsumption(unit: UnitWrapper): number {
     }
   }
 
-  return fuelConsumed
+  return fuelConsumed;
 }

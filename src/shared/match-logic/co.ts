@@ -101,7 +101,7 @@ const COIndex: Record<GameVersion, Map<CO, COProperties>> = {
     ["drake", drakeAW1],
     ["kanbei", kanbeiAW1],
     ["sonja", sonjaAW1],
-    ["sturm", sturmAW1Versus]
+    ["sturm", sturmAW1Versus],
   ]),
   AW2: new Map<CO, COProperties>([
     ["andy", andyAW2],
@@ -122,7 +122,7 @@ const COIndex: Record<GameVersion, Map<CO, COProperties>> = {
     ["hawke", hachiAW2],
     ["adder", adderAW2],
     ["lash", lashAW2],
-    ["flak", flakAW2]
+    ["flak", flakAW2],
   ]),
   AWDS: new Map<CO, COProperties>([
     ["andy", andyAWDS],
@@ -151,8 +151,8 @@ const COIndex: Record<GameVersion, Map<CO, COProperties>> = {
     ["jugger", juggerAWDS],
     ["koal", koalAWDS],
     ["kindle", kindleAWDS],
-    ["von-bolt", vonBoltAWDS]
-  ])
+    ["von-bolt", vonBoltAWDS],
+  ]),
 };
 
 export function getCOProperties(id: COID): COProperties {
@@ -161,9 +161,7 @@ export function getCOProperties(id: COID): COProperties {
   const coProps = map.get(id.name);
 
   if (coProps === undefined) {
-    throw new Error(
-      `CO ${JSON.stringify(id)} is not in the COIndex. (e.g. not implemented/added)`
-    );
+    throw new Error(`CO ${JSON.stringify(id)} is not in the COIndex. (e.g. not implemented/added)`);
   }
 
   return coProps;

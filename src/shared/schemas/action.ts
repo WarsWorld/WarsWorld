@@ -40,7 +40,7 @@ const unloadWaitActionSchema = z.object({
       z.object({
         isSecondUnit: z.boolean(), //if the unloaded unit is "loadedUnit2"
         direction: directionSchema,
-      })
+      }),
     )
     .min(1)
     .max(2),

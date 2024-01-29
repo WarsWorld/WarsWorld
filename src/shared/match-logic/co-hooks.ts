@@ -8,22 +8,16 @@ type ReturnValue = number | undefined;
 
 export type Hooks = {
   buildCost: (baseBuildCost: number, match: MatchWrapper) => ReturnValue;
-  movementCost: <T extends UnitType>(
-    baseMovementCost: number,
-    unit: UnitWrapper<T>
-  ) => ReturnValue;
+  movementCost: <T extends UnitType>(baseMovementCost: number, unit: UnitWrapper<T>) => ReturnValue;
   movementPoints: <T extends UnitType>(
     baseMovementPoints: number,
-    unit: UnitWrapper<T>
+    unit: UnitWrapper<T>,
   ) => ReturnValue;
   vision: (baseVisionRange: number) => ReturnValue;
 
   attackRange: (baseRange: number, attacker: UnitWrapper) => ReturnValue;
 
-  terrainStars: (
-    baseTerrainStars: number,
-    combatProps: CombatProps
-  ) => ReturnValue;
+  terrainStars: (baseTerrainStars: number, combatProps: CombatProps) => ReturnValue;
 
   attack: (combatProps: CombatProps) => ReturnValue;
   defense: (combatProps: CombatProps) => ReturnValue;

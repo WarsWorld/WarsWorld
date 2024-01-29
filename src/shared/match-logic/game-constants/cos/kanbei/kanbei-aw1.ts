@@ -8,8 +8,8 @@ export const kanbeiAW1: COProperties = {
     hooks: {
       buildCost: (value) => value * 1.2,
       attack: () => 120,
-      defense: () => 120
-    }
+      defense: () => 120,
+    },
   },
   powers: {
     COPower: {
@@ -17,8 +17,8 @@ export const kanbeiAW1: COProperties = {
       description: "Units gain +10% firepower.",
       stars: 5,
       hooks: {
-        attack: () => 130
-      }
+        attack: () => 130,
+      },
     },
-  }
+  },
 };

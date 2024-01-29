@@ -4,11 +4,12 @@ export const flakAW2: COProperties = {
   displayName: "Flak",
   gameVersion: "AW2",
   dayToDay: {
-    description: "Units have 15% good luck and 10% bad luck (instead of 10% good luck and 0% bad luck).",
+    description:
+      "Units have 15% good luck and 10% bad luck (instead of 10% good luck and 0% bad luck).",
     hooks: {
       maxGoodLuck: () => 15,
-      maxBadLuck: () => 10
-    }
+      maxBadLuck: () => 10,
+    },
   },
   powers: {
     COPower: {
@@ -17,8 +18,8 @@ export const flakAW2: COProperties = {
       stars: 3,
       hooks: {
         maxGoodLuck: () => 40,
-        maxBadLuck: () => 20
-      }
+        maxBadLuck: () => 20,
+      },
     },
     superCOPower: {
       name: "Barbaric Blow",
@@ -26,8 +27,8 @@ export const flakAW2: COProperties = {
       stars: 6,
       hooks: {
         maxGoodLuck: () => 80,
-        maxBadLuck: () => 40
-      }
-    }
-  }
-}
+        maxBadLuck: () => 40,
+      },
+    },
+  },
+};

@@ -59,15 +59,13 @@ export const playerMiddleware = t.middleware(async ({ ctx, next, input }) => {
   });
 });
 
-export const playerWithoutCurrentMiddleware = t.middleware(
-  async ({ ctx, next }) => {
-    const ownedPlayers = await getLoggedInUserPlayers(ctx.session);
+export const playerWithoutCurrentMiddleware = t.middleware(async ({ ctx, next }) => {
+  const ownedPlayers = await getLoggedInUserPlayers(ctx.session);
 
-    return next({
-      ctx: {
-        ...ctx,
-        ownedPlayers,
-      },
-    });
-  }
-);
+  return next({
+    ctx: {
+      ...ctx,
+      ownedPlayers,
+    },
+  });
+});

@@ -8,7 +8,7 @@ export const rachelAWDS: COProperties = {
     description: "When repairing on properties, units heal 1 extra HP (consumes additional funds).",
     hooks: {
       // extra repairs handled in pass turn event
-    }
+    },
   },
   powers: {
     COPower: {
@@ -16,8 +16,8 @@ export const rachelAWDS: COProperties = {
       description: "Luck is increased by 30% (for a total of 40%).",
       stars: 3,
       hooks: {
-        maxGoodLuck: () => 40
-      }
+        maxGoodLuck: () => 40,
+      },
     },
     superCOPower: {
       name: "Covering Fire",
@@ -33,19 +33,19 @@ export const rachelAWDS: COProperties = {
         player.match.damageUntil1HPInRadius({
           radius: 2,
           visualHpAmount: 3,
-          epicenter: positions[0]
+          epicenter: positions[0],
         });
         player.match.damageUntil1HPInRadius({
           radius: 2,
           visualHpAmount: 3,
-          epicenter: positions[1]
+          epicenter: positions[1],
         });
         player.match.damageUntil1HPInRadius({
           radius: 2,
           visualHpAmount: 3,
-          epicenter: positions[2]
+          epicenter: positions[2],
         });
-      }
-    }
-  }
+      },
+    },
+  },
 };

@@ -16,7 +16,7 @@ export const unloadNoWaitActionToEvent: MainActionToEvent<UnloadNoWaitAction> = 
   const transportUnit = match.getUnitOrThrow(action.transportPosition);
 
   if (!player.owns(transportUnit)) {
-    throw new DispatchableError("You don't own this unit")
+    throw new DispatchableError("You don't own this unit");
   }
 
   if (!transportUnit.isTransport()) {
@@ -40,10 +40,16 @@ export const unloadNoWaitActionToEvent: MainActionToEvent<UnloadNoWaitAction> = 
       throw new DispatchableError("Transport doesn't currently have a 2nd loaded unit");
     }
 
-    throwIfUnitCantBeUnloadedToTile(transportUnit.data.loadedUnit2, match.getTile(action.transportPosition));
+    throwIfUnitCantBeUnloadedToTile(
+      transportUnit.data.loadedUnit2,
+      match.getTile(action.transportPosition),
+    );
     throwIfUnitCantBeUnloadedToTile(transportUnit.data.loadedUnit2, match.getTile(unloadPosition));
   } else {
-    throwIfUnitCantBeUnloadedToTile(transportUnit.data.loadedUnit, match.getTile(action.transportPosition));
+    throwIfUnitCantBeUnloadedToTile(
+      transportUnit.data.loadedUnit,
+      match.getTile(action.transportPosition),
+    );
     throwIfUnitCantBeUnloadedToTile(transportUnit.data.loadedUnit, match.getTile(unloadPosition));
   }
 
@@ -61,7 +67,7 @@ export const applyUnloadNoWaitEvent = (match: MatchWrapper, event: UnloadNoWaitE
     unit.player.addUnwrappedUnit({
       ...unit.data.loadedUnit2,
       isReady: false,
-      position: addDirection(event.transportPosition, event.unloads.direction)
+      position: addDirection(event.transportPosition, event.unloads.direction),
     });
 
     unit.data.loadedUnit2 = null;
@@ -73,7 +79,7 @@ export const applyUnloadNoWaitEvent = (match: MatchWrapper, event: UnloadNoWaitE
     unit.player.addUnwrappedUnit({
       ...unit.data.loadedUnit,
       isReady: false,
-      position: addDirection(event.transportPosition, event.unloads.direction)
+      position: addDirection(event.transportPosition, event.unloads.direction),
     });
 
     if ("loadedUnit2" in unit.data) {

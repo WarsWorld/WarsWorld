@@ -56,7 +56,7 @@ export const passTurnActionToEvent: MainActionToEvent<PassTurnAction> = (match, 
       // if units are on top of a repair property, they can't crash
       if (!isInRepairFacility || !unit.player.owns(tile)) {
         const fuelConsumption = getTurnFuelConsumption(unit);
-        const fuelAfterConsumption = unit.getFuel() - fuelConsumption
+        const fuelAfterConsumption = unit.getFuel() - fuelConsumption;
         const willCrash = fuelAfterConsumption <= 0;
 
         if (willCrash && nextTurnPlayer.getUnits().length === 0) {
@@ -64,12 +64,12 @@ export const passTurnActionToEvent: MainActionToEvent<PassTurnAction> = (match, 
           // the game still generates a random weather first and sets it if applicable.
           turns.push({
             newWeather: getNewWeather(nextTurnPlayer),
-            eliminationReason: "all-units-crashed"
+            eliminationReason: "all-units-crashed",
           });
 
-          const singleTeamAlive = match.teams.filter((t) =>
-            t.players.some((p) => p.data.eliminated !== false)
-          ).length <= 1;
+          const singleTeamAlive =
+            match.teams.filter((t) => t.players.some((p) => p.data.eliminated !== false)).length <=
+            1;
 
           if (singleTeamAlive) {
             break turnLoop; // TODO not quite sure what should happen then. some MatchEndEvent logic i guess. maybe another field on PassTurnEvent?
@@ -86,7 +86,7 @@ export const passTurnActionToEvent: MainActionToEvent<PassTurnAction> = (match, 
 
   return {
     ...action,
-    turns
+    turns,
   };
 };
 

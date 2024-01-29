@@ -52,21 +52,20 @@ export default function ArticleCommentSection({ comments }: Props) {
       const parsedComment = articleCommentSchema.parse({
         articleId: Number(articleId),
         comment: String(comment).trim(),
-      })
-  
+      });
+
       await createComment({
         ...parsedComment,
         playerId: currentPlayer!.id,
-      })
+      });
 
       await trpcUtils.article.invalidate();
       setErrorMessage("");
       target.reset();
-
     } catch (err) {
-      if(err instanceof ZodError) {
+      if (err instanceof ZodError) {
         setErrorMessage(err.issues[0].message);
-      } else if(err instanceof TRPCClientError) {
+      } else if (err instanceof TRPCClientError) {
         setErrorMessage(err.message);
       } else {
         setErrorMessage("There was an error posting your comment. Please try again.");
@@ -78,7 +77,7 @@ export default function ArticleCommentSection({ comments }: Props) {
     <section className="@w-full @p-12 @relative @leading-10">
       <h2 className="@font-bold">Comments</h2>
 
-      {currentPlayer ? 
+      {currentPlayer ? (
         <div className="@w-full">
           <form
             onSubmit={(event) => {
@@ -87,8 +86,8 @@ export default function ArticleCommentSection({ comments }: Props) {
             method="post"
             className="@flex @flex-col"
           >
-            <TextAreaInput 
-              name="comment" 
+            <TextAreaInput
+              name="comment"
               height="16vh"
               text=""
               isError={errorMessage != ""}
@@ -98,10 +97,10 @@ export default function ArticleCommentSection({ comments }: Props) {
               <SquareButton type="submit">Add comment</SquareButton>
             </div>
           </form>
-        </div> 
-        : 
+        </div>
+      ) : (
         <div>Please login to write a comment.</div>
-      }
+      )}
 
       <div className="@flex @flex-col @gap-4">
         {comments.map((comment) => {

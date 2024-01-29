@@ -15,8 +15,8 @@ export const importAWBWMap = async (data: AWBWMapImportSchema) => {
         name: data.name,
         numberOfPlayers: data.numberOfPlayers,
         tiles: convertAWBWMapToWWMap(data.tileDataString),
-        predeployedUnits: [] /* TODO ! */
-      }
+        predeployedUnits: [] /* TODO ! */,
+      },
     });
   } catch (error) {
     console.error("An error occurred while importing the map");
@@ -24,9 +24,7 @@ export const importAWBWMap = async (data: AWBWMapImportSchema) => {
   }
 };
 
-export const convertAWBWMapToWWMap = (
-  tileDataString: string
-): WWMap["tiles"] => {
+export const convertAWBWMapToWWMap = (tileDataString: string): WWMap["tiles"] => {
   const tileData2DM = tileDataString
     .trim()
     .split("\n")
@@ -34,7 +32,7 @@ export const convertAWBWMapToWWMap = (
       l
         .trim()
         .split(",")
-        .map((t) => t.trim())
+        .map((t) => t.trim()),
     );
   const tileDataFlat = tileData2DM.flat();
   const row = tileData2DM[0].length;
@@ -222,5 +220,5 @@ const awbwTileMapping: Record<string, Tile> = {
   "191": { type: "commtower", playerSlot: 15 },
   "192": { type: "hq", playerSlot: 15 },
   "193": { type: "lab", playerSlot: 15 },
-  "194": { type: "port", playerSlot: 15 }
+  "194": { type: "port", playerSlot: 15 },
 };

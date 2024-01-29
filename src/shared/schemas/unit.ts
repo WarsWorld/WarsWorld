@@ -6,7 +6,7 @@ import {
   withCapturePoints,
   withHidden,
   withNoAmmoUnitStats,
-  withTypeSchema
+  withTypeSchema,
 } from "./unit-traits";
 
 //LAND UNITS:
@@ -15,14 +15,12 @@ const infantrySchema = withTypeSchema("infantry")
   .extend(withNoAmmoUnitStats)
   .extend(withCapturePoints);
 
-const mechSchema = withTypeSchema("mech")
-  .extend(withAmmoUnitStats)
-  .extend(withCapturePoints);
+const mechSchema = withTypeSchema("mech").extend(withAmmoUnitStats).extend(withCapturePoints);
 
 const APCSchema = withTypeSchema("apc")
   .extend(withNoAmmoUnitStats)
   .extend({
-    loadedUnit: getLoadedSchema([infantrySchema, mechSchema])
+    loadedUnit: getLoadedSchema([infantrySchema, mechSchema]),
   });
 
 const reconSchema = withTypeSchema("recon").extend(withNoAmmoUnitStats);
@@ -37,8 +35,8 @@ const otherLandUnitsWithAmmo = z
       "rocket",
       "mediumTank",
       "neoTank",
-      "megaTank"
-    ])
+      "megaTank",
+    ]),
   })
   .extend(withAmmoUnitStats);
 
@@ -46,30 +44,27 @@ const otherLandUnitsWithAmmo = z
 const transportCopterSchema = withTypeSchema("transportCopter")
   .extend(withNoAmmoUnitStats)
   .extend({
-    loadedUnit: getLoadedSchema([infantrySchema, mechSchema])
+    loadedUnit: getLoadedSchema([infantrySchema, mechSchema]),
   });
 
-const battleCopterSchema =
-  withTypeSchema("battleCopter").extend(withAmmoUnitStats);
+const battleCopterSchema = withTypeSchema("battleCopter").extend(withAmmoUnitStats);
 
 const blackBombSchema = withTypeSchema("blackBomb").extend(withNoAmmoUnitStats);
 
 const bomberAndFighterSchema = z
   .object({
-    type: z.enum(["bomber", "fighter"])
+    type: z.enum(["bomber", "fighter"]),
   })
   .extend(withAmmoUnitStats);
 
-const stealthSchema = withTypeSchema("stealth")
-  .extend(withHidden)
-  .extend(withAmmoUnitStats);
+const stealthSchema = withTypeSchema("stealth").extend(withHidden).extend(withAmmoUnitStats);
 
 const loadableAirUnitSchema = getLoadedSchema([
   transportCopterSchema,
   battleCopterSchema,
   blackBombSchema,
   bomberAndFighterSchema,
-  stealthSchema
+  stealthSchema,
 ]);
 
 //SEA UNITS:
@@ -77,7 +72,7 @@ const blackBoatSchema = withTypeSchema("blackBoat")
   .extend(withNoAmmoUnitStats)
   .extend({
     loadedUnit: getLoadedSchema([infantrySchema, mechSchema]),
-    loadedUnit2: getLoadedSchema([infantrySchema, mechSchema])
+    loadedUnit2: getLoadedSchema([infantrySchema, mechSchema]),
   });
 
 const landerSchema = withTypeSchema("lander")
@@ -88,36 +83,32 @@ const landerSchema = withTypeSchema("lander")
       mechSchema,
       reconSchema,
       APCSchema,
-      otherLandUnitsWithAmmo
+      otherLandUnitsWithAmmo,
     ]),
     loadedUnit2: getLoadedSchema([
       infantrySchema,
       mechSchema,
       reconSchema,
       APCSchema,
-      otherLandUnitsWithAmmo
-    ])
+      otherLandUnitsWithAmmo,
+    ]),
   });
 
 const cruiserSchema = withTypeSchema("cruiser")
   .extend(withAmmoUnitStats)
   .extend({
     loadedUnit: getLoadedSchema([transportCopterSchema, battleCopterSchema]),
-    loadedUnit2: getLoadedSchema([transportCopterSchema, battleCopterSchema])
+    loadedUnit2: getLoadedSchema([transportCopterSchema, battleCopterSchema]),
   });
 
 const battleshipSchema = withTypeSchema("battleship").extend(withAmmoUnitStats);
 
-const subSchema = withTypeSchema("sub")
-  .extend(withHidden)
-  .extend(withAmmoUnitStats);
+const subSchema = withTypeSchema("sub").extend(withHidden).extend(withAmmoUnitStats);
 
-const carrierSchema = withTypeSchema("carrier")
-  .extend(withAmmoUnitStats)
-  .extend({
-    loadedUnit: loadableAirUnitSchema,
-    loadedUnit2: loadableAirUnitSchema
-  });
+const carrierSchema = withTypeSchema("carrier").extend(withAmmoUnitStats).extend({
+  loadedUnit: loadableAirUnitSchema,
+  loadedUnit2: loadableAirUnitSchema,
+});
 
 //PIPE? UNITS:
 const pipeRunnerSchema = withTypeSchema("pipeRunner").extend(withAmmoUnitStats);
@@ -141,7 +132,7 @@ export const unitSchema = z.discriminatedUnion("type", [
   battleshipSchema.extend(shared),
   subSchema.extend(shared),
   carrierSchema.extend(shared),
-  pipeRunnerSchema.extend(shared)
+  pipeRunnerSchema.extend(shared),
 ]);
 
 export type UnitWithVisibleStats = z.infer<typeof unitSchema>;

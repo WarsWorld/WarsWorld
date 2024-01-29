@@ -25,7 +25,7 @@ type LaunchableSiloTile = WithPosition & {
 type PipeSeamTile = WithPosition & {
   type: PipeSeamTileType;
   hp: number;
-}
+};
 
 export type ChangeableTile = CapturableTile | LaunchableSiloTile | PipeSeamTile;
 

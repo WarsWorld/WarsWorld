@@ -11,8 +11,8 @@ export const nellAW2: COProperties = {
       description: "Luck is increased by an extra 80% (for a total of 100%).",
       stars: 6,
       hooks: {
-        maxGoodLuck: () => 100
-      }
-    }
-  }
-}
+        maxGoodLuck: () => 100,
+      },
+    },
+  },
+};

@@ -7,12 +7,12 @@ export const olafAWDS: COProperties = {
     description: "Units ignore snow penalties and have +20% firepower during snow.",
     hooks: {
       //in AWDS, olaf d2d is that units ignore fuel extra consumption during snow
-      attack: ( {attacker} ) => {
+      attack: ({ attacker }) => {
         if (attacker.match.getCurrentWeather() === "snow") {
           return 120;
         }
-      }
-    }
+      },
+    },
   },
   powers: {
     COPower: {
@@ -21,17 +21,17 @@ export const olafAWDS: COProperties = {
       stars: 3,
       instantEffect(player) {
         player.match.setWeather("snow", 2);
-      }
+      },
     },
     superCOPower: {
       name: "Winter fury",
       description: "All enemy units lose 2 HP, and causes it to snow for the next 2 days.",
       stars: 6,
       instantEffect(player) {
-        player.team.getEnemyUnits().forEach(unit => unit.damageUntil1HP(2));
+        player.team.getEnemyUnits().forEach((unit) => unit.damageUntil1HP(2));
 
         player.match.setWeather("snow", 2);
-      }
-    }
-  }
-}
+      },
+    },
+  },
+};

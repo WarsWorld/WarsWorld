@@ -4,10 +4,7 @@ import type { Position } from "shared/schemas/position";
 import { tileConstructor } from "./sprite-constructor";
 import type { MatchWrapper } from "shared/wrappers/match";
 import { DispatchableError } from "../shared/DispatchedError";
-import {
-  getNeighbourPositions,
-  positionsAreNeighbours,
-} from "shared/schemas/position";
+import { getNeighbourPositions, positionsAreNeighbours } from "shared/schemas/position";
 import type { UnitWrapper } from "../shared/wrappers/unit";
 import { getDistance } from "shared/schemas/position";
 import { unitPropertiesMap } from "shared/match-logic/game-constants/unit-properties";
@@ -20,7 +17,7 @@ export type PathNode = {
 
 export function getAccessibleNodes( //TODO: save result of function? _ (Sturm d2d?)
   match: MatchWrapper,
-  unit: UnitWrapper
+  unit: UnitWrapper,
 ): Map<Position, PathNode> {
   const ownerUnitPlayer = match.getPlayerBySlot(unit.data.playerSlot);
 
@@ -57,11 +54,7 @@ export function getAccessibleNodes( //TODO: save result of function? _ (Sturm d2
     const currNode = queues[currentDist].pop();
     const currPos = currNode?.pos;
 
-    if (
-      currNode == undefined ||
-      currPos === undefined ||
-      visited[currPos[0]][currPos[1]]
-    ) {
+    if (currNode == undefined || currPos === undefined || visited[currPos[0]][currPos[1]]) {
       continue;
     }
 
@@ -74,7 +67,7 @@ export function getAccessibleNodes( //TODO: save result of function? _ (Sturm d2
         continue;
       }
 
-      unit.getMovementCost(pos)
+      unit.getMovementCost(pos);
 
       const movementCost = unit.getMovementCost(pos);
 
@@ -100,7 +93,7 @@ export function getAccessibleNodes( //TODO: save result of function? _ (Sturm d2
 export async function showPassableTiles(
   match: MatchWrapper,
   unit: UnitWrapper,
-  accessibleNodes?: Map<Position, PathNode>
+  accessibleNodes?: Map<Position, PathNode>,
 ) {
   const markedTiles = new Container();
   markedTiles.eventMode = "static";
@@ -122,7 +115,7 @@ export async function showPassableTiles(
 export function getAttackableTiles(
   match: MatchWrapper,
   unit: UnitWrapper,
-  accessibleNodes?: Map<Position, PathNode>
+  accessibleNodes?: Map<Position, PathNode>,
 ): Position[] {
   if (accessibleNodes === undefined) {
     accessibleNodes = getAccessibleNodes(match, unit);
@@ -153,7 +146,7 @@ export function getAttackableTiles(
 export async function showAttackableTiles(
   match: MatchWrapper,
   unit: UnitWrapper,
-  attackableTiles?: Position[]
+  attackableTiles?: Position[],
 ) {
   const unitProperties = unitPropertiesMap[unit.data.type];
 
@@ -198,7 +191,7 @@ export function updatePath(
   unit: UnitWrapper,
   accessibleNodes: Map<Position, PathNode>,
   path: PathNode[],
-  newPos: Position
+  newPos: Position,
 ): PathNode[] {
   if (newPos === undefined || newPos === null || !accessibleNodes.has(newPos)) {
     throw new Error("Trying to add an unreachable position!");
@@ -220,13 +213,10 @@ export function updatePath(
 
     //check if new node is adjacent
     if (positionsAreNeighbours(lastNode.pos, newPos)) {
-      const moveCost = unit.getMovementCost(newPos)
+      const moveCost = unit.getMovementCost(newPos);
 
       //if it doesn't surpass movement restrictions, update current path
-      if (
-        moveCost !== null &&
-        moveCost + lastNode.dist <= unit.getMovementPoints()
-      ) {
+      if (moveCost !== null && moveCost + lastNode.dist <= unit.getMovementPoints()) {
         path.push({
           pos: newPos,
           dist: moveCost + lastNode.dist,
@@ -342,11 +332,7 @@ export function showPath(spriteSheet: Spritesheet, path: PathNode[]) {
       //special case for original node
       spriteName = getSpriteName(path2[0].pos, path2[i].pos, path2[i + 1].pos);
     } else {
-      spriteName = getSpriteName(
-        path2[i - 1].pos,
-        path2[i].pos,
-        path2[i + 1].pos
-      );
+      spriteName = getSpriteName(path2[i - 1].pos, path2[i].pos, path2[i + 1].pos);
     }
 
     const nodeSprite = new Sprite(spriteSheet.textures[spriteName + ".png"]);

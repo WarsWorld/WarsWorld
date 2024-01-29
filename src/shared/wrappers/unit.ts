@@ -7,7 +7,7 @@ import type { PlayerInMatchWrapper } from "./player-in-match";
 import { getBaseMovementCost } from "../match-logic/movement-cost";
 import { getWeatherSpecialMovement } from "../match-logic/weather";
 
-type ExtractUnit<T extends UnitType> = Extract<WWUnit, { type: T }>
+type ExtractUnit<T extends UnitType> = Extract<WWUnit, { type: T }>;
 
 export class UnitWrapper<
   Type extends UnitType = UnitType,
@@ -16,15 +16,15 @@ export class UnitWrapper<
    * without this, issues arise when trying to assign `this` to `UnitWrapper` (without generic!)
    * like a lot of utility functions do.
    */
-  Unit extends ExtractUnit<Type> = ExtractUnit<Type>
+  Unit extends ExtractUnit<Type> = ExtractUnit<Type>,
 > {
   public player: PlayerInMatchWrapper;
 
-  public properties: typeof unitPropertiesMap[Type];
+  public properties: (typeof unitPropertiesMap)[Type];
 
   constructor(
     public data: Unit,
-    public match: MatchWrapper
+    public match: MatchWrapper,
   ) {
     const player = match.getPlayerBySlot(data.playerSlot);
 
@@ -66,9 +66,7 @@ export class UnitWrapper<
    */
   getAmmo() {
     if (this.data.stats === "hidden") {
-      return "initialAmmo" in this.properties
-        ? this.properties.initialAmmo
-        : null;
+      return "initialAmmo" in this.properties ? this.properties.initialAmmo : null;
     }
 
     if (!("ammo" in this.data.stats)) {
@@ -154,9 +152,7 @@ export class UnitWrapper<
     const tile = this.match.getTile(this.data.position);
 
     if (tile === undefined) {
-      throw new Error(
-        `Could not get tile at ${JSON.stringify(this.data.position)}`
-      );
+      throw new Error(`Could not get tile at ${JSON.stringify(this.data.position)}`);
     }
 
     return tile;
@@ -165,7 +161,7 @@ export class UnitWrapper<
     const neighbourPositions = getNeighbourPositions(this.data.position);
 
     return this.match.units.filter((unit) =>
-      neighbourPositions.some((p) => isSamePosition(unit.data.position, p))
+      neighbourPositions.some((p) => isSamePosition(unit.data.position, p)),
     );
   }
 
@@ -176,8 +172,7 @@ export class UnitWrapper<
     const movementPointsHook = this.player.getHook("movementPoints");
     const modifiedMovement = movementPointsHook?.(movementPoints, this) ?? movementPoints;
 
-    const fuel =
-      this.data.stats === "hidden" ? initialFuel : this.data.stats.fuel;
+    const fuel = this.data.stats === "hidden" ? initialFuel : this.data.stats.fuel;
 
     return Math.min(modifiedMovement, fuel);
   }
@@ -191,16 +186,14 @@ export class UnitWrapper<
       unitPropertiesMap[this.data.type].movementType,
       getWeatherSpecialMovement(this.player),
       this.match.getTile(position).type,
-      this.match.rules.gameVersion ?? this.player.data.coId.version
+      this.match.rules.gameVersion ?? this.player.data.coId.version,
     );
 
     if (baseMovementCost === null) {
       return null;
     }
 
-    return (
-      this.player.getHook("movementCost")?.(baseMovementCost, this) ?? baseMovementCost
-    );
+    return this.player.getHook("movementCost")?.(baseMovementCost, this) ?? baseMovementCost;
   }
 
   // OTHERS ********************************************************************
@@ -214,7 +207,7 @@ export class UnitWrapper<
     this.player.team.vision?.removeUnitVision(this);
 
     this.match.units = this.match.units.filter((u) =>
-      isSamePosition(u.data.position, this.data.position)
+      isSamePosition(u.data.position, this.data.position),
     );
   }
 
