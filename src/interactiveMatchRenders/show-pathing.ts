@@ -67,7 +67,7 @@ export function getAccessibleNodes( //TODO: save result of function? _ (Sturm d2
 
     //update variables to mark as visited and add to result
     visited[currPos[0]][currPos[1]] = true;
-    accessibleTiles.set(currPos, <PathNode>currNode);
+    accessibleTiles.set(currPos, currNode);
 
     for (const pos of getNeighbourPositions(currPos)) {
       if (match.map.isOutOfBounds(pos)) {

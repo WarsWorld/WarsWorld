@@ -8,10 +8,10 @@ import type {
 import { unitPropertiesMap,
 } from "../shared/match-logic/game-constants/unit-properties";
 import type { PlayerInMatch } from "../shared/types/server-match-state";
-import { MatchWrapper } from "../shared/wrappers/match";
+import type { MatchWrapper } from "../shared/wrappers/match";
 import {Army} from "../shared/schemas/army";
-import { UnitType } from "shared/schemas/unit";
-import { ArmySpritesheetData } from "gameFunction/get-sprite-sheets";
+import type { UnitType } from "shared/schemas/unit";
+import type { ArmySpritesheetData } from "gameFunction/get-sprite-sheets";
 
 export type OurSpriteSheetData = ISpritesheetData & {
   animations: Record<string, string[]>; countries: Record<string, string[]>;

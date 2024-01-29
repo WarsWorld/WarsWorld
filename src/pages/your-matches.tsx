@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-misused-promises */
+ 
 import { usePlayers } from "frontend/context/players";
 import { trpc } from "frontend/utils/trpc-client";
 import Head from "next/head";

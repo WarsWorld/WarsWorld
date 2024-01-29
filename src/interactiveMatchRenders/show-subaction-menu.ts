@@ -10,9 +10,9 @@ import {
 import type { MatchWrapper } from "../shared/wrappers/match";
 import type { UnitWrapper } from "../shared/wrappers/unit";
 import { unitTypes } from "shared/schemas/unit";
-import { ArmySpritesheetData } from "gameFunction/get-sprite-sheets";
+import type { ArmySpritesheetData } from "gameFunction/get-sprite-sheets";
 import { unitPropertiesMap } from "shared/match-logic/game-constants/unit-properties";
-import { Position } from "shared/schemas/position";
+import type { Position } from "shared/schemas/position";
 
 //only called if player has current turn
 export default async function showSubactionMenu(

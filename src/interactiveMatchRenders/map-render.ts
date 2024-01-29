@@ -7,7 +7,7 @@ import type { MatchWrapper } from "../shared/wrappers/match";
 import type { LoadedSpriteSheet } from "../frontend/pixi/load-spritesheet";
 import type {Player} from "@prisma/client";
 import type { SheetNames } from "gameFunction/get-sprite-sheets";
-import { UnitType } from "shared/schemas/unit";
+import type { UnitType } from "shared/schemas/unit";
 
 type Props = {
   spriteSheets: LoadedSpriteSheet,

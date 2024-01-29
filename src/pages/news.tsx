@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/consistent-type-imports */
+ 
 import PageTitle from "frontend/components/layout/PageTitle";
 import { FeaturedNewsCard } from "frontend/components/news/FeaturedNewsCard";
 import LinkCard  from "frontend/components/layout/article/LinkCard";
