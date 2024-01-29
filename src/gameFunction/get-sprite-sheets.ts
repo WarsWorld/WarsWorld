@@ -2,18 +2,31 @@ import { promises as fs } from "fs";
 import path from "path";
 import type { ISpritesheetData } from "pixi.js";
 import type { Army } from "shared/schemas/army";
+import type { PropertyTileType } from "shared/schemas/tile";
+import type { UnitType } from "shared/schemas/unit";
 
-//export type AnimationsPropertyPatch = { animations: Record<string, string[]> };
+export type SheetNames = Army | "neutral" | "arrow";
 
-export type SheetNames = Army | "neutral" | "arrow"
+export type SpriteAnimationKeys =
+  | PropertyTileType
+  | TileAnimationVariants
+  | UnitType
+  | UnitAnimationVariants;
 
-export type SpriteMap = Partial<Record<SheetNames, ISpritesheetData | undefined>>;
+export type ArmySpritesheetData = ISpritesheetData & {
+  animations: Record<SpriteAnimationKeys, undefined>;
+};
 
-//this function is getting all the json spritesheets, nothing else, this happens on the server side
-export default async function getSpriteSheets(countryNames: Army[]): Promise<SpriteMap> {
+export type SpritesheetDataByArmy = Record<SheetNames, ArmySpritesheetData>;
+
+type TileAnimationVariants = `${PropertyTileType}_${"rain" | "snow"}`;
+type UnitMoveDirection = "down" | "side" | "up";
+type UnitAnimationVariants = `${UnitType}-m${UnitMoveDirection}`;
+
+export default async function getSpriteSheets(countryNames: Army[]): Promise<SpritesheetDataByArmy> {
   const jsonDirectory = path.join(process.cwd(), "public/img/spriteSheet");
 
-  const returnObj: SpriteMap = {};
+  const returnObj: Partial<SpritesheetDataByArmy> = {};
   const allCountryNames: SheetNames[] =  [...countryNames, "neutral", "arrow"];
 
   for (const country of allCountryNames) {
@@ -21,9 +34,9 @@ export default async function getSpriteSheets(countryNames: Army[]): Promise<Spr
       `${jsonDirectory}/${country}.json`,
       "utf-8"
     );
-    returnObj[country] = JSON.parse(fileData) as ISpritesheetData;
+    returnObj[country] = JSON.parse(fileData) as ArmySpritesheetData;
   }
 
-  return returnObj;
+  return returnObj as SpritesheetDataByArmy;
 }
 

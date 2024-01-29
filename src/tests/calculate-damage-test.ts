@@ -2,6 +2,7 @@ import type { WWMap } from "@prisma/client";
 import { attackActionToEvent } from "shared/match-logic/events/handlers/attack";
 import type { PlayerInMatch } from "shared/types/server-match-state";
 import { MatchWrapper } from "shared/wrappers/match";
+import { UnitWrapper } from "shared/wrappers/unit";
 
 /**
  * TODO add memory usage readouts by reading memory used by process
@@ -105,6 +106,7 @@ const match = new MatchWrapper(
   map,
   players,
   [],
+  UnitWrapper,
   0
 );
 

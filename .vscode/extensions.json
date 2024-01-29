@@ -1,8 +1,9 @@
 {
   "recommendations": [
-    "rvest.vs-code-prettier-eslint",
     "dbaeumer.vscode-eslint",
     "prisma.prisma",
-    "bradlc.vscode-tailwindcss"
+    "bradlc.vscode-tailwindcss",
+    "usernamehw.errorlens",
+    "gruntfuggly.todo-tree"
   ]
 }

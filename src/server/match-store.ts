@@ -6,6 +6,7 @@ import { playerMatchIndex } from "./player-match-index";
 import type { ChangeableTile } from "../shared/types/server-match-state";
 import { willBeChangeableTile } from "../shared/schemas/tile";
 import { applyMainEventToMatch, applySubEventToMatch } from "../shared/match-logic/events/apply-event-to-match";
+import { UnitWrapper } from "shared/wrappers/unit";
 
 const getChangeableTilesFromMap = (map: WWMap): ChangeableTile[] => {
   const changeableTiles: ChangeableTile[] = [];
@@ -57,6 +58,7 @@ export class MatchStore {
       rawMap,
       rawMatch.playerState,
       rawMap.predeployedUnits,
+      UnitWrapper,
       0
     );
 

@@ -11,7 +11,7 @@ export const maxAWDS: COProperties = {
           return 120;
         }
       },
-      attackRange(value, { attacker }) {
+      attackRange(value, attacker) {
         if (attacker.isIndirect()) {
           return value - 1;
         }

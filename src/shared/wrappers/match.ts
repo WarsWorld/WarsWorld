@@ -23,8 +23,22 @@ import { TeamWrapper } from "./team";
 import { UnitWrapper } from "./unit";
 import { Vision } from "./vision";
 
+/**
+ * an alternative to storing tile sprite references through the generic data type
+ * could something like this on the frontend:
+ *
+ * const cityNeutral = mapContainer.getChildAt(1)
+ * cityNeutral.removeFromParent();
+ *
+ * const cityOrangeStar = new AnimatedSprite("...");
+ * mapContainer.addChildAt(cityOrangeStar, 1)
+ */
+
 /** TODO: Add favorites, possibly spectators, also a timer */
-export class MatchWrapper {
+export class MatchWrapper<
+  ChangeableTileType extends ChangeableTile = ChangeableTile,
+  UnitWrapperType extends UnitWrapper = UnitWrapper,
+> {
   private currentWeather: Weather = "clear"; // made private so no one changes currentWeather without setter on accident
   public playerToRemoveWeatherEffect: PlayerInMatchWrapper | null = null;
   public weatherDaysLeft = 0;
@@ -35,23 +49,24 @@ export class MatchWrapper {
    * this property is a candidate for ArrayBuffer / IntArray optimization
    * just like Vision currently has.
    */
-  public units: UnitWrapper[];
+  public units: UnitWrapperType[];
   public map: MapWrapper;
 
   constructor(
     public id: Match["id"],
     public leagueType: LeagueType,
-    public changeableTiles: ChangeableTile[],
+    public changeableTiles: ChangeableTileType[],
     public rules: MatchRules,
     public status: MatchStatus,
     map: WWMap,
     players: PlayerInMatch[],
     units: WWUnit[],
+    UnitWrapperClass: new (unit: WWUnit, match: MatchWrapper) => UnitWrapperType,
     public turn: number
   ) {
     this.map = new MapWrapper(map);
     players.forEach(player => this.addUnwrappedPlayer(player));
-    this.units = units.map(unit => new UnitWrapper(unit, this))
+    this.units = units.map(unit => new UnitWrapperClass(unit, this));
   }
 
   /**

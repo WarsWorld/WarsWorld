@@ -1,5 +1,5 @@
 import PageTitle from "frontend/components/layout/PageTitle";
-import MatchCard from "./MatchCard";
+import MatchCard from "./card/MatchCard";
 import type { PlayerInMatch } from "shared/types/server-match-state";
 import type { MatchStatus } from "@prisma/client";
 

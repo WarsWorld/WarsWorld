@@ -23,6 +23,8 @@ import {
 } from "./match/util";
 import type { PlayerInMatch } from "../../shared/types/server-match-state";
 import { playerSlotForUnitsSchema } from "shared/schemas/player-slot";
+import { positionSchema } from "shared/schemas/position";
+import { TRPCError } from "@trpc/server";
 
 
 export const matchRouter = router({
@@ -52,7 +54,8 @@ export const matchRouter = router({
     status: match.status,
     turn: match.turn,
     units:
-      match.getPlayerById(currentPlayer.id)?.team.getEnemyUnitsInVision() ?? []
+      match.units.map(u => u.data)
+      // match.getPlayerById(currentPlayer.id)?.team.getEnemyUnitsInVision() ?? []
   })),
   join: matchBaseProcedure
     .input(
@@ -328,4 +331,19 @@ export const matchRouter = router({
         });
       }
     }),
+  adminUnwaitUnit: matchBaseProcedure.input(z.object({ position: positionSchema })).mutation(({ input, ctx }) => {
+    // TODO if ctx.user doesn't have the permissions to do this (e.g. isn't an admin)
+    // then throw a tRPC error for unauthorized
+
+    const unit = ctx.match.getUnitOrThrow(input.position)
+
+    if (unit.data.isReady) {
+      throw new TRPCError({
+        message: "Unit is already ready (unwaited)",
+        code: "BAD_REQUEST"
+      })
+    }
+
+    unit.data.isReady = true
+  })
 });

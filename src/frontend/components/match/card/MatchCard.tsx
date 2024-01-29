@@ -1,5 +1,5 @@
 import MatchCardTop from "./MatchCardTop";
-import MatchPlayer from "./MatchPlayer";
+import MatchPlayer from "../MatchPlayer";
 import type { FrontendMatch } from "shared/types/component-data";
 import { coSchema } from "shared/schemas/co";
 import { armySchema } from "shared/schemas/army";
@@ -29,26 +29,26 @@ export default function MatchCard({ match, inMatch }: matchData) {
       }
     });
   }
-  
+
   if (firstPlayer === undefined) {
     firstPlayer = match.players[0];
     secondPlayer = match.players[1];
   } else {
     playerIndex === 0 ? (secondPlayer = match.players[1]) : (secondPlayer = match.players[0]);
   }
-  
+
   //this function can change co, army or status (ready/not ready)
   // it is purely visual
   const [currentPlayerOptions, setCurrentPlayerOptions] = useState({
     CO: firstPlayer.coId,
     army: firstPlayer.army,
     ready: firstPlayer.ready,
-    slot: firstPlayer.slot
-  })
+    slot: firstPlayer.slot,
+  });
   const [selectedOptions, setSelectedOptions] = useState({
     selectedArmies: match.players.map((player) => player.army),
-    selectedSlots: match.players.map((player) => player.slot)
-  })
+    selectedSlots: match.players.map((player) => player.slot),
+  });
 
   let twoPlayerCheck = false;
 
@@ -62,14 +62,21 @@ export default function MatchCard({ match, inMatch }: matchData) {
         CO: firstPlayer.coId,
         army: firstPlayer.army,
         ready: firstPlayer.ready,
-        slot: firstPlayer.slot
-      })
+        slot: firstPlayer.slot,
+      });
     }
-  }, [firstPlayer])
+  }, [firstPlayer]);
 
   return (
     <div className="@grid @bg-bg-primary @relative">
-      <MatchCardTop mapName={match.map.name} day={match.turn} state={match.state} favorites={0} spectators={0} time={0.15} />
+      <MatchCardTop
+        mapName={match.map.name}
+        day={match.turn}
+        state={match.state}
+        favorites={0}
+        spectators={0}
+        time={0.15}
+      />
       <div className="@grid @grid-cols-2 @gap-3">
         <MatchPlayer
           name={firstPlayer.name}
@@ -90,8 +97,13 @@ export default function MatchCard({ match, inMatch }: matchData) {
         ) : (
           <MatchPlayer
             name={"Opponent"}
-            co={{ name: coSchema._def.values[Math.floor(Math.random() * coSchema._def.values.length)] , version: "AW2"}}
-            country={armySchema._def.values[Math.floor(Math.random() * armySchema._def.values.length)]}
+            co={{
+              name: coSchema._def.values[Math.floor(Math.random() * coSchema._def.values.length)],
+              version: "AW2",
+            }}
+            country={
+              armySchema._def.values[Math.floor(Math.random() * armySchema._def.values.length)]
+            }
             flipCO={true}
             opponent={true}
             playerReady={true}
@@ -118,7 +130,7 @@ export default function MatchCard({ match, inMatch }: matchData) {
       }
 
       {match.state != "setup" && match.players.length == 2 ? (
-        <Link href={`/match/${match.id}`} className="btnMenu @inline-block">
+        <Link href={`/match2/${match.id}`} className="btnMenu @inline-block">
           {" "}
           Enter Match
         </Link>

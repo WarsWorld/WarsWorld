@@ -27,7 +27,7 @@
     "build:server": "tsc --project tsconfig.server.json",
     "build": "concurrently \"npm:build:*\"",
     "start": "cross-env NODE_ENV=production node dist/server/main-production.js",
-    "jscpd": "npx jscpd --ignore node_modules,dist,public --reporters consoleFull ."
+    "redundant-code": "npx jscpd --ignore node_modules,dist,public,.next --reporters consoleFull ."
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"
@@ -42,6 +42,7 @@
     "@headlessui/react": "^1.7.17",
     "@prisma/client": "^5.7.1",
     "@react-hook/window-size": "^3.1.1",
+    "@tanstack/react-query": "^4.18.0",
     "@tanstack/react-table": "^8.11.2",
     "@trpc/client": "^10.44.0",
     "@trpc/next": "^10.44.1",

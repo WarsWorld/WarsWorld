@@ -1,15 +1,18 @@
 {
   "typescript.tsdk": "node_modules/typescript/lib",
-  "editor.defaultFormatter": "rvest.vs-code-prettier-eslint",
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.formatOnSave": false, // to make git diffs shorter. isolate auto-formatting into their own commits.
-  "editor.formatOnPaste": false,
-  "editor.formatOnType": false,
   "editor.tabSize": 2,
-  "vs-code-prettier-eslint.prettierLast": false,
   "[prisma]": {
     "editor.defaultFormatter": "Prisma.prisma"
   },
   "typescript.tsserver.experimental.enableProjectDiagnostics": true,
   "typescript.referencesCodeLens.enabled": true,
   "editor.rulers": [100],
+  "editor.codeActionsOnSave": [
+    "addMissingImports",
+    "source.organizeImports",
+    "source.formatDocument",
+    "source.fixAll.eslint"
+  ]
 }
