@@ -8,16 +8,18 @@ import {
   Texture,
 } from "pixi.js";
 import type { MatchWrapper } from "../shared/wrappers/match";
-import { unitPropertiesMap } from "../shared/match-logic/unit-properties";
 import type { UnitWrapper } from "../shared/wrappers/unit";
-import type { Position } from "acorn";
+import { unitTypes } from "shared/schemas/unit";
+import { ArmySpritesheetData } from "gameFunction/get-sprite-sheets";
+import { unitPropertiesMap } from "shared/match-logic/game-constants/unit-properties";
+import { Position } from "shared/schemas/position";
 
 //only called if player has current turn
 export default async function showSubactionMenu(
-  spriteSheet: Spritesheet,
+  spriteSheet: Spritesheet<ArmySpritesheetData>,
   match: MatchWrapper,
   unit: UnitWrapper,
-  position: Position
+  [x, y]: Position
 ) {
   //The big container holding everything
   //set its eventmode to static for interactivity and sortable for zIndex
@@ -25,7 +27,7 @@ export default async function showSubactionMenu(
   menuContainer.eventMode = "static";
   menuContainer.sortableChildren = true;
 
-  if (x > match.map.getWidth() / 2) {
+  if (x > match.map.width / 2) {
     console.log();
     menuContainer.x = x * 16 + 16 - 100;
   } else {
@@ -35,17 +37,19 @@ export default async function showSubactionMenu(
   //the name lets us find the menu easily with getChildByName for easy removal
   menuContainer.name = "menu";
 
-  const buildableUnitTypes = match.rules.allowedUnits.filter(
+  const allowedUnits = unitTypes.filter(t => !match.rules.bannedUnitTypes.includes(t))
+
+  const buildableUnitTypes = allowedUnits.filter(
     (type) => unitPropertiesMap[type].facility === facility
   );
 
   //if our menu would appear below the middle of the map, we need to bring it up!
   // Otherwise, our user will have to scroll down to see all the units, which is a poor experience
   if (
-    y > match.map.getHeight() / 2 &&
-    match.map.getHeight() - y < buildableUnitTypes.length * 0.675
+    y > match.map.height / 2 &&
+    match.map.height - y < buildableUnitTypes.length * 0.675
   ) {
-    const spaceLeft = match.map.getHeight() - y;
+    const spaceLeft = match.map.height - y;
     //now if you wonder about 0.675, it basically means the
     // menu element is 67.5% of a tile, so we only move that much
     y = y - Math.abs(spaceLeft - buildableUnitTypes.length * 0.675);
@@ -110,8 +114,8 @@ export default async function showSubactionMenu(
       unitBG.alpha = 1;
     });
 
-    menuElement.on("pointerdown", async () => {
-      await trpcAction.mutateAsync({
+    menuElement.on("pointerdown", () => {
+      trpcAction.mutateAsync({
         type: "build",
         unitType: "infantry",
         position: [x, y],

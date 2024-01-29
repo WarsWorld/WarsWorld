@@ -11,6 +11,7 @@ import type { PlayerInMatch } from "../shared/types/server-match-state";
 import { MatchWrapper } from "../shared/wrappers/match";
 import {Army} from "../shared/schemas/army";
 import { UnitType } from "shared/schemas/unit";
+import { ArmySpritesheetData } from "gameFunction/get-sprite-sheets";
 
 export type OurSpriteSheetData = ISpritesheetData & {
   animations: Record<string, string[]>; countries: Record<string, string[]>;
@@ -19,7 +20,7 @@ export type OurSpriteSheetData = ISpritesheetData & {
 type Props = {
   player: PlayerInMatch,
   match: MatchWrapper,
-  spriteSheet: Spritesheet;
+  spriteSheet: Spritesheet<ArmySpritesheetData>;
   facility: Facility;
   x: number;
   y: number;
@@ -66,9 +67,7 @@ export default async function showBuildMenu(
 
 
   //lets loop through our units and only get the ones that can be built in this facility
-  Object.keys(unitPropertiesMap).forEach((key) => {
-    const childObject: UnitPropertiesWithoutWeapon = unitPropertiesMap[key];
-
+  Object.entries(unitPropertiesMap).forEach(([key, childObject]) => {
     if (childObject.facility === facility && !unitBanned ) {
       unitNames.push(key)
       unitInfo.push(childObject)

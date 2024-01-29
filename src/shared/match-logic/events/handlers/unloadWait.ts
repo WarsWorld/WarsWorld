@@ -1,14 +1,14 @@
 import { DispatchableError } from "shared/DispatchedError";
-import { unitPropertiesMap } from "shared/match-logic/game-constants/unit-properties";
 import { terrainProperties } from "shared/match-logic/game-constants/terrain-properties";
+import { unitPropertiesMap } from "shared/match-logic/game-constants/unit-properties";
 import type { UnloadWaitAction } from "shared/schemas/action";
 import type { Position } from "shared/schemas/position";
+import { addDirection } from "shared/schemas/position";
 import type { Tile } from "shared/schemas/tile";
 import type { UnitType } from "shared/schemas/unit";
 import type { UnloadWaitEvent } from "shared/types/events";
 import type { ChangeableTile } from "shared/types/server-match-state";
 import type { MatchWrapper } from "shared/wrappers/match";
-import { addDirection } from "shared/schemas/position";
 import type { SubActionToEvent } from "../handler-types";
 
 export function throwIfUnitCantBeUnloadedToTile(unit: { type: UnitType }, tile: Tile | ChangeableTile) {
@@ -59,10 +59,10 @@ export const unloadWaitActionToEvent: SubActionToEvent<UnloadWaitAction> = (matc
         throw new DispatchableError("Transport doesn't currently have a 2nd loaded unit");
       }
 
-      throwIfUnitCantBeUnloadedToTile(transportUnit.data.loadedUnit2, match.getTile(action.transportPosition));
+      throwIfUnitCantBeUnloadedToTile(transportUnit.data.loadedUnit2, match.getTile(fromPosition));
       throwIfUnitCantBeUnloadedToTile(transportUnit.data.loadedUnit2, match.getTile(unloadPosition));
     } else {
-      throwIfUnitCantBeUnloadedToTile(transportUnit.data.loadedUnit, match.getTile(action.transportPosition));
+      throwIfUnitCantBeUnloadedToTile(transportUnit.data.loadedUnit, match.getTile(fromPosition));
       throwIfUnitCantBeUnloadedToTile(transportUnit.data.loadedUnit, match.getTile(unloadPosition));
     }
   } else if (action.unloads.length === 2) {

@@ -1,6 +1,5 @@
 import type { Spritesheet } from "pixi.js";
 import { Container, Sprite } from "pixi.js";
-import { unitPropertiesMap } from "shared/match-logic/unit-properties";
 import type { Position } from "shared/schemas/position";
 import { tileConstructor } from "./sprite-constructor";
 import type { MatchWrapper } from "shared/wrappers/match";
@@ -11,6 +10,7 @@ import {
 } from "shared/schemas/position";
 import type { UnitWrapper } from "../shared/wrappers/unit";
 import { getDistance } from "shared/schemas/position";
+import { unitPropertiesMap } from "shared/match-logic/game-constants/unit-properties";
 export type PathNode = {
   //saves distance from origin and parent (to retrieve the shortest path)
   pos: Position;
@@ -22,25 +22,25 @@ export function getAccessibleNodes( //TODO: save result of function? _ (Sturm d2
   match: MatchWrapper,
   unit: UnitWrapper
 ): Map<Position, PathNode> {
-  const ownerUnitPlayer = match.players.getBySlot(unit.data.playerSlot);
+  const ownerUnitPlayer = match.getPlayerBySlot(unit.data.playerSlot);
 
   if (ownerUnitPlayer === undefined) {
     throw new DispatchableError("This unit doesn't have an owner");
   }
 
-  const accessibleTiles: Map<Position, PathNode> = new Map(); //return variable
+  const accessibleTiles = new Map<Position, PathNode>(); //return variable
 
   //queues[a] has current queued nodes with distance a from origin (technically a "stack", not a queue, but the result doesn't change)
-  const queues: PathNode[][] = new Array(unit.getMovementPoints());
+  const queues: PathNode[][] = new Array([unit.getMovementPoints()]);
   queues.push([]);
   queues[0].push({ pos: unit.data.position, dist: 0, parent: null }); //queues[0] has the origin node, initially
 
   //initialize visited matrix
-  const visited: boolean[][] = new Array(match.map.getWidth())
+  const visited: boolean[][] = new Array(match.map.width)
     .fill(false)
-    .map(() => new Array(match.map.getHeight()).fill(false));
+    .map(() => new Array(match.map.height).fill(false));
 
-  for (const unit of ownerUnitPlayer.getEnemyUnits().data) {
+  for (const unit of ownerUnitPlayer.team.getEnemyUnits()) {
     //enemy tiles are impassible
     visited[unit.data.position[0]][unit.data.position[1]] = true;
   }
@@ -74,10 +74,9 @@ export function getAccessibleNodes( //TODO: save result of function? _ (Sturm d2
         continue;
       }
 
-      const movementCost = match.getMovementCost(
-        pos,
-        unit.data.type
-      );
+      unit.getMovementCost(pos)
+
+      const movementCost = unit.getMovementCost(pos);
 
       if (movementCost === null) {
         continue;
@@ -130,9 +129,9 @@ export function getAttackableTiles(
   }
 
   //initialize visited matrix
-  const visited: boolean[][] = new Array(match.map.getWidth())
+  const visited: boolean[][] = new Array(match.map.width)
     .fill(false)
-    .map(() => new Array(match.map.getHeight()).fill(false));
+    .map(() => new Array(match.map.height).fill(false));
 
   const attackpositions: Position[] = [];
 
@@ -164,8 +163,8 @@ export async function showAttackableTiles(
   if ("attackRange" in unitProperties) {
     if (unitProperties.attackRange[0] > 1) {
       //ranged unit
-      for (let i = 0; i < match.map.getWidth(); ++i) {
-        for (let j = 0; j < match.map.getHeight(); ++j) {
+      for (let i = 0; i < match.map.width; ++i) {
+        for (let j = 0; j < match.map.height; ++j) {
           const distance = getDistance([i, j], unit.data.position);
 
           if (
@@ -221,10 +220,7 @@ export function updatePath(
 
     //check if new node is adjacent
     if (positionsAreNeighbours(lastNode.pos, newPos)) {
-      const moveCost = match.getMovementCost(
-        newPos,
-        unit.data.type
-      );
+      const moveCost = unit.getMovementCost(newPos)
 
       //if it doesn't surpass movement restrictions, update current path
       if (
