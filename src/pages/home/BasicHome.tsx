@@ -1,10 +1,9 @@
-import SquareButton from "frontend/components/layout/SquareButton";
 import Banner from "frontend/components/layout/Banner";
+import PlayButton from "frontend/components/layout/PlayButton";
 import SmallContainer from "frontend/components/layout/SmallContainer";
 import ThreeLinesText from "frontend/components/layout/ThreeLinesText";
-import { useRouter } from "next/router";
-import PlayButton from "frontend/components/layout/PlayButton";
 import Image from "next/image";
+import { useRouter } from "next/router";
 
 const homePageCards = [
   {

@@ -1,6 +1,6 @@
 import type { Weather } from "shared/schemas/weather";
 import type { MatchWrapper } from "shared/wrappers/match";
-import { PlayerInMatchWrapper } from "../wrappers/player-in-match";
+import type { PlayerInMatchWrapper } from "../wrappers/player-in-match";
 
 /**
  * chance of random weather when starting a turn depends on the amount of
