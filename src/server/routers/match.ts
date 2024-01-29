@@ -1,3 +1,4 @@
+import { TRPCError } from "@trpc/server";
 import { emit } from "server/emitter/event-emitter";
 import { matchStore } from "server/match-store";
 import { pageMatchIndex } from "server/page-match-index";
@@ -5,9 +6,13 @@ import { playerMatchIndex } from "server/player-match-index";
 import { prisma } from "server/prisma/prisma-client";
 import { DispatchableError } from "shared/DispatchedError";
 import { createMatchStartEvent } from "shared/match-logic/events/handlers/match-start";
-import { Army, armySchema } from "shared/schemas/army";
+import type { Army } from "shared/schemas/army";
+import { armySchema } from "shared/schemas/army";
 import { coIdSchema } from "shared/schemas/co";
+import { playerSlotForUnitsSchema } from "shared/schemas/player-slot";
+import { positionSchema } from "shared/schemas/position";
 import { z } from "zod";
+import type { PlayerInMatch } from "../../shared/types/server-match-state";
 import {
   matchBaseProcedure,
   playerBaseProcedure,
@@ -17,10 +22,6 @@ import {
 } from "../trpc/trpc-setup";
 import { createMatchProcedure } from "./match/create";
 import { allMatchSlotsReady, matchToFrontend, throwIfMatchNotInSetupState } from "./match/util";
-import type { PlayerInMatch } from "../../shared/types/server-match-state";
-import { playerSlotForUnitsSchema } from "shared/schemas/player-slot";
-import { positionSchema } from "shared/schemas/position";
-import { TRPCError } from "@trpc/server";
 
 export const matchRouter = router({
   create: createMatchProcedure,
@@ -163,7 +164,6 @@ export const matchRouter = router({
       pageMatchIndex.removeMatch(match);
       matchStore.removeMatchFromIndex(match);
       await prisma.match.delete({ where: { id: match.id } });
-      return;
     } else {
       //lets create a playerState (what the db holds) to send it to the db.
       // playerState is basically a PlayerInMatchWrapper[] (well, at least the properties of it)

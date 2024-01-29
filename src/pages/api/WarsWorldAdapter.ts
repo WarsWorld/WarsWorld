@@ -1,9 +1,9 @@
 // Based on Prisma Adapter
 
+import type { Adapter, AdapterAccount } from "@auth/core/adapters"; // TODO important! at time of writing, @auth/core is still "experimental"
 import type { PrismaClient } from "@prisma/client";
-import type { Adapter, AdapterAccount } from "@auth/core/adapters";
-import type { AdapterUser } from "next-auth/adapters";
 import type { Awaitable } from "next-auth";
+import type { AdapterUser } from "next-auth/adapters";
 
 export default function WarsWorldAdapter(p: PrismaClient): Adapter {
   return {

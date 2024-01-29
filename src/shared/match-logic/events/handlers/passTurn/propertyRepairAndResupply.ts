@@ -1,4 +1,3 @@
-import { getVisualHPfromHP } from "shared/match-logic/calculate-damage";
 import type { UnitWrapper } from "shared/wrappers/unit";
 
 export function propertyRepairAndResupply(unit: UnitWrapper) {

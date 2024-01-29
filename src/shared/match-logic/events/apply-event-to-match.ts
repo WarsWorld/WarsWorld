@@ -1,18 +1,18 @@
 import { DispatchableError } from "shared/DispatchedError";
 import { getFinalPositionSafe } from "shared/schemas/position";
 import type { MatchWrapper } from "shared/wrappers/match";
-import type { MainEvent, MoveEvent, SubEvent } from "../../types/events";
+import type { MainEvent, MoveEvent } from "../../types/events";
 import { applyAbilityEvent } from "./handlers/ability";
 import { applyAttackEvent } from "./handlers/attack";
 import { applyBuildEvent } from "./handlers/build";
 import { applyCOPowerEvent } from "./handlers/coPower";
+import { applyDeleteEvent } from "./handlers/delete";
 import { applyLaunchMissileEvent } from "./handlers/launchMissile";
 import { applyMoveEvent } from "./handlers/move";
 import { applyPassTurnEvent } from "./handlers/passTurn";
 import { applyRepairEvent } from "./handlers/repair";
 import { applyUnloadNoWaitEvent } from "./handlers/unloadNoWait";
 import { applyUnloadWaitEvent } from "./handlers/unloadWait";
-import { applyDeleteEvent } from "./handlers/delete";
 
 export const applyMainEventToMatch = (match: MatchWrapper, event: MainEvent): void => {
   switch (event.type) {

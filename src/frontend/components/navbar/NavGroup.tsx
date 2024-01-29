@@ -1,9 +1,8 @@
 import type { Dispatch, SetStateAction } from "react";
-import { NavItem } from "./NavItem";
-import { NavMenuMatches } from "./NavMenuMatches";
 import NavButton from "./NavButton";
+import { NavItem } from "./NavItem";
 import NavLoginLogout from "./NavLoginLogout";
-import PlayButton from "../layout/PlayButton";
+import { NavMenuMatches } from "./NavMenuMatches";
 
 type Props = {
   showMatchLinks: boolean;

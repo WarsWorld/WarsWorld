@@ -1,5 +1,4 @@
 import { z } from "zod";
-import { propertyTileSchema } from "./tile";
 
 const axisConnectionsSchema = z.enum(["right-left", "top-bottom"]);
 

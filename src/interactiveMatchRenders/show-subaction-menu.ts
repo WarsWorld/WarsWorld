@@ -5,14 +5,13 @@ import { unitPropertiesMap } from "shared/match-logic/game-constants/unit-proper
 import type { Position } from "shared/schemas/position";
 import { unitTypes } from "shared/schemas/unit";
 import type { MatchWrapper } from "../shared/wrappers/match";
-import type { UnitWrapper } from "../shared/wrappers/unit";
 
 //only called if player has current turn
 export default async function showSubactionMenu(
   spriteSheet: Spritesheet<ArmySpritesheetData>,
   match: MatchWrapper,
-  unit: UnitWrapper,
   [x, y]: Position,
+  onBuild: () => void,
 ) {
   //The big container holding everything
   //set its eventmode to static for interactivity and sortable for zIndex
@@ -31,6 +30,8 @@ export default async function showSubactionMenu(
   menuContainer.name = "menu";
 
   const allowedUnits = unitTypes.filter((t) => !match.rules.bannedUnitTypes.includes(t));
+
+  const facility = match.getTile([x, y]).type;
 
   const buildableUnitTypes = allowedUnits.filter(
     (type) => unitPropertiesMap[type].facility === facility,
@@ -105,13 +106,7 @@ export default async function showSubactionMenu(
     });
 
     menuElement.on("pointerdown", () => {
-      trpcAction.mutateAsync({
-        type: "build",
-        unitType: "infantry",
-        position: [x, y],
-        playerId: "cljvrs6nc0002js2wl5g3jo5m",
-        matchId: "cljw16lea0000jscweoeop1ct",
-      });
+      onBuild();
     });
 
     menuElement.on("pointerleave", () => {
@@ -139,7 +134,7 @@ export default async function showSubactionMenu(
   return menuContainer;
 }
 
-const createCaptureOption = (match: MatchWrapper): Container => {
+const createCaptureOption = (match: MatchWrapper, onCapture: () => void): Container => {
   const menuElement = new Container();
   menuElement.eventMode = "static";
   //TODO: missing action icons
@@ -167,9 +162,7 @@ const createCaptureOption = (match: MatchWrapper): Container => {
     menuBG.alpha = 1;
   });
 
-  menuElement.on("pointerdown", async () => {
-    //send action
-  });
+  menuElement.on("pointerdown", onCapture);
 
   menuElement.on("pointerleave", () => {
     menuBG.alpha = 0.5;

@@ -1,20 +1,19 @@
 import { DispatchableError } from "shared/DispatchedError";
-import type { Action, MainAction, MoveAction } from "shared/schemas/action";
-import type { Position } from "shared/schemas/position";
+import type { MainAction, MoveAction } from "shared/schemas/action";
+import { getFinalPositionSafe } from "shared/schemas/position";
 import type { MainEvent, SubEvent } from "shared/types/events";
 import type { MatchWrapper } from "shared/wrappers/match";
 import { abilityActionToEvent } from "./handlers/ability";
 import { attackActionToEvent } from "./handlers/attack";
 import { buildActionToEvent } from "./handlers/build";
 import { coPowerActionToEvent } from "./handlers/coPower";
+import { deleteActionToEvent } from "./handlers/delete";
 import { launchMissileActionToEvent } from "./handlers/launchMissile";
 import { moveActionToEvent } from "./handlers/move";
+import { passTurnActionToEvent } from "./handlers/passTurn";
 import { repairActionToEvent } from "./handlers/repair";
 import { unloadNoWaitActionToEvent } from "./handlers/unloadNoWait";
 import { unloadWaitActionToEvent } from "./handlers/unloadWait";
-import { passTurnActionToEvent } from "./handlers/passTurn";
-import { getFinalPositionSafe } from "shared/schemas/position";
-import { deleteActionToEvent } from "./handlers/delete";
 
 export const validateMainActionAndToEvent = (
   match: MatchWrapper,

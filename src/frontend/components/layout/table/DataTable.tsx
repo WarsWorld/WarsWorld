@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/consistent-type-definitions */
 import type { Table } from "@tanstack/react-table";
 import { flexRender } from "@tanstack/react-table";
 

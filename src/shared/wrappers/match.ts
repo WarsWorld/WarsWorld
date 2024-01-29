@@ -11,7 +11,7 @@ import type { ChangeableTile, PlayerInMatch } from "shared/types/server-match-st
 import { MapWrapper } from "./map";
 import type { PlayerInMatchWrapper } from "./player-in-match";
 import { TeamWrapper } from "./team";
-import { UnitWrapper } from "./unit";
+import type { UnitWrapper } from "./unit";
 import { Vision } from "./vision";
 
 /**

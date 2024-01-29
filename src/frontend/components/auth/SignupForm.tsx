@@ -1,12 +1,12 @@
-import SquareButton from "../layout/SquareButton";
-import FormInput from "../layout/forms/FormInput";
-import { useState } from "react";
-import type { Dispatch, FormEvent, SetStateAction } from "react";
-import { trpc } from "frontend/utils/trpc-client";
-import ErrorSuccessBlock from "../layout/forms/ErrorSuccessBlock";
-import { passwordSchema, signUpSchema } from "shared/schemas/auth";
-import { ZodError, z } from "zod";
 import { TRPCClientError } from "@trpc/client";
+import { trpc } from "frontend/utils/trpc-client";
+import type { Dispatch, FormEvent, SetStateAction } from "react";
+import { useState } from "react";
+import { passwordSchema, signUpSchema } from "shared/schemas/auth";
+import { ZodError } from "zod";
+import SquareButton from "../layout/SquareButton";
+import ErrorSuccessBlock from "../layout/forms/ErrorSuccessBlock";
+import FormInput from "../layout/forms/FormInput";
 
 type Props = {
   setIsSignupForm: (value: boolean, callbackUrl: string | null) => Promise<void>;
@@ -78,11 +78,11 @@ export default function SignupForm({ setIsSignupForm, setDidSignUp, callbackUrl 
     setDidSignUp(true);
   };
 
-  const nameError = formErrors?.issues?.find((error) => error.path[0] == "name");
-  const emailError = formErrors?.issues?.find((error) => error.path[0] == "email");
-  const passwordError = formErrors?.issues?.find((error) => error.path[0] == "password");
+  const nameError = formErrors?.issues?.find((error) => error.path[0] === "name");
+  const emailError = formErrors?.issues?.find((error) => error.path[0] === "email");
+  const passwordError = formErrors?.issues?.find((error) => error.path[0] === "password");
   const confirmPasswordError = formErrors?.issues?.find(
-    (error) => error.path[0] == "confirmPassword",
+    (error) => error.path[0] === "confirmPassword",
   );
 
   return (
@@ -95,7 +95,7 @@ export default function SignupForm({ setIsSignupForm, setDidSignUp, callbackUrl 
           id="email"
           type="email"
           value={signupData.email}
-          isError={emailError != undefined}
+          isError={emailError !== undefined}
           errorMessage={emailError?.message}
           onChange={(event) =>
             onChangeGenericHandler("email", (event.target as HTMLInputElement).value)
@@ -107,7 +107,7 @@ export default function SignupForm({ setIsSignupForm, setDidSignUp, callbackUrl 
           id="username"
           type="text"
           value={signupData.user}
-          isError={nameError != undefined}
+          isError={nameError !== undefined}
           errorMessage={nameError?.message}
           onChange={(event) =>
             onChangeGenericHandler("user", (event.target as HTMLInputElement).value)
@@ -119,7 +119,7 @@ export default function SignupForm({ setIsSignupForm, setDidSignUp, callbackUrl 
           id="password"
           type="password"
           value={signupData.password}
-          isError={passwordError != undefined}
+          isError={passwordError !== undefined}
           errorMessage={passwordError?.message}
           onChange={(event) =>
             onChangeGenericHandler("password", (event.target as HTMLInputElement).value)
@@ -131,7 +131,7 @@ export default function SignupForm({ setIsSignupForm, setDidSignUp, callbackUrl 
           id="confirm_password"
           type="password"
           value={signupData.confirmPassword}
-          isError={confirmPasswordError != undefined}
+          isError={confirmPasswordError !== undefined}
           errorMessage={confirmPasswordError?.message}
           onChange={(event) =>
             onChangeGenericHandler("confirmPassword", (event.target as HTMLInputElement).value)

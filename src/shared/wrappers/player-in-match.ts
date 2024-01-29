@@ -2,12 +2,11 @@ import { getCOProperties } from "shared/match-logic/co";
 import type { Hooks } from "shared/match-logic/co-hooks";
 import type { Tile } from "shared/schemas/tile";
 import type { UnitWithVisibleStats } from "shared/schemas/unit";
-import type { Weather } from "shared/schemas/weather";
 import type { ChangeableTile, PlayerInMatch } from "shared/types/server-match-state";
+import { versionPropertiesMap } from "../match-logic/game-constants/version-properties";
 import type { MatchWrapper } from "./match";
 import type { TeamWrapper } from "./team";
 import { UnitWrapper } from "./unit";
-import { versionPropertiesMap } from "../match-logic/game-constants/version-properties";
 
 export class PlayerInMatchWrapper {
   public match: MatchWrapper;

@@ -5,10 +5,9 @@ import { getFinalPositionSafe, isSamePosition } from "shared/schemas/position";
 import type { UnitWithVisibleStats } from "shared/schemas/unit";
 import type { MoveEvent } from "shared/types/events";
 import type { MatchWrapper } from "shared/wrappers/match";
+import type { UnitWrapper } from "../../../wrappers/unit";
 import { applySubEventToMatch } from "../apply-event-to-match";
 import type { MainActionToEvent } from "../handler-types";
-import { PlayerInMatchWrapper } from "../../../wrappers/player-in-match";
-import { UnitWrapper } from "../../../wrappers/unit";
 
 export const createNoMoveEvent = (): MoveEvent => ({
   type: "move",
