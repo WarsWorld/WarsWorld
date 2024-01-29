@@ -2,13 +2,13 @@ import type { LoadedSpriteSheet } from "frontend/pixi/load-spritesheet";
 import { trpc } from "frontend/utils/trpc-client";
 import type { Container, DisplayObject, FederatedPointerEvent } from "pixi.js";
 import { Application } from "pixi.js";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { applyBuildEvent } from "shared/match-logic/events/handlers/build";
 import type { Position } from "shared/schemas/position";
 import type { MatchWrapper } from "shared/wrappers/match";
 import type { PlayerInMatchWrapper } from "shared/wrappers/player-in-match";
+import { setupApp } from "../../pixi/setupApp";
 import type { FrontendUnit } from "./FrontendUnit";
-import { setupApp } from "./pixi/setupApp";
 import type { ChangeableTileWithSprite } from "./types";
 
 type Props = {
@@ -24,6 +24,7 @@ const renderedTileSize = baseTileSize * renderMultiplier;
 export function MatchRenderer({ match, player, spriteSheets }: Props) {
   const pixiCanvasRef = useRef<HTMLCanvasElement | null>(null);
   const mapContainerRef = useRef<Container<DisplayObject> | null>(null);
+  const [buildMenuPosition, setBuildMenuPosition] = useState<Position | null>(null); // Position in viewport, not tiles.
 
   useEffect(() => {
     const app = new Application({
@@ -49,12 +50,18 @@ export function MatchRenderer({ match, player, spriteSheets }: Props) {
 
       const clickPosition: Position = [x, y];
 
+      // only handle admin features like unwaiting units up to here, everything else requires
+      // the player to have the current turn.
+
+      if (match.getCurrentTurnPlayer().data.id !== player.data.id) {
+        return;
+      }
+
       const unit = match.getUnit(clickPosition);
 
       if (unit !== undefined) {
         if (player.owns(unit) && unit.data.isReady) {
-          // TODO we should store our own player object
-          // do something, show move menu etc.
+          // TODO do something, show move menu etc.
         }
 
         return;

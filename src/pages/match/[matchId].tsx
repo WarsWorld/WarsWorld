@@ -1,31 +1,31 @@
+import MatchPlayer from "frontend/components/match/MatchPlayer";
 import { usePlayers } from "frontend/context/players";
+import type { SpritesheetDataByArmy } from "frontend/pixi/getSpritesheetData";
+import getSpriteSheets from "frontend/pixi/getSpritesheetData";
+import { loadSpritesFromSpriteMap, type LoadedSpriteSheet } from "frontend/pixi/load-spritesheet";
+import { trpc } from "frontend/utils/trpc-client";
+import type { GetServerSideProps } from "next";
 import { useRouter } from "next/router";
 import { Application, BaseTexture, SCALE_MODES } from "pixi.js";
 import { useEffect, useRef, useState } from "react";
 import type { Tile } from "shared/schemas/tile";
-import type { PlayerInMatch } from "shared/types/server-match-state";
-import MatchPlayer from "frontend/components/match/MatchPlayer";
-import type { LoadedSpriteSheet } from "frontend/pixi/load-spritesheet";
-import { loadSpritesheets } from "frontend/pixi/load-spritesheet";
-import { trpc } from "frontend/utils/trpc-client";
-import getSpriteSheets from "gameFunction/get-sprite-sheets";
-import type { SpriteMap } from "gameFunction/get-sprite-sheets";
-import type { GetServerSideProps } from "next";
-import { MatchWrapper } from "shared/wrappers/match";
-import { mapRender } from "../../interactiveMatchRenders/map-render";
-import Calculator from "../../frontend/components/calculator/Calculator";
 import type { UnitType } from "shared/schemas/unit";
+import type { PlayerInMatch } from "shared/types/server-match-state";
+import { MatchWrapper } from "shared/wrappers/match";
+import { UnitWrapper } from "shared/wrappers/unit";
+import Calculator from "../../frontend/components/calculator/Calculator";
+import { mapRender } from "../../interactiveMatchRenders/map-render";
 
 BaseTexture.defaultOptions.scaleMode = SCALE_MODES.NEAREST;
 
-type Props = { spriteData: SpriteMap };
+type Props = { spriteData: SpritesheetDataByArmy };
 
 const Match = ({ spriteData }: Props) => {
   // ---- TEXTURE LOADING ----
   const [spriteSheets, setSpriteSheets] = useState<LoadedSpriteSheet | undefined>(undefined);
   useEffect(() => {
     const fetchData = async () => {
-      setSpriteSheets(await loadSpritesheets(spriteData));
+      setSpriteSheets(await loadSpritesFromSpriteMap(spriteData));
     };
 
     void fetchData();
@@ -82,6 +82,7 @@ const Match = ({ spriteData }: Props) => {
           rawMatch.map,
           rawMatch.players,
           rawMatch.units,
+          UnitWrapper,
           rawMatch.turn,
         ),
       );
@@ -180,65 +181,63 @@ const Match = ({ spriteData }: Props) => {
     return <></>;
   } else {
     return (
-      <>
-        <div className="@grid @grid-cols-12 @text-center @my-20 @mx-2">
-          <div className="@col-span-12">
-            <Calculator player={players[0]} />
-          </div>
-          <h3 className="@col-span-12">Scale</h3>
-          <div className="@col-span-12 @p-2">
-            <button
-              className={"btn @inline"}
-              onClick={() => {
-                setScale(scale + 0.2);
-              }}
-            >
-              +
-            </button>
-            <h2 className="@inline @align-middle"> {Math.round(scale * 10) / 10} </h2>
-            <button
-              className={"btn"}
-              onClick={() => {
-                setScale(scale - 0.2);
-              }}
-            >
-              -
-            </button>
-          </div>
-          <div className="@mx-4 @w-48 @col-span-2 [image-rendering:pixelated]">
-            <MatchPlayer
-              name={players[0].name}
-              co={players[0].coId}
-              country={players[0].army}
-              playerReady={true}
-            />
-            Funds: {players[0].funds}
-            <br />
-            HasTurn: {String(players[0].hasCurrentTurn)}
-          </div>
-          <div className="@col-span-8">
-            <canvas
-              className="@inline"
-              style={{
-                imageRendering: "pixelated",
-              }}
-              ref={pixiCanvasRef}
-            ></canvas>
-          </div>
-          <div className="@mx-4 @w-48 @col-span-2 [image-rendering:pixelated]">
-            <MatchPlayer
-              name={players[1].name}
-              co={players[1].coId}
-              country={players[1].army}
-              playerReady={true}
-              flipCO={true}
-            />
-            Funds: {players[1].funds}
-            <br />
-            HasTurn: {String(players[1].hasCurrentTurn)}
-          </div>
+      <div className="@grid @grid-cols-12 @text-center @my-20 @mx-2">
+        <div className="@col-span-12">
+          <Calculator player={players[0]} />
         </div>
-      </>
+        <h3 className="@col-span-12">Scale</h3>
+        <div className="@col-span-12 @p-2">
+          <button
+            className={"btn @inline"}
+            onClick={() => {
+              setScale(scale + 0.2);
+            }}
+          >
+            +
+          </button>
+          <h2 className="@inline @align-middle"> {Math.round(scale * 10) / 10} </h2>
+          <button
+            className={"btn"}
+            onClick={() => {
+              setScale(scale - 0.2);
+            }}
+          >
+            -
+          </button>
+        </div>
+        <div className="@mx-4 @w-48 @col-span-2 [image-rendering:pixelated]">
+          <MatchPlayer
+            name={players[0].name}
+            co={players[0].coId}
+            country={players[0].army}
+            playerReady={true}
+          />
+          Funds: {players[0].funds}
+          <br />
+          HasTurn: {String(players[0].hasCurrentTurn)}
+        </div>
+        <div className="@col-span-8">
+          <canvas
+            className="@inline"
+            style={{
+              imageRendering: "pixelated",
+            }}
+            ref={pixiCanvasRef}
+          ></canvas>
+        </div>
+        <div className="@mx-4 @w-48 @col-span-2 [image-rendering:pixelated]">
+          <MatchPlayer
+            name={players[1].name}
+            co={players[1].coId}
+            country={players[1].army}
+            playerReady={true}
+            flipCO={true}
+          />
+          Funds: {players[1].funds}
+          <br />
+          HasTurn: {String(players[1].hasCurrentTurn)}
+        </div>
+      </div>
     );
   }
 };

@@ -1,8 +1,8 @@
 import type { Player } from "@prisma/client";
-import { createContext, useContext, useEffect, useState } from "react";
+import { trpc } from "frontend/utils/trpc-client";
 import { useLocalStorage } from "frontend/utils/use-local-storage";
 import type { ReactNode } from "react";
-import { trpc } from "frontend/utils/trpc-client";
+import { createContext, useContext, useEffect, useMemo, useState } from "react";
 
 type UserContext =
   | {
@@ -17,7 +17,10 @@ const playersContext = createContext<UserContext>(undefined);
 export const ProvidePlayers = ({ children }: { children: ReactNode }) => {
   const [currentPlayerId, setCurrentPlayerId] = useLocalStorage("currentPlayerId", null);
 
-  const { data } = trpc.user.me.useQuery();
+  const { data } = trpc.user.me.useQuery(undefined, {
+    refetchOnReconnect: false, // reduce trpc logging, this data doesn't really need to be refetched automatically
+    refetchOnWindowFocus: false,
+  });
 
   const [user, setUser] = useState<typeof data>();
 
@@ -25,23 +28,25 @@ export const ProvidePlayers = ({ children }: { children: ReactNode }) => {
     if (data?.user && data !== user) {
       setUser(data);
 
-      if (data.ownedPlayers?.[0] != undefined && currentPlayerId === "") {
-        setCurrentPlayerId(data.ownedPlayers[0].id);
+      // const ownedPlayer =
+      const player = data.ownedPlayers.at(0);
+
+      if (player !== undefined && currentPlayerId === "") {
+        setCurrentPlayerId(player.id);
       }
     }
   }, [data, currentPlayerId, setCurrentPlayerId, user]);
 
-  return (
-    <playersContext.Provider
-      value={{
-        ownedPlayers: user?.ownedPlayers,
-        currentPlayerId,
-        setCurrentPlayerId,
-      }}
-    >
-      {children}
-    </playersContext.Provider>
+  const userContextValue: UserContext = useMemo(
+    () => ({
+      ownedPlayers: user?.ownedPlayers,
+      currentPlayerId,
+      setCurrentPlayerId,
+    }),
+    [user?.ownedPlayers, currentPlayerId, setCurrentPlayerId],
   );
+
+  return <playersContext.Provider value={userContextValue}>{children}</playersContext.Provider>;
 };
 
 export const usePlayers = () => {

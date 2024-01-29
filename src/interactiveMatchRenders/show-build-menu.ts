@@ -1,5 +1,7 @@
-import type { ISpritesheetData, Spritesheet } from "pixi.js";
+import type { ArmySpritesheetData } from "frontend/pixi/getSpritesheetData";
+import type { Spritesheet } from "pixi.js";
 import { AnimatedSprite, Assets, BitmapText, Container, Sprite, Texture } from "pixi.js";
+import type { UnitType } from "shared/schemas/unit";
 import type {
   Facility,
   UnitProperties,
@@ -8,14 +10,6 @@ import type {
 import { unitPropertiesMap } from "../shared/match-logic/game-constants/unit-properties";
 import type { PlayerInMatch } from "../shared/types/server-match-state";
 import type { MatchWrapper } from "../shared/wrappers/match";
-import { Army } from "../shared/schemas/army";
-import type { UnitType } from "shared/schemas/unit";
-import type { ArmySpritesheetData } from "gameFunction/get-sprite-sheets";
-
-export type OurSpriteSheetData = ISpritesheetData & {
-  animations: Record<string, string[]>;
-  countries: Record<string, string[]>;
-};
 
 type Props = {
   player: PlayerInMatch;

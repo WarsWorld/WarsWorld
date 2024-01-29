@@ -1,13 +1,12 @@
+import type { Player } from "@prisma/client";
+import type { SheetNames } from "frontend/pixi/getSpritesheetData";
 import { AnimatedSprite, Container, Sprite, Texture } from "pixi.js";
-import showBuildMenu from "./show-build-menu";
-import { spriteConstructor } from "../gameFunction/spriteConstructor";
+import type { UnitType } from "shared/schemas/unit";
+import type { LoadedSpriteSheet } from "../frontend/pixi/load-spritesheet";
 import type { Tile } from "../shared/schemas/tile";
 import type { PlayerInMatch } from "../shared/types/server-match-state";
 import type { MatchWrapper } from "../shared/wrappers/match";
-import type { LoadedSpriteSheet } from "../frontend/pixi/load-spritesheet";
-import type { Player } from "@prisma/client";
-import type { SheetNames } from "gameFunction/get-sprite-sheets";
-import type { UnitType } from "shared/schemas/unit";
+import showBuildMenu from "./show-build-menu";
 
 type Props = {
   spriteSheets: LoadedSpriteSheet;
@@ -104,15 +103,16 @@ export const mapRender = ({
                   //lets create a transparent screen that covers everything.
                   // if we click on it, we will delete the menu
                   // therefore, achieving a quick way to delete menu if we click out of it
-                  const emptyScreen = spriteConstructor(
-                    Texture.WHITE,
-                    0,
-                    0,
-                    mapWidth,
-                    mapHeight,
-                    "static",
-                    -1,
-                  );
+
+                  const emptyScreen = new Sprite(Texture.WHITE);
+                  emptyScreen.x = 0;
+                  emptyScreen.y = 0;
+                  emptyScreen.width = mapWidth;
+                  emptyScreen.height = mapHeight;
+
+                  emptyScreen.zIndex = -1;
+                  emptyScreen.eventMode = "static";
+
                   emptyScreen.alpha = 0;
 
                   emptyScreen.on("pointerdown", () => {

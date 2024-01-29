@@ -1,13 +1,13 @@
 import type { LoadedSpriteSheet } from "frontend/pixi/load-spritesheet";
-import type { SpriteAnimationKeys } from "gameFunction/get-sprite-sheets";
 import type { Resource, Texture } from "pixi.js";
 import { AnimatedSprite, Container, Sprite } from "pixi.js";
 import type { Tile } from "shared/schemas/tile";
 import type { ChangeableTile } from "shared/types/server-match-state";
 import type { MatchWrapper } from "shared/wrappers/match";
-import type { FrontendUnit } from "../FrontendUnit";
-import { baseTileSize } from "../MatchRenderer";
-import type { ChangeableTileWithSprite } from "../types";
+import type { FrontendUnit } from "../components/match/FrontendUnit";
+import { baseTileSize } from "../components/match/MatchRenderer";
+import type { ChangeableTileWithSprite } from "../components/match/types";
+import type { SpriteAnimationKeys } from "./getSpritesheetData";
 
 type AnimationsProperty = Record<SpriteAnimationKeys, Texture<Resource>[]>;
 

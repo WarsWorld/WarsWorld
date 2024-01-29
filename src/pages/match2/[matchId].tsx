@@ -1,9 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
 import { MatchLoader } from "frontend/components/match/MatchLoader";
 import { usePlayers } from "frontend/context/players";
+import type { SpritesheetDataByArmy } from "frontend/pixi/getSpritesheetData";
+import getSpriteSheets from "frontend/pixi/getSpritesheetData";
 import { loadSpritesFromSpriteMap } from "frontend/pixi/load-spritesheet";
-import type { SpritesheetDataByArmy } from "gameFunction/get-sprite-sheets";
-import getSpriteSheets from "gameFunction/get-sprite-sheets";
 import type { GetServerSideProps } from "next";
 import { useRouter } from "next/router";
 import { z } from "zod";

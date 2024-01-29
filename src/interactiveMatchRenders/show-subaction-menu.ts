@@ -1,11 +1,11 @@
+import type { ArmySpritesheetData } from "frontend/pixi/getSpritesheetData";
 import type { Spritesheet } from "pixi.js";
 import { AnimatedSprite, Assets, BitmapText, Container, Sprite, Texture } from "pixi.js";
-import type { MatchWrapper } from "../shared/wrappers/match";
-import type { UnitWrapper } from "../shared/wrappers/unit";
-import { unitTypes } from "shared/schemas/unit";
-import type { ArmySpritesheetData } from "gameFunction/get-sprite-sheets";
 import { unitPropertiesMap } from "shared/match-logic/game-constants/unit-properties";
 import type { Position } from "shared/schemas/position";
+import { unitTypes } from "shared/schemas/unit";
+import type { MatchWrapper } from "../shared/wrappers/match";
+import type { UnitWrapper } from "../shared/wrappers/unit";
 
 //only called if player has current turn
 export default async function showSubactionMenu(

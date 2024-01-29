@@ -1,8 +1,8 @@
 import type { LoadedSpriteSheet } from "frontend/pixi/load-spritesheet";
 import type { Application } from "pixi.js";
 import type { MatchWrapper } from "shared/wrappers/match";
-import type { FrontendUnit } from "../FrontendUnit";
-import type { ChangeableTileWithSprite } from "../types";
+import type { FrontendUnit } from "../components/match/FrontendUnit";
+import type { ChangeableTileWithSprite } from "../components/match/types";
 import { renderMap } from "./renderMap";
 import { renderUnits } from "./renderUnits";
 

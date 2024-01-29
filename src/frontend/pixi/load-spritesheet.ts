@@ -1,9 +1,5 @@
-import { BaseTexture, Spritesheet, utils } from "pixi.js";
-import type {
-  ArmySpritesheetData,
-  SheetNames,
-  SpritesheetDataByArmy,
-} from "../../gameFunction/get-sprite-sheets";
+import { BaseTexture, SCALE_MODES, Spritesheet, utils } from "pixi.js";
+import type { ArmySpritesheetData, SheetNames, SpritesheetDataByArmy } from "./getSpritesheetData";
 
 export type LoadedSpriteSheet = Record<SheetNames, Spritesheet<ArmySpritesheetData>>;
 
@@ -22,7 +18,9 @@ export async function loadSpritesFromSpriteMap(
       }
 
       const pixiSheet = new Spritesheet<ArmySpritesheetData>(
-        BaseTexture.from(`/img/spriteSheet/${rawSpriteSheet.meta.image}`),
+        BaseTexture.from(`/img/spriteSheet/${rawSpriteSheet.meta.image}`, {
+          scaleMode: SCALE_MODES.NEAREST,
+        }),
         rawSpriteSheet,
       );
       await pixiSheet.parse();

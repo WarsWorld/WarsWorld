@@ -1,19 +1,27 @@
 import type { Spritesheet } from "pixi.js";
 import { Container, Sprite } from "pixi.js";
 import type { Position } from "shared/schemas/position";
-import { tileConstructor } from "./sprite-constructor";
+import {
+  getDistance,
+  getNeighbourPositions,
+  positionsAreNeighbours,
+} from "shared/schemas/position";
+import type { MapWrapper } from "shared/wrappers/map";
 import type { MatchWrapper } from "shared/wrappers/match";
 import { DispatchableError } from "../shared/DispatchedError";
-import { getNeighbourPositions, positionsAreNeighbours } from "shared/schemas/position";
 import type { UnitWrapper } from "../shared/wrappers/unit";
-import { getDistance } from "shared/schemas/position";
-import { unitPropertiesMap } from "shared/match-logic/game-constants/unit-properties";
+import { tileConstructor } from "./sprite-constructor";
 export type PathNode = {
   //saves distance from origin and parent (to retrieve the shortest path)
   pos: Position;
   dist: number;
   parent: Position | null;
 };
+
+const makeVisitedMatrix = (map: MapWrapper) =>
+  Array.from({ length: map.width })
+    .fill(false)
+    .map(() => Array.from<boolean>({ length: map.height }).fill(false));
 
 export function getAccessibleNodes( //TODO: save result of function? _ (Sturm d2d?)
   match: MatchWrapper,
@@ -28,14 +36,12 @@ export function getAccessibleNodes( //TODO: save result of function? _ (Sturm d2
   const accessibleTiles = new Map<Position, PathNode>(); //return variable
 
   //queues[a] has current queued nodes with distance a from origin (technically a "stack", not a queue, but the result doesn't change)
-  const queues: PathNode[][] = new Array([unit.getMovementPoints()]);
+
+  const queues = Array.from<PathNode[]>({ length: unit.getMovementPoints() });
   queues.push([]);
   queues[0].push({ pos: unit.data.position, dist: 0, parent: null }); //queues[0] has the origin node, initially
 
-  //initialize visited matrix
-  const visited: boolean[][] = new Array(match.map.width)
-    .fill(false)
-    .map(() => new Array(match.map.height).fill(false));
+  const visited = makeVisitedMatrix(match.map);
 
   for (const unit of ownerUnitPlayer.team.getEnemyUnits()) {
     //enemy tiles are impassible
@@ -45,7 +51,7 @@ export function getAccessibleNodes( //TODO: save result of function? _ (Sturm d2
   let currentDist = 0; //will check from closest to furthest, to find the shortest path
 
   while (currentDist < queues.length) {
-    if (queues[currentDist].length == 0) {
+    if (queues[currentDist].length === 0) {
       //increase currentDist if all nodes within that distance have been processed
       ++currentDist;
       continue;
@@ -54,7 +60,7 @@ export function getAccessibleNodes( //TODO: save result of function? _ (Sturm d2
     const currNode = queues[currentDist].pop();
     const currPos = currNode?.pos;
 
-    if (currNode == undefined || currPos === undefined || visited[currPos[0]][currPos[1]]) {
+    if (currNode === undefined || currPos === undefined || visited[currPos[0]][currPos[1]]) {
       continue;
     }
 
@@ -90,7 +96,7 @@ export function getAccessibleNodes( //TODO: save result of function? _ (Sturm d2
   return accessibleTiles;
 }
 
-export async function showPassableTiles(
+export function showPassableTiles(
   match: MatchWrapper,
   unit: UnitWrapper,
   accessibleNodes?: Map<Position, PathNode>,
@@ -121,10 +127,7 @@ export function getAttackableTiles(
     accessibleNodes = getAccessibleNodes(match, unit);
   }
 
-  //initialize visited matrix
-  const visited: boolean[][] = new Array(match.map.width)
-    .fill(false)
-    .map(() => new Array(match.map.height).fill(false));
+  const visited = makeVisitedMatrix(match.map);
 
   const attackpositions: Position[] = [];
 
@@ -143,35 +146,31 @@ export function getAttackableTiles(
   return attackpositions;
 }
 
-export async function showAttackableTiles(
+export function showAttackableTiles(
   match: MatchWrapper,
   unit: UnitWrapper,
   attackableTiles?: Position[],
 ) {
-  const unitProperties = unitPropertiesMap[unit.data.type];
-
   const markedTiles = new Container();
   markedTiles.eventMode = "static";
 
-  if ("attackRange" in unitProperties) {
-    if (unitProperties.attackRange[0] > 1) {
-      //ranged unit
-      for (let i = 0; i < match.map.width; ++i) {
-        for (let j = 0; j < match.map.height; ++j) {
-          const distance = getDistance([i, j], unit.data.position);
+  if ("attackRange" in unit.properties && unit.properties.attackRange[0] > 1) {
+    //ranged unit
+    for (let x = 0; x < match.map.width; x++) {
+      for (let y = 0; y < match.map.height; y++) {
+        const distance = getDistance([x, y], unit.data.position);
 
-          if (
-            distance <= unitProperties.attackRange[1] &&
-            distance >= unitProperties.attackRange[0]
-          ) {
-            const square = tileConstructor([i, j], "#be1919");
-            markedTiles.addChild(square);
-          }
+        if (
+          distance <= unit.properties.attackRange[1] &&
+          distance >= unit.properties.attackRange[0]
+        ) {
+          const square = tileConstructor([x, y], "#be1919");
+          markedTiles.addChild(square);
         }
       }
-
-      return markedTiles;
     }
+
+    return markedTiles;
   }
 
   if (attackableTiles === undefined) {
@@ -187,23 +186,22 @@ export async function showAttackableTiles(
 }
 
 export function updatePath(
-  match: MatchWrapper,
   unit: UnitWrapper,
   accessibleNodes: Map<Position, PathNode>,
   path: PathNode[],
   newPos: Position,
 ): PathNode[] {
-  if (newPos === undefined || newPos === null || !accessibleNodes.has(newPos)) {
+  if (!accessibleNodes.has(newPos)) {
     throw new Error("Trying to add an unreachable position!");
   }
 
   if (path.length !== 0) {
-    const lastNode = path[path.length - 1];
+    const lastNode = path.at(-1)!;
 
     for (const node of path) {
       if (node.pos === newPos) {
         //the "new" node is part of the current path, so delete all nodes after that one
-        while (node !== path[path.length - 1]) {
+        while (node !== path.at(-1)) {
           path.pop();
         }
 
@@ -240,7 +238,77 @@ export function updatePath(
     }
   }
 
-  return newPath.reverse();
+  return newPath.toReversed();
+}
+
+function getSpriteName(a: Position, b: Position, c: Position): string {
+  //path from a to b to c, the sprite is the one displayed in b (middle node)
+  const dify = Math.abs(a[1] - c[1]);
+  const difx = Math.abs(a[0] - c[0]);
+
+  if (dify + difx === 2) {
+    //not start nor end
+    if (dify === 2) {
+      return "ew";
+    }
+
+    if (difx === 2) {
+      return "ns";
+    }
+
+    let ans: string;
+
+    if (a[0] > b[0] || c[0] > b[0]) {
+      ans = "s";
+    } else {
+      ans = "n";
+    }
+
+    if (a[1] > b[1] || c[1] > b[1]) {
+      ans += "e";
+    } else {
+      ans += "w";
+    }
+
+    return ans;
+  }
+
+  if (a[1] === b[1] && a[0] === b[0]) {
+    //starting node
+    if (c[1] === b[1] && c[0] === b[0]) {
+      //AND ending node
+      return "od";
+    }
+
+    if (c[1] < b[1]) {
+      return "ow";
+    }
+
+    if (c[1] > b[1]) {
+      return "oe";
+    }
+
+    if (c[0] > b[0]) {
+      return "os";
+    }
+
+    return "on";
+  } else {
+    //ending node
+    if (a[1] < b[1]) {
+      return "wd";
+    }
+
+    if (a[1] > b[1]) {
+      return "ed";
+    }
+
+    if (a[0] < b[0]) {
+      return "nd";
+    }
+
+    return "sd";
+  }
 }
 
 export function showPath(spriteSheet: Spritesheet, path: PathNode[]) {
@@ -250,76 +318,6 @@ export function showPath(spriteSheet: Spritesheet, path: PathNode[]) {
 
   const arrowContainer = new Container();
   arrowContainer.eventMode = "static";
-
-  function getSpriteName(a: Position, b: Position, c: Position): string {
-    //path from a to b to c, the sprite is the one displayed in b (middle node)
-    const dify = Math.abs(a[1] - c[1]);
-    const difx = Math.abs(a[0] - c[0]);
-
-    if (dify + difx === 2) {
-      //not start nor end
-      if (dify === 2) {
-        return "ew";
-      }
-
-      if (difx === 2) {
-        return "ns";
-      }
-
-      let ans: string;
-
-      if (a[0] > b[0] || c[0] > b[0]) {
-        ans = "s";
-      } else {
-        ans = "n";
-      }
-
-      if (a[1] > b[1] || c[1] > b[1]) {
-        ans += "e";
-      } else {
-        ans += "w";
-      }
-
-      return ans;
-    }
-
-    if (a[1] === b[1] && a[0] === b[0]) {
-      //starting node
-      if (c[1] === b[1] && c[0] === b[0]) {
-        //AND ending node
-        return "od";
-      }
-
-      if (c[1] < b[1]) {
-        return "ow";
-      }
-
-      if (c[1] > b[1]) {
-        return "oe";
-      }
-
-      if (c[0] > b[0]) {
-        return "os";
-      }
-
-      return "on";
-    } else {
-      //ending node
-      if (a[1] < b[1]) {
-        return "wd";
-      }
-
-      if (a[1] > b[1]) {
-        return "ed";
-      }
-
-      if (a[0] < b[0]) {
-        return "nd";
-      }
-
-      return "sd";
-    }
-  }
 
   const len = path.length;
   const path2 = [...path];
