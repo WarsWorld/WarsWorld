@@ -1,23 +1,15 @@
+# editor / IDE / OS stuff
+.DS_Store
+/.idea
+
+# secrets
+.env
+
+# generated files
+/.next
+/next-env.d.ts
+/dist
+/node_modules
+/.eslintcache
 # https://www.typescriptlang.org/tsconfig#tsBuildInfoFile
 tsconfig.tsbuildinfo
-
-# next.js
-/.next/
-/out/
-/next-env.d.ts
-
-# production
-/build
-/dist/
-
-/node_modules
-.env
-.eslintcache
-.DS_Store
-/.idea/.gitignore
-/.idea/codeStyles/codeStyleConfig.xml
-/.idea/jsLibraryMappings.xml
-/prisma/migrations/20230510171142_amogus/migration.sql
-/.idea/inspectionProfiles/Project_Default.xml
-/.idea/vcs.xml
-/.idea/
