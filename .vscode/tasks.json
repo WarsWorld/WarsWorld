@@ -4,9 +4,9 @@
     {
       "type": "npm",
       "script": "lint:eslint",
-      "problemMatcher": ["$eslint-compact"],
+      "problemMatcher": ["$eslint-stylish"],
       "label": "npm: lint:eslint",
-      "detail": "eslint src --ext \".js,.ts,.tsx\" --cache --report-unused-disable-directives"
+      "detail": "eslint ."
     }
   ]
 }

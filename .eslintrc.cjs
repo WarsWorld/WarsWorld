@@ -1,8 +1,20 @@
-const isProdEnvironment = process.env.NODE_ENV === "production";
+/* eslint-env node */
+
 const padded = ["if", "const", "let", "expression", "return", "break"];
 
-/** @type {import("eslint")} */
-module.exports = {
+// [upstream] https://github.com/typescript-eslint/typescript-eslint/issues/7694
+
+/** @type {import("eslint").Linter.Config} */
+const eslintConfig = {
+  root: true,
+  /**
+   * even though "dist" is already excluded through tsconfig.json, eslint will
+   * lint the "dist" folder without this `ignorePatterns`.
+   * i suspect that's because there's another eslint config generated at `./dist/.eslintrc.cjs`.
+   * maybe there's a cleaner way by telling typescript to typecheck `./.eslintrc.js` but not transpile it to `./dist`.
+   */
+  ignorePatterns: "/dist",
+  reportUnusedDisableDirectives: true,
   extends: [
     "plugin:@next/next/recommended",
     "plugin:@typescript-eslint/recommended-type-checked",
@@ -13,9 +25,8 @@ module.exports = {
   ],
   parser: "@typescript-eslint/parser",
   plugins: ["@stylistic/ts", "@typescript-eslint"],
-  root: true,
   parserOptions: {
-    ecmaVersion: 2018,
+    ecmaVersion: 2022,
     sourceType: "module",
     project: true,
     tsconfigRootDir: __dirname,
@@ -25,7 +36,6 @@ module.exports = {
       version: "detect",
     },
   },
-  ignorePatterns: ["dist"],
   rules: {
     curly: "error",
     "@stylistic/ts/padding-line-between-statements": [
@@ -71,16 +81,6 @@ module.exports = {
         ignoreTemplateLiterals: true,
       },
     ],
-    "prettier/prettier": [
-      isProdEnvironment ? "error" : "off",
-      {
-        // this fixes an oddity with the rvest.vs-code-prettier-eslint extension
-        // maybe we can look into this another time.
-        // looks like it's not interpreting this property correctly
-        // from package.json prettier config..? (es5 should be default value)
-        trailingComma: "es5",
-      },
-    ],
     /**
      * TODO
      * we haven't decided yet if we want to use next.js' <Image> or just
@@ -91,7 +91,7 @@ module.exports = {
   },
   overrides: [
     {
-      files: ["src/shared/**/*.ts"],
+      files: ["src/shared/**/*.*"],
       rules: {
         "@typescript-eslint/no-restricted-imports": [
           "error",
@@ -101,7 +101,7 @@ module.exports = {
             // and using DOM APIs or React on backend will too.
             patterns: [
               {
-                group: ["**/server/**", "**/frontend/**"],
+                group: ["**/{server,frontend}/**"],
                 message: "Don't import non-type server or frontend code into shared",
                 allowTypeImports: true,
               },
@@ -115,5 +115,26 @@ module.exports = {
         ],
       },
     },
+    {
+      files: ["src/**/*.*"],
+      excludedFiles: "src/{components/client-only,pixi}/**/*.*",
+      rules: {
+        "@typescript-eslint/no-restricted-imports": [
+          "error",
+          {
+            patterns: [
+              {
+                group: ["**pixi**"],
+                message:
+                  "Non-type Pixi.js stuff is only allowed in react/client-only because other files might be server-side rendered (no window/document for pixi)",
+                allowTypeImports: true,
+              },
+            ],
+          },
+        ],
+      },
+    },
   ],
 };
+
+module.exports = eslintConfig;

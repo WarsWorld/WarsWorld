@@ -1,13 +1,12 @@
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const defaultTheme = require("tailwindcss/defaultTheme");
+import type { Config } from "tailwindcss";
+import { fontFamily } from "tailwindcss/defaultTheme";
 
-/** @type {import('tailwindcss').Config} */
-module.exports = {
+export default {
   prefix: "@",
   content: ["./src/**/*.{ts,tsx}"],
   theme: {
     extend: {
-      sans: ["Proxima Nova", ...defaultTheme.fontFamily.sans],
+      sans: ["Proxima Nova", ...fontFamily.sans],
       fontFamily: {
         russoOne: ["RussoOne", "sans-serif"],
       },
@@ -60,4 +59,4 @@ module.exports = {
     },
   ],
   plugins: [],
-};
+} satisfies Config;

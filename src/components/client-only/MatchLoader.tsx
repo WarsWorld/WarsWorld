@@ -1,17 +1,24 @@
-import type { LoadedSpriteSheet } from "frontend/pixi/load-spritesheet";
+import { useQuery } from "@tanstack/react-query";
+import { FrontendUnit } from "frontend/components/match/FrontendUnit";
+import type { SpritesheetDataByArmy } from "frontend/components/match/getSpritesheetData";
+import type { ChangeableTileWithSprite } from "frontend/components/match/types";
 import { trpc } from "frontend/utils/trpc-client";
+import { loadSpritesFromSpriteMap } from "pixi/load-spritesheet";
 import { MatchWrapper } from "shared/wrappers/match";
-import { FrontendUnit } from "./FrontendUnit";
 import { MatchRenderer } from "./MatchRenderer";
-import { type ChangeableTileWithSprite } from "./types";
 
 type Props = {
   matchId: string;
   playerId: string;
-  spriteSheets: LoadedSpriteSheet;
+  spritesheetDataByArmy: SpritesheetDataByArmy;
 };
 
-export function MatchLoader({ matchId, playerId, spriteSheets }: Props) {
+export function MatchLoader({ matchId, playerId, spritesheetDataByArmy }: Props) {
+  const spriteSheetQuery = useQuery({
+    queryKey: ["spritesheets"],
+    queryFn: () => loadSpritesFromSpriteMap(spritesheetDataByArmy),
+  });
+
   const fullMatchQuery = trpc.match.full.useQuery(
     { matchId, playerId },
     {
@@ -42,11 +49,11 @@ export function MatchLoader({ matchId, playerId, spriteSheets }: Props) {
     },
   );
 
-  if (fullMatchQuery.isError) {
+  if (fullMatchQuery.isError || spriteSheetQuery.isError) {
     return <p>error {":("}</p>;
   }
 
-  if (fullMatchQuery.isLoading) {
+  if (fullMatchQuery.isLoading || spriteSheetQuery.isLoading) {
     return <p>Loading match data...</p>;
   }
 
@@ -56,5 +63,11 @@ export function MatchLoader({ matchId, playerId, spriteSheets }: Props) {
     throw new Error("Could not find player by playerId in match wrapper in MatchLoader");
   }
 
-  return <MatchRenderer match={fullMatchQuery.data} spriteSheets={spriteSheets} player={player} />;
+  return (
+    <MatchRenderer
+      match={fullMatchQuery.data}
+      spriteSheets={spriteSheetQuery.data}
+      player={player}
+    />
+  );
 }

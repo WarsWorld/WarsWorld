@@ -3,6 +3,7 @@
     "target": "es2022",
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
+    "checkJs": true,
     "skipLibCheck": true,
     "strict": true,
     "strictNullChecks": true,
@@ -18,22 +19,6 @@
     "incremental": true,
     "downlevelIteration": true
   },
-  "include": [
-    "next-env.d.ts",
-    "**/*.ts",
-    "**/*.d.ts",
-    "**/*.tsx",
-    "./next.config.js",
-    "./.eslintrc.js",
-    "./tailwind.config.js",
-    "./postcss.config.js"
-  ],
-  "exclude": ["node_modules", "dist"],
-  "ts-node": {
-    "transpileOnly": true,
-    "compilerOptions": {
-      "module": "commonjs"
-    },
-    "files": true
-  }
+  "include": [".", ".eslintrc.cjs"], // .eslintrc.json is extra because the leading period makes it excluded otherwise
+  "exclude": ["node_modules", "dist", ".next"]
 }

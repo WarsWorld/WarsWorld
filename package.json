@@ -5,6 +5,7 @@
   "engines": {
     "node": "^21.0.0"
   },
+  "type": "module",
   "scripts": {
     "db:up": "docker compose up -d",
     "db:destroy": "docker compose down --volumes --remove-orphans",
@@ -17,8 +18,8 @@
     "dev:wss": "cross-env PORT=3001 tsx watch src/server/main-wss-development.ts --tsconfig tsconfig.server.json",
     "dev:next": "next dev",
     "dev": "npm run prisma:push && concurrently \"npm:dev:*\"",
-    "lint:eslint": "eslint src --ext \".js,.ts,.tsx\" --cache --report-unused-disable-directives",
-    "lint:eslint:fix": "eslint src --ext \".js,.ts,.tsx\" --cache --report-unused-disable-directives --fix",
+    "lint:eslint": "eslint .",
+    "lint:eslint:fix": "eslint . --fix",
     "lint:prettier": "prettier --check .",
     "lint:prettier:fix": "prettier --write .",
     "lint": "npm run lint:prettier && npm run lint:eslint",

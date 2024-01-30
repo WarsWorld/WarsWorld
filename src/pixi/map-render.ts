@@ -1,11 +1,11 @@
 import type { Player } from "@prisma/client";
-import type { SheetNames } from "frontend/pixi/getSpritesheetData";
+import type { SheetNames } from "frontend/components/match/getSpritesheetData";
 import { AnimatedSprite, Container, Sprite, Texture } from "pixi.js";
 import type { UnitType } from "shared/schemas/unit";
-import type { LoadedSpriteSheet } from "../frontend/pixi/load-spritesheet";
 import type { Tile } from "../shared/schemas/tile";
 import type { PlayerInMatch } from "../shared/types/server-match-state";
 import type { MatchWrapper } from "../shared/wrappers/match";
+import type { LoadedSpriteSheet } from "./load-spritesheet";
 import showBuildMenu from "./show-build-menu";
 
 type Props = {

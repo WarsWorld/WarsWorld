@@ -1,5 +1,9 @@
+import type {
+  ArmySpritesheetData,
+  SheetNames,
+  SpritesheetDataByArmy,
+} from "frontend/components/match/getSpritesheetData";
 import { BaseTexture, SCALE_MODES, Spritesheet, utils } from "pixi.js";
-import type { ArmySpritesheetData, SheetNames, SpritesheetDataByArmy } from "./getSpritesheetData";
 
 export type LoadedSpriteSheet = Record<SheetNames, Spritesheet<ArmySpritesheetData>>;
 

@@ -4,11 +4,11 @@
  * @link https://www.prisma.io/docs/guides/database/seed-database
  */
 import { PrismaClient } from "@prisma/client";
+import * as fs from "fs/promises";
+import matter from "gray-matter";
 import { hashPassword } from "server/hashPassword";
 import { importAWBWMap } from "server/tools/map-importer-utilities";
 import { developmentPlayerNamePrefix as Prefix } from "server/trpc/middleware/player";
-import * as fs from "fs/promises";
-import matter from "gray-matter";
 import { articleSchema } from "shared/schemas/article";
 
 const prisma = new PrismaClient();
@@ -37,8 +37,8 @@ const guides = [
   "Tech-ups",
 ];
 
-function seedArticles(articles: string[], type: string, authorId: string) {
-  articles.map(async (article) => {
+async function seedArticles(articles: string[], type: string, authorId: string) {
+  for (const article of articles) {
     const file = await fs.readFile(
       `src/frontend/utils/articles/${type.toLowerCase()}/${article}.md`,
       "utf-8",
@@ -72,7 +72,7 @@ function seedArticles(articles: string[], type: string, authorId: string) {
         body: articleData.body,
       },
     });
-  });
+  }
 }
 
 async function main() {
@@ -90,8 +90,8 @@ async function main() {
     developmentPlayerNames.map((name) => prisma.player.create({ data: { name, userId } })),
   );
 
-  seedArticles(news, "News", devPlayers[0].id);
-  seedArticles(guides, "Guide", devPlayers[1].id);
+  await seedArticles(news, "News", devPlayers[0].id);
+  await seedArticles(guides, "Guide", devPlayers[1].id);
 
   /**
    * author: "Hellraider",

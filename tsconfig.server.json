@@ -3,10 +3,8 @@
   "compilerOptions": {
     "module": "commonjs",
     "outDir": "dist",
-    "lib": ["ES2022", "DOM"],
+    "lib": ["ES2023", "DOM"],
     "isolatedModules": false,
     "noEmit": false
-  },
-  "include": ["next-env.d.ts", "src/**/*.ts", "src/**/*.tsx"],
-  "exclude": ["node_modules", "dist"]
+  }
 }

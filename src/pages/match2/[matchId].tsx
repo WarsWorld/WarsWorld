@@ -1,55 +1,83 @@
-import { useQuery } from "@tanstack/react-query";
-import { MatchLoader } from "frontend/components/match/MatchLoader";
+import type {
+  ArmySpritesheetData,
+  SpritesheetDataByArmy,
+} from "frontend/components/match/getSpritesheetData";
 import { usePlayers } from "frontend/context/players";
-import type { SpritesheetDataByArmy } from "frontend/pixi/getSpritesheetData";
-import getSpriteSheets from "frontend/pixi/getSpritesheetData";
-import { loadSpritesFromSpriteMap } from "frontend/pixi/load-spritesheet";
 import type { GetServerSideProps } from "next";
+import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
+import fs from "node:fs/promises";
+import path from "node:path";
+import { spritesheetDataSchema } from "shared/schemas/spritesheet-data";
 import { z } from "zod";
+
+const MatchLoaderNoSSR = dynamic(
+  () => import("components/client-only/MatchLoader").then((res) => res.MatchLoader),
+  {
+    ssr: false,
+    loading: () => <p>Loading MatchLoader component...</p>,
+  },
+);
 
 type Props = { spritesheetDataByArmy: SpritesheetDataByArmy };
 
 const MatchPage = ({ spritesheetDataByArmy }: Props) => {
-  const spriteSheetQuery = useQuery({
-    queryKey: ["spritesheets"],
-    queryFn: () => loadSpritesFromSpriteMap(spritesheetDataByArmy),
-  });
-
   const { query } = useRouter();
   const { currentPlayer } = usePlayers();
   const matchIdResult = z.string().safeParse(query.matchId);
 
-  if (spriteSheetQuery.isError || !matchIdResult.success) {
+  if (!matchIdResult.success) {
     return <p>error {":("}</p>;
   }
 
-  if (spriteSheetQuery.isLoading || currentPlayer === undefined) {
+  if (currentPlayer === undefined) {
     return <p>Loading...</p>;
   }
 
   return (
-    <MatchLoader
+    <MatchLoaderNoSSR
       matchId={matchIdResult.data}
       playerId={currentPlayer.id}
-      spriteSheets={spriteSheetQuery.data}
-    ></MatchLoader>
+      spritesheetDataByArmy={spritesheetDataByArmy}
+    ></MatchLoaderNoSSR>
   );
 };
 
 export default MatchPage;
 
 export const getServerSideProps: GetServerSideProps<Props> = async () => {
-  //TODO: Should we call all the spritesheets or just the ones the players will need?
-  // Unsure how we would know which players are playing what before even loading the match
-  // (which right now we do this call before the tRPC call that gets the match data...)
-  const spritesheetDataByArmy = await getSpriteSheets([
-    "yellow-comet",
-    "green-earth",
-    "black-hole",
-    "orange-star",
-    "blue-moon",
-  ]);
+  const spritesheetDatas = await Promise.all(
+    [
+      "yellow-comet",
+      "green-earth",
+      "black-hole",
+      "orange-star",
+      "blue-moon",
+      "neutral",
+      "arrow",
+    ].map(async (sheetName) => {
+      const filePath = path.join(process.cwd(), `public/img/spriteSheet/${sheetName}.json`);
+      const fileData = await fs.readFile(filePath, "utf-8");
+      const spritesheetData = spritesheetDataSchema.parse(JSON.parse(fileData));
 
-  return { props: { spritesheetDataByArmy } };
+      return {
+        sheetName,
+        data: spritesheetData as ArmySpritesheetData,
+      };
+    }),
+  );
+
+  const spritesheetDataByArmy = spritesheetDatas.reduce<Partial<SpritesheetDataByArmy>>(
+    (prev, cur) => ({
+      ...prev,
+      [cur.sheetName]: cur.data,
+    }),
+    {},
+  );
+
+  return {
+    props: {
+      spritesheetDataByArmy: spritesheetDataByArmy as SpritesheetDataByArmy,
+    },
+  };
 };

@@ -10,6 +10,5 @@
 /next-env.d.ts
 /dist
 /node_modules
-/.eslintcache
 # https://www.typescriptlang.org/tsconfig#tsBuildInfoFile
 tsconfig.tsbuildinfo

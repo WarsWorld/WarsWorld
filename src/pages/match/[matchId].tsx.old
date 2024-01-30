@@ -242,18 +242,3 @@ const Match = ({ spriteData }: Props) => {
   }
 };
 export default Match;
-
-export const getServerSideProps: GetServerSideProps<Props> = async () => {
-  //TODO: Should we call all the spritesheets or just the ones the players will need?
-  // Unsure how we would know which players are playing what before even loading the match
-  // (which right now we do this call before the tRPC call that gets the match data...)
-  const spriteData = await getSpriteSheets([
-    "yellow-comet",
-    "green-earth",
-    "black-hole",
-    "orange-star",
-    "blue-moon",
-  ]);
-
-  return { props: { spriteData } };
-};

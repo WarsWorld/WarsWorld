@@ -1,4 +1,4 @@
-import type { ArmySpritesheetData } from "frontend/pixi/getSpritesheetData";
+import type { ArmySpritesheetData } from "frontend/components/match/getSpritesheetData";
 import type { Spritesheet } from "pixi.js";
 import { AnimatedSprite, Assets, BitmapText, Container, Sprite, Texture } from "pixi.js";
 import { unitPropertiesMap } from "shared/match-logic/game-constants/unit-properties";
