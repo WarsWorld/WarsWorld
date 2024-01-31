@@ -4,6 +4,7 @@ import type { SpritesheetDataByArmy } from "frontend/components/match/getSprites
 import type { ChangeableTileWithSprite } from "frontend/components/match/types";
 import { trpc } from "frontend/utils/trpc-client";
 import { loadSpritesFromSpriteMap } from "pixi/load-spritesheet";
+import type { FrontendChatMessage } from "shared/types/component-data";
 import { MatchWrapper } from "shared/wrappers/match";
 import { MatchRenderer } from "./MatchRenderer";
 
@@ -32,19 +33,22 @@ export function MatchLoader({ matchId, playerId, spritesheetDataByArmy }: Props)
       refetchIntervalInBackground: false,
       refetchOnReconnect: false,
       refetchOnWindowFocus: false,
-      select(match) {
-        return new MatchWrapper<ChangeableTileWithSprite, FrontendUnit>(
-          match.id,
-          match.leagueType,
-          match.changeableTiles.map((tile) => ({ ...tile, sprite: null })),
-          match.rules,
-          match.status,
-          match.map,
-          match.players,
-          match.units,
-          FrontendUnit,
-          match.turn,
-        );
+      select(data) {
+        return {
+          match: new MatchWrapper<ChangeableTileWithSprite, FrontendUnit>(
+            data.id,
+            data.leagueType,
+            data.changeableTiles.map((tile) => ({ ...tile, sprite: null })),
+            data.rules,
+            data.status,
+            data.map,
+            data.players,
+            data.units,
+            FrontendUnit,
+            data.turn,
+          ),
+          chatMessages: data.chatMessages,
+        };
       },
     },
   );
@@ -57,17 +61,29 @@ export function MatchLoader({ matchId, playerId, spritesheetDataByArmy }: Props)
     return <p>Loading match data...</p>;
   }
 
-  const player = fullMatchQuery.data.getPlayerById(playerId);
+  const player = fullMatchQuery.data.match.getPlayerById(playerId);
 
   if (player === undefined) {
     throw new Error("Could not find player by playerId in match wrapper in MatchLoader");
   }
 
+  /* Formatting chat messages */
+  const chatMessages: FrontendChatMessage[] = fullMatchQuery.data.chatMessages.map(
+    ({ createdAt, author: { name }, content }) => {
+      return {
+        createdAt: createdAt,
+        name: name,
+        content: content,
+      };
+    },
+  );
+
   return (
     <MatchRenderer
-      match={fullMatchQuery.data}
+      match={fullMatchQuery.data.match}
       spriteSheets={spriteSheetQuery.data}
       player={player}
+      chatMessages={chatMessages}
     />
   );
 }

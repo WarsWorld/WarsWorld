@@ -11,11 +11,12 @@ import {
 } from "shared/match-logic/events/apply-event-to-match";
 import { mainActionSchema } from "shared/schemas/action";
 import { getFinalPositionSafe } from "shared/schemas/position";
-import type { Emittable, EmittableEvent } from "shared/types/events";
-import { matchBaseProcedure, playerInMatchBaseProcedure, router } from "../trpc/trpc-setup";
+import type { ChatMessageEvent, Emittable, EmittableEvent } from "shared/types/events";
+import { z } from "zod";
 import { mainEventToEmittables } from "../../shared/match-logic/events/event-to-emittable";
-import { fillDiscoveredUnitsAndProperties } from "../../shared/match-logic/events/vision-update";
 import { updateMoveVision } from "../../shared/match-logic/events/handlers/move";
+import { fillDiscoveredUnitsAndProperties } from "../../shared/match-logic/events/vision-update";
+import { matchBaseProcedure, playerInMatchBaseProcedure, router } from "../trpc/trpc-setup";
 
 export const actionRouter = router({
   send: playerInMatchBaseProcedure
@@ -83,6 +84,8 @@ export const actionRouter = router({
       // TODO @function either this function gets a list of emittables, or we iterate through them here.
       //  undefined means that team shouldn't receive the event
       //  emittableEvents[i] is from match.teams[i]. emittableEvents has one extra "no team"(spectator) at the end
+      // TODO: This needs revision. Instead of sending the event to teams not undefined in emittableEvents,
+      // it just sends the event out emittableEvents.length times to everyone.
       emittableEvents.forEach((event) => {
         if (event !== undefined) {
           emit({ ...event, matchId: match.id });
@@ -133,6 +136,42 @@ export const actionRouter = router({
       };
     });
   }),
+  sendChatMessage: matchBaseProcedure
+    .input(
+      z.object({
+        message: z.string(),
+      }),
+    )
+    .mutation(async ({ input, ctx: { match } }) => {
+      /* Add message to match in database */
+      const newMessage = await prisma.chatMessage.create({
+        data: {
+          content: input.message,
+          authorId: input.playerId,
+          matchId: input.matchId,
+        },
+        select: {
+          content: true,
+          createdAt: true,
+          author: {
+            select: {
+              name: true,
+            },
+          },
+        },
+      });
+
+      /* Create event */
+      const event: ChatMessageEvent = {
+        type: "chatMessage",
+        createdAt: newMessage.createdAt,
+        name: newMessage.author.name,
+        content: newMessage.content,
+      };
+
+      /* Emit event */
+      emit({ ...event, matchId: match.id });
+    }),
   // TODO create procedure for anonymous users to observe games
   // (they get their own special "-1" team or something)
 });

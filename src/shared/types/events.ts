@@ -16,11 +16,12 @@ import type {
 } from "shared/schemas/action";
 import type { Army } from "shared/schemas/army";
 import type { COID } from "shared/schemas/co";
+import type { PlayerSlot } from "shared/schemas/player-slot";
 import type { Position } from "shared/schemas/position";
 import type { WWUnit } from "shared/schemas/unit";
 import type { Weather } from "shared/schemas/weather";
+import type { FrontendChatMessage } from "./component-data";
 import type { CapturableTile } from "./server-match-state";
-import type { PlayerSlot } from "shared/schemas/player-slot";
 
 /** player slot 0 implicity starts */
 export type MatchStartEvent = {
@@ -147,6 +148,11 @@ export type EmittableMoveEvent = Omit<MoveEvent, "subEvent"> &
     appearingUnit?: WWUnit;
   };
 
+// Chat Messages Events
+export type ChatMessageEvent = {
+  type: "chatMessage";
+} & FrontendChatMessage;
+
 export type EmittableEvent = (
   | MatchStartEvent
   | EmittableMoveEvent
@@ -157,6 +163,7 @@ export type EmittableEvent = (
   | BuildEvent
   | DeleteEvent
   | MatchEndEvent
+  | ChatMessageEvent
 ) &
   WithDiscoveries;
 

@@ -36,19 +36,38 @@ export const matchRouter = router({
     ({ ctx: { currentPlayer } }) =>
       playerMatchIndex.getPlayerMatches(currentPlayer.id)?.map(matchToFrontend) ?? [],
   ),
-  full: matchBaseProcedure.query(({ ctx: { match, currentPlayer } }) => ({
-    id: match.id,
-    leagueType: match.leagueType,
-    changeableTiles: match.changeableTiles,
-    currentWeather: match.getCurrentWeather(),
-    map: match.map.data,
-    players: match.getAllPlayers().map((player) => player.data),
-    rules: match.rules,
-    status: match.status,
-    turn: match.turn,
-    units: match.units.map((u) => u.data),
-    // match.getPlayerById(currentPlayer.id)?.team.getEnemyUnitsInVision() ?? []
-  })),
+  full: matchBaseProcedure.query(async ({ ctx: { match, currentPlayer } }) => {
+    // compile all chat messages
+    const chatMessages = await prisma.chatMessage.findMany({
+      select: {
+        content: true,
+        createdAt: true,
+        author: {
+          select: {
+            name: true,
+          },
+        },
+      },
+      where: {
+        matchId: match.id,
+      },
+    });
+
+    return {
+      id: match.id,
+      leagueType: match.leagueType,
+      changeableTiles: match.changeableTiles,
+      currentWeather: match.getCurrentWeather(),
+      map: match.map.data,
+      players: match.getAllPlayers().map((player) => player.data),
+      rules: match.rules,
+      status: match.status,
+      turn: match.turn,
+      units: match.units.map((u) => u.data),
+      // match.getPlayerById(currentPlayer.id)?.team.getEnemyUnitsInVision() ?? []
+      chatMessages,
+    };
+  }),
   join: matchBaseProcedure
     .input(
       z.object({
