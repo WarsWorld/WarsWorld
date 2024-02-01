@@ -1,10 +1,10 @@
+import { ProtectPage } from "frontend/components/auth/ProtectPage";
+import SquareButton from "frontend/components/layout/SquareButton";
+import CreateMatch from "frontend/components/match/card/CreateMatch";
+import MatchSection from "frontend/components/match/card/MatchSection";
 import { usePlayers } from "frontend/context/players";
 import { trpc } from "frontend/utils/trpc-client";
 import Head from "next/head";
-import MatchSection from "frontend/components/match/MatchSection";
-import CreateMatch from "frontend/components/match/CreateMatch";
-import { ProtectPage } from "frontend/components/auth/ProtectPage";
-import SquareButton from "frontend/components/layout/SquareButton";
 import { useRouter } from "next/router";
 
 export default function YourMatches() {

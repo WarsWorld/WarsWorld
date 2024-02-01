@@ -1,13 +1,13 @@
-import MatchCardTop from "./MatchCardTop";
-import MatchPlayer from "../MatchPlayer";
-import type { FrontendMatch } from "shared/types/component-data";
-import { coSchema } from "shared/schemas/co";
-import { armySchema } from "shared/schemas/army";
-import MatchCardSetup from "./MatchCardSetup";
-import React, { useEffect, useState } from "react";
 import { usePlayers } from "frontend/context/players";
 import Link from "next/link";
+import { useEffect, useState } from "react";
+import { armySchema } from "shared/schemas/army";
+import { coSchema } from "shared/schemas/co";
+import type { FrontendMatch } from "shared/types/component-data";
 import type { PlayerInMatch } from "shared/types/server-match-state";
+import MatchCardSetup from "./MatchCardSetup";
+import MatchCardTop from "./MatchCardTop";
+import MatchPlayer from "./MatchPlayer";
 
 type matchData = {
   match: FrontendMatch;
