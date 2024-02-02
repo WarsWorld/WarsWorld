@@ -4,7 +4,6 @@ import type { SpritesheetDataByArmy } from "frontend/components/match/getSprites
 import type { ChangeableTileWithSprite } from "frontend/components/match/types";
 import { trpc } from "frontend/utils/trpc-client";
 import { loadSpritesFromSpriteMap } from "pixi/load-spritesheet";
-import type { FrontendChatMessage } from "shared/types/component-data";
 import { MatchWrapper } from "shared/wrappers/match";
 import { MatchRenderer } from "./MatchRenderer";
 
@@ -34,18 +33,19 @@ export function MatchLoader({ matchId, playerId, spritesheetDataByArmy }: Props)
       refetchOnReconnect: false,
       refetchOnWindowFocus: false,
       select(data) {
+        const matchData = data.match;
         return {
           match: new MatchWrapper<ChangeableTileWithSprite, FrontendUnit>(
-            data.id,
-            data.leagueType,
-            data.changeableTiles.map((tile) => ({ ...tile, sprite: null })),
-            data.rules,
-            data.status,
-            data.map,
-            data.players,
-            data.units,
+            matchData.id,
+            matchData.leagueType,
+            matchData.changeableTiles.map((tile) => ({ ...tile, sprite: null })),
+            matchData.rules,
+            matchData.status,
+            matchData.map,
+            matchData.players,
+            matchData.units,
             FrontendUnit,
-            data.turn,
+            matchData.turn,
           ),
           chatMessages: data.chatMessages,
         };
@@ -67,23 +67,12 @@ export function MatchLoader({ matchId, playerId, spritesheetDataByArmy }: Props)
     throw new Error("Could not find player by playerId in match wrapper in MatchLoader");
   }
 
-  /* Formatting chat messages */
-  const chatMessages: FrontendChatMessage[] = fullMatchQuery.data.chatMessages.map(
-    ({ createdAt, author: { name }, content }) => {
-      return {
-        createdAt: createdAt,
-        name: name,
-        content: content,
-      };
-    },
-  );
-
   return (
     <MatchRenderer
       match={fullMatchQuery.data.match}
       spriteSheets={spriteSheetQuery.data}
       player={player}
-      chatMessages={chatMessages}
+      chatMessages={fullMatchQuery.data.chatMessages}
     />
   );
 }

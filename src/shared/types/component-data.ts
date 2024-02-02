@@ -9,10 +9,4 @@ export type FrontendMatch = {
   turn: number;
 };
 
-export type FrontendChatMessage = {
-  createdAt: Date;
-  name: string;
-  content: string;
-};
-
 export type MapBasic = Pick<WWMap, "id" | "name" | "numberOfPlayers">;

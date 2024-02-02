@@ -11,8 +11,7 @@ import {
 } from "shared/match-logic/events/apply-event-to-match";
 import { mainActionSchema } from "shared/schemas/action";
 import { getFinalPositionSafe } from "shared/schemas/position";
-import type { ChatMessageEvent, Emittable, EmittableEvent } from "shared/types/events";
-import { z } from "zod";
+import type { Emittable, EmittableEvent } from "shared/types/events";
 import { mainEventToEmittables } from "../../shared/match-logic/events/event-to-emittable";
 import { updateMoveVision } from "../../shared/match-logic/events/handlers/move";
 import { fillDiscoveredUnitsAndProperties } from "../../shared/match-logic/events/vision-update";
@@ -136,42 +135,6 @@ export const actionRouter = router({
       };
     });
   }),
-  sendChatMessage: matchBaseProcedure
-    .input(
-      z.object({
-        message: z.string(),
-      }),
-    )
-    .mutation(async ({ input, ctx: { match } }) => {
-      /* Add message to match in database */
-      const newMessage = await prisma.chatMessage.create({
-        data: {
-          content: input.message,
-          authorId: input.playerId,
-          matchId: input.matchId,
-        },
-        select: {
-          content: true,
-          createdAt: true,
-          author: {
-            select: {
-              name: true,
-            },
-          },
-        },
-      });
-
-      /* Create event */
-      const event: ChatMessageEvent = {
-        type: "chatMessage",
-        createdAt: newMessage.createdAt,
-        name: newMessage.author.name,
-        content: newMessage.content,
-      };
-
-      /* Emit event */
-      emit({ ...event, matchId: match.id });
-    }),
   // TODO create procedure for anonymous users to observe games
   // (they get their own special "-1" team or something)
 });

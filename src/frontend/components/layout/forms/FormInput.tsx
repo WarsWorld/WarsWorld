@@ -24,7 +24,7 @@ export default function FormInput({
   return (
     <>
       <div className={className}>
-        {text ?? (
+        {text !== undefined && (
           <label htmlFor={id ?? ""} className="@text-xl smallscreen:@text-2xl @text-white">
             {text}
           </label>

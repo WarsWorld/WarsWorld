@@ -34,7 +34,7 @@ export default function TextAreaInput({
         <textarea
           className={`@mt-2 @w-full @text-white @p-4 @text-xl smallscreen:@text-2xl @border-[2.5px] @rounded-2xl @bg-black/50 ${
             isError == true ? "@border-orange-star" : "@border-primary"
-          } ${textAreaStyling}`}
+          } ${textAreaStyling ?? ""}`}
           name={name}
           style={{ height }}
           placeholder="Write here... "

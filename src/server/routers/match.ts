@@ -11,6 +11,7 @@ import { armySchema } from "shared/schemas/army";
 import { coIdSchema } from "shared/schemas/co";
 import { playerSlotForUnitsSchema } from "shared/schemas/player-slot";
 import { positionSchema } from "shared/schemas/position";
+import { chatMessageSelect } from "shared/types/chat-message";
 import { z } from "zod";
 import type { PlayerInMatch } from "../../shared/types/server-match-state";
 import {
@@ -22,6 +23,7 @@ import {
 } from "../trpc/trpc-setup";
 import { createMatchProcedure } from "./match/create";
 import { allMatchSlotsReady, matchToFrontend, throwIfMatchNotInSetupState } from "./match/util";
+import { ChatMessageEvent } from "shared/types/events";
 
 export const matchRouter = router({
   create: createMatchProcedure,
@@ -39,32 +41,24 @@ export const matchRouter = router({
   full: matchBaseProcedure.query(async ({ ctx: { match, currentPlayer } }) => {
     // compile all chat messages
     const chatMessages = await prisma.chatMessage.findMany({
-      select: {
-        content: true,
-        createdAt: true,
-        author: {
-          select: {
-            name: true,
-          },
-        },
-      },
-      where: {
-        matchId: match.id,
-      },
+      select: chatMessageSelect,
+      where: { matchId: match.id },
     });
 
     return {
-      id: match.id,
-      leagueType: match.leagueType,
-      changeableTiles: match.changeableTiles,
-      currentWeather: match.getCurrentWeather(),
-      map: match.map.data,
-      players: match.getAllPlayers().map((player) => player.data),
-      rules: match.rules,
-      status: match.status,
-      turn: match.turn,
-      units: match.units.map((u) => u.data),
-      // match.getPlayerById(currentPlayer.id)?.team.getEnemyUnitsInVision() ?? []
+      match: {
+        id: match.id,
+        leagueType: match.leagueType,
+        changeableTiles: match.changeableTiles,
+        currentWeather: match.getCurrentWeather(),
+        map: match.map.data,
+        players: match.getAllPlayers().map((player) => player.data),
+        rules: match.rules,
+        status: match.status,
+        turn: match.turn,
+        units: match.units.map((u) => u.data),
+        // match.getPlayerById(currentPlayer.id)?.team.getEnemyUnitsInVision() ?? []
+      },
       chatMessages,
     };
   }),
@@ -364,5 +358,37 @@ export const matchRouter = router({
       }
 
       unit.data.isReady = true;
+    }),
+  sendChatMessage: matchBaseProcedure
+    .input(
+      z.object({
+        message: z.string().max(500).min(1).trim(),
+      }),
+    )
+    .mutation(async ({ input, ctx: { match } }) => {
+      const newMessage = await prisma.chatMessage.create({
+        data: {
+          content: input.message,
+          authorId: input.playerId,
+          matchId: input.matchId,
+        },
+        select: {
+          content: true,
+          createdAt: true,
+          author: {
+            select: {
+              name: true,
+            },
+          },
+        },
+      });
+
+      const event: ChatMessageEvent = {
+        type: "chatMessage",
+        ...newMessage,
+      };
+
+      /* Emit event */
+      emit({ ...event, matchId: match.id });
     }),
 });

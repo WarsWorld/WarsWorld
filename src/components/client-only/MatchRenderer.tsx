@@ -4,7 +4,7 @@ import type { LoadedSpriteSheet } from "pixi/load-spritesheet";
 import { useState } from "react";
 import { applyBuildEvent } from "shared/match-logic/events/handlers/build";
 import type { Position } from "shared/schemas/position";
-import type { FrontendChatMessage } from "shared/types/component-data";
+import type { ChatMessageFrontend } from "shared/types/chat-message";
 import type { MatchWrapper } from "shared/wrappers/match";
 import type { PlayerInMatchWrapper } from "shared/wrappers/player-in-match";
 import type { FrontendUnit } from "../../frontend/components/match/FrontendUnit";
@@ -15,7 +15,7 @@ type Props = {
   match: MatchWrapper<ChangeableTileWithSprite, FrontendUnit>;
   player: PlayerInMatchWrapper;
   spriteSheets: LoadedSpriteSheet;
-  chatMessages: FrontendChatMessage[];
+  chatMessages: ChatMessageFrontend[];
 };
 
 export const baseTileSize = 16;
@@ -24,7 +24,7 @@ export const renderedTileSize = baseTileSize * renderMultiplier;
 
 export function MatchRenderer({ match, player, spriteSheets, chatMessages }: Props) {
   const [buildMenuPosition, setBuildMenuPosition] = useState<Position | null>(null); // Position in viewport, not tiles.
-  const [chat, setChat] = useState<FrontendChatMessage[]>(chatMessages);
+  const [chatHistory, setChatHistory] = useState(chatMessages);
 
   const { mapContainerRef, pixiCanvasRef } = usePixi(match, spriteSheets, player);
 
@@ -69,10 +69,7 @@ export function MatchRenderer({ match, player, spriteSheets, chatMessages }: Pro
             break;
           }
           case "chatMessage": {
-            const newMessage: FrontendChatMessage = {
-              ...data,
-            };
-            setChat((prev) => [...prev, newMessage]);
+            setChatHistory((prev) => [...prev, data]);
             break;
           }
         }
@@ -89,7 +86,7 @@ export function MatchRenderer({ match, player, spriteSheets, chatMessages }: Pro
         }}
         ref={pixiCanvasRef}
       ></canvas>
-      {<ChatBox matchId={match.id} currentPlayerId={player.data.id} chat={chat} />}
+      <ChatBox matchId={match.id} currentPlayerId={player.data.id} chatHistory={chatHistory} />
     </>
   );
 }

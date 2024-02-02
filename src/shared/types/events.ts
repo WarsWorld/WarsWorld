@@ -20,8 +20,8 @@ import type { PlayerSlot } from "shared/schemas/player-slot";
 import type { Position } from "shared/schemas/position";
 import type { WWUnit } from "shared/schemas/unit";
 import type { Weather } from "shared/schemas/weather";
-import type { FrontendChatMessage } from "./component-data";
 import type { CapturableTile } from "./server-match-state";
+import { ChatMessageFrontend } from "./chat-message";
 
 /** player slot 0 implicity starts */
 export type MatchStartEvent = {
@@ -151,7 +151,7 @@ export type EmittableMoveEvent = Omit<MoveEvent, "subEvent"> &
 // Chat Messages Events
 export type ChatMessageEvent = {
   type: "chatMessage";
-} & FrontendChatMessage;
+} & ChatMessageFrontend;
 
 export type EmittableEvent = (
   | MatchStartEvent
