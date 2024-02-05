@@ -12,6 +12,7 @@ import { coIdSchema } from "shared/schemas/co";
 import { playerSlotForUnitsSchema } from "shared/schemas/player-slot";
 import { positionSchema } from "shared/schemas/position";
 import { chatMessageSelect } from "shared/types/chat-message";
+import type { ChatMessageEmittable } from "shared/types/events";
 import { z } from "zod";
 import type { PlayerInMatch } from "../../shared/types/server-match-state";
 import {
@@ -23,7 +24,6 @@ import {
 } from "../trpc/trpc-setup";
 import { createMatchProcedure } from "./match/create";
 import { allMatchSlotsReady, matchToFrontend, throwIfMatchNotInSetupState } from "./match/util";
-import { ChatMessageEvent } from "shared/types/events";
 
 export const matchRouter = router({
   create: createMatchProcedure,
@@ -383,7 +383,7 @@ export const matchRouter = router({
         },
       });
 
-      const event: ChatMessageEvent = {
+      const event: ChatMessageEmittable = {
         type: "chatMessage",
         ...newMessage,
       };

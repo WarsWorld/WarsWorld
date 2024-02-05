@@ -20,9 +20,34 @@ import type { PlayerSlot } from "shared/schemas/player-slot";
 import type { Position } from "shared/schemas/position";
 import type { WWUnit } from "shared/schemas/unit";
 import type { Weather } from "shared/schemas/weather";
+import type { ChatMessageFrontend } from "./chat-message";
 import type { CapturableTile } from "./server-match-state";
-import { ChatMessageFrontend } from "./chat-message";
+/**
+ * =============== READ ME ===============
+ * TERMINOLOGY:
+ * - Events: Stored match actions used for match replays.
+ *   They have a specific table in the database. For more info, check the prisma schema.
+ *      e.g. Creating a unit
+ * - Emittables: Actions that are broadcasted to subscribers using websockets.
+ *      e.g. In-match chat box messages
+ *
+ * IMPORTANT NOTES:
+ * -  Most events are emittables
+ *      For the few that are not, they need to be modified and explicitly
+ *      named emittable as some information needs to be hidden from the client.
+ *      For example, MoveEvent to EmittableMoveEvent for FoW.
+ * -  Not all emittables are events.
+ *      For example, ChatMessageEmittable is not an event and
+ *      not stored as an event in the database.
+ *      They are label emittables for sending and receiving messsages real time.
+ */
 
+// =============== CHAT MESSAGE EMITTABLE ===============
+export type ChatMessageEmittable = {
+  type: "chatMessage";
+} & ChatMessageFrontend;
+
+// =============== MAIN EVENTS ===============
 /** player slot 0 implicity starts */
 export type MatchStartEvent = {
   type: "matchStart";
@@ -39,20 +64,6 @@ export type MoveEvent<SubEventType extends SubEvent = SubEvent> = {
   trap: boolean;
   subEvent: SubEventType;
 } & Omit<MoveAction, "subAction">;
-
-export type AttackEvent = {
-  /**
-   * The new defender HP after the attack.
-   */
-  defenderHP: number;
-  /**
-   * The new attacker HP after the attack.
-   * If undefined, that means HP is unchanged
-   * because there was no counter-attack.
-   */
-  attackerHP?: number;
-} & AttackAction &
-  WithElimination<`all-${"attacker" | "defender"}-units-destroyed`>;
 
 export type COPowerEvent = COPowerAction & {
   /** used for rachel, von-bolt and sturm SCOPs */
@@ -86,60 +97,25 @@ export type Turn = WithElimination<"all-units-crashed"> & {
 
 export type PassTurnEvent = PassTurnAction & { turns: Turn[] };
 
-export type AbilityEvent = AbilityAction &
-  WithElimination<"hq-or-labs-captured" | "property-goal-reached">;
+export type BuildEvent = BuildAction;
 
 export type DeleteEvent = DeleteAction & WithElimination<`all-units-destroyed`>;
 
-export type BuildEvent = BuildAction;
-export type LaunchMissileEvent = LaunchMissileAction;
-export type RepairEvent = RepairAction;
-export type WaitEvent = WaitAction;
 export type UnloadNoWaitEvent = UnloadNoWaitAction;
-export type UnloadWaitEvent = UnloadWaitAction;
 
 export type MainEvent =
   | MatchStartEvent
+  | MatchEndEvent
   | MoveEvent
-  | UnloadNoWaitEvent
-  | PlayerEliminatedEvent
   | COPowerEvent
+  | PlayerEliminatedEvent
   | PassTurnEvent
   | BuildEvent
   | DeleteEvent
-  | MatchEndEvent;
+  | UnloadNoWaitEvent;
 
-export type SubEvent =
-  | AbilityEvent
-  | WaitEvent
-  | RepairEvent
-  | LaunchMissileEvent
-  | UnloadWaitEvent
-  | AttackEvent;
-
-type WithDiscoveries = {
-  discoveredUnits?: WWUnit[];
-  discoveredProperties?: CapturableTile[];
-};
-
-export type EmittableSubEvent =
-  | AbilityEvent
-  | WaitEvent
-  | RepairEvent
-  | LaunchMissileEvent
-  | UnloadWaitEvent
-  | ({
-      type: "attack";
-      attackerHP?: number;
-      attackerPlayerSlot: PlayerSlot;
-      attackerPowerCharge: number;
-      defenderHP?: number;
-      defenderPosition?: Position;
-      defenderPlayerSlot: PlayerSlot;
-      defenderPowerCharge: number;
-    } & WithElimination<`all-${"attacker" | "defender"}-units-destroyed`>);
-
-export type EmittableMoveEvent = Omit<MoveEvent, "subEvent"> &
+// =============== EMITTABLE MAIN EVENTS ===============
+type EmittableMoveEvent = Omit<MoveEvent, "subEvent"> &
   WithDiscoveries & {
     subEvent: EmittableSubEvent;
     /**
@@ -148,26 +124,80 @@ export type EmittableMoveEvent = Omit<MoveEvent, "subEvent"> &
     appearingUnit?: WWUnit;
   };
 
-// Chat Messages Events
-export type ChatMessageEvent = {
-  type: "chatMessage";
-} & ChatMessageFrontend;
+type WithDiscoveries = {
+  discoveredUnits?: WWUnit[];
+  discoveredProperties?: CapturableTile[];
+};
 
-export type EmittableEvent = (
+export type EmittableMainEvent = (
   | MatchStartEvent
-  | EmittableMoveEvent
-  | UnloadNoWaitEvent
-  | PlayerEliminatedEvent
+  | MatchEndEvent
+  | EmittableMoveEvent // difference from MainEvent
   | COPowerEvent
+  | PlayerEliminatedEvent
   | PassTurnEvent
   | BuildEvent
   | DeleteEvent
-  | MatchEndEvent
-  | ChatMessageEvent
+  | UnloadNoWaitEvent
 ) &
   WithDiscoveries;
 
-export type NonStoredEvent = WithPlayer &
+// =============== SUB EVENTS ===============
+export type AttackEvent = {
+  /**
+   * The new defender HP after the attack.
+   */
+  defenderHP: number;
+  /**
+   * The new attacker HP after the attack.
+   * If undefined, that means HP is unchanged
+   * because there was no counter-attack.
+   */
+  attackerHP?: number;
+} & AttackAction &
+  WithElimination<`all-${"attacker" | "defender"}-units-destroyed`>;
+
+export type AbilityEvent = AbilityAction &
+  WithElimination<"hq-or-labs-captured" | "property-goal-reached">;
+
+export type WaitEvent = WaitAction;
+
+export type RepairEvent = RepairAction;
+
+export type LaunchMissileEvent = LaunchMissileAction;
+
+export type UnloadWaitEvent = UnloadWaitAction;
+
+export type SubEvent =
+  | AttackEvent
+  | AbilityEvent
+  | WaitEvent
+  | RepairEvent
+  | LaunchMissileEvent
+  | UnloadWaitEvent;
+
+// =============== EMITTABLE SUB EVENTS ===============
+type EmittableAttackEvent = {
+  type: "attack";
+  attackerHP?: number;
+  attackerPlayerSlot: PlayerSlot;
+  attackerPowerCharge: number;
+  defenderHP?: number;
+  defenderPosition?: Position;
+  defenderPlayerSlot: PlayerSlot;
+  defenderPowerCharge: number;
+} & WithElimination<`all-${"attacker" | "defender"}-units-destroyed`>;
+
+export type EmittableSubEvent =
+  | EmittableAttackEvent // difference from SubEvent
+  | AbilityEvent
+  | WaitEvent
+  | RepairEvent
+  | LaunchMissileEvent
+  | UnloadWaitEvent;
+
+// =============== MATCH EMITTABLES ===============
+export type MatchEmittable = WithPlayer &
   WithMatchId &
   (
     | {
@@ -194,4 +224,6 @@ export type NonStoredEvent = WithPlayer &
       }
   );
 
-export type Emittable = (EmittableEvent | NonStoredEvent) & { matchId: string };
+export type Emittable = (EmittableMainEvent | MatchEmittable | ChatMessageEmittable) & {
+  matchId: string;
+};

@@ -11,7 +11,7 @@ import {
 } from "shared/match-logic/events/apply-event-to-match";
 import { mainActionSchema } from "shared/schemas/action";
 import { getFinalPositionSafe } from "shared/schemas/position";
-import type { Emittable, EmittableEvent } from "shared/types/events";
+import type { Emittable, EmittableMainEvent } from "shared/types/events";
 import { mainEventToEmittables } from "../../shared/match-logic/events/event-to-emittable";
 import { updateMoveVision } from "../../shared/match-logic/events/handlers/move";
 import { fillDiscoveredUnitsAndProperties } from "../../shared/match-logic/events/vision-update";
@@ -50,7 +50,7 @@ export const actionRouter = router({
        * because we stop about here and don't store/emit.
        */
 
-      let emittableEvents: (EmittableEvent | undefined)[]; // undefined means that team doesn't receive the event
+      let emittableEvents: (EmittableMainEvent | undefined)[]; // undefined means that team doesn't receive the event
 
       if (mainEvent.type === "move" && input.type === "move") {
         // second condition is only needed for type-gating input event
