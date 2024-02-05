@@ -1,7 +1,7 @@
 import type { ChangeEventHandler } from "react";
 
 type Props = {
-  text: string;
+  text?: string;
   className?: string;
   isError?: boolean;
   errorMessage?: string;
@@ -24,9 +24,11 @@ export default function FormInput({
   return (
     <>
       <div className={className}>
-        <label htmlFor={id ?? ""} className="@text-xl smallscreen:@text-2xl @text-white">
-          {text}
-        </label>
+        {text !== undefined && (
+          <label htmlFor={id ?? ""} className="@text-xl smallscreen:@text-2xl @text-white">
+            {text}
+          </label>
+        )}
         <input
           id={id ?? ""}
           name={id ?? ""}

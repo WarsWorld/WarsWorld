@@ -32,19 +32,23 @@ export function MatchLoader({ matchId, playerId, spritesheetDataByArmy }: Props)
       refetchIntervalInBackground: false,
       refetchOnReconnect: false,
       refetchOnWindowFocus: false,
-      select(match) {
-        return new MatchWrapper<ChangeableTileWithSprite, FrontendUnit>(
-          match.id,
-          match.leagueType,
-          match.changeableTiles.map((tile) => ({ ...tile, sprite: null })),
-          match.rules,
-          match.status,
-          match.map,
-          match.players,
-          match.units,
-          FrontendUnit,
-          match.turn,
-        );
+      select(data) {
+        const matchData = data.match;
+        return {
+          match: new MatchWrapper<ChangeableTileWithSprite, FrontendUnit>(
+            matchData.id,
+            matchData.leagueType,
+            matchData.changeableTiles.map((tile) => ({ ...tile, sprite: null })),
+            matchData.rules,
+            matchData.status,
+            matchData.map,
+            matchData.players,
+            matchData.units,
+            FrontendUnit,
+            matchData.turn,
+          ),
+          chatMessages: data.chatMessages,
+        };
       },
     },
   );
@@ -57,7 +61,7 @@ export function MatchLoader({ matchId, playerId, spritesheetDataByArmy }: Props)
     return <p>Loading match data...</p>;
   }
 
-  const player = fullMatchQuery.data.getPlayerById(playerId);
+  const player = fullMatchQuery.data.match.getPlayerById(playerId);
 
   if (player === undefined) {
     throw new Error("Could not find player by playerId in match wrapper in MatchLoader");
@@ -65,9 +69,10 @@ export function MatchLoader({ matchId, playerId, spritesheetDataByArmy }: Props)
 
   return (
     <MatchRenderer
-      match={fullMatchQuery.data}
+      match={fullMatchQuery.data.match}
       spriteSheets={spriteSheetQuery.data}
       player={player}
+      chatMessages={fullMatchQuery.data.chatMessages}
     />
   );
 }
