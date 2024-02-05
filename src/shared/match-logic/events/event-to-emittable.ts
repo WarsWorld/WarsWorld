@@ -1,11 +1,7 @@
+import type { EmittableMainEvent, EmittableSubEvent } from "shared/types/emittables";
 import type { Position } from "../../schemas/position";
 import { addDirection, getFinalPositionSafe, getNeighbourPositions } from "../../schemas/position";
-import type {
-  EmittableMainEvent,
-  EmittableSubEvent,
-  MainEvent,
-  MoveEvent,
-} from "../../types/events";
+import type { MainEvent, MoveEvent } from "../../types/events";
 import type { MatchWrapper } from "../../wrappers/match";
 import { TeamWrapper } from "../../wrappers/team";
 import { getVisualHPfromHP } from "../calculate-damage";

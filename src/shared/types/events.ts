@@ -1,5 +1,4 @@
 import type { Player } from "@prisma/client";
-import type { WithMatchId } from "server/trpc/middleware/match";
 import type {
   AbilityAction,
   AttackAction,
@@ -14,38 +13,8 @@ import type {
   UnloadWaitAction,
   WaitAction,
 } from "shared/schemas/action";
-import type { Army } from "shared/schemas/army";
-import type { COID } from "shared/schemas/co";
-import type { PlayerSlot } from "shared/schemas/player-slot";
 import type { Position } from "shared/schemas/position";
-import type { WWUnit } from "shared/schemas/unit";
 import type { Weather } from "shared/schemas/weather";
-import type { ChatMessageFrontend } from "./chat-message";
-import type { CapturableTile } from "./server-match-state";
-/**
- * =============== READ ME ===============
- * TERMINOLOGY:
- * - Events: Stored match actions used for match replays.
- *   They have a specific table in the database. For more info, check the prisma schema.
- *      e.g. Creating a unit
- * - Emittables: Actions that are broadcasted to subscribers using websockets.
- *      e.g. In-match chat box messages
- *
- * IMPORTANT NOTES:
- * -  Most events are emittables
- *      For the few that are not, they need to be modified and explicitly
- *      named emittable as some information needs to be hidden from the client.
- *      For example, MoveEvent to EmittableMoveEvent for FoW.
- * -  Not all emittables are events.
- *      For example, ChatMessageEmittable is not an event and
- *      not stored as an event in the database.
- *      They are label emittables for sending and receiving messsages real time.
- */
-
-// =============== CHAT MESSAGE EMITTABLE ===============
-export type ChatMessageEmittable = {
-  type: "chatMessage";
-} & ChatMessageFrontend;
 
 // =============== MAIN EVENTS ===============
 /** player slot 0 implicity starts */
@@ -70,7 +39,7 @@ export type COPowerEvent = COPowerAction & {
   positions?: Position[];
 };
 
-type WithPlayer = {
+export type WithPlayer = {
   playerId: Player["id"];
 };
 
@@ -86,7 +55,7 @@ export type PlayerEliminatedEvent = WithPlayer & {
     | { eliminationReason: "timer-ran-out" }
   );
 
-type WithElimination<Reason extends string> = {
+export type WithElimination<Reason extends string> = {
   eliminationReason?: Reason;
 };
 
@@ -113,34 +82,6 @@ export type MainEvent =
   | BuildEvent
   | DeleteEvent
   | UnloadNoWaitEvent;
-
-// =============== EMITTABLE MAIN EVENTS ===============
-type EmittableMoveEvent = Omit<MoveEvent, "subEvent"> &
-  WithDiscoveries & {
-    subEvent: EmittableSubEvent;
-    /**
-     * e.g. for when a unit moves from FoW into vision or when it's unloaded into vision
-     */
-    appearingUnit?: WWUnit;
-  };
-
-type WithDiscoveries = {
-  discoveredUnits?: WWUnit[];
-  discoveredProperties?: CapturableTile[];
-};
-
-export type EmittableMainEvent = (
-  | MatchStartEvent
-  | MatchEndEvent
-  | EmittableMoveEvent // difference from MainEvent
-  | COPowerEvent
-  | PlayerEliminatedEvent
-  | PassTurnEvent
-  | BuildEvent
-  | DeleteEvent
-  | UnloadNoWaitEvent
-) &
-  WithDiscoveries;
 
 // =============== SUB EVENTS ===============
 export type AttackEvent = {
@@ -175,55 +116,3 @@ export type SubEvent =
   | RepairEvent
   | LaunchMissileEvent
   | UnloadWaitEvent;
-
-// =============== EMITTABLE SUB EVENTS ===============
-type EmittableAttackEvent = {
-  type: "attack";
-  attackerHP?: number;
-  attackerPlayerSlot: PlayerSlot;
-  attackerPowerCharge: number;
-  defenderHP?: number;
-  defenderPosition?: Position;
-  defenderPlayerSlot: PlayerSlot;
-  defenderPowerCharge: number;
-} & WithElimination<`all-${"attacker" | "defender"}-units-destroyed`>;
-
-export type EmittableSubEvent =
-  | EmittableAttackEvent // difference from SubEvent
-  | AbilityEvent
-  | WaitEvent
-  | RepairEvent
-  | LaunchMissileEvent
-  | UnloadWaitEvent;
-
-// =============== MATCH EMITTABLES ===============
-export type MatchEmittable = WithPlayer &
-  WithMatchId &
-  (
-    | {
-        type: "player-joined";
-      }
-    | {
-        type: "player-picked-co";
-        coId: COID;
-      }
-    | {
-        type: "player-picked-army";
-        army: Army;
-      }
-    | {
-        type: "player-picked-slot";
-        slot: PlayerSlot;
-      }
-    | {
-        type: "player-left";
-      }
-    | {
-        type: "player-changed-ready-status";
-        ready: boolean;
-      }
-  );
-
-export type Emittable = (EmittableMainEvent | MatchEmittable | ChatMessageEmittable) & {
-  matchId: string;
-};

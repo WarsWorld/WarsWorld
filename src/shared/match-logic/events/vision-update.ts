@@ -1,4 +1,4 @@
-import type { EmittableMainEvent } from "../../types/events";
+import type { EmittableMainEvent } from "../../types/emittables";
 import type { CapturableTile } from "../../types/server-match-state";
 import type { MatchWrapper } from "../../wrappers/match";
 
