@@ -142,7 +142,8 @@ model Clan {
 model Player {
   id          String        @id @default(cuid())
   MMR         MMR[]
-  name        String
+  name        String        @unique
+  displayName String
   secret      Boolean       @default(false) // secret = true means that parent user is hidden on profile
   ChatMessage ChatMessage[]
 
@@ -160,8 +161,8 @@ model Player {
   Notes Notes[]
 
   Comments   ArticleComment[]
-  ownedClans Clan[] @relation(name: "owner")
-  clans      Clan[] @relation(name: "member")
+  ownedClans Clan[]           @relation(name: "owner")
+  clans      Clan[]           @relation(name: "member")
 }
 
 // Right now maps need to be immutable but we
