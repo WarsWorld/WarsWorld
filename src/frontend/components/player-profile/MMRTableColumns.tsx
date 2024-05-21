@@ -4,11 +4,6 @@ import type { PlayerMMR } from "pages/players/[playerName]";
 const columnHelper = createColumnHelper<PlayerMMR>();
 
 export const columns = [
-  columnHelper.accessor("mmr", {
-    id: "MMR",
-    header: () => "MMR",
-    cell: (info) => info.getValue(),
-  }),
   columnHelper.accessor("wins", {
     id: "W",
     header: () => "W",
@@ -25,3 +20,13 @@ export const columns = [
     cell: (info) => info.getValue(),
   }),
 ];
+
+const mmrColumn = [
+  columnHelper.accessor("mmr", {
+    id: "MMR",
+    header: () => "MMR",
+    cell: (info) => info.getValue(),
+  }),
+];
+
+export const columnsWithMMR = mmrColumn.concat(columns);
