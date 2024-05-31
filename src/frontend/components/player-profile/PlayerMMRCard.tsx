@@ -19,9 +19,9 @@ export default function PlayerMMRCard({ data, leagueType, rank }: Props) {
 
   return (
     <div className="@flex @flex-col @items-center @justify-center @align-middle @w-full">
-      <div className="@flex @flex-col @items-center @justify-center @align-middle @w-80">
+      <div className="@flex @flex-col @items-center @justify-center @align-middle">
         <div className="@w-full @py-2 @text-center @uppercase">
-          <h3 className="@font-russoOne">{leagueType}</h3>
+          <h3 className="@font-russoOne @text-xl monitor:@text-2xl">{leagueType}</h3>
         </div>
         <MMRDataTable table={table} />
         <div className="@w-full @py-2 @text-center">

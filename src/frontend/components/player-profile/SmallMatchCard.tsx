@@ -1,8 +1,8 @@
 import Link from "next/link";
-import type { COID } from "shared/schemas/co";
+import type { CO } from "shared/schemas/co";
 
 type SmallMatchCardPlayer = {
-  coId: COID;
+  co: CO;
   name: string;
 };
 type Props = {
@@ -20,32 +20,32 @@ const resultColors = {
 
 export default function SmallMatchCard({ matchResult, player1, player2, matchLink }: Props) {
   return (
+    // UNCONVINCED
     <Link
       className="@flex @bg-black/50 @text-center @text-white @cursor-pointer hover:@text-white hover:@translate-x-2"
       href={matchLink}
     >
       <div
-        className={`@flex ${resultColors[matchResult]} @h-full @min-w-16 @font-russoOne @text-4xl @align-middle @justify-center @items-center`}
+        className={`@flex ${resultColors[matchResult]} @h-full @min-w-12 monitor:@min-w-16 @font-russoOne @text-2xl monitor:@text-4xl @align-middle @justify-center @items-center`}
       >
         <strong>{matchResult}</strong>
       </div>
-      <div className="@grid @grid-cols-2 @w-full @mx-2">
-        <div className="@flex @items-center">
-          <img
-            className="[image-rendering:pixelated] @grayscale @h-12"
-            src={`/img/CO/pixelated/${player1.coId.name}-small.png`}
-            alt={player1.coId.name}
-          />
-          <p className="@self-start @px-2 @text-sm">{player1.name}</p>
+      <div className="@relative @flex @w-full @justify-between @items-center">
+        <img
+          className="[image-rendering:pixelated] @h-10 monitor:@h-12 @opacity-10 @px-4"
+          src={`/img/CO/pixelated/${player1.co}-small.png`}
+          alt={player1.co}
+        />
+        <p className="@absolute @bottom-0 @px-2 @left-0 @text-sm @bg-transparent">{player1.name}</p>
+        <div className="@absolute @opacity-10 @font-russoOne @text-4xl @bottom-0 @left-1/2 @translate-x-[-50%]">
+          VS
         </div>
-        <div className="@flex @items-center @justify-end">
-          <p className="@self-end @px-2 @text-sm">{player2.name}</p>
-          <img
-            className="[image-rendering:pixelated] @scale-x-[-1] @h-12"
-            src={`/img/CO/pixelated/${player2.coId.name}-small.png`}
-            alt={player2.coId.name}
-          />
-        </div>
+        <img
+          className="[image-rendering:pixelated] @scale-x-[-1] @h-10 monitor:@h-12 @opacity-10 @px-4"
+          src={`/img/CO/pixelated/${player2.co}-small.png`}
+          alt={player2.co}
+        />
+        <p className="@absolute @top-0 @px-2 @right-0 @text-sm @bg-transparent">{player2.name}</p>
       </div>
     </Link>
   );

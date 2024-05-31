@@ -37,7 +37,7 @@ export default function MMRDataTable({ table }: Props) {
                 ${header.column.id === "MMR" && "@border-r-4"}`}
                 key={header.id}
               >
-                <h3 className="@font-russoOne">
+                <h3 className="@font-russoOne @text-lg">
                   {header.isPlaceholder
                     ? null
                     : flexRender(header.column.columnDef.header, header.getContext())}
@@ -52,12 +52,12 @@ export default function MMRDataTable({ table }: Props) {
           <tr key={row.id}>
             {row.getVisibleCells().map((cell) => (
               <td
-                className={`@p-2 @text-center ${
+                className={`@p-1 monitor:@p-2 @text-center ${
                   cell.id === "0_MMR" ? "@bg-bg-secondary @border-r-4" : ""
                 }`}
                 key={cell.id}
               >
-                <div className={`@px-1 @text-xl`}>
+                <div className={`@px-1 @text-lg`}>
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}
                 </div>
               </td>

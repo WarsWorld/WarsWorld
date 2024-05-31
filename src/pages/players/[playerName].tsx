@@ -3,6 +3,7 @@ import type { SelectOption } from "frontend/components/layout/Select";
 import Select from "frontend/components/layout/Select";
 import MMRDataTable from "frontend/components/player-profile/MMRDataTable";
 import { columns } from "frontend/components/player-profile/MMRTableColumns";
+import { PlayerFriendLink } from "frontend/components/player-profile/PlayerFriendLink";
 import PlayerMMRCard from "frontend/components/player-profile/PlayerMMRCard";
 import SmallMatchCard from "frontend/components/player-profile/SmallMatchCard";
 import Head from "next/head";
@@ -136,7 +137,7 @@ export default function UserProfile() {
           <div className="@flex @space-x-4">
             <div className="@col-span-6 @h-full @w-[75%]">
               {/* Show general league stats */}
-              <section className="@grid @grid-cols-3 @gap-4 @py-8 @px-12 @h-full @bg-black/60 @my-4">
+              <section className="@grid @grid-cols-3 @gap-4 @p-8 @h-full @bg-black/60 @my-4">
                 <PlayerMMRCard leagueType="Standard" rank={4} data={mmr_std_data} />
                 <PlayerMMRCard leagueType="Fog" rank={23} data={mmr_fog_data} />
                 <PlayerMMRCard leagueType="High Funds" rank={1456} data={mmr_hf_data} />
@@ -145,24 +146,24 @@ export default function UserProfile() {
                 <PlayerMMRCard leagueType="Live High Funds" rank={1456} data={mmr_hf_data} />
               </section>
               {/* Fully shows stats for one league */}
-              <section className="@pb-8 @px-12 @h-full @w-full @bg-black/60 @my-4 @space-y-4">
+              <section className="@pb-8 @px-8 @h-full @w-full @bg-black/60 @my-4 @space-y-4">
                 <div className="@grid @grid-cols-4">
                   <Select
-                    className="@col-span-1 @self-center @h-12"
+                    className="@col-span-1 @self-center @h-10 monitor:@h-12"
                     options={gamemodes}
                     onChange={setGamemode}
                     value={gamemode}
                   />
-                  <h1 className="@col-span-3 @font-russoOne @px-8">LIVE STANDARD</h1>
+                  <h1 className="@col-span-3 @font-russoOne @px-16">LIVE STANDARD</h1>
                 </div>
                 <div className="@grid @grid-cols-12 @gap-8">
                   <div className="@flex @flex-col @col-span-3">
-                    <h2 className="@font-russoOne @text-5xl @my-2">Rank: #1</h2>
-                    <p className="@font-russoOne @text-2xl">MMR: 2784</p>
-                    <p className="@font-russoOne @text-2xl">Max MMR: 3342</p>
-                    <p className="@text-xl">Last game: 06/29/2023</p>
+                    <h2 className="@font-russoOne @text-3xl monitor:@text-5xl @my-2">Rank: #1</h2>
+                    <p className="@font-russoOne @text-xl monitor:@text-2xl">MMR: 2784</p>
+                    <p className="@font-russoOne @text-xl monitor:@text-2xl">Max MMR: 3342</p>
+                    <p className="@text-sm monitor:@text-lg">Last game: 06/29/2023</p>
                     <br />
-                    <div className="@flex @flex-col @py-4 @items-center @justify-center @align-middle @w-60">
+                    <div className="@flex @flex-col @py-4 @items-center @justify-center @align-middle">
                       <MMRDataTable table={table} />
                     </div>
                   </div>
@@ -171,41 +172,41 @@ export default function UserProfile() {
                       GRAPH
                     </div>
                   </div>
-                  <div className="@grid @grid-rows-5 @gap-2 @h-full @col-span-4">
+                  <div className="@grid @grid-rows-5 @gap-4 monitor:@gap-6 @h-full @col-span-4">
                     <SmallMatchCard
                       matchResult="W"
-                      player1={{ coId: { name: "grimm", version: "AWDS" }, name: "Grimm Guy" }}
-                      player2={{ coId: { name: "nell", version: "AWDS" }, name: "Itou Kaiji" }}
+                      player1={{ co: "grimm", name: "Grimm Guy" }}
+                      player2={{ co: "eagle", name: "Itou Kaiji" }}
                       matchLink="/"
                     />
                     <SmallMatchCard
                       matchResult="L"
-                      player1={{ coId: { name: "sonja", version: "AWDS" }, name: "Itou Kaiji" }}
-                      player2={{ coId: { name: "grimm", version: "AWDS" }, name: "Grimm Guy" }}
+                      player1={{ co: "koal", name: "Itou Kaiji" }}
+                      player2={{ co: "grimm", name: "Grimm Guy" }}
                       matchLink="/"
                     />
                     <SmallMatchCard
                       matchResult="D"
-                      player1={{ coId: { name: "sasha", version: "AWDS" }, name: "CliveGlitch" }}
-                      player2={{ coId: { name: "javier", version: "AWDS" }, name: "Itou Kaiji" }}
+                      player1={{ co: "sasha", name: "CliveGlitch" }}
+                      player2={{ co: "javier", name: "Itou Kaiji" }}
                       matchLink="/"
                     />
                     <SmallMatchCard
                       matchResult="W"
-                      player1={{ coId: { name: "sonja", version: "AWDS" }, name: "Itou Kaiji" }}
-                      player2={{ coId: { name: "grimm", version: "AWDS" }, name: "Grimm Guy" }}
+                      player1={{ co: "sonja", name: "Itou Kaiji" }}
+                      player2={{ co: "grimm", name: "Grimm Guy" }}
                       matchLink="/"
                     />
                     <SmallMatchCard
                       matchResult="W"
-                      player1={{ coId: { name: "grimm", version: "AWDS" }, name: "Grimm Guy" }}
-                      player2={{ coId: { name: "olaf", version: "AWDS" }, name: "Itou Kaiji" }}
+                      player1={{ co: "grimm", name: "Grimm Guy" }}
+                      player2={{ co: "olaf", name: "Itou Kaiji" }}
                       matchLink="/"
                     />
                   </div>
                 </div>
               </section>
-              <section className="@pb-8 @px-12 @h-full @w-full @bg-black/60 @my-4 @space-y-2">
+              <section className="@pb-8 @px-8 @h-full @w-full @bg-black/60 @my-4 @space-y-2">
                 <h1 className="@col-span-3 @text-center @font-russoOne">Favorite Games</h1>
                 <div className="@grid @grid-cols-4 @h-48 @gap-4">
                   <div className="@w-full @h-full @border-primary @border-4 @bg-bg-secondary">
@@ -224,8 +225,45 @@ export default function UserProfile() {
               </section>
             </div>
             <div className="@h-full @w-[25%]">
-              <section className="@w-full @min-h-[56rem] @bg-black/60 @pb-8 @px-12 @my-4">
-                <div>Friends</div>
+              <section className="@w-full @min-h-[56rem] @bg-black/60 @pb-8 @p-6 @my-4">
+                <h3 className="@font-russoOne @uppercase">Friends</h3>
+                <div className="@flex @flex-col @w-full @px-1 @py-6 @space-y-4">
+                  <PlayerFriendLink
+                    friendName="Master Chief"
+                    friendFavArmy="orange-star"
+                    friendFavCO="adder"
+                  />
+                  <PlayerFriendLink
+                    friendName="Alm"
+                    friendFavArmy="green-earth"
+                    friendFavCO="andy"
+                  />
+                  <PlayerFriendLink
+                    friendName="Professor Layton"
+                    friendFavArmy="blue-moon"
+                    friendFavCO="grit"
+                  />
+                  <PlayerFriendLink
+                    friendName="Griffith"
+                    friendFavArmy="yellow-comet"
+                    friendFavCO="kanbei"
+                  />
+                  <PlayerFriendLink
+                    friendName="Yukimura204254 Echoes and Knuckles"
+                    friendFavArmy="black-hole"
+                    friendFavCO="lash"
+                  />
+                  <PlayerFriendLink
+                    friendName="The Arbiter"
+                    friendFavArmy="blue-moon"
+                    friendFavCO="javier"
+                  />
+                  <PlayerFriendLink
+                    friendName="Grimm Guy"
+                    friendFavArmy="yellow-comet"
+                    friendFavCO="grimm"
+                  />
+                </div>
               </section>
             </div>
           </div>
