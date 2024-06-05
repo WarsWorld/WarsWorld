@@ -1,9 +1,17 @@
 import { z } from "zod";
+import { gameVersionSchema } from "./game-version";
 import { unitTypeSchema } from "./unit";
 import { weatherSettingSchema } from "./weather";
-import { gameVersionSchema } from "./game-version";
 
+const timeRestrictionsSchema = z.object({
+  startingMinutes: z.number(),
+  maxTurnMinutes: z.number(),
+  turnMinutesIncrement: z.number(),
+});
+
+// TODO add tag match option (2 COs per player)
 export const matchRulesSchema = z.object({
+  timeRestrictions: timeRestrictionsSchema,
   unitCapPerPlayer: z.number().int().positive(),
   fogOfWar: z.boolean(),
   /**
