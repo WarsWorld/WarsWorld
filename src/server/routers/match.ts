@@ -106,6 +106,7 @@ export const matchRouter = router({
         powerMeter: 0,
         eliminated: false,
         hasCurrentTurn: false,
+        secondsRemaining: match.rules.timeRestrictions.startingSeconds,
         army: availableArmies[(Math.random() * availableArmies.length) | 0] as Army,
         // army: availableArmies[0] as Army, // use this if there are performance concerns with Math.random
         COPowerState: "no-power",

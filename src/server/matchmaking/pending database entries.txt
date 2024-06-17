@@ -1,0 +1,3 @@
+league queues info
+player's elo list for each queue
+current map rotation for each queue

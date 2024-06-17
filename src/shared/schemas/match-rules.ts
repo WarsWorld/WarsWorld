@@ -4,9 +4,9 @@ import { unitTypeSchema } from "./unit";
 import { weatherSettingSchema } from "./weather";
 
 const timeRestrictionsSchema = z.object({
-  startingMinutes: z.number(),
-  maxTurnMinutes: z.number(),
-  turnMinutesIncrement: z.number(),
+  startingSeconds: z.number(),
+  maxTurnSeconds: z.number(),
+  turnSecondsIncrement: z.number(),
 });
 
 // TODO add tag match option (2 COs per player)

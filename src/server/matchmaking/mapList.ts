@@ -1,15 +1,12 @@
+import type { LeagueType } from "@prisma/client";
 import type { CO, COID } from "shared/schemas/co";
 import type { MatchRules } from "shared/schemas/match-rules";
-import { z } from "zod";
 
 export type MapSetting = {
   mapId: string; //?
   matchRules: MatchRules;
   allowedCOs: (CO | COID)[]; //depending if matchRules has its own game version or not, we need CO version
 };
-
-export const leagueQueuesSchema = z.enum(["STD", "FOW", "HF"]);
-export type LeagueQueues = z.infer<typeof leagueQueuesSchema>;
 
 // we are probably gonna have these lists in JSON files for easier editing, and they are gonna define
 // the current map rotation.
@@ -18,9 +15,9 @@ const exampleMapSettingList: MapSetting[] = [
     mapId: "map",
     matchRules: {
       timeRestrictions: {
-        startingMinutes: 10,
-        maxTurnMinutes: 10,
-        turnMinutesIncrement: 2,
+        startingSeconds: 10,
+        maxTurnSeconds: 10,
+        turnSecondsIncrement: 2,
       },
       unitCapPerPlayer: 50,
       fogOfWar: false,
@@ -40,9 +37,9 @@ const exampleMapSettingList: MapSetting[] = [
     mapId: "map2",
     matchRules: {
       timeRestrictions: {
-        startingMinutes: 10,
-        maxTurnMinutes: 10,
-        turnMinutesIncrement: 2,
+        startingSeconds: 10,
+        maxTurnSeconds: 10,
+        turnSecondsIncrement: 2,
       },
       unitCapPerPlayer: 50,
       fogOfWar: false,
@@ -59,8 +56,19 @@ const exampleMapSettingList: MapSetting[] = [
   },
 ];
 
-export const mapSettingListMap: Record<LeagueQueues, MapSetting[]> = {
-  STD: exampleMapSettingList,
-  FOW: exampleMapSettingList,
-  HF: exampleMapSettingList,
+// it's a partial record because not all leagueTypes will have an active queue for now
+export const mapSettingListMap: Partial<Record<LeagueType, MapSetting[]>> = {
+  standard: exampleMapSettingList,
+  fog: exampleMapSettingList,
+  highFunds: exampleMapSettingList,
+};
+
+export const getRandomMapSetting = (leagueType: LeagueType) => {
+  const mapSettings = mapSettingListMap[leagueType];
+
+  if (mapSettings && mapSettings.length > 0) {
+    return mapSettings[Math.floor(Math.random() * mapSettings.length)];
+  }
+
+  return undefined;
 };

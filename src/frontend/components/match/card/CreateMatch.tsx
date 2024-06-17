@@ -65,9 +65,9 @@ export default function CreateMatch({ currentPlayer, setCurrentPlayer }: Props) 
     await createMatchMutation.mutateAsync({
       rules: {
         timeRestrictions: {
-          startingTime: 100000,
-          maxTurnTime: 100000,
-          turnIncrement: 1,
+          startingSeconds: 100000,
+          maxTurnSeconds: 100000,
+          turnSecondsIncrement: 1,
         },
         bannedUnitTypes: [],
         captureLimit: 50,

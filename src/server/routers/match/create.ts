@@ -23,6 +23,7 @@ export const createMatchProcedure = playerBaseProcedure
           {
             slot: 0,
             hasCurrentTurn: true,
+            secondsRemaining: input.rules.timeRestrictions.startingSeconds,
             id: ctx.currentPlayer.id,
             name: ctx.currentPlayer.name,
             ready: false,

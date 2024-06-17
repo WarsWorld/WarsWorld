@@ -7,7 +7,11 @@ import { getDistance, isSamePosition } from "shared/schemas/position";
 import type { Tile } from "shared/schemas/tile";
 import type { WWUnit } from "shared/schemas/unit";
 import type { Weather } from "shared/schemas/weather";
-import type { ChangeableTile, PlayerInMatch } from "shared/types/server-match-state";
+import type {
+  ChangeableTile,
+  ExternalMatchData,
+  PlayerInMatch,
+} from "shared/types/server-match-state";
 import { MapWrapper } from "./map";
 import type { PlayerInMatchWrapper } from "./player-in-match";
 import { TeamWrapper } from "./team";
@@ -49,11 +53,13 @@ export class MatchWrapper<
     public changeableTiles: ChangeableTileType[],
     public rules: MatchRules,
     public status: MatchStatus,
+    public externalMatchData: ExternalMatchData,
     map: WWMap,
     players: PlayerInMatch[],
     units: WWUnit[],
     UnitWrapperClass: new (unit: WWUnit, match: MatchWrapper) => UnitWrapperType,
     public turn: number,
+    public timeOfLastEndTurn: Date,
   ) {
     this.map = new MapWrapper(map);
     players.forEach((player) => this.addUnwrappedPlayer(player));

@@ -16,11 +16,11 @@ import type {
 } from "shared/schemas/action";
 import type { Army } from "shared/schemas/army";
 import type { COID } from "shared/schemas/co";
+import type { PlayerSlot } from "shared/schemas/player-slot";
 import type { Position } from "shared/schemas/position";
 import type { WWUnit } from "shared/schemas/unit";
 import type { Weather } from "shared/schemas/weather";
 import type { CapturableTile } from "./server-match-state";
-import type { PlayerSlot } from "shared/schemas/player-slot";
 
 /** player slot 0 implicity starts */
 export type MatchStartEvent = {
@@ -83,7 +83,10 @@ export type Turn = WithElimination<"all-units-crashed"> & {
   newWeather: Weather | null;
 };
 
-export type PassTurnEvent = PassTurnAction & { turns: Turn[] };
+export type PassTurnEvent = PassTurnAction & {
+  isTimeout?: boolean;
+  turns: Turn[];
+};
 
 export type AbilityEvent = AbilityAction &
   WithElimination<"hq-or-labs-captured" | "property-goal-reached">;

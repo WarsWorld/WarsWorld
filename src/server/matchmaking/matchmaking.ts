@@ -1,10 +1,11 @@
-import type { Player } from "@prisma/client";
+import type { LeagueType, Player } from "@prisma/client";
+import { getRandomMapSetting } from "./mapList";
 
 // Automatic queues will only have 1v1 settings (for now)
 
 type PlayerInQueue = {
-  player: Player;
-  minutesQueued: number;
+  playerId: Player["id"];
+  secondsQueued: number;
 }; // more info can be added, but most of it should be on the player type itself
 
 /**
@@ -14,7 +15,7 @@ type PlayerInQueue = {
 type MatchmakingFunction = (player1: PlayerInQueue, player2: PlayerInQueue) => boolean;
 
 type MatchmakingQueue = {
-  queueId: string; //?
+  leagueType: LeagueType;
   matchmakingFunction: MatchmakingFunction;
   playersInQueue: PlayerInQueue[];
 };
@@ -49,18 +50,28 @@ export const createPossibleMatches = (matchmakingQueue: MatchmakingQueue) => {
   const playerPairs = createMatchmakingPairs(matchmakingQueue);
 
   for (const playerPair of playerPairs) {
-    //decide a map, tier, ruleset in general and create a match
-    //(+ notify players in some way)
+    const mapSetting = getRandomMapSetting(matchmakingQueue.leagueType);
+
+    if (mapSetting === undefined) {
+      throw new Error(
+        "Did not find available map settings for the league: " + matchmakingQueue.leagueType,
+      );
+    }
+
+    //create a match
+    //asign random CO for each player and random army (or most used CO and most used army. keep in mind army can't be repeated)
+    //notify players in some way (that a match was found)
   }
 };
 
+//----------------------------------------------
 export const defaultMatchmakingFunction = (player1: PlayerInQueue, player2: PlayerInQueue) => {
   //arbitrary constants
   const eloRange = 100,
     eloRangeIncPerMinute = 10;
 
-  const player1EloRange = eloRange + player1.minutesQueued * eloRangeIncPerMinute;
-  const player2EloRange = eloRange + player2.minutesQueued * eloRangeIncPerMinute;
+  const player1EloRange = eloRange + (player1.secondsQueued / 60) * eloRangeIncPerMinute;
+  const player2EloRange = eloRange + (player2.secondsQueued / 60) * eloRangeIncPerMinute;
 
   if (true) {
     /*if abs(player1.certainQueue.elo - player2.etc) < min(p1eloRange, p2eloRange)*/

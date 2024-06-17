@@ -232,6 +232,11 @@ async function main() {
     data: {
       leagueType: "fog",
       rules: {
+        timeRestrictions: {
+          startingSeconds: 600,
+          maxTurnSeconds: 600,
+          turnSecondsIncrement: 60,
+        },
         bannedUnitTypes: [],
         captureLimit: 50,
         dayLimit: 50,
@@ -248,6 +253,7 @@ async function main() {
         {
           slot: 0,
           hasCurrentTurn: true,
+          secondsRemaining: 600,
           id: devPlayers[0].id,
           name: devPlayers[0].name,
           ready: true,
@@ -265,6 +271,7 @@ async function main() {
         {
           slot: 1,
           hasCurrentTurn: false,
+          secondsRemaining: 600,
           id: devPlayers[1].id,
           name: devPlayers[1].name,
           ready: true,

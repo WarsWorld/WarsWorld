@@ -57,6 +57,7 @@ const players: PlayerInMatch[] = [
   {
     name: "Grimm Guy",
     army: "orange-star",
+    secondsRemaining: 3600,
     coId: {
       name: "andy",
       version: "AW1",
@@ -72,6 +73,7 @@ const players: PlayerInMatch[] = [
   {
     name: "Incuggarch",
     army: "blue-moon",
+    secondsRemaining: 3600,
     coId: {
       name: "andy",
       version: "AW1",
@@ -90,6 +92,11 @@ const match = new MatchWrapper(
   "standard",
   [],
   {
+    timeRestrictions: {
+      startingSeconds: 10000,
+      maxTurnSeconds: 10000,
+      turnSecondsIncrement: 2,
+    },
     unitCapPerPlayer: 0,
     fogOfWar: false,
     fundsPerProperty: 1000,
@@ -103,11 +110,18 @@ const match = new MatchWrapper(
     // playerslot 1 (2nd index of teamMapping) is Incuggarch and is a part of team 1
   },
   "playing",
+  {
+    isPublic: true,
+    followers: [],
+    currentViewers: [],
+    isPaused: false,
+  },
   map,
   players,
   [],
   UnitWrapper,
   0,
+  new Date(),
 );
 
 const p1 = match.getPlayerBySlot(0)!;
