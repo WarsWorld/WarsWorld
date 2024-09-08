@@ -11,7 +11,7 @@ export default async function showSubactionMenu(
   spriteSheet: Spritesheet<ArmySpritesheetData>,
   match: MatchWrapper,
   [x, y]: Position,
-  onBuild: () => void,
+  onBuild?: () => void,
 ) {
   //The big container holding everything
   //set its eventmode to static for interactivity and sortable for zIndex
@@ -105,9 +105,10 @@ export default async function showSubactionMenu(
       unitBG.alpha = 1;
     });
 
-    menuElement.on("pointerdown", () => {
+    //TODO: WHEN CLICKING
+/*    menuElement.on("pointerdown", () => {
       onBuild();
-    });
+    });*/
 
     menuElement.on("pointerleave", () => {
       unitBG.alpha = 0.5;

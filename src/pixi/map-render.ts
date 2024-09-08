@@ -78,7 +78,7 @@ export const mapRender = ({
             tile.eventMode = "static";
             //Lets make menu appear
 
-            if (armySpriteSheet !== undefined) {
+
               tile.on("pointerdown", () => {
                 void (async () => {
                   const menu = await showBuildMenu({
@@ -124,7 +124,7 @@ export const mapRender = ({
                   mapContainer.addChild(emptyScreen);
                 })();
               });
-            }
+
           }
 
           //TODO: Seems like properties/buildings have different animation speeds...

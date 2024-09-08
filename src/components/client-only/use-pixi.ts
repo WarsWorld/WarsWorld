@@ -9,6 +9,7 @@ import type { PlayerInMatchWrapper } from "shared/wrappers/player-in-match";
 import type { FrontendUnit } from "../../frontend/components/match/FrontendUnit";
 import type { ChangeableTileWithSprite } from "../../frontend/components/match/types";
 import { renderMultiplier, renderedTileSize } from "./MatchRenderer";
+import showSubactionMenu from "../../pixi/show-subaction-menu";
 
 export function usePixi(
   match: MatchWrapper<ChangeableTileWithSprite, FrontendUnit>,
@@ -35,7 +36,8 @@ export function usePixi(
     const clickHandler = (event: FederatedPointerEvent) => {
       // menus: event.page
       // determine tile: event.global or event.screen
-      console.log(event, event.client, event.global, event.movement, event.page, event.screen);
+      console.log(match.changeableTiles);
+      console.log(/*event,*//* event.client, */event.global, /*event.page, event.screen*/);
 
       const x = Math.floor((event.global.x - renderedTileSize / 2) / renderedTileSize);
       const y = Math.floor((event.global.y - renderedTileSize / 2) / renderedTileSize);
@@ -63,18 +65,21 @@ export function usePixi(
 
       if (changeableTile !== undefined) {
         if (player.owns(changeableTile)) {
-          // show build menu
+          console.log("this is a changeable tile");
+          console.log(player);
+          console.log(spriteSheets);
+          showSubactionMenu(spriteSheets[player.data.army],match,clickPosition)
         }
       }
 
-      // const hover = document.createElement("div");
-      // hover.style.width = "4px";
-      // hover.style.height = "4px";
-      // hover.style.position = "absolute";
-      // hover.style.background = "red";
-      // hover.style.top = `${event.screen.y}px`;
-      // hover.style.left = `${event.screen.x}px`;
-      // document.body.appendChild(hover);
+/*       const hover = document.createElement("div");
+       hover.style.width = "4px";
+       hover.style.height = "4px";
+       hover.style.position = "absolute";
+       hover.style.background = "red";
+       hover.style.top = `${event.screen.y}px`;
+       hover.style.left = `${event.screen.x}px`;
+       document.body.appendChild(hover);*/
     };
 
     mapContainer.on("pointertap", clickHandler);
