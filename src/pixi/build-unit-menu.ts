@@ -3,18 +3,31 @@ import type { Spritesheet } from "pixi.js";
 import { AnimatedSprite, Assets, BitmapText, Container, Sprite, Text, Texture } from "pixi.js";
 import { unitPropertiesMap } from "shared/match-logic/game-constants/unit-properties";
 import type { Position } from "shared/schemas/position";
-import { unitTypes } from "shared/schemas/unit";
+import { UnitType, unitTypes } from "shared/schemas/unit";
 import type { MatchWrapper } from "../shared/wrappers/match";
-import { Nova_Square } from "next/font/google";
+import { position } from "unist-util-position";
+import { trpc } from "frontend/utils/trpc-client";
 
-const nova = Nova_Square({ weight: "400", preload: false });
+
+
+/*actionMutation.useMutation()*/
+/*
+const actionMutateAsync = (input: {
+  unitType: UnitType,
+  position: Position,
+  playerId: string,
+  matchId: string
+}) => {
+  const type = "build"
+  void actionMutation.mutateAsync({type, ...input})
+}*/
 
 //only called if player has current turn
 export default async function buildUnitMenu(
   spriteSheet: Spritesheet<ArmySpritesheetData>,
   match: MatchWrapper,
   [x, y]: Position,
-  onBuild?: () => void
+  onBuild?: any,
 ) {
 
   //The big container holding everything
@@ -52,10 +65,10 @@ export default async function buildUnitMenu(
   //if our menu would appear below the middle of the map, we need to bring it up!
   if (y >= match.map.height / 2 && match.map.height - y < buildableUnitTypes.length) {
     const spaceLeft = match.map.height - y;
-    y = y - Math.abs(spaceLeft - buildableUnitTypes.length);
-  }
+    menuContainer.y = (y - Math.abs(spaceLeft - buildableUnitTypes.length)) * tileSize;
+  } else menuContainer.y = y * tileSize;
 
-  menuContainer.y = y * tileSize;
+
 
   //lets load our font
   await Assets.load("/aw2Font.fnt");
@@ -130,8 +143,14 @@ export default async function buildUnitMenu(
 
 //TODO: WHEN CLICKING
     menuElement.on("pointerdown", () => {
-      console.log(unitType);
-      //onBuild();
+
+  onBuild.mutateAsync({
+        type: "build",
+        position: [x,y],
+        playerId: match.getCurrentTurnPlayer().data.id,
+        matchId: match.id,
+        unitType: unitType,
+      })
     });
 
 

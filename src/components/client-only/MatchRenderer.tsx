@@ -39,27 +39,6 @@ export function MatchRenderer({ match, player, spriteSheets }: Props) {
           }
           case "passTurn": {
             if (data.turns.at(-1)?.newWeather) {
-              // const mapContainer = mapContainerRef.current
-              // if (mapContainer === null) {
-              //   return;
-              // }
-              // const oldTiles = mapContainer.children;
-              // for (let y = 0; y < match.map.data.tiles.length; y++) {
-              //   for (let x = 0; x < match.map.data.tiles[y].length; x++) {
-              //     const tile = match.getTile([x, y]);
-              //     const tileSprite = getTileSprite(match, tile, spriteSheets);
-              //     // makes our sprites render at the bottom, not from the top.
-              //     tileSprite.anchor.set(0, 1);
-              //     tileSprite.x = x * baseTileSize;
-              //     tileSprite.y = y * baseTileSize;
-              //     tileSprite.zIndex = y;
-              //     mapContainer.addChild(tileSprite);
-              //     if ("sprite" in tile) {
-              //       tile.sprite = tileSprite;
-              //     }
-              //   }
-              // }
-              // oldTiles.forEach(c => c.removeFromParent())
             }
           }
         }

@@ -10,6 +10,7 @@ import type { FrontendUnit } from "../../frontend/components/match/FrontendUnit"
 import type { ChangeableTileWithSprite } from "../../frontend/components/match/types";
 import { renderMultiplier, renderedTileSize } from "./MatchRenderer";
 import buildUnitMenu from "../../pixi/build-unit-menu";
+import { trpc } from "../../frontend/utils/trpc-client";
 
 export function usePixi(
   match: MatchWrapper<ChangeableTileWithSprite, FrontendUnit>,
@@ -19,7 +20,7 @@ export function usePixi(
   const pixiCanvasRef = useRef<HTMLCanvasElement | null>(null);
   const mapContainerRef = useRef<Container<DisplayObject> | null>(null);
 
-
+  const actionMutation = trpc.action.send.useMutation();
 
   useEffect(() => {
     const app = new Application({
@@ -38,6 +39,7 @@ export function usePixi(
     const clickHandler = async (event: FederatedPointerEvent) => {
 
 
+      //removes the menu if we click anywhere, still lets the menu work
       if (mapContainer.getChildByName("unitMenu") !== null) {
         // @ts-ignore
         mapContainer.removeChild(mapContainer.getChildByName("unitMenu"));
@@ -72,24 +74,12 @@ export function usePixi(
 
       if (changeableTile !== undefined) {
         if (player.owns(changeableTile)) {
-          let subActionMenu = await buildUnitMenu(spriteSheets[player.data.army], match, clickPosition)
-          console.log(clickPosition);
+          let subActionMenu = await buildUnitMenu(spriteSheets[player.data.army], match, clickPosition, actionMutation)
           subActionMenu.zIndex = 100
           mapContainer.addChild(subActionMenu)
-          console.log(mapContainer);
-          console.log(mapContainer.getChildByName("unitMenu"));
 
        }
       }
-
-      /*       const hover = document.createElement("div");
-             hover.style.width = "4px";
-             hover.style.height = "4px";
-             hover.style.position = "absolute";
-             hover.style.background = "red";
-             hover.style.top = `${event.screen.y}px`;
-             hover.style.left = `${event.screen.x}px`;
-             document.body.appendChild(hover);*/
     };
 
     mapContainer.on("pointertap", clickHandler);
@@ -105,3 +95,15 @@ export function usePixi(
     mapContainerRef,
   };
 }
+
+
+//unsure if function will ever need this red pointer again
+
+/*       const hover = document.createElement("div");
+             hover.style.width = "4px";
+             hover.style.height = "4px";
+             hover.style.position = "absolute";
+             hover.style.background = "red";
+             hover.style.top = `${event.screen.y}px`;
+             hover.style.left = `${event.screen.x}px`;
+             document.body.appendChild(hover);*/
