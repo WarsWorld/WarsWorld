@@ -1,139 +1,158 @@
 import type { ArmySpritesheetData } from "frontend/components/match/getSpritesheetData";
 import type { Spritesheet } from "pixi.js";
-import { AnimatedSprite, Assets, BitmapText, Container, Sprite, Texture } from "pixi.js";
+import { AnimatedSprite, Assets, BitmapText, Container, Sprite, Text, Texture } from "pixi.js";
 import { unitPropertiesMap } from "shared/match-logic/game-constants/unit-properties";
 import type { Position } from "shared/schemas/position";
 import { unitTypes } from "shared/schemas/unit";
 import type { MatchWrapper } from "../shared/wrappers/match";
+import { Nova_Square } from "next/font/google";
+
+const nova = Nova_Square({ weight: "400", preload: false });
 
 //only called if player has current turn
-export default async function showSubactionMenu(
+export default async function buildUnitMenu(
   spriteSheet: Spritesheet<ArmySpritesheetData>,
   match: MatchWrapper,
   [x, y]: Position,
-  onBuild?: () => void,
+  onBuild?: () => void
 ) {
+
   //The big container holding everything
   //set its eventmode to static for interactivity and sortable for zIndex
   const menuContainer = new Container();
   menuContainer.eventMode = "static";
   menuContainer.sortableChildren = true;
 
-  if (x > match.map.width / 2) {
-    console.log();
-    menuContainer.x = x * 16 + 16 - 100;
-  } else {
-    menuContainer.x = x * 16 + 16;
-  }
+  const tileSize = 16;
+  //this is the value we have applied to units (half a tile)
+  const unitSize = tileSize / 2;
+
 
   //the name lets us find the menu easily with getChildByName for easy removal
-  menuContainer.name = "menu";
+  menuContainer.name = "unitMenu";
 
   const allowedUnits = unitTypes.filter((t) => !match.rules.bannedUnitTypes.includes(t));
 
   const facility = match.getTile([x, y]).type;
 
-  const buildableUnitTypes = allowedUnits.filter(
-    (type) => unitPropertiesMap[type].facility === facility,
-  );
+// Filter allowed units based on facility type and then sort by cost
+  const buildableUnitTypes = allowedUnits
+    .filter((type) => unitPropertiesMap[type].facility === facility)
+    .sort((a, b) => unitPropertiesMap[a].cost - unitPropertiesMap[b].cost);
 
-  //if our menu would appear below the middle of the map, we need to bring it up!
-  // Otherwise, our user will have to scroll down to see all the units, which is a poor experience
-  if (y > match.map.height / 2 && match.map.height - y < buildableUnitTypes.length * 0.675) {
-    const spaceLeft = match.map.height - y;
-    //now if you wonder about 0.675, it basically means the
-    // menu element is 67.5% of a tile, so we only move that much
-    y = y - Math.abs(spaceLeft - buildableUnitTypes.length * 0.675);
+  // if we are over half the map. invert menu placement
+  if (x > match.map.width / 2) {
+    menuContainer.x = x * tileSize - tileSize * 6; //the menu width is about 6 * tileSize
+  }
+  //we are not over half the map, menu is placed next to factory
+  else {
+    menuContainer.x = x * tileSize + tileSize;
   }
 
-  menuContainer.y = y * 16;
+  //if our menu would appear below the middle of the map, we need to bring it up!
+  if (y >= match.map.height / 2 && match.map.height - y < buildableUnitTypes.length) {
+    const spaceLeft = match.map.height - y;
+    y = y - Math.abs(spaceLeft - buildableUnitTypes.length);
+  }
+
+  menuContainer.y = y * tileSize;
 
   //lets load our font
   await Assets.load("/aw2Font.fnt");
 
-  //lets loop through every unit we can produce.
+
+  //This makes the menu elements be each below each other, it starts at 0 then gets plussed, so elements keep going down and down. yValue is not the best name for it but effectively it is that, a y value
   let yValue = 0;
 
+  //lets loop through each unit and build the build menu
   for (const unitType of buildableUnitTypes) {
     //child container to hold all the text and sprite into one place
     const menuElement = new Container();
     menuElement.eventMode = "static";
 
-    yValue += 12;
-
-    //our unit image
-    console.log(unitType);
-    const unitSprite = new AnimatedSprite(spriteSheet.animations[unitType]);
-    unitSprite.y = yValue;
-    unitSprite.width = 8;
-    unitSprite.height = 8;
-    unitSprite.animationSpeed = 0.07;
-    // try to make it "centered"
-    unitSprite.anchor.set(-0.2, -0.2);
-
-    unitSprite.play();
-
-    const unitName = new BitmapText(`${unitType.toUpperCase()}`, {
-      fontName: "awFont",
-      fontSize: 12,
-    });
-    unitName.y = yValue;
-    unitName.x = 15;
-    unitName.anchor.set(0, -0.1);
-
-    const unitCost = new BitmapText(`${unitPropertiesMap[unitType].cost}`, {
-      fontName: "awFont",
-      fontSize: 10,
-    });
-    unitCost.y = yValue;
-    unitCost.x = 60;
-    unitCost.anchor.set(0, -0.25);
-
-    //the grey rectangle we see
+    //the grey rectangle bg that each unit has
     const unitBG = new Sprite(Texture.WHITE);
     unitBG.x = 0;
     unitBG.y = yValue;
-    unitBG.width = 85;
-    unitBG.height = 10;
-
+    //TODO: Standardize these sizes
+    unitBG.width = tileSize * 5.7;
+    unitBG.height = unitSize * 1.35;
     unitBG.eventMode = "static";
     unitBG.tint = "#ffffff";
     unitBG.alpha = 0.5;
+    menuElement.addChild(unitBG);
 
-    //lets add a hover effect to our elements
+
+    //the unit sprite we see on the menu
+    const unitSprite = new AnimatedSprite(spriteSheet.animations[unitType]);
+    unitSprite.y = yValue;
+    unitSprite.width = unitSize;
+    unitSprite.height = unitSize;
+    unitSprite.animationSpeed = 0.06;
+    // try to make it "centered"
+    unitSprite.anchor.set(-0.2, -0.2);
+    unitSprite.play();
+    menuElement.addChild(unitSprite);
+
+    //name of the unit
+    const unitName = new BitmapText(`${unitType.toUpperCase()}`, {
+      fontName: "awFont",
+      fontSize: 10
+    });
+    unitName.y = yValue;
+    unitName.x = tileSize;
+    //trying to line it up nicely wiht the unit icon
+    unitName.anchor.set(0, -0.3);
+    menuElement.addChild(unitName);
+
+
+    //cost displayed
+    const unitCost = new BitmapText(`${unitPropertiesMap[unitType].cost}`, {
+      fontName: "awFont",
+      fontSize: 10
+    });
+    unitCost.y = yValue;
+    //TODO: Standardize this size
+    unitCost.x = tileSize * 4;
+    unitCost.anchor.set(0, -0.25);
+    menuElement.addChild(unitCost);
+
+
+    //lets add a hover effect to the unitBG when you hover over the menu
     menuElement.on("pointerenter", () => {
       unitBG.alpha = 1;
     });
 
-    //TODO: WHEN CLICKING
-/*    menuElement.on("pointerdown", () => {
-      onBuild();
-    });*/
-
+    //when you stop hovering the menu
     menuElement.on("pointerleave", () => {
       unitBG.alpha = 0.5;
     });
 
-    menuElement.addChild(unitBG);
-    menuElement.addChild(unitName);
-    menuElement.addChild(unitCost);
-    menuElement.addChild(unitSprite);
+//TODO: WHEN CLICKING
+    menuElement.on("pointerdown", () => {
+      console.log(unitType);
+      //onBuild();
+    });
+
+
+    yValue += unitSize * 2;
     menuContainer.addChild(menuElement);
   }
 
   //The extra border we see around the menu
   //TODO: Change outerborder color depending on country/army color
-  const outerBorder = new Sprite(Texture.WHITE);
-  outerBorder.tint = "#8c8c8c";
-  outerBorder.x = -2;
-  outerBorder.y = -2;
-  outerBorder.width = 89;
-  outerBorder.height = (buildableUnitTypes.length - 1) * 12 + 14;
-  outerBorder.zIndex = -1;
-  outerBorder.alpha = 0.8;
-  menuContainer.addChild(outerBorder);
+  const menuBG = new Sprite(Texture.WHITE);
+  menuBG.tint = "#cacaca";
+  menuBG.x = -2;
+  menuBG.y = -2;
+  menuBG.width = tileSize * 6; //expands 6 tiles worth of space
+  menuBG.height = yValue;
+  menuBG.zIndex = -1;
+  menuBG.alpha = 1;
+  menuContainer.addChild(menuBG);
   return menuContainer;
 }
+
 
 const createCaptureOption = (match: MatchWrapper, onCapture: () => void): Container => {
   const menuElement = new Container();
@@ -142,7 +161,7 @@ const createCaptureOption = (match: MatchWrapper, onCapture: () => void): Contai
 
   const actionText = new BitmapText("Capture", {
     fontName: "awFont",
-    fontSize: 10,
+    fontSize: 10
   });
   actionText.y = 0;
   actionText.x = 60;
@@ -171,7 +190,7 @@ const createCaptureOption = (match: MatchWrapper, onCapture: () => void): Contai
 
   menuElement.addChild(menuBG);
   menuElement.addChild(actionText);
-  //sprite
+
 
   return menuElement;
 };
