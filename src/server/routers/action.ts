@@ -11,11 +11,11 @@ import {
 } from "shared/match-logic/events/apply-event-to-match";
 import { mainActionSchema } from "shared/schemas/action";
 import { getFinalPositionSafe } from "shared/schemas/position";
-import type { Emittable, EmittableEvent } from "shared/types/events";
-import { matchBaseProcedure, playerInMatchBaseProcedure, router } from "../trpc/trpc-setup";
+import type { Emittable, EmittableMainEvent } from "shared/types/emittables";
 import { mainEventToEmittables } from "../../shared/match-logic/events/event-to-emittable";
-import { fillDiscoveredUnitsAndProperties } from "../../shared/match-logic/events/vision-update";
 import { updateMoveVision } from "../../shared/match-logic/events/handlers/move";
+import { fillDiscoveredUnitsAndProperties } from "../../shared/match-logic/events/vision-update";
+import { matchBaseProcedure, playerInMatchBaseProcedure, router } from "../trpc/trpc-setup";
 
 export const actionRouter = router({
   send: playerInMatchBaseProcedure
@@ -50,7 +50,7 @@ export const actionRouter = router({
        * because we stop about here and don't store/emit.
        */
 
-      let emittableEvents: (EmittableEvent | undefined)[]; // undefined means that team doesn't receive the event
+      let emittableEvents: (EmittableMainEvent | undefined)[]; // undefined means that team doesn't receive the event
 
       if (mainEvent.type === "move" && input.type === "move") {
         // second condition is only needed for type-gating input event
@@ -83,6 +83,8 @@ export const actionRouter = router({
       // TODO @function either this function gets a list of emittables, or we iterate through them here.
       //  undefined means that team shouldn't receive the event
       //  emittableEvents[i] is from match.teams[i]. emittableEvents has one extra "no team"(spectator) at the end
+      // TODO: This needs revision. Instead of sending the event to teams not undefined in emittableEvents,
+      // it just sends the event out emittableEvents.length times to everyone.
       emittableEvents.forEach((event) => {
         if (event !== undefined) {
           emit({ ...event, matchId: match.id });

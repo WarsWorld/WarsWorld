@@ -1,10 +1,11 @@
-import type { EmittableEvent, EmittableSubEvent, MainEvent, MoveEvent } from "../../types/events";
-import type { MatchWrapper } from "../../wrappers/match";
+import type { EmittableMainEvent, EmittableSubEvent } from "shared/types/emittables";
 import type { Position } from "../../schemas/position";
 import { addDirection, getFinalPositionSafe, getNeighbourPositions } from "../../schemas/position";
-import { getPowerChargeGain } from "./handlers/attack";
-import { getVisualHPfromHP } from "../calculate-damage";
+import type { MainEvent, MoveEvent } from "../../types/events";
+import type { MatchWrapper } from "../../wrappers/match";
 import { TeamWrapper } from "../../wrappers/team";
+import { getVisualHPfromHP } from "../calculate-damage";
+import { getPowerChargeGain } from "./handlers/attack";
 
 export const subEventToEmittables = (match: MatchWrapper, { subEvent, path }: MoveEvent) => {
   const fromPosition = getFinalPositionSafe(path);
@@ -157,7 +158,7 @@ export const mainEventToEmittables = (match: MatchWrapper, event: MainEvent) => 
   const teams = [...match.teams];
   teams.push(new TeamWrapper([], match, -1)); // add spectator vision
 
-  const emittableEvents = new Array<EmittableEvent | undefined>(match.teams.length + 1);
+  const emittableEvents = new Array<EmittableMainEvent | undefined>(match.teams.length + 1);
   emittableEvents.fill(undefined);
 
   switch (event.type) {

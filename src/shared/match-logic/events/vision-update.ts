@@ -1,10 +1,10 @@
-import type { EmittableEvent } from "../../types/events";
-import type { MatchWrapper } from "../../wrappers/match";
+import type { EmittableMainEvent } from "../../types/emittables";
 import type { CapturableTile } from "../../types/server-match-state";
+import type { MatchWrapper } from "../../wrappers/match";
 
 export const fillDiscoveredUnitsAndProperties = (
   match: MatchWrapper,
-  emittableEvents: (EmittableEvent | undefined)[],
+  emittableEvents: (EmittableMainEvent | undefined)[],
 ) => {
   // emittableEvents.length = math.teams.length + 1, since it has "no team" in the end
   for (let i = 0; i < match.teams.length; ++i) {
