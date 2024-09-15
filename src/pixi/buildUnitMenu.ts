@@ -1,26 +1,10 @@
 import type { ArmySpritesheetData } from "frontend/components/match/getSpritesheetData";
-import type { Spritesheet } from "pixi.js";
+import type { DisplayObject, Spritesheet } from "pixi.js";
 import { AnimatedSprite, Assets, BitmapText, Container, Sprite, Text, Texture } from "pixi.js";
 import { unitPropertiesMap } from "shared/match-logic/game-constants/unit-properties";
 import type { Position } from "shared/schemas/position";
 import { UnitType, unitTypes } from "shared/schemas/unit";
 import type { MatchWrapper } from "../shared/wrappers/match";
-import { position } from "unist-util-position";
-import { trpc } from "frontend/utils/trpc-client";
-
-
-
-/*actionMutation.useMutation()*/
-/*
-const actionMutateAsync = (input: {
-  unitType: UnitType,
-  position: Position,
-  playerId: string,
-  matchId: string
-}) => {
-  const type = "build"
-  void actionMutation.mutateAsync({type, ...input})
-}*/
 
 //only called if player has current turn
 export default async function buildUnitMenu(
@@ -35,6 +19,7 @@ export default async function buildUnitMenu(
   const menuContainer = new Container();
   menuContainer.eventMode = "static";
   menuContainer.sortableChildren = true;
+  menuContainer.zIndex = 999
 
   const tileSize = 16;
   //this is the value we have applied to units (half a tile)
@@ -69,6 +54,9 @@ export default async function buildUnitMenu(
   } else menuContainer.y = y * tileSize;
 
 
+  //TODO: Fix border
+  menuContainer.x += 8
+  menuContainer.y += 8
 
   //lets load our font
   await Assets.load("/aw2Font.fnt");
@@ -142,7 +130,7 @@ export default async function buildUnitMenu(
     });
 
 //TODO: WHEN CLICKING
-    menuElement.on("pointerdown", () => {
+    menuElement.on("pointerdown",  () => {
 
   onBuild.mutateAsync({
         type: "build",
@@ -151,6 +139,9 @@ export default async function buildUnitMenu(
         matchId: match.id,
         unitType: unitType,
       })
+      //as soon a selection is done, destroy/erase the menu
+      menuContainer.destroy()
+
     });
 
 

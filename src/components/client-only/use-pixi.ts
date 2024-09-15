@@ -9,8 +9,9 @@ import type { PlayerInMatchWrapper } from "shared/wrappers/player-in-match";
 import type { FrontendUnit } from "../../frontend/components/match/FrontendUnit";
 import type { ChangeableTileWithSprite } from "../../frontend/components/match/types";
 import { renderMultiplier, renderedTileSize } from "./MatchRenderer";
-import buildUnitMenu from "../../pixi/build-unit-menu";
+import buildUnitMenu from "../../pixi/buildUnitMenu";
 import { trpc } from "../../frontend/utils/trpc-client";
+import { renderUnitSprite } from "../../pixi/renderUnitSprite";
 
 export function usePixi(
   match: MatchWrapper<ChangeableTileWithSprite, FrontendUnit>,
@@ -19,8 +20,34 @@ export function usePixi(
 ) {
   const pixiCanvasRef = useRef<HTMLCanvasElement | null>(null);
   const mapContainerRef = useRef<Container<DisplayObject> | null>(null);
+  const unitContainerRef = useRef<Container<DisplayObject> | null>(null);
 
+
+  //TODO: trpc mutations need to be in this file I believe, could it be possible to import them from elsewhere? It will become messy having each action here...
   const actionMutation = trpc.action.send.useMutation();
+
+  trpc.action.onEvent.useSubscription(
+    {
+      playerId: player.data.id,
+      matchId: match.id,
+    },
+    {
+      onData(data) {
+        switch (data.type) {
+          case "build": {
+            if (unitContainerRef.current !== null) {
+              const unit : FrontendUnit | undefined = match.getUnit(data.position);
+              if (unit !== undefined) {
+                unitContainerRef.current.addChild(renderUnitSprite(unit,spriteSheets[match.getCurrentTurnPlayer().data.army]))
+              }
+            }
+            break;
+          }
+
+        }
+      },
+    },
+  );
 
   useEffect(() => {
     const app = new Application({
@@ -32,18 +59,22 @@ export function usePixi(
       height: match.map.height * renderedTileSize + renderedTileSize,
     });
 
-    const { mapContainer } = setupApp(app, match, renderMultiplier, spriteSheets);
+    const { mapContainer, unitContainer } = setupApp(app, match, renderMultiplier, spriteSheets);
     mapContainer.eventMode = "static";
     mapContainerRef.current = mapContainer;
+    unitContainerRef.current = unitContainer;
+
+
 
     const clickHandler = async (event: FederatedPointerEvent) => {
 
 
       //removes the menu if we click anywhere, still lets the menu work
-      if (mapContainer.getChildByName("unitMenu") !== null) {
+      if (unitContainer.getChildByName("unitMenu") !== null) {
         // @ts-ignore
-        mapContainer.removeChild(mapContainer.getChildByName("unitMenu"));
+        unitContainer.removeChild(unitContainer.getChildByName("unitMenu"));
       }
+
       // menus: event.page
       // determine tile: event.global or event.screen
       console.log(/*event,*//* event.client, */event.global, /*event.page, event.screen*/);
@@ -73,10 +104,13 @@ export function usePixi(
       const changeableTile = match.getTile(clickPosition);
 
       if (changeableTile !== undefined) {
+        //TODO: How to manage silo/show different menu
         if (player.owns(changeableTile)) {
-          let subActionMenu = await buildUnitMenu(spriteSheets[player.data.army], match, clickPosition, actionMutation)
-          subActionMenu.zIndex = 100
-          mapContainer.addChild(subActionMenu)
+          //this assumes the tile is a building and not a silo
+          let unitMenu = await buildUnitMenu(spriteSheets[player.data.army], match, clickPosition, actionMutation )
+
+          //The menu is added to the unitContainer because units are ALWAYS above terrain (so unitContainer.zIndex > mapContainer.zIndex, and we need the menu to be ALWAYS above units so it has to be in the unitContainer
+          unitContainer.addChild(unitMenu)
 
        }
       }
