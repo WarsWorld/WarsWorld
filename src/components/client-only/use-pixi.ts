@@ -12,6 +12,8 @@ import { renderMultiplier, renderedTileSize } from "./MatchRenderer";
 import buildUnitMenu from "../../pixi/buildUnitMenu";
 import { trpc } from "../../frontend/utils/trpc-client";
 import { renderUnitSprite } from "../../pixi/renderUnitSprite";
+import { applyBuildEvent } from "../../shared/match-logic/events/handlers/build";
+import { showPassableTiles } from "../../pixi/show-pathing";
 
 export function usePixi(
   match: MatchWrapper<ChangeableTileWithSprite, FrontendUnit>,
@@ -35,11 +37,10 @@ export function usePixi(
       onData(data) {
         switch (data.type) {
           case "build": {
+            applyBuildEvent(match, data);
+            const unit = match.getUnitOrThrow(data.position);
             if (unitContainerRef.current !== null) {
-              const unit : FrontendUnit | undefined = match.getUnit(data.position);
-              if (unit !== undefined) {
                 unitContainerRef.current.addChild(renderUnitSprite(unit,spriteSheets[match.getCurrentTurnPlayer().data.army]))
-              }
             }
             break;
           }
@@ -94,8 +95,11 @@ export function usePixi(
       const unit = match.getUnit(clickPosition);
 
       if (unit !== undefined) {
-        if (player.owns(unit) && unit.data.isReady) {
-          // TODO do something, show move menu etc.
+        if (player.owns(unit.data)/* && unit.data.isReady*/) {
+          console.log("clicked unit");
+          //TODO: This shit is broken
+          console.log(showPassableTiles(match,unit))
+
         }
 
         return;

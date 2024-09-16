@@ -24,7 +24,7 @@ export function MatchRenderer({ match, player, spriteSheets }: Props) {
 
   const { mapContainerRef, pixiCanvasRef } = usePixi(match, spriteSheets, player);
 
-  trpc.action.onEvent.useSubscription(
+/*  trpc.action.onEvent.useSubscription(
     {
       playerId: player.data.id,
       matchId: match.id,
@@ -44,7 +44,7 @@ export function MatchRenderer({ match, player, spriteSheets }: Props) {
         }
       },
     },
-  );
+  );*/
 
   return (
     <canvas

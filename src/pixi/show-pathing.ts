@@ -37,6 +37,7 @@ export function getAccessibleNodes( //TODO: save result of function? _ (Sturm d2
 
   //queues[a] has current queued nodes with distance a from origin (technically a "stack", not a queue, but the result doesn't change)
 
+  //TODO this seems to be broken?
   const queues = Array.from<PathNode[]>({ length: unit.getMovementPoints() });
   queues.push([]);
   queues[0].push({ pos: unit.data.position, dist: 0, parent: null }); //queues[0] has the origin node, initially
