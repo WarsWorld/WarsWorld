@@ -38,9 +38,8 @@ export function getAccessibleNodes( //TODO: save result of function? _ (Sturm d2
   //queues[a] has current queued nodes with distance a from origin (technically a "stack", not a queue, but the result doesn't change)
 
   //TODO this seems to be broken?
-  const queues = Array.from<PathNode[]>({ length: unit.getMovementPoints() });
-  queues.push([]);
-  queues[0].push({ pos: unit.data.position, dist: 0, parent: null }); //queues[0] has the origin node, initially
+  const queues: PathNode[][] = Array.from({ length: unit.getMovementPoints() }, () => []);
+  queues[0].push({ pos: unit.data.position, dist: 0, parent: null });//queues[0] has the origin node, initially
 
   const visited = makeVisitedMatrix(match.map);
 
@@ -85,7 +84,7 @@ export function getAccessibleNodes( //TODO: save result of function? _ (Sturm d2
       const nodeDist = currNode.dist + movementCost;
 
       if (nodeDist <= unit.getMovementPoints()) {
-        queues[nodeDist].push({
+        queues[nodeDist - 1].push({
           pos: pos,
           dist: nodeDist,
           parent: currPos,
@@ -115,7 +114,7 @@ export function showPassableTiles(
     const square = tileConstructor(pos, "#43d9e4");
     markedTiles.addChild(square);
   }
-
+  markedTiles.zIndex = 9999
   return markedTiles;
 }
 

@@ -69,16 +69,15 @@ export function usePixi(
 
     const clickHandler = async (event: FederatedPointerEvent) => {
 
-
       //removes the menu if we click anywhere, still lets the menu work
-      if (unitContainer.getChildByName("unitMenu") !== null) {
-        // @ts-ignore
-        unitContainer.removeChild(unitContainer.getChildByName("unitMenu"));
+      const unitMenu = unitContainer.getChildByName("unitMenu")
+      if (unitMenu !== null) {
+        unitContainer.removeChild(unitMenu);
       }
 
       // menus: event.page
       // determine tile: event.global or event.screen
-      console.log(/*event,*//* event.client, */event.global, /*event.page, event.screen*/);
+      //console.log(/*event,*//* event.client, */event.global, /*event.page, event.screen*/);
 
       const x = Math.floor((event.global.x - renderedTileSize / 2) / renderedTileSize);
       const y = Math.floor((event.global.y - renderedTileSize / 2) / renderedTileSize);
@@ -93,12 +92,12 @@ export function usePixi(
       }
 
       const unit = match.getUnit(clickPosition);
-
       if (unit !== undefined) {
+        //todo: ts hates this,
+        //@ts-ignore
         if (player.owns(unit.data)/* && unit.data.isReady*/) {
-          console.log("clicked unit");
-          //TODO: This shit is broken
-          console.log(showPassableTiles(match,unit))
+          const showPath = showPassableTiles(match,unit);
+          mapContainer.addChild(showPath);
 
         }
 
