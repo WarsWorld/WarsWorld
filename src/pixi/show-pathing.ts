@@ -115,6 +115,7 @@ export function showPassableTiles(
     markedTiles.addChild(square);
   }
   markedTiles.zIndex = 9999
+  markedTiles.name = "path"
   return markedTiles;
 }
 

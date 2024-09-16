@@ -13,7 +13,7 @@ import buildUnitMenu from "../../pixi/buildUnitMenu";
 import { trpc } from "../../frontend/utils/trpc-client";
 import { renderUnitSprite } from "../../pixi/renderUnitSprite";
 import { applyBuildEvent } from "../../shared/match-logic/events/handlers/build";
-import { showPassableTiles } from "../../pixi/show-pathing";
+import { getAccessibleNodes, PathNode, showPassableTiles } from "../../pixi/show-pathing";
 
 export function usePixi(
   match: MatchWrapper<ChangeableTileWithSprite, FrontendUnit>,
@@ -65,7 +65,8 @@ export function usePixi(
     mapContainerRef.current = mapContainer;
     unitContainerRef.current = unitContainer;
 
-
+    //TODO: Should this be a ref?
+    let pathQueue: Map<Position, PathNode> | null = null;
 
     const clickHandler = async (event: FederatedPointerEvent) => {
 
@@ -91,12 +92,35 @@ export function usePixi(
         return;
       }
 
+      let path = mapContainer.getChildByName("path");
+      //Handle clicking on path
+      if ( pathQueue) {
+        let clickedOnPath = false;
+        for (const [pos] of pathQueue) {
+          if (clickPosition[0] === pos[0] && clickPosition[1] === pos[1]) {
+            clickedOnPath = true;
+            console.log("you've clicked on a path!");
+            console.log(pos);
+
+          }
+        }
+
+        //handle if we didnt click on the path
+        if (!clickedOnPath) {
+          if (path) mapContainer.removeChild(path)
+          pathQueue = null;
+        }
+      }
+
+
       const unit = match.getUnit(clickPosition);
       if (unit !== undefined) {
         //todo: ts hates this,
         //@ts-ignore
         if (player.owns(unit.data)/* && unit.data.isReady*/) {
           const showPath = showPassableTiles(match,unit);
+          pathQueue = getAccessibleNodes(match,unit)
+          if (path) mapContainer.removeChild(path)
           mapContainer.addChild(showPath);
 
         }
