@@ -45,14 +45,21 @@ export function MatchRenderer({ match, player, spriteSheets }: Props) {
       },
     },
   );*/
+  const passTurnMutation = trpc.action.send.useMutation();
 
   return (
+    <>
+      <button className="btn" onClick={() => passTurnMutation.mutateAsync({
+        type: "passTurn",
+        playerId: player.data.id,
+        matchId: match.id,
+      })}> Pass Turn</button>
     <canvas
       className="@inline"
       style={{
         imageRendering: "pixelated",
       }}
       ref={pixiCanvasRef}
-    ></canvas>
+    ></canvas></>
   );
 }

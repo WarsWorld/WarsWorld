@@ -80,7 +80,8 @@ export class PlayerInMatchWrapper {
     for (let i = nextSlot(this.data.slot); i !== this.data.slot; i = nextSlot(i)) {
       const player = this.match.getPlayerBySlot(i);
 
-      if (player?.data.eliminated === true) {
+      //TODO: This should be false since if the player is NOT eliminated, then we return that player, right?
+      if (player?.data.eliminated === false) {
         return player;
       }
     }

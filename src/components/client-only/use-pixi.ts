@@ -134,7 +134,7 @@ export function usePixi(
         //TODO: How to manage silo/show different menu
         if (player.owns(changeableTile)) {
           //this assumes the tile is a building and not a silo
-          let unitMenu = await buildUnitMenu(spriteSheets[player.data.army], match, clickPosition, actionMutation )
+          let unitMenu = await buildUnitMenu(spriteSheets[player.data.army], match,player, clickPosition, actionMutation )
 
           //The menu is added to the unitContainer because units are ALWAYS above terrain (so unitContainer.zIndex > mapContainer.zIndex, and we need the menu to be ALWAYS above units so it has to be in the unitContainer
           unitContainer.addChild(unitMenu)

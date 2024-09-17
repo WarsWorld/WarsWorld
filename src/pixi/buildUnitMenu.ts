@@ -5,11 +5,13 @@ import { unitPropertiesMap } from "shared/match-logic/game-constants/unit-proper
 import type { Position } from "shared/schemas/position";
 import { UnitType, unitTypes } from "shared/schemas/unit";
 import type { MatchWrapper } from "../shared/wrappers/match";
+import { PlayerInMatchWrapper } from "../shared/wrappers/player-in-match";
 
 //only called if player has current turn
 export default async function buildUnitMenu(
   spriteSheet: Spritesheet<ArmySpritesheetData>,
   match: MatchWrapper,
+  player: PlayerInMatchWrapper,
   [x, y]: Position,
   onBuild?: any,
 ) {
@@ -135,7 +137,7 @@ export default async function buildUnitMenu(
   onBuild.mutateAsync({
         type: "build",
         position: [x,y],
-        playerId: match.getCurrentTurnPlayer().data.id,
+        playerId: player.data.id,
         matchId: match.id,
         unitType: unitType,
       })
