@@ -1,12 +1,24 @@
 import { getCOProperties } from "shared/match-logic/co";
 import type { Hooks } from "shared/match-logic/co-hooks";
-import type { Tile } from "shared/schemas/tile";
+import type { PropertyTile, Tile } from "shared/schemas/tile";
 import type { UnitWithVisibleStats } from "shared/schemas/unit";
 import type { ChangeableTile, PlayerInMatch } from "shared/types/server-match-state";
 import { versionPropertiesMap } from "../match-logic/game-constants/version-properties";
 import type { MatchWrapper } from "./match";
 import type { TeamWrapper } from "./team";
 import { UnitWrapper } from "./unit";
+
+//TODO: Band-aid fix from chatGPT, needs to be fixed down below
+
+// Type guard to check if the object is a UnitWrapper
+function isUnitWrapper(object: any): object is UnitWrapper {
+  return "data" in object && "playerSlot" in object.data;
+}
+
+// Type guard to check if the object is a PropertyTile (or has playerSlot directly)
+function isPropertyTile(object: any): object is PropertyTile {
+  return "playerSlot" in object;
+}
 
 export class PlayerInMatchWrapper {
   public match: MatchWrapper;
@@ -119,11 +131,20 @@ export class PlayerInMatchWrapper {
     this.data.powerMeter = Math.min(value, this.getMaxPowerMeter());
   }
 
-  owns(tileOrUnit: Tile | ChangeableTile | UnitWrapper) {
-    if ("playerSlot" in tileOrUnit) {
+  //TODO: Band aid fix applied here
+  owns(tileOrUnit: Tile | ChangeableTile | UnitWrapper): boolean {
+
+    // If it's a UnitWrapper, the playerSlot is under tileOrUnit.data
+    if (isUnitWrapper(tileOrUnit)) {
+      return tileOrUnit.data.playerSlot === this.data.slot;
+    }
+
+    // If it's a PropertyTile, playerSlot is directly on the object
+    if (isPropertyTile(tileOrUnit)) {
       return tileOrUnit.playerSlot === this.data.slot;
     }
 
+    // If none of the conditions match, return false
     return false;
   }
 

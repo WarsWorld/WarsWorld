@@ -43,7 +43,9 @@ export const moveActionToEvent: MainActionToEvent<MoveAction> = (match, action) 
 
     match.map.throwIfOutOfBounds(position);
 
-    const moveCost = unit.getMovementCost(position);
+    let moveCost = unit.getMovementCost(position);
+    //It costs 0 points to move out of starting tile, our path[0] is the starting tile so we should not count it for movement
+    if (pathIndex === 0) moveCost = 0;
 
     if (moveCost === null) {
       throw new DispatchableError("Cannot move to a desired position");
@@ -55,7 +57,7 @@ export const moveActionToEvent: MainActionToEvent<MoveAction> = (match, action) 
 
     const unitInPosition = match.getUnit(position);
 
-    if (unitInPosition?.data.playerSlot === unit.data.playerSlot) {
+    if (unitInPosition !== undefined && unitInPosition?.data.playerSlot !== unit.data.playerSlot) {
       result.trap = true;
       break;
     }
@@ -243,7 +245,6 @@ export const applyMoveEvent = (match: MatchWrapper, event: MoveEvent) => {
   }
 
   unit.drainFuel((event.path.length - 1) * getOneTileFuelCost(match, unit));
-
   const unitAtDestination = match.getUnit(getFinalPositionSafe(event.path));
 
   if (unitAtDestination === undefined) {
