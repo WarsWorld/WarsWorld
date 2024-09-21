@@ -20,6 +20,7 @@ export const moveActionToEvent: MainActionToEvent<MoveAction> = (match, action) 
   const player = match.getCurrentTurnPlayer();
   const unit = match.getUnitOrThrow(action.path[0]);
 
+
   if (!player.owns(unit)) {
     throw new DispatchableError("You don't own this unit");
   }
@@ -29,6 +30,12 @@ export const moveActionToEvent: MainActionToEvent<MoveAction> = (match, action) 
   }
 
   const result = createNoMoveEvent();
+
+  //Unit is waiting in-place if it's path is only the starting tile
+  if (action.path.length === 1) {
+    result.path.push(action.path[0]);
+    return result
+  }
 
   let remainingMovePoints = unit.getMovementPoints();
 
@@ -73,7 +80,8 @@ export const moveActionToEvent: MainActionToEvent<MoveAction> = (match, action) 
       unitInPosition !== undefined &&
       unitInPosition.data.playerSlot === unit.data.playerSlot
     ) {
-      if (unitInPosition.data.type === unit.data.type) {
+
+      if (unitInPosition.data.type === unit.data.type ) {
         // trying to join (same unit type)
         // join logic: if neither unit has loaded units, and the unit at join destination is not 10 hp
         if (unitInPosition.getVisualHP() === 10) {

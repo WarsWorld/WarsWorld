@@ -24,36 +24,16 @@ export function MatchRenderer({ match, player, spriteSheets }: Props) {
 
   const { mapContainerRef, pixiCanvasRef } = usePixi(match, spriteSheets, player);
 
-/*  trpc.action.onEvent.useSubscription(
-    {
-      playerId: player.data.id,
-      matchId: match.id,
-    },
-    {
-      onData(data) {
-        switch (data.type) {
-          case "build": {
-            applyBuildEvent(match, data);
-            const unit = match.getUnitOrThrow(data.position);
-            break;
-          }
-          case "passTurn": {
-            if (data.turns.at(-1)?.newWeather) {
-            }
-          }
-        }
-      },
-    },
-  );*/
-  const passTurnMutation = trpc.action.send.useMutation();
+  const passTurnMutation = trpc.action.send.useMutation(
+  );
 
   return (
     <>
-      <button className="btn" onClick={() => passTurnMutation.mutateAsync({
+      <button  className="btn" onClick={() => passTurnMutation.mutateAsync({
         type: "passTurn",
         playerId: player.data.id,
         matchId: match.id,
-      })}> Pass Turn</button>
+      }) }  > {match.getCurrentTurnPlayer().data.id === player.data.id ? `Pass Turn` : `not your turn to pass`}</button>
     <canvas
       className="@inline"
       style={{

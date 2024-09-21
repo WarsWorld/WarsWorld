@@ -381,7 +381,6 @@ export function getShortestPathToPosition(
 
   // Traverse back through the parent nodes to build the shortest path
   while (currentNode !== null) {
-    console.log(path);
     path.unshift(currentNode.pos);
     const nextNode = accessibleNodes.get(currentNode.parent!)
     if (nextNode !== undefined){
