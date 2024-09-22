@@ -37,7 +37,7 @@ export function getAccessibleNodes( //TODO: save result of function? _ (Sturm d2
 
   //queues[a] has current queued nodes with distance a from origin (technically a "stack", not a queue, but the result doesn't change)
   const queues: PathNode[][] = Array.from({ length: unit.getMovementPoints() }, () => []);
-  queues[0].push({ pos: unit.data.position, dist: 0, parent: null });//queues[0] has the origin node, initially
+  queues[0].push({ pos: unit.data.position, dist: 0, parent: null }); //queues[0] has the origin node, initially
 
   const visited = makeVisitedMatrix(match.map);
 
@@ -112,8 +112,9 @@ export function showPassableTiles(
     const square = tileConstructor(pos, "#43d9e4");
     markedTiles.addChild(square);
   }
-  markedTiles.zIndex = 9999
-  markedTiles.name = "path"
+
+  markedTiles.zIndex = 9999;
+  markedTiles.name = "path";
   return markedTiles;
 }
 
@@ -344,8 +345,6 @@ export function showPath(spriteSheet: Spritesheet, path: PathNode[]) {
   return arrowContainer;
 }
 
-
-
 //TODO: So apparently, our map wont take map.get[0,0] as it doesnt compare the same to the key [0,0] since its not the same array, so we can't do map.has([0,0]), we instead have to manually check. I'm sure there is an easy fix here but I could not think of it
 function positionsAreEqual(pos1: Position, pos2: Position): boolean {
   return pos1[0] === pos2[0] && pos1[1] === pos2[1];
@@ -355,7 +354,7 @@ function positionsAreEqual(pos1: Position, pos2: Position): boolean {
 export function getShortestPathToPosition(
   match: MatchWrapper,
   unit: UnitWrapper,
-  targetPosition: Position
+  targetPosition: Position,
 ): Path | null {
   // Get all accessible nodes using the existing function
   const accessibleNodes = getAccessibleNodes(match, unit);
@@ -382,11 +381,13 @@ export function getShortestPathToPosition(
   // Traverse back through the parent nodes to build the shortest path
   while (currentNode !== null) {
     path.unshift(currentNode.pos);
-    const nextNode = accessibleNodes.get(currentNode.parent!)
-    if (nextNode !== undefined){
-      currentNode = nextNode ;
-    } else break;
+    const nextNode = accessibleNodes.get(currentNode.parent!);
 
+    if (nextNode !== undefined) {
+      currentNode = nextNode;
+    } else {
+      break;
+    }
   }
 
   return path;

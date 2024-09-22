@@ -1,4 +1,5 @@
-import { Container, DisplayObject, FederatedPointerEvent, Sprite } from "pixi.js";
+import type { Container, DisplayObject, FederatedPointerEvent } from "pixi.js";
+import { Sprite } from "pixi.js";
 import { Application } from "pixi.js";
 import type { LoadedSpriteSheet } from "pixi/load-spritesheet";
 import { setupApp } from "pixi/setupApp";
@@ -9,14 +10,9 @@ import type { PlayerInMatchWrapper } from "shared/wrappers/player-in-match";
 import type { FrontendUnit } from "../../frontend/components/match/FrontendUnit";
 import type { ChangeableTileWithSprite } from "../../frontend/components/match/types";
 import { renderMultiplier, renderedTileSize } from "./MatchRenderer";
-import { trpc } from "../../frontend/utils/trpc-client";
-import { renderUnitSprite } from "../../pixi/renderUnitSprite";
-import { applyBuildEvent } from "../../shared/match-logic/events/handlers/build";
-import {
-  PathNode,
-} from "../../pixi/show-pathing";
+import type { PathNode } from "../../pixi/show-pathing";
 import { handleClick } from "../../pixi/handleClick";
-import { UnitWrapper } from "../../shared/wrappers/unit";
+import type { UnitWrapper } from "../../shared/wrappers/unit";
 import { trpcActions } from "../../pixi/trpcActions";
 
 export function usePixi(
@@ -28,8 +24,7 @@ export function usePixi(
   const mapContainerRef = useRef<Container<DisplayObject> | null>(null);
   const unitContainerRef = useRef<Container<DisplayObject> | null>(null);
   const currentUnitRef = useRef<UnitWrapper | null>(null);
-  const pathQueueRef = useRef<Map<Position, PathNode> | null >(null);
-
+  const pathQueueRef = useRef<Map<Position, PathNode> | null>(null);
 
   //TODO: Someone please the ts gods
   const { actionMutation } = trpcActions(match, player, unitContainerRef.current, spriteSheets);
@@ -51,7 +46,17 @@ export function usePixi(
 
     //TODO: Someone please the ts gods
     const clickHandler = async (event: FederatedPointerEvent) => {
-      handleClick(event, match, mapContainerRef.current, unitContainerRef.current, currentUnitRef, pathQueueRef, player, spriteSheets, actionMutation);
+      await handleClick(
+        event,
+        match,
+        mapContainerRef.current,
+        unitContainerRef.current,
+        currentUnitRef,
+        pathQueueRef,
+        player,
+        spriteSheets,
+        actionMutation,
+      );
     };
 
     mapContainerRef.current.on("pointertap", clickHandler);

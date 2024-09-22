@@ -133,7 +133,6 @@ export class PlayerInMatchWrapper {
 
   //TODO: Band aid fix applied here
   owns(tileOrUnit: Tile | ChangeableTile | UnitWrapper): boolean {
-
     // If it's a UnitWrapper, the playerSlot is under tileOrUnit.data
     if (isUnitWrapper(tileOrUnit)) {
       return tileOrUnit.data.playerSlot === this.data.slot;

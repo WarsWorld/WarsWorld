@@ -2,19 +2,16 @@ import { baseTileSize } from "components/client-only/MatchRenderer";
 import type { FrontendUnit } from "frontend/components/match/FrontendUnit";
 import { AnimatedSprite, Container, type Spritesheet } from "pixi.js";
 import type { LoadedSpriteSheet } from "./load-spritesheet";
-import { UnitWrapper } from "../shared/wrappers/unit";
+import type { UnitWrapper } from "../shared/wrappers/unit";
 import type { ArmySpritesheetData } from "../frontend/components/match/getSpritesheetData";
 import type { Position } from "shared/schemas/position";
-
 
 export function renderUnitSprite(
   unit: FrontendUnit | UnitWrapper,
   spriteSheets: Spritesheet<ArmySpritesheetData>,
-  newPosition?:Position | null,
+  newPosition?: Position | null,
 ) {
-
-  const unitSprite = new AnimatedSprite(spriteSheets.animations[unit.data.type]
-  );
+  const unitSprite = new AnimatedSprite(spriteSheets.animations[unit.data.type]);
 
   let x = unit.data.position[0];
   let y = unit.data.position[1];
@@ -23,7 +20,7 @@ export function renderUnitSprite(
   //this lets us render at a different position (such as when moving an unit around)
   if (newPosition) {
     x = newPosition[0];
-    y = newPosition[1]
+    y = newPosition[1];
     unitName = "unit-ghost";
   }
 

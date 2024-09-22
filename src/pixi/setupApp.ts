@@ -20,7 +20,7 @@ export function setupApp(
   const unitContainer = renderUnits(match, spriteSheets);
 
   mapContainer.name = "mapContainer";
-  unitContainer.name = "childContainer"
+  unitContainer.name = "childContainer";
 
   app.stage.addChild(mapContainer, unitContainer);
 

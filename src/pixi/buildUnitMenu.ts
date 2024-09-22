@@ -5,7 +5,7 @@ import { unitPropertiesMap } from "shared/match-logic/game-constants/unit-proper
 import type { Position } from "shared/schemas/position";
 import { UnitType, unitTypes } from "shared/schemas/unit";
 import type { MatchWrapper } from "../shared/wrappers/match";
-import { PlayerInMatchWrapper } from "../shared/wrappers/player-in-match";
+import type { PlayerInMatchWrapper } from "../shared/wrappers/player-in-match";
 
 //only called if player has current turn
 export default async function buildUnitMenu(
@@ -15,18 +15,16 @@ export default async function buildUnitMenu(
   [x, y]: Position,
   onBuild?: any,
 ) {
-
   //The big container holding everything
   //set its eventmode to static for interactivity and sortable for zIndex
   const menuContainer = new Container();
   menuContainer.eventMode = "static";
   menuContainer.sortableChildren = true;
-  menuContainer.zIndex = 999
+  menuContainer.zIndex = 999;
 
   const tileSize = 16;
   //this is the value we have applied to units (half a tile)
   const unitSize = tileSize / 2;
-
 
   //the name lets us find the menu easily with getChildByName for easy removal
   menuContainer.name = "unitMenu";
@@ -35,7 +33,7 @@ export default async function buildUnitMenu(
 
   const facility = match.getTile([x, y]).type;
 
-// Filter allowed units based on facility type and then sort by cost
+  // Filter allowed units based on facility type and then sort by cost
   const buildableUnitTypes = allowedUnits
     .filter((type) => unitPropertiesMap[type].facility === facility)
     .sort((a, b) => unitPropertiesMap[a].cost - unitPropertiesMap[b].cost);
@@ -53,16 +51,16 @@ export default async function buildUnitMenu(
   if (y >= match.map.height / 2 && match.map.height - y < buildableUnitTypes.length) {
     const spaceLeft = match.map.height - y;
     menuContainer.y = (y - Math.abs(spaceLeft - buildableUnitTypes.length)) * tileSize;
-  } else menuContainer.y = y * tileSize;
-
+  } else {
+    menuContainer.y = y * tileSize;
+  }
 
   //TODO: Fix border
-  menuContainer.x += 8
-  menuContainer.y += 8
+  menuContainer.x += 8;
+  menuContainer.y += 8;
 
   //lets load our font
   await Assets.load("/aw2Font.fnt");
-
 
   //This makes the menu elements be each below each other, it starts at 0 then gets plussed, so elements keep going down and down. yValue is not the best name for it but effectively it is that, a y value
   let yValue = 0;
@@ -85,7 +83,6 @@ export default async function buildUnitMenu(
     unitBG.alpha = 0.5;
     menuElement.addChild(unitBG);
 
-
     //the unit sprite we see on the menu
     const unitSprite = new AnimatedSprite(spriteSheet.animations[unitType]);
     unitSprite.y = yValue;
@@ -100,7 +97,7 @@ export default async function buildUnitMenu(
     //name of the unit
     const unitName = new BitmapText(`${unitType.toUpperCase()}`, {
       fontName: "awFont",
-      fontSize: 10
+      fontSize: 10,
     });
     unitName.y = yValue;
     unitName.x = tileSize;
@@ -108,18 +105,16 @@ export default async function buildUnitMenu(
     unitName.anchor.set(0, -0.3);
     menuElement.addChild(unitName);
 
-
     //cost displayed
     const unitCost = new BitmapText(`${unitPropertiesMap[unitType].cost}`, {
       fontName: "awFont",
-      fontSize: 10
+      fontSize: 10,
     });
     unitCost.y = yValue;
     //TODO: Standardize this size
     unitCost.x = tileSize * 4;
     unitCost.anchor.set(0, -0.25);
     menuElement.addChild(unitCost);
-
 
     //lets add a hover effect to the unitBG when you hover over the menu
     menuElement.on("pointerenter", () => {
@@ -131,21 +126,18 @@ export default async function buildUnitMenu(
       unitBG.alpha = 0.5;
     });
 
-//TODO: WHEN CLICKING
-    menuElement.on("pointerdown",  () => {
-
-  onBuild.mutateAsync({
+    //TODO: WHEN CLICKING
+    menuElement.on("pointerdown", () => {
+      onBuild.mutateAsync({
         type: "build",
-        position: [x,y],
+        position: [x, y],
         playerId: player.data.id,
         matchId: match.id,
         unitType: unitType,
-      })
+      });
       //as soon a selection is done, destroy/erase the menu
-      menuContainer.destroy()
-
+      menuContainer.destroy();
     });
-
 
     yValue += unitSize * 2;
     menuContainer.addChild(menuElement);
@@ -165,7 +157,6 @@ export default async function buildUnitMenu(
   return menuContainer;
 }
 
-
 const createCaptureOption = (match: MatchWrapper, onCapture: () => void): Container => {
   const menuElement = new Container();
   menuElement.eventMode = "static";
@@ -173,7 +164,7 @@ const createCaptureOption = (match: MatchWrapper, onCapture: () => void): Contai
 
   const actionText = new BitmapText("Capture", {
     fontName: "awFont",
-    fontSize: 10
+    fontSize: 10,
   });
   actionText.y = 0;
   actionText.x = 60;
@@ -202,7 +193,6 @@ const createCaptureOption = (match: MatchWrapper, onCapture: () => void): Contai
 
   menuElement.addChild(menuBG);
   menuElement.addChild(actionText);
-
 
   return menuElement;
 };
