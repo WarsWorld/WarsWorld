@@ -247,6 +247,8 @@ export const applyMoveEvent = (match: MatchWrapper, event: MoveEvent) => {
 
   const unit = match.getUnitOrThrow(event.path[0]);
 
+  unit.data.isReady = false;
+
   //if unit was capturing, interrupt capture
   if ("currentCapturePoints" in unit) {
     unit.currentCapturePoints = undefined;

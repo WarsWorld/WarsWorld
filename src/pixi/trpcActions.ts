@@ -19,7 +19,7 @@ export const trpcActions = (
   trpc.action.onEvent.useSubscription(
     {
       playerId: player.data.id,
-      matchId: match.id,
+      matchId: match.id
     },
     {
       onData(data) {
@@ -44,26 +44,19 @@ export const trpcActions = (
             }
             break;
           }
-     /*     case "move": {
-            if (data.path.length === 0) break;
-            console.log("move event!");
+          case "move": {
+            if (data.path.length === 0 || !match.getUnit(data.path[0])) break;
             applyMoveEvent(match, data);
-            console.log(data);
-            let finalPosition : Position= data.path[0]
+            let finalPosition: Position = data.path[data.path.length - 1];
             const unit = match.getUnitOrThrow(finalPosition);
-            console.log("we passed the unit test");
-
-            if (unit !== null) {
-              unitContainer.getChildByName(`unit-${finalPosition[0]}-${finalPosition[1]}`)?.destroy();
+              unitContainer.getChildByName(`unit-${data.path[0][0]}-${data.path[0][1]}`)?.destroy();
               unitContainer.addChild(
                 renderUnitSprite(unit, spriteSheets[match.getCurrentTurnPlayer().data.army])
               );
-            }
-            console.log("finished moving");
             break;
-          }*/
+          }
         }
-      },
+      }
     }
   );
 

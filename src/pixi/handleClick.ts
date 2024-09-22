@@ -47,15 +47,15 @@ export const handleClick = async (
 
 
   // UNIT MOVING HANDLING
-  let path = mapContainer.getChildByName("path");
 
   //Handle clicking on path
   if ( pathQueue.current && currentUnitRef.current) {
-    let clickedOnPath = false;
     for (const [pos] of pathQueue.current) {
       if (clickPosition[0] === pos[0] && clickPosition[1] === pos[1]) {
 
-        clickedOnPath = true;
+        pathQueue.current = null;
+
+        mapContainer.getChildByName("path")?.destroy();
 
 
         // 1 - dissapear current sprite
@@ -70,25 +70,24 @@ export const handleClick = async (
 
         //4 - display subactio menu next to unit in new position
         const subMenu = await subActionMenu(match, player, currentUnitRef.current,pos, actionMutation, newPath)
+
         unitContainer.addChild(subMenu)
+        break;
 
       }
     }
     //handle if we didnt click on the path
-    if (!clickedOnPath) {
-      if (path) mapContainer.removeChild(path);
-
-
+  } else if (currentUnitRef.current) {
+      mapContainer.getChildByName("path")?.destroy();
       //lets add the original unit back to its original position only if the original doesnt exist
-      if (!unitContainer.getChildByName(`unit-${currentUnitRef.current.data.position[0]}-${currentUnitRef.current.data.position[1]}`)) {
+      if (match.getUnit(currentUnitRef.current.data.position) && !unitContainer.getChildByName(`unit-${currentUnitRef.current.data.position[0]}-${currentUnitRef.current.data.position[1]}`)) {
         unitContainer.addChild(renderUnitSprite(currentUnitRef.current, spriteSheets[match.getCurrentTurnPlayer().data.army]));
       }
-
-
       pathQueue.current = null;
       currentUnitRef.current = null;
     }
-  }
+
+
 
 
   const unit = match.getUnit(clickPosition);
@@ -99,7 +98,7 @@ export const handleClick = async (
       currentUnitRef.current = unit;
       const showPath = showPassableTiles(match,unit);
       pathQueue.current = getAccessibleNodes(match,unit)
-      if (path) mapContainer.removeChild(path)
+      mapContainer.getChildByName("path")?.destroy();
       mapContainer.addChild(showPath);
 
     }
