@@ -25,22 +25,105 @@ export const handleClick = async (
   spriteSheets: LoadedSpriteSheet,
   actionMutation: any,
 ) => {
-  // Handle click events like in your original function
-  // ...
-
   if (match.getCurrentTurnPlayer().data.id !== player.data.id) {
     return;
   }
+
+  const x = Math.floor((event.global.x - renderedTileSize / 2) / renderedTileSize);
+  const y = Math.floor((event.global.y - renderedTileSize / 2) / renderedTileSize);
+
+  const clickPosition: Position = [x, y];
+  //STEPS WHEN CLICKING
+
+/*
+
+so right now, everytime there is a click in the game, this function runs. Ergo, we need to be able to differ if this is the first time clicking an unit or base or if we are clicking again to select a path OR to select an action.
+
+For example
+Click #1, click on unit owned
+  - now we need to show the path that unit can go to
+
+    Click #2, clicked on a blue square of the path (we need a variable to determine if we've clicked on a path)
+      -Show the unit moving to that tile
+      -Display the actions menu
+
+      Click #3, click on an action
+      - perform the action, if its a transport, we need to display where can the unit go go to click #4
+
+        Click#4,
+        - show options for unit to be unloaded to
+
+
+  If at any moment, the user clicks on something that doesnt do anything (such as an empty tile) then we need to clean up everything and re-render everything back to its original position.
+
+
+  So having a system for click management (such as knowing if we clicked on an ally unit vs an enemy unit and showing their attack range or movement range and so on) is quite important.
+
+ */
+
+  //0 - is there a path active
+  // if path active {}
+
+  //if clicking on path
+
+  //HANDLING TRANSPORT
+  // if clicking on unit we OWN and its out TURN
+
+  //else go below
+
+//1 - Check if it's an unit
+  const unit = match.getUnit(clickPosition);
+  if (unit) {
+
+
+    //1.1 - Show its path
+    const showPath = showPassableTiles(match, unit);
+    pathQueue.current = getAccessibleNodes(match, unit);
+    mapContainer.addChild(showPath);
+    //todo: ts hates this,
+
+    if (player.owns(unit.data) && unit.data.isReady) {
+      console.log("player owns unit");
+      currentUnitRef.current = unit;
+    }
+
+    return;
+  }
+
+  //- Trigger something to understand we've clicked an unit and its path, now we follow this specific path
+
+  //--- WAIT FOR THE NEXT CLICK ---
+
+  //1.2 - If the player owns the unit AND has the turn AND clicks on the path
+
+  // - Remove the original unit
+  // - Show unit in new position
+  // - Show subaction menu in new position
+
+  //--- WAIT FOR NEXT CLICK ---
+
+  //1.2.3 - If they click on action, do action, else, return to original state
+    // if unit is a transport, sort out one last click to know where will units be dropped
+
+
+  //1.3 - else not your turn or not your unit? Destroy the path, return to original state
+
+  //2 - (No unit) Check if its a property AND its our turn AND we own it
+
+  // 2.1 - Show unit building menu
+
+  // - If click on menu, build unit on spot
+  //- Else, return to original state
+
+  // --- WAIT FOR THE NEXT CLICK ---
 
   //removes the menu if we click anywhere, still lets the menu work
   unitContainer.getChildByName("unitMenu")?.destroy();
   unitContainer.getChildByName("subMenu")?.destroy();
   unitContainer.getChildByName("unit-ghost")?.destroy();
 
-  const x = Math.floor((event.global.x - renderedTileSize / 2) / renderedTileSize);
-  const y = Math.floor((event.global.y - renderedTileSize / 2) / renderedTileSize);
-
-  const clickPosition: Position = [x, y];
+  console.log(`pathQueue ${pathQueue.current}`);
+  console.log(`currentUnitRef.current ${currentUnitRef.current}`);
 
   // UNIT MOVING HANDLING
 
@@ -109,22 +192,6 @@ export const handleClick = async (
 
     pathQueue.current = null;
     currentUnitRef.current = null;
-  }
-
-  const unit = match.getUnit(clickPosition);
-
-  if (unit !== undefined) {
-    //todo: ts hates this,
-    //@ts-ignore
-    if (player.owns(unit.data) && unit.data.isReady) {
-      currentUnitRef.current = unit;
-      const showPath = showPassableTiles(match, unit);
-      pathQueue.current = getAccessibleNodes(match, unit);
-      mapContainer.getChildByName("path")?.destroy();
-      mapContainer.addChild(showPath);
-    }
-
-    return;
   }
 
   const changeableTile = match.getTile(clickPosition);

@@ -1,7 +1,6 @@
 import { trpc } from "frontend/utils/trpc-client";
 import type { LoadedSpriteSheet } from "pixi/load-spritesheet";
 import { useState } from "react";
-import { applyBuildEvent } from "shared/match-logic/events/handlers/build";
 import type { Position } from "shared/schemas/position";
 import type { MatchWrapper } from "shared/wrappers/match";
 import type { PlayerInMatchWrapper } from "shared/wrappers/player-in-match";
@@ -20,9 +19,11 @@ export const renderMultiplier = 2;
 export const renderedTileSize = baseTileSize * renderMultiplier;
 
 export function MatchRenderer({ match, player, spriteSheets }: Props) {
-  const [buildMenuPosition, setBuildMenuPosition] = useState<Position | null>(null); // Position in viewport, not tiles.
+  const [turnButton, setTurnButton] = useState<boolean>(
+    match.getCurrentTurnPlayer().data.id === player.data.id,
+  );
 
-  const { mapContainerRef, pixiCanvasRef } = usePixi(match, spriteSheets, player);
+  const { pixiCanvasRef } = usePixi(match, spriteSheets, player);
 
   const passTurnMutation = trpc.action.send.useMutation();
 
@@ -30,18 +31,21 @@ export function MatchRenderer({ match, player, spriteSheets }: Props) {
     <>
       <button
         className="btn"
-        onClick={() =>
-          passTurnMutation.mutateAsync({
-            type: "passTurn",
-            playerId: player.data.id,
-            matchId: match.id,
-          })
-        }
+        onClick={() => {
+          passTurnMutation
+            .mutateAsync({
+              type: "passTurn",
+              playerId: player.data.id,
+              matchId: match.id,
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+          //TODO: should be doing something better than this...
+          setTurnButton(!turnButton);
+        }}
       >
-        {" "}
-        {match.getCurrentTurnPlayer().data.id === player.data.id
-          ? `Pass Turn`
-          : `not your turn to pass`}
+        {turnButton ? "Pass Turn" : "Not your Turn"}
       </button>
       <canvas
         className="@inline"

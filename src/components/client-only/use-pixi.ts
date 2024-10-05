@@ -25,6 +25,8 @@ export function usePixi(
   const unitContainerRef = useRef<Container<DisplayObject> | null>(null);
   const currentUnitRef = useRef<UnitWrapper | null>(null);
   const pathQueueRef = useRef<Map<Position, PathNode> | null>(null);
+  const clickedOnEnemyUnitRef = useRef<boolean | null>(null);
+  const clickStateRef = useRef<string>("neutral");
 
   //TODO: Someone please the ts gods
   const { actionMutation } = trpcActions(match, player, unitContainerRef.current, spriteSheets);

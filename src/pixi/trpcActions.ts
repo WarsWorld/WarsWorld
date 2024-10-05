@@ -53,9 +53,13 @@ export const trpcActions = (
               break;
             }
 
+            console.log("move Event!");
             applyMoveEvent(match, data);
+            console.log("event apploed!");
             const finalPosition: Position = data.path[data.path.length - 1];
+
             const unit = match.getUnitOrThrow(finalPosition);
+            console.log("we did not throw from unit final pos!");
             unitContainer.getChildByName(`unit-${data.path[0][0]}-${data.path[0][1]}`)?.destroy();
             unitContainer.addChild(
               renderUnitSprite(unit, spriteSheets[match.getCurrentTurnPlayer().data.army]),
