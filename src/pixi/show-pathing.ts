@@ -1,6 +1,6 @@
 import type { Spritesheet } from "pixi.js";
 import { Container, Sprite } from "pixi.js";
-import type { Position, Path } from "shared/schemas/position";
+import type { Position } from "shared/schemas/position";
 import {
   getDistance,
   getNeighbourPositions,
@@ -70,8 +70,6 @@ export function getAccessibleNodes( //TODO: save result of function? _ (Sturm d2
       if (match.map.isOutOfBounds(pos)) {
         continue;
       }
-
-      unit.getMovementCost(pos);
 
       const movementCost = unit.getMovementCost(pos);
 
@@ -188,14 +186,14 @@ export function showAttackableTiles(
 export function updatePath(
   unit: UnitWrapper,
   accessibleNodes: Map<Position, PathNode>,
-  path: PathNode[],
+  path: PathNode[] | undefined,
   newPos: Position,
 ): PathNode[] {
   if (!accessibleNodes.has(newPos)) {
     throw new Error("Trying to add an unreachable position!");
   }
 
-  if (path.length !== 0) {
+  if (path !== undefined && path.length !== 0) {
     const lastNode = path.at(-1)!;
 
     for (const node of path) {
@@ -343,52 +341,4 @@ export function showPath(spriteSheet: Spritesheet, path: PathNode[]) {
   //this name will let us easily remove arrows later
   arrowContainer.name = "arrows";
   return arrowContainer;
-}
-
-//TODO: So apparently, our map wont take map.get[0,0] as it doesnt compare the same to the key [0,0] since its not the same array, so we can't do map.has([0,0]), we instead have to manually check. I'm sure there is an easy fix here but I could not think of it
-function positionsAreEqual(pos1: Position, pos2: Position): boolean {
-  return pos1[0] === pos2[0] && pos1[1] === pos2[1];
-}
-
-//TODO: I know we want to get the path the player chose (specially for fog) but for right now, I just want to create enough utility for standard. Feel free to modify this function or the other ones to replicate the same result.
-export function getShortestPathToPosition(
-  match: MatchWrapper,
-  unit: UnitWrapper,
-  targetPosition: Position,
-): Path | null {
-  // Get all accessible nodes using the existing function
-  const accessibleNodes = getAccessibleNodes(match, unit);
-
-  // Find the target position by value instead of reference
-  let targetNode: PathNode | undefined;
-
-  for (const [pos, node] of accessibleNodes.entries()) {
-    if (positionsAreEqual(pos, targetPosition)) {
-      targetNode = node;
-      break;
-    }
-  }
-
-  // If the target position is not accessible, return null
-  if (!targetNode) {
-    return null;
-  }
-
-  // Initialize the path array and start from the target position
-  const path: Path = [];
-  let currentNode = targetNode;
-
-  // Traverse back through the parent nodes to build the shortest path
-  while (currentNode !== null) {
-    path.unshift(currentNode.pos);
-    const nextNode = accessibleNodes.get(currentNode.parent!);
-
-    if (nextNode !== undefined) {
-      currentNode = nextNode;
-    } else {
-      break;
-    }
-  }
-
-  return path;
 }

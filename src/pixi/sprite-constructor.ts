@@ -1,7 +1,7 @@
 import { Sprite, Texture } from "pixi.js";
 import type { Position } from "shared/schemas/position";
 
-export function tileConstructor(position: Position, colour: string) {
+export const tileConstructor = (position: Position, colour: string) => {
   const tile = new Sprite(Texture.WHITE);
   tile.anchor.set(1, 1); //?
   tile.x = (position[0] + 1) * 16;
@@ -12,4 +12,25 @@ export function tileConstructor(position: Position, colour: string) {
   tile.eventMode = "static";
   tile.tint = colour;
   return tile;
-}
+};
+
+export const interactiveTileConstructor = (
+  position: Position,
+  colour: string,
+  hoverBehaviour?: (position: Position) => void,
+  clickBehaviour?: (positoin: Position) => void,
+) => {
+  const tile = tileConstructor(position, colour);
+
+  tile.eventMode = "dynamic";
+
+  if (hoverBehaviour) {
+    tile.on("mouseover", () => hoverBehaviour(position));
+  }
+
+  if (clickBehaviour) {
+    tile.on("pointerdown", () => clickBehaviour(position));
+  }
+
+  return tile;
+};

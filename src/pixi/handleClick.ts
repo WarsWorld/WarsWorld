@@ -1,18 +1,17 @@
 // pixiEventHandlers.ts
-import type { FederatedPointerEvent, Container } from "pixi.js";
+import type { Container, FederatedPointerEvent } from "pixi.js";
+import type { MutableRefObject } from "react";
 import type { Position } from "shared/schemas/position";
 import type { MatchWrapper } from "shared/wrappers/match";
-import { renderUnitSprite } from "./renderUnitSprite";
-import { getAccessibleNodes, showPassableTiles, getShortestPathToPosition } from "./show-pathing";
-import subActionMenu from "./subActionMenu";
-import type { PathNode } from "./show-pathing";
 import { renderedTileSize } from "../components/client-only/MatchRenderer";
-import buildUnitMenu from "./buildUnitMenu";
 import type { PlayerInMatchWrapper } from "../shared/wrappers/player-in-match";
-import type { LoadedSpriteSheet } from "./load-spritesheet";
-import type { FrontendUnit } from "../frontend/components/match/FrontendUnit";
 import type { UnitWrapper } from "../shared/wrappers/unit";
-import type { MutableRefObject } from "react";
+import buildUnitMenu from "./buildUnitMenu";
+import type { LoadedSpriteSheet } from "./load-spritesheet";
+import { renderUnitSprite } from "./renderUnitSprite";
+import type { PathNode } from "./show-pathing";
+import { getAccessibleNodes, showPassableTiles, updatePath } from "./show-pathing";
+import subActionMenu from "./subActionMenu";
 
 export const handleClick = async (
   event: FederatedPointerEvent,
@@ -35,7 +34,7 @@ export const handleClick = async (
   const clickPosition: Position = [x, y];
   //STEPS WHEN CLICKING
 
-/*
+  /*
 
 so right now, everytime there is a click in the game, this function runs. Ergo, we need to be able to differ if this is the first time clicking an unit or base or if we are clicking again to select a path OR to select an action.
 
@@ -71,18 +70,17 @@ Click #1, click on unit owned
 
   //else go below
 
-//1 - Check if it's an unit
+  //1 - Check if it's an unit
   const unit = match.getUnit(clickPosition);
+
   if (unit) {
-
-
     //1.1 - Show its path
     const showPath = showPassableTiles(match, unit);
     pathQueue.current = getAccessibleNodes(match, unit);
     mapContainer.addChild(showPath);
     //todo: ts hates this,
 
-    if (player.owns(unit.data) && unit.data.isReady) {
+    if (player.owns(unit) && unit.data.isReady) {
       console.log("player owns unit");
       currentUnitRef.current = unit;
     }
@@ -103,8 +101,7 @@ Click #1, click on unit owned
   //--- WAIT FOR NEXT CLICK ---
 
   //1.2.3 - If they click on action, do action, else, return to original state
-    // if unit is a transport, sort out one last click to know where will units be dropped
-
+  // if unit is a transport, sort out one last click to know where will units be dropped
 
   //1.3 - else not your turn or not your unit? Destroy the path, return to original state
 
@@ -151,7 +148,8 @@ Click #1, click on unit owned
           ),
         );
 
-        const newPath = getShortestPathToPosition(match, currentUnitRef.current, pos);
+        const accessibleNodes = getAccessibleNodes(match, currentUnitRef.current);
+        const newPath = updatePath(currentUnitRef.current, accessibleNodes, undefined, pos);
 
         if (newPath === null) {
           break;

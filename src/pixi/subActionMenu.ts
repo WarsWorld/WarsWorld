@@ -1,12 +1,254 @@
-import { Assets, BitmapText, Container, Sprite, Text, Texture } from "pixi.js";
-import type { Position, Path } from "shared/schemas/position";
+import { Assets, BitmapText, Container, Sprite, Texture } from "pixi.js";
+import { getBaseDamage } from "shared/match-logic/game-constants/base-damage";
+import { unitPropertiesMap } from "shared/match-logic/game-constants/unit-properties";
+import { getBaseMovementCost } from "shared/match-logic/movement-cost";
+import { getWeatherSpecialMovement } from "shared/match-logic/weather";
+import {
+  getDistance,
+  getNeighbourPositions,
+  type Path,
+  type Position,
+} from "shared/schemas/position";
+import type { WWUnit } from "shared/schemas/unit";
+import { UnitWrapper } from "shared/wrappers/unit";
+import type { FrontendUnit } from "../frontend/components/match/FrontendUnit";
 import type { MatchWrapper } from "../shared/wrappers/match";
 import type { PlayerInMatchWrapper } from "../shared/wrappers/player-in-match";
-import type { FrontendUnit } from "../frontend/components/match/FrontendUnit";
-import type { SubAction } from "../shared/schemas/action";
-import type { PropertyTileType } from "../shared/schemas/tile";
-import { type Tile } from "../shared/schemas/tile";
-import type { ChangeableTile } from "../shared/types/server-match-state";
+
+export enum AvailableSubActions {
+  "Wait",
+  "Join",
+  "Load",
+  "Capture",
+  "Launch",
+  "Supply",
+  "Explode",
+  "Hide",
+  "Show",
+  "Unload",
+  "Repair",
+  "Attack",
+}
+
+export const getAvailableSubActions = (
+  match: MatchWrapper,
+  player: PlayerInMatchWrapper,
+  unit: UnitWrapper,
+  newPosition: Position,
+) => {
+  const menuOptions: AvailableSubActions[] = [];
+  const tile = match.getTile(newPosition);
+
+  //check for wait / join / load (move validity already checked somewhere else)
+  //if loading / joining, there is only one menu option
+  if (
+    match.getUnit(newPosition) === undefined ||
+    (newPosition[0] === unit.data.position[0] && newPosition[1] === unit.data.position[1])
+  ) {
+    menuOptions.push(AvailableSubActions.Wait);
+  } else if (match.getUnit(newPosition)?.data.type === unit.data.type) {
+    menuOptions.push(AvailableSubActions.Join);
+    return menuOptions;
+  } else {
+    menuOptions.push(AvailableSubActions.Load);
+    return menuOptions;
+  }
+
+  //check for attack, including pipeseams
+  if (!unit.isTransport()) {
+    let addAttackSubaction = false;
+
+    //code for creating dummy pipeseam equivalent unit and checking if unit can attack pipeseams
+    const usedVersion = match.rules.gameVersion ?? unit.player.data.coId.version;
+    const pipeseamUnitEquivalent: WWUnit = {
+      type: usedVersion === "AW1" ? "mediumTank" : "neoTank",
+      playerSlot: -1,
+      position: [1, 1],
+      isReady: false,
+      stats: {
+        hp: 1,
+        fuel: 0,
+        ammo: 0,
+      },
+    };
+    const wrappedPipeseamUnit = new UnitWrapper(pipeseamUnitEquivalent, match);
+    const canAttackPipeseams = getBaseDamage(unit, wrappedPipeseamUnit) !== null;
+
+    if (unit.isIndirect()) {
+      for (let x = 0; x < match.map.width && !addAttackSubaction; x++) {
+        for (let y = 0; y < match.map.height && !addAttackSubaction; y++) {
+          const distance = getDistance([x, y], unit.data.position);
+
+          if (
+            distance <= unit.properties.attackRange[1] &&
+            distance >= unit.properties.attackRange[0]
+          ) {
+            if (
+              canAttackPipeseams &&
+              !match.map.isOutOfBounds([x, y]) &&
+              match.getTile([x, y]).type === "pipeSeam"
+            ) {
+              addAttackSubaction = true;
+            }
+
+            const attackableUnit = match.getUnit([x, y]);
+
+            if (
+              attackableUnit &&
+              attackableUnit.player.team !== unit.player.team &&
+              getBaseDamage(unit, attackableUnit) !== null
+            ) {
+              addAttackSubaction = true;
+            }
+          }
+        }
+      }
+    } else {
+      if (canAttackPipeseams) {
+        for (const adjacentPos of getNeighbourPositions(newPosition)) {
+          if (addAttackSubaction) {
+            break;
+          }
+
+          if (
+            !match.map.isOutOfBounds(adjacentPos) &&
+            match.getTile(adjacentPos).type === "pipeSeam"
+          ) {
+            addAttackSubaction = true;
+          }
+        }
+      }
+
+      for (const adjacentUnit of unit.getNeighbouringUnits()) {
+        if (addAttackSubaction) {
+          break;
+        }
+
+        if (
+          adjacentUnit.player.team !== unit.player.team &&
+          getBaseDamage(unit, adjacentUnit) !== null
+        ) {
+          addAttackSubaction = true;
+        }
+      }
+    }
+
+    if (addAttackSubaction) {
+      menuOptions.push(AvailableSubActions.Attack);
+    }
+  }
+
+  //check for capture / launch
+  if (unit.isInfantryOrMech()) {
+    if ("playerSlot" in tile && tile.playerSlot !== player.data.slot) {
+      menuOptions.push(AvailableSubActions.Capture);
+    }
+
+    if (tile.type === "unusedSilo") {
+      menuOptions.push(AvailableSubActions.Launch);
+    }
+  }
+
+  //check for supply
+  if (unit.data.type === "apc") {
+    for (const adjacentUnit of unit.getNeighbouringUnits()) {
+      if (adjacentUnit.player === unit.player) {
+        menuOptions.push(AvailableSubActions.Supply);
+        break;
+      }
+    }
+  }
+
+  //check for explode
+  if (unit.data.type === "blackBomb") {
+    menuOptions.push(AvailableSubActions.Explode);
+  }
+
+  //check for hide / show
+  if ("hidden" in unit.data) {
+    if (unit.data.hidden) {
+      menuOptions.push(AvailableSubActions.Show);
+    } else {
+      menuOptions.push(AvailableSubActions.Hide);
+    }
+  }
+
+  //check for unload
+  if (unit.isTransport()) {
+    let addUnloadSubaction = false;
+
+    if (unit.data.loadedUnit !== null) {
+      const baseMovementCost = getBaseMovementCost(
+        unitPropertiesMap[unit.data.loadedUnit.type].movementType,
+        getWeatherSpecialMovement(unit.player),
+        tile.type,
+        match.rules.gameVersion ?? unit.player.data.coId.version,
+      );
+
+      if (baseMovementCost !== null) {
+        for (const adjacentPosition of getNeighbourPositions(newPosition)) {
+          if (!match.map.isOutOfBounds(adjacentPosition)) {
+            const adjacentBaseMovementCost = getBaseMovementCost(
+              unitPropertiesMap[unit.data.loadedUnit.type].movementType,
+              getWeatherSpecialMovement(unit.player),
+              match.getTile(adjacentPosition).type,
+              match.rules.gameVersion ?? unit.player.data.coId.version,
+            );
+
+            if (adjacentBaseMovementCost !== null) {
+              addUnloadSubaction = true;
+              break;
+            }
+          }
+        }
+      }
+    }
+
+    if (!addUnloadSubaction && "loadedUnit2" in unit.data && unit.data.loadedUnit2 !== null) {
+      //duplicated code for loadedUnit2
+      const baseMovementCost = getBaseMovementCost(
+        unitPropertiesMap[unit.data.loadedUnit2.type].movementType,
+        getWeatherSpecialMovement(unit.player),
+        tile.type,
+        match.rules.gameVersion ?? unit.player.data.coId.version,
+      );
+
+      if (baseMovementCost !== null) {
+        for (const adjacentPosition of getNeighbourPositions(newPosition)) {
+          if (!match.map.isOutOfBounds(adjacentPosition)) {
+            const adjacentBaseMovementCost = getBaseMovementCost(
+              unitPropertiesMap[unit.data.loadedUnit2.type].movementType,
+              getWeatherSpecialMovement(unit.player),
+              match.getTile(adjacentPosition).type,
+              match.rules.gameVersion ?? unit.player.data.coId.version,
+            );
+
+            if (adjacentBaseMovementCost !== null) {
+              addUnloadSubaction = true;
+              break;
+            }
+          }
+        }
+      }
+    }
+
+    if (addUnloadSubaction) {
+      menuOptions.push(AvailableSubActions.Unload);
+    }
+  }
+
+  //check for repair
+  if (unit.data.type === "blackBoat") {
+    for (const adjacentUnit of unit.getNeighbouringUnits()) {
+      if (adjacentUnit.player === unit.player) {
+        menuOptions.push(AvailableSubActions.Repair);
+        break;
+      }
+    }
+  }
+
+  return menuOptions;
+};
 
 export default async function subActionMenu(
   match: MatchWrapper,
@@ -17,58 +259,7 @@ export default async function subActionMenu(
   mutation: any,
   newPath?: Path,
 ) {
-  const menuOptions: SubAction[] = [];
-  const tile = match.getTile(newPosition);
-  console.log(tile.type);
-
-  //the name will be displaying for each action
-
-  if (unit.isInfantryOrMech()) {
-    const tile: Tile | ChangeableTile = match.getTile(newPosition);
-    console.log(tile);
-
-    //check if in capturable property
-    const capturableTile: PropertyTileType[] = [
-      "base",
-      "airport",
-      "port",
-      "hq",
-      "lab",
-      "commtower",
-      "city",
-    ];
-
-    //TODO: fix this
-    //@ts-ignore
-    if (
-      capturableTile.includes(tile.type as PropertyTileType) &&
-      tile?.playerSlot !== player.data.slot
-    ) {
-      menuOptions.push({ type: "ability" });
-    } else {
-    }
-
-    //check if silo
-  }
-
-  //check for possible attacks or next to pipeseam?
-  if (unit.getNeighbouringUnits()) {
-  }
-
-  //check if indirect can attack
-  if (unit.isIndirect()) {
-  }
-
-  //there's not a different unit on the tile we want to go to? then we can wait there
-  if (
-    match.getUnit(newPosition) === undefined ||
-    (newPosition[0] === unit.data.position[0] && newPosition[1] === unit.data.position[1])
-  ) {
-    menuOptions.push({ type: "wait" });
-
-    //check if new tile has a transport
-  } else if (match.getUnit(newPosition)?.isTransport()) {
-  }
+  const menuOptions = getAvailableSubActions(match, player, unit, newPosition);
 
   const [x, y] = newPosition;
 
@@ -109,14 +300,12 @@ export default async function subActionMenu(
   menuContainer.x += 8;
   menuContainer.y += 8;
 
-  //lets load our font
   await Assets.load("/aw2Font.fnt");
 
   //This makes the menu elements be each below each other, it starts at 0 then gets plussed, so elements keep going down and down. yValue is not the best name for it but effectively it is that, a y value
   let yValue = 0;
 
-  //lets loop through each unit and build the build menu
-  for (const action of menuOptions) {
+  for (const subAction of menuOptions) {
     //child container to hold all the text and sprite into one place
     const menuElement = new Container();
     menuElement.eventMode = "static";
@@ -133,20 +322,7 @@ export default async function subActionMenu(
     actionBG.alpha = 0.5;
     menuElement.addChild(actionBG);
 
-    /* //the unit sprite we see on the menu
-    const actionIcon = new AnimatedSprite(spriteSheet.animations[unitType]);
-    actionIcon.y = yValue;
-    actionIcon.width = unitSize;
-    actionIcon.height = unitSize;
-    actionIcon.animationSpeed = 0.06;
-    // try to make it "centered"
-    actionIcon.anchor.set(-0.2, -0.2);
-    actionIcon.play();
-    menuElement.addChild(actionIcon);
-*/
-    //name of the unit
-
-    const actionText = new BitmapText(`${action.type.toUpperCase()}`, {
+    const actionText = new BitmapText(`${AvailableSubActions[subAction].toUpperCase()}`, {
       fontName: "awFont",
       fontSize: 10,
     });
@@ -172,7 +348,7 @@ export default async function subActionMenu(
 
       mutation.mutateAsync({
         type: "move",
-        subAction: action,
+        subAction: subAction,
         path: newPath,
         playerId: player.data.id,
         matchId: match.id,
