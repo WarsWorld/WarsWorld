@@ -1,5 +1,8 @@
 import { Assets, BitmapText, Container, Sprite, Texture } from "pixi.js";
-import { getBaseDamage } from "shared/match-logic/game-constants/base-damage";
+import {
+  createPipeSeamUnitEquivalent,
+  getBaseDamage,
+} from "shared/match-logic/game-constants/base-damage";
 import { unitPropertiesMap } from "shared/match-logic/game-constants/unit-properties";
 import { getBaseMovementCost } from "shared/match-logic/movement-cost";
 import { getWeatherSpecialMovement } from "shared/match-logic/weather";
@@ -9,8 +12,7 @@ import {
   type Path,
   type Position,
 } from "shared/schemas/position";
-import type { WWUnit } from "shared/schemas/unit";
-import { UnitWrapper } from "shared/wrappers/unit";
+import type { UnitWrapper } from "shared/wrappers/unit";
 import type { FrontendUnit } from "../frontend/components/match/FrontendUnit";
 import type { MatchWrapper } from "../shared/wrappers/match";
 import type { PlayerInMatchWrapper } from "../shared/wrappers/player-in-match";
@@ -58,21 +60,8 @@ export const getAvailableSubActions = (
   if (!unit.isTransport()) {
     let addAttackSubaction = false;
 
-    //code for creating dummy pipeseam equivalent unit and checking if unit can attack pipeseams
-    const usedVersion = match.rules.gameVersion ?? unit.player.data.coId.version;
-    const pipeseamUnitEquivalent: WWUnit = {
-      type: usedVersion === "AW1" ? "mediumTank" : "neoTank",
-      playerSlot: -1,
-      position: [1, 1],
-      isReady: false,
-      stats: {
-        hp: 1,
-        fuel: 0,
-        ammo: 0,
-      },
-    };
-    const wrappedPipeseamUnit = new UnitWrapper(pipeseamUnitEquivalent, match);
-    const canAttackPipeseams = getBaseDamage(unit, wrappedPipeseamUnit) !== null;
+    const pipeSeamUnitEquivalent = createPipeSeamUnitEquivalent(match, unit);
+    const canAttackPipeseams = getBaseDamage(unit, pipeSeamUnitEquivalent) !== null;
 
     if (unit.isIndirect()) {
       for (let x = 0; x < match.map.width && !addAttackSubaction; x++) {

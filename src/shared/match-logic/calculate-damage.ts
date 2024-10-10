@@ -1,7 +1,9 @@
+import type { LuckRoll } from "shared/schemas/co";
+import { getDistance } from "shared/schemas/position";
+import type { UnitWrapper } from "shared/wrappers/unit";
 import type { CombatProps } from "./co-hooks";
-import { getTerrainDefenseStars } from "./game-constants/terrain-properties";
 import { getBaseDamage } from "./game-constants/base-damage";
-import type { LuckRoll } from "./events/handlers/attack";
+import { getTerrainDefenseStars } from "./game-constants/terrain-properties";
 
 /** @returns 1-10, whole numbers */
 export const getVisualHPfromHP = (hp: number) => Math.ceil(hp / 10);
@@ -104,10 +106,73 @@ export const calculateDamage = (
   // TODO explain magic values
   // damage formula application
   const luckModifier = goodLuckValue - badLuckValue;
-  const attackFactor = baseDamage * (attackModifier / 100) + luckModifier;
+  const attackFactor = Math.max(0, baseDamage * (attackModifier / 100) + luckModifier);
   const defenseFactor = (200 - (defenseModifier + defenderTerrainStars * visualHPOfDefender)) / 100;
 
   const dirtyDamageAsPercentage = attackFactor * (visualHPOfAttacker / 10) * defenseFactor;
 
   return Math.floor(roundUpTo(dirtyDamageAsPercentage, 0.05));
+};
+
+//can return negative hp values (useful for damage calculator / displaying damage range)
+export const calculateEngagementOutcome = (
+  attacker: UnitWrapper,
+  defender: UnitWrapper,
+  attackerLuck: LuckRoll,
+  defenderLuck: LuckRoll,
+): { defenderHP: number; attackerHP: number | undefined } => {
+  let damageByAttacker = calculateDamage(
+    {
+      attacker,
+      defender,
+    },
+    attackerLuck,
+    false,
+  );
+
+  if (damageByAttacker === null) {
+    damageByAttacker = 0; // this is necessary cause sonja scop reverses attacker and defender
+  }
+
+  //check if ded
+  if (damageByAttacker >= defender.getHP()) {
+    return {
+      defenderHP: defender.getHP() - damageByAttacker,
+      attackerHP: undefined,
+    };
+  }
+
+  //check if defender can counterattack
+  if (getDistance(attacker.data.position, defender.data.position) === 1) {
+    if ("attackRange" in defender.properties && defender.properties.attackRange[1] === 1) {
+      //defender is melee, maybe can counterattack
+      //temporarily subtract hp to calculate counter dmg
+      const originalHP = defender.getHP();
+      defender.setHp(originalHP - damageByAttacker);
+
+      const damageByDefender = calculateDamage(
+        {
+          attacker: defender,
+          defender: attacker,
+        },
+        defenderLuck,
+        true,
+      );
+
+      defender.setHp(originalHP);
+
+      if (damageByDefender !== null) {
+        //return event with counter-attack
+        return {
+          defenderHP: defender.getHP() - damageByAttacker,
+          attackerHP: attacker.getHP() - damageByDefender,
+        };
+      }
+    }
+  }
+
+  return {
+    defenderHP: defender.getHP() - damageByAttacker,
+    attackerHP: undefined,
+  };
 };
