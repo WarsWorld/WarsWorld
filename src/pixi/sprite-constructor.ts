@@ -13,24 +13,3 @@ export const tileConstructor = (position: Position, colour: string) => {
   tile.tint = colour;
   return tile;
 };
-
-export const interactiveTileConstructor = (
-  position: Position,
-  colour: string,
-  hoverBehaviour?: (position: Position) => void,
-  clickBehaviour?: (positoin: Position) => void,
-) => {
-  const tile = tileConstructor(position, colour);
-
-  tile.eventMode = "dynamic";
-
-  if (hoverBehaviour) {
-    tile.on("mouseover", () => hoverBehaviour(position));
-  }
-
-  if (clickBehaviour) {
-    tile.on("pointerdown", () => clickBehaviour(position));
-  }
-
-  return tile;
-};

@@ -7,10 +7,11 @@ import { renderedTileSize } from "../components/client-only/MatchRenderer";
 import type { PlayerInMatchWrapper } from "../shared/wrappers/player-in-match";
 import type { UnitWrapper } from "../shared/wrappers/unit";
 import buildUnitMenu from "./buildUnitMenu";
+import { createTileContainer } from "./interactiveTileFunctions";
 import type { LoadedSpriteSheet } from "./load-spritesheet";
 import { renderUnitSprite } from "./renderUnitSprite";
 import type { PathNode } from "./show-pathing";
-import { getAccessibleNodes, showPassableTiles, updatePath } from "./show-pathing";
+import { getAccessibleNodes, updatePath } from "./show-pathing";
 import subActionMenu from "./subActionMenu";
 
 export const handleClick = async (
@@ -75,9 +76,15 @@ Click #1, click on unit owned
 
   if (unit) {
     //1.1 - Show its path
-    const showPath = showPassableTiles(match, unit);
+    const passablePositions = getAccessibleNodes(match, unit);
+    const displayedPassableTiles = createTileContainer(
+      Array.from(passablePositions.keys()),
+      "#43d9e4",
+      999,
+      "path",
+    );
     pathQueue.current = getAccessibleNodes(match, unit);
-    mapContainer.addChild(showPath);
+    mapContainer.addChild(displayedPassableTiles);
     //todo: ts hates this,
 
     if (player.owns(unit) && unit.data.isReady) {
