@@ -25,19 +25,19 @@ export function PlayerSelectLeagueSection({ playerMMRArray }: Props) {
   const currentLeague = playerMMRArray?.find((league) => league.leagueType === gamemode?.label);
 
   return (
-    <section className="@pb-8 @px-8 @h-full @w-full @bg-black/60 @my-4 @space-y-4">
-      <div className="@grid @grid-cols-4">
+    <section className="@pb-8 @py-8 laptop:@py-0 laptop:@pb-4 @px-4 smallscreen:@px-6 laptop:@px-8 @h-full @w-full @bg-black/60 @my-4 @space-y-4">
+      <div className="@grid smallscreen:@grid-cols-4">
         <Select
-          className="@col-span-1 @self-center @h-10 monitor:@h-12"
+          className="smallscreen:@col-span-2 laptop:@col-span-1 @self-center @h-10 monitor:@h-12 @order-2 smallscreen:@order-1"
           options={gamemodes}
           onChange={(o) => setGamemode(o)}
           value={gamemode}
         />
-        <h1 className="@col-span-3 @font-russoOne @px-16 @uppercase">
+        <h1 className="smallscreen:@col-span-2 laptop:@col-span-3 @font-russoOne smallscreen:@px-16 @uppercase @order-1 smallscreen:@order-2">
           {currentLeague?.leagueType}
         </h1>
       </div>
-      <div className="@grid @grid-cols-12 @gap-8">
+      <div className="@grid smallscreen:@grid-cols-8 laptop:@grid-cols-12 @gap-8">
         <div className="@flex @flex-col @col-span-3">
           <h2 className="@font-russoOne @text-2xl monitor:@text-4xl @my-2">
             Rank: #{currentLeague?.rank}
@@ -60,11 +60,11 @@ export function PlayerSelectLeagueSection({ playerMMRArray }: Props) {
           </div>
         </div>
         <div className="@flex @flex-col @h-full @p-2 @col-span-5">
-          <div className="@w-full @h-full @border-primary @border-4 @bg-bg-secondary @text-center">
+          <div className="@w-full @h-56 smallscreen:@h-full @border-primary @border-4 @bg-bg-secondary @text-center">
             GRAPH
           </div>
         </div>
-        <div className="@grid @grid-rows-5 @gap-4 monitor:@gap-6 @h-full @col-span-4">
+        <div className="@grid @grid-rows-5 @gap-4 monitor:@gap-6 @h-full @col-span-5 smallscreen:@col-span-8 laptop:@col-span-4">
           <SmallMatchCard
             matchResult="W"
             player1={{ co: "grimm", name: "Grimm Guy" }}

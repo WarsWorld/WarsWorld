@@ -7,7 +7,7 @@ type Props = {
 
 export function PLayerLeagueGeneralSection({ playerLeaguesMMR }: Props) {
   return (
-    <section className="@grid @grid-cols-3 @gap-4 @p-8 @h-full @bg-black/60 @my-4">
+    <section className="@grid smallscreen:@grid-cols-2 laptop:@grid-cols-3 @gap-4 @p-8 @h-full @bg-black/60 @my-4">
       {playerLeaguesMMR?.map((league) => {
         return (
           <PlayerMMRCard

@@ -1,7 +1,8 @@
+import { PlayerFavoriteGamesSection } from "frontend/components/player-profile/player-sections/PlayerFavoriteGamesSection";
+import { PlayerFriendSection } from "frontend/components/player-profile/player-sections/PlayerFriendsSection";
 import { PLayerLeagueGeneralSection } from "frontend/components/player-profile/player-sections/PlayerLeagueGeneralSection";
 import { PlayerProfileMainSection } from "frontend/components/player-profile/player-sections/PlayerProfileMainSection";
 import { PlayerSelectLeagueSection } from "frontend/components/player-profile/player-sections/PlayerSelectLeagueSection";
-import { PlayerFriendLink } from "frontend/components/player-profile/PlayerFriendLink";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { z } from "zod";
@@ -91,7 +92,8 @@ export default function UserProfile() {
       </Head>
 
       <div className="@flex @flex-col @justify-center @items-center @align-middle">
-        <div className="@w-[95vw] @m-4 @px-4">
+        <div className="@w-[95vw] @m-4 smallscreen:@px-4">
+          {/* Each Section calls the info? */}
           <PlayerProfileMainSection
             playerName={playerName ?? ""}
             description="Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quaerat, sed recusandae,
@@ -105,71 +107,18 @@ export default function UserProfile() {
             lastActivity="05/21/2024 05:04pm"
             isOnline={true}
           />
-          <div className="@flex @space-x-4">
-            <div className="@col-span-6 @h-full @w-[75%]">
-              {/* Show general league stats */}
+          <div className="@flex  @flex-col laptop:@flex-row laptop:@space-x-4">
+            <div className="@col-span-6 @h-full laptop:@w-[75%]">
+              {/* 
+                Show all profile sections, can add a best maps section, fav maps section, and we can even make it so the user can personalize their profile sections,
+                the user could change the order and which sessions will appear in their profile.
+              */}
               <PLayerLeagueGeneralSection playerLeaguesMMR={playerMMRArray} />
-              {/* Fully shows stats for one league */}
               <PlayerSelectLeagueSection playerMMRArray={playerMMRArray} />
-              <section className="@pb-8 @px-8 @h-full @w-full @bg-black/60 @my-4 @space-y-2">
-                <h1 className="@col-span-3 @text-center @font-russoOne">Favorite Games</h1>
-                <div className="@grid @grid-cols-4 @h-48 @gap-4">
-                  <div className="@w-full @h-full @border-primary @border-4 @bg-bg-secondary">
-                    <p className="@text-center">GAME</p>
-                  </div>
-                  <div className="@w-full @h-full @border-primary @border-4 @bg-bg-secondary">
-                    <p className="@text-center">GAME</p>
-                  </div>
-                  <div className="@w-full @h-full @border-primary @border-4 @bg-bg-secondary">
-                    <p className="@text-center">GAME</p>
-                  </div>
-                  <div className="@w-full @h-full @border-primary @border-4 @bg-bg-secondary">
-                    <p className="@text-center">GAME</p>
-                  </div>
-                </div>
-              </section>
+              <PlayerFavoriteGamesSection />
             </div>
-            <div className="@h-full @w-[25%]">
-              <section className="@w-full @min-h-[56rem] @bg-black/60 @pb-8 @p-6 @my-4">
-                <h3 className="@font-russoOne @uppercase">Friends</h3>
-                <div className="@flex @flex-col @w-full @px-1 @py-6 @space-y-4">
-                  <PlayerFriendLink
-                    friendName="Master Chief"
-                    friendFavArmy="orange-star"
-                    friendFavCO="adder"
-                  />
-                  <PlayerFriendLink
-                    friendName="Alm"
-                    friendFavArmy="green-earth"
-                    friendFavCO="andy"
-                  />
-                  <PlayerFriendLink
-                    friendName="Professor Layton"
-                    friendFavArmy="blue-moon"
-                    friendFavCO="grit"
-                  />
-                  <PlayerFriendLink
-                    friendName="Griffith"
-                    friendFavArmy="yellow-comet"
-                    friendFavCO="kanbei"
-                  />
-                  <PlayerFriendLink
-                    friendName="Yukimura204254 Echoes and Knuckles"
-                    friendFavArmy="black-hole"
-                    friendFavCO="lash"
-                  />
-                  <PlayerFriendLink
-                    friendName="The Arbiter"
-                    friendFavArmy="blue-moon"
-                    friendFavCO="javier"
-                  />
-                  <PlayerFriendLink
-                    friendName="Grimm Guy"
-                    friendFavArmy="yellow-comet"
-                    friendFavCO="grimm"
-                  />
-                </div>
-              </section>
+            <div className="@min-h-full laptop:@w-[25%] @mb-8">
+              <PlayerFriendSection />
             </div>
           </div>
         </div>

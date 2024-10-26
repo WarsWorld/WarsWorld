@@ -20,7 +20,6 @@ const resultColors = {
 
 export function SmallMatchCard({ matchResult, player1, player2, matchLink }: Props) {
   return (
-    // UNCONVINCED
     <Link
       className="@flex @bg-black/50 @text-center @text-white @cursor-pointer hover:@text-white hover:@translate-x-2"
       href={matchLink}
