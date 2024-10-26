@@ -1,89 +1,27 @@
 import { DispatchableError } from "shared/DispatchedError";
 import type { AttackAction } from "shared/schemas/action";
-import { unitPropertiesMap } from "../../game-constants/unit-properties";
-import { calculateDamage, getVisualHPfromHP } from "../../calculate-damage";
-import type { MatchWrapper } from "shared/wrappers/match";
+import type { LuckRoll } from "shared/schemas/co";
 import type { Position } from "shared/schemas/position";
-import type { AttackEvent } from "shared/types/events";
-import type { SubActionToEvent } from "../handler-types";
 import { getDistance } from "shared/schemas/position";
-import { UnitWrapper } from "../../../wrappers/unit";
-import { canAttackWithPrimary, getBaseDamage } from "../../game-constants/base-damage";
+import type { AttackEvent } from "shared/types/events";
+import type { MatchWrapper } from "shared/wrappers/match";
 import type { PlayerInMatchWrapper } from "shared/wrappers/player-in-match";
-import type { WWUnit } from "../../../schemas/unit";
+import type { UnitWrapper } from "../../../wrappers/unit";
+import { calculateEngagementOutcome, getVisualHPfromHP } from "../../calculate-damage";
+import {
+  canAttackWithPrimary,
+  createPipeSeamUnitEquivalent,
+  getBaseDamage,
+} from "../../game-constants/base-damage";
+import { unitPropertiesMap } from "../../game-constants/unit-properties";
+import type { SubActionToEvent } from "../handler-types";
 
-export type LuckRoll = {
-  goodLuck: number;
-  badLuck: number;
-};
 type Params = [
   ...Parameters<SubActionToEvent<AttackAction>>,
   unitHasMoved: boolean,
   attackerLuck: LuckRoll,
   defenderLuck: LuckRoll,
 ];
-
-const calculateEngagementOutcome = (
-  attacker: UnitWrapper,
-  defender: UnitWrapper,
-  attackerLuck: LuckRoll,
-  defenderLuck: LuckRoll,
-): { defenderHP: number; attackerHP: number | undefined } => {
-  let damageByAttacker = calculateDamage(
-    {
-      attacker,
-      defender,
-    },
-    attackerLuck,
-    false,
-  );
-
-  if (damageByAttacker === null) {
-    damageByAttacker = 0; // this is necessary cause sonja scop reverses attacker and defender
-  }
-
-  //check if ded
-  if (damageByAttacker >= defender.getHP()) {
-    return {
-      defenderHP: 0,
-      attackerHP: undefined,
-    };
-  }
-
-  //check if defender can counterattack
-  if (getDistance(attacker.data.position, defender.data.position) === 1) {
-    if ("attackRange" in defender.properties && defender.properties.attackRange[1] === 1) {
-      //defender is melee, maybe can counterattack
-      //temporarily subtract hp to calculate counter dmg
-      const originalHP = defender.getHP();
-      defender.setHp(originalHP - damageByAttacker);
-
-      const damageByDefender = calculateDamage(
-        {
-          attacker: defender,
-          defender: attacker,
-        },
-        defenderLuck,
-        true,
-      );
-
-      defender.setHp(originalHP);
-
-      if (damageByDefender !== null) {
-        //return event with counter-attack
-        return {
-          defenderHP: defender.getHP() - damageByAttacker,
-          attackerHP: Math.max(0, attacker.getHP() - damageByDefender),
-        };
-      }
-    }
-  }
-
-  return {
-    defenderHP: defender.getHP() - damageByAttacker,
-    attackerHP: undefined,
-  };
-};
 
 function getEliminationReason({
   attacker,
@@ -158,35 +96,27 @@ export const attackActionToEvent: (...params: Params) => AttackEvent = (
       throw new DispatchableError("No unit found in target location to attack");
     }
 
-    const usedVersion = match.rules.gameVersion ?? attacker.player.data.coId.version;
-    const unitEquivalent: WWUnit = {
-      type: usedVersion === "AW1" ? "mediumTank" : "neoTank",
-      playerSlot: -1,
-      position: action.defenderPosition,
-      isReady: false,
-      stats: {
-        hp: attackedTile.hp,
-        fuel: 0,
-        ammo: 0,
-      },
-    };
+    const pipeSeamUnitEquivalent = createPipeSeamUnitEquivalent(
+      match,
+      attacker,
+      action.defenderPosition,
+      attackedTile.hp,
+    );
 
-    const wrappedUnit = new UnitWrapper(unitEquivalent, match);
-
-    if (getBaseDamage(attacker, wrappedUnit) === null) {
+    if (getBaseDamage(attacker, pipeSeamUnitEquivalent) === null) {
       throw new DispatchableError("Unit cannot attack specified pipeseam");
     }
 
     const result = calculateEngagementOutcome(
       attacker,
-      wrappedUnit,
+      pipeSeamUnitEquivalent,
       { goodLuck: 0, badLuck: 0 },
       { goodLuck: 0, badLuck: 0 },
     );
 
     return {
       ...action,
-      defenderHP: result.defenderHP,
+      defenderHP: Math.max(0, result.defenderHP),
     };
   }
 
@@ -218,13 +148,13 @@ export const attackActionToEvent: (...params: Params) => AttackEvent = (
 
     return {
       ...action,
-      defenderHP: result.attackerHP,
-      attackerHP: result.defenderHP,
+      defenderHP: Math.max(0, result.attackerHP),
+      attackerHP: Math.max(0, result.defenderHP),
       eliminationReason: getEliminationReason({
         attacker: attacker.player, // TODO not sure if this is the correct way around...
         defender: defender.player,
-        attackerHP: result.defenderHP,
-        defenderHP: result.attackerHP,
+        attackerHP: Math.max(0, result.defenderHP),
+        defenderHP: Math.max(0, result.attackerHP),
       }),
     };
   }
@@ -232,13 +162,13 @@ export const attackActionToEvent: (...params: Params) => AttackEvent = (
   const result = calculateEngagementOutcome(attacker, defender, attackerLuck, defenderLuck);
   return {
     ...action,
-    defenderHP: result.defenderHP,
-    attackerHp: result.attackerHP,
+    defenderHP: Math.max(0, result.defenderHP),
+    attackerHp: result.attackerHP !== undefined ? Math.max(0, result.attackerHP) : undefined,
     eliminationReason: getEliminationReason({
       attacker: attacker.player,
       defender: defender.player,
-      attackerHP: result.attackerHP,
-      defenderHP: result.defenderHP,
+      attackerHP: result.attackerHP !== undefined ? Math.max(0, result.attackerHP) : undefined,
+      defenderHP: Math.max(0, result.defenderHP),
     }),
   };
 };

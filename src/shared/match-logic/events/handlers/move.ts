@@ -30,6 +30,12 @@ export const moveActionToEvent: MainActionToEvent<MoveAction> = (match, action) 
 
   const result = createNoMoveEvent();
 
+  //Unit is waiting in-place if it's path is only the starting tile
+  if (action.path.length === 1) {
+    result.path.push(action.path[0]);
+    return result;
+  }
+
   let remainingMovePoints = unit.getMovementPoints();
 
   const fuelNeeded = action.path.length - 1;
@@ -43,7 +49,12 @@ export const moveActionToEvent: MainActionToEvent<MoveAction> = (match, action) 
 
     match.map.throwIfOutOfBounds(position);
 
-    const moveCost = unit.getMovementCost(position);
+    let moveCost = unit.getMovementCost(position);
+
+    //It costs 0 points to move out of starting tile, our path[0] is the starting tile so we should not count it for movement
+    if (pathIndex === 0) {
+      moveCost = 0;
+    }
 
     if (moveCost === null) {
       throw new DispatchableError("Cannot move to a desired position");
@@ -55,7 +66,7 @@ export const moveActionToEvent: MainActionToEvent<MoveAction> = (match, action) 
 
     const unitInPosition = match.getUnit(position);
 
-    if (unitInPosition?.data.playerSlot === unit.data.playerSlot) {
+    if (unitInPosition !== undefined && unitInPosition?.data.playerSlot !== unit.data.playerSlot) {
       result.trap = true;
       break;
     }
@@ -237,13 +248,14 @@ export const applyMoveEvent = (match: MatchWrapper, event: MoveEvent) => {
 
   const unit = match.getUnitOrThrow(event.path[0]);
 
+  unit.data.isReady = false;
+
   //if unit was capturing, interrupt capture
   if ("currentCapturePoints" in unit) {
     unit.currentCapturePoints = undefined;
   }
 
   unit.drainFuel((event.path.length - 1) * getOneTileFuelCost(match, unit));
-
   const unitAtDestination = match.getUnit(getFinalPositionSafe(event.path));
 
   if (unitAtDestination === undefined) {

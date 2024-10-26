@@ -1,5 +1,9 @@
 import type { Spritesheet } from "pixi.js";
 import { Container, Sprite } from "pixi.js";
+import {
+  createPipeSeamUnitEquivalent,
+  getBaseDamage,
+} from "shared/match-logic/game-constants/base-damage";
 import type { Position } from "shared/schemas/position";
 import {
   getDistance,
@@ -10,7 +14,6 @@ import type { MapWrapper } from "shared/wrappers/map";
 import type { MatchWrapper } from "shared/wrappers/match";
 import { DispatchableError } from "../shared/DispatchedError";
 import type { UnitWrapper } from "../shared/wrappers/unit";
-import { tileConstructor } from "./sprite-constructor";
 export type PathNode = {
   //saves distance from origin and parent (to retrieve the shortest path)
   pos: Position;
@@ -23,10 +26,11 @@ const makeVisitedMatrix = (map: MapWrapper) =>
     .fill(false)
     .map(() => Array.from<boolean>({ length: map.height }).fill(false));
 
-export function getAccessibleNodes( //TODO: save result of function? _ (Sturm d2d?)
+export const getAccessibleNodes = (
+  //TODO: save result of function? _ (Sturm d2d?)
   match: MatchWrapper,
   unit: UnitWrapper,
-): Map<Position, PathNode> {
+): Map<Position, PathNode> => {
   const ownerUnitPlayer = match.getPlayerBySlot(unit.data.playerSlot);
 
   if (ownerUnitPlayer === undefined) {
@@ -36,9 +40,7 @@ export function getAccessibleNodes( //TODO: save result of function? _ (Sturm d2
   const accessibleTiles = new Map<Position, PathNode>(); //return variable
 
   //queues[a] has current queued nodes with distance a from origin (technically a "stack", not a queue, but the result doesn't change)
-
-  const queues = Array.from<PathNode[]>({ length: unit.getMovementPoints() });
-  queues.push([]);
+  const queues: PathNode[][] = Array.from({ length: unit.getMovementPoints() }, () => []);
   queues[0].push({ pos: unit.data.position, dist: 0, parent: null }); //queues[0] has the origin node, initially
 
   const visited = makeVisitedMatrix(match.map);
@@ -73,8 +75,6 @@ export function getAccessibleNodes( //TODO: save result of function? _ (Sturm d2
         continue;
       }
 
-      unit.getMovementCost(pos);
-
       const movementCost = unit.getMovementCost(pos);
 
       if (movementCost === null) {
@@ -84,7 +84,7 @@ export function getAccessibleNodes( //TODO: save result of function? _ (Sturm d2
       const nodeDist = currNode.dist + movementCost;
 
       if (nodeDist <= unit.getMovementPoints()) {
-        queues[nodeDist].push({
+        queues[nodeDist - 1].push({
           pos: pos,
           dist: nodeDist,
           parent: currPos,
@@ -94,65 +94,14 @@ export function getAccessibleNodes( //TODO: save result of function? _ (Sturm d2
   }
 
   return accessibleTiles;
-}
+};
 
-export function showPassableTiles(
+export const getAttackableTiles = (
   match: MatchWrapper,
   unit: UnitWrapper,
   accessibleNodes?: Map<Position, PathNode>,
-) {
-  const markedTiles = new Container();
-  markedTiles.eventMode = "static";
-
-  if (accessibleNodes === undefined) {
-    accessibleNodes = getAccessibleNodes(match, unit);
-  }
-
-  //add squares one by one
-  for (const [pos] of accessibleNodes.entries()) {
-    //TODO: Add a border to "edge" tiles
-    const square = tileConstructor(pos, "#43d9e4");
-    markedTiles.addChild(square);
-  }
-
-  return markedTiles;
-}
-
-export function getAttackableTiles(
-  match: MatchWrapper,
-  unit: UnitWrapper,
-  accessibleNodes?: Map<Position, PathNode>,
-): Position[] {
-  if (accessibleNodes === undefined) {
-    accessibleNodes = getAccessibleNodes(match, unit);
-  }
-
-  const visited = makeVisitedMatrix(match.map);
-
-  const attackpositions: Position[] = [];
-
-  for (const [pos] of accessibleNodes.entries()) {
-    for (const adjPos of getNeighbourPositions(pos)) {
-      //all positions adjacent to tiles where the unit can move to are attacking tiles
-      if (!match.map.isOutOfBounds(adjPos)) {
-        if (!visited[adjPos[0]][adjPos[1]]) {
-          attackpositions.push(adjPos);
-          visited[adjPos[0]][adjPos[1]] = true;
-        }
-      }
-    }
-  }
-
-  return attackpositions;
-}
-
-export function showAttackableTiles(
-  match: MatchWrapper,
-  unit: UnitWrapper,
-  attackableTiles?: Position[],
-) {
-  const markedTiles = new Container();
-  markedTiles.eventMode = "static";
+): Position[] => {
+  const attackPositions: Position[] = [];
 
   if ("attackRange" in unit.properties && unit.properties.attackRange[0] > 1) {
     //ranged unit
@@ -164,38 +113,75 @@ export function showAttackableTiles(
           distance <= unit.properties.attackRange[1] &&
           distance >= unit.properties.attackRange[0]
         ) {
-          const square = tileConstructor([x, y], "#be1919");
-          markedTiles.addChild(square);
+          attackPositions.push([x, y]);
         }
       }
     }
+  } else {
+    if (accessibleNodes === undefined) {
+      accessibleNodes = getAccessibleNodes(match, unit);
+    }
 
-    return markedTiles;
+    const visited = makeVisitedMatrix(match.map);
+
+    for (const [pos] of accessibleNodes.entries()) {
+      for (const adjPos of getNeighbourPositions(pos)) {
+        //all positions adjacent to tiles where the unit can move to are attacking tiles
+        if (!match.map.isOutOfBounds(adjPos)) {
+          if (!visited[adjPos[0]][adjPos[1]]) {
+            attackPositions.push(adjPos);
+            visited[adjPos[0]][adjPos[1]] = true;
+          }
+        }
+      }
+    }
   }
+
+  return attackPositions;
+};
+
+export const getAttackTargetTiles = (
+  match: MatchWrapper,
+  unit: UnitWrapper,
+  attackableTiles?: Position[],
+) => {
+  const attackTargetPositions: Position[] = [];
 
   if (attackableTiles === undefined) {
     attackableTiles = getAttackableTiles(match, unit);
   }
 
-  for (const pos of attackableTiles) {
-    const square = tileConstructor(pos, "#be1919");
-    markedTiles.addChild(square);
+  const canAttackPipeseams =
+    getBaseDamage(unit, createPipeSeamUnitEquivalent(match, unit)) !== null;
+
+  for (const position of attackableTiles) {
+    const enemy = match.getUnit(position);
+
+    if (enemy === undefined) {
+      if (match.getTile(position).type === "pipeSeam" && canAttackPipeseams) {
+        attackTargetPositions.push(position);
+      }
+    } else {
+      if (enemy.player.team !== unit.player.team && getBaseDamage(unit, enemy) !== null) {
+        attackTargetPositions.push(position);
+      }
+    }
   }
 
-  return markedTiles;
-}
+  return attackTargetPositions;
+};
 
-export function updatePath(
+export const updatePath = (
   unit: UnitWrapper,
   accessibleNodes: Map<Position, PathNode>,
-  path: PathNode[],
+  path: PathNode[] | undefined,
   newPos: Position,
-): PathNode[] {
+): PathNode[] => {
   if (!accessibleNodes.has(newPos)) {
     throw new Error("Trying to add an unreachable position!");
   }
 
-  if (path.length !== 0) {
+  if (path !== undefined && path.length !== 0) {
     const lastNode = path.at(-1)!;
 
     for (const node of path) {
@@ -239,9 +225,9 @@ export function updatePath(
   }
 
   return newPath.toReversed();
-}
+};
 
-function getSpriteName(a: Position, b: Position, c: Position): string {
+const getSpriteName = (a: Position, b: Position, c: Position): string => {
   //path from a to b to c, the sprite is the one displayed in b (middle node)
   const dify = Math.abs(a[1] - c[1]);
   const difx = Math.abs(a[0] - c[0]);
@@ -309,9 +295,9 @@ function getSpriteName(a: Position, b: Position, c: Position): string {
 
     return "sd";
   }
-}
+};
 
-export function showPath(spriteSheet: Spritesheet, path: PathNode[]) {
+export const showPath = (spriteSheet: Spritesheet, path: PathNode[]) => {
   if (path.length < 1) {
     throw new Error("Empty path!");
   }
@@ -343,4 +329,4 @@ export function showPath(spriteSheet: Spritesheet, path: PathNode[]) {
   //this name will let us easily remove arrows later
   arrowContainer.name = "arrows";
   return arrowContainer;
-}
+};

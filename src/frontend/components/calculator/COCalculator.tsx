@@ -1,4 +1,4 @@
-import { CO } from "../../../shared/schemas/co";
+import type { CO } from "../../../shared/schemas/co";
 import IconText from "./IconText";
 import COSelect from "./COSelect";
 

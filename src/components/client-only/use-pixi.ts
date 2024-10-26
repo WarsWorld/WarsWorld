@@ -1,4 +1,5 @@
 import type { Container, DisplayObject, FederatedPointerEvent } from "pixi.js";
+import { Sprite } from "pixi.js";
 import { Application } from "pixi.js";
 import type { LoadedSpriteSheet } from "pixi/load-spritesheet";
 import { setupApp } from "pixi/setupApp";
@@ -9,6 +10,10 @@ import type { PlayerInMatchWrapper } from "shared/wrappers/player-in-match";
 import type { FrontendUnit } from "../../frontend/components/match/FrontendUnit";
 import type { ChangeableTileWithSprite } from "../../frontend/components/match/types";
 import { renderMultiplier, renderedTileSize } from "./MatchRenderer";
+import type { PathNode } from "../../pixi/show-pathing";
+import { handleClick } from "../../pixi/handleClick";
+import type { UnitWrapper } from "../../shared/wrappers/unit";
+import { trpcActions } from "../../pixi/trpcActions";
 
 export function usePixi(
   match: MatchWrapper<ChangeableTileWithSprite, FrontendUnit>,
@@ -17,6 +22,14 @@ export function usePixi(
 ) {
   const pixiCanvasRef = useRef<HTMLCanvasElement | null>(null);
   const mapContainerRef = useRef<Container<DisplayObject> | null>(null);
+  const unitContainerRef = useRef<Container<DisplayObject> | null>(null);
+  const currentUnitRef = useRef<UnitWrapper | null>(null);
+  const pathQueueRef = useRef<Map<Position, PathNode> | null>(null);
+  const clickedOnEnemyUnitRef = useRef<boolean | null>(null);
+  const clickStateRef = useRef<string>("neutral");
+
+  //TODO: Someone please the ts gods
+  const { actionMutation } = trpcActions(match, player, unitContainerRef.current, spriteSheets);
 
   useEffect(() => {
     const app = new Application({
@@ -28,62 +41,33 @@ export function usePixi(
       height: match.map.height * renderedTileSize + renderedTileSize,
     });
 
-    const { mapContainer } = setupApp(app, match, renderMultiplier, spriteSheets);
-    mapContainer.eventMode = "static";
+    const { mapContainer, unitContainer } = setupApp(app, match, renderMultiplier, spriteSheets);
     mapContainerRef.current = mapContainer;
+    unitContainerRef.current = unitContainer;
+    mapContainerRef.current.eventMode = "static";
 
-    const clickHandler = (event: FederatedPointerEvent) => {
-      // menus: event.page
-      // determine tile: event.global or event.screen
-      console.log(event, event.client, event.global, event.movement, event.page, event.screen);
-
-      const x = Math.floor((event.global.x - renderedTileSize / 2) / renderedTileSize);
-      const y = Math.floor((event.global.y - renderedTileSize / 2) / renderedTileSize);
-
-      const clickPosition: Position = [x, y];
-
-      // only handle admin features like unwaiting units up to here, everything else requires
-      // the player to have the current turn.
-
-      if (match.getCurrentTurnPlayer().data.id !== player.data.id) {
-        return;
-      }
-
-      const unit = match.getUnit(clickPosition);
-
-      if (unit !== undefined) {
-        if (player.owns(unit) && unit.data.isReady) {
-          // TODO do something, show move menu etc.
-        }
-
-        return;
-      }
-
-      const changeableTile = match.getTile(clickPosition);
-
-      if (changeableTile !== undefined) {
-        if (player.owns(changeableTile)) {
-          // show build menu
-        }
-      }
-
-      // const hover = document.createElement("div");
-      // hover.style.width = "4px";
-      // hover.style.height = "4px";
-      // hover.style.position = "absolute";
-      // hover.style.background = "red";
-      // hover.style.top = `${event.screen.y}px`;
-      // hover.style.left = `${event.screen.x}px`;
-      // document.body.appendChild(hover);
+    //TODO: Someone please the ts gods
+    const clickHandler = async (event: FederatedPointerEvent) => {
+      await handleClick(
+        event,
+        match,
+        mapContainerRef.current,
+        unitContainerRef.current,
+        currentUnitRef,
+        pathQueueRef,
+        player,
+        spriteSheets,
+        actionMutation,
+      );
     };
 
-    mapContainer.on("pointertap", clickHandler);
+    mapContainerRef.current.on("pointertap", clickHandler);
 
     return () => {
       app.stop();
-      mapContainer.off("pointertap", clickHandler);
+      mapContainerRef.current.off("pointertap", clickHandler);
     };
-  }, [match, spriteSheets, player]);
+  }, [match]);
 
   return {
     pixiCanvasRef,
