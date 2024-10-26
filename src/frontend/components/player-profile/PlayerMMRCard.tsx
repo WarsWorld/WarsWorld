@@ -1,7 +1,7 @@
-import { getCoreRowModel, getPaginationRowModel, useReactTable } from "@tanstack/react-table";
+import { getCoreRowModel, useReactTable } from "@tanstack/react-table";
 import { columnsWithMMR } from "frontend/components/player-profile/MMRTableColumns";
 import type { PlayerMMR } from "pages/players/[playerName]";
-import MMRDataTable from "./MMRDataTable";
+import { MMRDataTable } from "./MMRDataTable";
 
 type Props = {
   leagueType: string;
@@ -9,12 +9,11 @@ type Props = {
   rank: number;
 };
 
-export default function PlayerMMRCard({ data, leagueType, rank }: Props) {
+export function PlayerMMRCard({ data, leagueType, rank }: Props) {
   const table = useReactTable({
     data,
     columns: columnsWithMMR,
     getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
   });
 
   return (

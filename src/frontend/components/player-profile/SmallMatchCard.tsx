@@ -18,7 +18,7 @@ const resultColors = {
   D: "@bg-bg-tertiary",
 };
 
-export default function SmallMatchCard({ matchResult, player1, player2, matchLink }: Props) {
+export function SmallMatchCard({ matchResult, player1, player2, matchLink }: Props) {
   return (
     // UNCONVINCED
     <Link

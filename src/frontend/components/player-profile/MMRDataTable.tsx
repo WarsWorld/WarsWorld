@@ -21,7 +21,7 @@ const TableHeaderColors: Record<number, string> = {
   2: "@bg-black/80 @text-bg-tertiary",
 };
 
-export default function MMRDataTable({ table }: Props) {
+export function MMRDataTable({ table }: Props) {
   return (
     <table className="@w-full @bg-black/50 @shadow-lg @shadow-black @rounded-lg @overflow-hidden">
       <thead>
