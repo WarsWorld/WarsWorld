@@ -1,12 +1,12 @@
+import { TRPCClientError } from "@trpc/client";
 import { usePlayers } from "frontend/context/players";
 import { trpc } from "frontend/utils/trpc-client";
 import { useParams } from "next/navigation";
-import { type TextareaHTMLAttributes, type FormEvent, useState } from "react";
-import TextAreaInput from "../forms/TextAreaInput";
+import { type FormEvent, type TextareaHTMLAttributes, useState } from "react";
 import { articleCommentSchema, type ArticleCommentsWithPlayer } from "shared/schemas/article";
-import SquareButton from "../SquareButton";
 import { ZodError } from "zod";
-import { TRPCClientError } from "@trpc/client";
+import TextAreaInput from "../forms/TextAreaInput";
+import SquareButton from "../SquareButton";
 
 type Props = {
   comments: ArticleCommentsWithPlayer;
@@ -59,7 +59,7 @@ export default function ArticleCommentSection({ comments }: Props) {
         playerId: currentPlayer!.id,
       });
 
-      await trpcUtils.article.invalidate();
+      await trpcUtils.article.getArticleCommentsById.invalidate();
       setErrorMessage("");
       target.reset();
     } catch (err) {

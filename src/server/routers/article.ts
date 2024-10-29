@@ -1,12 +1,12 @@
-import { z } from "zod";
-import { playerBaseProcedure, publicBaseProcedure, router } from "../trpc/trpc-setup";
 import { TRPCError } from "@trpc/server";
 import { prisma } from "server/prisma/prisma-client";
 import {
   type ArticleCategories,
-  articleSchema,
   articleCommentSchema,
+  articleSchema,
 } from "shared/schemas/article";
+import { z } from "zod";
+import { playerBaseProcedure, publicBaseProcedure, router } from "../trpc/trpc-setup";
 
 const bannedWords = ["heck", "frick", "oof", "swag", "amongus"];
 
@@ -44,7 +44,7 @@ export const articleRouter = router({
         },
       });
     }),
-  getMarkdownById: publicBaseProcedure
+  getArticleTitleById: publicBaseProcedure
     .input(
       z.object({
         id: z.string(),
@@ -53,12 +53,26 @@ export const articleRouter = router({
     .query(async ({ input }) => {
       const article = await prisma.article.findFirst({
         select: {
-          body: true,
           title: true,
-          description: true,
-          thumbnail: true,
-          category: true,
-          createdAt: true,
+        },
+        where: {
+          AND: {
+            id: parseInt(input.id),
+          },
+        },
+      });
+
+      return article?.title;
+    }),
+  getArticleCommentsById: publicBaseProcedure
+    .input(
+      z.object({
+        id: z.string(),
+      }),
+    )
+    .query(async ({ input }) => {
+      const response = await prisma.article.findFirst({
+        select: {
           Comments: {
             include: {
               player: true,
@@ -75,7 +89,32 @@ export const articleRouter = router({
         },
       });
 
-      if (article == null) {
+      return response?.Comments;
+    }),
+  getArticleById: publicBaseProcedure
+    .input(
+      z.object({
+        id: z.string(),
+      }),
+    )
+    .query(async ({ input }) => {
+      const article = await prisma.article.findFirst({
+        select: {
+          body: true,
+          title: true,
+          description: true,
+          thumbnail: true,
+          category: true,
+          createdAt: true,
+        },
+        where: {
+          AND: {
+            id: parseInt(input.id),
+          },
+        },
+      });
+
+      if (!article) {
         return null;
       }
 
@@ -85,7 +124,7 @@ export const articleRouter = router({
 
       return {
         ...article,
-        type: type,
+        type,
       };
     }),
   addComment: playerBaseProcedure.input(articleCommentSchema).mutation(async ({ input, ctx }) => {

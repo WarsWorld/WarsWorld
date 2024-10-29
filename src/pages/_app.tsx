@@ -1,4 +1,3 @@
-"use client"; // This is a client component 👈🏽
 import { Layout } from "frontend/components/layout";
 import { ProvidePlayers } from "frontend/context/players";
 import "frontend/styles/global.scss";
