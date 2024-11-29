@@ -7,14 +7,16 @@ import type { SubAction } from "../shared/schemas/action";
 import type { PropertyTileType } from "../shared/schemas/tile";
 import { type Tile } from "../shared/schemas/tile";
 import type { ChangeableTile } from "../shared/types/server-match-state";
+import type { MutableRefObject } from "react";
+import type { UnitWrapper } from "../shared/wrappers/unit";
 
 export default async function subActionMenu(
   match: MatchWrapper,
   player: PlayerInMatchWrapper,
-  unit: FrontendUnit,
   newPosition: Position,
   //TODO: Whats the type for a mutation?
   mutation: any,
+  currentUnitClickedRef: MutableRefObject<UnitWrapper | null>,
   newPath?: Path,
 ) {
   const menuOptions: SubAction[] = [];
@@ -22,6 +24,11 @@ export default async function subActionMenu(
   console.log(tile.type);
 
   //the name will be displaying for each action
+  let unit: UnitWrapper;
+
+  if (currentUnitClickedRef.current !== null) {
+    unit = currentUnitClickedRef.current;
+  }
 
   if (unit.isInfantryOrMech()) {
     const tile: Tile | ChangeableTile = match.getTile(newPosition);
@@ -166,7 +173,7 @@ export default async function subActionMenu(
       actionBG.alpha = 0.5;
     });
 
-    //TODO: WHEN CLICKING
+    //TODO: WHEN CLICKING ON AN OPTION
     menuElement.on("pointerdown", () => {
       console.log(newPath);
 
@@ -177,6 +184,11 @@ export default async function subActionMenu(
         playerId: player.data.id,
         matchId: match.id,
       });
+
+      //The currentUnitClicked has changed (moved, attacked, died), therefore, we delete the previous information as it is not accurate anymore
+      //this also helps so when the screen resets, we dont have two copies of a unit
+      currentUnitClickedRef.current = null;
+
       //as soon a selection is done, destroy/erase the menu
       menuContainer.destroy();
     });

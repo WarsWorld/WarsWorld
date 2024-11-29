@@ -1,0 +1,190 @@
+<mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/24.7.17 Chrome/128.0.6613.36 Electron/32.0.1 Safari/537.36" version="24.7.17">
+  <diagram id="C5RBs43oDa-KdzZeNtuy" name="Page-1">
+    <mxGraphModel dx="1452" dy="2490" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="WIyWlLk6GJQsqaUBKTNV-0" />
+        <mxCell id="WIyWlLk6GJQsqaUBKTNV-1" parent="WIyWlLk6GJQsqaUBKTNV-0" />
+        <mxCell id="WIyWlLk6GJQsqaUBKTNV-2" value="No" style="rounded=0;html=1;jettySize=auto;orthogonalLoop=1;fontSize=11;endArrow=block;endFill=0;endSize=8;strokeWidth=1;shadow=0;labelBackgroundColor=none;edgeStyle=orthogonalEdgeStyle;entryX=0.476;entryY=0;entryDx=0;entryDy=0;entryPerimeter=0;fillColor=#f8cecc;gradientColor=#ea6b66;strokeColor=#b85450;" parent="WIyWlLk6GJQsqaUBKTNV-1" source="XgBcg6JTZcr7kntOQHq--8" target="n9zvwWZEZ2bQyNMuNhne-8" edge="1">
+          <mxGeometry x="-0.0331" y="20" relative="1" as="geometry">
+            <mxPoint x="1212.4883720930234" y="270.0080683436163" as="targetPoint" />
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="WIyWlLk6GJQsqaUBKTNV-3" value="Click" style="rounded=1;whiteSpace=wrap;html=1;fontSize=32;glass=0;strokeWidth=1;shadow=0;fillColor=#0050ef;fontColor=#ffffff;strokeColor=#001DBC;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
+          <mxGeometry x="1125" y="-780" width="170" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="WIyWlLk6GJQsqaUBKTNV-5" value="No" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;jettySize=auto;orthogonalLoop=1;fontSize=11;endArrow=block;endFill=0;endSize=8;strokeWidth=1;shadow=0;labelBackgroundColor=none;exitX=1.006;exitY=0.526;exitDx=0;exitDy=0;exitPerimeter=0;fillColor=#f8cecc;gradientColor=#ea6b66;strokeColor=#b85450;" parent="WIyWlLk6GJQsqaUBKTNV-1" source="n9zvwWZEZ2bQyNMuNhne-8" target="WIyWlLk6GJQsqaUBKTNV-7" edge="1">
+          <mxGeometry y="10" relative="1" as="geometry">
+            <mxPoint as="offset" />
+            <mxPoint x="1325" y="117.5" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="MI_2pKUf5rQWiwXYGWFa-12" value="Yes" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.482;exitY=1.002;exitDx=0;exitDy=0;exitPerimeter=0;fillColor=#d5e8d4;strokeColor=#82b366;gradientColor=#97d077;" parent="WIyWlLk6GJQsqaUBKTNV-1" source="n9zvwWZEZ2bQyNMuNhne-8" target="MI_2pKUf5rQWiwXYGWFa-11" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1202.4883720930234" y="202.49193165638326" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="MI_2pKUf5rQWiwXYGWFa-1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=-0.021;entryY=0.53;entryDx=0;entryDy=0;entryPerimeter=0;fillColor=#f8cecc;gradientColor=#ea6b66;strokeColor=#b85450;" parent="WIyWlLk6GJQsqaUBKTNV-1" source="WIyWlLk6GJQsqaUBKTNV-7" target="n9zvwWZEZ2bQyNMuNhne-9" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1650" y="117.5" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="MI_2pKUf5rQWiwXYGWFa-2" value="No" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="MI_2pKUf5rQWiwXYGWFa-1" vertex="1" connectable="0">
+          <mxGeometry x="-0.1149" y="-1" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="MI_2pKUf5rQWiwXYGWFa-4" value="Yes" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fillColor=#d5e8d4;strokeColor=#82b366;gradientColor=#97d077;" parent="WIyWlLk6GJQsqaUBKTNV-1" source="WIyWlLk6GJQsqaUBKTNV-7" target="MI_2pKUf5rQWiwXYGWFa-5" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1480" y="30" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="WIyWlLk6GJQsqaUBKTNV-7" value="Did we click on a facility&amp;nbsp; &amp;amp;&amp;amp; we own it &amp;amp;&amp;amp; is it our turn?" style="rounded=1;whiteSpace=wrap;html=1;fontSize=12;glass=0;strokeWidth=1;shadow=0;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
+          <mxGeometry x="1450" y="85" width="170" height="65" as="geometry" />
+        </mxCell>
+        <mxCell id="MI_2pKUf5rQWiwXYGWFa-5" value="Show building menu" style="whiteSpace=wrap;html=1;rounded=1;glass=0;strokeWidth=1;shadow=0;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
+          <mxGeometry x="1475" y="222.5" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="MI_2pKUf5rQWiwXYGWFa-14" value="Yes" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fillColor=#d5e8d4;strokeColor=#82b366;gradientColor=#97d077;" parent="WIyWlLk6GJQsqaUBKTNV-1" source="MI_2pKUf5rQWiwXYGWFa-11" target="MI_2pKUf5rQWiwXYGWFa-35" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1200" y="612.5" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="MI_2pKUf5rQWiwXYGWFa-11" value="Do we own the unit &amp;amp;&amp;amp; its our turn&amp;nbsp;&amp;nbsp;" style="whiteSpace=wrap;html=1;shadow=0;strokeWidth=1;spacing=6;spacingTop=-4;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
+          <mxGeometry x="1140" y="377.5" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="MI_2pKUf5rQWiwXYGWFa-26" value="no" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fillColor=#f8cecc;gradientColor=#ea6b66;strokeColor=#b85450;" parent="WIyWlLk6GJQsqaUBKTNV-1" source="MI_2pKUf5rQWiwXYGWFa-11" target="MI_2pKUf5rQWiwXYGWFa-25" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1260" y="407.5" as="sourcePoint" />
+            <mxPoint x="1570" y="407.5" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="MI_2pKUf5rQWiwXYGWFa-25" value="&lt;font style=&quot;font-size: 12px;&quot;&gt;Check:&amp;nbsp;&lt;b style=&quot;&quot;&gt;unitRangeShow, &lt;/b&gt;determine whether to show attack, move or vision if in a fog match&lt;/font&gt;&amp;nbsp;&amp;nbsp;" style="rounded=0;whiteSpace=wrap;html=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
+          <mxGeometry x="1500" y="355" width="280" height="105" as="geometry" />
+        </mxCell>
+        <mxCell id="MI_2pKUf5rQWiwXYGWFa-37" value="no" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fillColor=#f8cecc;gradientColor=#ea6b66;strokeColor=#b85450;" parent="WIyWlLk6GJQsqaUBKTNV-1" source="MI_2pKUf5rQWiwXYGWFa-35" target="MI_2pKUf5rQWiwXYGWFa-36" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="XgBcg6JTZcr7kntOQHq--6" value="Yes" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fillColor=#d5e8d4;strokeColor=#82b366;gradientColor=#97d077;" parent="WIyWlLk6GJQsqaUBKTNV-1" source="MI_2pKUf5rQWiwXYGWFa-35" target="XgBcg6JTZcr7kntOQHq--5" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="MI_2pKUf5rQWiwXYGWFa-35" value="Is the unit ready?" style="rounded=0;whiteSpace=wrap;html=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
+          <mxGeometry x="1140" y="612.5" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="XgBcg6JTZcr7kntOQHq--1" value="Yes" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fillColor=#d5e8d4;strokeColor=#82b366;gradientColor=#97d077;" parent="WIyWlLk6GJQsqaUBKTNV-1" source="MI_2pKUf5rQWiwXYGWFa-36" target="XgBcg6JTZcr7kntOQHq--0" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="XgBcg6JTZcr7kntOQHq--4" value="No" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fillColor=#f8cecc;gradientColor=#ea6b66;strokeColor=#b85450;" parent="WIyWlLk6GJQsqaUBKTNV-1" source="MI_2pKUf5rQWiwXYGWFa-36" target="n9zvwWZEZ2bQyNMuNhne-10" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1650" y="642.5" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="MI_2pKUf5rQWiwXYGWFa-36" value="Is the unit a transport &amp;amp;&amp;amp; has a unit loaded" style="rounded=0;whiteSpace=wrap;html=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
+          <mxGeometry x="1365" y="597.5" width="155" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="XgBcg6JTZcr7kntOQHq--0" value="Open action menu to drop off units" style="rounded=0;whiteSpace=wrap;html=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
+          <mxGeometry x="1380" y="752.5" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="XgBcg6JTZcr7kntOQHq--5" value="Show available tiles to move &amp;amp; available units to attack.&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;Save current unit data in &quot;currentUnitClickedRef&quot;&lt;/div&gt;" style="whiteSpace=wrap;html=1;rounded=0;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
+          <mxGeometry x="1080" y="840" width="240" height="156" as="geometry" />
+        </mxCell>
+        <mxCell id="XgBcg6JTZcr7kntOQHq--7" value="Variables&lt;div style=&quot;font-size: 16px;&quot;&gt;&lt;br style=&quot;font-size: 16px;&quot;&gt;&lt;div style=&quot;font-size: 16px;&quot;&gt;&lt;b style=&quot;font-size: 16px;&quot;&gt;unitRangeShowRef&lt;/b&gt;: keeps track to show enemy units movement, attack range or vision range&amp;nbsp;&lt;/div&gt;&lt;/div&gt;&lt;div style=&quot;font-size: 16px;&quot;&gt;&lt;br style=&quot;font-size: 16px;&quot;&gt;&lt;/div&gt;&lt;div style=&quot;font-size: 16px;&quot;&gt;&lt;b style=&quot;font-size: 16px;&quot;&gt;currentUnitClickedRef:&lt;/b&gt;Stores the data of the unit selected by user, this helps us know which unit was last clicked&amp;nbsp;&lt;/div&gt;&lt;div style=&quot;font-size: 16px;&quot;&gt;&lt;br&gt;&lt;/div&gt;&lt;div style=&quot;font-size: 16px;&quot;&gt;&lt;br style=&quot;font-size: 16px;&quot;&gt;&lt;/div&gt;&lt;div style=&quot;font-size: 16px;&quot;&gt;&lt;b style=&quot;font-size: 16px;&quot;&gt;pathQueueRef:&lt;/b&gt;&amp;nbsp;Has an array of Position/tiles where the unit clicked can move&lt;/div&gt;&lt;div style=&quot;font-size: 16px;&quot;&gt;&lt;br style=&quot;font-size: 16px;&quot;&gt;&lt;/div&gt;&lt;div style=&quot;font-size: 16px;&quot;&gt;&lt;br style=&quot;font-size: 16px;&quot;&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontSize=16;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
+          <mxGeometry x="1040" y="-1160" width="500" height="340" as="geometry" />
+        </mxCell>
+        <mxCell id="XgBcg6JTZcr7kntOQHq--9" value="No" style="rounded=0;html=1;jettySize=auto;orthogonalLoop=1;fontSize=11;endArrow=block;endFill=0;endSize=8;strokeWidth=1;shadow=0;labelBackgroundColor=none;edgeStyle=orthogonalEdgeStyle;fillColor=#f8cecc;gradientColor=#ea6b66;strokeColor=#b85450;" parent="WIyWlLk6GJQsqaUBKTNV-1" source="n9zvwWZEZ2bQyNMuNhne-11" target="XgBcg6JTZcr7kntOQHq--8" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1210" y="-730" as="sourcePoint" />
+            <mxPoint x="1210" y="280" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="XgBcg6JTZcr7kntOQHq--12" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fillColor=#d5e8d4;strokeColor=#82b366;gradientColor=#97d077;" parent="WIyWlLk6GJQsqaUBKTNV-1" source="XgBcg6JTZcr7kntOQHq--8" target="XgBcg6JTZcr7kntOQHq--11" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="XgBcg6JTZcr7kntOQHq--13" value="Yes" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="XgBcg6JTZcr7kntOQHq--12" vertex="1" connectable="0">
+          <mxGeometry x="0.0891" y="2" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="XgBcg6JTZcr7kntOQHq--8" value="is currentUnitClickedRef &amp;amp;&amp;amp; pathQueueRef" style="rounded=0;whiteSpace=wrap;html=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
+          <mxGeometry x="1140" y="-470" width="140" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="XgBcg6JTZcr7kntOQHq--15" value="Yes" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fillColor=#d5e8d4;strokeColor=#82b366;gradientColor=#97d077;" parent="WIyWlLk6GJQsqaUBKTNV-1" source="XgBcg6JTZcr7kntOQHq--18" target="XgBcg6JTZcr7kntOQHq--14" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="XgBcg6JTZcr7kntOQHq--17" value="No" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fillColor=#f8cecc;gradientColor=#ea6b66;strokeColor=#b85450;" parent="WIyWlLk6GJQsqaUBKTNV-1" source="XgBcg6JTZcr7kntOQHq--11" target="XgBcg6JTZcr7kntOQHq--16" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="XgBcg6JTZcr7kntOQHq--11" value="Did the user click on a legal path/tile to move?" style="whiteSpace=wrap;html=1;rounded=0;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
+          <mxGeometry x="1520" y="-470" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="XgBcg6JTZcr7kntOQHq--14" value="Show action menu next to transport&amp;nbsp;" style="whiteSpace=wrap;html=1;rounded=0;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
+          <mxGeometry x="1477.5" y="-80" width="205" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="XgBcg6JTZcr7kntOQHq--16" value="Reset Screen" style="whiteSpace=wrap;html=1;rounded=0;fillColor=#f0a30a;strokeColor=#BD7000;fontColor=#000000;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
+          <mxGeometry x="1820" y="-470" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="XgBcg6JTZcr7kntOQHq--19" value="Yes" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fillColor=#d5e8d4;strokeColor=#82b366;gradientColor=#97d077;" parent="WIyWlLk6GJQsqaUBKTNV-1" source="XgBcg6JTZcr7kntOQHq--11" target="XgBcg6JTZcr7kntOQHq--18" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1580" y="-410" as="sourcePoint" />
+            <mxPoint x="1580" y="-80" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="XgBcg6JTZcr7kntOQHq--21" value="Yes" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fillColor=#d5e8d4;strokeColor=#82b366;gradientColor=#97d077;" parent="WIyWlLk6GJQsqaUBKTNV-1" source="n9zvwWZEZ2bQyNMuNhne-1" target="XgBcg6JTZcr7kntOQHq--20" edge="1">
+          <mxGeometry x="0.0612" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="XgBcg6JTZcr7kntOQHq--18" value="Is there a transport in the tile/position clicked &amp;amp;&amp;amp; can the unit be loaded in said transport &amp;amp;&amp;amp; the transport doesn&#39;t have max capacity?" style="rounded=0;whiteSpace=wrap;html=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
+          <mxGeometry x="1490" y="-290" width="180" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="XgBcg6JTZcr7kntOQHq--20" value="Create a new temporary sprite in selected/new position.&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;Eliminate the path sprite&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;Remove sprite of original position.&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;Show action menu next to unit&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;Set thirdClick to true&amp;nbsp;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
+          <mxGeometry x="1752.5" y="-125" width="345" height="150" as="geometry" />
+        </mxCell>
+        <mxCell id="n9zvwWZEZ2bQyNMuNhne-0" value="pixi-sprite-names&lt;div style=&quot;font-size: 16px;&quot;&gt;&lt;br style=&quot;font-size: 16px;&quot;&gt;&lt;div style=&quot;font-size: 16px;&quot;&gt;&lt;b style=&quot;font-size: 16px;&quot;&gt;tempUnit:&lt;/b&gt;&amp;nbsp;temporary sprite we use while &quot;showing&quot; a unit as moved, its deleted if user cancels actions mid-way&amp;nbsp;&lt;/div&gt;&lt;/div&gt;&lt;div style=&quot;font-size: 16px;&quot;&gt;&lt;br style=&quot;font-size: 16px;&quot;&gt;&lt;/div&gt;&lt;div style=&quot;font-size: 16px;&quot;&gt;&lt;b style=&quot;font-size: 16px;&quot;&gt;unit-x-y:&lt;/b&gt;&amp;nbsp;Sprite of unit on x-y coordinates&lt;/div&gt;&lt;div style=&quot;font-size: 16px;&quot;&gt;&lt;br style=&quot;font-size: 16px;&quot;&gt;&lt;/div&gt;&lt;div style=&quot;font-size: 16px;&quot;&gt;&lt;b style=&quot;font-size: 16px;&quot;&gt;path:&lt;/b&gt;&amp;nbsp;sprite of blue tiles that show a path for unit to move&lt;/div&gt;&lt;div style=&quot;font-size: 16px;&quot;&gt;&lt;br style=&quot;font-size: 16px;&quot;&gt;&lt;/div&gt;&lt;div style=&quot;font-size: 16px;&quot;&gt;&lt;b style=&quot;font-size: 16px;&quot;&gt;subMenu: &lt;/b&gt;sprite of&lt;b style=&quot;font-size: 16px;&quot;&gt;&amp;nbsp;&lt;/b&gt;the menu with options such as attack, wait, etc&lt;/div&gt;&lt;div style=&quot;font-size: 16px;&quot;&gt;&lt;br style=&quot;font-size: 16px;&quot;&gt;&lt;/div&gt;&lt;div style=&quot;font-size: 16px;&quot;&gt;&lt;b style=&quot;font-size: 16px;&quot;&gt;buildMenu:&lt;/b&gt;&amp;nbsp;sprite of the menu to build units&lt;/div&gt;&lt;div style=&quot;font-size: 16px;&quot;&gt;&lt;br style=&quot;font-size: 16px;&quot;&gt;&lt;/div&gt;&lt;div style=&quot;font-size: 16px;&quot;&gt;&lt;br style=&quot;font-size: 16px;&quot;&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontSize=16;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="1660" y="-1120" width="380" height="360" as="geometry" />
+        </mxCell>
+        <mxCell id="n9zvwWZEZ2bQyNMuNhne-2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fillColor=#f8cecc;gradientColor=#ea6b66;strokeColor=#b85450;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="XgBcg6JTZcr7kntOQHq--18" target="n9zvwWZEZ2bQyNMuNhne-1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1670" y="-235" as="sourcePoint" />
+            <mxPoint x="2160" y="-235" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="n9zvwWZEZ2bQyNMuNhne-4" value="No" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fillColor=#f8cecc;gradientColor=#ea6b66;strokeColor=#b85450;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="n9zvwWZEZ2bQyNMuNhne-1" target="n9zvwWZEZ2bQyNMuNhne-5">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="2150" y="-235" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="n9zvwWZEZ2bQyNMuNhne-1" value="Is there no unit in the position clicked OR is the position clicked the same tile as where the unit already was (meaning, unit is doing an action on the same tile it already was)" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="1800" y="-277.5" width="250" height="85" as="geometry" />
+        </mxCell>
+        <mxCell id="n9zvwWZEZ2bQyNMuNhne-5" value="Reset Screen" style="whiteSpace=wrap;html=1;rounded=0;fillColor=#f0a30a;strokeColor=#BD7000;fontColor=#000000;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="2154" y="-265" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="n9zvwWZEZ2bQyNMuNhne-8" value="Did we click on a unit?" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="1130" y="70" width="160" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="n9zvwWZEZ2bQyNMuNhne-9" value="Reset Screen" style="whiteSpace=wrap;html=1;rounded=0;fillColor=#f0a30a;strokeColor=#BD7000;fontColor=#000000;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="1700" y="85" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="n9zvwWZEZ2bQyNMuNhne-10" value="Reset Screen" style="whiteSpace=wrap;html=1;rounded=0;fillColor=#f0a30a;strokeColor=#BD7000;fontColor=#000000;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="1660" y="612.5" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="n9zvwWZEZ2bQyNMuNhne-12" value="" style="rounded=0;html=1;jettySize=auto;orthogonalLoop=1;fontSize=11;endArrow=block;endFill=0;endSize=8;strokeWidth=1;shadow=0;labelBackgroundColor=none;edgeStyle=orthogonalEdgeStyle;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="WIyWlLk6GJQsqaUBKTNV-3" target="n9zvwWZEZ2bQyNMuNhne-11">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1210" y="-730" as="sourcePoint" />
+            <mxPoint x="1210" y="-470" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="n9zvwWZEZ2bQyNMuNhne-14" value="Yes" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fillColor=#d5e8d4;gradientColor=#97d077;strokeColor=#82b366;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="n9zvwWZEZ2bQyNMuNhne-11" target="n9zvwWZEZ2bQyNMuNhne-13">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="n9zvwWZEZ2bQyNMuNhne-11" value="isThirdClick true?" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="1150" y="-644" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="n9zvwWZEZ2bQyNMuNhne-13" value="Set third click as false, reset screen" style="whiteSpace=wrap;html=1;rounded=0;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="1390" y="-644" width="120" height="60" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

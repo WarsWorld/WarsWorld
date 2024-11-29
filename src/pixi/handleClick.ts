@@ -10,206 +10,188 @@ import { renderedTileSize } from "../components/client-only/MatchRenderer";
 import buildUnitMenu from "./buildUnitMenu";
 import type { PlayerInMatchWrapper } from "../shared/wrappers/player-in-match";
 import type { LoadedSpriteSheet } from "./load-spritesheet";
-import type { FrontendUnit } from "../frontend/components/match/FrontendUnit";
 import type { UnitWrapper } from "../shared/wrappers/unit";
 import type { MutableRefObject } from "react";
+import { isUnitProducingProperty } from "../shared/schemas/tile";
 
 export const handleClick = async (
   event: FederatedPointerEvent,
   match: MatchWrapper,
   mapContainer: Container,
   unitContainer: Container,
-  currentUnitRef: MutableRefObject<UnitWrapper | null>,
-  pathQueue: MutableRefObject<Map<Position, PathNode> | null>,
+  currentUnitClickedRef: MutableRefObject<UnitWrapper | null>,
+  pathQueueRef: MutableRefObject<Map<Position, PathNode> | null>,
   player: PlayerInMatchWrapper,
   spriteSheets: LoadedSpriteSheet,
   actionMutation: any,
+  unitRangeShowRef: "attack" | "movement" | "vision",
+  thirdClickRef: MutableRefObject<boolean>,
 ) => {
-  if (match.getCurrentTurnPlayer().data.id !== player.data.id) {
-    return;
-  }
-
   const x = Math.floor((event.global.x - renderedTileSize / 2) / renderedTileSize);
   const y = Math.floor((event.global.y - renderedTileSize / 2) / renderedTileSize);
 
   const clickPosition: Position = [x, y];
-  //STEPS WHEN CLICKING
 
-/*
+  //Check if there is a unit in the tile/position clicked
+  const unitClicked = match.getUnit(clickPosition);
 
-so right now, everytime there is a click in the game, this function runs. Ergo, we need to be able to differ if this is the first time clicking an unit or base or if we are clicking again to select a path OR to select an action.
+  //Check what tile is in the tile/position clicked
+  const tileClicked = match.getTile(clickPosition);
 
-For example
-Click #1, click on unit owned
-  - now we need to show the path that unit can go to
+  //the third click is basically when a unit is displaying a submenu, the submenu has its own event listeners so, we want to make sure no matter what the user does, they will either click on an option or not and reset the screen back to original
+  if (thirdClickRef.current) {
+    thirdClickRef.current = false;
+    resetScreen();
+  }
+  //there is an savedUnit and a path, meaning the user has already clicked on a unit beforehand
+  else if (currentUnitClickedRef.current && pathQueueRef.current) {
+    const currentUnitClickedPosition = currentUnitClickedRef.current.data.position;
 
-    Click #2, clicked on a blue square of the path (we need a variable to determine if we've clicked on a path)
-      -Show the unit moving to that tile
-      -Display the actions menu
+    //flag to determine if we clicked on path
+    let clickedOnPathFlag = false;
 
-      Click #3, click on an action
-      - perform the action, if its a transport, we need to display where can the unit go go to click #4
+    for (const [pos] of pathQueueRef.current) {
+      //we found the path / user clicked on a legal path
+      if (clickPosition[0] === pos[0] && clickPosition[1] === pos[1]) {
+        const unitInTile = match.getUnit(clickPosition);
 
-        Click#4,
-        - show options for unit to be unloaded to
+        //TODO: Logic to handle user clicking an unit (we show its path) and then clicking a transport unit (meaning user is trying to transport that unit
+        if (unitInTile?.isTransport()) {
+          //show action menu next to transport?
+          //Handle logic to see if currentUnitClicked can be transported, if not, initiate cleanup
+        }
+        //No unit in tile / tile is empty OR we clicked on the same position unit is already in
+        else if (
+          !unitInTile ||
+          (currentUnitClickedPosition[0] === pos[0] && currentUnitClickedPosition[1] === pos[1])
+        ) {
+          thirdClickRef.current = true;
 
+          // Remove Path
+          mapContainer.getChildByName("path")?.destroy();
 
-  If at any moment, the user clicks on something that doesnt do anything (such as an empty tile) then we need to clean up everything and re-render everything back to its original position.
+          //Remove current sprite of unit clicked
+          unitContainer
+            .getChildByName(
+              `unit-${currentUnitClickedRef.current.data.position[0]}-${currentUnitClickedRef.current.data.position[1]}`,
+            )
+            ?.destroy();
 
+          //create new temporary sprite in selected position
+          const tempUnit = renderUnitSprite(
+            currentUnitClickedRef.current,
+            spriteSheets[match.getCurrentTurnPlayer().data.army],
+            clickPosition,
+          );
+          tempUnit.name = "tempUnit";
+          unitContainer.addChild(tempUnit);
 
-  So having a system for click management (such as knowing if we clicked on an ally unit vs an enemy unit and showing their attack range or movement range and so on) is quite important.
+          //TODO: User neeeds to be able to select their own path, below just gets the fastest/most efficient path which will not work for fog
+          const efficientPath = getShortestPathToPosition(
+            match,
+            currentUnitClickedRef.current,
+            pos,
+          );
 
- */
+          // display subaction menu next to unit in new position
+          const subMenu = await subActionMenu(
+            match,
+            player,
+            pos,
+            actionMutation,
+            currentUnitClickedRef,
+            efficientPath,
+          );
 
-  //0 - is there a path active
-  // if path active {}
+          unitContainer.addChild(subMenu);
+        } else {
+          resetScreen();
+        }
 
-  //if clicking on path
+        clickedOnPathFlag = true;
+        break;
+      }
+    }
 
-  //HANDLING TRANSPORT
-  // if clicking on unit we OWN and its out TURN
+    if (!clickedOnPathFlag) {
+      //we clicked outside the path
+      resetScreen();
+    }
+  }
+  //Is there an unit where clicked?
+  else if (unitClicked) {
+    //Do we own this unit AND is it our turn?
+    if (player.owns(unitClicked) && match.getCurrentTurnPlayer().data.id === player.data.id) {
+      //is the unit ready?
+      if (unitClicked.data.isReady) {
+        currentUnitClickedRef.current = unitClicked;
 
-  //else go below
-
-//1 - Check if it's an unit
-  const unit = match.getUnit(clickPosition);
-  if (unit) {
-
-
-    //1.1 - Show its path
-    const showPath = showPassableTiles(match, unit);
-    pathQueue.current = getAccessibleNodes(match, unit);
-    mapContainer.addChild(showPath);
-    //todo: ts hates this,
-
-    if (player.owns(unit.data) && unit.data.isReady) {
-      console.log("player owns unit");
-      currentUnitRef.current = unit;
+        //Show its path
+        const showPath = showPassableTiles(match, unitClicked);
+        pathQueueRef.current = getAccessibleNodes(match, unitClicked);
+        mapContainer.addChild(showPath);
+      }
+      //todo: handle logic for clicking a transport that is loaded and NOT ready (so it can drop off units)
+      else if (unitClicked.isTransport() /*TODO && isLoaded*/) {
+        //Show subaction menu of transport to drop off units
+      }
+    }
+    //TODO: We clicked on a unit we do not own OR its not our turn. Display unit movement/attack range/vision
+    else {
+      //show unit path/move/stuff
     }
 
     return;
   }
+  //we did NOT click on a unit
+  //did we click a facily AND we own that facility AND its our turn?
+  else if (
+    /*TODO: Check property can produce units (for example, Hachi SCOP) */ player.owns(
+      tileClicked,
+    ) &&
+    isUnitProducingProperty(tileClicked) &&
+    match.getCurrentTurnPlayer().data.id === player.data.id
+  ) {
+    const buildMenu = await buildUnitMenu(
+      spriteSheets[player.data.army],
+      match,
+      player,
+      clickPosition,
+      actionMutation,
+    );
 
-  //- Trigger something to understand we've clicked an unit and its path, now we follow this specific path
-
-  //--- WAIT FOR THE NEXT CLICK ---
-
-  //1.2 - If the player owns the unit AND has the turn AND clicks on the path
-
-  // - Remove the original unit
-  // - Show unit in new position
-  // - Show subaction menu in new position
-
-  //--- WAIT FOR NEXT CLICK ---
-
-  //1.2.3 - If they click on action, do action, else, return to original state
-    // if unit is a transport, sort out one last click to know where will units be dropped
-
-
-  //1.3 - else not your turn or not your unit? Destroy the path, return to original state
-
-  //2 - (No unit) Check if its a property AND its our turn AND we own it
-
-  // 2.1 - Show unit building menu
-
-  // - If click on menu, build unit on spot
-  //- Else, return to original state
-
-  // --- WAIT FOR THE NEXT CLICK ---
-
-  //removes the menu if we click anywhere, still lets the menu work
-  unitContainer.getChildByName("unitMenu")?.destroy();
-  unitContainer.getChildByName("subMenu")?.destroy();
-  unitContainer.getChildByName("unit-ghost")?.destroy();
-
-  console.log(`pathQueue ${pathQueue.current}`);
-  console.log(`currentUnitRef.current ${currentUnitRef.current}`);
-
-  // UNIT MOVING HANDLING
-
-  //Handle clicking on path
-  if (pathQueue.current && currentUnitRef.current) {
-    for (const [pos] of pathQueue.current) {
-      if (clickPosition[0] === pos[0] && clickPosition[1] === pos[1]) {
-        pathQueue.current = null;
-
-        mapContainer.getChildByName("path")?.destroy();
-
-        // 1 - dissapear current sprite
-        unitContainer
-          .getChildByName(
-            `unit-${currentUnitRef.current.data.position[0]}-${currentUnitRef.current.data.position[1]}`,
-          )
-          ?.destroy();
-
-        //2 - create new sprite in position
-        unitContainer.addChild(
-          renderUnitSprite(
-            currentUnitRef.current,
-            spriteSheets[match.getCurrentTurnPlayer().data.army],
-            clickPosition,
-          ),
-        );
-
-        const newPath = getShortestPathToPosition(match, currentUnitRef.current, pos);
-
-        if (newPath === null) {
-          break;
-        }
-
-        //4 - display subactio menu next to unit in new position
-        const subMenu = await subActionMenu(
-          match,
-          player,
-          currentUnitRef.current,
-          pos,
-          actionMutation,
-          newPath,
-        );
-
-        unitContainer.addChild(subMenu);
-        break;
-      }
-    }
-    //handle if we didnt click on the path
-  } else if (currentUnitRef.current) {
-    mapContainer.getChildByName("path")?.destroy();
-
-    //lets add the original unit back to its original position only if the original doesnt exist
-    if (
-      match.getUnit(currentUnitRef.current.data.position) &&
-      !unitContainer.getChildByName(
-        `unit-${currentUnitRef.current.data.position[0]}-${currentUnitRef.current.data.position[1]}`,
-      )
-    ) {
-      unitContainer.addChild(
-        renderUnitSprite(
-          currentUnitRef.current,
-          spriteSheets[match.getCurrentTurnPlayer().data.army],
-        ),
-      );
-    }
-
-    pathQueue.current = null;
-    currentUnitRef.current = null;
+    //The menu is added to the unitContainer because units are ALWAYS above terrain (so unitContainer.zIndex > mapContainer.zIndex, and we need the menu to be ALWAYS above units so it has to be in the unitContainer
+    unitContainer.addChild(buildMenu);
+  } else {
+    resetScreen();
   }
 
-  const changeableTile = match.getTile(clickPosition);
+  function resetScreen() {
+    //removes the menu if we click anywhere, still lets the menu work
+    unitContainer.getChildByName("buildMenu")?.destroy();
+    unitContainer.getChildByName("subMenu")?.destroy();
+    unitContainer.getChildByName("tempUnit")?.destroy();
+    mapContainer.getChildByName("path")?.destroy();
 
-  if (changeableTile !== undefined) {
-    //TODO: How to manage silo/show different menu
-    if (player.owns(changeableTile)) {
-      //this assumes the tile is a building and not a silo
-      const unitMenu = await buildUnitMenu(
-        spriteSheets[player.data.army],
-        match,
-        player,
-        clickPosition,
-        actionMutation,
-      );
-
-      //The menu is added to the unitContainer because units are ALWAYS above terrain (so unitContainer.zIndex > mapContainer.zIndex, and we need the menu to be ALWAYS above units so it has to be in the unitContainer
-      unitContainer.addChild(unitMenu);
+    //handle if we didnt click on the path
+    if (currentUnitClickedRef.current) {
+      //lets add the original unit back to its original position only if the original doesnt exist
+      if (
+        match.getUnit(currentUnitClickedRef.current.data.position) &&
+        !unitContainer.getChildByName(
+          `unit-${currentUnitClickedRef.current.data.position[0]}-${currentUnitClickedRef.current.data.position[1]}`,
+        )
+      ) {
+        unitContainer.addChild(
+          renderUnitSprite(
+            currentUnitClickedRef.current,
+            spriteSheets[match.getCurrentTurnPlayer().data.army],
+          ),
+        );
+      }
     }
+
+    pathQueueRef.current = null;
+    currentUnitClickedRef.current = null;
   }
 };
