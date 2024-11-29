@@ -1,6 +1,10 @@
 import type { Spritesheet } from "pixi.js";
 import { Container, Sprite } from "pixi.js";
-import type { Position, Path } from "shared/schemas/position";
+import {
+  createPipeSeamUnitEquivalent,
+  getBaseDamage,
+} from "shared/match-logic/game-constants/base-damage";
+import type { Position } from "shared/schemas/position";
 import {
   getDistance,
   getNeighbourPositions,
@@ -10,7 +14,6 @@ import type { MapWrapper } from "shared/wrappers/map";
 import type { MatchWrapper } from "shared/wrappers/match";
 import { DispatchableError } from "../shared/DispatchedError";
 import type { UnitWrapper } from "../shared/wrappers/unit";
-import { tileConstructor } from "./sprite-constructor";
 export type PathNode = {
   //saves distance from origin and parent (to retrieve the shortest path)
   pos: Position;
@@ -23,10 +26,11 @@ const makeVisitedMatrix = (map: MapWrapper) =>
     .fill(false)
     .map(() => Array.from<boolean>({ length: map.height }).fill(false));
 
-export function getAccessibleNodes( //TODO: save result of function? _ (Sturm d2d?)
+export const getAccessibleNodes = (
+  //TODO: save result of function? _ (Sturm d2d?)
   match: MatchWrapper,
   unit: UnitWrapper,
-): Map<Position, PathNode> {
+): Map<Position, PathNode> => {
   const ownerUnitPlayer = match.getPlayerBySlot(unit.data.playerSlot);
 
   if (ownerUnitPlayer === undefined) {
@@ -71,8 +75,6 @@ export function getAccessibleNodes( //TODO: save result of function? _ (Sturm d2
         continue;
       }
 
-      unit.getMovementCost(pos);
-
       const movementCost = unit.getMovementCost(pos);
 
       if (movementCost === null) {
@@ -92,67 +94,14 @@ export function getAccessibleNodes( //TODO: save result of function? _ (Sturm d2
   }
 
   return accessibleTiles;
-}
+};
 
-export function showPassableTiles(
+export const getAttackableTiles = (
   match: MatchWrapper,
   unit: UnitWrapper,
   accessibleNodes?: Map<Position, PathNode>,
-) {
-  const markedTiles = new Container();
-  markedTiles.eventMode = "static";
-
-  if (accessibleNodes === undefined) {
-    accessibleNodes = getAccessibleNodes(match, unit);
-  }
-
-  //add squares one by one
-  for (const [pos] of accessibleNodes.entries()) {
-    //TODO: Add a border to "edge" tiles
-    const square = tileConstructor(pos, "#43d9e4");
-    markedTiles.addChild(square);
-  }
-
-  markedTiles.zIndex = 9999;
-  markedTiles.name = "path";
-  return markedTiles;
-}
-
-export function getAttackableTiles(
-  match: MatchWrapper,
-  unit: UnitWrapper,
-  accessibleNodes?: Map<Position, PathNode>,
-): Position[] {
-  if (accessibleNodes === undefined) {
-    accessibleNodes = getAccessibleNodes(match, unit);
-  }
-
-  const visited = makeVisitedMatrix(match.map);
-
-  const attackpositions: Position[] = [];
-
-  for (const [pos] of accessibleNodes.entries()) {
-    for (const adjPos of getNeighbourPositions(pos)) {
-      //all positions adjacent to tiles where the unit can move to are attacking tiles
-      if (!match.map.isOutOfBounds(adjPos)) {
-        if (!visited[adjPos[0]][adjPos[1]]) {
-          attackpositions.push(adjPos);
-          visited[adjPos[0]][adjPos[1]] = true;
-        }
-      }
-    }
-  }
-
-  return attackpositions;
-}
-
-export function showAttackableTiles(
-  match: MatchWrapper,
-  unit: UnitWrapper,
-  attackableTiles?: Position[],
-) {
-  const markedTiles = new Container();
-  markedTiles.eventMode = "static";
+): Position[] => {
+  const attackPositions: Position[] = [];
 
   if ("attackRange" in unit.properties && unit.properties.attackRange[0] > 1) {
     //ranged unit
@@ -164,41 +113,111 @@ export function showAttackableTiles(
           distance <= unit.properties.attackRange[1] &&
           distance >= unit.properties.attackRange[0]
         ) {
-          const square = tileConstructor([x, y], "#be1919");
-          markedTiles.addChild(square);
+          attackPositions.push([x, y]);
         }
       }
     }
+  } else {
+    if (accessibleNodes === undefined) {
+      accessibleNodes = getAccessibleNodes(match, unit);
+    }
 
-    return markedTiles;
+    const visited = makeVisitedMatrix(match.map);
+
+    for (const [pos] of accessibleNodes.entries()) {
+      for (const adjPos of getNeighbourPositions(pos)) {
+        //all positions adjacent to tiles where the unit can move to are attacking tiles
+        if (!match.map.isOutOfBounds(adjPos)) {
+          if (!visited[adjPos[0]][adjPos[1]]) {
+            attackPositions.push(adjPos);
+            visited[adjPos[0]][adjPos[1]] = true;
+          }
+        }
+      }
+    }
   }
+
+  return attackPositions;
+};
+
+export const getAttackTargetTiles = (
+  match: MatchWrapper,
+  unit: UnitWrapper,
+  attackableTiles?: Position[],
+) => {
+  const attackTargetPositions: Position[] = [];
 
   if (attackableTiles === undefined) {
     attackableTiles = getAttackableTiles(match, unit);
   }
 
-  for (const pos of attackableTiles) {
-    const square = tileConstructor(pos, "#be1919");
-    markedTiles.addChild(square);
+  const canAttackPipeseams =
+    getBaseDamage(unit, createPipeSeamUnitEquivalent(match, unit)) !== null;
+
+  for (const position of attackableTiles) {
+    const enemy = match.getUnit(position);
+
+    if (enemy === undefined) {
+      if (match.getTile(position).type === "pipeSeam" && canAttackPipeseams) {
+        attackTargetPositions.push(position);
+      }
+    } else {
+      if (enemy.player.team !== unit.player.team && getBaseDamage(unit, enemy) !== null) {
+        attackTargetPositions.push(position);
+      }
+    }
   }
 
-  return markedTiles;
-}
+  return attackTargetPositions;
+};
 
-export function updatePath(
+// Helper function to check if two positions are the same
+const arePositionsEqual = (pos1: Position, pos2: Position): boolean => {
+  return pos1[0] === pos2[0] && pos1[1] === pos2[1];
+};
+
+// Function to check if newPos is in accessibleNodes (by value comparison)
+const hasPositionInMap = (accessibleNodes: Map<Position, PathNode>, newPos: Position): boolean => {
+  for (let key of accessibleNodes.keys()) {
+    if (arePositionsEqual(key, newPos)) {
+      return true; // newPos is found in the map
+    }
+  }
+  return false; // newPos is not in the map
+};
+
+// Helper function to get the value from the map using value-based comparison of Position
+const getPathNodeFromMap = (accessibleNodes: Map<Position, PathNode>, currentPos: Position): PathNode | undefined => {
+  for (let [key, value] of accessibleNodes.entries()) {
+    if (arePositionsEqual(key, currentPos)) {
+      return value; // Return the corresponding PathNode if position matches
+    }
+  }
+  return undefined; // Return undefined if no match is found
+};
+
+
+export const updatePath = (
   unit: UnitWrapper,
   accessibleNodes: Map<Position, PathNode>,
-  path: PathNode[],
+  path: PathNode[] | undefined,
   newPos: Position,
-): PathNode[] {
-  if (!accessibleNodes.has(newPos)) {
+): PathNode[] => {
+  console.log(accessibleNodes);
+  console.log(accessibleNodes.has(newPos));
+  console.log(newPos);
+
+  if (!hasPositionInMap(accessibleNodes, newPos)) {
     throw new Error("Trying to add an unreachable position!");
   }
 
-  if (path.length !== 0) {
+
+
+  if (path !== undefined && path.length !== 0) {
     const lastNode = path.at(-1)!;
 
     for (const node of path) {
+
       if (node.pos === newPos) {
         //the "new" node is part of the current path, so delete all nodes after that one
         while (node !== path.at(-1)) {
@@ -229,8 +248,10 @@ export function updatePath(
   const newPath: PathNode[] = [];
   let currentPos: [number, number] | null = newPos;
 
+
   while (currentPos !== null) {
-    const accessibleNodesPath = accessibleNodes.get(currentPos);
+
+    const accessibleNodesPath = getPathNodeFromMap(accessibleNodes, currentPos);
 
     if (accessibleNodesPath !== undefined) {
       newPath.push(accessibleNodesPath);
@@ -239,9 +260,9 @@ export function updatePath(
   }
 
   return newPath.toReversed();
-}
+};
 
-function getSpriteName(a: Position, b: Position, c: Position): string {
+const getSpriteName = (a: Position, b: Position, c: Position): string => {
   //path from a to b to c, the sprite is the one displayed in b (middle node)
   const dify = Math.abs(a[1] - c[1]);
   const difx = Math.abs(a[0] - c[0]);
@@ -309,9 +330,9 @@ function getSpriteName(a: Position, b: Position, c: Position): string {
 
     return "sd";
   }
-}
+};
 
-export function showPath(spriteSheet: Spritesheet, path: PathNode[]) {
+export const showPath = (spriteSheet: Spritesheet, path: PathNode[]) => {
   if (path.length < 1) {
     throw new Error("Empty path!");
   }
@@ -343,52 +364,4 @@ export function showPath(spriteSheet: Spritesheet, path: PathNode[]) {
   //this name will let us easily remove arrows later
   arrowContainer.name = "arrows";
   return arrowContainer;
-}
-
-//TODO: So apparently, our map wont take map.get[0,0] as it doesnt compare the same to the key [0,0] since its not the same array, so we can't do map.has([0,0]), we instead have to manually check. I'm sure there is an easy fix here but I could not think of it
-function positionsAreEqual(pos1: Position, pos2: Position): boolean {
-  return pos1[0] === pos2[0] && pos1[1] === pos2[1];
-}
-
-//TODO: I know we want to get the path the player chose (specially for fog) but for right now, I just want to create enough utility for standard. Feel free to modify this function or the other ones to replicate the same result.
-export function getShortestPathToPosition(
-  match: MatchWrapper,
-  unit: UnitWrapper,
-  targetPosition: Position,
-): Path | null {
-  // Get all accessible nodes using the existing function
-  const accessibleNodes = getAccessibleNodes(match, unit);
-
-  // Find the target position by value instead of reference
-  let targetNode: PathNode | undefined;
-
-  for (const [pos, node] of accessibleNodes.entries()) {
-    if (positionsAreEqual(pos, targetPosition)) {
-      targetNode = node;
-      break;
-    }
-  }
-
-  // If the target position is not accessible, return null
-  if (!targetNode) {
-    return null;
-  }
-
-  // Initialize the path array and start from the target position
-  const path: Path = [];
-  let currentNode = targetNode;
-
-  // Traverse back through the parent nodes to build the shortest path
-  while (currentNode !== null) {
-    path.unshift(currentNode.pos);
-    const nextNode = accessibleNodes.get(currentNode.parent!);
-
-    if (nextNode !== undefined) {
-      currentNode = nextNode;
-    } else {
-      break;
-    }
-  }
-
-  return path;
-}
+};

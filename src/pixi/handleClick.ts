@@ -3,7 +3,7 @@ import type { FederatedPointerEvent, Container } from "pixi.js";
 import type { Position } from "shared/schemas/position";
 import type { MatchWrapper } from "shared/wrappers/match";
 import { renderUnitSprite } from "./renderUnitSprite";
-import { getAccessibleNodes, showPassableTiles, getShortestPathToPosition } from "./show-pathing";
+import { getAccessibleNodes, updatePath } from "./show-pathing";
 import subActionMenu from "./subActionMenu";
 import type { PathNode } from "./show-pathing";
 import { renderedTileSize } from "../components/client-only/MatchRenderer";
@@ -13,6 +13,7 @@ import type { LoadedSpriteSheet } from "./load-spritesheet";
 import type { UnitWrapper } from "../shared/wrappers/unit";
 import type { MutableRefObject } from "react";
 import { isUnitProducingProperty } from "../shared/schemas/tile";
+import { createTileContainer } from "./interactiveTileFunctions";
 
 export const handleClick = async (
   event: FederatedPointerEvent,
@@ -43,6 +44,7 @@ export const handleClick = async (
     thirdClickRef.current = false;
     resetScreen();
   }
+
   //there is an savedUnit and a path, meaning the user has already clicked on a unit beforehand
   else if (currentUnitClickedRef.current && pathQueueRef.current) {
     const currentUnitClickedPosition = currentUnitClickedRef.current.data.position;
@@ -86,12 +88,18 @@ export const handleClick = async (
           tempUnit.name = "tempUnit";
           unitContainer.addChild(tempUnit);
 
-          //TODO: User neeeds to be able to select their own path, below just gets the fastest/most efficient path which will not work for fog
+          console.log("accessible nodes");
+          const accessibleNodes = getAccessibleNodes(match, currentUnitClickedRef.current);
+          console.log("newPath");
+          const newPath = updatePath(currentUnitClickedRef.current, accessibleNodes, undefined, pos);
+          console.log("newPath!!!!!");
+
+     /*     //TODO: User neeeds to be able to select their own path, below just gets the fastest/most efficient path which will not work for fog
           const efficientPath = getShortestPathToPosition(
             match,
             currentUnitClickedRef.current,
             pos,
-          );
+          );*/
 
           // display subaction menu next to unit in new position
           const subMenu = await subActionMenu(
@@ -100,7 +108,7 @@ export const handleClick = async (
             pos,
             actionMutation,
             currentUnitClickedRef,
-            efficientPath,
+            newPath,
           );
 
           unitContainer.addChild(subMenu);
@@ -126,10 +134,25 @@ export const handleClick = async (
       if (unitClicked.data.isReady) {
         currentUnitClickedRef.current = unitClicked;
 
-        //Show its path
+
+//NEW CHANGES
+        const passablePositions = getAccessibleNodes(match, unitClicked);
+        console.log(passablePositions);
+        const displayedPassableTiles = createTileContainer(
+      Array.from(passablePositions.keys()),
+      "#43d9e4",
+      999,
+      "path",
+    );
+    pathQueueRef.current = getAccessibleNodes(match, unitClicked);
+    mapContainer.addChild(displayedPassableTiles);
+
+
+
+        /*//Show its path
         const showPath = showPassableTiles(match, unitClicked);
         pathQueueRef.current = getAccessibleNodes(match, unitClicked);
-        mapContainer.addChild(showPath);
+        mapContainer.addChild(showPath);*/
       }
       //todo: handle logic for clicking a transport that is loaded and NOT ready (so it can drop off units)
       else if (unitClicked.isTransport() /*TODO && isLoaded*/) {

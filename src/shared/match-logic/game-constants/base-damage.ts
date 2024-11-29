@@ -1,5 +1,29 @@
-import type { UnitType } from "shared/schemas/unit";
-import type { UnitWrapper } from "shared/wrappers/unit";
+import type { Position } from "shared/schemas/position";
+import type { UnitType, WWUnit } from "shared/schemas/unit";
+import type { MatchWrapper } from "shared/wrappers/match";
+import { UnitWrapper } from "shared/wrappers/unit";
+
+export const createPipeSeamUnitEquivalent = (
+  match: MatchWrapper,
+  attacker: UnitWrapper,
+  pipeSeamPosition?: Position,
+  pipeSeamHp?: number,
+) => {
+  const usedVersion = match.rules.gameVersion ?? attacker.player.data.coId.version;
+  const unitEquivalent: WWUnit = {
+    type: usedVersion === "AW1" ? "mediumTank" : "neoTank",
+    //TODO: We can't use -1 because that player doesnt exist/throws an error, I'm changing it to playerSlot: 1 just to make it "work" for now
+    playerSlot: 1,
+    position: pipeSeamPosition ?? [0, 0],
+    isReady: false,
+    stats: {
+      hp: pipeSeamHp ?? 99,
+      fuel: 0,
+      ammo: 0,
+    },
+  };
+  return new UnitWrapper(unitEquivalent, match);
+};
 
 /**
  * Returns if unit is going to attack enemy unit with primary weapon or not
