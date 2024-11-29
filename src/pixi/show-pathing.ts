@@ -170,6 +170,9 @@ export const getAttackTargetTiles = (
 
   return attackTargetPositions;
 };
+//TODO: Do we really need these? right now they are just being used as a band-aid fix to make things work - Javi
+//HELPER FUNCTIONS BY CHATGPT
+
 
 // Helper function to check if two positions are the same
 const arePositionsEqual = (pos1: Position, pos2: Position): boolean => {
@@ -194,6 +197,24 @@ const getPathNodeFromMap = (accessibleNodes: Map<Position, PathNode>, currentPos
     }
   }
   return undefined; // Return undefined if no match is found
+};
+
+// Function to retrieve the path from the PathNode
+const getPathCoordinates = (pathNode: PathNode, accessibleNodes: Map<Position, PathNode>): number[][] => {
+  const path: number[][] = [];
+  let currentNode: PathNode | undefined = pathNode;
+
+  // Walk through the path from the given node to the origin
+  while (currentNode !== undefined && currentNode !== null) {
+    // Add the current position as [x, y] to the path
+    path.push([currentNode.pos.x, currentNode.pos.y]);
+
+    // Move to the parent node if available
+    currentNode = currentNode.parent ? getPathNodeFromMap(accessibleNodes, currentNode.parent) : undefined;
+  }
+
+  // Reverse the path to ensure it starts from the first position (origin) to the last
+  return path.reverse();
 };
 
 

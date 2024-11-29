@@ -255,12 +255,17 @@ export default async function subActionMenu(
   //TODO: Whats the type for a mutation?
   mutation: any,
   currentUnitClickedRef: React.MutableRefObject<UnitWrapper | null>,
-  newPath?: PathNode[]
+  newPath: PathNode[]
 ) {
 
 
   //the name will be displaying for each action
   let unit: UnitWrapper;
+
+  // Extract the positions as a number[][] array
+  const positionsArray: number[][] = newPath.map(node => node.pos);
+  console.log("positions Array: ", positionsArray);
+  console.log(positionsArray);
 
   if (currentUnitClickedRef.current !== null) {
     unit = currentUnitClickedRef.current;
@@ -353,6 +358,7 @@ export default async function subActionMenu(
 
     //TODO: WHEN CLICKING
     menuElement.on("pointerdown", () => {
+      console.log("pointerdown");
       console.log(newPath);
       console.log(subAction);
       console.log(menuOptions);
@@ -360,8 +366,8 @@ export default async function subActionMenu(
 
       mutation.mutateAsync({
         type: "move",
-        subAction: subAction,
-        path: newPath,
+        subAction: { type: "wait"},
+        path: positionsArray,
         playerId: player.data.id,
         matchId: match.id,
       });
