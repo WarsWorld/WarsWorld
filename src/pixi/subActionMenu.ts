@@ -48,6 +48,13 @@ export const getAvailableSubActions = (
   const menuOptions: AvailableSubActions[] = [];
   const tile = match.getTile(newPosition);
 
+  //This grabs the neighboring units in the new position, units.getNeighboringUnits() gets them in the old position
+  const neighbourPositions = getNeighbourPositions(newPosition);
+
+  let neighbourUnitsInNewPosition =  match.units.filter((unit) =>
+    neighbourPositions.some((p) => isSamePosition(unit.data.position, p)),
+  );
+
   //check for wait / join / load (move validity a
   // already checked somewhere else)
   //if loading / joining, there is only one menu option
@@ -68,11 +75,15 @@ export const getAvailableSubActions = (
   //check for attack, including pipeseams
   if (!unit.isTransport()) {
 
+
+
     let addAttackSubaction = false;
 
     const pipeSeamUnitEquivalent = createPipeSeamUnitEquivalent(match, unit);
 
     const canAttackPipeseams = getBaseDamage(unit, pipeSeamUnitEquivalent) !== null;
+
+
 
     if (unit.isIndirect()) {
       console.log("unit is indirect");
@@ -106,8 +117,6 @@ export const getAvailableSubActions = (
         }
       }
     } else {
-      console.log("unit is not indirect");
-      console.log(`Pipeseams ${addAttackSubaction}`);
       if (canAttackPipeseams) {
         for (const adjacentPos of getNeighbourPositions(newPosition)) {
           if (addAttackSubaction) {
@@ -122,20 +131,7 @@ export const getAvailableSubActions = (
           }
         }
       }
-      console.log(`adjacent unit ${addAttackSubaction}`);
-      //todo: this gets the neighboring units of the unit IN THE ORIGINAL POSITION
-      const neighbourPositions = getNeighbourPositions(newPosition);
 
-      console.log(`newPosition ${newPosition}`);
-      console.log(`neighbourPositions ${neighbourPositions}`);
-      console.log(neighbourPositions);
-
-      let neighbourUnitsInNewPosition =  match.units.filter((unit) =>
-        neighbourPositions.some((p) => isSamePosition(unit.data.position, p)),
-      );
-
-
-      console.log(neighbourUnitsInNewPosition);
 
       for (const adjacentUnit of neighbourUnitsInNewPosition) {
         if (addAttackSubaction) {
@@ -146,13 +142,11 @@ export const getAvailableSubActions = (
           adjacentUnit.player.team !== unit.player.team &&
           getBaseDamage(unit, adjacentUnit) !== null
         ) {
-          console.log(`adjacentUnit is not on the same team as unit ${ adjacentUnit.player.team !== unit.player.team}`);
           addAttackSubaction = true;
         }
       }
     }
 
-    console.log(`addAttackSubAction final Check ${addAttackSubaction}`);
     if (addAttackSubaction) {
       //TODO: This implementation needs to actually check where user wants to attack
       availableActions.set(AvailableSubActions.Attack, {type: "attack", defenderPosition:[0,0]});
@@ -174,8 +168,8 @@ export const getAvailableSubActions = (
 
   //check for supply
   if (unit.data.type === "apc") {
-    for (const adjacentUnit of unit.getNeighbouringUnits()) {
-      if (adjacentUnit.player === unit.player) {
+    for (const adjacentUnit of neighbourUnitsInNewPosition) {
+      if (adjacentUnit.player.data.id === unit.player.data.id) {
         availableActions.set(AvailableSubActions.Supply, {type: "ability"});
         break;
       }
@@ -263,8 +257,8 @@ export const getAvailableSubActions = (
 
   //check for repair
   if (unit.data.type === "blackBoat") {
-    for (const adjacentUnit of unit.getNeighbouringUnits()) {
-      if (adjacentUnit.player === unit.player) {
+    for (const adjacentUnit of neighbourUnitsInNewPosition) {
+      if (adjacentUnit.player.data.id === unit.player.data.id) {
         //TODO: Actually check where user wants to repair
         availableActions.set(AvailableSubActions.Repair, {type: "repair", direction:"up" });
        break;
