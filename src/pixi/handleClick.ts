@@ -85,7 +85,6 @@ Click #1, click on unit owned
     );
     pathQueue.current = getAccessibleNodes(match, unit);
     mapContainer.addChild(displayedPassableTiles);
-    //todo: ts hates this,
 
     if (player.owns(unit) && unit.data.isReady) {
       console.log("player owns unit");
