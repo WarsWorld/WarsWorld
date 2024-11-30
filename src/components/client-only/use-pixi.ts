@@ -20,13 +20,20 @@ export function usePixi(
   spriteSheets: LoadedSpriteSheet,
   player: PlayerInMatchWrapper,
 ) {
+  //containers holding pixi elements
   const pixiCanvasRef = useRef<HTMLCanvasElement | null>(null);
   const mapContainerRef = useRef<Container<DisplayObject> | null>(null);
   const unitContainerRef = useRef<Container<DisplayObject> | null>(null);
-  const currentUnitRef = useRef<UnitWrapper | null>(null);
+
+  // the unit we've clicked (the one that will be seeing sub action menu), we keep it here to reference it later on
+  const currentUnitClickedRef = useRef<UnitWrapper | null>(null);
+
+  // when user clicks an unit, we need a variable to determine if we show them unit's movement range, attack range or vision (for fog)
+  const unitRangeShowRef = useRef<"attack" | "movement" | "vision">("movement");
+
+  const thirdClickRef = useRef<boolean>(false);
+
   const pathQueueRef = useRef<Map<Position, PathNode> | null>(null);
-  const clickedOnEnemyUnitRef = useRef<boolean | null>(null);
-  const clickStateRef = useRef<string>("neutral");
 
   //TODO: Someone please the ts gods
   const { actionMutation } = trpcActions(match, player, unitContainerRef.current, spriteSheets);
@@ -47,17 +54,20 @@ export function usePixi(
     mapContainerRef.current.eventMode = "static";
 
     //TODO: Someone please the ts gods
+    //This function handles almost all the clicks, sometimes elements (such as menus) have event listeners, otherwise it is handled via this function
     const clickHandler = async (event: FederatedPointerEvent) => {
       await handleClick(
         event,
         match,
         mapContainerRef.current,
         unitContainerRef.current,
-        currentUnitRef,
+        currentUnitClickedRef,
         pathQueueRef,
         player,
         spriteSheets,
         actionMutation,
+        unitRangeShowRef,
+        thirdClickRef,
       );
     };
 

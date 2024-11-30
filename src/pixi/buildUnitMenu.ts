@@ -27,7 +27,7 @@ export default async function buildUnitMenu(
   const unitSize = tileSize / 2;
 
   //the name lets us find the menu easily with getChildByName for easy removal
-  menuContainer.name = "unitMenu";
+  menuContainer.name = "buildMenu";
 
   const allowedUnits = unitTypes.filter((t) => !match.rules.bannedUnitTypes.includes(t));
 
