@@ -4,7 +4,7 @@ import {
   createPipeSeamUnitEquivalent,
   getBaseDamage,
 } from "shared/match-logic/game-constants/base-damage";
-import type { Position } from "shared/schemas/position";
+import { isSamePosition, Position } from "shared/schemas/position";
 import {
   getDistance,
   getNeighbourPositions,
@@ -173,16 +173,10 @@ export const getAttackTargetTiles = (
 //TODO: Do we really need these? right now they are just being used as a band-aid fix to make things work - Javi
 //HELPER FUNCTIONS BY CHATGPT
 
-
-// Helper function to check if two positions are the same
-const arePositionsEqual = (pos1: Position, pos2: Position): boolean => {
-  return pos1[0] === pos2[0] && pos1[1] === pos2[1];
-};
-
 // Function to check if newPos is in accessibleNodes (by value comparison)
 const hasPositionInMap = (accessibleNodes: Map<Position, PathNode>, newPos: Position): boolean => {
   for (let key of accessibleNodes.keys()) {
-    if (arePositionsEqual(key, newPos)) {
+    if (isSamePosition(key, newPos)) {
       return true; // newPos is found in the map
     }
   }
@@ -192,7 +186,7 @@ const hasPositionInMap = (accessibleNodes: Map<Position, PathNode>, newPos: Posi
 // Helper function to get the value from the map using value-based comparison of Position
 const getPathNodeFromMap = (accessibleNodes: Map<Position, PathNode>, currentPos: Position): PathNode | undefined => {
   for (let [key, value] of accessibleNodes.entries()) {
-    if (arePositionsEqual(key, currentPos)) {
+    if (isSamePosition(key, currentPos)) {
       return value; // Return the corresponding PathNode if position matches
     }
   }

@@ -1,6 +1,6 @@
 // pixiEventHandlers.ts
 import type { FederatedPointerEvent, Container } from "pixi.js";
-import type { Position } from "shared/schemas/position";
+import { isSamePosition, Position } from "shared/schemas/position";
 import type { MatchWrapper } from "shared/wrappers/match";
 import { renderUnitSprite } from "./renderUnitSprite";
 import { getAccessibleNodes, updatePath } from "./show-pathing";
@@ -47,14 +47,13 @@ export const handleClick = async (
 
   //there is an savedUnit and a path, meaning the user has already clicked on a unit beforehand
   else if (currentUnitClickedRef.current && pathQueueRef.current) {
-    const currentUnitClickedPosition = currentUnitClickedRef.current.data.position;
 
     //flag to determine if we clicked on path
     let clickedOnPathFlag = false;
 
     for (const [pos] of pathQueueRef.current) {
       //we found the path / user clicked on a legal path
-      if (clickPosition[0] === pos[0] && clickPosition[1] === pos[1]) {
+      if (isSamePosition(clickPosition, pos)) {
         const unitInTile = match.getUnit(clickPosition);
 
         //TODO: Logic to handle user clicking an unit (we show its path) and then clicking a transport unit (meaning user is trying to transport that unit
@@ -64,8 +63,7 @@ export const handleClick = async (
         }
         //No unit in tile / tile is empty OR we clicked on the same position unit is already in
         else if (
-          !unitInTile ||
-          (currentUnitClickedPosition[0] === pos[0] && currentUnitClickedPosition[1] === pos[1])
+          !unitInTile || isSamePosition(currentUnitClickedRef.current.data.position, pos)
         ) {
           thirdClickRef.current = true;
 
