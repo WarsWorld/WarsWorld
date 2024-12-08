@@ -27,7 +27,6 @@ export const handleClick = async (
   spriteSheets: LoadedSpriteSheet,
   actionMutation: any,
   unitRangeShowRef: "attack" | "movement" | "vision",
-  thirdClickRef: MutableRefObject<boolean>,
 ) => {
   const x = Math.floor((event.global.x - renderedTileSize / 2) / renderedTileSize);
   const y = Math.floor((event.global.y - renderedTileSize / 2) / renderedTileSize);
@@ -87,8 +86,6 @@ export const handleClick = async (
         }
         //No unit in tile / tile is empty OR we clicked on the same position unit is already in
         else if (!unitInTile || isSamePosition(currentUnitClickedRef.current.data.position, pos)) {
-          thirdClickRef.current = true;
-
           //remove path and add sprite of unit in possible "new" position
           mapContainer.getChildByName("path")?.destroy();
           unitContainer

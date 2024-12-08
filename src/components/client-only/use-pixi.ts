@@ -30,8 +30,6 @@ export function usePixi(
   // when user clicks an unit, we need a variable to determine if we show them unit's movement range, attack range or vision (for fog)
   const unitRangeShowRef = useRef<"attack" | "movement" | "vision">("movement");
 
-  const thirdClickRef = useRef<boolean>(false);
-
   const pathQueueRef = useRef<Map<Position, PathNode> | null>(null);
 
   const { actionMutation } = trpcActions(
@@ -71,7 +69,6 @@ export function usePixi(
         spriteSheets,
         actionMutation,
         unitRangeShowRef,
-        thirdClickRef,
       );
     };
 
