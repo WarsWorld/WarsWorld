@@ -1,6 +1,7 @@
 // pixiEventHandlers.ts
 import type { FederatedPointerEvent, Container } from "pixi.js";
-import { isSamePosition, Position } from "shared/schemas/position";
+import type { Position } from "shared/schemas/position";
+import { isSamePosition } from "shared/schemas/position";
 import type { MatchWrapper } from "shared/wrappers/match";
 import { renderUnitSprite } from "./renderUnitSprite";
 import { getAccessibleNodes, updatePath } from "./show-pathing";
@@ -47,7 +48,6 @@ export const handleClick = async (
 
   //there is an savedUnit and a path, meaning the user has already clicked on a unit beforehand
   else if (currentUnitClickedRef.current && pathQueueRef.current) {
-
     //flag to determine if we clicked on path
     let clickedOnPathFlag = false;
 
@@ -62,9 +62,7 @@ export const handleClick = async (
           //Handle logic to see if currentUnitClicked can be transported, if not, initiate cleanup
         }
         //No unit in tile / tile is empty OR we clicked on the same position unit is already in
-        else if (
-          !unitInTile || isSamePosition(currentUnitClickedRef.current.data.position, pos)
-        ) {
+        else if (!unitInTile || isSamePosition(currentUnitClickedRef.current.data.position, pos)) {
           thirdClickRef.current = true;
 
           // Remove Path
@@ -86,13 +84,15 @@ export const handleClick = async (
           tempUnit.name = "tempUnit";
           unitContainer.addChild(tempUnit);
 
-          console.log("accessible nodes");
           const accessibleNodes = getAccessibleNodes(match, currentUnitClickedRef.current);
-          console.log("newPath");
-          const newPath = updatePath(currentUnitClickedRef.current, accessibleNodes, undefined, pos);
-          console.log("newPath!!!!!");
+          const newPath = updatePath(
+            currentUnitClickedRef.current,
+            accessibleNodes,
+            undefined,
+            pos,
+          );
 
-     /*     //TODO: User neeeds to be able to select their own path, below just gets the fastest/most efficient path which will not work for fog
+          /*     //TODO: User neeeds to be able to select their own path, below just gets the fastest/most efficient path which will not work for fog
           const efficientPath = getShortestPathToPosition(
             match,
             currentUnitClickedRef.current,
@@ -132,20 +132,16 @@ export const handleClick = async (
       if (unitClicked.data.isReady) {
         currentUnitClickedRef.current = unitClicked;
 
-
-//NEW CHANGES
+        //NEW CHANGES
         const passablePositions = getAccessibleNodes(match, unitClicked);
-        console.log(passablePositions);
         const displayedPassableTiles = createTileContainer(
-      Array.from(passablePositions.keys()),
-      "#43d9e4",
-      999,
-      "path",
-    );
-    pathQueueRef.current = getAccessibleNodes(match, unitClicked);
-    mapContainer.addChild(displayedPassableTiles);
-
-
+          Array.from(passablePositions.keys()),
+          "#43d9e4",
+          999,
+          "path",
+        );
+        pathQueueRef.current = getAccessibleNodes(match, unitClicked);
+        mapContainer.addChild(displayedPassableTiles);
 
         /*//Show its path
         const showPath = showPassableTiles(match, unitClicked);

@@ -1,6 +1,6 @@
 import { DispatchableError } from "shared/DispatchedError";
 import { unitPropertiesMap } from "shared/match-logic/game-constants/unit-properties";
-import type { MoveAction } from "shared/schemas/action";
+import type { MoveAction, SubAction } from "shared/schemas/action";
 import { getFinalPositionSafe, isSamePosition } from "shared/schemas/position";
 import type { UnitWithVisibleStats } from "shared/schemas/unit";
 import type { MoveEvent } from "shared/types/events";
@@ -9,11 +9,11 @@ import type { UnitWrapper } from "../../../wrappers/unit";
 import { applySubEventToMatch } from "../apply-event-to-match";
 import type { MainActionToEvent } from "../handler-types";
 
-export const createNoMoveEvent = (): MoveEvent => ({
+export const createNoMoveEvent = (subAction: SubAction): MoveEvent => ({
   type: "move",
   path: [],
   trap: false,
-  subEvent: { type: "wait" },
+  subEvent: { type: subAction.type },
 });
 
 export const moveActionToEvent: MainActionToEvent<MoveAction> = (match, action) => {
@@ -28,7 +28,7 @@ export const moveActionToEvent: MainActionToEvent<MoveAction> = (match, action) 
     throw new DispatchableError("Trying to move a waited unit");
   }
 
-  const result = createNoMoveEvent();
+  const result = createNoMoveEvent(action.subAction);
 
   //Unit is waiting in-place if it's path is only the starting tile
   if (action.path.length === 1) {

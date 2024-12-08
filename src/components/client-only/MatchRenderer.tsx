@@ -19,13 +19,31 @@ export const renderMultiplier = 2;
 export const renderedTileSize = baseTileSize * renderMultiplier;
 
 export function MatchRenderer({ match, player, spriteSheets }: Props) {
-  const [turnButton, setTurnButton] = useState<boolean>(
+  const [isPlayerTurn, setIsPlayerTurn] = useState<boolean>(
     match.getCurrentTurnPlayer().data.id === player.data.id,
   );
 
   const { pixiCanvasRef } = usePixi(match, spriteSheets, player);
 
   const passTurnMutation = trpc.action.send.useMutation();
+
+  trpc.action.onEvent.useSubscription({
+      playerId: player.data.id,
+      matchId: match.id,
+    },
+    {
+      onData(event) {
+        switch (event.type) {
+          case "passTurn": {
+            //this doesnt work as expected, button doesnt change in frontend
+            setIsPlayerTurn((current) =>
+              match.getCurrentTurnPlayer().data.id === player.data.id
+            );
+          }
+
+        }
+      }
+  })
 
   return (
     <>
@@ -41,11 +59,10 @@ export function MatchRenderer({ match, player, spriteSheets }: Props) {
             .catch((err) => {
               console.log(err);
             });
-          //TODO: should be doing something better than this...
-          setTurnButton(!turnButton);
+          setIsPlayerTurn(!isPlayerTurn);
         }}
       >
-        {turnButton ? "Pass Turn" : "Not your Turn"}
+        {isPlayerTurn ? "Pass Turn" : "Not your Turn"}
       </button>
       <canvas
         className="@inline"

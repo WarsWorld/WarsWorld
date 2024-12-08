@@ -36,7 +36,8 @@ export function usePixi(
   const pathQueueRef = useRef<Map<Position, PathNode> | null>(null);
 
   //TODO: Someone please the ts gods
-  const { actionMutation } = trpcActions(match, player, unitContainerRef.current, spriteSheets);
+
+  const { actionMutation } = trpcActions(match, player, unitContainerRef, mapContainerRef, spriteSheets);
 
   useEffect(() => {
     const app = new Application({
@@ -52,6 +53,8 @@ export function usePixi(
     mapContainerRef.current = mapContainer;
     unitContainerRef.current = unitContainer;
     mapContainerRef.current.eventMode = "static";
+
+    if (unitContainerRef.current === null) return;
 
     //TODO: Someone please the ts gods
     //This function handles almost all the clicks, sometimes elements (such as menus) have event listeners, otherwise it is handled via this function

@@ -67,7 +67,7 @@ export default function CreateMatch({ currentPlayer, setCurrentPlayer }: Props) 
         bannedUnitTypes: [],
         captureLimit: 50,
         dayLimit: 50,
-        fogOfWar: true,
+        fogOfWar: false,
         fundsPerProperty: 1000,
         unitCapPerPlayer: 50,
         weatherSetting: "clear",
