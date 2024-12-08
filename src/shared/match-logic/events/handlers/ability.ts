@@ -15,10 +15,10 @@ function willCaptureTile(unit: UnitWrapper<"infantry" | "mech">): boolean {
       capturePoints = 0; // insta capture
     } else {
       // capture at 1.5x rate, rounded down
-      capturePoints -= Math.floor(unit.getHP() * 1.5);
+      capturePoints -= Math.floor(unit.getVisualHP() * 1.5);
     }
   } else {
-    capturePoints -= unit.getHP();
+    capturePoints -= unit.getVisualHP();
   }
 
   return capturePoints <= 0;
@@ -178,10 +178,10 @@ export const applyAbilityEvent: ApplySubEvent<AbilityEvent> = (match, event, fro
           unit.data.currentCapturePoints = 0; // insta capture
         } else {
           // capture at 1.5x rate, rounded down
-          unit.data.currentCapturePoints -= Math.floor(unit.getHP() * 1.5);
+          unit.data.currentCapturePoints -= Math.floor(unit.getVisualHP() * 1.5);
         }
       } else {
-        unit.data.currentCapturePoints -= unit.getHP();
+        unit.data.currentCapturePoints -= unit.getVisualHP();
       }
 
       if (unit.data.currentCapturePoints <= 0) {

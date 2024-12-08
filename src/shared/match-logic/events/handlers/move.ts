@@ -251,8 +251,8 @@ export const applyMoveEvent = (match: MatchWrapper, event: MoveEvent) => {
   unit.data.isReady = false;
 
   //if unit was capturing, interrupt capture
-  if ("currentCapturePoints" in unit) {
-    unit.currentCapturePoints = undefined;
+  if ("currentCapturePoints" in unit.data) {
+    unit.data.currentCapturePoints = undefined;
   }
 
   unit.drainFuel((event.path.length - 1) * getOneTileFuelCost(match, unit));

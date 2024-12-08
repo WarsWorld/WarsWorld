@@ -43,10 +43,10 @@ export const trpcActions = (
             if (!unit) {
               applyBuildEvent(match, event);
 
-              unit = match.getUnitOrThrow(event.position);
-              unitContainer.current.addChild(
+             // unit = match.getUnitOrThrow(event.position);
+              /*unitContainer.current.addChild(
                 renderUnitSprite(unit, spriteSheets[match.getCurrentTurnPlayer().data.army]),
-              );
+              );*/
             }
 
             break;
@@ -54,19 +54,18 @@ export const trpcActions = (
           case "passTurn": {
             applyPassTurnEvent(match, event);
 
-            unitContainer.current.children.forEach((child) => {
+        /*    unitContainer.current.children.forEach((child) => {
               if (child instanceof Sprite) {
                 child.tint = "#ffffff";
               }
-            });
+            });*/
 
             break;
           }
           case "move": {
-            if (event.path.length === 0 || !match.getUnit(event.path[0])) {
+                   if (event.path.length === 0 || !match.getUnit(event.path[0])) {
               break;
             }
-
             applyMoveEvent(match, event);
 
             const finalPosition: Position = event.path[event.path.length - 1];
@@ -74,20 +73,15 @@ export const trpcActions = (
 
             if (event.subEvent.type == "ability") {
               applyAbilityEvent(match, event.subEvent, finalPosition);
-
-              //TODO: Actually needs to check capture points and if 20 or more then run this
-              if (unit.isInfantryOrMech()) {
-                //mapContainer.current.addChild()
-              }
             }
 
-            unitContainer.current
+            /*unitContainer.current
               .getChildByName(`unit-${event.path[0][0]}-${event.path[0][1]}`)
               ?.destroy();
 
             unitContainer.current.addChild(
               renderUnitSprite(unit, spriteSheets[match.getCurrentTurnPlayer().data.army]),
-            );
+            );*/
             break;
           }
         }
