@@ -10,16 +10,16 @@ import { applyMoveEvent } from "../shared/match-logic/events/handlers/move";
 import type { Position } from "../shared/schemas/position";
 import { applyAbilityEvent } from "../shared/match-logic/events/handlers/ability";
 import { applyPassTurnEvent } from "../shared/match-logic/events/handlers/passTurn";
-import { ChangeableTileWithSprite } from "../frontend/components/match/types";
-import { FrontendUnit } from "../frontend/components/match/FrontendUnit";
-import { MutableRefObject } from "react";
+import type { ChangeableTileWithSprite } from "../frontend/components/match/types";
+import type { FrontendUnit } from "../frontend/components/match/FrontendUnit";
+import type { MutableRefObject } from "react";
 
 export const trpcActions = (
   match: MatchWrapper<ChangeableTileWithSprite, FrontendUnit>,
   player: PlayerInMatchWrapper,
   unitContainer: MutableRefObject<Container<DisplayObject> | null>,
   mapContainer: MutableRefObject<Container<DisplayObject> | null>,
-  spriteSheets: LoadedSpriteSheet
+  spriteSheets: LoadedSpriteSheet,
 ) => {
   trpc.action.onEvent.useSubscription(
     {
@@ -28,35 +28,37 @@ export const trpcActions = (
     },
     {
       onData(event) {
+        if (unitContainer.current === null || mapContainer.current === null) {
+          throw new Error(
+            `unitContainer is null = ${unitContainer.current === null} or mapContainer is null = ${
+              mapContainer.current === null
+            }`,
+          );
+        }
 
-        console.log("Event Received " + event.type);
-        console.log("unit container is null true/false");
-        console.log(unitContainer.current === null);
-
-        //TODO: Why is unitContainer.current null when second player looks at it
-        if (unitContainer.current === null || mapContainer.current === null) throw new Error (`unitContainer is null = ${unitContainer.current === null} or mapContainer is null = ${mapContainer.current === null}`);
         switch (event.type) {
           case "build": {
-            applyBuildEvent(match, event);
-            const unit = match.getUnitOrThrow(event.position);
-            console.log(unit);
+            let unit = match.getUnit(event.position);
+
+            if (!unit) {
+              applyBuildEvent(match, event);
+
+              unit = match.getUnitOrThrow(event.position);
               unitContainer.current.addChild(
                 renderUnitSprite(unit, spriteSheets[match.getCurrentTurnPlayer().data.army]),
               );
-
+            }
 
             break;
           }
           case "passTurn": {
-            applyPassTurnEvent(match,event)
+            applyPassTurnEvent(match, event);
 
-
-              unitContainer.current.children.forEach((child) => {
-                if (child instanceof Sprite) {
-                  child.tint = "#ffffff";
-                }
-              });
-
+            unitContainer.current.children.forEach((child) => {
+              if (child instanceof Sprite) {
+                child.tint = "#ffffff";
+              }
+            });
 
             break;
           }
@@ -75,20 +77,13 @@ export const trpcActions = (
 
               //TODO: Actually needs to check capture points and if 20 or more then run this
               if (unit.isInfantryOrMech()) {
-                mapContainer.current.addChild()
-
+                //mapContainer.current.addChild()
               }
-
             }
 
-            console.log(event.path);
-
-
-              //Pixi Visual
-              unitContainer.current.getChildByName(`unit-${event.path[0][0]}-${event.path[0][1]}`)?.destroy();
-
-
-
+            unitContainer.current
+              .getChildByName(`unit-${event.path[0][0]}-${event.path[0][1]}`)
+              ?.destroy();
 
             unitContainer.current.addChild(
               renderUnitSprite(unit, spriteSheets[match.getCurrentTurnPlayer().data.army]),

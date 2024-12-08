@@ -27,7 +27,8 @@ export function MatchRenderer({ match, player, spriteSheets }: Props) {
 
   const passTurnMutation = trpc.action.send.useMutation();
 
-  trpc.action.onEvent.useSubscription({
+  trpc.action.onEvent.useSubscription(
+    {
       playerId: player.data.id,
       matchId: match.id,
     },
@@ -35,15 +36,13 @@ export function MatchRenderer({ match, player, spriteSheets }: Props) {
       onData(event) {
         switch (event.type) {
           case "passTurn": {
-            //this doesnt work as expected, button doesnt change in frontend
-            setIsPlayerTurn((current) =>
-              match.getCurrentTurnPlayer().data.id === player.data.id
-            );
+            //todo: this doesnt work as expected, button doesnt always change in frontend
+            setIsPlayerTurn(match.getCurrentTurnPlayer().data.id === player.data.id);
           }
-
         }
-      }
-  })
+      },
+    },
+  );
 
   return (
     <>

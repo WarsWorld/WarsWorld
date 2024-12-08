@@ -1,5 +1,4 @@
 import type { Container, DisplayObject, FederatedPointerEvent } from "pixi.js";
-import { Sprite } from "pixi.js";
 import { Application } from "pixi.js";
 import type { LoadedSpriteSheet } from "pixi/load-spritesheet";
 import { setupApp } from "pixi/setupApp";
@@ -35,9 +34,13 @@ export function usePixi(
 
   const pathQueueRef = useRef<Map<Position, PathNode> | null>(null);
 
-  //TODO: Someone please the ts gods
-
-  const { actionMutation } = trpcActions(match, player, unitContainerRef, mapContainerRef, spriteSheets);
+  const { actionMutation } = trpcActions(
+    match,
+    player,
+    unitContainerRef,
+    mapContainerRef,
+    spriteSheets,
+  );
 
   useEffect(() => {
     const app = new Application({
@@ -54,10 +57,8 @@ export function usePixi(
     unitContainerRef.current = unitContainer;
     mapContainerRef.current.eventMode = "static";
 
-    if (unitContainerRef.current === null) return;
-
-    //TODO: Someone please the ts gods
-    //This function handles almost all the clicks, sometimes elements (such as menus) have event listeners, otherwise it is handled via this function
+    //This function handles almost all the clicks, sometimes elements (such as menus)
+    // have event listeners, otherwise it is handled via this function
     const clickHandler = async (event: FederatedPointerEvent) => {
       await handleClick(
         event,
@@ -80,7 +81,7 @@ export function usePixi(
       app.stop();
       mapContainerRef.current.off("pointertap", clickHandler);
     };
-  }, [match]);
+  }, [actionMutation, match, player, spriteSheets]);
 
   return {
     pixiCanvasRef,
