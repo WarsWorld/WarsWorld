@@ -1,6 +1,6 @@
 import { baseTileSize } from "components/client-only/MatchRenderer";
 import type { FrontendUnit } from "frontend/components/match/FrontendUnit";
-import { AnimatedSprite, Container, type Spritesheet } from "pixi.js";
+import { AnimatedSprite, Container, Sprite, type Spritesheet, Texture } from "pixi.js";
 import type { LoadedSpriteSheet } from "./load-spritesheet";
 import type { UnitWrapper } from "../shared/wrappers/unit";
 import type { ArmySpritesheetData } from "../frontend/components/match/getSpritesheetData";
@@ -9,8 +9,11 @@ import type { Position } from "shared/schemas/position";
 export function renderUnitSprite(
   unit: FrontendUnit | UnitWrapper,
   spriteSheets: Spritesheet<ArmySpritesheetData>,
+  //TODO Do we really need to export 2 spritesheets?
+  iconSpriteSheet: Spritesheet,
   newPosition?: Position | null,
 ) {
+  const unitContainer = new Container();
   const unitSprite = new AnimatedSprite(spriteSheets.animations[unit.data.type]);
 
   let x = unit.data.position[0];
@@ -21,7 +24,7 @@ export function renderUnitSprite(
   if (newPosition) {
     x = newPosition[0];
     y = newPosition[1];
-    unitName = "unit-ghost";
+    unitName = "tempUnit";
   }
 
   //TODO: so y'all remember there's a border around the map? units x and y needs to be plussed by that
@@ -33,55 +36,25 @@ export function renderUnitSprite(
     unitSprite.tint = "#bbbbbb";
   }
 
-  unitSprite.name = unitName;
   unitSprite.play();
+  unitContainer.name = unitName;
 
   //TODO: So frontendunit has a sprite but not unitwrapper. Right now, using something like match.getUnit(position) gets you an unitWrapper unit. Therefore, until we have an easy way to get our frontendunits, we can't use sprite
   //unit.sprite = unitSprite;
+  unitContainer.addChild(unitSprite);
 
-  return unitSprite;
-}
-
-/*import { baseTileSize } from "components/client-only/MatchRenderer";
-import type { FrontendUnit } from "frontend/components/match/FrontendUnit";
-import { AnimatedSprite, Container } from "pixi.js";
-import type { LoadedSpriteSheet } from "./load-spritesheet";
-import { Army } from "../shared/schemas/army";
-import { UnitType } from "../shared/schemas/unit";
-import { Position } from "../shared/schemas/position";
-
-export function renderUnitSprite(
-  unit: UnitType,
-  army: Army,
-  position: Position,
-  spriteSheets: LoadedSpriteSheet
-) {
-
-  const unitSprite = new AnimatedSprite(spriteSheets[army]?.animations[unit]
-  );
-
-  //so y'all remember there's a border around the map? units x and y needs to be plussed by that
-  unitSprite.x = position[0] * baseTileSize + 8;
-  unitSprite.y = position[1] * baseTileSize + 8;
-  unitSprite.animationSpeed = 0.07;
-
-  if (!unit.data.isReady) {
-    unitSprite.tint = "#bbbbbb";
+  if (unit.data.currentCapturePoints !== undefined) {
+    console.log(unit.data.currentCapturePoints);
+    const smallIcon = new Sprite(iconSpriteSheet?.textures["capturing.png"]);
+    smallIcon.x = x * baseTileSize + 8;
+    smallIcon.y = y * baseTileSize + 16;
+    //TODO: Standardize these sizes
+    smallIcon.width = 8;
+    smallIcon.height = 8;
+    smallIcon.eventMode = "static";
+    smallIcon.zIndex = 999;
+    unitContainer.addChild(smallIcon);
   }
 
-  let x = position[0];
-  let y = position[1];
-
-  //if we need to reference a unit by name (such as after it gets killed), we can get it via getChildByName "unit-x-y"
-  unitSprite.name = `unit-${x}-${y}`;
-
-  unitSprite.play();
-
-  //TODO: Why does the unit need to save sprite?
-  //unit.sprite = unitSprite;
-
-  return unitSprite;
+  return unitContainer;
 }
-
-
- */

@@ -169,6 +169,14 @@ export const applyAbilityEvent: ApplySubEvent<AbilityEvent> = (match, event, fro
         break;
       }
 
+      //TODO: For some reason, if the unit completes the capture, this function will run twice, therefore, this check is necessary to stop that
+      const capturingTile = unit.getTile();
+
+      if (!("playerSlot" in capturingTile) || unit.player.owns(capturingTile)) {
+        unit.data.currentCapturePoints = undefined;
+        break;
+      }
+
       if (unit.data.currentCapturePoints === undefined) {
         unit.data.currentCapturePoints = 20;
       }

@@ -2,7 +2,7 @@ import type { Container, DisplayObject, FederatedPointerEvent } from "pixi.js";
 import { Application } from "pixi.js";
 import type { LoadedSpriteSheet } from "pixi/load-spritesheet";
 import { setupApp } from "pixi/setupApp";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { Position } from "shared/schemas/position";
 import type { MatchWrapper } from "shared/wrappers/match";
 import type { PlayerInMatchWrapper } from "shared/wrappers/player-in-match";
@@ -32,13 +32,10 @@ export function usePixi(
 
   const pathQueueRef = useRef<Map<Position, PathNode> | null>(null);
 
-  const { actionMutation } = trpcActions(
-    match,
-    player,
-    unitContainerRef,
-    mapContainerRef,
-    spriteSheets,
-  );
+  // New state to trigger re-render after any event is received
+  const [eventTrigger, setEventTrigger] = useState(0);
+
+  const { actionMutation } = trpcActions(match, player, () => setEventTrigger((prev) => prev + 1));
 
   useEffect(() => {
     const app = new Application({
@@ -78,7 +75,7 @@ export function usePixi(
       app.stop();
       mapContainerRef.current.off("pointertap", clickHandler);
     };
-  }, [actionMutation, match, player, spriteSheets]);
+  }, [actionMutation, match, player, spriteSheets, eventTrigger]);
 
   return {
     pixiCanvasRef,

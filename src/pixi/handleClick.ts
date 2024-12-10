@@ -98,6 +98,7 @@ export const handleClick = async (
           const tempUnit = renderUnitSprite(
             currentUnitClickedRef.current,
             spriteSheets[match.getCurrentTurnPlayer().data.army],
+            spriteSheets.icons,
             clickPosition,
           );
           tempUnit.name = "tempUnit";
@@ -189,6 +190,7 @@ export const handleClick = async (
           renderUnitSprite(
             currentUnitClickedRef.current,
             spriteSheets[match.getCurrentTurnPlayer().data.army],
+            spriteSheets.icons,
           ),
         );
       }
