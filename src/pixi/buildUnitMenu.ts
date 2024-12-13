@@ -95,49 +95,59 @@ export default async function buildUnitMenu(
     menuElement.addChild(unitSprite);
 
     //name of the unit
-    const unitName = new BitmapText(`${unitType.toUpperCase()}`, {
+    const unitNameText = new BitmapText(`${unitType.toUpperCase()}`, {
       fontName: "awFont",
       fontSize: 10,
     });
-    unitName.y = yValue;
-    unitName.x = tileSize;
+    unitNameText.y = yValue;
+    unitNameText.x = tileSize;
     //trying to line it up nicely wiht the unit icon
-    unitName.anchor.set(0, -0.3);
-    menuElement.addChild(unitName);
+    unitNameText.anchor.set(0, -0.3);
+    menuElement.addChild(unitNameText);
 
     //cost displayed
-    const unitCost = new BitmapText(`${unitPropertiesMap[unitType].cost}`, {
+    const unitCostText = new BitmapText(`${unitPropertiesMap[unitType].cost}`, {
       fontName: "awFont",
       fontSize: 10,
     });
-    unitCost.y = yValue;
+    unitCostText.y = yValue;
     //TODO: Standardize this size
-    unitCost.x = tileSize * 4;
-    unitCost.anchor.set(0, -0.25);
-    menuElement.addChild(unitCost);
+    unitCostText.x = tileSize * 4;
+    unitCostText.anchor.set(0, -0.25);
+    menuElement.addChild(unitCostText);
 
-    //lets add a hover effect to the unitBG when you hover over the menu
-    menuElement.on("pointerenter", () => {
-      unitBG.alpha = 1;
-    });
-
-    //when you stop hovering the menu
-    menuElement.on("pointerleave", () => {
-      unitBG.alpha = 0.5;
-    });
-
-    //TODO: WHEN CLICKING
-    menuElement.on("pointerdown", () => {
-      onBuild.mutateAsync({
-        type: "build",
-        position: [x, y],
-        playerId: player.data.id,
-        matchId: match.id,
-        unitType: unitType,
+    if (player.data.funds >= unitPropertiesMap[unitType].cost) {
+      //lets add a hover effect to the unitBG when you hover over the menu
+      menuElement.on("pointerenter", () => {
+        unitBG.alpha = 1;
       });
-      //as soon a selection is done, destroy/erase the menu
-      menuContainer.destroy();
-    });
+
+      //when you stop hovering the menu
+      menuElement.on("pointerleave", () => {
+        unitBG.alpha = 0.5;
+      });
+
+      //TODO: WHEN CLICKING
+      menuElement.on("pointerdown", () => {
+        onBuild.mutateAsync({
+          type: "build",
+          position: [x, y],
+          playerId: player.data.id,
+          matchId: match.id,
+          unitType: unitType,
+        });
+        //as soon a selection is done, destroy/erase the menu
+        menuContainer.destroy();
+      });
+    }
+    //can't afford units
+    else {
+      unitBG.tint = "#555555";
+      unitSprite.tint = "#979797";
+      unitSprite.stop();
+      unitNameText.alpha = 0.75;
+      unitCostText.alpha = 0.75;
+    }
 
     yValue += unitSize * 2;
     menuContainer.addChild(menuElement);

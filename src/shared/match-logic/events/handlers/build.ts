@@ -156,5 +156,9 @@ const createUnitFromBuildEvent = (
 export const applyBuildEvent = (match: MatchWrapper, event: BuildEvent) => {
   const player = match.getCurrentTurnPlayer();
 
-  player.addUnwrappedUnit(createUnitFromBuildEvent(player.data.slot, event));
+  //TODO: Don't charge player if unit is already in there (this happens because events re-run sometimes)
+  if (match.getUnit(event.position) === undefined) {
+    player.data.funds -= unitPropertiesMap[event.unitType].cost;
+    player.addUnwrappedUnit(createUnitFromBuildEvent(player.data.slot, event));
+  }
 };

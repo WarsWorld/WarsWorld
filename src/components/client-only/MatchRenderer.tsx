@@ -46,6 +46,7 @@ export function MatchRenderer({ match, player, spriteSheets }: Props) {
 
   return (
     <>
+      <p>Your Funds: {player.data.funds}</p>
       <button
         className="btn"
         onClick={() => {

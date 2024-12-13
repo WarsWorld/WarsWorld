@@ -44,7 +44,6 @@ export function renderUnitSprite(
   unitContainer.addChild(unitSprite);
 
   if (unit.data.currentCapturePoints !== undefined) {
-    console.log(unit.data.currentCapturePoints);
     const smallIcon = new Sprite(iconSpriteSheet?.textures["capturing.png"]);
     smallIcon.x = x * baseTileSize + 8;
     smallIcon.y = y * baseTileSize + 16;
