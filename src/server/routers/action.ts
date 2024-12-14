@@ -83,10 +83,18 @@ export const actionRouter = router({
       // TODO @function either this function gets a list of emittables, or we iterate through them here.
       //  undefined means that team shouldn't receive the event
       //  emittableEvents[i] is from match.teams[i]. emittableEvents has one extra "no team"(spectator) at the end
-      emittableEvents.forEach((event) => {
-        if (event !== undefined) {
+      emittableEvents.forEach((event, index) => {
+        //TODO: Right now emitting multiple events causes the frontend to process multiple copies of those events.
+        // Players should only receive 1 individual event rather than receive 1 event per player in-game.
+        // Otherwise, frontend needs a way to discriminate between X amount of events to see which one it process and which ones it doesn't
+        // see https://github.com/WarsWorld/WarsWorld/issues/234
+        if (index === 0 && event !== undefined) {
           emit({ ...event, matchId: match.id });
         }
+
+        /*  if (event !== undefined) {
+          emit({ ...event, matchId: match.id });
+        }*/
       });
 
       /* 10. Save event */

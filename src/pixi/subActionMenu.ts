@@ -282,6 +282,8 @@ export default async function subActionMenu(
 
   if (currentUnitClickedRef.current !== null) {
     unit = currentUnitClickedRef.current;
+  } else {
+    return;
   }
 
   const menuOptions = getAvailableSubActions(match, player, unit, newPosition);
@@ -302,7 +304,8 @@ export default async function subActionMenu(
   //the name lets us find the menu easily with getChildByName for easy removal
   menuContainer.name = "subMenu";
 
-  //TODO: Modify these two x and y conditions so that menu is onlu moved if it would ever be out of bounds, so it should check not if we are halfway but just about to cross off the map
+  //TODO: Modify these two x and y conditions so that menu is onlu moved if it would ever be out of bounds,
+  // so it should check not if we are halfway but just about to cross off the map
 
   // if we are over half the map. invert menu placement
   if (x > match.map.width / 2) {
@@ -374,9 +377,6 @@ export default async function subActionMenu(
     const positionsArray: Position[] = newPath.map((node) => node.pos);
 
     menuElement.on("pointerdown", () => {
-
-      console.log("Menu Action Clicked");
-      console.log(subAction);
       mutation.mutateAsync({
         type: "move",
         subAction: subAction,

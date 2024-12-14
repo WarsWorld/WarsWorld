@@ -39,11 +39,13 @@ export function renderUnitSprite(
   unitSprite.play();
   unitContainer.name = unitName;
 
-  //TODO: So frontendunit has a sprite but not unitwrapper. Right now, using something like match.getUnit(position) gets you an unitWrapper unit. Therefore, until we have an easy way to get our frontendunits, we can't use sprite
+  //TODO: So frontendunit has a sprite but not unitwrapper.
+  // Right now, using something like match.getUnit(position) gets you an unitWrapper unit.
+  // Therefore, until we have an easy way to get our frontendunits, we can't use sprite
   //unit.sprite = unitSprite;
   unitContainer.addChild(unitSprite);
 
-  if (unit.data.currentCapturePoints !== undefined) {
+  if ("currentCapturePoints" in unit.data && unit.data.currentCapturePoints !== undefined) {
     const smallIcon = new Sprite(iconSpriteSheet?.textures["capturing.png"]);
     smallIcon.x = x * baseTileSize + 8;
     smallIcon.y = y * baseTileSize + 16;

@@ -13,6 +13,7 @@ import type { PathNode } from "../../pixi/show-pathing";
 import { handleClick } from "../../pixi/handleClick";
 import type { UnitWrapper } from "../../shared/wrappers/unit";
 import { trpcActions } from "../../pixi/trpcActions";
+import { trpc } from "../../frontend/utils/trpc-client";
 
 export function usePixi(
   match: MatchWrapper<ChangeableTileWithSprite, FrontendUnit>,
