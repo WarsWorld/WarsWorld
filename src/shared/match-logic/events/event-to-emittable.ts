@@ -158,7 +158,10 @@ export const mainEventToEmittables = (match: MatchWrapper, event: MainEvent) => 
   teams.push(new TeamWrapper([], match, -1)); // add spectator vision
 
   const emittableEvents = new Array<EmittableEvent | undefined>(match.teams.length + 1);
-  emittableEvents.fill(undefined);
+
+  emittableEvents.forEach((e, i) => {
+    emittableEvents[i] = undefined;
+  });
 
   switch (event.type) {
     case "move": {
@@ -212,9 +215,14 @@ export const mainEventToEmittables = (match: MatchWrapper, event: MainEvent) => 
           }
         }
 
+        if (emittableSubEvents[i] === undefined) {
+          emittableSubEvents[i] = { type: "wait" };
+        }
+
         // right now appearing units have all data, but if they go from fog to fog,
         // they may have only unit type (and other stats not visible)
         emittableEvents[i] = {
+          playerId: getFirstPlayerInTeam(teams[i]),
           type: "move",
           path: shownPath,
           trap: teams[i].isPositionVisible(event.path[event.path.length - 1]) ? event.trap : false,
@@ -236,7 +244,10 @@ export const mainEventToEmittables = (match: MatchWrapper, event: MainEvent) => 
           teams[i].isPositionVisible(event.transportPosition) ||
           teams[i].isPositionVisible(addDirection(event.transportPosition, event.unloads.direction))
         ) {
-          emittableEvents[i] = event;
+          emittableEvents[i] = {
+            ...event,
+            playerId: getFirstPlayerInTeam(teams[i]),
+          };
         }
       }
 
@@ -247,7 +258,10 @@ export const mainEventToEmittables = (match: MatchWrapper, event: MainEvent) => 
       // I suspect that Fog Of War will stop certain players from receiving these events and thus
       // this switch case will have a different implementation.
       for (let i = 0; i < match.teams.length + 1; ++i) {
-        emittableEvents[i] = event;
+        emittableEvents[i] = {
+          ...event,
+          playerId: getFirstPlayerInTeam(teams[i]),
+        };
       }
 
       break;
@@ -259,7 +273,10 @@ export const mainEventToEmittables = (match: MatchWrapper, event: MainEvent) => 
           teams[i].isPositionVisible(event.position) ||
           ("eliminationReason" in event && event.eliminationReason !== undefined)
         ) {
-          emittableEvents[i] = event;
+          emittableEvents[i] = {
+            ...event,
+            playerId: getFirstPlayerInTeam(teams[i]),
+          };
         }
       }
 
@@ -267,10 +284,23 @@ export const mainEventToEmittables = (match: MatchWrapper, event: MainEvent) => 
     }
     default: {
       for (let i = 0; i < match.teams.length + 1; ++i) {
-        emittableEvents[i] = event;
+        emittableEvents[i] = {
+          ...event,
+          playerId: getFirstPlayerInTeam(teams[i]),
+        };
       }
+
+      break;
     }
   }
 
   return emittableEvents;
 };
+
+function getFirstPlayerInTeam(team: TeamWrapper) {
+  if (team.players === undefined || team.players.length === 0) {
+    return "spectator";
+  }
+
+  return team.players[0].data.id;
+}
