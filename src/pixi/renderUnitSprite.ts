@@ -57,5 +57,26 @@ export function renderUnitSprite(
     unitContainer.addChild(smallIcon);
   }
 
+  const visualHP = unit.getVisualHP();
+
+  if (visualHP !== 10) {
+    const smallIcon = new Sprite(iconSpriteSheet?.textures[`health-${visualHP}.png`]);
+    smallIcon.x = x * baseTileSize + 16;
+    smallIcon.y = y * baseTileSize + 16;
+    //TODO: Standardize these sizes
+    smallIcon.width = 8;
+    smallIcon.height = 8;
+    smallIcon.eventMode = "static";
+    smallIcon.zIndex = 999;
+    unitContainer.addChild(smallIcon);
+  }
+
+  //todo: flashinc icon for ammo
+
+
+  //todo: flashing icon for fuel
+
+  //todo: Make one function for all icon cases
+
   return unitContainer;
 }

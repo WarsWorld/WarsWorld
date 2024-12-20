@@ -58,8 +58,9 @@ export const actionRouter = router({
         /* 3. Sub action to event */
         // if there was a trap or join/load, the default subEvent is "wait".
         const isJoinOrLoad = match.getUnit(getFinalPositionSafe(mainEvent.path)) !== undefined;
+        //todo: isJoinorLoad doesnt really work, have to fix
 
-        if (!mainEvent.trap && !isJoinOrLoad) {
+        if (!mainEvent.trap /*&& !isJoinOrLoad*/) {
           mainEvent.subEvent = validateSubActionAndToEvent(match, input);
         }
 

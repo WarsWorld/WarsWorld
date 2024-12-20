@@ -13,6 +13,7 @@ import type { PathNode } from "../../pixi/show-pathing";
 import { handleClick } from "../../pixi/handleClick";
 import type { UnitWrapper } from "../../shared/wrappers/unit";
 import { trpcActions } from "../../pixi/trpcActions";
+//todo: this import is needed
 import { trpc } from "../../frontend/utils/trpc-client";
 
 export function usePixi(
@@ -31,7 +32,10 @@ export function usePixi(
   // when user clicks an unit, we need a variable to determine if we show them unit's movement range, attack range or vision (for fog)
   const unitRangeShowRef = useRef<"attack" | "movement" | "vision">("movement");
 
-  const pathQueueRef = useRef<Map<Position, PathNode> | null>(null);
+  //TODO: To some extent, these three all store the same type of information (positions), however, they store it at different times...
+  const moveTilesRef = useRef<Map<Position, PathNode> | null>(null);
+
+  const pathRef = useRef<Position[] | null>(null);
 
   // New state to trigger re-render after any event is received
   const [eventTrigger, setEventTrigger] = useState(0);
@@ -62,11 +66,12 @@ export function usePixi(
         mapContainerRef.current,
         unitContainerRef.current,
         currentUnitClickedRef,
-        pathQueueRef,
+        moveTilesRef,
         player,
         spriteSheets,
         actionMutation,
         unitRangeShowRef,
+        pathRef,
       );
     };
 

@@ -17,7 +17,7 @@ import type { UnitWrapper } from "shared/wrappers/unit";
 import type { FrontendUnit } from "../frontend/components/match/FrontendUnit";
 import type { MatchWrapper } from "../shared/wrappers/match";
 import type { PlayerInMatchWrapper } from "../shared/wrappers/player-in-match";
-import { MutableRefObject } from "react";
+import type { MutableRefObject } from "react";
 import type { PathNode } from "./show-pathing";
 import type { SubAction } from "../shared/schemas/action";
 
@@ -273,7 +273,7 @@ export default async function subActionMenu(
   //TODO: Whats the type for a mutation?
   mutation: any,
   currentUnitClickedRef: React.MutableRefObject<UnitWrapper | null>,
-  newPath: PathNode[],
+  pathRef: MutableRefObject<Position[] | null>,
 ) {
   availableActions = new Map<AvailableSubActions, SubAction>();
 
@@ -371,23 +371,23 @@ export default async function subActionMenu(
       actionBG.alpha = 0.5;
     });
 
-    //TODO: WHEN CLICKING
-
-    //It extracts the path in the format the backend wants it (just an array of positions)
-    const positionsArray: Position[] = newPath.map((node) => node.pos);
-
     menuElement.on("pointerdown", () => {
-      mutation.mutateAsync({
-        type: "move",
-        subAction: subAction,
-        path: positionsArray,
-        playerId: player.data.id,
-        matchId: match.id,
-      });
+      //if its an attack
+      if (name == "11") {
+        console.log("attack mode triggered");
+      } else {
+        mutation.mutateAsync({
+          type: "move",
+          subAction: subAction,
+          path: pathRef.current,
+          playerId: player.data.id,
+          matchId: match.id,
+        });
 
-      //The currentUnitClicked has changed (moved, attacked, died), therefore, we delete the previous information as it is not accurate anymore
-      //this also helps so when the screen resets, we dont have two copies of a unit
-      currentUnitClickedRef.current = null;
+        //The currentUnitClicked has changed (moved, attacked, died), therefore, we delete the previous information as it is not accurate anymore
+        //this also helps so when the screen resets, we dont have two copies of a unit
+        currentUnitClickedRef.current = null;
+      }
 
       //as soon a selection is done, destroy/erase the menu
       menuContainer.destroy();

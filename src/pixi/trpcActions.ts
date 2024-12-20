@@ -21,6 +21,11 @@ export const trpcActions = (
     },
     {
       onData(event) {
+        //todo: sometimes we receive events but frontend doesnt process them
+        //so we can see the actionOnEvent but nothing happens (onData doesnt run...)
+        //this logs proves useful to know if connection was done correctly
+        //if the log doesnt run, then the frontend doesnt really process events
+        console.log(event);
         switch (event.type) {
           case "build": {
             applyBuildEvent(match, event);

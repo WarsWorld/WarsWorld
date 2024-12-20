@@ -100,15 +100,17 @@ export const getAccessibleNodes = (
 export const getAttackableTiles = (
   match: MatchWrapper,
   unit: UnitWrapper,
+  fromPosition?: Position,
   accessibleNodes?: Map<Position, PathNode>,
 ): Position[] => {
   const attackPositions: Position[] = [];
+  const sourcePosition = fromPosition || unit.data.position;
 
   if ("attackRange" in unit.properties && unit.properties.attackRange[0] > 1) {
-    //ranged unit
+    // Ranged unit
     for (let x = 0; x < match.map.width; x++) {
       for (let y = 0; y < match.map.height; y++) {
-        const distance = getDistance([x, y], unit.data.position);
+        const distance = getDistance([x, y], sourcePosition);
 
         if (
           distance <= unit.properties.attackRange[1] &&
@@ -119,15 +121,17 @@ export const getAttackableTiles = (
       }
     }
   } else {
+    // Melee unit
     if (accessibleNodes === undefined) {
-      accessibleNodes = getAccessibleNodes(match, unit);
+      accessibleNodes = fromPosition
+        ? new Map([[fromPosition, { position: fromPosition }]]) // Create a minimal node if specific position given
+        : getAccessibleNodes(match, unit);
     }
 
     const visited = makeVisitedMatrix(match.map);
 
     for (const [pos] of accessibleNodes.entries()) {
       for (const adjPos of getNeighbourPositions(pos)) {
-        //all positions adjacent to tiles where the unit can move to are attacking tiles
         if (!match.map.isOutOfBounds(adjPos)) {
           if (!visited[adjPos[0]][adjPos[1]]) {
             attackPositions.push(adjPos);
@@ -144,12 +148,13 @@ export const getAttackableTiles = (
 export const getAttackTargetTiles = (
   match: MatchWrapper,
   unit: UnitWrapper,
+  fromPosition?: Position,
   attackableTiles?: Position[],
 ) => {
   const attackTargetPositions: Position[] = [];
 
   if (attackableTiles === undefined) {
-    attackableTiles = getAttackableTiles(match, unit);
+    attackableTiles = getAttackableTiles(match, unit, fromPosition);
   }
 
   const canAttackPipeseams =
@@ -171,6 +176,7 @@ export const getAttackTargetTiles = (
 
   return attackTargetPositions;
 };
+
 //TODO: Do we really need these? right now they are just being used as a band-aid fix to make things work - Javi
 //HELPER FUNCTIONS BY CHATGPT
 

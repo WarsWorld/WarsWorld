@@ -1,12 +1,13 @@
 // pixiEventHandlers.ts
-import type { FederatedPointerEvent, Container } from "pixi.js";
+import type { FederatedPointerEvent } from "pixi.js";
+import { Container } from "pixi.js";
 import type { Position } from "shared/schemas/position";
 import { isSamePosition } from "shared/schemas/position";
 import type { MatchWrapper } from "shared/wrappers/match";
 import { renderUnitSprite } from "./renderUnitSprite";
-import { getAccessibleNodes, updatePath } from "./show-pathing";
-import subActionMenu from "./subActionMenu";
 import type { PathNode } from "./show-pathing";
+import { getAccessibleNodes, getAttackTargetTiles, updatePath } from "./show-pathing";
+import subActionMenu from "./subActionMenu";
 import { renderedTileSize } from "../components/client-only/MatchRenderer";
 import buildUnitMenu from "./buildUnitMenu";
 import type { PlayerInMatchWrapper } from "../shared/wrappers/player-in-match";
@@ -15,6 +16,7 @@ import type { UnitWrapper } from "../shared/wrappers/unit";
 import type { MutableRefObject } from "react";
 import { isUnitProducingProperty } from "../shared/schemas/tile";
 import { createTileContainer } from "./interactiveTileFunctions";
+import { tileConstructor } from "./sprite-constructor";
 
 export const handleClick = async (
   event: FederatedPointerEvent,
@@ -22,11 +24,12 @@ export const handleClick = async (
   mapContainer: Container,
   unitContainer: Container,
   currentUnitClickedRef: MutableRefObject<UnitWrapper | null>,
-  pathQueueRef: MutableRefObject<Map<Position, PathNode> | null>,
+  moveTilesRef: MutableRefObject<Map<Position, PathNode> | null>,
   player: PlayerInMatchWrapper,
   spriteSheets: LoadedSpriteSheet,
   actionMutation: any,
   unitRangeShowRef: "attack" | "movement" | "vision",
+  pathRef: MutableRefObject<Position[] | null>,
 ) => {
   const x = Math.floor((event.global.x - renderedTileSize / 2) / renderedTileSize);
   const y = Math.floor((event.global.y - renderedTileSize / 2) / renderedTileSize);
@@ -67,20 +70,29 @@ export const handleClick = async (
 
     unitContainer.addChild(buildMenu);
   }
+  //are we in attack mode? (meaning, our unit is attacking)
+  else if (pathRef.current && currentUnitClickedRef.current) {
+    console.log("clicked on attack mode!");
+
+    //It extracts the path in the format the backend wants it (just an array of positions)
+
+    renderAttackTiles(match, currentUnitClickedRef.current, pathRef.current);
+    pathRef.current = null;
+  }
 
   //there is an savedUnit and a path, meaning the user has already clicked on a unit beforehand
-  else if (currentUnitClickedRef.current && pathQueueRef.current) {
+  else if (currentUnitClickedRef.current && moveTilesRef.current) {
     //flag to determine if we clicked on path
     let clickedOnPathFlag = false;
 
-    for (const [pos] of pathQueueRef.current) {
+    for (const [pos] of moveTilesRef.current) {
       //we found the path / user clicked on a legal path
       if (isSamePosition(clickPosition, pos)) {
         const unitInTile = match.getUnit(clickPosition);
 
         //TODO: Logic to handle user clicking an unit (we show its path) and
         // then clicking a transport unit (meaning user is trying to transport that unit
-        if (unitInTile?.isTransport()) {
+        if (unitInTile?.isTransport() === true) {
           //show action menu next to transport?
           //Handle logic to see if currentUnitClicked can be transported, if not, initiate cleanup
         }
@@ -88,6 +100,7 @@ export const handleClick = async (
         else if (!unitInTile || isSamePosition(currentUnitClickedRef.current.data.position, pos)) {
           //remove path and add sprite of unit in possible "new" position
           mapContainer.getChildByName("path")?.destroy();
+          unitContainer.getChildByName("preAttackBox")?.destroy();
           unitContainer
             .getChildByName(
               `unit-${currentUnitClickedRef.current.data.position[0]}-${currentUnitClickedRef.current.data.position[1]}`,
@@ -113,6 +126,9 @@ export const handleClick = async (
             pos,
           );
 
+          //It extracts the path in the format the backend wants it (just an array of positions)
+          pathRef.current = newPath.map((node) => node.pos);
+
           // display subaction menu next to unit in new position
           const subMenu = await subActionMenu(
             match,
@@ -120,11 +136,11 @@ export const handleClick = async (
             pos,
             actionMutation,
             currentUnitClickedRef,
-            newPath,
+            pathRef,
           );
 
           unitContainer.addChild(subMenu);
-          pathQueueRef.current = null;
+          moveTilesRef.current = null;
         } else {
           resetScreen();
         }
@@ -155,8 +171,10 @@ export const handleClick = async (
           999,
           "path",
         );
-        pathQueueRef.current = getAccessibleNodes(match, unitClicked);
+        moveTilesRef.current = getAccessibleNodes(match, unitClicked);
         mapContainer.addChild(displayedPassableTiles);
+
+        renderAttackTiles(match, currentUnitClickedRef.current, null);
       }
       //todo: handle logic for clicking a transport that is loaded and NOT ready (so it can drop off units)
       else if (unitClicked.isTransport() /*TODO && isLoaded*/) {
@@ -174,6 +192,7 @@ export const handleClick = async (
   function resetScreen() {
     //removes all temporary sprites (menus, paths, tempunit)
     unitContainer.getChildByName("buildMenu")?.destroy();
+    unitContainer.getChildByName("preAttackBox")?.destroy();
     unitContainer.getChildByName("subMenu")?.destroy();
     unitContainer.getChildByName("tempUnit")?.destroy();
     mapContainer.getChildByName("path")?.destroy();
@@ -196,7 +215,52 @@ export const handleClick = async (
       }
     }
 
-    pathQueueRef.current = null;
+    moveTilesRef.current = null;
     currentUnitClickedRef.current = null;
+    pathRef.current = null;
+  }
+
+  function renderAttackTiles(match: MatchWrapper, unit: UnitWrapper, path: Position[] | null) {
+    unitContainer.getChildByName("preAttackBox")?.destroy();
+
+    let attackTiles;
+
+    if (path) {
+      attackTiles = getAttackTargetTiles(match, unit, path[path.length - 1]);
+      console.log(attackTiles);
+    } else {
+      attackTiles = getAttackTargetTiles(match, unit);
+    }
+
+    const attackTileContainer = new Container();
+    attackTileContainer.name = "preAttackBox";
+    attackTileContainer.x = renderedTileSize / 4;
+    attackTileContainer.y = renderedTileSize / 4;
+    attackTiles.forEach((tile) => {
+      const attackTile = tileConstructor(tile, "#be1919");
+      attackTileContainer.addChild(attackTile);
+
+      //todo: add onpointer down attack mutation then reset screen
+      attackTile.eventMode = "static";
+
+      if (path) {
+        attackTile.on("pointerdown", () => {
+          actionMutation.mutateAsync({
+            type: "move",
+            subAction: {
+              type: "attack",
+              defenderPosition: tile,
+            },
+            path: path,
+            playerId: player.data.id,
+            matchId: match.id,
+          });
+          //The currentUnitClicked has changed (moved, attacked, died), therefore, we delete the previous information as it is not accurate anymore
+          //this also helps so when the screen resets, we dont have two copies of a unit
+          currentUnitClickedRef.current = null;
+        });
+      }
+    });
+    unitContainer.addChild(attackTileContainer);
   }
 };

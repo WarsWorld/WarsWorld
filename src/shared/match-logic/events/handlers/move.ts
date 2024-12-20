@@ -9,11 +9,11 @@ import type { UnitWrapper } from "../../../wrappers/unit";
 import { applySubEventToMatch } from "../apply-event-to-match";
 import type { MainActionToEvent } from "../handler-types";
 
-export const createNoMoveEvent = (subAction: SubAction): MoveEvent => ({
+export const createNoMoveEvent = (subAction: SubAction) => ({
   type: "move",
   path: [],
   trap: false,
-  subEvent: { type: subAction.type },
+  subEvent: { ...subAction },
 });
 
 export const moveActionToEvent: MainActionToEvent<MoveAction> = (match, action) => {
