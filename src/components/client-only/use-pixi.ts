@@ -1,3 +1,4 @@
+"use client"
 import type { Container, DisplayObject, FederatedPointerEvent } from "pixi.js";
 import { Application } from "pixi.js";
 import type { LoadedSpriteSheet } from "pixi/load-spritesheet";
@@ -13,8 +14,6 @@ import type { PathNode } from "../../pixi/show-pathing";
 import { handleClick } from "../../pixi/handleClick";
 import type { UnitWrapper } from "../../shared/wrappers/unit";
 import { trpcActions } from "../../pixi/trpcActions";
-//todo: this import is needed
-import { trpc } from "../../frontend/utils/trpc-client";
 
 export function usePixi(
   match: MatchWrapper<ChangeableTileWithSprite, FrontendUnit>,
@@ -37,10 +36,8 @@ export function usePixi(
 
   const pathRef = useRef<Position[] | null>(null);
 
-  // New state to trigger re-render after any event is received
-  const [eventTrigger, setEventTrigger] = useState(0);
 
-  const { actionMutation } = trpcActions(match, player, () => setEventTrigger((prev) => prev + 1));
+  const { actionMutation } = trpcActions();
 
   useEffect(() => {
     const app = new Application({
@@ -81,7 +78,7 @@ export function usePixi(
       app.stop();
       mapContainerRef.current.off("pointertap", clickHandler);
     };
-  }, [actionMutation, match, player, spriteSheets, eventTrigger]);
+  }, [actionMutation, match, player, spriteSheets]);
 
   return {
     pixiCanvasRef,

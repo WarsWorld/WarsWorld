@@ -1,4 +1,3 @@
-"use client"; // This is a client component 👈🏽
 import { ProvidePlayers } from "frontend/context/players";
 import { trpc } from "frontend/utils/trpc-client";
 import type { Session } from "next-auth";
@@ -8,9 +7,12 @@ import Head from "next/head";
 import "frontend/styles/global.scss";
 import { Layout } from "frontend/components/layout";
 
-const MyApp: AppType<{ session: Session | null }> = ({ Component, pageProps }) => {
+const MyApp: AppType<{ session: Session | null }> = ({
+  Component,
+  pageProps: { session, ...pageProps },
+}) => {
   return (
-    <SessionProvider session={pageProps.session}>
+    <SessionProvider session={session}>
       <Head>
         <title>Wars World</title>
         <link rel="icon" href="/favicon.ico" />
