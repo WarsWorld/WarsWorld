@@ -1,3 +1,4 @@
+import type { DisplayObject } from "pixi.js";
 import { Assets, BitmapText, Container, Sprite, Texture } from "pixi.js";
 import {
   createPipeSeamUnitEquivalent,
@@ -20,6 +21,7 @@ import type { PlayerInMatchWrapper } from "../shared/wrappers/player-in-match";
 import type { MutableRefObject } from "react";
 import type { PathNode } from "./show-pathing";
 import type { SubAction } from "../shared/schemas/action";
+import { renderAttackTiles } from "./renderAttackTiles";
 
 export enum AvailableSubActions {
   "Wait",
@@ -271,9 +273,10 @@ export default async function subActionMenu(
   player: PlayerInMatchWrapper,
   newPosition: Position,
   //TODO: Whats the type for a mutation?
-  mutation: any,
+  actionMutation: any,
   currentUnitClickedRef: React.MutableRefObject<UnitWrapper | null>,
   pathRef: MutableRefObject<Position[] | null>,
+  unitContainer: Container<DisplayObject>,
 ) {
   availableActions = new Map<AvailableSubActions, SubAction>();
 
@@ -328,8 +331,6 @@ export default async function subActionMenu(
   menuContainer.x += 8;
   menuContainer.y += 8;
 
-  await Assets.load("/aw2Font.fnt");
-
   //This makes the menu elements be each below each other, it starts at 0 then gets plussed, so elements keep going down and down.
   // yValue is not the best name for it but effectively it is that, a y value
   let yValue = 0;
@@ -374,9 +375,18 @@ export default async function subActionMenu(
     menuElement.on("pointerdown", () => {
       //if its an attack
       if (name == "11") {
-        console.log("attack mode triggered");
+        unitContainer.addChild(
+          renderAttackTiles(
+            unitContainer,
+            match,
+            player,
+            currentUnitClickedRef,
+            actionMutation,
+            pathRef.current,
+          ),
+        );
       } else {
-        mutation.mutateAsync({
+        actionMutation.mutateAsync({
           type: "move",
           subAction: subAction,
           path: pathRef.current,

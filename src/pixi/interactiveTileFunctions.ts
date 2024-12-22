@@ -6,6 +6,11 @@ import type { MatchWrapper } from "shared/wrappers/match";
 import type { UnitWrapper } from "shared/wrappers/unit";
 import { tileConstructor } from "./sprite-constructor";
 
+export type BattleForecast = {
+  attackerDamage: { max: number; min: number };
+  defenderDamage: { max: number; min: number };
+};
+
 export const readyUnitClickedAccessibleTile = (
   match: MatchWrapper,
   unit: UnitWrapper,
@@ -15,12 +20,12 @@ export const readyUnitClickedAccessibleTile = (
   //display subaction menu
 };
 
-export const readyUnitHoveredAttackableTile = (
+export const getBattleForecast = (
   match: MatchWrapper,
   attacker: UnitWrapper,
   newUnitPosition: Position,
   attackingPosition: Position,
-) => {
+): BattleForecast => {
   let defender = match.getUnit(attackingPosition);
   const isPipeSeamAttack = defender === undefined;
 
@@ -77,8 +82,10 @@ export const readyUnitHoveredAttackableTile = (
   const maxDamageTaken = attacker.getHP() - (bestDefenderOutcome.attackerHP ?? 0);
   const minDamageTaken = attacker.getHP() - (bestAttackerOutcome.attackerHP ?? 0);
 
-  //TODO create display showing those 4 numbers (don't display damage taken if both are 0 (never counterattack))
-  // also remove it when not hovering it anymore
+  return {
+    attackerDamage: { max: maxDamageDealt, min: minDamageDealt },
+    defenderDamage: { min: minDamageTaken, max: maxDamageTaken },
+  };
 };
 
 export const readyUnitClickedAttackableTile = (

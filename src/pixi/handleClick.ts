@@ -1,6 +1,6 @@
 // pixiEventHandlers.ts
-import type { FederatedPointerEvent } from "pixi.js";
-import { Container } from "pixi.js";
+import { Assets } from "pixi.js";
+import type { Container, FederatedPointerEvent } from "pixi.js";
 import type { Position } from "shared/schemas/position";
 import { isSamePosition } from "shared/schemas/position";
 import type { MatchWrapper } from "shared/wrappers/match";
@@ -16,7 +16,7 @@ import type { UnitWrapper } from "../shared/wrappers/unit";
 import type { MutableRefObject } from "react";
 import { isUnitProducingProperty } from "../shared/schemas/tile";
 import { createTileContainer } from "./interactiveTileFunctions";
-import { tileConstructor } from "./sprite-constructor";
+import { renderAttackTiles } from "./renderAttackTiles";
 
 export const handleClick = async (
   event: FederatedPointerEvent,
@@ -31,6 +31,8 @@ export const handleClick = async (
   unitRangeShowRef: "attack" | "movement" | "vision",
   pathRef: MutableRefObject<Position[] | null>,
 ) => {
+  //lets load our font
+  await Assets.load("/aw2Font.fnt");
   const x = Math.floor((event.global.x - renderedTileSize / 2) / renderedTileSize);
   const y = Math.floor((event.global.y - renderedTileSize / 2) / renderedTileSize);
 
@@ -42,22 +44,15 @@ export const handleClick = async (
   //Check what tile is in the tile/position clicked
   const tileClicked = match.getTile(clickPosition);
 
-  //TODO: Sometimes match.units will get bugged and units will seemingly dissapear
-  //console logs to check when units "stop" existing
-  /*  console.log(unitClicked);
-
-  console.log(clickPosition);
-
-  console.log(match.units);*/
-
-  //did we click a facily AND we own that facility AND its our turn?
+  //CHECK TO SEE IF WE CLICKED FACILITY
   if (
     !unitClicked &&
     player.owns(tileClicked) &&
     /*TODO: Check property can produce units (for example, Hachi SCOP) */ isUnitProducingProperty(
       tileClicked,
     ) &&
-    match.getCurrentTurnPlayer().data.id === player.data.id
+    match.getCurrentTurnPlayer().data.id === player.data.id &&
+    currentUnitClickedRef.current === null
   ) {
     resetScreen();
     const buildMenu = await buildUnitMenu(
@@ -70,17 +65,10 @@ export const handleClick = async (
 
     unitContainer.addChild(buildMenu);
   }
-  //are we in attack mode? (meaning, our unit is attacking)
-  else if (pathRef.current && currentUnitClickedRef.current) {
-    console.log("clicked on attack mode!");
 
-    //It extracts the path in the format the backend wants it (just an array of positions)
-    unitContainer.getChildByName("preAttackBox")?.destroy();
-   unitContainer.addChild(renderAttackTiles(match, currentUnitClickedRef.current, pathRef.current)) ;
-    pathRef.current = null;
-  }
-
-  //there is an savedUnit and a path, meaning the user has already clicked on a unit beforehand
+  //there is an currentUnitClickedRef and move tiles (the blue squares)
+  // meaning the user has already clicked on a unit
+  // so now we can process those movements
   else if (currentUnitClickedRef.current && moveTilesRef.current) {
     //flag to determine if we clicked on path
     let clickedOnPathFlag = false;
@@ -137,6 +125,7 @@ export const handleClick = async (
             actionMutation,
             currentUnitClickedRef,
             pathRef,
+            unitContainer,
           );
 
           unitContainer.addChild(subMenu);
@@ -156,10 +145,11 @@ export const handleClick = async (
     }
   }
 
-  //Is there an unit where clicked?
+  //DID WE CLICK ON A UNIT?
   else if (unitClicked) {
     resetScreen();
 
+    //Do we own said unit and is it our turn?
     if (player.owns(unitClicked) && match.getCurrentTurnPlayer().data.id === player.data.id) {
       if (unitClicked.data.isReady) {
         currentUnitClickedRef.current = unitClicked;
@@ -174,7 +164,16 @@ export const handleClick = async (
         moveTilesRef.current = getAccessibleNodes(match, unitClicked);
         mapContainer.addChild(displayedPassableTiles);
 
-        unitContainer.addChild(renderAttackTiles(match, currentUnitClickedRef.current, null)) ;
+        unitContainer.addChild(
+          renderAttackTiles(
+            unitContainer,
+            match,
+            player,
+            currentUnitClickedRef,
+            actionMutation,
+            null,
+          ),
+        );
       }
       //todo: handle logic for clicking a transport that is loaded and NOT ready (so it can drop off units)
       else if (unitClicked.isTransport() /*TODO && isLoaded*/) {
@@ -185,7 +184,9 @@ export const handleClick = async (
     else {
       //show unit path/move/stuff
     }
-  } else {
+  }
+  //we did not clicked on a facility nor a unit nor a path/move tiles, so we will do nothing other than ensure the state has been resetted clean
+  else {
     resetScreen();
   }
 
@@ -218,50 +219,5 @@ export const handleClick = async (
     moveTilesRef.current = null;
     currentUnitClickedRef.current = null;
     pathRef.current = null;
-  }
-
-  function renderAttackTiles(match: MatchWrapper, unit: UnitWrapper, path: Position[] | null) {
-    //I want this function to be independent, yet not have to give it so many props such as unit container, actionMutation, currentUnitClickedRef
-
-
-    let attackTiles;
-
-    if (path) {
-      attackTiles = getAttackTargetTiles(match, unit, path[path.length - 1]);
-      console.log(attackTiles);
-    } else {
-      attackTiles = getAttackTargetTiles(match, unit);
-    }
-
-    const attackTileContainer = new Container();
-    attackTileContainer.name = "preAttackBox";
-    attackTileContainer.x = renderedTileSize / 4;
-    attackTileContainer.y = renderedTileSize / 4;
-    attackTiles.forEach((tile) => {
-      const attackTile = tileConstructor(tile, "#be1919");
-      attackTileContainer.addChild(attackTile);
-
-      //todo: add onpointer down attack mutation then reset screen
-      attackTile.eventMode = "static";
-
-      if (path) {
-        attackTile.on("pointerdown", () => {
-          actionMutation.mutateAsync({
-            type: "move",
-            subAction: {
-              type: "attack",
-              defenderPosition: tile,
-            },
-            path: path,
-            playerId: player.data.id,
-            matchId: match.id,
-          });
-          //The currentUnitClicked has changed (moved, attacked, died), therefore, we delete the previous information as it is not accurate anymore
-          //this also helps so when the screen resets, we dont have two copies of a unit
-          currentUnitClickedRef.current = null;
-        });
-      }
-    });
-    return attackTileContainer;
   }
 };
