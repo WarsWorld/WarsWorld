@@ -75,8 +75,8 @@ export const handleClick = async (
     console.log("clicked on attack mode!");
 
     //It extracts the path in the format the backend wants it (just an array of positions)
-
-    renderAttackTiles(match, currentUnitClickedRef.current, pathRef.current);
+    unitContainer.getChildByName("preAttackBox")?.destroy();
+   unitContainer.addChild(renderAttackTiles(match, currentUnitClickedRef.current, pathRef.current)) ;
     pathRef.current = null;
   }
 
@@ -174,7 +174,7 @@ export const handleClick = async (
         moveTilesRef.current = getAccessibleNodes(match, unitClicked);
         mapContainer.addChild(displayedPassableTiles);
 
-        renderAttackTiles(match, currentUnitClickedRef.current, null);
+        unitContainer.addChild(renderAttackTiles(match, currentUnitClickedRef.current, null)) ;
       }
       //todo: handle logic for clicking a transport that is loaded and NOT ready (so it can drop off units)
       else if (unitClicked.isTransport() /*TODO && isLoaded*/) {
@@ -221,7 +221,8 @@ export const handleClick = async (
   }
 
   function renderAttackTiles(match: MatchWrapper, unit: UnitWrapper, path: Position[] | null) {
-    unitContainer.getChildByName("preAttackBox")?.destroy();
+    //I want this function to be independent, yet not have to give it so many props such as unit container, actionMutation, currentUnitClickedRef
+
 
     let attackTiles;
 
@@ -261,6 +262,6 @@ export const handleClick = async (
         });
       }
     });
-    unitContainer.addChild(attackTileContainer);
+    return attackTileContainer;
   }
 };
