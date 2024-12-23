@@ -31,7 +31,7 @@ function infantryOrMechAbilityToEvent(
   const capturingTile = unit.getTile();
 
   //todo: bugs out, tile is already captured when this triggers so it always believes property cannot be captured
-  if (!("playerSlot" in capturingTile)/* || unit.player.owns(capturingTile)*/) {
+  if (!("playerSlot" in capturingTile) /* || unit.player.owns(capturingTile)*/) {
     throw new DispatchableError("This tile can not be captured");
   }
 

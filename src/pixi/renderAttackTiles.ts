@@ -13,6 +13,8 @@ import type { PlayerInMatchWrapper } from "../shared/wrappers/player-in-match";
 import type { MutableRefObject } from "react";
 import type { BattleForecast } from "./interactiveTileFunctions";
 import { getBattleForecast } from "./interactiveTileFunctions";
+import { renderUnitSprite } from "./renderUnitSprite";
+import type { LoadedSpriteSheet } from "./load-spritesheet";
 
 export function renderAttackTiles(
   unitContainer: Container<DisplayObject>,
@@ -20,6 +22,7 @@ export function renderAttackTiles(
   player: PlayerInMatchWrapper,
   currentUnitClickedRef: MutableRefObject<UnitWrapper | null>,
   actionMutation: any,
+  spriteSheets: LoadedSpriteSheet,
   path: Position[] | null,
 ) {
   unitContainer.getChildByName("preAttackBox")?.destroy();
@@ -79,8 +82,19 @@ export function renderAttackTiles(
     attackTileContainer.addChild(attackTile);
   });
 
+  //todo: at some point maybe refactor all the numbers over the place here
+  //into somethinc clean and consistent
   function renderProbabilities(attacker: UnitWrapper, defender: UnitWrapper) {
     const defenderPosition = defender.data.position;
+    const probabilitiesContainer = new Container();
+    probabilitiesContainer.name = "probabilities";
+    probabilitiesContainer.x = ((defenderPosition[0] + 2.5) * renderedTileSize) / 2;
+    probabilitiesContainer.y = (defenderPosition[1] * renderedTileSize) / 2;
+
+    if (attacker === null) {
+      return probabilitiesContainer;
+    }
+
     const attackingPos = path !== null ? path[path.length - 1] : attacker.data.position;
     const { attackerDamage, defenderDamage }: BattleForecast = getBattleForecast(
       match,
@@ -89,40 +103,35 @@ export function renderAttackTiles(
       defenderPosition,
     );
 
-    const probabilitiesContainer = new Container();
-    probabilitiesContainer.name = "probabilities";
-    probabilitiesContainer.x = ((defenderPosition[0] + 3) * renderedTileSize) / 2;
-    probabilitiesContainer.y = (defenderPosition[1] * renderedTileSize) / 2;
-
     const background = new Sprite(Texture.WHITE);
     background.anchor.set(1, 1); //?
-    background.width = renderedTileSize * 2.5;
-    background.height = renderedTileSize * 1.5;
+    background.width = renderedTileSize * 2;
+    background.height = renderedTileSize * 1.25;
     background.eventMode = "static";
     background.tint = "#eaeaea";
     probabilitiesContainer.addChild(background);
 
-    const attackerProbabilities = new BitmapText(
-      `${attackerDamage.min}% - ${attackerDamage.max}%`,
-      {
-        fontName: "awFont",
-        fontSize: 12,
-      },
-    );
-    attackerProbabilities.x = -renderedTileSize * 1.25 - 4;
-    attackerProbabilities.y = -renderedTileSize * 1.25;
-    probabilitiesContainer.addChild(attackerProbabilities);
+    const attackerText = new BitmapText(`${attackerDamage.min}% - ${attackerDamage.max}%`, {
+      fontName: "awFont",
+      fontSize: 12,
+    });
+    attackerText.x = -renderedTileSize * 1.25 - 3;
+    attackerText.y = -renderedTileSize * 1.25 + 4;
+    probabilitiesContainer.addChild(attackerText);
 
-    const defenderProbabilities = new BitmapText(
-      `${defenderDamage.min}% - ${defenderDamage.max}%`,
-      {
-        fontName: "awFont",
-        fontSize: 12,
-      },
-    );
-    defenderProbabilities.x = -renderedTileSize * 2.5 + 4;
-    defenderProbabilities.y = -renderedTileSize / 2;
-    probabilitiesContainer.addChild(defenderProbabilities);
+    const defenderText = new BitmapText(`${defenderDamage.min}% - ${defenderDamage.max}%`, {
+      fontName: "awFont",
+      fontSize: 12,
+    });
+    defenderText.x = -renderedTileSize * 2 + 4;
+    defenderText.y = -renderedTileSize / 2 + 2;
+    probabilitiesContainer.addChild(defenderText);
+
+    const attackerSprite = renderUnitSprite(attacker, spriteSheets, [-4.25, -3]);
+    probabilitiesContainer.addChild(attackerSprite);
+
+    const defenderSprite = renderUnitSprite(defender, spriteSheets, [-1.75, -1.75]);
+    probabilitiesContainer.addChild(defenderSprite);
 
     return probabilitiesContainer;
   }

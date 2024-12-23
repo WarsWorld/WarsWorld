@@ -12,9 +12,7 @@ export function renderUnits(
   const unitContainer = new Container();
 
   for (const unit of match.units) {
-    unitContainer.addChild(
-      renderUnitSprite(unit, spriteSheets[unit.player.data.army], spriteSheets.icons),
-    );
+    unitContainer.addChild(renderUnitSprite(unit, spriteSheets));
   }
 
   return unitContainer;

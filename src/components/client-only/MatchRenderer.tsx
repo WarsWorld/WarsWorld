@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { trpc } from "frontend/utils/trpc-client";
 import type { LoadedSpriteSheet } from "pixi/load-spritesheet";
 import { useEffect, useState } from "react";
@@ -28,7 +28,6 @@ export const renderMultiplier = 2;
 export const renderedTileSize = baseTileSize * renderMultiplier;
 
 export function MatchRenderer({ match, player, spriteSheets, turn, setTurn }: Props) {
-
   const [eventTrigger, setEventTrigger] = useState(0);
   useEffect(() => {
     setTurn(match.getCurrentTurnPlayer().data.id === player.data.id);
@@ -37,7 +36,6 @@ export function MatchRenderer({ match, player, spriteSheets, turn, setTurn }: Pr
   const { pixiCanvasRef } = usePixi(match, spriteSheets, player);
 
   const passTurnMutation = trpc.action.send.useMutation();
-
 
   trpc.action.onEvent.useSubscription(
     {
@@ -66,8 +64,7 @@ export function MatchRenderer({ match, player, spriteSheets, turn, setTurn }: Pr
 
             const finalPosition: Position = event.path[event.path.length - 1];
 
-
-            switch(event.subEvent.type) {
+            switch (event.subEvent.type) {
               case "attack": {
                 applyAttackEvent(match, event.subEvent, finalPosition);
                 break;
@@ -77,8 +74,6 @@ export function MatchRenderer({ match, player, spriteSheets, turn, setTurn }: Pr
                 break;
               }
             }
-
-
 
             break;
           }

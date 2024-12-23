@@ -98,8 +98,7 @@ export const handleClick = async (
           //create new temporary sprite in selected position
           const tempUnit = renderUnitSprite(
             currentUnitClickedRef.current,
-            spriteSheets[match.getCurrentTurnPlayer().data.army],
-            spriteSheets.icons,
+            spriteSheets,
             clickPosition,
           );
           tempUnit.name = "tempUnit";
@@ -126,6 +125,7 @@ export const handleClick = async (
             currentUnitClickedRef,
             pathRef,
             unitContainer,
+            spriteSheets,
           );
 
           unitContainer.addChild(subMenu);
@@ -171,6 +171,7 @@ export const handleClick = async (
             player,
             currentUnitClickedRef,
             actionMutation,
+            spriteSheets,
             null,
           ),
         );
@@ -206,13 +207,7 @@ export const handleClick = async (
           `unit-${currentUnitClickedRef.current.data.position[0]}-${currentUnitClickedRef.current.data.position[1]}`,
         )
       ) {
-        unitContainer.addChild(
-          renderUnitSprite(
-            currentUnitClickedRef.current,
-            spriteSheets[match.getCurrentTurnPlayer().data.army],
-            spriteSheets.icons,
-          ),
-        );
+        unitContainer.addChild(renderUnitSprite(currentUnitClickedRef.current, spriteSheets));
       }
     }
 

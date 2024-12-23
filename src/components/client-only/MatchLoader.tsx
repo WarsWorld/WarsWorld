@@ -35,7 +35,7 @@ export function MatchLoader({ matchId, playerId, spritesheetDataByArmy }: Props)
       refetchIntervalInBackground: false,
       refetchOnReconnect: true,
       //refetchInterval: 10000,
-      refetchOnWindowFocus: false,
+      refetchOnWindowFocus: true,
       select(match) {
         return new MatchWrapper<ChangeableTileWithSprite, FrontendUnit>(
           match.id,
@@ -66,22 +66,19 @@ export function MatchLoader({ matchId, playerId, spritesheetDataByArmy }: Props)
     return <p>Loading match data...</p>;
   }
 
-
-
-
   const player = fullMatchQuery.data.getPlayerById(playerId);
-
 
   if (player === undefined) {
     throw new Error("Could not find player by playerId in match wrapper in MatchLoader");
   }
-
 
   return (
     <MatchRenderer
       match={fullMatchQuery.data}
       spriteSheets={spriteSheetQuery.data}
       turn={turn}
-      setTurn={setTurn} player={player}    />
+      setTurn={setTurn}
+      player={player}
+    />
   );
 }

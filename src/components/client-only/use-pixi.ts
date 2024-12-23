@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import type { Container, DisplayObject, FederatedPointerEvent } from "pixi.js";
 import { Application } from "pixi.js";
 import type { LoadedSpriteSheet } from "pixi/load-spritesheet";
@@ -35,7 +35,6 @@ export function usePixi(
   const moveTilesRef = useRef<Map<Position, PathNode> | null>(null);
 
   const pathRef = useRef<Position[] | null>(null);
-
 
   const { actionMutation } = trpcActions();
 

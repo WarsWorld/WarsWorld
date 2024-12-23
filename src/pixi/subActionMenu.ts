@@ -22,6 +22,7 @@ import type { MutableRefObject } from "react";
 import type { PathNode } from "./show-pathing";
 import type { SubAction } from "../shared/schemas/action";
 import { renderAttackTiles } from "./renderAttackTiles";
+import type { LoadedSpriteSheet } from "./load-spritesheet";
 
 export enum AvailableSubActions {
   "Wait",
@@ -268,7 +269,7 @@ export const getAvailableSubActions = (
   return menuOptions;
 };
 
-export default async function subActionMenu(
+export default function subActionMenu(
   match: MatchWrapper,
   player: PlayerInMatchWrapper,
   newPosition: Position,
@@ -277,6 +278,7 @@ export default async function subActionMenu(
   currentUnitClickedRef: React.MutableRefObject<UnitWrapper | null>,
   pathRef: MutableRefObject<Position[] | null>,
   unitContainer: Container<DisplayObject>,
+  spriteSheets: LoadedSpriteSheet,
 ) {
   availableActions = new Map<AvailableSubActions, SubAction>();
 
@@ -382,6 +384,7 @@ export default async function subActionMenu(
             player,
             currentUnitClickedRef,
             actionMutation,
+            spriteSheets,
             pathRef.current,
           ),
         );

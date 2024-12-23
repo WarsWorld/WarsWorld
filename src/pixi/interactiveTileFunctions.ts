@@ -79,16 +79,16 @@ export const getBattleForecast = (
   const maxDamageDealt = defender.getHP() - bestAttackerOutcome.defenderHP;
   const minDamageDealt = defender.getHP() - bestDefenderOutcome.defenderHP;
 
-  //Enemy unit is dead
-  if (minDamageDealt >= defender?.getHP()) {
+  const maxDamageTaken = attacker.getHP() - (bestDefenderOutcome.attackerHP ?? 0);
+  const minDamageTaken = attacker.getHP() - (bestAttackerOutcome.attackerHP ?? 0);
+
+  //Enemy unit is dead or can't attack
+  if (minDamageDealt >= defender?.getHP() || maxDamageTaken === attacker.getHP()) {
     return {
       attackerDamage: { max: maxDamageDealt, min: minDamageDealt },
       defenderDamage: { min: 0, max: 0 },
     };
   }
-
-  const maxDamageTaken = attacker.getHP() - (bestDefenderOutcome.attackerHP ?? 0);
-  const minDamageTaken = attacker.getHP() - (bestAttackerOutcome.attackerHP ?? 0);
 
   return {
     attackerDamage: { max: maxDamageDealt, min: minDamageDealt },
