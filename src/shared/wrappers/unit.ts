@@ -206,8 +206,8 @@ export class UnitWrapper<
   remove() {
     this.player.team.vision?.removeUnitVision(this);
 
-    this.match.units = this.match.units.filter((u) =>
-      isSamePosition(u.data.position, this.data.position),
+    this.match.units = this.match.units.filter(
+      (u) => !isSamePosition(u.data.position, this.data.position),
     );
   }
 

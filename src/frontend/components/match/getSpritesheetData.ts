@@ -3,7 +3,7 @@ import type { Army } from "shared/schemas/army";
 import type { PropertyTileType } from "shared/schemas/tile";
 import type { UnitType } from "shared/schemas/unit";
 
-export type SheetNames = Army | "neutral" | "arrow";
+export type SheetNames = Army | "neutral" | "arrow" | "icons";
 
 export type SpriteAnimationKeys =
   | PropertyTileType

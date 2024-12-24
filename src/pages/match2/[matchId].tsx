@@ -55,6 +55,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async () => {
       "blue-moon",
       "neutral",
       "arrow",
+      "icons",
     ].map(async (sheetName) => {
       const filePath = path.join(process.cwd(), `public/img/spriteSheet/${sheetName}.json`);
       const fileData = await fs.readFile(filePath, "utf-8");

@@ -15,10 +15,10 @@ function willCaptureTile(unit: UnitWrapper<"infantry" | "mech">): boolean {
       capturePoints = 0; // insta capture
     } else {
       // capture at 1.5x rate, rounded down
-      capturePoints -= Math.floor(unit.getHP() * 1.5);
+      capturePoints -= Math.floor(unit.getVisualHP() * 1.5);
     }
   } else {
-    capturePoints -= unit.getHP();
+    capturePoints -= unit.getVisualHP();
   }
 
   return capturePoints <= 0;
@@ -30,7 +30,8 @@ function infantryOrMechAbilityToEvent(
 ): AbilityEvent {
   const capturingTile = unit.getTile();
 
-  if (!("playerSlot" in capturingTile) || unit.player.owns(capturingTile)) {
+  //todo: bugs out, tile is already captured when this triggers so it always believes property cannot be captured
+  if (!("playerSlot" in capturingTile) /* || unit.player.owns(capturingTile)*/) {
     throw new DispatchableError("This tile can not be captured");
   }
 
@@ -169,6 +170,14 @@ export const applyAbilityEvent: ApplySubEvent<AbilityEvent> = (match, event, fro
         break;
       }
 
+      //TODO: For some reason, if the unit completes the capture, this function will run twice, therefore, this check is necessary to stop that
+      const capturingTile = unit.getTile();
+
+      if (!("playerSlot" in capturingTile) || unit.player.owns(capturingTile)) {
+        unit.data.currentCapturePoints = undefined;
+        break;
+      }
+
       if (unit.data.currentCapturePoints === undefined) {
         unit.data.currentCapturePoints = 20;
       }
@@ -178,10 +187,10 @@ export const applyAbilityEvent: ApplySubEvent<AbilityEvent> = (match, event, fro
           unit.data.currentCapturePoints = 0; // insta capture
         } else {
           // capture at 1.5x rate, rounded down
-          unit.data.currentCapturePoints -= Math.floor(unit.getHP() * 1.5);
+          unit.data.currentCapturePoints -= Math.floor(unit.getVisualHP() * 1.5);
         }
       } else {
-        unit.data.currentCapturePoints -= unit.getHP();
+        unit.data.currentCapturePoints -= unit.getVisualHP();
       }
 
       if (unit.data.currentCapturePoints <= 0) {

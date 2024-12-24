@@ -1,9 +1,9 @@
+"use client";
 import type { Container, DisplayObject, FederatedPointerEvent } from "pixi.js";
-import { Sprite } from "pixi.js";
 import { Application } from "pixi.js";
 import type { LoadedSpriteSheet } from "pixi/load-spritesheet";
 import { setupApp } from "pixi/setupApp";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { Position } from "shared/schemas/position";
 import type { MatchWrapper } from "shared/wrappers/match";
 import type { PlayerInMatchWrapper } from "shared/wrappers/player-in-match";
@@ -31,12 +31,12 @@ export function usePixi(
   // when user clicks an unit, we need a variable to determine if we show them unit's movement range, attack range or vision (for fog)
   const unitRangeShowRef = useRef<"attack" | "movement" | "vision">("movement");
 
-  const thirdClickRef = useRef<boolean>(false);
+  //TODO: To some extent, these three all store the same type of information (positions), however, they store it at different times...
+  const moveTilesRef = useRef<Map<Position, PathNode> | null>(null);
 
-  const pathQueueRef = useRef<Map<Position, PathNode> | null>(null);
+  const pathRef = useRef<Position[] | null>(null);
 
-  //TODO: Someone please the ts gods
-  const { actionMutation } = trpcActions(match, player, unitContainerRef.current, spriteSheets);
+  const { actionMutation } = trpcActions();
 
   useEffect(() => {
     const app = new Application({
@@ -53,8 +53,8 @@ export function usePixi(
     unitContainerRef.current = unitContainer;
     mapContainerRef.current.eventMode = "static";
 
-    //TODO: Someone please the ts gods
-    //This function handles almost all the clicks, sometimes elements (such as menus) have event listeners, otherwise it is handled via this function
+    //This function handles almost all the clicks, sometimes elements (such as menus)
+    // have event listeners, otherwise it is handled via this function
     const clickHandler = async (event: FederatedPointerEvent) => {
       await handleClick(
         event,
@@ -62,12 +62,12 @@ export function usePixi(
         mapContainerRef.current,
         unitContainerRef.current,
         currentUnitClickedRef,
-        pathQueueRef,
+        moveTilesRef,
         player,
         spriteSheets,
         actionMutation,
         unitRangeShowRef,
-        thirdClickRef,
+        pathRef,
       );
     };
 
@@ -77,7 +77,7 @@ export function usePixi(
       app.stop();
       mapContainerRef.current.off("pointertap", clickHandler);
     };
-  }, [match]);
+  }, [actionMutation, match, player, spriteSheets]);
 
   return {
     pixiCanvasRef,

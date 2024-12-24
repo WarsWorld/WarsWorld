@@ -156,5 +156,6 @@ const createUnitFromBuildEvent = (
 export const applyBuildEvent = (match: MatchWrapper, event: BuildEvent) => {
   const player = match.getCurrentTurnPlayer();
 
+  player.data.funds -= unitPropertiesMap[event.unitType].cost;
   player.addUnwrappedUnit(createUnitFromBuildEvent(player.data.slot, event));
 };

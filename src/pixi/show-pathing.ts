@@ -4,7 +4,8 @@ import {
   createPipeSeamUnitEquivalent,
   getBaseDamage,
 } from "shared/match-logic/game-constants/base-damage";
-import { isSamePosition, Position } from "shared/schemas/position";
+import type { Position } from "shared/schemas/position";
+import { isSamePosition } from "shared/schemas/position";
 import {
   getDistance,
   getNeighbourPositions,
@@ -99,15 +100,17 @@ export const getAccessibleNodes = (
 export const getAttackableTiles = (
   match: MatchWrapper,
   unit: UnitWrapper,
+  fromPosition?: Position,
   accessibleNodes?: Map<Position, PathNode>,
 ): Position[] => {
   const attackPositions: Position[] = [];
+  const sourcePosition = fromPosition || unit.data.position;
 
   if ("attackRange" in unit.properties && unit.properties.attackRange[0] > 1) {
-    //ranged unit
+    // Ranged unit
     for (let x = 0; x < match.map.width; x++) {
       for (let y = 0; y < match.map.height; y++) {
-        const distance = getDistance([x, y], unit.data.position);
+        const distance = getDistance([x, y], sourcePosition);
 
         if (
           distance <= unit.properties.attackRange[1] &&
@@ -118,15 +121,17 @@ export const getAttackableTiles = (
       }
     }
   } else {
+    // Melee unit
     if (accessibleNodes === undefined) {
-      accessibleNodes = getAccessibleNodes(match, unit);
+      accessibleNodes = fromPosition
+        ? new Map([[fromPosition, { position: fromPosition }]]) // Create a minimal node if specific position given
+        : getAccessibleNodes(match, unit);
     }
 
     const visited = makeVisitedMatrix(match.map);
 
     for (const [pos] of accessibleNodes.entries()) {
       for (const adjPos of getNeighbourPositions(pos)) {
-        //all positions adjacent to tiles where the unit can move to are attacking tiles
         if (!match.map.isOutOfBounds(adjPos)) {
           if (!visited[adjPos[0]][adjPos[1]]) {
             attackPositions.push(adjPos);
@@ -143,12 +148,13 @@ export const getAttackableTiles = (
 export const getAttackTargetTiles = (
   match: MatchWrapper,
   unit: UnitWrapper,
+  fromPosition?: Position,
   attackableTiles?: Position[],
 ) => {
   const attackTargetPositions: Position[] = [];
 
   if (attackableTiles === undefined) {
-    attackableTiles = getAttackableTiles(match, unit);
+    attackableTiles = getAttackableTiles(match, unit, fromPosition);
   }
 
   const canAttackPipeseams =
@@ -170,31 +176,40 @@ export const getAttackTargetTiles = (
 
   return attackTargetPositions;
 };
+
 //TODO: Do we really need these? right now they are just being used as a band-aid fix to make things work - Javi
 //HELPER FUNCTIONS BY CHATGPT
 
 // Function to check if newPos is in accessibleNodes (by value comparison)
 const hasPositionInMap = (accessibleNodes: Map<Position, PathNode>, newPos: Position): boolean => {
-  for (let key of accessibleNodes.keys()) {
+  for (const key of accessibleNodes.keys()) {
     if (isSamePosition(key, newPos)) {
       return true; // newPos is found in the map
     }
   }
+
   return false; // newPos is not in the map
 };
 
 // Helper function to get the value from the map using value-based comparison of Position
-const getPathNodeFromMap = (accessibleNodes: Map<Position, PathNode>, currentPos: Position): PathNode | undefined => {
-  for (let [key, value] of accessibleNodes.entries()) {
+const getPathNodeFromMap = (
+  accessibleNodes: Map<Position, PathNode>,
+  currentPos: Position,
+): PathNode | undefined => {
+  for (const [key, value] of accessibleNodes.entries()) {
     if (isSamePosition(key, currentPos)) {
       return value; // Return the corresponding PathNode if position matches
     }
   }
+
   return undefined; // Return undefined if no match is found
 };
 
 // Function to retrieve the path from the PathNode
-const getPathCoordinates = (pathNode: PathNode, accessibleNodes: Map<Position, PathNode>): number[][] => {
+const getPathCoordinates = (
+  pathNode: PathNode,
+  accessibleNodes: Map<Position, PathNode>,
+): number[][] => {
   const path: number[][] = [];
   let currentNode: PathNode | undefined = pathNode;
 
@@ -204,13 +219,14 @@ const getPathCoordinates = (pathNode: PathNode, accessibleNodes: Map<Position, P
     path.push([currentNode.pos.x, currentNode.pos.y]);
 
     // Move to the parent node if available
-    currentNode = currentNode.parent ? getPathNodeFromMap(accessibleNodes, currentNode.parent) : undefined;
+    currentNode = currentNode.parent
+      ? getPathNodeFromMap(accessibleNodes, currentNode.parent)
+      : undefined;
   }
 
   // Reverse the path to ensure it starts from the first position (origin) to the last
   return path.reverse();
 };
-
 
 export const updatePath = (
   unit: UnitWrapper,
@@ -218,21 +234,14 @@ export const updatePath = (
   path: PathNode[] | undefined,
   newPos: Position,
 ): PathNode[] => {
-  console.log(accessibleNodes);
-  console.log(accessibleNodes.has(newPos));
-  console.log(newPos);
-
   if (!hasPositionInMap(accessibleNodes, newPos)) {
     throw new Error("Trying to add an unreachable position!");
   }
-
-
 
   if (path !== undefined && path.length !== 0) {
     const lastNode = path.at(-1)!;
 
     for (const node of path) {
-
       if (node.pos === newPos) {
         //the "new" node is part of the current path, so delete all nodes after that one
         while (node !== path.at(-1)) {
@@ -263,9 +272,7 @@ export const updatePath = (
   const newPath: PathNode[] = [];
   let currentPos: [number, number] | null = newPos;
 
-
   while (currentPos !== null) {
-
     const accessibleNodesPath = getPathNodeFromMap(accessibleNodes, currentPos);
 
     if (accessibleNodesPath !== undefined) {

@@ -158,7 +158,7 @@ export type EmittableEvent = (
   | DeleteEvent
   | MatchEndEvent
 ) &
-  WithDiscoveries;
+  WithDiscoveries & { playerId: string };
 
 export type NonStoredEvent = WithPlayer &
   WithMatchId &
