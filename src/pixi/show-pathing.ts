@@ -104,7 +104,7 @@ export const getAttackableTiles = (
   accessibleNodes?: Map<Position, PathNode>,
 ): Position[] => {
   const attackPositions: Position[] = [];
-  const sourcePosition = fromPosition || unit.data.position;
+  const sourcePosition = fromPosition ?? unit.data.position;
 
   if ("attackRange" in unit.properties && unit.properties.attackRange[0] > 1) {
     // Ranged unit
@@ -203,29 +203,6 @@ const getPathNodeFromMap = (
   }
 
   return undefined; // Return undefined if no match is found
-};
-
-// Function to retrieve the path from the PathNode
-const getPathCoordinates = (
-  pathNode: PathNode,
-  accessibleNodes: Map<Position, PathNode>,
-): number[][] => {
-  const path: number[][] = [];
-  let currentNode: PathNode | undefined = pathNode;
-
-  // Walk through the path from the given node to the origin
-  while (currentNode !== undefined && currentNode !== null) {
-    // Add the current position as [x, y] to the path
-    path.push([currentNode.pos.x, currentNode.pos.y]);
-
-    // Move to the parent node if available
-    currentNode = currentNode.parent
-      ? getPathNodeFromMap(accessibleNodes, currentNode.parent)
-      : undefined;
-  }
-
-  // Reverse the path to ensure it starts from the first position (origin) to the last
-  return path.reverse();
 };
 
 export const updatePath = (

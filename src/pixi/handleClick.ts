@@ -6,6 +6,7 @@ import { isSamePosition } from "shared/schemas/position";
 import type { MatchWrapper } from "shared/wrappers/match";
 import { renderUnitSprite } from "./renderUnitSprite";
 import type { PathNode } from "./show-pathing";
+import { getAttackableTiles } from "./show-pathing";
 import { getAccessibleNodes, getAttackTargetTiles, updatePath } from "./show-pathing";
 import subActionMenu from "./subActionMenu";
 import { renderedTileSize } from "../components/client-only/MatchRenderer";
@@ -17,6 +18,7 @@ import type { MutableRefObject } from "react";
 import { isUnitProducingProperty } from "../shared/schemas/tile";
 import { createTileContainer } from "./interactiveTileFunctions";
 import { renderAttackTiles } from "./renderAttackTiles";
+import { displayEnemyRange } from "./displayEnemyRange";
 
 export const handleClick = async (
   event: FederatedPointerEvent,
@@ -28,7 +30,7 @@ export const handleClick = async (
   player: PlayerInMatchWrapper,
   spriteSheets: LoadedSpriteSheet,
   actionMutation: any,
-  unitRangeShowRef: "attack" | "movement" | "vision",
+  unitRangeShowRef: MutableRefObject<"attack" | "movement" | "vision">,
   pathRef: MutableRefObject<Position[] | null>,
 ) => {
   //lets load our font
@@ -150,40 +152,49 @@ export const handleClick = async (
     resetScreen();
 
     //Do we own said unit and is it our turn?
-    if (player.owns(unitClicked) && match.getCurrentTurnPlayer().data.id === player.data.id) {
-      if (unitClicked.data.isReady) {
-        currentUnitClickedRef.current = unitClicked;
+    if (
+      player.owns(unitClicked) &&
+      match.getCurrentTurnPlayer().data.id === player.data.id &&
+      unitClicked.data.isReady
+    ) {
+      currentUnitClickedRef.current = unitClicked;
 
-        const passablePositions = getAccessibleNodes(match, unitClicked);
-        const displayedPassableTiles = createTileContainer(
-          Array.from(passablePositions.keys()),
-          "#43d9e4",
-          999,
-          "path",
-        );
-        moveTilesRef.current = getAccessibleNodes(match, unitClicked);
-        mapContainer.addChild(displayedPassableTiles);
+      const passablePositions = getAccessibleNodes(match, unitClicked);
+      const displayedPassableTiles = createTileContainer(
+        Array.from(passablePositions.keys()),
+        "#43d9e4",
+        999,
+        "path",
+      );
+      moveTilesRef.current = getAccessibleNodes(match, unitClicked);
+      mapContainer.addChild(displayedPassableTiles);
 
-        unitContainer.addChild(
-          renderAttackTiles(
-            unitContainer,
-            match,
-            player,
-            currentUnitClickedRef,
-            actionMutation,
-            spriteSheets,
-            null,
-          ),
-        );
-      }
-      //todo: handle logic for clicking a transport that is loaded and NOT ready (so it can drop off units)
-      else if (unitClicked.isTransport() /*TODO && isLoaded*/) {
-        //Show subaction menu of transport to drop off units
-      }
+      unitContainer.addChild(
+        renderAttackTiles(
+          unitContainer,
+          match,
+          player,
+          currentUnitClickedRef,
+          actionMutation,
+          spriteSheets,
+          null,
+        ),
+      );
     }
+    //todo: handle logic for clicking a transport that is loaded and NOT ready (so it can drop off units)
+    else if (
+      unitClicked.isTransport() /*TODO && isLoaded*/ &&
+      player.owns(unitClicked) &&
+      match.getCurrentTurnPlayer().data.id === player.data.id
+    ) {
+      //Show subaction menu of transport to drop off units
+    }
+
     //TODO: We clicked on a unit we do not own OR its not our turn. Display unit movement/attack range/vision
     else {
       //show unit path/move/stuff
+
+      mapContainer.addChild(displayEnemyRange(match, unitClicked, unitRangeShowRef));
     }
   }
   //we did not clicked on a facility nor a unit nor a path/move tiles, so we will do nothing other than ensure the state has been resetted clean

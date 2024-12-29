@@ -39,7 +39,6 @@ export function renderAttackTiles(
 
   if (path) {
     attackTiles = getAttackTargetTiles(match, currentUnitClickedRef.current, path[path.length - 1]);
-    console.log(attackTiles);
   } else {
     attackTiles = getAttackTargetTiles(match, currentUnitClickedRef.current);
   }
@@ -82,7 +81,7 @@ export function renderAttackTiles(
     attackTileContainer.addChild(attackTile);
   });
 
-  //todo: at some point maybe refactor all the numbers over the place here
+  //todo: at some point maybe refactor all the numbers that are over the place here
   //into somethinc clean and consistent
   function renderProbabilities(attacker: UnitWrapper, defender: UnitWrapper) {
     const defenderPosition = defender.data.position;
@@ -115,8 +114,8 @@ export function renderAttackTiles(
       fontName: "awFont",
       fontSize: 12,
     });
-    attackerText.x = -renderedTileSize * 1.25 - 3;
-    attackerText.y = -renderedTileSize * 1.25 + 4;
+    attackerText.x = -renderedTileSize * 1.25 - 1;
+    attackerText.y = -renderedTileSize * 1.25 + 8;
     probabilitiesContainer.addChild(attackerText);
 
     const defenderText = new BitmapText(`${defenderDamage.min}% - ${defenderDamage.max}%`, {
@@ -127,7 +126,7 @@ export function renderAttackTiles(
     defenderText.y = -renderedTileSize / 2 + 2;
     probabilitiesContainer.addChild(defenderText);
 
-    const attackerSprite = renderUnitSprite(attacker, spriteSheets, [-4.25, -3]);
+    const attackerSprite = renderUnitSprite(attacker, spriteSheets, [-4.25, -2.75]);
     probabilitiesContainer.addChild(attackerSprite);
 
     const defenderSprite = renderUnitSprite(defender, spriteSheets, [-1.75, -1.75]);
