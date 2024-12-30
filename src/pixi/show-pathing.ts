@@ -15,6 +15,8 @@ import type { MapWrapper } from "shared/wrappers/map";
 import type { MatchWrapper } from "shared/wrappers/match";
 import { DispatchableError } from "../shared/DispatchedError";
 import type { UnitWrapper } from "../shared/wrappers/unit";
+import type { LoadedSpriteSheet } from "./load-spritesheet";
+import { baseTileSize, renderedTileSize } from "../components/client-only/MatchRenderer";
 export type PathNode = {
   //saves distance from origin and parent (to retrieve the shortest path)
   pos: Position;
@@ -263,28 +265,28 @@ export const updatePath = (
 
 const getSpriteName = (a: Position, b: Position, c: Position): string => {
   //path from a to b to c, the sprite is the one displayed in b (middle node)
-  const dify = Math.abs(a[1] - c[1]);
   const difx = Math.abs(a[0] - c[0]);
+  const dify = Math.abs(a[1] - c[1]);
 
   if (dify + difx === 2) {
     //not start nor end
-    if (dify === 2) {
+    if (difx === 2) {
       return "ew";
     }
 
-    if (difx === 2) {
+    if (dify === 2) {
       return "ns";
     }
 
     let ans: string;
 
-    if (a[0] > b[0] || c[0] > b[0]) {
+    if (a[1] > b[1] || c[1] > b[1]) {
       ans = "s";
     } else {
       ans = "n";
     }
 
-    if (a[1] > b[1] || c[1] > b[1]) {
+    if (a[0] > b[0] || c[0] > b[0]) {
       ans += "e";
     } else {
       ans += "w";
@@ -293,37 +295,37 @@ const getSpriteName = (a: Position, b: Position, c: Position): string => {
     return ans;
   }
 
-  if (a[1] === b[1] && a[0] === b[0]) {
+  if (a[0] === b[0] && a[1] === b[1]) {
     //starting node
-    if (c[1] === b[1] && c[0] === b[0]) {
+    if (c[0] === b[0] && c[1] === b[1]) {
       //AND ending node
       return "od";
     }
 
-    if (c[1] < b[1]) {
+    if (c[0] < b[0]) {
       return "ow";
     }
 
-    if (c[1] > b[1]) {
+    if (c[0] > b[0]) {
       return "oe";
     }
 
-    if (c[0] > b[0]) {
+    if (c[1] > b[1]) {
       return "os";
     }
 
     return "on";
   } else {
     //ending node
-    if (a[1] < b[1]) {
+    if (a[0] < b[0]) {
       return "wd";
     }
 
-    if (a[1] > b[1]) {
+    if (a[0] > b[0]) {
       return "ed";
     }
 
-    if (a[0] < b[0]) {
+    if (a[1] < b[1]) {
       return "nd";
     }
 
@@ -331,7 +333,7 @@ const getSpriteName = (a: Position, b: Position, c: Position): string => {
   }
 };
 
-export const showPath = (spriteSheet: Spritesheet, path: PathNode[]) => {
+export const showPath = (spriteSheet: LoadedSpriteSheet, path: PathNode[]) => {
   if (path.length < 1) {
     throw new Error("Empty path!");
   }
@@ -348,19 +350,20 @@ export const showPath = (spriteSheet: Spritesheet, path: PathNode[]) => {
 
     if (i === 0) {
       //special case for original node
-      spriteName = getSpriteName(path2[0].pos, path2[i].pos, path2[i + 1].pos);
+      //spriteName = getSpriteName(path2[0].pos, path2[i].pos, path2[i + 1].pos);
     } else {
       spriteName = getSpriteName(path2[i - 1].pos, path2[i].pos, path2[i + 1].pos);
     }
 
-    const nodeSprite = new Sprite(spriteSheet.textures[spriteName + ".png"]);
+    const nodeSprite = new Sprite(spriteSheet.arrow?.textures[spriteName + ".png"]);
     nodeSprite.anchor.set(1, 1);
-    nodeSprite.x = (path2[i].pos[1] + 1) * 16;
-    nodeSprite.y = (path2[i].pos[0] + 1) * 16;
+    nodeSprite.x = (path2[i].pos[0] + 1) * baseTileSize;
+    nodeSprite.y = (path2[i].pos[1] + 1) * baseTileSize;
     arrowContainer.addChild(nodeSprite);
   }
 
   //this name will let us easily remove arrows later
   arrowContainer.name = "arrows";
+  arrowContainer.zIndex = 9999;
   return arrowContainer;
 };

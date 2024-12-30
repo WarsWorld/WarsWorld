@@ -6,10 +6,11 @@ import { isSamePosition } from "shared/schemas/position";
 import type { MatchWrapper } from "shared/wrappers/match";
 import { renderUnitSprite } from "./renderUnitSprite";
 import type { PathNode } from "./show-pathing";
+import { showPath } from "./show-pathing";
 import { getAttackableTiles } from "./show-pathing";
 import { getAccessibleNodes, getAttackTargetTiles, updatePath } from "./show-pathing";
 import subActionMenu from "./subActionMenu";
-import { renderedTileSize } from "../components/client-only/MatchRenderer";
+import { baseTileSize, renderedTileSize } from "../components/client-only/MatchRenderer";
 import buildUnitMenu from "./buildUnitMenu";
 import type { PlayerInMatchWrapper } from "../shared/wrappers/player-in-match";
 import type { LoadedSpriteSheet } from "./load-spritesheet";
@@ -88,8 +89,9 @@ export const handleClick = async (
         }
         //No unit in tile / tile is empty OR we clicked on the same position unit is already in
         else if (!unitInTile || isSamePosition(currentUnitClickedRef.current.data.position, pos)) {
-          //remove path and add sprite of unit in possible "new" position
+          //clean game area and add sprite of unit in possible "new" position
           mapContainer.getChildByName("path")?.destroy();
+          mapContainer.getChildByName("arrows")?.destroy();
           unitContainer.getChildByName("preAttackBox")?.destroy();
           unitContainer
             .getChildByName(
@@ -166,6 +168,23 @@ export const handleClick = async (
         999,
         "path",
       );
+
+      for (const sprite of displayedPassableTiles.children) {
+        //TODO: This needs to re-run even when going over itself, arrow right now does not support going "backwards"
+        sprite.on("mouseover", () => {
+          //TODO: This also needs to select the user's path, then if not possible, the most optimal route, right now it's only the latter
+          const newPath = updatePath(unitClicked, passablePositions, undefined, [
+            sprite.x / (renderedTileSize / 2) - 1,
+            sprite.y / (renderedTileSize / 2) - 1,
+          ]);
+          const arrows = showPath(spriteSheets, newPath);
+          mapContainer.getChildByName("arrows")?.destroy();
+          mapContainer.addChild(arrows);
+        });
+      }
+
+      //TODO:
+      //Loop through container, on hover, reupdate arrow container
       moveTilesRef.current = getAccessibleNodes(match, unitClicked);
       mapContainer.addChild(displayedPassableTiles);
 
@@ -209,6 +228,7 @@ export const handleClick = async (
     unitContainer.getChildByName("subMenu")?.destroy();
     unitContainer.getChildByName("tempUnit")?.destroy();
     mapContainer.getChildByName("path")?.destroy();
+    mapContainer.getChildByName("arrows")?.destroy();
 
     if (currentUnitClickedRef.current) {
       //lets add the original unit back to its original position only if the original doesnt exist

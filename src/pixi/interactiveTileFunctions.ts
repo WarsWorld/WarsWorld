@@ -11,15 +11,6 @@ export type BattleForecast = {
   defenderDamage: { max: number; min: number };
 };
 
-export const readyUnitClickedAccessibleTile = (
-  match: MatchWrapper,
-  unit: UnitWrapper,
-  position: Position,
-) => {
-  //check if can be a final location (empty tile or join or load)
-  //display subaction menu
-};
-
 export const getBattleForecast = (
   match: MatchWrapper,
   attacker: UnitWrapper,
@@ -108,6 +99,15 @@ export const readyUnitClickedAttackableTile = (
   } else {
     //send action
   }
+};
+
+export const readyUnitClickedAccessibleTile = (
+  match: MatchWrapper,
+  unit: UnitWrapper,
+  position: Position,
+) => {
+  //check if can be a final location (empty tile or join or load)
+  //display subaction menu
 };
 
 //passable tiles colour: "#43d9e4"

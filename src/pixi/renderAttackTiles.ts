@@ -135,5 +135,6 @@ export function renderAttackTiles(
     return probabilitiesContainer;
   }
 
+  attackTileContainer.zIndex = 999;
   return attackTileContainer;
 }
