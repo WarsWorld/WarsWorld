@@ -88,7 +88,7 @@ export function MatchRenderer({ match, player, spriteSheets, turn, setTurn }: Pr
     <>
       <p>Your Funds: {player.data.funds}</p>
       <button
-        className="btn"
+        className="btn @select-none"
         onClick={() => {
           passTurnMutation
             .mutateAsync({

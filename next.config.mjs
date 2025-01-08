@@ -1,10 +1,14 @@
-// [upstream] https://github.com/vercel/next.js/issues/5318
-// https://github.com/vercel/next.js/discussions/35969
-// https://github.com/vercel/next.js/pull/57656
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 /** @type {import("next").NextConfig} */
 const nextConfig = {
-  /** We run eslint as a separate task in CI */
+  sassOptions: {
+    includePaths: [path.join(__dirname, "src/frontend/styles")],
+  },
   eslint: { ignoreDuringBuilds: process.env.CI !== undefined },
   reactStrictMode: true,
   images: {
