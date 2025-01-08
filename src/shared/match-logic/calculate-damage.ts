@@ -75,8 +75,11 @@ export const calculateDamage = (
   const badLuckHook = attacker.player.getHook("maxBadLuck");
   const maxBadLuck = badLuckHook?.(hookProps) ?? attackerVersionProperties.baseBadLuck;
 
-  const goodLuckValue = luckRoll.goodLuck * maxGoodLuck;
-  const badLuckValue = luckRoll.badLuck * maxBadLuck;
+  //needs the special case luckRoll == 1 (so maxLuck = 1 gives expected results consistent with floor)
+  const goodLuckValue =
+    luckRoll.goodLuck === 1 ? maxGoodLuck - 1 : Math.floor(luckRoll.goodLuck * maxGoodLuck);
+  const badLuckValue =
+    luckRoll.badLuck === 1 ? maxBadLuck - 1 : Math.floor(luckRoll.badLuck * maxBadLuck);
 
   // terrain stars calculations
   const baseTerrainStars = getTerrainDefenseStars(defender.getTile().type);
@@ -105,13 +108,19 @@ export const calculateDamage = (
 
   // TODO explain magic values
   // damage formula application
+
   const luckModifier = goodLuckValue - badLuckValue;
-  const attackFactor = Math.max(0, baseDamage * (attackModifier / 100) + luckModifier);
-  const defenseFactor = (200 - (defenseModifier + defenderTerrainStars * visualHPOfDefender)) / 100;
 
-  const dirtyDamageAsPercentage = attackFactor * (visualHPOfAttacker / 10) * defenseFactor;
+  const attackFactor = Math.max(0, Math.floor(baseDamage * (attackModifier / 100) + luckModifier));
 
-  return Math.floor(roundUpTo(dirtyDamageAsPercentage, 0.05));
+  const attackHPFactor = Math.floor(attackFactor * (visualHPOfAttacker / 10));
+
+  const defenseFactor =
+    Math.floor(200 - (defenseModifier + defenderTerrainStars * visualHPOfDefender)) / 100;
+
+  const damageAsPercentage = Math.floor(attackHPFactor * defenseFactor);
+
+  return damageAsPercentage;
 };
 
 //can return negative hp values (useful for damage calculator / displaying damage range)
