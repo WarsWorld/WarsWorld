@@ -5,7 +5,6 @@ import type { PlayerInMatchWrapper } from "shared/wrappers/player-in-match";
 import type { UnitWrapper } from "shared/wrappers/unit";
 import type { ApplyEvent, MainActionToEvent } from "../handler-types";
 import { getTurnFuelConsumption } from "./passTurn/consumeFuelAndCrash";
-import { gainFunds } from "./passTurn/gainFunds";
 import { propertyRepairAndResupply } from "./passTurn/propertyRepairAndResupply";
 import { updateWeather } from "./passTurn/updateWeather";
 
@@ -124,7 +123,7 @@ export const applyPassTurnEvent: ApplyEvent<PassTurnEvent> = (match, event) => {
     nextTurnPlayer.data.COPowerState = "no-power";
 
     updateWeather(nextTurnPlayer, turn.newWeather);
-    gainFunds(nextTurnPlayer);
+    nextTurnPlayer.data.funds += nextTurnPlayer.getFundsPerTurn();
 
     // update units
     for (const unit of nextTurnPlayer.getUnits()) {
