@@ -1,5 +1,6 @@
 import type { DisplayObject } from "pixi.js";
-import { Assets, BitmapText, Container, Sprite, Texture } from "pixi.js";
+import { BitmapText, Container, Sprite, Texture } from "pixi.js";
+import type { MutableRefObject } from "react";
 import {
   createPipeSeamUnitEquivalent,
   getBaseDamage,
@@ -11,18 +12,14 @@ import {
   getDistance,
   getNeighbourPositions,
   isSamePosition,
-  type Path,
   type Position,
 } from "shared/schemas/position";
 import type { UnitWrapper } from "shared/wrappers/unit";
-import type { FrontendUnit } from "../frontend/components/match/FrontendUnit";
+import type { SubAction } from "../shared/schemas/action";
 import type { MatchWrapper } from "../shared/wrappers/match";
 import type { PlayerInMatchWrapper } from "../shared/wrappers/player-in-match";
-import type { MutableRefObject } from "react";
-import type { PathNode } from "./show-pathing";
-import type { SubAction } from "../shared/schemas/action";
-import { renderAttackTiles } from "./renderAttackTiles";
 import type { LoadedSpriteSheet } from "./load-spritesheet";
+import { renderAttackTiles } from "./renderAttackTiles";
 
 export enum AvailableSubActions {
   "Wait",
@@ -376,7 +373,7 @@ export default function subActionMenu(
 
     menuElement.on("pointerdown", () => {
       //if its an attack
-      if (name == "11") {
+      if (name === AvailableSubActions.Attack) {
         unitContainer.addChild(
           renderAttackTiles(
             unitContainer,

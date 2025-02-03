@@ -1,20 +1,17 @@
-import type { MatchWrapper } from "../shared/wrappers/match";
-import type { UnitWrapper } from "../shared/wrappers/unit";
-import type { Position } from "../shared/schemas/position";
-import { getAttackTargetTiles } from "./show-pathing";
 import type { DisplayObject } from "pixi.js";
-import { Text } from "pixi.js";
-import { Assets, BitmapText } from "pixi.js";
-import { Sprite, Texture } from "pixi.js";
-import { Container } from "pixi.js";
-import { renderedTileSize } from "../components/client-only/MatchRenderer";
-import { tileConstructor } from "./sprite-constructor";
-import type { PlayerInMatchWrapper } from "../shared/wrappers/player-in-match";
+import { BitmapText, Container, Sprite, Texture } from "pixi.js";
 import type { MutableRefObject } from "react";
+import { renderedTileSize } from "../components/client-only/MatchRenderer";
+import type { Position } from "../shared/schemas/position";
+import type { MatchWrapper } from "../shared/wrappers/match";
+import type { PlayerInMatchWrapper } from "../shared/wrappers/player-in-match";
+import type { UnitWrapper } from "../shared/wrappers/unit";
 import type { BattleForecast } from "./interactiveTileFunctions";
 import { getBattleForecast } from "./interactiveTileFunctions";
-import { renderUnitSprite } from "./renderUnitSprite";
 import type { LoadedSpriteSheet } from "./load-spritesheet";
+import { renderUnitSprite } from "./renderUnitSprite";
+import { getAttackTargetTiles } from "./show-pathing";
+import { tileConstructor } from "./sprite-constructor";
 
 export function renderAttackTiles(
   unitContainer: Container<DisplayObject>,
@@ -50,9 +47,13 @@ export function renderAttackTiles(
     //lets add a hover effect to the unitBG when you hover over the menu
     attackTile.on("pointerenter", () => {
       attackTileContainer.getChildByName("probabilities")?.destroy();
-      attackTileContainer.addChild(
-        renderProbabilities(currentUnitClickedRef.current, match.getUnit(pos)),
-      );
+
+      const unit1 = currentUnitClickedRef.current;
+      const unit2 = match.getUnit(pos);
+
+      if (unit1 !== null && unit2 !== undefined) {
+        attackTileContainer.addChild(renderProbabilities(unit1, unit2));
+      }
     });
 
     //when you stop hovering the menu

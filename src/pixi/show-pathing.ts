@@ -1,22 +1,21 @@
-import type { Spritesheet } from "pixi.js";
 import { Container, Sprite } from "pixi.js";
 import {
   createPipeSeamUnitEquivalent,
   getBaseDamage,
 } from "shared/match-logic/game-constants/base-damage";
 import type { Position } from "shared/schemas/position";
-import { isSamePosition } from "shared/schemas/position";
 import {
   getDistance,
   getNeighbourPositions,
+  isSamePosition,
   positionsAreNeighbours,
 } from "shared/schemas/position";
 import type { MapWrapper } from "shared/wrappers/map";
 import type { MatchWrapper } from "shared/wrappers/match";
+import { baseTileSize } from "../components/client-only/MatchRenderer";
 import { DispatchableError } from "../shared/DispatchedError";
 import type { UnitWrapper } from "../shared/wrappers/unit";
 import type { LoadedSpriteSheet } from "./load-spritesheet";
-import { baseTileSize, renderedTileSize } from "../components/client-only/MatchRenderer";
 export type PathNode = {
   //saves distance from origin and parent (to retrieve the shortest path)
   pos: Position;
@@ -126,7 +125,7 @@ export const getAttackableTiles = (
     // Melee unit
     if (accessibleNodes === undefined) {
       accessibleNodes = fromPosition
-        ? new Map([[fromPosition, { position: fromPosition }]]) // Create a minimal node if specific position given
+        ? new Map([[fromPosition, { pos: fromPosition, dist: 0, parent: null }]]) // Create a minimal node if specific position given
         : getAccessibleNodes(match, unit);
     }
 
@@ -179,44 +178,12 @@ export const getAttackTargetTiles = (
   return attackTargetPositions;
 };
 
-//TODO: Do we really need these? right now they are just being used as a band-aid fix to make things work - Javi
-//HELPER FUNCTIONS BY CHATGPT
-
-// Function to check if newPos is in accessibleNodes (by value comparison)
-const hasPositionInMap = (accessibleNodes: Map<Position, PathNode>, newPos: Position): boolean => {
-  for (const key of accessibleNodes.keys()) {
-    if (isSamePosition(key, newPos)) {
-      return true; // newPos is found in the map
-    }
-  }
-
-  return false; // newPos is not in the map
-};
-
-// Helper function to get the value from the map using value-based comparison of Position
-const getPathNodeFromMap = (
-  accessibleNodes: Map<Position, PathNode>,
-  currentPos: Position,
-): PathNode | undefined => {
-  for (const [key, value] of accessibleNodes.entries()) {
-    if (isSamePosition(key, currentPos)) {
-      return value; // Return the corresponding PathNode if position matches
-    }
-  }
-
-  return undefined; // Return undefined if no match is found
-};
-
 export const updatePath = (
   unit: UnitWrapper,
   accessibleNodes: Map<Position, PathNode>,
   path: PathNode[] | undefined,
   newPos: Position,
 ): PathNode[] => {
-  if (!hasPositionInMap(accessibleNodes, newPos)) {
-    throw new Error("Trying to add an unreachable position!");
-  }
-
   if (path !== undefined && path.length !== 0) {
     const lastNode = path.at(-1)!;
 
@@ -252,7 +219,14 @@ export const updatePath = (
   let currentPos: [number, number] | null = newPos;
 
   while (currentPos !== null) {
-    const accessibleNodesPath = getPathNodeFromMap(accessibleNodes, currentPos);
+    let accessibleNodesPath = undefined;
+
+    for (const [key, value] of accessibleNodes.entries()) {
+      if (isSamePosition(key, currentPos)) {
+        accessibleNodesPath = value;
+        break;
+      }
+    }
 
     if (accessibleNodesPath !== undefined) {
       newPath.push(accessibleNodesPath);
@@ -346,9 +320,10 @@ export const showPath = (spriteSheet: LoadedSpriteSheet, path: PathNode[]) => {
   path2.push(path[len - 1]); //to detect the final node
 
   for (let i = 0; i < len; ++i) {
-    let spriteName: string;
+    let spriteName = "";
 
     if (i === 0) {
+      //TODO i don't understand what this does
       //special case for original node
       //spriteName = getSpriteName(path2[0].pos, path2[i].pos, path2[i + 1].pos);
     } else {

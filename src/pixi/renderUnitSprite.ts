@@ -1,10 +1,9 @@
 import { baseTileSize } from "components/client-only/MatchRenderer";
 import type { FrontendUnit } from "frontend/components/match/FrontendUnit";
-import { AnimatedSprite, Container, Sprite, Texture } from "pixi.js";
-import type { LoadedSpriteSheet } from "./load-spritesheet";
-import type { UnitWrapper } from "../shared/wrappers/unit";
+import { AnimatedSprite, Container, Sprite } from "pixi.js";
 import type { Position } from "shared/schemas/position";
-import { Pos } from "@jridgewell/gen-mapping/dist/types/types";
+import type { UnitWrapper } from "../shared/wrappers/unit";
+import type { LoadedSpriteSheet } from "./load-spritesheet";
 
 type UnitType = FrontendUnit | UnitWrapper;
 type SpritePosition = { x: number; y: number };
@@ -32,7 +31,7 @@ export function renderUnitSprite(
   spriteSheets: LoadedSpriteSheet,
   newPosition?: Position | null,
 ): Container {
-  const position = newPosition || unit.data.position;
+  const position = newPosition ?? unit.data.position;
   const spritePosition = calculatePosition(position);
 
   // Create unit container and sprite

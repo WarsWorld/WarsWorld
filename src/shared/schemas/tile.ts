@@ -1,3 +1,4 @@
+import type { ChangeableTile } from "shared/types/server-match-state";
 import { z } from "zod";
 import { playerSlotForPropertiesSchema } from "./player-slot";
 import type { PipeSeamTile } from "./variable-tiles";
@@ -5,7 +6,7 @@ import { variableTileSchema } from "./variable-tiles";
 
 export const isNotNeutralProperty = (propertyTile: PropertyTile) => propertyTile.playerSlot !== -1;
 
-export const isUnitProducingProperty = (tile: Tile): tile is PropertyTile =>
+export const isUnitProducingProperty = (tile: Tile | ChangeableTile): tile is PropertyTile =>
   tile.type === "base" || tile.type === "airport" || tile.type === "port";
 
 export const willBeChangeableTile = (

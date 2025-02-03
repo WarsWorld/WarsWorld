@@ -1,20 +1,20 @@
 import type { ArmySpritesheetData } from "frontend/components/match/getSpritesheetData";
-import type { DisplayObject, Spritesheet } from "pixi.js";
-import { AnimatedSprite, Assets, BitmapText, Container, Sprite, Text, Texture } from "pixi.js";
+import type { Spritesheet } from "pixi.js";
+import { AnimatedSprite, BitmapText, Container, Sprite, Texture } from "pixi.js";
 import { unitPropertiesMap } from "shared/match-logic/game-constants/unit-properties";
 import type { Position } from "shared/schemas/position";
-import { UnitType, unitTypes } from "shared/schemas/unit";
+import { unitTypes } from "shared/schemas/unit";
 import type { MatchWrapper } from "../shared/wrappers/match";
 import type { PlayerInMatchWrapper } from "../shared/wrappers/player-in-match";
 
 //only called if player has current turn
-export default async function buildUnitMenu(
+export const buildUnitMenu = (
   spriteSheet: Spritesheet<ArmySpritesheetData>,
   match: MatchWrapper,
   player: PlayerInMatchWrapper,
   [x, y]: Position,
   onBuild?: any,
-) {
+) => {
   //The big container holding everything
   //set its eventmode to static for interactivity and sortable for zIndex
   const menuContainer = new Container();
@@ -162,7 +162,7 @@ export default async function buildUnitMenu(
   menuBG.alpha = 1;
   menuContainer.addChild(menuBG);
   return menuContainer;
-}
+};
 
 const createCaptureOption = (match: MatchWrapper, onCapture: () => void): Container => {
   const menuElement = new Container();

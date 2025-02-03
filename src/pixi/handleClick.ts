@@ -1,25 +1,23 @@
 // pixiEventHandlers.ts
-import { Assets } from "pixi.js";
 import type { Container, FederatedPointerEvent } from "pixi.js";
+import { Assets } from "pixi.js";
+import type { MutableRefObject } from "react";
 import type { Position } from "shared/schemas/position";
 import { isSamePosition } from "shared/schemas/position";
 import type { MatchWrapper } from "shared/wrappers/match";
+import { renderedTileSize } from "../components/client-only/MatchRenderer";
+import { isUnitProducingProperty } from "../shared/schemas/tile";
+import type { PlayerInMatchWrapper } from "../shared/wrappers/player-in-match";
+import type { UnitWrapper } from "../shared/wrappers/unit";
+import { buildUnitMenu } from "./buildUnitMenu";
+import { displayEnemyRange } from "./displayEnemyRange";
+import { createTileContainer } from "./interactiveTileFunctions";
+import type { LoadedSpriteSheet } from "./load-spritesheet";
+import { renderAttackTiles } from "./renderAttackTiles";
 import { renderUnitSprite } from "./renderUnitSprite";
 import type { PathNode } from "./show-pathing";
-import { showPath } from "./show-pathing";
-import { getAttackableTiles } from "./show-pathing";
-import { getAccessibleNodes, getAttackTargetTiles, updatePath } from "./show-pathing";
+import { getAccessibleNodes, showPath, updatePath } from "./show-pathing";
 import subActionMenu from "./subActionMenu";
-import { baseTileSize, renderedTileSize } from "../components/client-only/MatchRenderer";
-import buildUnitMenu from "./buildUnitMenu";
-import type { PlayerInMatchWrapper } from "../shared/wrappers/player-in-match";
-import type { LoadedSpriteSheet } from "./load-spritesheet";
-import type { UnitWrapper } from "../shared/wrappers/unit";
-import type { MutableRefObject } from "react";
-import { isUnitProducingProperty } from "../shared/schemas/tile";
-import { createTileContainer } from "./interactiveTileFunctions";
-import { renderAttackTiles } from "./renderAttackTiles";
-import { displayEnemyRange } from "./displayEnemyRange";
 
 export const handleClick = async (
   event: FederatedPointerEvent,
@@ -47,18 +45,21 @@ export const handleClick = async (
   //Check what tile is in the tile/position clicked
   const tileClicked = match.getTile(clickPosition);
 
+  const isHachiSuperActive =
+    player.data.COPowerState === "super-co-power" && player.data.coId.name === "hachi";
+  const canTileBuildUnits =
+    (tileClicked.type === "city" && isHachiSuperActive) || isUnitProducingProperty(tileClicked);
+
   //CHECK TO SEE IF WE CLICKED FACILITY
   if (
     !unitClicked &&
     player.owns(tileClicked) &&
-    /*TODO: Check property can produce units (for example, Hachi SCOP) */ isUnitProducingProperty(
-      tileClicked,
-    ) &&
+    canTileBuildUnits &&
     match.getCurrentTurnPlayer().data.id === player.data.id &&
     currentUnitClickedRef.current === null
   ) {
     resetScreen();
-    const buildMenu = await buildUnitMenu(
+    const buildMenu = buildUnitMenu(
       spriteSheets[player.data.army],
       match,
       player,
@@ -121,7 +122,7 @@ export const handleClick = async (
           pathRef.current = newPath.map((node) => node.pos);
 
           // display subaction menu next to unit in new position
-          const subMenu = await subActionMenu(
+          const subMenu = subActionMenu(
             match,
             player,
             pos,
