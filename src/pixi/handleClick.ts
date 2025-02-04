@@ -11,7 +11,7 @@ import type { PlayerInMatchWrapper } from "../shared/wrappers/player-in-match";
 import type { UnitWrapper } from "../shared/wrappers/unit";
 import { buildUnitMenu } from "./buildUnitMenu";
 import { displayEnemyRange } from "./displayEnemyRange";
-import { createTileContainer } from "./interactiveTileFunctions";
+import { createTilesContainer } from "./interactiveTileFunctions";
 import type { LoadedSpriteSheet } from "./load-spritesheet";
 import { renderAttackTiles } from "./renderAttackTiles";
 import { renderUnitSprite } from "./renderUnitSprite";
@@ -111,15 +111,10 @@ export const handleClick = async (
 
           //TODO: User neeeds to be able to select their own path, below just gets the fastest/most efficient path which will not work for fog
           const accessibleNodes = getAccessibleNodes(match, currentUnitClickedRef.current);
-          const newPath = updatePath(
-            currentUnitClickedRef.current,
-            accessibleNodes,
-            undefined,
-            pos,
-          );
+          const newPath = updatePath(currentUnitClickedRef.current, accessibleNodes, null, pos);
 
           //It extracts the path in the format the backend wants it (just an array of positions)
-          pathRef.current = newPath.map((node) => node.pos);
+          pathRef.current = newPath;
 
           // display subaction menu next to unit in new position
           const subMenu = subActionMenu(
@@ -162,27 +157,24 @@ export const handleClick = async (
     ) {
       currentUnitClickedRef.current = unitClicked;
 
+      const hoverBehaviour = (position: Position) => {
+        const newPath = updatePath(unitClicked, passablePositions, pathRef.current, position);
+        pathRef.current = newPath;
+        const arrows = showPath(spriteSheets, newPath); //TODO put arrows behind interactive tiles
+        mapContainer.getChildByName("arrows")?.destroy();
+        mapContainer.addChild(arrows);
+      };
+
       const passablePositions = getAccessibleNodes(match, unitClicked);
-      const displayedPassableTiles = createTileContainer(
+      const displayedPassableTiles = createTilesContainer(
         Array.from(passablePositions.keys()),
         "#43d9e4",
         999,
         "path",
+        hoverBehaviour,
       );
 
-      for (const sprite of displayedPassableTiles.children) {
-        //TODO: This needs to re-run even when going over itself, arrow right now does not support going "backwards"
-        sprite.on("mouseover", () => {
-          //TODO: This also needs to select the user's path, then if not possible, the most optimal route, right now it's only the latter
-          const newPath = updatePath(unitClicked, passablePositions, undefined, [
-            sprite.x / (renderedTileSize / 2) - 1,
-            sprite.y / (renderedTileSize / 2) - 1,
-          ]);
-          const arrows = showPath(spriteSheets, newPath);
-          mapContainer.getChildByName("arrows")?.destroy();
-          mapContainer.addChild(arrows);
-        });
-      }
+      //TODO implement click behaviour well
 
       //TODO:
       //Loop through container, on hover, reupdate arrow container

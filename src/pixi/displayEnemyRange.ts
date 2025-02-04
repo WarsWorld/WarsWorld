@@ -1,9 +1,9 @@
-import { getAccessibleNodes, getAttackableTiles } from "./show-pathing";
-import { createTileContainer } from "./interactiveTileFunctions";
+import { Container } from "pixi.js";
+import type { MutableRefObject } from "react";
 import type { MatchWrapper } from "../shared/wrappers/match";
 import type { UnitWrapper } from "../shared/wrappers/unit";
-import type { MutableRefObject } from "react";
-import { Container } from "pixi.js";
+import { createTilesContainer } from "./interactiveTileFunctions";
+import { getAccessibleNodes, getAttackableTiles } from "./show-pathing";
 
 export function displayEnemyRange(
   match: MatchWrapper,
@@ -12,7 +12,7 @@ export function displayEnemyRange(
 ) {
   if (unitRangeShowRef.current === "movement") {
     const passablePositions = getAccessibleNodes(match, unitClicked);
-    const displayedPassableTiles = createTileContainer(
+    const displayedPassableTiles = createTilesContainer(
       Array.from(passablePositions.keys()),
       "#43d9e4",
       999,
@@ -23,7 +23,7 @@ export function displayEnemyRange(
     return displayedPassableTiles;
   } else if (unitRangeShowRef.current === "attack") {
     const attackablePositions = getAttackableTiles(match, unitClicked);
-    const displayedPassableTiles = createTileContainer(attackablePositions, "#be1919", 999, "path");
+    const displayedPassableTiles = createTilesContainer(attackablePositions, "#be1919", 999, "path");
 
     if (match.leagueType === "fog") {
       unitRangeShowRef.current = "vision";

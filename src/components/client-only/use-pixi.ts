@@ -3,17 +3,17 @@ import type { Container, DisplayObject, FederatedPointerEvent } from "pixi.js";
 import { Application } from "pixi.js";
 import type { LoadedSpriteSheet } from "pixi/load-spritesheet";
 import { setupApp } from "pixi/setupApp";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import type { Position } from "shared/schemas/position";
 import type { MatchWrapper } from "shared/wrappers/match";
 import type { PlayerInMatchWrapper } from "shared/wrappers/player-in-match";
 import type { FrontendUnit } from "../../frontend/components/match/FrontendUnit";
 import type { ChangeableTileWithSprite } from "../../frontend/components/match/types";
-import { renderMultiplier, renderedTileSize } from "./MatchRenderer";
-import type { PathNode } from "../../pixi/show-pathing";
 import { handleClick } from "../../pixi/handleClick";
-import type { UnitWrapper } from "../../shared/wrappers/unit";
+import type { PathNode } from "../../pixi/show-pathing";
 import { trpcActions } from "../../pixi/trpcActions";
+import type { UnitWrapper } from "../../shared/wrappers/unit";
+import { renderMultiplier, renderedTileSize } from "./MatchRenderer";
 
 export function usePixi(
   match: MatchWrapper<ChangeableTileWithSprite, FrontendUnit>,

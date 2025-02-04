@@ -178,19 +178,37 @@ export const getAttackTargetTiles = (
   return attackTargetPositions;
 };
 
+export const calculatePathDistance = (unit: UnitWrapper, path: Position[]) => {
+  let dist = 0;
+
+  path.forEach((pos, index) => {
+    if (index !== 0) {
+      const moveCost = unit.getMovementCost(pos); //TODO cache movement costs
+
+      if (moveCost === null) {
+        return null;
+      }
+
+      dist += moveCost;
+    }
+  });
+
+  return dist;
+};
+
 export const updatePath = (
   unit: UnitWrapper,
   accessibleNodes: Map<Position, PathNode>,
-  path: PathNode[] | undefined,
+  path: Position[] | null,
   newPos: Position,
-): PathNode[] => {
-  if (path !== undefined && path.length !== 0) {
-    const lastNode = path.at(-1)!;
+): Position[] => {
+  if (path !== null && path.length !== 0) {
+    const lastPosition = path.at(-1)!;
 
-    for (const node of path) {
-      if (node.pos === newPos) {
+    for (const pos of path) {
+      if (pos === newPos) {
         //the "new" node is part of the current path, so delete all nodes after that one
-        while (node !== path.at(-1)) {
+        while (pos !== path.at(-1)) {
           path.pop();
         }
 
@@ -199,27 +217,24 @@ export const updatePath = (
     }
 
     //check if new node is adjacent
-    if (positionsAreNeighbours(lastNode.pos, newPos)) {
+    if (positionsAreNeighbours(lastPosition, newPos)) {
       const moveCost = unit.getMovementCost(newPos);
+      const distanceCovered = calculatePathDistance(unit, path);
 
       //if it doesn't surpass movement restrictions, update current path
-      if (moveCost !== null && moveCost + lastNode.dist <= unit.getMovementPoints()) {
-        path.push({
-          pos: newPos,
-          dist: moveCost + lastNode.dist,
-          parent: lastNode.pos,
-        });
+      if (moveCost !== null && moveCost + distanceCovered <= unit.getMovementPoints()) {
+        path.push(newPos);
         return path;
       }
     }
   }
 
   //if the new position can't be added to the current path, recreate the entire path
-  const newPath: PathNode[] = [];
+  const newPath: Position[] = [];
   let currentPos: [number, number] | null = newPos;
 
   while (currentPos !== null) {
-    let accessibleNodesPath = undefined;
+    let accessibleNodesPath: PathNode | undefined = undefined;
 
     for (const [key, value] of accessibleNodes.entries()) {
       if (isSamePosition(key, currentPos)) {
@@ -229,7 +244,7 @@ export const updatePath = (
     }
 
     if (accessibleNodesPath !== undefined) {
-      newPath.push(accessibleNodesPath);
+      newPath.push(accessibleNodesPath.pos);
       currentPos = accessibleNodesPath.parent;
     }
   }
@@ -307,7 +322,7 @@ const getSpriteName = (a: Position, b: Position, c: Position): string => {
   }
 };
 
-export const showPath = (spriteSheet: LoadedSpriteSheet, path: PathNode[]) => {
+export const showPath = (spriteSheet: LoadedSpriteSheet, path: Position[]) => {
   if (path.length < 1) {
     throw new Error("Empty path!");
   }
@@ -325,15 +340,15 @@ export const showPath = (spriteSheet: LoadedSpriteSheet, path: PathNode[]) => {
     if (i === 0) {
       //TODO i don't understand what this does
       //special case for original node
-      //spriteName = getSpriteName(path2[0].pos, path2[i].pos, path2[i + 1].pos);
+      //spriteName = getSpriteName(path2[0], path2[i], path2[i + 1]);
     } else {
-      spriteName = getSpriteName(path2[i - 1].pos, path2[i].pos, path2[i + 1].pos);
+      spriteName = getSpriteName(path2[i - 1], path2[i], path2[i + 1]);
     }
 
     const nodeSprite = new Sprite(spriteSheet.arrow?.textures[spriteName + ".png"]);
     nodeSprite.anchor.set(1, 1);
-    nodeSprite.x = (path2[i].pos[0] + 1) * baseTileSize;
-    nodeSprite.y = (path2[i].pos[1] + 1) * baseTileSize;
+    nodeSprite.x = (path2[i][0] + 1) * baseTileSize;
+    nodeSprite.y = (path2[i][1] + 1) * baseTileSize;
     arrowContainer.addChild(nodeSprite);
   }
 

@@ -112,7 +112,7 @@ export const readyUnitClickedAccessibleTile = (
 
 //passable tiles colour: "#43d9e4"
 //attackable tiles colour: "#be1919"
-export const createTileContainer = (
+export const createTilesContainer = (
   tilePositions: Position[],
   tileColour: string,
   tileZIndex: number,
