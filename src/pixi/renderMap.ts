@@ -2,8 +2,9 @@ import { baseTileSize } from "components/client-only/MatchRenderer";
 import type { FrontendUnit } from "frontend/components/match/FrontendUnit";
 import type { SpriteAnimationKeys } from "frontend/components/match/getSpritesheetData";
 import type { ChangeableTileWithSprite } from "frontend/components/match/types";
-import type { Resource, Texture } from "pixi.js";
-import { AnimatedSprite, Container, Sprite } from "pixi.js";
+import type { Resource } from "pixi.js";
+import { AnimatedSprite, Container, Sprite, Texture } from "pixi.js";
+import type { Position } from "shared/schemas/position";
 import type { Tile } from "shared/schemas/tile";
 import type { ChangeableTile } from "shared/types/server-match-state";
 import type { MatchWrapper } from "shared/wrappers/match";
@@ -74,3 +75,42 @@ export function renderMap(
 
   return mapContainer;
 }
+
+export const renderInvisInteractiveTiles = (
+  match: MatchWrapper<ChangeableTileWithSprite, FrontendUnit>,
+  onTileClick: (pos: Position) => Promise<void>,
+  onTileHover: (pos: Position) => Promise<void>,
+) => {
+  const mapContainer = new Container();
+  mapContainer.x = baseTileSize / 2;
+  mapContainer.y = baseTileSize / 2;
+
+  for (let y = 0; y < match.map.data.tiles.length; y++) {
+    for (let x = 0; x < match.map.data.tiles[y].length; x++) {
+      const tileSprite = new Sprite(Texture.EMPTY);
+      tileSprite.height = baseTileSize;
+      tileSprite.width = baseTileSize;
+
+      // makes our sprites render at the bottom, not from the top.
+      tileSprite.anchor.set(0, 1);
+
+      tileSprite.x = x * baseTileSize;
+      tileSprite.y = (y + 1) * baseTileSize;
+
+      tileSprite.interactive = true;
+      tileSprite.on("pointertap", () => {
+        void onTileClick([x, y]);
+      });
+      tileSprite.on("pointerenter", () => {
+        void onTileHover([x, y]);
+      });
+
+      mapContainer.addChild(tileSprite);
+    }
+  }
+
+  //allows for us to use zIndex on the children of mapContainer
+  mapContainer.sortableChildren = true;
+
+  return mapContainer;
+};

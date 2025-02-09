@@ -199,14 +199,14 @@ export const calculatePathDistance = (unit: UnitWrapper, path: Position[]) => {
 export const updatePath = (
   unit: UnitWrapper,
   accessibleNodes: Map<Position, PathNode>,
-  path: Position[] | null,
+  path: Position[],
   newPos: Position,
 ): Position[] => {
-  if (path !== null && path.length !== 0) {
+  if (path.length !== 0) {
     const lastPosition = path.at(-1)!;
 
     for (const pos of path) {
-      if (pos === newPos) {
+      if (isSamePosition(pos, newPos)) {
         //the "new" node is part of the current path, so delete all nodes after that one
         while (pos !== path.at(-1)) {
           path.pop();
@@ -231,22 +231,31 @@ export const updatePath = (
 
   //if the new position can't be added to the current path, recreate the entire path
   const newPath: Position[] = [];
-  let currentPos: [number, number] | null = newPos;
+  let currentPathNode = undefined;
 
-  while (currentPos !== null) {
-    let accessibleNodesPath: PathNode | undefined = undefined;
+  for (const [key, value] of accessibleNodes) {
+    if (isSamePosition(key, newPos)) {
+      currentPathNode = value;
+      break;
+    }
+  }
 
-    for (const [key, value] of accessibleNodes.entries()) {
-      if (isSamePosition(key, currentPos)) {
-        accessibleNodesPath = value;
-        break;
-      }
+  if (currentPathNode === undefined) {
+    return path;
+  }
+
+  while (currentPathNode !== undefined) {
+    newPath.push(currentPathNode.pos);
+
+    if (currentPathNode.parent === null) {
+      break;
     }
 
-    if (accessibleNodesPath !== undefined) {
-      newPath.push(accessibleNodesPath.pos);
-      currentPos = accessibleNodesPath.parent;
-    }
+    currentPathNode = accessibleNodes.get(currentPathNode.parent);
+  }
+
+  if (newPath.length === 0) {
+    return path;
   }
 
   return newPath.toReversed();

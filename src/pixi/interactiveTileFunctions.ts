@@ -117,8 +117,6 @@ export const createTilesContainer = (
   tileColour: string,
   tileZIndex: number,
   containerName?: string,
-  hoverBehaviour?: (position: Position) => void,
-  clickBehaviour?: (positoin: Position) => void,
 ) => {
   const markedTiles = new Container();
   markedTiles.eventMode = "dynamic";
@@ -126,21 +124,13 @@ export const createTilesContainer = (
   for (const pos of tilePositions) {
     const square = tileConstructor(pos, tileColour);
 
-    if (hoverBehaviour) {
-      square.on("mouseover", () => hoverBehaviour(pos));
-    }
-
-    if (clickBehaviour) {
-      square.on("pointerdown", () => clickBehaviour(pos));
-    }
-
     markedTiles.addChild(square);
   }
 
   markedTiles.zIndex = tileZIndex;
 
   if (containerName !== undefined) {
-    markedTiles.name = "path";
+    markedTiles.name = containerName;
   }
 
   return markedTiles;

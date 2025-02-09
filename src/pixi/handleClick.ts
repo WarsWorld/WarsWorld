@@ -1,11 +1,10 @@
 // pixiEventHandlers.ts
-import type { Container, FederatedPointerEvent } from "pixi.js";
+import type { Container } from "pixi.js";
 import { Assets } from "pixi.js";
 import type { MutableRefObject } from "react";
 import type { Position } from "shared/schemas/position";
 import { isSamePosition } from "shared/schemas/position";
 import type { MatchWrapper } from "shared/wrappers/match";
-import { renderedTileSize } from "../components/client-only/MatchRenderer";
 import { isUnitProducingProperty } from "../shared/schemas/tile";
 import type { PlayerInMatchWrapper } from "../shared/wrappers/player-in-match";
 import type { UnitWrapper } from "../shared/wrappers/unit";
@@ -20,10 +19,11 @@ import { getAccessibleNodes, showPath, updatePath } from "./show-pathing";
 import subActionMenu from "./subActionMenu";
 
 export const handleClick = async (
-  event: FederatedPointerEvent,
+  clickPosition: Position,
   match: MatchWrapper,
   mapContainer: Container,
   unitContainer: Container,
+  interactiveContainer: Container,
   currentUnitClickedRef: MutableRefObject<UnitWrapper | null>,
   moveTilesRef: MutableRefObject<Map<Position, PathNode> | null>,
   player: PlayerInMatchWrapper,
@@ -34,10 +34,6 @@ export const handleClick = async (
 ) => {
   //lets load our font
   await Assets.load("/aw2Font.fnt");
-  const x = Math.floor((event.global.x - renderedTileSize / 2) / renderedTileSize);
-  const y = Math.floor((event.global.y - renderedTileSize / 2) / renderedTileSize);
-
-  const clickPosition: Position = [x, y];
 
   //Check if there is a unit in the tile/position clicked
   const unitClicked = match.getUnit(clickPosition);
@@ -67,7 +63,7 @@ export const handleClick = async (
       actionMutation,
     );
 
-    unitContainer.addChild(buildMenu);
+    interactiveContainer.addChild(buildMenu);
   }
 
   //there is an currentUnitClickedRef and move tiles (the blue squares)
@@ -109,18 +105,12 @@ export const handleClick = async (
           tempUnit.name = "tempUnit";
           unitContainer.addChild(tempUnit);
 
-          //TODO: User neeeds to be able to select their own path, below just gets the fastest/most efficient path which will not work for fog
-          const accessibleNodes = getAccessibleNodes(match, currentUnitClickedRef.current);
-          const newPath = updatePath(currentUnitClickedRef.current, accessibleNodes, null, pos);
-
-          //It extracts the path in the format the backend wants it (just an array of positions)
-          pathRef.current = newPath;
-
           // display subaction menu next to unit in new position
           const subMenu = subActionMenu(
             match,
             player,
             pos,
+            currentUnitClickedRef.current,
             actionMutation,
             currentUnitClickedRef,
             pathRef,
@@ -128,7 +118,7 @@ export const handleClick = async (
             spriteSheets,
           );
 
-          unitContainer.addChild(subMenu);
+          interactiveContainer.addChild(subMenu);
           moveTilesRef.current = null;
         } else {
           resetScreen();
@@ -157,28 +147,15 @@ export const handleClick = async (
     ) {
       currentUnitClickedRef.current = unitClicked;
 
-      const hoverBehaviour = (position: Position) => {
-        const newPath = updatePath(unitClicked, passablePositions, pathRef.current, position);
-        pathRef.current = newPath;
-        const arrows = showPath(spriteSheets, newPath); //TODO put arrows behind interactive tiles
-        mapContainer.getChildByName("arrows")?.destroy();
-        mapContainer.addChild(arrows);
-      };
-
       const passablePositions = getAccessibleNodes(match, unitClicked);
       const displayedPassableTiles = createTilesContainer(
         Array.from(passablePositions.keys()),
         "#43d9e4",
         999,
         "path",
-        hoverBehaviour,
       );
 
-      //TODO implement click behaviour well
-
-      //TODO:
-      //Loop through container, on hover, reupdate arrow container
-      moveTilesRef.current = getAccessibleNodes(match, unitClicked);
+      moveTilesRef.current = passablePositions;
       mapContainer.addChild(displayedPassableTiles);
 
       unitContainer.addChild(
@@ -216,9 +193,9 @@ export const handleClick = async (
 
   function resetScreen() {
     //removes all temporary sprites (menus, paths, tempunit)
-    unitContainer.getChildByName("buildMenu")?.destroy();
-    unitContainer.getChildByName("preAttackBox")?.destroy();
-    unitContainer.getChildByName("subMenu")?.destroy();
+    interactiveContainer.getChildByName("buildMenu")?.destroy();
+    interactiveContainer.getChildByName("subMenu")?.destroy();
+    unitContainer.getChildByName("preAttackBox")?.destroy(); //TODO ??
     unitContainer.getChildByName("tempUnit")?.destroy();
     mapContainer.getChildByName("path")?.destroy();
     mapContainer.getChildByName("arrows")?.destroy();
@@ -238,5 +215,48 @@ export const handleClick = async (
     moveTilesRef.current = null;
     currentUnitClickedRef.current = null;
     pathRef.current = null;
+  }
+};
+
+export const handleHover = async (
+  hoverPos: Position,
+  match: MatchWrapper,
+  mapContainer: Container,
+  unitContainer: Container,
+  interactiveContainer: Container,
+  currentUnitClickedRef: MutableRefObject<UnitWrapper | null>,
+  moveTilesRef: MutableRefObject<Map<Position, PathNode> | null>,
+  player: PlayerInMatchWrapper,
+  spriteSheets: LoadedSpriteSheet,
+  actionMutation: any,
+  unitRangeShowRef: MutableRefObject<"attack" | "movement" | "vision">,
+  pathRef: MutableRefObject<Position[] | null>,
+) => {
+  await Assets.load("/aw2Font.fnt");
+
+  const currentUnit = currentUnitClickedRef.current;
+  const moveTiles = moveTilesRef.current;
+
+  let hoveredMoveTile = false;
+
+  if (moveTiles !== null) {
+    for (const [key, _] of moveTiles) {
+      if (isSamePosition(hoverPos, key)) {
+        hoveredMoveTile = true;
+      }
+    }
+  }
+
+  if (currentUnit != null && moveTiles != null && hoveredMoveTile) {
+    const newPath = updatePath(
+      currentUnit,
+      moveTiles,
+      pathRef.current ?? [currentUnit.data.position],
+      hoverPos,
+    );
+    pathRef.current = newPath;
+    const arrows = showPath(spriteSheets, newPath);
+    mapContainer.getChildByName("arrows")?.destroy();
+    mapContainer.addChild(arrows);
   }
 };

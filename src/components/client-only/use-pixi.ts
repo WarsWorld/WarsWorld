@@ -1,5 +1,5 @@
 "use client";
-import type { Container, DisplayObject, FederatedPointerEvent } from "pixi.js";
+import type { Container, DisplayObject } from "pixi.js";
 import { Application } from "pixi.js";
 import type { LoadedSpriteSheet } from "pixi/load-spritesheet";
 import { setupApp } from "pixi/setupApp";
@@ -9,7 +9,7 @@ import type { MatchWrapper } from "shared/wrappers/match";
 import type { PlayerInMatchWrapper } from "shared/wrappers/player-in-match";
 import type { FrontendUnit } from "../../frontend/components/match/FrontendUnit";
 import type { ChangeableTileWithSprite } from "../../frontend/components/match/types";
-import { handleClick } from "../../pixi/handleClick";
+import { handleClick, handleHover } from "../../pixi/handleClick";
 import type { PathNode } from "../../pixi/show-pathing";
 import { trpcActions } from "../../pixi/trpcActions";
 import type { UnitWrapper } from "../../shared/wrappers/unit";
@@ -24,6 +24,7 @@ export function usePixi(
   const pixiCanvasRef = useRef<HTMLCanvasElement | null>(null);
   const mapContainerRef = useRef<Container<DisplayObject> | null>(null);
   const unitContainerRef = useRef<Container<DisplayObject> | null>(null);
+  const interactiveContainerRef = useRef<Container<DisplayObject> | null>(null);
 
   // the unit we've clicked (the one that will be seeing sub action menu), we keep it here to reference it later on
   const currentUnitClickedRef = useRef<UnitWrapper | null>(null);
@@ -48,19 +49,13 @@ export function usePixi(
       height: match.map.height * renderedTileSize + renderedTileSize,
     });
 
-    const { mapContainer, unitContainer } = setupApp(app, match, renderMultiplier, spriteSheets);
-    mapContainerRef.current = mapContainer;
-    unitContainerRef.current = unitContainer;
-    mapContainerRef.current.eventMode = "static";
-
-    //This function handles almost all the clicks, sometimes elements (such as menus)
-    // have event listeners, otherwise it is handled via this function
-    const clickHandler = async (event: FederatedPointerEvent) => {
+    const onTileClick = async (pos: Position) => {
       await handleClick(
-        event,
+        pos,
         match,
         mapContainerRef.current,
         unitContainerRef.current,
+        interactiveContainerRef.current,
         currentUnitClickedRef,
         moveTilesRef,
         player,
@@ -71,11 +66,47 @@ export function usePixi(
       );
     };
 
-    mapContainerRef.current.on("pointertap", clickHandler);
+    const onTileHover = async (pos: Position) => {
+      await handleHover(
+        pos,
+        match,
+        mapContainerRef.current,
+        unitContainerRef.current,
+        interactiveContainerRef.current,
+        currentUnitClickedRef,
+        moveTilesRef,
+        player,
+        spriteSheets,
+        actionMutation,
+        unitRangeShowRef,
+        pathRef,
+      );
+    };
+
+    const { mapContainer, unitContainer, interactiveContainer } = setupApp(
+      app,
+      match,
+      renderMultiplier,
+      spriteSheets,
+      onTileClick,
+      onTileHover,
+    );
+    mapContainerRef.current = mapContainer;
+    unitContainerRef.current = unitContainer;
+    interactiveContainerRef.current = interactiveContainer;
+    mapContainerRef.current.eventMode = "static";
 
     return () => {
       app.stop();
-      mapContainerRef.current.off("pointertap", clickHandler);
+
+      for (const tile of interactiveContainer.children) {
+        tile.off("pointertap");
+        tile.off("pointerenter");
+      }
+
+      //if (mapContainerRef.current !== null) {
+      //  mapContainerRef.current.off("pointertap", clickHandler);
+      //}
     };
   }, [actionMutation, match, player, spriteSheets]);
 

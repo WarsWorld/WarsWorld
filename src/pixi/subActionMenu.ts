@@ -270,6 +270,7 @@ export default function subActionMenu(
   match: MatchWrapper,
   player: PlayerInMatchWrapper,
   newPosition: Position,
+  unit: UnitWrapper,
   //TODO: Whats the type for a mutation?
   actionMutation: any,
   currentUnitClickedRef: React.MutableRefObject<UnitWrapper | null>,
@@ -278,15 +279,6 @@ export default function subActionMenu(
   spriteSheets: LoadedSpriteSheet,
 ) {
   availableActions = new Map<AvailableSubActions, SubAction>();
-
-  //the name will be displaying for each action
-  let unit: UnitWrapper;
-
-  if (currentUnitClickedRef.current !== null) {
-    unit = currentUnitClickedRef.current;
-  } else {
-    return;
-  }
 
   const menuOptions = getAvailableSubActions(match, player, unit, newPosition);
 
