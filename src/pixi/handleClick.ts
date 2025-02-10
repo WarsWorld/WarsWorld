@@ -2,6 +2,7 @@
 import type { Container } from "pixi.js";
 import { Assets } from "pixi.js";
 import type { MutableRefObject } from "react";
+import type { MainAction } from "shared/schemas/action";
 import type { Position } from "shared/schemas/position";
 import { isSamePosition } from "shared/schemas/position";
 import type { MatchWrapper } from "shared/wrappers/match";
@@ -21,16 +22,16 @@ import subActionMenu from "./subActionMenu";
 export const handleClick = async (
   clickPosition: Position,
   match: MatchWrapper,
+  player: PlayerInMatchWrapper,
   mapContainer: Container,
   unitContainer: Container,
   interactiveContainer: Container,
   currentUnitClickedRef: MutableRefObject<UnitWrapper | null>,
   moveTilesRef: MutableRefObject<Map<Position, PathNode> | null>,
-  player: PlayerInMatchWrapper,
-  spriteSheets: LoadedSpriteSheet,
-  actionMutation: any,
   unitRangeShowRef: MutableRefObject<"attack" | "movement" | "vision">,
   pathRef: MutableRefObject<Position[] | null>,
+  spriteSheets: LoadedSpriteSheet,
+  sendAction: (action: MainAction) => Promise<void>,
 ) => {
   //lets load our font
   await Assets.load("/aw2Font.fnt");
@@ -60,7 +61,7 @@ export const handleClick = async (
       match,
       player,
       clickPosition,
-      actionMutation,
+      sendAction,
     );
 
     interactiveContainer.addChild(buildMenu);
@@ -111,11 +112,11 @@ export const handleClick = async (
             player,
             pos,
             currentUnitClickedRef.current,
-            actionMutation,
             currentUnitClickedRef,
             pathRef,
             unitContainer,
             spriteSheets,
+            sendAction,
           );
 
           interactiveContainer.addChild(subMenu);
@@ -164,9 +165,9 @@ export const handleClick = async (
           match,
           player,
           currentUnitClickedRef,
-          actionMutation,
           spriteSheets,
           null,
+          sendAction,
         ),
       );
     }
@@ -219,18 +220,18 @@ export const handleClick = async (
 };
 
 export const handleHover = async (
-  hoverPos: Position,
+  hoverPosition: Position,
   match: MatchWrapper,
+  player: PlayerInMatchWrapper,
   mapContainer: Container,
   unitContainer: Container,
   interactiveContainer: Container,
   currentUnitClickedRef: MutableRefObject<UnitWrapper | null>,
   moveTilesRef: MutableRefObject<Map<Position, PathNode> | null>,
-  player: PlayerInMatchWrapper,
-  spriteSheets: LoadedSpriteSheet,
-  actionMutation: any,
   unitRangeShowRef: MutableRefObject<"attack" | "movement" | "vision">,
   pathRef: MutableRefObject<Position[] | null>,
+  spriteSheets: LoadedSpriteSheet,
+  sendAction: (action: MainAction) => Promise<void>,
 ) => {
   await Assets.load("/aw2Font.fnt");
 
@@ -241,7 +242,7 @@ export const handleHover = async (
 
   if (moveTiles !== null) {
     for (const [key, _] of moveTiles) {
-      if (isSamePosition(hoverPos, key)) {
+      if (isSamePosition(hoverPosition, key)) {
         hoveredMoveTile = true;
       }
     }
@@ -252,7 +253,7 @@ export const handleHover = async (
       currentUnit,
       moveTiles,
       pathRef.current ?? [currentUnit.data.position],
-      hoverPos,
+      hoverPosition,
     );
     pathRef.current = newPath;
     const arrows = showPath(spriteSheets, newPath);

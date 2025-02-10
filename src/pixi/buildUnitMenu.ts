@@ -2,6 +2,7 @@ import type { ArmySpritesheetData } from "frontend/components/match/getSpriteshe
 import type { Spritesheet } from "pixi.js";
 import { AnimatedSprite, BitmapText, Container, Sprite, Texture } from "pixi.js";
 import { unitPropertiesMap } from "shared/match-logic/game-constants/unit-properties";
+import type { MainAction } from "shared/schemas/action";
 import type { Position } from "shared/schemas/position";
 import { unitTypes } from "shared/schemas/unit";
 import type { MatchWrapper } from "../shared/wrappers/match";
@@ -13,7 +14,7 @@ export const buildUnitMenu = (
   match: MatchWrapper,
   player: PlayerInMatchWrapper,
   [x, y]: Position,
-  onBuild?: any,
+  sendAction: (action: MainAction) => Promise<void>,
 ) => {
   //The big container holding everything
   //set its eventmode to static for interactivity and sortable for zIndex
@@ -59,7 +60,8 @@ export const buildUnitMenu = (
   menuContainer.x += 8;
   menuContainer.y += 8;
 
-  //This makes the menu elements be each below each other, it starts at 0 then gets plussed, so elements keep going down and down. yValue is not the best name for it but effectively it is that, a y value
+  //This makes the menu elements be each below each other, it starts at 0 then gets plussed,
+  // so elements keep going down and down. yValue is not the best name for it but effectively it is that, a y value
   let yValue = 0;
 
   //lets loop through each unit and build the build menu
@@ -126,11 +128,9 @@ export const buildUnitMenu = (
 
       //TODO: WHEN CLICKING
       menuElement.on("pointerdown", () => {
-        onBuild.mutateAsync({
+        void sendAction({
           type: "build",
           position: [x, y],
-          playerId: player.data.id,
-          matchId: match.id,
           unitType: unitType,
         });
         //as soon a selection is done, destroy/erase the menu

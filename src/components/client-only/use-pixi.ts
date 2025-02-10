@@ -4,6 +4,7 @@ import { Application } from "pixi.js";
 import type { LoadedSpriteSheet } from "pixi/load-spritesheet";
 import { setupApp } from "pixi/setupApp";
 import { useEffect, useRef } from "react";
+import type { MainAction } from "shared/schemas/action";
 import type { Position } from "shared/schemas/position";
 import type { MatchWrapper } from "shared/wrappers/match";
 import type { PlayerInMatchWrapper } from "shared/wrappers/player-in-match";
@@ -15,11 +16,11 @@ import { trpcActions } from "../../pixi/trpcActions";
 import type { UnitWrapper } from "../../shared/wrappers/unit";
 import { renderMultiplier, renderedTileSize } from "./MatchRenderer";
 
-export function usePixi(
+export const usePixi = (
   match: MatchWrapper<ChangeableTileWithSprite, FrontendUnit>,
   spriteSheets: LoadedSpriteSheet,
   player: PlayerInMatchWrapper,
-) {
+) => {
   //containers holding pixi elements
   const pixiCanvasRef = useRef<HTMLCanvasElement | null>(null);
   const mapContainerRef = useRef<Container<DisplayObject> | null>(null);
@@ -39,6 +40,14 @@ export function usePixi(
 
   const { actionMutation } = trpcActions();
 
+  const sendAction = async (action: MainAction) => {
+    await actionMutation.mutateAsync({
+      playerId: player.data.id,
+      matchId: match.id,
+      ...action,
+    });
+  };
+
   useEffect(() => {
     const app = new Application({
       view: pixiCanvasRef.current ?? undefined,
@@ -50,37 +59,49 @@ export function usePixi(
     });
 
     const onTileClick = async (pos: Position) => {
-      await handleClick(
-        pos,
-        match,
-        mapContainerRef.current,
-        unitContainerRef.current,
-        interactiveContainerRef.current,
-        currentUnitClickedRef,
-        moveTilesRef,
-        player,
-        spriteSheets,
-        actionMutation,
-        unitRangeShowRef,
-        pathRef,
-      );
+      if (
+        mapContainerRef.current !== null &&
+        unitContainerRef.current !== null &&
+        interactiveContainerRef.current !== null
+      ) {
+        await handleClick(
+          pos,
+          match,
+          player,
+          mapContainerRef.current,
+          unitContainerRef.current,
+          interactiveContainerRef.current,
+          currentUnitClickedRef,
+          moveTilesRef,
+          unitRangeShowRef,
+          pathRef,
+          spriteSheets,
+          sendAction,
+        );
+      }
     };
 
     const onTileHover = async (pos: Position) => {
-      await handleHover(
-        pos,
-        match,
-        mapContainerRef.current,
-        unitContainerRef.current,
-        interactiveContainerRef.current,
-        currentUnitClickedRef,
-        moveTilesRef,
-        player,
-        spriteSheets,
-        actionMutation,
-        unitRangeShowRef,
-        pathRef,
-      );
+      if (
+        mapContainerRef.current !== null &&
+        unitContainerRef.current !== null &&
+        interactiveContainerRef.current !== null
+      ) {
+        await handleHover(
+          pos,
+          match,
+          player,
+          mapContainerRef.current,
+          unitContainerRef.current,
+          interactiveContainerRef.current,
+          currentUnitClickedRef,
+          moveTilesRef,
+          unitRangeShowRef,
+          pathRef,
+          spriteSheets,
+          sendAction,
+        );
+      }
     };
 
     const { mapContainer, unitContainer, interactiveContainer } = setupApp(
@@ -103,10 +124,6 @@ export function usePixi(
         tile.off("pointertap");
         tile.off("pointerenter");
       }
-
-      //if (mapContainerRef.current !== null) {
-      //  mapContainerRef.current.off("pointertap", clickHandler);
-      //}
     };
   }, [actionMutation, match, player, spriteSheets]);
 
@@ -114,4 +131,4 @@ export function usePixi(
     pixiCanvasRef,
     mapContainerRef,
   };
-}
+};

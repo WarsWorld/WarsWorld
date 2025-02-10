@@ -15,7 +15,7 @@ import {
   type Position,
 } from "shared/schemas/position";
 import type { UnitWrapper } from "shared/wrappers/unit";
-import type { SubAction } from "../shared/schemas/action";
+import type { MainAction, SubAction } from "../shared/schemas/action";
 import type { MatchWrapper } from "../shared/wrappers/match";
 import type { PlayerInMatchWrapper } from "../shared/wrappers/player-in-match";
 import type { LoadedSpriteSheet } from "./load-spritesheet";
@@ -271,12 +271,11 @@ export default function subActionMenu(
   player: PlayerInMatchWrapper,
   newPosition: Position,
   unit: UnitWrapper,
-  //TODO: Whats the type for a mutation?
-  actionMutation: any,
   currentUnitClickedRef: React.MutableRefObject<UnitWrapper | null>,
   pathRef: MutableRefObject<Position[] | null>,
   unitContainer: Container<DisplayObject>,
   spriteSheets: LoadedSpriteSheet,
+  sendAction: (action: MainAction) => Promise<void>,
 ) {
   availableActions = new Map<AvailableSubActions, SubAction>();
 
@@ -372,18 +371,16 @@ export default function subActionMenu(
             match,
             player,
             currentUnitClickedRef,
-            actionMutation,
             spriteSheets,
             pathRef.current,
+            sendAction,
           ),
         );
       } else {
-        actionMutation.mutateAsync({
+        void sendAction({
           type: "move",
           subAction: subAction,
-          path: pathRef.current,
-          playerId: player.data.id,
-          matchId: match.id,
+          path: pathRef.current ?? [],
         });
 
         //The currentUnitClicked has changed (moved, attacked, died), therefore, we delete the previous information as it is not accurate anymore

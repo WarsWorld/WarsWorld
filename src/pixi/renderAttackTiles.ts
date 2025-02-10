@@ -1,6 +1,7 @@
 import type { DisplayObject } from "pixi.js";
 import { BitmapText, Container, Sprite, Texture } from "pixi.js";
 import type { MutableRefObject } from "react";
+import type { MainAction } from "shared/schemas/action";
 import { renderedTileSize } from "../components/client-only/MatchRenderer";
 import type { Position } from "../shared/schemas/position";
 import type { MatchWrapper } from "../shared/wrappers/match";
@@ -18,9 +19,9 @@ export function renderAttackTiles(
   match: MatchWrapper,
   player: PlayerInMatchWrapper,
   currentUnitClickedRef: MutableRefObject<UnitWrapper | null>,
-  actionMutation: any,
   spriteSheets: LoadedSpriteSheet,
   path: Position[] | null,
+  sendAction: (action: MainAction) => Promise<void>,
 ) {
   unitContainer.getChildByName("preAttackBox")?.destroy();
 
@@ -63,15 +64,13 @@ export function renderAttackTiles(
 
     if (path) {
       attackTile.on("pointerdown", () => {
-        actionMutation.mutateAsync({
+        void sendAction({
           type: "move",
           subAction: {
             type: "attack",
             defenderPosition: pos,
           },
           path: path,
-          playerId: player.data.id,
-          matchId: match.id,
         });
         //The currentUnitClicked has changed (moved, attacked, died), therefore, we delete the previous information as it is not accurate anymore
         //this also helps so when the screen resets, we dont have two copies of a unit
