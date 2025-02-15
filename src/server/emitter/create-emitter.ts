@@ -1,5 +1,4 @@
 import type { Match } from "@prisma/client";
-import type { GameEvent } from "./emitter-schema";
 
 /**
  * Read up on JavaScript event emitters.
@@ -36,7 +35,7 @@ export const createEmitter = <D extends { matchId: Match["id"] }>() => {
       return () => unsubscribe(matchId, playerID, listenerToSubscribe);
     },
     unsubscribe,
-    emit: (gameEvent: GameEvent, dispatched?: D) => {
+    emit: (playerId: string, dispatched?: D) => {
       if (dispatched) {
         const matchMap = listenerMap.get(dispatched.matchId);
 
@@ -45,12 +44,8 @@ export const createEmitter = <D extends { matchId: Match["id"] }>() => {
           return;
         }
 
-        let listeners;
-
-        if (gameEvent.type !== "matchStart" && gameEvent?.playerId) {
-          listeners = matchMap.get(gameEvent.playerId);
-        }
         // Use get method instead of iteration
+        const listeners = matchMap.get(playerId);
 
         // If listeners exist, call them
         if (listeners) {
