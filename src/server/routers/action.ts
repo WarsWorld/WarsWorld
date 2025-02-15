@@ -88,7 +88,6 @@ export const actionRouter = router({
       // this emits to the first player on each team, needs to emit to the whole team
       emittableEvents.forEach((emittableEvent: EmittableEvent | undefined) => {
         if (emittableEvent) {
-          //@ts-ignore
           emit(emittableEvent.playerId, { ...emittableEvent, matchId: match.id });
         }
       });

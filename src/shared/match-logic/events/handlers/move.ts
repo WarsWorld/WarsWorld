@@ -15,7 +15,7 @@ export const createNoMoveEvent = (subAction: SubAction) => ({
   trap: false,
   subEvent: { ...subAction },
 });
-//@ts-ignore
+//@ts-expect-error this is causing an error
 export const moveActionToEvent: MainActionToEvent<MoveAction> = (match, action) => {
   const player = match.getCurrentTurnPlayer();
   const unit = match.getUnitOrThrow(action.path[0]);
@@ -32,7 +32,7 @@ export const moveActionToEvent: MainActionToEvent<MoveAction> = (match, action) 
 
   //Unit is waiting in-place if it's path is only the starting tile
   if (action.path.length === 1) {
-    //@ts-ignore
+    //@ts-expect-error this is causing an error
     result.path.push(action.path[0]);
     return result;
   }
@@ -61,7 +61,7 @@ export const moveActionToEvent: MainActionToEvent<MoveAction> = (match, action) 
       throw new DispatchableError("Cannot move to a desired position");
     }
 
-    //@ts-ignore
+    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
     if (result.path.find((pos) => isSamePosition(pos, position))) {
       throw new DispatchableError("The given path passes through the same position twice");
     }
@@ -149,7 +149,7 @@ export const moveActionToEvent: MainActionToEvent<MoveAction> = (match, action) 
       }
     }
 
-    //@ts-ignore
+    //@ts-expect-error this is causing an error
     result.path.push(action.path[pathIndex]);
   }
 

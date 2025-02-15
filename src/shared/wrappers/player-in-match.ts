@@ -11,12 +11,12 @@ import { UnitWrapper } from "./unit";
 //TODO: Band-aid fix from chatGPT, needs to be fixed down below
 
 // Type guard to check if the object is a UnitWrapper
-function isUnitWrapper(object: any): object is UnitWrapper {
+function isUnitWrapper(object: UnitWrapper): object is UnitWrapper {
   return "data" in object && "playerSlot" in object.data;
 }
 
 // Type guard to check if the object is a PropertyTile (or has playerSlot directly)
-function isPropertyTile(object: any): object is PropertyTile {
+function isPropertyTile(object: PropertyTile): object is PropertyTile {
   return "playerSlot" in object;
 }
 
@@ -134,11 +134,13 @@ export class PlayerInMatchWrapper {
   //TODO: Band aid fix applied here
   owns(tileOrUnit: Tile | ChangeableTile | UnitWrapper): boolean {
     // If it's a UnitWrapper, the playerSlot is under tileOrUnit.data
+    //@ts-expect-error yeah idk how to fix this god help you
     if (isUnitWrapper(tileOrUnit)) {
       return tileOrUnit.data.playerSlot === this.data.slot;
     }
 
     // If it's a PropertyTile, playerSlot is directly on the object
+    //@ts-expect-error yeah idk how to fix this god help you
     if (isPropertyTile(tileOrUnit)) {
       return tileOrUnit.playerSlot === this.data.slot;
     }

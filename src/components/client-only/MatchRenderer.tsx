@@ -20,7 +20,7 @@ type Props = {
   player: PlayerInMatchWrapper;
   spriteSheets: LoadedSpriteSheet;
   turn: boolean;
-  setTurn: any;
+  setTurn: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 export const baseTileSize = 16;
@@ -31,7 +31,6 @@ export const mapBorder = baseTileSize / 2;
 export function MatchRenderer({ match, player, spriteSheets, turn, setTurn }: Props) {
   const [eventTrigger, setEventTrigger] = useState(0);
   useEffect(() => {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
     setTurn(match.getCurrentTurnPlayer().data.id === player.data.id);
   }, []);
 
