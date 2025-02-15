@@ -35,6 +35,7 @@ export const createEmitter = <D extends { matchId: Match["id"] }>() => {
       return () => unsubscribe(matchId, playerID, listenerToSubscribe);
     },
     unsubscribe,
+    //todo: Fix this to actually work with all emit events
     emit: (playerId: string, dispatched?: D) => {
       if (dispatched) {
         const matchMap = listenerMap.get(dispatched.matchId);
