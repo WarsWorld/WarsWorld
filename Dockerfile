@@ -4,7 +4,7 @@ LABEL authors="Javi"
 ENTRYPOINT ["top", "-b"]
 
 # Step 1: Set up the Node.js environment
-FROM node:18-alpine AS build
+FROM node:21-alpine AS build
 
 # Set working directory
 WORKDIR /app
@@ -22,7 +22,7 @@ COPY . .
 RUN npm run build
 
 # Step 2: Run the application
-FROM node:18-alpine AS runner
+FROM node:21-alpine AS runner
 
 WORKDIR /app
 
