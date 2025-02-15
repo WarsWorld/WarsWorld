@@ -1,5 +1,5 @@
 import { getCOProperties } from "shared/match-logic/co";
-import { MatchWrapper } from "shared/wrappers/match";
+import type { MatchWrapper } from "shared/wrappers/match";
 
 export const renderPlayerInfoCard = (match: MatchWrapper, playerSlot: number) => {
   const player = match.getPlayerBySlot(playerSlot);
@@ -9,8 +9,6 @@ export const renderPlayerInfoCard = (match: MatchWrapper, playerSlot: number) =>
   }
 
   const coId = player.data.coId;
-
-
 
   const currentPower = player.data.powerMeter;
   const startCost = player.getPowerStarCost();
@@ -26,5 +24,5 @@ export const renderPlayerInfoCard = (match: MatchWrapper, playerSlot: number) =>
 
   const units = player.getUnits();
   const unitCount = units.length;
-  const unitValue = //sum of unit.getBuildCost() * unit.getVisualHP()/10
+  //const unitValue = //sum of unit.getBuildCost() * unit.getVisualHP()/10
 };
