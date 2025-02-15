@@ -13,6 +13,7 @@ import { applyPassTurnEvent } from "../../shared/match-logic/events/handlers/pas
 import { applyMoveEvent } from "../../shared/match-logic/events/handlers/move";
 import { applyAbilityEvent } from "../../shared/match-logic/events/handlers/ability";
 import { applyAttackEvent } from "../../shared/match-logic/events/handlers/attack";
+import type { AttackEvent, MoveEvent } from "../../shared/types/events";
 
 type Props = {
   match: MatchWrapper<ChangeableTileWithSprite, FrontendUnit>;
@@ -30,6 +31,7 @@ export const mapBorder = baseTileSize / 2;
 export function MatchRenderer({ match, player, spriteSheets, turn, setTurn }: Props) {
   const [eventTrigger, setEventTrigger] = useState(0);
   useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
     setTurn(match.getCurrentTurnPlayer().data.id === player.data.id);
   }, []);
 
@@ -60,13 +62,13 @@ export function MatchRenderer({ match, player, spriteSheets, turn, setTurn }: Pr
               break;
             }
 
-            applyMoveEvent(match, event);
+            applyMoveEvent(match, event as MoveEvent);
 
             const finalPosition: Position = event.path[event.path.length - 1];
 
             switch (event.subEvent.type) {
               case "attack": {
-                applyAttackEvent(match, event.subEvent, finalPosition);
+                applyAttackEvent(match, event.subEvent as AttackEvent, finalPosition);
                 break;
               }
               case "ability": {
