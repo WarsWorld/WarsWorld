@@ -2,7 +2,7 @@ import type { DisplayObject } from "pixi.js";
 import { BitmapText, Container, Sprite, Texture } from "pixi.js";
 import type { MutableRefObject } from "react";
 import type { MainAction } from "shared/schemas/action";
-import { renderedTileSize } from "../components/client-only/MatchRenderer";
+import { baseTileSize, renderedTileSize } from "../components/client-only/MatchRenderer";
 import type { Position } from "../shared/schemas/position";
 import type { MatchWrapper } from "../shared/wrappers/match";
 import type { PlayerInMatchWrapper } from "../shared/wrappers/player-in-match";
@@ -16,6 +16,7 @@ import { tileConstructor } from "./sprite-constructor";
 
 export function renderAttackTiles(
   unitContainer: Container<DisplayObject>,
+  interactiveContainer: Container<DisplayObject>,
   match: MatchWrapper,
   player: PlayerInMatchWrapper,
   currentUnitClickedRef: MutableRefObject<UnitWrapper | null>,
@@ -23,18 +24,17 @@ export function renderAttackTiles(
   path: Position[] | null,
   sendAction: (action: MainAction) => Promise<void>,
 ) {
-  unitContainer.getChildByName("preAttackBox")?.destroy();
+  interactiveContainer.getChildByName("preAttackBox")?.destroy();
 
   let attackTiles;
   const attackTileContainer = new Container();
   attackTileContainer.name = "preAttackBox";
-  attackTileContainer.x = renderedTileSize / 4;
-  attackTileContainer.y = renderedTileSize / 4;
 
   if (currentUnitClickedRef.current === null) {
     return attackTileContainer;
   }
 
+  //This means we have clicked on a unit
   if (path) {
     attackTiles = getAttackTargetTiles(match, currentUnitClickedRef.current, path[path.length - 1]);
   } else {

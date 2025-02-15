@@ -115,6 +115,7 @@ export const handleClick = async (
             currentUnitClickedRef,
             pathRef,
             unitContainer,
+            interactiveContainer,
             spriteSheets,
             sendAction,
           );
@@ -159,9 +160,10 @@ export const handleClick = async (
       moveTilesRef.current = passablePositions;
       mapContainer.addChild(displayedPassableTiles);
 
-      unitContainer.addChild(
+      interactiveContainer.addChild(
         renderAttackTiles(
           unitContainer,
+          interactiveContainer,
           match,
           player,
           currentUnitClickedRef,
@@ -196,7 +198,7 @@ export const handleClick = async (
     //removes all temporary sprites (menus, paths, tempunit)
     interactiveContainer.getChildByName("buildMenu")?.destroy();
     interactiveContainer.getChildByName("subMenu")?.destroy();
-    unitContainer.getChildByName("preAttackBox")?.destroy(); //TODO ??
+    interactiveContainer.getChildByName("preAttackBox")?.destroy(); //TODO ??
     unitContainer.getChildByName("tempUnit")?.destroy();
     mapContainer.getChildByName("path")?.destroy();
     mapContainer.getChildByName("arrows")?.destroy();

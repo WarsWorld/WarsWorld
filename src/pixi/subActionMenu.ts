@@ -274,6 +274,7 @@ export default function subActionMenu(
   currentUnitClickedRef: React.MutableRefObject<UnitWrapper | null>,
   pathRef: MutableRefObject<Position[] | null>,
   unitContainer: Container<DisplayObject>,
+  interactiveContainer: Container,
   spriteSheets: LoadedSpriteSheet,
   sendAction: (action: MainAction) => Promise<void>,
 ) {
@@ -297,9 +298,6 @@ export default function subActionMenu(
   //the name lets us find the menu easily with getChildByName for easy removal
   menuContainer.name = "subMenu";
 
-  //TODO: Modify these two x and y conditions so that menu is onlu moved if it would ever be out of bounds,
-  // so it should check not if we are halfway but just about to cross off the map
-
   // if we are over half the map. invert menu placement
   if (x > match.map.width / 2) {
     menuContainer.x = x * tileSize - tileSize * 3; //the menu width is about 6 * tileSize
@@ -310,16 +308,12 @@ export default function subActionMenu(
   }
 
   //if our menu would appear below the middle of the map, we need to bring it up!
-  if (y >= match.map.height / 2 && match.map.height - y < menuOptions.length) {
+  if (y >= match.map.height / 2 && match.map.height - y <= menuOptions.length + 1) {
     const spaceLeft = match.map.height - y;
     menuContainer.y = (y - Math.abs(spaceLeft - menuOptions.length)) * tileSize;
   } else {
     menuContainer.y = y * tileSize;
   }
-
-  //TODO: Fix border
-  menuContainer.x += 8;
-  menuContainer.y += 8;
 
   //This makes the menu elements be each below each other, it starts at 0 then gets plussed, so elements keep going down and down.
   // yValue is not the best name for it but effectively it is that, a y value
@@ -365,9 +359,10 @@ export default function subActionMenu(
     menuElement.on("pointerdown", () => {
       //if its an attack
       if (name === AvailableSubActions.Attack) {
-        unitContainer.addChild(
+        interactiveContainer.addChild(
           renderAttackTiles(
             unitContainer,
+            interactiveContainer,
             match,
             player,
             currentUnitClickedRef,
@@ -380,7 +375,7 @@ export default function subActionMenu(
         void sendAction({
           type: "move",
           subAction: subAction,
-          path: pathRef.current ?? [],
+          path: pathRef.current ?? [newPosition],
         });
 
         //The currentUnitClicked has changed (moved, attacked, died), therefore, we delete the previous information as it is not accurate anymore
