@@ -7,6 +7,7 @@ import type { Position } from "shared/schemas/position";
 import { unitTypes } from "shared/schemas/unit";
 import type { MatchWrapper } from "../shared/wrappers/match";
 import type { PlayerInMatchWrapper } from "../shared/wrappers/player-in-match";
+import { baseTileSize } from "../components/client-only/MatchRenderer";
 
 //only called if player has current turn
 export const buildUnitMenu = (
@@ -23,9 +24,8 @@ export const buildUnitMenu = (
   menuContainer.sortableChildren = true;
   menuContainer.zIndex = 999;
 
-  const tileSize = 16;
   //this is the value we have applied to units (half a tile)
-  const unitSize = tileSize / 2;
+  const unitSize = baseTileSize / 2;
 
   //the name lets us find the menu easily with getChildByName for easy removal
   menuContainer.name = "buildMenu";
@@ -41,19 +41,19 @@ export const buildUnitMenu = (
 
   // if we are over half the map. invert menu placement
   if (x > match.map.width / 2) {
-    menuContainer.x = x * tileSize - tileSize * 6; //the menu width is about 6 * tileSize
+    menuContainer.x = x * baseTileSize - baseTileSize * 6; //the menu width is about 6 * baseTileSize
   }
   //we are not over half the map, menu is placed next to factory
   else {
-    menuContainer.x = x * tileSize + tileSize;
+    menuContainer.x = x * baseTileSize + baseTileSize;
   }
 
   //if our menu would appear below the middle of the map, we need to bring it up!
   if (y >= match.map.height / 2 && match.map.height - y < buildableUnitTypes.length) {
     const spaceLeft = match.map.height - y;
-    menuContainer.y = (y - Math.abs(spaceLeft - buildableUnitTypes.length)) * tileSize;
+    menuContainer.y = (y - Math.abs(spaceLeft - buildableUnitTypes.length)) * baseTileSize;
   } else {
-    menuContainer.y = y * tileSize;
+    menuContainer.y = y * baseTileSize;
   }
 
   //This makes the menu elements be each below each other, it starts at 0 then gets plussed,
@@ -71,7 +71,7 @@ export const buildUnitMenu = (
     unitBG.x = 0;
     unitBG.y = yValue;
     //TODO: Standardize these sizes
-    unitBG.width = tileSize * 5.7;
+    unitBG.width = baseTileSize * 5.7;
     unitBG.height = unitSize * 1.35;
     unitBG.eventMode = "static";
     unitBG.tint = "#ffffff";
@@ -95,7 +95,7 @@ export const buildUnitMenu = (
       fontSize: 10,
     });
     unitNameText.y = yValue;
-    unitNameText.x = tileSize;
+    unitNameText.x = baseTileSize;
     //trying to line it up nicely wiht the unit icon
     unitNameText.anchor.set(0, -0.3);
     menuElement.addChild(unitNameText);
@@ -107,7 +107,7 @@ export const buildUnitMenu = (
     });
     unitCostText.y = yValue;
     //TODO: Standardize this size
-    unitCostText.x = tileSize * 4;
+    unitCostText.x = baseTileSize * 4;
     unitCostText.anchor.set(0, -0.25);
     menuElement.addChild(unitCostText);
 
@@ -152,7 +152,7 @@ export const buildUnitMenu = (
   menuBG.tint = "#cacaca";
   menuBG.x = -2;
   menuBG.y = -2;
-  menuBG.width = tileSize * 6; //expands 6 tiles worth of space
+  menuBG.width = baseTileSize * 6; //expands 6 tiles worth of space
   menuBG.height = yValue;
   menuBG.zIndex = -1;
   menuBG.alpha = 1;

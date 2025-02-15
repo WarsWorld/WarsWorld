@@ -8,7 +8,6 @@ import type { PlayerInMatchWrapper } from "shared/wrappers/player-in-match";
 import type { FrontendUnit } from "../../frontend/components/match/FrontendUnit";
 import type { ChangeableTileWithSprite } from "../../frontend/components/match/types";
 import { usePixi } from "./use-pixi";
-import { useSubscriptionWithRetry } from "./useSubscriptionWithRetry";
 import { applyBuildEvent } from "../../shared/match-logic/events/handlers/build";
 import { applyPassTurnEvent } from "../../shared/match-logic/events/handlers/passTurn";
 import { applyMoveEvent } from "../../shared/match-logic/events/handlers/move";
@@ -26,6 +25,7 @@ type Props = {
 export const baseTileSize = 16;
 export const renderMultiplier = 2;
 export const renderedTileSize = baseTileSize * renderMultiplier;
+export const mapBorder = baseTileSize / 2;
 
 export function MatchRenderer({ match, player, spriteSheets, turn, setTurn }: Props) {
   const [eventTrigger, setEventTrigger] = useState(0);

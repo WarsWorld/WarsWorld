@@ -20,6 +20,7 @@ import type { MatchWrapper } from "../shared/wrappers/match";
 import type { PlayerInMatchWrapper } from "../shared/wrappers/player-in-match";
 import type { LoadedSpriteSheet } from "./load-spritesheet";
 import { renderAttackTiles } from "./renderAttackTiles";
+import { baseTileSize } from "../components/client-only/MatchRenderer";
 
 export enum AvailableSubActions {
   "Wait",
@@ -291,28 +292,27 @@ export default function subActionMenu(
   menuContainer.sortableChildren = true;
   menuContainer.zIndex = 999;
 
-  const tileSize = 16;
   //this is the value we have applied to units (half a tile)
-  const unitSize = tileSize / 2;
+  const unitSize = baseTileSize / 2;
 
   //the name lets us find the menu easily with getChildByName for easy removal
   menuContainer.name = "subMenu";
 
   // if we are over half the map. invert menu placement
   if (x > match.map.width / 2) {
-    menuContainer.x = x * tileSize - tileSize * 3; //the menu width is about 6 * tileSize
+    menuContainer.x = x * baseTileSize - baseTileSize * 3; //the menu width is about 6 * baseTileSize
   }
   //we are not over half the map, menu is placed next to factory
   else {
-    menuContainer.x = x * tileSize + tileSize;
+    menuContainer.x = x * baseTileSize + baseTileSize;
   }
 
   //if our menu would appear below the middle of the map, we need to bring it up!
   if (y >= match.map.height / 2 && match.map.height - y <= menuOptions.length + 1) {
     const spaceLeft = match.map.height - y;
-    menuContainer.y = (y - Math.abs(spaceLeft - menuOptions.length)) * tileSize;
+    menuContainer.y = (y - Math.abs(spaceLeft - menuOptions.length)) * baseTileSize;
   } else {
-    menuContainer.y = y * tileSize;
+    menuContainer.y = y * baseTileSize;
   }
 
   //This makes the menu elements be each below each other, it starts at 0 then gets plussed, so elements keep going down and down.
@@ -329,7 +329,7 @@ export default function subActionMenu(
     actionBG.x = 0;
     actionBG.y = yValue;
     //TODO: Standardize these sizes
-    actionBG.width = tileSize * 2.8;
+    actionBG.width = baseTileSize * 2.8;
     actionBG.height = unitSize * 1.35;
     actionBG.eventMode = "static";
     actionBG.tint = "#ffffff";
@@ -341,7 +341,7 @@ export default function subActionMenu(
       fontSize: 10,
     });
     actionText.y = yValue;
-    actionText.x = tileSize;
+    actionText.x = baseTileSize;
     //trying to line it up nicely wiht the unit icon
     actionText.anchor.set(0, -0.3);
     menuElement.addChild(actionText);
@@ -397,7 +397,7 @@ export default function subActionMenu(
   menuBG.tint = "#cacaca";
   menuBG.x = -2;
   menuBG.y = -2;
-  menuBG.width = tileSize * 3; //expands 3 tiles worth of space
+  menuBG.width = baseTileSize * 3; //expands 3 tiles worth of space
   menuBG.height = yValue;
   menuBG.zIndex = -1;
   menuBG.alpha = 1;
