@@ -56,10 +56,6 @@ export const buildUnitMenu = (
     menuContainer.y = y * tileSize;
   }
 
-  //TODO: Fix border
-  menuContainer.x += 8;
-  menuContainer.y += 8;
-
   //This makes the menu elements be each below each other, it starts at 0 then gets plussed,
   // so elements keep going down and down. yValue is not the best name for it but effectively it is that, a y value
   let yValue = 0;
