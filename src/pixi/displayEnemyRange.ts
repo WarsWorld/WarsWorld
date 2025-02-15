@@ -23,7 +23,12 @@ export function displayEnemyRange(
     return displayedPassableTiles;
   } else if (unitRangeShowRef.current === "attack") {
     const attackablePositions = getAttackableTiles(match, unitClicked);
-    const displayedPassableTiles = createTilesContainer(attackablePositions, "#be1919", 999, "path");
+    const displayedPassableTiles = createTilesContainer(
+      attackablePositions,
+      "#be1919",
+      999,
+      "path",
+    );
 
     if (match.leagueType === "fog") {
       unitRangeShowRef.current = "vision";

@@ -1,4 +1,4 @@
-import { baseTileSize } from "components/client-only/MatchRenderer";
+import { baseTileSize, mapBorder } from "components/client-only/MatchRenderer";
 import type { FrontendUnit } from "frontend/components/match/FrontendUnit";
 import type { SpriteAnimationKeys } from "frontend/components/match/getSpritesheetData";
 import type { ChangeableTileWithSprite } from "frontend/components/match/types";
@@ -47,8 +47,8 @@ export function renderMap(
   spriteSheets: LoadedSpriteSheet,
 ) {
   const mapContainer = new Container(); // TODO add x,y values for margin/border
-  mapContainer.x = baseTileSize / 2;
-  mapContainer.y = baseTileSize / 2;
+  mapContainer.x = mapBorder;
+  mapContainer.y = mapBorder;
 
   for (let y = 0; y < match.map.data.tiles.length; y++) {
     for (let x = 0; x < match.map.data.tiles[y].length; x++) {
