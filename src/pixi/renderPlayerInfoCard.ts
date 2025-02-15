@@ -10,7 +10,7 @@ export const renderPlayerInfoCard = (match: MatchWrapper, playerSlot: number) =>
 
   const coId = player.data.coId;
 
-  player.
+
 
   const currentPower = player.data.powerMeter;
   const startCost = player.getPowerStarCost();
