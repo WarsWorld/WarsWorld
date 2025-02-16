@@ -1,7 +1,7 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "module": "commonjs",
+    "module": "esnext",
     "outDir": "dist",
     "lib": ["ES2023", "DOM"],
     "isolatedModules": false,

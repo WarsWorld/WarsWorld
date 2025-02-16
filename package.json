@@ -24,10 +24,10 @@
     "lint:prettier:fix": "prettier --write .",
     "lint": "npm run lint:prettier && npm run lint:eslint",
     "lint:fix": "npm run lint:prettier:fix && npm run lint:eslint:fix",
-    "build:next": "cross-env NODE_ENV=development next build",
+    "build:next": "cross-env NODE_ENV=production next build",
     "build:server": "tsc --project tsconfig.server.json",
     "build": "concurrently \"npm:build:*\"",
-    "start": "cross-env NODE_ENV=development node dist/server/main-production.js",
+    "start": "cross-env NODE_ENV=production node dist/src/server/main-production.js",
     "redundant-code": "npx jscpd --ignore node_modules,dist,public,.next --reporters consoleFull .",
     "update-depencencies": "npx npm-check-updates -i"
   },

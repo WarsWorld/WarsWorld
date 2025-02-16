@@ -18,6 +18,9 @@ RUN npm install
 # Copy the rest of the application files
 COPY . .
 
+# Generate Prisma client
+RUN npx prisma generate
+
 # Build the Next.js app
 RUN npm run build
 
@@ -27,7 +30,7 @@ FROM node:21-alpine AS runner
 WORKDIR /app
 
 # Copy the built app from the build step
-COPY --from=build /app/.next /app/.next
+COPY --from=build /app/.next/* /app/.next/
 COPY --from=build /app/node_modules /app/node_modules
 COPY --from=build /app/package.json /app/package.json
 
@@ -35,4 +38,4 @@ COPY --from=build /app/package.json /app/package.json
 EXPOSE 3000
 
 # Start the application
-CMD ["npm", "start"]
+CMD ["npm", "run", "start"]
