@@ -32,7 +32,7 @@ export function MatchRenderer({ match, player, spriteSheets, turn, setTurn }: Pr
   useEffect(() => {
     const isPlayerTurn = match.getCurrentTurnPlayer().data.id === player.data.id;
     setTurn(isPlayerTurn);
-  }, []);
+  }, [match, player.data.id, setTurn]);
 
   const { pixiCanvasRef } = usePixi(match, spriteSheets, player);
 

@@ -56,7 +56,7 @@ export function MatchLoader({ matchId, playerId, spritesheetDataByArmy }: Props)
   // Add useEffect to trigger refetch when turn changes
   useEffect(() => {
     fullMatchQuery.refetch();
-  }, [turn]);
+  }, [turn, fullMatchQuery]);
 
   if (fullMatchQuery.isError || spriteSheetQuery.isError) {
     return <p>error {":("}</p>;
