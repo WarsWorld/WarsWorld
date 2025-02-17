@@ -125,7 +125,7 @@ export const usePixi = (
         tile.off("pointerenter");
       }
     };
-  }, [actionMutation, match, player, spriteSheets]);
+  }, [actionMutation, match, player, spriteSheets, sendAction]);
 
   return {
     pixiCanvasRef,
