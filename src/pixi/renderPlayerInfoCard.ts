@@ -26,5 +26,5 @@ export const renderPlayerInfoCard = (match: MatchWrapper, playerSlot: number) =>
 
   const units = player.getUnits();
   const unitCount = units.length;
-  const unitValue = //sum of unit.getBuildCost() * unit.getVisualHP()/10
+  const unitValue = 0; // TODO: sum of unit.getBuildCost() * unit.getVisualHP()/10
 };
