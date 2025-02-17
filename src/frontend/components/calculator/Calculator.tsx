@@ -1,5 +1,5 @@
 import COCalculator from "./COCalculator";
-import { CO } from "../../../shared/schemas/co";
+// import { CO } from "../../../shared/schemas/co"; // TODO: unused import
 import type { PlayerInMatch } from "shared/types/server-match-state";
 
 type Props = {

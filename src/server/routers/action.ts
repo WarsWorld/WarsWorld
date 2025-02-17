@@ -20,7 +20,7 @@ import { updateMoveVision } from "../../shared/match-logic/events/handlers/move"
 export const actionRouter = router({
   send: playerInMatchBaseProcedure
     .input(mainActionSchema)
-    .mutation(async ({ input, ctx: { match, player } }) => {
+    .mutation(async ({ input, ctx: { match, _player } }) => {
       /**
        * EXTREMELY IMPORTANT! This order MUST be followed, otherwise some things may not have required information:
        * 1. Move action to event
@@ -57,7 +57,7 @@ export const actionRouter = router({
 
         /* 3. Sub action to event */
         // if there was a trap or join/load, the default subEvent is "wait".
-        const isJoinOrLoad = match.getUnit(getFinalPositionSafe(mainEvent.path)) !== undefined;
+        const _isJoinOrLoad = match.getUnit(getFinalPositionSafe(mainEvent.path)) !== undefined;
         //todo: isJoinorLoad doesnt really work, have to fix
 
         if (!mainEvent.trap /*&& !isJoinOrLoad*/) {

@@ -1,6 +1,8 @@
 import { getCOProperties } from "shared/match-logic/co";
 import type { MatchWrapper } from "shared/wrappers/match";
 
+/* eslint-disable @typescript-eslint/no-unused-vars */
+// TODO: unused yet
 export const renderPlayerInfoCard = (match: MatchWrapper, playerSlot: number) => {
   const player = match.getPlayerBySlot(playerSlot);
 
