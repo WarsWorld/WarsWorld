@@ -25,11 +25,14 @@
     "lint": "npm run lint:prettier && npm run lint:eslint",
     "lint:fix": "npm run lint:prettier:fix && npm run lint:eslint:fix",
     "build:next": "cross-env NODE_ENV=production next build",
-    "build:server": "tsc --project tsconfig.server.json",
+    "build:server": "tsc --project tsconfig.server.json && tsc-alias -p tsconfig.server.json",
     "build": "concurrently \"npm:build:*\"",
-    "start": "cross-env NODE_ENV=production node dist/src/server/main-production.js",
+    "start:next": "next start",
+    "start:server": "cross-env NODE_ENV=production node dist/src/server/main-production.js",
+    "start": "npm run prisma:push && concurrently \\\"npm:start:*\\\"\"",
     "redundant-code": "npx jscpd --ignore node_modules,dist,public,.next --reporters consoleFull .",
-    "update-depencencies": "npx npm-check-updates -i"
+    "update-depencencies": "npx npm-check-updates -i",
+    "fix-paths": "fix-esm-import-path  dist "
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"
@@ -50,6 +53,7 @@
     "@trpc/next": "^10.45.0",
     "@trpc/server": "^10.45.0",
     "bcrypt": "^5.1.1",
+    "fix-esm-import-path": "^1.10.1",
     "gray-matter": "^4.0.3",
     "next": "^14.1.0",
     "next-auth": "^4.24.5",
@@ -87,7 +91,9 @@
     "npm-run-all": "^4.1.5",
     "postcss": "^8.4.33",
     "prisma": "^5.8.1",
+    "resolve-tspaths": "^0.8.23",
     "tailwindcss": "^3.4.1",
+    "tsc-alias": "^1.8.10",
     "tsx": "^4.7.0",
     "typescript": "^5.3.3"
   }
