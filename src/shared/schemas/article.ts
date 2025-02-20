@@ -31,5 +31,5 @@ export const articleCommentSchema = z.object({
 
 export type ArticleCategories = z.infer<typeof articleCategoriesSchema>;
 export type ArticleCommentsWithPlayer = NonNullable<
-  inferRouterOutputs<typeof articleRouter>["getArticleCommentsById"]
->;
+  inferRouterOutputs<typeof articleRouter>["getMarkdownById"]
+>["Comments"];

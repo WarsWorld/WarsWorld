@@ -1,11 +1,8 @@
-import { createServerSideHelpers } from "@trpc/react-query/server";
 import Article from "frontend/components/layout/article/Article";
 import { markdownToHTML, stringToSlug } from "frontend/utils/articleUtils";
 import { trpc } from "frontend/utils/trpc-client";
 import type { GetStaticPaths, GetStaticPropsContext, InferGetStaticPropsType } from "next";
 import { prisma } from "server/prisma/prisma-client";
-import { appRouter } from "server/routers/app";
-import superjson from "superjson";
 
 export const getStaticPaths = (async () => {
   const articles = await prisma.article.findMany({
@@ -14,7 +11,6 @@ export const getStaticPaths = (async () => {
       title: true,
     },
   });
-
   const paths = articles?.map((article) => {
     return {
       params: {
@@ -25,11 +21,12 @@ export const getStaticPaths = (async () => {
 
   return {
     paths: paths ?? [],
-    fallback: "blocking",
+    fallback: true,
   };
 }) satisfies GetStaticPaths;
 
 export const getStaticProps = async (context: GetStaticPropsContext<{ slug: string[] }>) => {
+  // Url Params
   const articleId = context.params?.slug[0];
   const paramSlug = context.params?.slug[1];
 
@@ -40,25 +37,22 @@ export const getStaticProps = async (context: GetStaticPropsContext<{ slug: stri
       notFound: true,
     };
   }
-
-  const helpers = createServerSideHelpers({
-    router: appRouter,
-    ctx: { session: null },
-    transformer: superjson,
+  // Get article title name
+  const article = await prisma.article.findFirst({
+    select: {
+      title: true,
+    },
+    where: {
+      id: parseInt(articleId),
+    },
   });
 
-  const articleTitle = await helpers.article.getArticleTitleById.fetch({
-    id: articleId,
-  });
-
-  if (articleTitle === undefined || articleTitle === null) {
+  if (article == undefined) {
     return {
       notFound: true,
     };
   }
-
-  const title = stringToSlug(articleTitle);
-
+  const title = stringToSlug(article.title);
   // Redirect to correct slug
   if (title != paramSlug || context.params?.slug[2] != undefined) {
     return {
@@ -68,39 +62,30 @@ export const getStaticProps = async (context: GetStaticPropsContext<{ slug: stri
       },
     };
   }
-
-  await helpers.article.getArticleById.prefetch({
-    id: articleId,
-  });
-
   // Render the page
   return {
     props: {
-      trpcState: helpers.dehydrate(),
-      articleId: articleId,
+      articleId: articleId ?? "",
+      title: title,
     },
     revalidate: 60,
   };
 };
 
 export default function ArticlePage({ articleId }: InferGetStaticPropsType<typeof getStaticProps>) {
-  const { data: articleData } = trpc.article.getArticleById.useQuery(
+  const { data: articleData } = trpc.article.getMarkdownById.useQuery(
     { id: articleId },
-    { enabled: articleId !== undefined, refetchOnMount: false, refetchOnWindowFocus: false },
-  );
-  const { data: articleComments } = trpc.article.getArticleCommentsById.useQuery(
-    { id: articleId },
-    { enabled: articleId !== undefined },
+    { enabled: articleId != undefined },
   );
 
   return (
     <>
-      {articleData && articleComments && (
+      {articleData && (
         <Article
           articleData={{
             type: articleData.type ?? "news",
             contentHtml: markdownToHTML(articleData.body),
-            comments: articleComments,
+            comments: articleData.Comments,
             metaData: {
               title: articleData.title,
               description: articleData.description,
