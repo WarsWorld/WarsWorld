@@ -232,12 +232,12 @@ async function main() {
 
   await prisma.match.create({
     data: {
-      leagueType: "fog",
+      leagueType: "standard",
       rules: {
         bannedUnitTypes: [],
         captureLimit: 50,
         dayLimit: 50,
-        fogOfWar: true,
+        fogOfWar: false,
         fundsPerProperty: 1000,
         unitCapPerPlayer: 50,
         weatherSetting: "clear",
@@ -258,10 +258,10 @@ async function main() {
             version: "AW2",
           },
           eliminated: false,
-          funds: 10000,
+          funds: 0,
           powerMeter: 0,
           timesPowerUsed: 0,
-          army: "orange-star",
+          army: "blue-moon",
           COPowerState: "no-power",
         },
         {
@@ -275,10 +275,10 @@ async function main() {
             version: "AW2",
           },
           eliminated: false,
-          funds: 10000,
+          funds: 0,
           powerMeter: 0,
           timesPowerUsed: 0,
-          army: "black-hole",
+          army: "green-earth",
           COPowerState: "no-power",
         },
       ],

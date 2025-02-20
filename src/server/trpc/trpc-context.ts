@@ -8,7 +8,7 @@ import { getSession } from "next-auth/react";
 
 export async function createContext(opts: CreateNextContextOptions | CreateWSSContextFnOptions) {
   const session = await getSession({ req: opts.req });
-  console.log("createContext for", session?.user?.name ?? "unknown user");
+  //console.log("createContext for", session?.user?.name ?? "unknown user");
   return {
     session,
   };

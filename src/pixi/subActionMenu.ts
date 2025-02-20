@@ -1,4 +1,6 @@
-import { Assets, BitmapText, Container, Sprite, Texture } from "pixi.js";
+import type { DisplayObject } from "pixi.js";
+import { BitmapText, Container, Sprite, Texture } from "pixi.js";
+import type { MutableRefObject } from "react";
 import {
   createPipeSeamUnitEquivalent,
   getBaseDamage,
@@ -9,13 +11,16 @@ import { getWeatherSpecialMovement } from "shared/match-logic/weather";
 import {
   getDistance,
   getNeighbourPositions,
-  type Path,
+  isSamePosition,
   type Position,
 } from "shared/schemas/position";
 import type { UnitWrapper } from "shared/wrappers/unit";
-import type { FrontendUnit } from "../frontend/components/match/FrontendUnit";
+import type { MainAction, SubAction } from "../shared/schemas/action";
 import type { MatchWrapper } from "../shared/wrappers/match";
 import type { PlayerInMatchWrapper } from "../shared/wrappers/player-in-match";
+import type { LoadedSpriteSheet } from "./load-spritesheet";
+import { renderAttackTiles } from "./renderAttackTiles";
+import { baseTileSize } from "../components/client-only/MatchRenderer";
 
 export enum AvailableSubActions {
   "Wait",
@@ -32,6 +37,8 @@ export enum AvailableSubActions {
   "Attack",
 }
 
+let availableActions: Map<AvailableSubActions, SubAction>;
+
 export const getAvailableSubActions = (
   match: MatchWrapper,
   player: PlayerInMatchWrapper,
@@ -41,18 +48,26 @@ export const getAvailableSubActions = (
   const menuOptions: AvailableSubActions[] = [];
   const tile = match.getTile(newPosition);
 
-  //check for wait / join / load (move validity already checked somewhere else)
+  //This grabs the neighboring units in the new position, units.getNeighboringUnits() gets them in the old position
+  const neighbourPositions = getNeighbourPositions(newPosition);
+
+  const neighbourUnitsInNewPosition = match.units.filter((unit) =>
+    neighbourPositions.some((p) => isSamePosition(unit.data.position, p)),
+  );
+
+  //check for wait / join / load (move validity a
+  // already checked somewhere else)
   //if loading / joining, there is only one menu option
   if (
     match.getUnit(newPosition) === undefined ||
     (newPosition[0] === unit.data.position[0] && newPosition[1] === unit.data.position[1])
   ) {
-    menuOptions.push(AvailableSubActions.Wait);
+    availableActions.set(AvailableSubActions.Wait, { type: "wait" });
   } else if (match.getUnit(newPosition)?.data.type === unit.data.type) {
-    menuOptions.push(AvailableSubActions.Join);
+    availableActions.set(AvailableSubActions.Join, { type: "wait" });
     return menuOptions;
   } else {
-    menuOptions.push(AvailableSubActions.Load);
+    availableActions.set(AvailableSubActions.Load, { type: "wait" });
     return menuOptions;
   }
 
@@ -61,9 +76,12 @@ export const getAvailableSubActions = (
     let addAttackSubaction = false;
 
     const pipeSeamUnitEquivalent = createPipeSeamUnitEquivalent(match, unit);
+
     const canAttackPipeseams = getBaseDamage(unit, pipeSeamUnitEquivalent) !== null;
 
     if (unit.isIndirect()) {
+      console.log("unit is indirect");
+
       for (let x = 0; x < match.map.width && !addAttackSubaction; x++) {
         for (let y = 0; y < match.map.height && !addAttackSubaction; y++) {
           const distance = getDistance([x, y], unit.data.position);
@@ -108,7 +126,7 @@ export const getAvailableSubActions = (
         }
       }
 
-      for (const adjacentUnit of unit.getNeighbouringUnits()) {
+      for (const adjacentUnit of neighbourUnitsInNewPosition) {
         if (addAttackSubaction) {
           break;
         }
@@ -123,26 +141,34 @@ export const getAvailableSubActions = (
     }
 
     if (addAttackSubaction) {
-      menuOptions.push(AvailableSubActions.Attack);
+      //TODO: This implementation needs to actually check where user wants to attack
+      availableActions.set(AvailableSubActions.Attack, {
+        type: "attack",
+        defenderPosition: [0, 0],
+      });
     }
   }
 
   //check for capture / launch
   if (unit.isInfantryOrMech()) {
     if ("playerSlot" in tile && tile.playerSlot !== player.data.slot) {
-      menuOptions.push(AvailableSubActions.Capture);
+      availableActions.set(AvailableSubActions.Capture, { type: "ability" });
     }
 
     if (tile.type === "unusedSilo") {
-      menuOptions.push(AvailableSubActions.Launch);
+      //TODO: This implementation needs to actually check where user wants missile to go
+      availableActions.set(AvailableSubActions.Launch, {
+        type: "launchMissile",
+        targetPosition: [0, 0],
+      });
     }
   }
 
   //check for supply
   if (unit.data.type === "apc") {
-    for (const adjacentUnit of unit.getNeighbouringUnits()) {
-      if (adjacentUnit.player === unit.player) {
-        menuOptions.push(AvailableSubActions.Supply);
+    for (const adjacentUnit of neighbourUnitsInNewPosition) {
+      if (adjacentUnit.player.data.id === unit.player.data.id) {
+        availableActions.set(AvailableSubActions.Supply, { type: "ability" });
         break;
       }
     }
@@ -150,15 +176,15 @@ export const getAvailableSubActions = (
 
   //check for explode
   if (unit.data.type === "blackBomb") {
-    menuOptions.push(AvailableSubActions.Explode);
+    availableActions.set(AvailableSubActions.Explode, { type: "ability" });
   }
 
   //check for hide / show
   if ("hidden" in unit.data) {
     if (unit.data.hidden) {
-      menuOptions.push(AvailableSubActions.Show);
+      availableActions.set(AvailableSubActions.Show, { type: "ability" });
     } else {
-      menuOptions.push(AvailableSubActions.Hide);
+      availableActions.set(AvailableSubActions.Hide, { type: "ability" });
     }
   }
 
@@ -222,15 +248,17 @@ export const getAvailableSubActions = (
     }
 
     if (addUnloadSubaction) {
-      menuOptions.push(AvailableSubActions.Unload);
+      throw new Error("Unload not implemented");
+      // availableActions.set(AvailableSubActions.Unload, {type: "unloadWait", });
     }
   }
 
   //check for repair
   if (unit.data.type === "blackBoat") {
-    for (const adjacentUnit of unit.getNeighbouringUnits()) {
-      if (adjacentUnit.player === unit.player) {
-        menuOptions.push(AvailableSubActions.Repair);
+    for (const adjacentUnit of neighbourUnitsInNewPosition) {
+      if (adjacentUnit.player.data.id === unit.player.data.id) {
+        //TODO: Actually check where user wants to repair
+        availableActions.set(AvailableSubActions.Repair, { type: "repair", direction: "up" });
         break;
       }
     }
@@ -239,15 +267,20 @@ export const getAvailableSubActions = (
   return menuOptions;
 };
 
-export default async function subActionMenu(
+export default function subActionMenu(
   match: MatchWrapper,
   player: PlayerInMatchWrapper,
-  unit: FrontendUnit,
   newPosition: Position,
-  //TODO: Whats the type for a mutation?
-  mutation: any,
-  newPath?: Path,
+  unit: UnitWrapper,
+  currentUnitClickedRef: React.MutableRefObject<UnitWrapper | null>,
+  pathRef: MutableRefObject<Position[] | null>,
+  unitContainer: Container<DisplayObject>,
+  interactiveContainer: Container,
+  spriteSheets: LoadedSpriteSheet,
+  sendAction: (action: MainAction) => Promise<void>,
 ) {
+  availableActions = new Map<AvailableSubActions, SubAction>();
+
   const menuOptions = getAvailableSubActions(match, player, unit, newPosition);
 
   const [x, y] = newPosition;
@@ -259,42 +292,34 @@ export default async function subActionMenu(
   menuContainer.sortableChildren = true;
   menuContainer.zIndex = 999;
 
-  const tileSize = 16;
   //this is the value we have applied to units (half a tile)
-  const unitSize = tileSize / 2;
+  const unitSize = baseTileSize / 2;
 
   //the name lets us find the menu easily with getChildByName for easy removal
   menuContainer.name = "subMenu";
 
-  //TODO: Modify these two x and y conditions so that menu is onlu moved if it would ever be out of bounds, so it should check not if we are halfway but just about to cross off the map
-
   // if we are over half the map. invert menu placement
   if (x > match.map.width / 2) {
-    menuContainer.x = x * tileSize - tileSize * 3; //the menu width is about 6 * tileSize
+    menuContainer.x = x * baseTileSize - baseTileSize * 3; //the menu width is about 6 * baseTileSize
   }
   //we are not over half the map, menu is placed next to factory
   else {
-    menuContainer.x = x * tileSize + tileSize;
+    menuContainer.x = x * baseTileSize + baseTileSize;
   }
 
   //if our menu would appear below the middle of the map, we need to bring it up!
-  if (y >= match.map.height / 2 && match.map.height - y < menuOptions.length) {
+  if (y >= match.map.height / 2 && match.map.height - y <= menuOptions.length + 1) {
     const spaceLeft = match.map.height - y;
-    menuContainer.y = (y - Math.abs(spaceLeft - menuOptions.length)) * tileSize;
+    menuContainer.y = (y - Math.abs(spaceLeft - menuOptions.length)) * baseTileSize;
   } else {
-    menuContainer.y = y * tileSize;
+    menuContainer.y = y * baseTileSize;
   }
 
-  //TODO: Fix border
-  menuContainer.x += 8;
-  menuContainer.y += 8;
-
-  await Assets.load("/aw2Font.fnt");
-
-  //This makes the menu elements be each below each other, it starts at 0 then gets plussed, so elements keep going down and down. yValue is not the best name for it but effectively it is that, a y value
+  //This makes the menu elements be each below each other, it starts at 0 then gets plussed, so elements keep going down and down.
+  // yValue is not the best name for it but effectively it is that, a y value
   let yValue = 0;
 
-  for (const subAction of menuOptions) {
+  for (const [name, subAction] of availableActions) {
     //child container to hold all the text and sprite into one place
     const menuElement = new Container();
     menuElement.eventMode = "static";
@@ -304,19 +329,19 @@ export default async function subActionMenu(
     actionBG.x = 0;
     actionBG.y = yValue;
     //TODO: Standardize these sizes
-    actionBG.width = tileSize * 2.8;
+    actionBG.width = baseTileSize * 2.8;
     actionBG.height = unitSize * 1.35;
     actionBG.eventMode = "static";
     actionBG.tint = "#ffffff";
     actionBG.alpha = 0.5;
     menuElement.addChild(actionBG);
 
-    const actionText = new BitmapText(`${AvailableSubActions[subAction].toUpperCase()}`, {
+    const actionText = new BitmapText(`${AvailableSubActions[name].toUpperCase()}`, {
       fontName: "awFont",
       fontSize: 10,
     });
     actionText.y = yValue;
-    actionText.x = tileSize;
+    actionText.x = baseTileSize;
     //trying to line it up nicely wiht the unit icon
     actionText.anchor.set(0, -0.3);
     menuElement.addChild(actionText);
@@ -331,17 +356,33 @@ export default async function subActionMenu(
       actionBG.alpha = 0.5;
     });
 
-    //TODO: WHEN CLICKING
     menuElement.on("pointerdown", () => {
-      console.log(newPath);
+      //if its an attack
+      if (name === AvailableSubActions.Attack) {
+        interactiveContainer.addChild(
+          renderAttackTiles(
+            unitContainer,
+            interactiveContainer,
+            match,
+            player,
+            currentUnitClickedRef,
+            spriteSheets,
+            pathRef.current,
+            sendAction,
+          ),
+        );
+      } else {
+        void sendAction({
+          type: "move",
+          subAction: subAction,
+          path: pathRef.current ?? [newPosition],
+        });
 
-      mutation.mutateAsync({
-        type: "move",
-        subAction: subAction,
-        path: newPath,
-        playerId: player.data.id,
-        matchId: match.id,
-      });
+        //The currentUnitClicked has changed (moved, attacked, died), therefore, we delete the previous information as it is not accurate anymore
+        //this also helps so when the screen resets, we dont have two copies of a unit
+        currentUnitClickedRef.current = null;
+      }
+
       //as soon a selection is done, destroy/erase the menu
       menuContainer.destroy();
     });
@@ -356,7 +397,7 @@ export default async function subActionMenu(
   menuBG.tint = "#cacaca";
   menuBG.x = -2;
   menuBG.y = -2;
-  menuBG.width = tileSize * 3; //expands 3 tiles worth of space
+  menuBG.width = baseTileSize * 3; //expands 3 tiles worth of space
   menuBG.height = yValue;
   menuBG.zIndex = -1;
   menuBG.alpha = 1;

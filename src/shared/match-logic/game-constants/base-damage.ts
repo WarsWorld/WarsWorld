@@ -12,7 +12,8 @@ export const createPipeSeamUnitEquivalent = (
   const usedVersion = match.rules.gameVersion ?? attacker.player.data.coId.version;
   const unitEquivalent: WWUnit = {
     type: usedVersion === "AW1" ? "mediumTank" : "neoTank",
-    playerSlot: -1,
+    //TODO: We can't use -1 because that player doesnt exist/throws an error, I'm changing it to playerSlot: 1 just to make it "work" for now
+    playerSlot: 1,
     position: pipeSeamPosition ?? [0, 0],
     isReady: false,
     stats: {

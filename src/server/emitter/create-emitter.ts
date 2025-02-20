@@ -8,24 +8,49 @@ import type { Match } from "@prisma/client";
  */
 export const createEmitter = <D extends { matchId: Match["id"] }>() => {
   type Listener = (dispatched: D) => void;
-  const listenerMap = new Map<Match["id"], Listener[]>();
+  //New update
+  const listenerMap = new Map<Match["id"], Map<string, Listener[]>>();
 
-  const unsubscribe = (matchId: Match["id"], listenerToUnsub: Listener) => {
-    listenerMap.set(matchId, listenerMap.get(matchId)?.filter((l) => l !== listenerToUnsub) ?? []);
+  const unsubscribe = (matchId: Match["id"], playerId: string, listenerToUnsub: Listener) => {
+    listenerMap.get(matchId)?.delete(playerId);
   };
 
   return {
-    subscribe: (matchId: Match["id"], listenerToSubscribe: Listener) => {
-      const listeners = listenerMap.get(matchId);
+    subscribe: (matchId: Match["id"], playerID: string, listenerToSubscribe: Listener) => {
+      // Ensure the match exists in the outer map
+      if (!listenerMap.has(matchId)) {
+        listenerMap.set(matchId, new Map());
+      }
 
-      listenerMap.set(matchId, [...(listeners ?? []), listenerToSubscribe]);
+      // Get the inner map for the match
+      const matchMap = listenerMap.get(matchId)!;
 
-      return () => unsubscribe(matchId, listenerToSubscribe);
+      //is it an spectator
+      if (playerID === "spectator") {
+        matchMap.set(playerID, [...(matchMap.get(playerID) ?? []), listenerToSubscribe]);
+      } else {
+        matchMap.set(playerID, [listenerToSubscribe]);
+      }
+
+      return () => unsubscribe(matchId, playerID, listenerToSubscribe);
     },
     unsubscribe,
-    emit: (dispatched?: D) => {
+    emit: (playerId: string, dispatched?: D) => {
       if (dispatched) {
-        listenerMap.get(dispatched.matchId)?.forEach((l) => l(dispatched));
+        const matchMap = listenerMap.get(dispatched.matchId);
+
+        // Null check for matchMap
+        if (!matchMap) {
+          return;
+        }
+
+        // Use get method instead of iteration
+        const listeners = matchMap.get(playerId);
+
+        // If listeners exist, call them
+        if (listeners) {
+          listeners.forEach((l) => l(dispatched));
+        }
       }
     },
   };

@@ -1,87 +1,78 @@
 import { baseTileSize } from "components/client-only/MatchRenderer";
 import type { FrontendUnit } from "frontend/components/match/FrontendUnit";
-import { AnimatedSprite, Container, type Spritesheet } from "pixi.js";
-import type { LoadedSpriteSheet } from "./load-spritesheet";
-import type { UnitWrapper } from "../shared/wrappers/unit";
-import type { ArmySpritesheetData } from "../frontend/components/match/getSpritesheetData";
+import { AnimatedSprite, Container, Sprite } from "pixi.js";
 import type { Position } from "shared/schemas/position";
+import type { UnitWrapper } from "../shared/wrappers/unit";
+import type { LoadedSpriteSheet } from "./load-spritesheet";
 
-export function renderUnitSprite(
-  unit: FrontendUnit | UnitWrapper,
-  spriteSheets: Spritesheet<ArmySpritesheetData>,
-  newPosition?: Position | null,
-) {
-  const unitSprite = new AnimatedSprite(spriteSheets.animations[unit.data.type]);
+type UnitType = FrontendUnit | UnitWrapper;
+type SpritePosition = { x: number; y: number };
 
-  let x = unit.data.position[0];
-  let y = unit.data.position[1];
-  let unitName = `unit-${x}-${y}`;
-
-  //this lets us render at a different position (such as when moving an unit around)
-  if (newPosition) {
-    x = newPosition[0];
-    y = newPosition[1];
-    unitName = "unit-ghost";
-  }
-
-  //TODO: so y'all remember there's a border around the map? units x and y needs to be plussed by that
-  unitSprite.x = x * baseTileSize + 8;
-  unitSprite.y = y * baseTileSize + 8;
-  unitSprite.animationSpeed = 0.07;
-
-  if (!unit.data.isReady) {
-    unitSprite.tint = "#bbbbbb";
-  }
-
-  unitSprite.name = unitName;
-  unitSprite.play();
-
-  //TODO: So frontendunit has a sprite but not unitwrapper. Right now, using something like match.getUnit(position) gets you an unitWrapper unit. Therefore, until we have an easy way to get our frontendunits, we can't use sprite
-  //unit.sprite = unitSprite;
-
-  return unitSprite;
+function calculatePosition(position: Position, offset = 8): SpritePosition {
+  return {
+    x: position[0] * baseTileSize + offset,
+    y: position[1] * baseTileSize + offset,
+  };
 }
 
-/*import { baseTileSize } from "components/client-only/MatchRenderer";
-import type { FrontendUnit } from "frontend/components/match/FrontendUnit";
-import { AnimatedSprite, Container } from "pixi.js";
-import type { LoadedSpriteSheet } from "./load-spritesheet";
-import { Army } from "../shared/schemas/army";
-import { UnitType } from "../shared/schemas/unit";
-import { Position } from "../shared/schemas/position";
+function createIcon(spriteSheet: LoadedSpriteSheet, pos: Position, texture: string): Sprite {
+  const icon = new Sprite(spriteSheet.icons?.textures[texture]);
+  icon.x = pos[0];
+  icon.y = pos[1];
+  icon.width = 8;
+  icon.height = 8;
+  icon.eventMode = "static";
+  icon.zIndex = 999;
+  return icon;
+}
 
 export function renderUnitSprite(
   unit: UnitType,
-  army: Army,
-  position: Position,
-  spriteSheets: LoadedSpriteSheet
-) {
+  spriteSheets: LoadedSpriteSheet,
+  newPosition?: Position | null,
+): Container {
+  const position = newPosition ?? unit.data.position;
+  const spritePosition = calculatePosition(position);
 
-  const unitSprite = new AnimatedSprite(spriteSheets[army]?.animations[unit]
-  );
+  // Create unit container and sprite
+  const unitContainer = new Container();
+  const armySpriteSheet = spriteSheets[`${unit.player.data.army}`];
+  const unitSprite = new AnimatedSprite(armySpriteSheet.animations[unit.data.type]);
 
-  //so y'all remember there's a border around the map? units x and y needs to be plussed by that
-  unitSprite.x = position[0] * baseTileSize + 8;
-  unitSprite.y = position[1] * baseTileSize + 8;
+  // Configure unit sprite
+  unitSprite.x = spritePosition.x;
+  unitSprite.y = spritePosition.y;
   unitSprite.animationSpeed = 0.07;
 
   if (!unit.data.isReady) {
     unitSprite.tint = "#bbbbbb";
   }
 
-  let x = position[0];
-  let y = position[1];
-
-  //if we need to reference a unit by name (such as after it gets killed), we can get it via getChildByName "unit-x-y"
-  unitSprite.name = `unit-${x}-${y}`;
-
   unitSprite.play();
+  unitContainer.name = newPosition ? "tempUnit" : `unit-${position[0]}-${position[1]}`;
+  unitContainer.addChild(unitSprite);
 
-  //TODO: Why does the unit need to save sprite?
-  //unit.sprite = unitSprite;
+  // Add capture points icon if applicable
+  if ("currentCapturePoints" in unit.data && unit.data.currentCapturePoints !== undefined) {
+    const captureIcon = createIcon(
+      spriteSheets,
+      [spritePosition.x, spritePosition.y + 8],
+      "capturing.png",
+    );
+    unitContainer.addChild(captureIcon);
+  }
 
-  return unitSprite;
+  // Add HP icon if not at full health
+  const visualHP = unit.getVisualHP();
+
+  if (visualHP !== 10) {
+    const healthIcon = createIcon(
+      spriteSheets,
+      [spritePosition.x + 8, spritePosition.y + 8],
+      `health-${visualHP}.png`,
+    );
+    unitContainer.addChild(healthIcon);
+  }
+
+  return unitContainer;
 }
-
-
- */

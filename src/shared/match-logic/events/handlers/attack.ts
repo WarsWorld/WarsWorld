@@ -163,7 +163,7 @@ export const attackActionToEvent: (...params: Params) => AttackEvent = (
   return {
     ...action,
     defenderHP: Math.max(0, result.defenderHP),
-    attackerHp: result.attackerHP !== undefined ? Math.max(0, result.attackerHP) : undefined,
+    attackerHP: result.attackerHP !== undefined ? Math.max(0, result.attackerHP) : undefined,
     eliminationReason: getEliminationReason({
       attacker: attacker.player,
       defender: defender.player,

@@ -32,6 +32,9 @@ export default function MatchCardTop({ mapName, day, state }: matchData) {
           </div>
         )}
 
+        {
+          //TODO: This needs to actually grab the gamemode
+        }
         <div className="@col-span-1 ">STD</div>
 
         <div className="@col-span-1 @bg-bg-secondary">

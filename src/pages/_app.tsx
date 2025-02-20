@@ -7,9 +7,12 @@ import { SessionProvider } from "next-auth/react";
 import type { AppType } from "next/app";
 import Head from "next/head";
 
-const MyApp: AppType<{ session: Session | null }> = ({ Component, pageProps }) => {
+const MyApp: AppType<{ session: Session | null }> = ({
+  Component,
+  pageProps: { session, ...pageProps },
+}) => {
   return (
-    <SessionProvider session={pageProps.session}>
+    <SessionProvider session={session}>
       <Head>
         <title>Wars World</title>
         <link rel="icon" href="/favicon.ico" />

@@ -147,6 +147,28 @@ export class PlayerInMatchWrapper {
     return false;
   }
 
+  getFundsPerTurn() {
+    let numberOfFundsGivingProperties = 0;
+
+    for (const changeableTile of this.match.changeableTiles) {
+      if (
+        changeableTile.type !== "lab" &&
+        changeableTile.type !== "commtower" &&
+        this.owns(changeableTile)
+      ) {
+        numberOfFundsGivingProperties++;
+      }
+    }
+
+    let { fundsPerProperty } = this.match.rules;
+
+    if (this.data.coId.name === "sasha") {
+      fundsPerProperty += 100;
+    }
+
+    return numberOfFundsGivingProperties * fundsPerProperty;
+  }
+
   addUnwrappedUnit(rawUnit: Omit<UnitWithVisibleStats, "playerSlot">) {
     const unit = new UnitWrapper(
       { ...rawUnit, playerSlot: this.data.slot } as UnitWithVisibleStats,

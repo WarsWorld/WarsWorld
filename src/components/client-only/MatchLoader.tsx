@@ -6,6 +6,7 @@ import { trpc } from "frontend/utils/trpc-client";
 import { loadSpritesFromSpriteMap } from "pixi/load-spritesheet";
 import { MatchWrapper } from "shared/wrappers/match";
 import { MatchRenderer } from "./MatchRenderer";
+import { useEffect, useState } from "react";
 
 type Props = {
   matchId: string;
@@ -19,6 +20,8 @@ export function MatchLoader({ matchId, playerId, spritesheetDataByArmy }: Props)
     queryFn: () => loadSpritesFromSpriteMap(spritesheetDataByArmy),
   });
 
+  const [turn, setTurn] = useState<boolean>(false);
+
   const fullMatchQuery = trpc.match.full.useQuery(
     { matchId, playerId },
     {
@@ -30,8 +33,9 @@ export function MatchLoader({ matchId, playerId, spritesheetDataByArmy }: Props)
         },
       ],
       refetchIntervalInBackground: false,
-      refetchOnReconnect: false,
-      refetchOnWindowFocus: false,
+      refetchOnReconnect: true,
+      //refetchInterval: 10000,
+      refetchOnWindowFocus: true,
       select(match) {
         return new MatchWrapper<ChangeableTileWithSprite, FrontendUnit>(
           match.id,
@@ -48,6 +52,11 @@ export function MatchLoader({ matchId, playerId, spritesheetDataByArmy }: Props)
       },
     },
   );
+
+  // Add useEffect to trigger refetch when turn changes
+  useEffect(() => {
+    fullMatchQuery.refetch();
+  }, [turn]);
 
   if (fullMatchQuery.isError || spriteSheetQuery.isError) {
     return <p>error {":("}</p>;
@@ -67,6 +76,8 @@ export function MatchLoader({ matchId, playerId, spritesheetDataByArmy }: Props)
     <MatchRenderer
       match={fullMatchQuery.data}
       spriteSheets={spriteSheetQuery.data}
+      turn={turn}
+      setTurn={setTurn}
       player={player}
     />
   );

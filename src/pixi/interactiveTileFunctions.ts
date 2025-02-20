@@ -6,21 +6,17 @@ import type { MatchWrapper } from "shared/wrappers/match";
 import type { UnitWrapper } from "shared/wrappers/unit";
 import { tileConstructor } from "./sprite-constructor";
 
-export const readyUnitClickedAccessibleTile = (
-  match: MatchWrapper,
-  unit: UnitWrapper,
-  position: Position,
-) => {
-  //check if can be a final location (empty tile or join or load)
-  //display subaction menu
+export type BattleForecast = {
+  attackerDamage: { max: number; min: number };
+  defenderDamage: { max: number; min: number };
 };
 
-export const readyUnitHoveredAttackableTile = (
+export const getBattleForecast = (
   match: MatchWrapper,
   attacker: UnitWrapper,
   newUnitPosition: Position,
   attackingPosition: Position,
-) => {
+): BattleForecast => {
   let defender = match.getUnit(attackingPosition);
   const isPipeSeamAttack = defender === undefined;
 
@@ -77,8 +73,18 @@ export const readyUnitHoveredAttackableTile = (
   const maxDamageTaken = attacker.getHP() - (bestDefenderOutcome.attackerHP ?? 0);
   const minDamageTaken = attacker.getHP() - (bestAttackerOutcome.attackerHP ?? 0);
 
-  //TODO create display showing those 4 numbers (don't display damage taken if both are 0 (never counterattack))
-  // also remove it when not hovering it anymore
+  //Enemy unit is dead or can't attack
+  if (minDamageDealt >= defender?.getHP() || maxDamageTaken === attacker.getHP()) {
+    return {
+      attackerDamage: { max: maxDamageDealt, min: minDamageDealt },
+      defenderDamage: { min: 0, max: 0 },
+    };
+  }
+
+  return {
+    attackerDamage: { max: maxDamageDealt, min: minDamageDealt },
+    defenderDamage: { min: minDamageTaken, max: maxDamageTaken },
+  };
 };
 
 export const readyUnitClickedAttackableTile = (
@@ -95,15 +101,22 @@ export const readyUnitClickedAttackableTile = (
   }
 };
 
+export const readyUnitClickedAccessibleTile = (
+  match: MatchWrapper,
+  unit: UnitWrapper,
+  position: Position,
+) => {
+  //check if can be a final location (empty tile or join or load)
+  //display subaction menu
+};
+
 //passable tiles colour: "#43d9e4"
 //attackable tiles colour: "#be1919"
-export const createTileContainer = (
+export const createTilesContainer = (
   tilePositions: Position[],
   tileColour: string,
   tileZIndex: number,
   containerName?: string,
-  hoverBehaviour?: (position: Position) => void,
-  clickBehaviour?: (positoin: Position) => void,
 ) => {
   const markedTiles = new Container();
   markedTiles.eventMode = "dynamic";
@@ -111,21 +124,13 @@ export const createTileContainer = (
   for (const pos of tilePositions) {
     const square = tileConstructor(pos, tileColour);
 
-    if (hoverBehaviour) {
-      square.on("mouseover", () => hoverBehaviour(pos));
-    }
-
-    if (clickBehaviour) {
-      square.on("pointerdown", () => clickBehaviour(pos));
-    }
-
     markedTiles.addChild(square);
   }
 
   markedTiles.zIndex = tileZIndex;
 
   if (containerName !== undefined) {
-    markedTiles.name = "path";
+    markedTiles.name = containerName;
   }
 
   return markedTiles;

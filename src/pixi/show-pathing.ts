@@ -1,4 +1,3 @@
-import type { Spritesheet } from "pixi.js";
 import { Container, Sprite } from "pixi.js";
 import {
   createPipeSeamUnitEquivalent,
@@ -8,12 +7,15 @@ import type { Position } from "shared/schemas/position";
 import {
   getDistance,
   getNeighbourPositions,
+  isSamePosition,
   positionsAreNeighbours,
 } from "shared/schemas/position";
 import type { MapWrapper } from "shared/wrappers/map";
 import type { MatchWrapper } from "shared/wrappers/match";
+import { baseTileSize } from "../components/client-only/MatchRenderer";
 import { DispatchableError } from "../shared/DispatchedError";
 import type { UnitWrapper } from "../shared/wrappers/unit";
+import type { LoadedSpriteSheet } from "./load-spritesheet";
 export type PathNode = {
   //saves distance from origin and parent (to retrieve the shortest path)
   pos: Position;
@@ -99,15 +101,17 @@ export const getAccessibleNodes = (
 export const getAttackableTiles = (
   match: MatchWrapper,
   unit: UnitWrapper,
+  fromPosition?: Position,
   accessibleNodes?: Map<Position, PathNode>,
 ): Position[] => {
   const attackPositions: Position[] = [];
+  const sourcePosition = fromPosition ?? unit.data.position;
 
   if ("attackRange" in unit.properties && unit.properties.attackRange[0] > 1) {
-    //ranged unit
+    // Ranged unit
     for (let x = 0; x < match.map.width; x++) {
       for (let y = 0; y < match.map.height; y++) {
-        const distance = getDistance([x, y], unit.data.position);
+        const distance = getDistance([x, y], sourcePosition);
 
         if (
           distance <= unit.properties.attackRange[1] &&
@@ -118,15 +122,17 @@ export const getAttackableTiles = (
       }
     }
   } else {
+    // Melee unit
     if (accessibleNodes === undefined) {
-      accessibleNodes = getAccessibleNodes(match, unit);
+      accessibleNodes = fromPosition
+        ? new Map([[fromPosition, { pos: fromPosition, dist: 0, parent: null }]]) // Create a minimal node if specific position given
+        : getAccessibleNodes(match, unit);
     }
 
     const visited = makeVisitedMatrix(match.map);
 
     for (const [pos] of accessibleNodes.entries()) {
       for (const adjPos of getNeighbourPositions(pos)) {
-        //all positions adjacent to tiles where the unit can move to are attacking tiles
         if (!match.map.isOutOfBounds(adjPos)) {
           if (!visited[adjPos[0]][adjPos[1]]) {
             attackPositions.push(adjPos);
@@ -143,12 +149,13 @@ export const getAttackableTiles = (
 export const getAttackTargetTiles = (
   match: MatchWrapper,
   unit: UnitWrapper,
+  fromPosition?: Position,
   attackableTiles?: Position[],
 ) => {
   const attackTargetPositions: Position[] = [];
 
   if (attackableTiles === undefined) {
-    attackableTiles = getAttackableTiles(match, unit);
+    attackableTiles = getAttackableTiles(match, unit, fromPosition);
   }
 
   const canAttackPipeseams =
@@ -171,23 +178,37 @@ export const getAttackTargetTiles = (
   return attackTargetPositions;
 };
 
+export const calculatePathDistance = (unit: UnitWrapper, path: Position[]) => {
+  let dist = 0;
+
+  path.forEach((pos, index) => {
+    if (index !== 0) {
+      const moveCost = unit.getMovementCost(pos); //TODO cache movement costs
+
+      if (moveCost === null) {
+        return null;
+      }
+
+      dist += moveCost;
+    }
+  });
+
+  return dist;
+};
+
 export const updatePath = (
   unit: UnitWrapper,
   accessibleNodes: Map<Position, PathNode>,
-  path: PathNode[] | undefined,
+  path: Position[],
   newPos: Position,
-): PathNode[] => {
-  if (!accessibleNodes.has(newPos)) {
-    throw new Error("Trying to add an unreachable position!");
-  }
+): Position[] => {
+  if (path.length !== 0) {
+    const lastPosition = path.at(-1)!;
 
-  if (path !== undefined && path.length !== 0) {
-    const lastNode = path.at(-1)!;
-
-    for (const node of path) {
-      if (node.pos === newPos) {
+    for (const pos of path) {
+      if (isSamePosition(pos, newPos)) {
         //the "new" node is part of the current path, so delete all nodes after that one
-        while (node !== path.at(-1)) {
+        while (pos !== path.at(-1)) {
           path.pop();
         }
 
@@ -196,32 +217,45 @@ export const updatePath = (
     }
 
     //check if new node is adjacent
-    if (positionsAreNeighbours(lastNode.pos, newPos)) {
+    if (positionsAreNeighbours(lastPosition, newPos)) {
       const moveCost = unit.getMovementCost(newPos);
+      const distanceCovered = calculatePathDistance(unit, path);
 
       //if it doesn't surpass movement restrictions, update current path
-      if (moveCost !== null && moveCost + lastNode.dist <= unit.getMovementPoints()) {
-        path.push({
-          pos: newPos,
-          dist: moveCost + lastNode.dist,
-          parent: lastNode.pos,
-        });
+      if (moveCost !== null && moveCost + distanceCovered <= unit.getMovementPoints()) {
+        path.push(newPos);
         return path;
       }
     }
   }
 
   //if the new position can't be added to the current path, recreate the entire path
-  const newPath: PathNode[] = [];
-  let currentPos: [number, number] | null = newPos;
+  const newPath: Position[] = [];
+  let currentPathNode = undefined;
 
-  while (currentPos !== null) {
-    const accessibleNodesPath = accessibleNodes.get(currentPos);
-
-    if (accessibleNodesPath !== undefined) {
-      newPath.push(accessibleNodesPath);
-      currentPos = accessibleNodesPath.parent;
+  for (const [key, value] of accessibleNodes) {
+    if (isSamePosition(key, newPos)) {
+      currentPathNode = value;
+      break;
     }
+  }
+
+  if (currentPathNode === undefined) {
+    return path;
+  }
+
+  while (currentPathNode !== undefined) {
+    newPath.push(currentPathNode.pos);
+
+    if (currentPathNode.parent === null) {
+      break;
+    }
+
+    currentPathNode = accessibleNodes.get(currentPathNode.parent);
+  }
+
+  if (newPath.length === 0) {
+    return path;
   }
 
   return newPath.toReversed();
@@ -229,28 +263,28 @@ export const updatePath = (
 
 const getSpriteName = (a: Position, b: Position, c: Position): string => {
   //path from a to b to c, the sprite is the one displayed in b (middle node)
-  const dify = Math.abs(a[1] - c[1]);
   const difx = Math.abs(a[0] - c[0]);
+  const dify = Math.abs(a[1] - c[1]);
 
   if (dify + difx === 2) {
     //not start nor end
-    if (dify === 2) {
+    if (difx === 2) {
       return "ew";
     }
 
-    if (difx === 2) {
+    if (dify === 2) {
       return "ns";
     }
 
     let ans: string;
 
-    if (a[0] > b[0] || c[0] > b[0]) {
+    if (a[1] > b[1] || c[1] > b[1]) {
       ans = "s";
     } else {
       ans = "n";
     }
 
-    if (a[1] > b[1] || c[1] > b[1]) {
+    if (a[0] > b[0] || c[0] > b[0]) {
       ans += "e";
     } else {
       ans += "w";
@@ -259,37 +293,37 @@ const getSpriteName = (a: Position, b: Position, c: Position): string => {
     return ans;
   }
 
-  if (a[1] === b[1] && a[0] === b[0]) {
+  if (a[0] === b[0] && a[1] === b[1]) {
     //starting node
-    if (c[1] === b[1] && c[0] === b[0]) {
+    if (c[0] === b[0] && c[1] === b[1]) {
       //AND ending node
       return "od";
     }
 
-    if (c[1] < b[1]) {
+    if (c[0] < b[0]) {
       return "ow";
     }
 
-    if (c[1] > b[1]) {
+    if (c[0] > b[0]) {
       return "oe";
     }
 
-    if (c[0] > b[0]) {
+    if (c[1] > b[1]) {
       return "os";
     }
 
     return "on";
   } else {
     //ending node
-    if (a[1] < b[1]) {
+    if (a[0] < b[0]) {
       return "wd";
     }
 
-    if (a[1] > b[1]) {
+    if (a[0] > b[0]) {
       return "ed";
     }
 
-    if (a[0] < b[0]) {
+    if (a[1] < b[1]) {
       return "nd";
     }
 
@@ -297,7 +331,7 @@ const getSpriteName = (a: Position, b: Position, c: Position): string => {
   }
 };
 
-export const showPath = (spriteSheet: Spritesheet, path: PathNode[]) => {
+export const showPath = (spriteSheet: LoadedSpriteSheet, path: Position[]) => {
   if (path.length < 1) {
     throw new Error("Empty path!");
   }
@@ -310,23 +344,25 @@ export const showPath = (spriteSheet: Spritesheet, path: PathNode[]) => {
   path2.push(path[len - 1]); //to detect the final node
 
   for (let i = 0; i < len; ++i) {
-    let spriteName: string;
+    let spriteName = "";
 
     if (i === 0) {
+      //TODO i don't understand what this does
       //special case for original node
-      spriteName = getSpriteName(path2[0].pos, path2[i].pos, path2[i + 1].pos);
+      //spriteName = getSpriteName(path2[0], path2[i], path2[i + 1]);
     } else {
-      spriteName = getSpriteName(path2[i - 1].pos, path2[i].pos, path2[i + 1].pos);
+      spriteName = getSpriteName(path2[i - 1], path2[i], path2[i + 1]);
     }
 
-    const nodeSprite = new Sprite(spriteSheet.textures[spriteName + ".png"]);
+    const nodeSprite = new Sprite(spriteSheet.arrow?.textures[spriteName + ".png"]);
     nodeSprite.anchor.set(1, 1);
-    nodeSprite.x = (path2[i].pos[1] + 1) * 16;
-    nodeSprite.y = (path2[i].pos[0] + 1) * 16;
+    nodeSprite.x = (path2[i][0] + 1) * baseTileSize;
+    nodeSprite.y = (path2[i][1] + 1) * baseTileSize;
     arrowContainer.addChild(nodeSprite);
   }
 
   //this name will let us easily remove arrows later
   arrowContainer.name = "arrows";
+  arrowContainer.zIndex = 9999;
   return arrowContainer;
 };

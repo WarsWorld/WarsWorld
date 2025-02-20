@@ -1,20 +1,22 @@
 import type { ArmySpritesheetData } from "frontend/components/match/getSpritesheetData";
-import type { DisplayObject, Spritesheet } from "pixi.js";
-import { AnimatedSprite, Assets, BitmapText, Container, Sprite, Text, Texture } from "pixi.js";
+import type { Spritesheet } from "pixi.js";
+import { AnimatedSprite, BitmapText, Container, Sprite, Texture } from "pixi.js";
 import { unitPropertiesMap } from "shared/match-logic/game-constants/unit-properties";
+import type { MainAction } from "shared/schemas/action";
 import type { Position } from "shared/schemas/position";
-import { UnitType, unitTypes } from "shared/schemas/unit";
+import { unitTypes } from "shared/schemas/unit";
 import type { MatchWrapper } from "../shared/wrappers/match";
 import type { PlayerInMatchWrapper } from "../shared/wrappers/player-in-match";
+import { baseTileSize } from "../components/client-only/MatchRenderer";
 
 //only called if player has current turn
-export default async function buildUnitMenu(
+export const buildUnitMenu = (
   spriteSheet: Spritesheet<ArmySpritesheetData>,
   match: MatchWrapper,
   player: PlayerInMatchWrapper,
   [x, y]: Position,
-  onBuild?: any,
-) {
+  sendAction: (action: MainAction) => Promise<void>,
+) => {
   //The big container holding everything
   //set its eventmode to static for interactivity and sortable for zIndex
   const menuContainer = new Container();
@@ -22,12 +24,11 @@ export default async function buildUnitMenu(
   menuContainer.sortableChildren = true;
   menuContainer.zIndex = 999;
 
-  const tileSize = 16;
   //this is the value we have applied to units (half a tile)
-  const unitSize = tileSize / 2;
+  const unitSize = baseTileSize / 2;
 
   //the name lets us find the menu easily with getChildByName for easy removal
-  menuContainer.name = "unitMenu";
+  menuContainer.name = "buildMenu";
 
   const allowedUnits = unitTypes.filter((t) => !match.rules.bannedUnitTypes.includes(t));
 
@@ -40,29 +41,23 @@ export default async function buildUnitMenu(
 
   // if we are over half the map. invert menu placement
   if (x > match.map.width / 2) {
-    menuContainer.x = x * tileSize - tileSize * 6; //the menu width is about 6 * tileSize
+    menuContainer.x = x * baseTileSize - baseTileSize * 6; //the menu width is about 6 * baseTileSize
   }
   //we are not over half the map, menu is placed next to factory
   else {
-    menuContainer.x = x * tileSize + tileSize;
+    menuContainer.x = x * baseTileSize + baseTileSize;
   }
 
   //if our menu would appear below the middle of the map, we need to bring it up!
   if (y >= match.map.height / 2 && match.map.height - y < buildableUnitTypes.length) {
     const spaceLeft = match.map.height - y;
-    menuContainer.y = (y - Math.abs(spaceLeft - buildableUnitTypes.length)) * tileSize;
+    menuContainer.y = (y - Math.abs(spaceLeft - buildableUnitTypes.length)) * baseTileSize;
   } else {
-    menuContainer.y = y * tileSize;
+    menuContainer.y = y * baseTileSize;
   }
 
-  //TODO: Fix border
-  menuContainer.x += 8;
-  menuContainer.y += 8;
-
-  //lets load our font
-  await Assets.load("/aw2Font.fnt");
-
-  //This makes the menu elements be each below each other, it starts at 0 then gets plussed, so elements keep going down and down. yValue is not the best name for it but effectively it is that, a y value
+  //This makes the menu elements be each below each other, it starts at 0 then gets plussed,
+  // so elements keep going down and down. yValue is not the best name for it but effectively it is that, a y value
   let yValue = 0;
 
   //lets loop through each unit and build the build menu
@@ -76,7 +71,7 @@ export default async function buildUnitMenu(
     unitBG.x = 0;
     unitBG.y = yValue;
     //TODO: Standardize these sizes
-    unitBG.width = tileSize * 5.7;
+    unitBG.width = baseTileSize * 5.7;
     unitBG.height = unitSize * 1.35;
     unitBG.eventMode = "static";
     unitBG.tint = "#ffffff";
@@ -95,49 +90,57 @@ export default async function buildUnitMenu(
     menuElement.addChild(unitSprite);
 
     //name of the unit
-    const unitName = new BitmapText(`${unitType.toUpperCase()}`, {
+    const unitNameText = new BitmapText(`${unitType.toUpperCase()}`, {
       fontName: "awFont",
       fontSize: 10,
     });
-    unitName.y = yValue;
-    unitName.x = tileSize;
+    unitNameText.y = yValue;
+    unitNameText.x = baseTileSize;
     //trying to line it up nicely wiht the unit icon
-    unitName.anchor.set(0, -0.3);
-    menuElement.addChild(unitName);
+    unitNameText.anchor.set(0, -0.3);
+    menuElement.addChild(unitNameText);
 
     //cost displayed
-    const unitCost = new BitmapText(`${unitPropertiesMap[unitType].cost}`, {
+    const unitCostText = new BitmapText(`${unitPropertiesMap[unitType].cost}`, {
       fontName: "awFont",
       fontSize: 10,
     });
-    unitCost.y = yValue;
+    unitCostText.y = yValue;
     //TODO: Standardize this size
-    unitCost.x = tileSize * 4;
-    unitCost.anchor.set(0, -0.25);
-    menuElement.addChild(unitCost);
+    unitCostText.x = baseTileSize * 4;
+    unitCostText.anchor.set(0, -0.25);
+    menuElement.addChild(unitCostText);
 
-    //lets add a hover effect to the unitBG when you hover over the menu
-    menuElement.on("pointerenter", () => {
-      unitBG.alpha = 1;
-    });
-
-    //when you stop hovering the menu
-    menuElement.on("pointerleave", () => {
-      unitBG.alpha = 0.5;
-    });
-
-    //TODO: WHEN CLICKING
-    menuElement.on("pointerdown", () => {
-      onBuild.mutateAsync({
-        type: "build",
-        position: [x, y],
-        playerId: player.data.id,
-        matchId: match.id,
-        unitType: unitType,
+    if (player.data.funds >= unitPropertiesMap[unitType].cost) {
+      //lets add a hover effect to the unitBG when you hover over the menu
+      menuElement.on("pointerenter", () => {
+        unitBG.alpha = 1;
       });
-      //as soon a selection is done, destroy/erase the menu
-      menuContainer.destroy();
-    });
+
+      //when you stop hovering the menu
+      menuElement.on("pointerleave", () => {
+        unitBG.alpha = 0.5;
+      });
+
+      //TODO: WHEN CLICKING
+      menuElement.on("pointerdown", () => {
+        void sendAction({
+          type: "build",
+          position: [x, y],
+          unitType: unitType,
+        });
+        //as soon a selection is done, destroy/erase the menu
+        menuContainer.destroy();
+      });
+    }
+    //can't afford units
+    else {
+      unitBG.tint = "#555555";
+      unitSprite.tint = "#979797";
+      unitSprite.stop();
+      unitNameText.alpha = 0.75;
+      unitCostText.alpha = 0.75;
+    }
 
     yValue += unitSize * 2;
     menuContainer.addChild(menuElement);
@@ -149,13 +152,13 @@ export default async function buildUnitMenu(
   menuBG.tint = "#cacaca";
   menuBG.x = -2;
   menuBG.y = -2;
-  menuBG.width = tileSize * 6; //expands 6 tiles worth of space
+  menuBG.width = baseTileSize * 6; //expands 6 tiles worth of space
   menuBG.height = yValue;
   menuBG.zIndex = -1;
   menuBG.alpha = 1;
   menuContainer.addChild(menuBG);
   return menuContainer;
-}
+};
 
 const createCaptureOption = (match: MatchWrapper, onCapture: () => void): Container => {
   const menuElement = new Container();

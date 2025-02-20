@@ -32,7 +32,7 @@ export const createMatchProcedure = playerBaseProcedure
             },
             eliminated: false,
             //TODO: Handle funds correctly
-            funds: 10000,
+            funds: 0,
             powerMeter: 0,
             timesPowerUsed: 0,
             army: "orange-star",
