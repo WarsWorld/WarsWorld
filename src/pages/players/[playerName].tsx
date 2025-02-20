@@ -92,7 +92,7 @@ export default function UserProfile() {
       </Head>
 
       <div className="@flex @flex-col @justify-center @items-center @align-middle">
-        <div className="@w-[95vw] @m-4 smallscreen:@px-4">
+        <div className="@w-[95%] tablet:@w-[80%] @m-4 smallscreen:@px-4">
           {/* Each Section calls the info? */}
           <PlayerProfileMainSection
             playerName={playerName ?? ""}
@@ -110,7 +110,8 @@ export default function UserProfile() {
           <div className="@flex  @flex-col laptop:@flex-row laptop:@space-x-4">
             <div className="@col-span-6 @h-full laptop:@w-[75%]">
               {/* 
-                Show all profile sections, can add a best maps section, fav maps section, and we can even make it so the user can personalize their profile sections,
+                Show all profile sections, can add a best maps section, fav maps section, and we 
+                can even make it so the user can personalize their profile sections,
                 the user could change the order and which sessions will appear in their profile.
               */}
               <PLayerLeagueGeneralSection playerLeaguesMMR={playerMMRArray} />

@@ -1,5 +1,5 @@
-import { Army } from "shared/schemas/army";
-import { CO } from "shared/schemas/co";
+import type { Army } from "shared/schemas/army";
+import type { CO } from "shared/schemas/co";
 
 type Props = {
   playerName: string;

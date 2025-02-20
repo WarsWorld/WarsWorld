@@ -1,4 +1,4 @@
-import { PlayerMMR } from "pages/players/[playerName]";
+import type { PlayerMMR } from "pages/players/[playerName]";
 import { PlayerMMRCard } from "../PlayerMMRCard";
 
 type Props = {

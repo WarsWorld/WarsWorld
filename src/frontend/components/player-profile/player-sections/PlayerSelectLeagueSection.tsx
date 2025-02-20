@@ -1,5 +1,6 @@
-import Select, { SelectOption } from "frontend/components/layout/Select";
-import { PlayerMMR } from "pages/players/[playerName]";
+import type { SelectOption } from "frontend/components/layout/Select";
+import Select from "frontend/components/layout/Select";
+import type { PlayerMMR } from "pages/players/[playerName]";
 import { useState } from "react";
 import { SmallMatchCard } from "../SmallMatchCard";
 

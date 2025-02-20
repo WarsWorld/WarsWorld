@@ -1,12 +1,12 @@
-import { Army } from "shared/schemas/army";
-import { CO } from "shared/schemas/co";
+import type { Army } from "shared/schemas/army";
+import type { CO } from "shared/schemas/co";
 import { PlayerFriendLink } from "../PlayerFriendLink";
 
-interface Player {
+type Player = {
   name: string;
   favArmy: Army;
   favCO: CO;
-}
+};
 
 const friends: Player[] = [
   {
@@ -50,7 +50,7 @@ export function PlayerFriendSection() {
   return (
     <section className="@w-full @min-h-full @bg-black/60 @pb-8 @p-6 @my-4">
       <h3 className="@font-russoOne @uppercase @text-2xl smallscreen:@text-3xl">Friends</h3>
-      <div className="@flex @flex-col @w-full @px-1 @py-6 @space-y-4">
+      <div className="@flex @flex-col @w-full @py-6 @space-y-1">
         {friends.map((friend) => {
           return (
             <PlayerFriendLink
