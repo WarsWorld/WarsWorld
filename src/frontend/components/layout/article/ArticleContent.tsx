@@ -33,7 +33,7 @@ export default function ArticleContent({ contentHTML }: Props) {
   }
 
   return (
-    <div className="@w-full">
+    <div className="@w- @px-24">
       <div className="@grid @grid-cols-12 @py-12 @px-4 smallscreen:@pl-16 @relative @leading-10">
         <div className="@relative @col-span-12 smallscreen:@col-span-10">
           <article

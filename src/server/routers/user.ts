@@ -1,12 +1,12 @@
-import { preferencesSchema } from "shared/schemas/preferences";
+import { TRPCError } from "@trpc/server";
+import { hashPassword } from "server/hashPassword";
 import { prisma } from "server/prisma/prisma-client";
 import { authMiddleware } from "server/trpc/middleware/auth";
 import { playerWithoutCurrentMiddleware } from "server/trpc/middleware/player";
 import { playerBaseProcedure, publicBaseProcedure, router } from "server/trpc/trpc-setup";
-import { z } from "zod";
 import { signUpSchema } from "shared/schemas/auth";
-import { TRPCError } from "@trpc/server";
-import { hashPassword } from "server/hashPassword";
+import { preferencesSchema } from "shared/schemas/preferences";
+import { z } from "zod";
 
 export const userRouter = router({
   me: publicBaseProcedure
@@ -63,6 +63,7 @@ export const userRouter = router({
     await prisma.player.create({
       data: {
         name: input.name,
+        displayName: input.name,
         user: {
           connect: {
             id: user.id,

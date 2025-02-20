@@ -87,7 +87,9 @@ async function main() {
   });
 
   const devPlayers = await Promise.all(
-    developmentPlayerNames.map((name) => prisma.player.create({ data: { name, userId } })),
+    developmentPlayerNames.map((name) =>
+      prisma.player.create({ data: { name, displayName: name, userId } }),
+    ),
   );
 
   await seedArticles(news, "News", devPlayers[0].id);
