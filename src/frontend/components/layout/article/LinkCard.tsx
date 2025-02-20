@@ -29,7 +29,7 @@ export default function LinkCard({ cardInfo }: Props) {
       : cardInfo.description;
 
   return (
-    <div className="@relative @bg-black/50 @object-cover @h-[380px] laptop:@h-[478px] ultra:@h-[720px] @w-[320px] laptop:@w-[400px] ultra:@w-[640px] @transform @cursor-pointer @border-transparent @border-4 hover:@-translate-y-1 hover:@border-primary tablet:hover:@z-10 @duration-200 @ease-in">
+    <div className="@relative @bg-black/50 @object-cover @h-[380px] laptop:@h-[478px] ultra:@h-[720px] @w-[320px] laptop:@w-[400px] ultra:@w-[640px] @transform @cursor-pointer @border-transparent @border-4 hover:@-translate-y-1 hover:@border-primary hover:@bg-gray-900/50 tablet:hover:@z-10 @duration-200 @ease-in">
       <Link href={`${cardInfo.subdirectory}`} className="@absolute @h-full @w-full @z-10" />
       <div className="@grid @grid-rows-2 @h-full">
         <Image

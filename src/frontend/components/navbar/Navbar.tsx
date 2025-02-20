@@ -1,12 +1,12 @@
-import { useEffect, useState } from "react";
-import Link from "next/link";
+import { useWindowWidth } from "@react-hook/window-size";
 import Image from "next/image";
+import Link from "next/link";
+import { useSearchParams } from "next/navigation";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
 import { NavGroup } from "./NavGroup";
 import { NavGroupMobile } from "./NavGroupMobile";
-import { useWindowWidth } from "@react-hook/window-size";
-import { useSearchParams } from "next/navigation";
 import NavLoginLogout from "./NavLoginLogout";
-import { useRouter } from "next/router";
 
 export function Navbar() {
   const searchParams = useSearchParams();
@@ -49,10 +49,10 @@ export function Navbar() {
   return (
     <header className="@w-screen @fixed @top-0 @z-40 @shadow-lg @shadow-bg-primary">
       <nav className="@flex @h-full @justify-between @items-center @bg-gradient-to-r @from-bg-primary @via-bg-secondary @to-bg-primary @mx-auto @px-4 smallscreen:@px-8 laptop:@px-6">
-        <div className="@h-full @w-[25%] smallscreen:@w-[10%] @flex @flex-col @justify-center @align-middle">
-          <Link className="@flex @align-middle @justify-start" href="/">
+        <div className="@relative @h-full @w-[25%] smallscreen:@w-[10%] @flex @flex-col @justify-center @align-middle">
+          <Link className=" @absolute @left-4 @top-2 @flex @align-middle @justify-start" href="/">
             <Image
-              className="@w-16 smallscreen:@w-20"
+              className="@w-16 smallscreen:@w-24"
               src="/img/layout/logo.webp"
               alt="AW Logo"
               width={0}
@@ -94,7 +94,6 @@ export function Navbar() {
           </>
         )}
       </nav>
-      <div className="@h-1 @w-full @bg-gradient-to-r @from-primary-dark @from-10% @via-primary @to-primary-dark @to-90%" />
     </header>
   );
 }

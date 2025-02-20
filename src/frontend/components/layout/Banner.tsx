@@ -5,7 +5,7 @@ export default function Banner2(props: {
   backgroundURL: string;
 }) {
   return (
-    <div className="@relative @h-[65vh] @w-full tablet:@h-[90vh] @overflow-hidden @shadow-black @shadow-2xl">
+    <div className="@relative @h-[65vh] @w-full tablet:@h-[80vh] @overflow-hidden @shadow-black @shadow-2xl">
       <Image
         className="@object-cover @object-top @w-full @absolute @h-full @z-0"
         alt=""
