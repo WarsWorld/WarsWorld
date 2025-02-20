@@ -37,6 +37,7 @@ const eslintConfig = {
     },
   },
   rules: {
+    // "prettier/prettier": "off",
     curly: "error",
     "@stylistic/ts/padding-line-between-statements": [
       "error",

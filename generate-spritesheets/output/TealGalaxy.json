@@ -1,0 +1,3719 @@
+{
+  "meta": {
+    "scale": 1
+  },
+  "frames": {
+    "map.Airport-0.png": {
+      "frame": {
+        "x": 0,
+        "y": 0,
+        "w": 16,
+        "h": 18
+      }
+    },
+    "map.Airport-1.png": {
+      "frame": {
+        "x": 23,
+        "y": 0,
+        "w": 16,
+        "h": 18
+      }
+    },
+    "map.Airport-2.png": {
+      "frame": {
+        "x": 46,
+        "y": 0,
+        "w": 16,
+        "h": 18
+      }
+    },
+    "map.Airport_Rain-0.png": {
+      "frame": {
+        "x": 69,
+        "y": 0,
+        "w": 16,
+        "h": 18
+      }
+    },
+    "map.Airport_Rain-1.png": {
+      "frame": {
+        "x": 92,
+        "y": 0,
+        "w": 16,
+        "h": 18
+      }
+    },
+    "map.Airport_Rain-2.png": {
+      "frame": {
+        "x": 115,
+        "y": 0,
+        "w": 16,
+        "h": 18
+      }
+    },
+    "map.Airport_Snow-0.png": {
+      "frame": {
+        "x": 138,
+        "y": 0,
+        "w": 16,
+        "h": 18
+      }
+    },
+    "map.Airport_Snow-1.png": {
+      "frame": {
+        "x": 161,
+        "y": 0,
+        "w": 16,
+        "h": 18
+      }
+    },
+    "map.Airport_Snow-2.png": {
+      "frame": {
+        "x": 184,
+        "y": 0,
+        "w": 16,
+        "h": 18
+      }
+    },
+    "map.Base-0.png": {
+      "frame": {
+        "x": 207,
+        "y": 0,
+        "w": 16,
+        "h": 25
+      }
+    },
+    "map.Base-1.png": {
+      "frame": {
+        "x": 230,
+        "y": 0,
+        "w": 16,
+        "h": 25
+      }
+    },
+    "map.Base-2.png": {
+      "frame": {
+        "x": 253,
+        "y": 0,
+        "w": 16,
+        "h": 25
+      }
+    },
+    "map.Base-3.png": {
+      "frame": {
+        "x": 276,
+        "y": 0,
+        "w": 16,
+        "h": 25
+      }
+    },
+    "map.Base-4.png": {
+      "frame": {
+        "x": 299,
+        "y": 0,
+        "w": 16,
+        "h": 25
+      }
+    },
+    "map.Base-5.png": {
+      "frame": {
+        "x": 322,
+        "y": 0,
+        "w": 16,
+        "h": 25
+      }
+    },
+    "map.Base_Rain-0.png": {
+      "frame": {
+        "x": 345,
+        "y": 0,
+        "w": 16,
+        "h": 25
+      }
+    },
+    "map.Base_Rain-1.png": {
+      "frame": {
+        "x": 368,
+        "y": 0,
+        "w": 16,
+        "h": 25
+      }
+    },
+    "map.Base_Rain-2.png": {
+      "frame": {
+        "x": 391,
+        "y": 0,
+        "w": 16,
+        "h": 25
+      }
+    },
+    "map.Base_Rain-3.png": {
+      "frame": {
+        "x": 414,
+        "y": 0,
+        "w": 16,
+        "h": 25
+      }
+    },
+    "map.Base_Rain-4.png": {
+      "frame": {
+        "x": 0,
+        "y": 31,
+        "w": 16,
+        "h": 25
+      }
+    },
+    "map.Base_Rain-5.png": {
+      "frame": {
+        "x": 23,
+        "y": 31,
+        "w": 16,
+        "h": 25
+      }
+    },
+    "map.Base_Snow-0.png": {
+      "frame": {
+        "x": 46,
+        "y": 31,
+        "w": 16,
+        "h": 25
+      }
+    },
+    "map.Base_Snow-1.png": {
+      "frame": {
+        "x": 69,
+        "y": 31,
+        "w": 16,
+        "h": 25
+      }
+    },
+    "map.Base_Snow-2.png": {
+      "frame": {
+        "x": 92,
+        "y": 31,
+        "w": 16,
+        "h": 25
+      }
+    },
+    "map.Base_Snow-3.png": {
+      "frame": {
+        "x": 115,
+        "y": 31,
+        "w": 16,
+        "h": 25
+      }
+    },
+    "map.Base_Snow-4.png": {
+      "frame": {
+        "x": 138,
+        "y": 31,
+        "w": 16,
+        "h": 25
+      }
+    },
+    "map.Base_Snow-5.png": {
+      "frame": {
+        "x": 161,
+        "y": 31,
+        "w": 16,
+        "h": 25
+      }
+    },
+    "map.City-0.png": {
+      "frame": {
+        "x": 184,
+        "y": 31,
+        "w": 16,
+        "h": 22
+      }
+    },
+    "map.City-1.png": {
+      "frame": {
+        "x": 207,
+        "y": 31,
+        "w": 16,
+        "h": 22
+      }
+    },
+    "map.City-2.png": {
+      "frame": {
+        "x": 230,
+        "y": 31,
+        "w": 16,
+        "h": 22
+      }
+    },
+    "map.City_Rain-0.png": {
+      "frame": {
+        "x": 253,
+        "y": 31,
+        "w": 16,
+        "h": 22
+      }
+    },
+    "map.City_Rain-1.png": {
+      "frame": {
+        "x": 276,
+        "y": 31,
+        "w": 16,
+        "h": 22
+      }
+    },
+    "map.City_Rain-2.png": {
+      "frame": {
+        "x": 299,
+        "y": 31,
+        "w": 16,
+        "h": 22
+      }
+    },
+    "map.City_Snow-0.png": {
+      "frame": {
+        "x": 322,
+        "y": 31,
+        "w": 16,
+        "h": 22
+      }
+    },
+    "map.City_Snow-1.png": {
+      "frame": {
+        "x": 345,
+        "y": 31,
+        "w": 16,
+        "h": 22
+      }
+    },
+    "map.City_Snow-2.png": {
+      "frame": {
+        "x": 368,
+        "y": 31,
+        "w": 16,
+        "h": 22
+      }
+    },
+    "map.ComTower-0.png": {
+      "frame": {
+        "x": 391,
+        "y": 31,
+        "w": 16,
+        "h": 25
+      }
+    },
+    "map.ComTower-1.png": {
+      "frame": {
+        "x": 414,
+        "y": 31,
+        "w": 16,
+        "h": 25
+      }
+    },
+    "map.ComTower-2.png": {
+      "frame": {
+        "x": 0,
+        "y": 62,
+        "w": 16,
+        "h": 25
+      }
+    },
+    "map.ComTower_Rain-0.png": {
+      "frame": {
+        "x": 23,
+        "y": 62,
+        "w": 16,
+        "h": 25
+      }
+    },
+    "map.ComTower_Rain-1.png": {
+      "frame": {
+        "x": 46,
+        "y": 62,
+        "w": 16,
+        "h": 25
+      }
+    },
+    "map.ComTower_Rain-2.png": {
+      "frame": {
+        "x": 69,
+        "y": 62,
+        "w": 16,
+        "h": 25
+      }
+    },
+    "map.ComTower_Snow-0.png": {
+      "frame": {
+        "x": 92,
+        "y": 62,
+        "w": 16,
+        "h": 25
+      }
+    },
+    "map.ComTower_Snow-1.png": {
+      "frame": {
+        "x": 115,
+        "y": 62,
+        "w": 16,
+        "h": 25
+      }
+    },
+    "map.ComTower_Snow-2.png": {
+      "frame": {
+        "x": 138,
+        "y": 62,
+        "w": 16,
+        "h": 25
+      }
+    },
+    "map.HQ-0.png": {
+      "frame": {
+        "x": 161,
+        "y": 62,
+        "w": 16,
+        "h": 31
+      }
+    },
+    "map.HQ-1.png": {
+      "frame": {
+        "x": 184,
+        "y": 62,
+        "w": 16,
+        "h": 31
+      }
+    },
+    "map.HQ-2.png": {
+      "frame": {
+        "x": 207,
+        "y": 62,
+        "w": 16,
+        "h": 31
+      }
+    },
+    "map.HQ_Rain-0.png": {
+      "frame": {
+        "x": 230,
+        "y": 62,
+        "w": 16,
+        "h": 31
+      }
+    },
+    "map.HQ_Rain-1.png": {
+      "frame": {
+        "x": 253,
+        "y": 62,
+        "w": 16,
+        "h": 31
+      }
+    },
+    "map.HQ_Rain-2.png": {
+      "frame": {
+        "x": 276,
+        "y": 62,
+        "w": 16,
+        "h": 31
+      }
+    },
+    "map.HQ_Snow-0.png": {
+      "frame": {
+        "x": 299,
+        "y": 62,
+        "w": 16,
+        "h": 31
+      }
+    },
+    "map.HQ_Snow-1.png": {
+      "frame": {
+        "x": 322,
+        "y": 62,
+        "w": 16,
+        "h": 31
+      }
+    },
+    "map.HQ_Snow-2.png": {
+      "frame": {
+        "x": 345,
+        "y": 62,
+        "w": 16,
+        "h": 31
+      }
+    },
+    "map.Lab-0.png": {
+      "frame": {
+        "x": 368,
+        "y": 62,
+        "w": 16,
+        "h": 24
+      }
+    },
+    "map.Lab-1.png": {
+      "frame": {
+        "x": 391,
+        "y": 62,
+        "w": 16,
+        "h": 24
+      }
+    },
+    "map.Lab-2.png": {
+      "frame": {
+        "x": 414,
+        "y": 62,
+        "w": 16,
+        "h": 24
+      }
+    },
+    "map.Lab_Rain-0.png": {
+      "frame": {
+        "x": 0,
+        "y": 93,
+        "w": 16,
+        "h": 24
+      }
+    },
+    "map.Lab_Rain-1.png": {
+      "frame": {
+        "x": 23,
+        "y": 93,
+        "w": 16,
+        "h": 24
+      }
+    },
+    "map.Lab_Rain-2.png": {
+      "frame": {
+        "x": 46,
+        "y": 93,
+        "w": 16,
+        "h": 24
+      }
+    },
+    "map.Lab_Snow-0.png": {
+      "frame": {
+        "x": 69,
+        "y": 93,
+        "w": 16,
+        "h": 24
+      }
+    },
+    "map.Lab_Snow-1.png": {
+      "frame": {
+        "x": 92,
+        "y": 93,
+        "w": 16,
+        "h": 24
+      }
+    },
+    "map.Lab_Snow-2.png": {
+      "frame": {
+        "x": 115,
+        "y": 93,
+        "w": 16,
+        "h": 24
+      }
+    },
+    "map.Port-0.png": {
+      "frame": {
+        "x": 138,
+        "y": 93,
+        "w": 16,
+        "h": 22
+      }
+    },
+    "map.Port-1.png": {
+      "frame": {
+        "x": 161,
+        "y": 93,
+        "w": 16,
+        "h": 22
+      }
+    },
+    "map.Port-2.png": {
+      "frame": {
+        "x": 184,
+        "y": 93,
+        "w": 16,
+        "h": 22
+      }
+    },
+    "map.Port_Rain-0.png": {
+      "frame": {
+        "x": 207,
+        "y": 93,
+        "w": 16,
+        "h": 22
+      }
+    },
+    "map.Port_Rain-1.png": {
+      "frame": {
+        "x": 230,
+        "y": 93,
+        "w": 16,
+        "h": 22
+      }
+    },
+    "map.Port_Rain-2.png": {
+      "frame": {
+        "x": 253,
+        "y": 93,
+        "w": 16,
+        "h": 22
+      }
+    },
+    "map.Port_Snow-0.png": {
+      "frame": {
+        "x": 276,
+        "y": 93,
+        "w": 16,
+        "h": 22
+      }
+    },
+    "map.Port_Snow-1.png": {
+      "frame": {
+        "x": 299,
+        "y": 93,
+        "w": 16,
+        "h": 22
+      }
+    },
+    "map.Port_Snow-2.png": {
+      "frame": {
+        "x": 322,
+        "y": 93,
+        "w": 16,
+        "h": 22
+      }
+    },
+    "unit.APC-0.png": {
+      "frame": {
+        "x": 345,
+        "y": 93,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.APC-1.png": {
+      "frame": {
+        "x": 368,
+        "y": 93,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.APC-2.png": {
+      "frame": {
+        "x": 391,
+        "y": 93,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.APC-3.png": {
+      "frame": {
+        "x": 414,
+        "y": 93,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.APC_MDown-0.png": {
+      "frame": {
+        "x": 0,
+        "y": 124,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.APC_MDown-1.png": {
+      "frame": {
+        "x": 23,
+        "y": 124,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.APC_MDown-2.png": {
+      "frame": {
+        "x": 46,
+        "y": 124,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.APC_MSide-0.png": {
+      "frame": {
+        "x": 69,
+        "y": 124,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.APC_MSide-1.png": {
+      "frame": {
+        "x": 92,
+        "y": 124,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.APC_MSide-2.png": {
+      "frame": {
+        "x": 115,
+        "y": 124,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.APC_MUp-0.png": {
+      "frame": {
+        "x": 138,
+        "y": 124,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.APC_MUp-1.png": {
+      "frame": {
+        "x": 161,
+        "y": 124,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.APC_MUp-2.png": {
+      "frame": {
+        "x": 184,
+        "y": 124,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.Anti-Air-0.png": {
+      "frame": {
+        "x": 207,
+        "y": 124,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.Anti-Air-1.png": {
+      "frame": {
+        "x": 230,
+        "y": 124,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.Anti-Air-2.png": {
+      "frame": {
+        "x": 253,
+        "y": 124,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.Anti-Air-3.png": {
+      "frame": {
+        "x": 276,
+        "y": 124,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.Anti-Air_MDown-0.png": {
+      "frame": {
+        "x": 299,
+        "y": 124,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.Anti-Air_MDown-1.png": {
+      "frame": {
+        "x": 322,
+        "y": 124,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.Anti-Air_MDown-2.png": {
+      "frame": {
+        "x": 345,
+        "y": 124,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.Anti-Air_MSide-0.png": {
+      "frame": {
+        "x": 368,
+        "y": 124,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.Anti-Air_MSide-1.png": {
+      "frame": {
+        "x": 391,
+        "y": 124,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.Anti-Air_MSide-2.png": {
+      "frame": {
+        "x": 414,
+        "y": 124,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.Anti-Air_MUp-0.png": {
+      "frame": {
+        "x": 0,
+        "y": 155,
+        "w": 16,
+        "h": 18
+      }
+    },
+    "unit.Anti-Air_MUp-1.png": {
+      "frame": {
+        "x": 23,
+        "y": 155,
+        "w": 16,
+        "h": 18
+      }
+    },
+    "unit.Anti-Air_MUp-2.png": {
+      "frame": {
+        "x": 46,
+        "y": 155,
+        "w": 16,
+        "h": 18
+      }
+    },
+    "unit.Artillery-0.png": {
+      "frame": {
+        "x": 69,
+        "y": 155,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.Artillery-1.png": {
+      "frame": {
+        "x": 92,
+        "y": 155,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.Artillery-2.png": {
+      "frame": {
+        "x": 115,
+        "y": 155,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.Artillery-3.png": {
+      "frame": {
+        "x": 138,
+        "y": 155,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.Artillery_MDown-0.png": {
+      "frame": {
+        "x": 161,
+        "y": 155,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.Artillery_MDown-1.png": {
+      "frame": {
+        "x": 184,
+        "y": 155,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.Artillery_MDown-2.png": {
+      "frame": {
+        "x": 207,
+        "y": 155,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.Artillery_MSide-0.png": {
+      "frame": {
+        "x": 230,
+        "y": 155,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.Artillery_MSide-1.png": {
+      "frame": {
+        "x": 253,
+        "y": 155,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.Artillery_MSide-2.png": {
+      "frame": {
+        "x": 276,
+        "y": 155,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.Artillery_MUp-0.png": {
+      "frame": {
+        "x": 299,
+        "y": 155,
+        "w": 16,
+        "h": 19
+      }
+    },
+    "unit.Artillery_MUp-1.png": {
+      "frame": {
+        "x": 322,
+        "y": 155,
+        "w": 16,
+        "h": 19
+      }
+    },
+    "unit.Artillery_MUp-2.png": {
+      "frame": {
+        "x": 345,
+        "y": 155,
+        "w": 16,
+        "h": 19
+      }
+    },
+    "unit.B-Copter-0.png": {
+      "frame": {
+        "x": 368,
+        "y": 155,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.B-Copter-1.png": {
+      "frame": {
+        "x": 391,
+        "y": 155,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.B-Copter-2.png": {
+      "frame": {
+        "x": 414,
+        "y": 155,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.B-Copter-3.png": {
+      "frame": {
+        "x": 0,
+        "y": 186,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.B-Copter_MDown-0.png": {
+      "frame": {
+        "x": 23,
+        "y": 186,
+        "w": 19,
+        "h": 22
+      }
+    },
+    "unit.B-Copter_MDown-1.png": {
+      "frame": {
+        "x": 46,
+        "y": 186,
+        "w": 19,
+        "h": 22
+      }
+    },
+    "unit.B-Copter_MSide-0.png": {
+      "frame": {
+        "x": 69,
+        "y": 186,
+        "w": 21,
+        "h": 23
+      }
+    },
+    "unit.B-Copter_MSide-1.png": {
+      "frame": {
+        "x": 92,
+        "y": 186,
+        "w": 21,
+        "h": 23
+      }
+    },
+    "unit.B-Copter_MUp-0.png": {
+      "frame": {
+        "x": 115,
+        "y": 186,
+        "w": 19,
+        "h": 20
+      }
+    },
+    "unit.B-Copter_MUp-1.png": {
+      "frame": {
+        "x": 138,
+        "y": 186,
+        "w": 19,
+        "h": 20
+      }
+    },
+    "unit.Battleship-0.png": {
+      "frame": {
+        "x": 161,
+        "y": 186,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.Battleship-1.png": {
+      "frame": {
+        "x": 184,
+        "y": 186,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.Battleship_MDown-0.png": {
+      "frame": {
+        "x": 207,
+        "y": 186,
+        "w": 16,
+        "h": 20
+      }
+    },
+    "unit.Battleship_MDown-1.png": {
+      "frame": {
+        "x": 230,
+        "y": 186,
+        "w": 16,
+        "h": 20
+      }
+    },
+    "unit.Battleship_MSide-0.png": {
+      "frame": {
+        "x": 253,
+        "y": 186,
+        "w": 18,
+        "h": 16
+      }
+    },
+    "unit.Battleship_MSide-1.png": {
+      "frame": {
+        "x": 276,
+        "y": 186,
+        "w": 18,
+        "h": 16
+      }
+    },
+    "unit.Battleship_MUp-0.png": {
+      "frame": {
+        "x": 299,
+        "y": 186,
+        "w": 16,
+        "h": 19
+      }
+    },
+    "unit.Battleship_MUp-1.png": {
+      "frame": {
+        "x": 322,
+        "y": 186,
+        "w": 16,
+        "h": 19
+      }
+    },
+    "unit.BlackBoat-0.png": {
+      "frame": {
+        "x": 345,
+        "y": 186,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.BlackBoat-1.png": {
+      "frame": {
+        "x": 368,
+        "y": 186,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.BlackBoat-2.png": {
+      "frame": {
+        "x": 391,
+        "y": 186,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.BlackBoat-3.png": {
+      "frame": {
+        "x": 414,
+        "y": 186,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.BlackBoat_MDown-0.png": {
+      "frame": {
+        "x": 0,
+        "y": 217,
+        "w": 16,
+        "h": 17
+      }
+    },
+    "unit.BlackBoat_MDown-1.png": {
+      "frame": {
+        "x": 23,
+        "y": 217,
+        "w": 16,
+        "h": 17
+      }
+    },
+    "unit.BlackBoat_MSide-0.png": {
+      "frame": {
+        "x": 46,
+        "y": 217,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.BlackBoat_MSide-1.png": {
+      "frame": {
+        "x": 69,
+        "y": 217,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.BlackBoat_MUp-0.png": {
+      "frame": {
+        "x": 92,
+        "y": 217,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.BlackBoat_MUp-1.png": {
+      "frame": {
+        "x": 115,
+        "y": 217,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.BlackBomb-0.png": {
+      "frame": {
+        "x": 138,
+        "y": 217,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.BlackBomb-1.png": {
+      "frame": {
+        "x": 161,
+        "y": 217,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.BlackBomb-2.png": {
+      "frame": {
+        "x": 184,
+        "y": 217,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.BlackBomb-3.png": {
+      "frame": {
+        "x": 207,
+        "y": 217,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.BlackBomb_MDown-0.png": {
+      "frame": {
+        "x": 230,
+        "y": 217,
+        "w": 16,
+        "h": 23
+      }
+    },
+    "unit.BlackBomb_MDown-1.png": {
+      "frame": {
+        "x": 253,
+        "y": 217,
+        "w": 16,
+        "h": 23
+      }
+    },
+    "unit.BlackBomb_MDown-2.png": {
+      "frame": {
+        "x": 276,
+        "y": 217,
+        "w": 16,
+        "h": 23
+      }
+    },
+    "unit.BlackBomb_MSide-0.png": {
+      "frame": {
+        "x": 299,
+        "y": 217,
+        "w": 22,
+        "h": 16
+      }
+    },
+    "unit.BlackBomb_MSide-1.png": {
+      "frame": {
+        "x": 322,
+        "y": 217,
+        "w": 22,
+        "h": 16
+      }
+    },
+    "unit.BlackBomb_MSide-2.png": {
+      "frame": {
+        "x": 345,
+        "y": 217,
+        "w": 22,
+        "h": 16
+      }
+    },
+    "unit.BlackBomb_MUp-0.png": {
+      "frame": {
+        "x": 368,
+        "y": 217,
+        "w": 16,
+        "h": 22
+      }
+    },
+    "unit.BlackBomb_MUp-1.png": {
+      "frame": {
+        "x": 391,
+        "y": 217,
+        "w": 16,
+        "h": 22
+      }
+    },
+    "unit.BlackBomb_MUp-2.png": {
+      "frame": {
+        "x": 414,
+        "y": 217,
+        "w": 16,
+        "h": 22
+      }
+    },
+    "unit.Bomber-0.png": {
+      "frame": {
+        "x": 0,
+        "y": 248,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.Bomber-1.png": {
+      "frame": {
+        "x": 23,
+        "y": 248,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.Bomber_MDown-0.png": {
+      "frame": {
+        "x": 46,
+        "y": 248,
+        "w": 19,
+        "h": 24
+      }
+    },
+    "unit.Bomber_MDown-1.png": {
+      "frame": {
+        "x": 69,
+        "y": 248,
+        "w": 19,
+        "h": 24
+      }
+    },
+    "unit.Bomber_MDown-2.png": {
+      "frame": {
+        "x": 92,
+        "y": 248,
+        "w": 19,
+        "h": 24
+      }
+    },
+    "unit.Bomber_MSide-0.png": {
+      "frame": {
+        "x": 115,
+        "y": 248,
+        "w": 23,
+        "h": 22
+      }
+    },
+    "unit.Bomber_MSide-1.png": {
+      "frame": {
+        "x": 138,
+        "y": 248,
+        "w": 23,
+        "h": 22
+      }
+    },
+    "unit.Bomber_MSide-2.png": {
+      "frame": {
+        "x": 161,
+        "y": 248,
+        "w": 23,
+        "h": 22
+      }
+    },
+    "unit.Bomber_MUp-0.png": {
+      "frame": {
+        "x": 184,
+        "y": 248,
+        "w": 19,
+        "h": 24
+      }
+    },
+    "unit.Bomber_MUp-1.png": {
+      "frame": {
+        "x": 207,
+        "y": 248,
+        "w": 19,
+        "h": 24
+      }
+    },
+    "unit.Bomber_MUp-2.png": {
+      "frame": {
+        "x": 230,
+        "y": 248,
+        "w": 19,
+        "h": 24
+      }
+    },
+    "unit.Carrier-0.png": {
+      "frame": {
+        "x": 253,
+        "y": 248,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.Carrier-1.png": {
+      "frame": {
+        "x": 276,
+        "y": 248,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.Carrier_MDown-0.png": {
+      "frame": {
+        "x": 299,
+        "y": 248,
+        "w": 16,
+        "h": 20
+      }
+    },
+    "unit.Carrier_MDown-1.png": {
+      "frame": {
+        "x": 322,
+        "y": 248,
+        "w": 16,
+        "h": 20
+      }
+    },
+    "unit.Carrier_MSide-0.png": {
+      "frame": {
+        "x": 345,
+        "y": 248,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.Carrier_MSide-1.png": {
+      "frame": {
+        "x": 368,
+        "y": 248,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.Carrier_MUp-0.png": {
+      "frame": {
+        "x": 391,
+        "y": 248,
+        "w": 16,
+        "h": 18
+      }
+    },
+    "unit.Carrier_MUp-1.png": {
+      "frame": {
+        "x": 414,
+        "y": 248,
+        "w": 16,
+        "h": 18
+      }
+    },
+    "unit.Cruiser-0.png": {
+      "frame": {
+        "x": 0,
+        "y": 279,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.Cruiser-1.png": {
+      "frame": {
+        "x": 23,
+        "y": 279,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.Cruiser_MDown-0.png": {
+      "frame": {
+        "x": 46,
+        "y": 279,
+        "w": 16,
+        "h": 17
+      }
+    },
+    "unit.Cruiser_MDown-1.png": {
+      "frame": {
+        "x": 69,
+        "y": 279,
+        "w": 16,
+        "h": 17
+      }
+    },
+    "unit.Cruiser_MSide-0.png": {
+      "frame": {
+        "x": 92,
+        "y": 279,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.Cruiser_MSide-1.png": {
+      "frame": {
+        "x": 115,
+        "y": 279,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.Cruiser_MUp-0.png": {
+      "frame": {
+        "x": 138,
+        "y": 279,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.Cruiser_MUp-1.png": {
+      "frame": {
+        "x": 161,
+        "y": 279,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.Fighter-0.png": {
+      "frame": {
+        "x": 184,
+        "y": 279,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.Fighter-1.png": {
+      "frame": {
+        "x": 207,
+        "y": 279,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.Fighter_MDown-0.png": {
+      "frame": {
+        "x": 230,
+        "y": 279,
+        "w": 16,
+        "h": 24
+      }
+    },
+    "unit.Fighter_MDown-1.png": {
+      "frame": {
+        "x": 253,
+        "y": 279,
+        "w": 16,
+        "h": 24
+      }
+    },
+    "unit.Fighter_MDown-2.png": {
+      "frame": {
+        "x": 276,
+        "y": 279,
+        "w": 16,
+        "h": 24
+      }
+    },
+    "unit.Fighter_MSide-0.png": {
+      "frame": {
+        "x": 299,
+        "y": 279,
+        "w": 22,
+        "h": 19
+      }
+    },
+    "unit.Fighter_MSide-1.png": {
+      "frame": {
+        "x": 322,
+        "y": 279,
+        "w": 22,
+        "h": 19
+      }
+    },
+    "unit.Fighter_MSide-2.png": {
+      "frame": {
+        "x": 345,
+        "y": 279,
+        "w": 22,
+        "h": 19
+      }
+    },
+    "unit.Fighter_MUp-0.png": {
+      "frame": {
+        "x": 368,
+        "y": 279,
+        "w": 16,
+        "h": 23
+      }
+    },
+    "unit.Fighter_MUp-1.png": {
+      "frame": {
+        "x": 391,
+        "y": 279,
+        "w": 16,
+        "h": 23
+      }
+    },
+    "unit.Fighter_MUp-2.png": {
+      "frame": {
+        "x": 414,
+        "y": 279,
+        "w": 16,
+        "h": 23
+      }
+    },
+    "unit.Infantry-0.png": {
+      "frame": {
+        "x": 0,
+        "y": 310,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.Infantry-1.png": {
+      "frame": {
+        "x": 23,
+        "y": 310,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.Infantry-2.png": {
+      "frame": {
+        "x": 46,
+        "y": 310,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.Infantry-3.png": {
+      "frame": {
+        "x": 69,
+        "y": 310,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.Infantry_MDown-0.png": {
+      "frame": {
+        "x": 92,
+        "y": 310,
+        "w": 16,
+        "h": 18
+      }
+    },
+    "unit.Infantry_MDown-1.png": {
+      "frame": {
+        "x": 115,
+        "y": 310,
+        "w": 16,
+        "h": 18
+      }
+    },
+    "unit.Infantry_MDown-2.png": {
+      "frame": {
+        "x": 138,
+        "y": 310,
+        "w": 16,
+        "h": 18
+      }
+    },
+    "unit.Infantry_MDown-3.png": {
+      "frame": {
+        "x": 161,
+        "y": 310,
+        "w": 16,
+        "h": 18
+      }
+    },
+    "unit.Infantry_MSide-0.png": {
+      "frame": {
+        "x": 184,
+        "y": 310,
+        "w": 16,
+        "h": 17
+      }
+    },
+    "unit.Infantry_MSide-1.png": {
+      "frame": {
+        "x": 207,
+        "y": 310,
+        "w": 16,
+        "h": 17
+      }
+    },
+    "unit.Infantry_MSide-2.png": {
+      "frame": {
+        "x": 230,
+        "y": 310,
+        "w": 16,
+        "h": 17
+      }
+    },
+    "unit.Infantry_MSide-3.png": {
+      "frame": {
+        "x": 253,
+        "y": 310,
+        "w": 16,
+        "h": 17
+      }
+    },
+    "unit.Infantry_MUp-0.png": {
+      "frame": {
+        "x": 276,
+        "y": 310,
+        "w": 16,
+        "h": 19
+      }
+    },
+    "unit.Infantry_MUp-1.png": {
+      "frame": {
+        "x": 299,
+        "y": 310,
+        "w": 16,
+        "h": 19
+      }
+    },
+    "unit.Infantry_MUp-2.png": {
+      "frame": {
+        "x": 322,
+        "y": 310,
+        "w": 16,
+        "h": 19
+      }
+    },
+    "unit.Infantry_MUp-3.png": {
+      "frame": {
+        "x": 345,
+        "y": 310,
+        "w": 16,
+        "h": 19
+      }
+    },
+    "unit.Lander-0.png": {
+      "frame": {
+        "x": 368,
+        "y": 310,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.Lander-1.png": {
+      "frame": {
+        "x": 391,
+        "y": 310,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.Lander_MDown-0.png": {
+      "frame": {
+        "x": 414,
+        "y": 310,
+        "w": 16,
+        "h": 18
+      }
+    },
+    "unit.Lander_MDown-1.png": {
+      "frame": {
+        "x": 0,
+        "y": 341,
+        "w": 16,
+        "h": 18
+      }
+    },
+    "unit.Lander_MSide-0.png": {
+      "frame": {
+        "x": 23,
+        "y": 341,
+        "w": 18,
+        "h": 16
+      }
+    },
+    "unit.Lander_MSide-1.png": {
+      "frame": {
+        "x": 46,
+        "y": 341,
+        "w": 18,
+        "h": 16
+      }
+    },
+    "unit.Lander_MUp-0.png": {
+      "frame": {
+        "x": 69,
+        "y": 341,
+        "w": 16,
+        "h": 19
+      }
+    },
+    "unit.Lander_MUp-1.png": {
+      "frame": {
+        "x": 92,
+        "y": 341,
+        "w": 16,
+        "h": 19
+      }
+    },
+    "unit.MdTank-0.png": {
+      "frame": {
+        "x": 115,
+        "y": 341,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.MdTank-1.png": {
+      "frame": {
+        "x": 138,
+        "y": 341,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.MdTank-2.png": {
+      "frame": {
+        "x": 161,
+        "y": 341,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.MdTank-3.png": {
+      "frame": {
+        "x": 184,
+        "y": 341,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.MdTank_MDown-0.png": {
+      "frame": {
+        "x": 207,
+        "y": 341,
+        "w": 16,
+        "h": 17
+      }
+    },
+    "unit.MdTank_MDown-1.png": {
+      "frame": {
+        "x": 230,
+        "y": 341,
+        "w": 16,
+        "h": 17
+      }
+    },
+    "unit.MdTank_MDown-2.png": {
+      "frame": {
+        "x": 253,
+        "y": 341,
+        "w": 16,
+        "h": 17
+      }
+    },
+    "unit.MdTank_MSide-0.png": {
+      "frame": {
+        "x": 276,
+        "y": 341,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.MdTank_MSide-1.png": {
+      "frame": {
+        "x": 299,
+        "y": 341,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.MdTank_MSide-2.png": {
+      "frame": {
+        "x": 322,
+        "y": 341,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.MdTank_MUp-0.png": {
+      "frame": {
+        "x": 345,
+        "y": 341,
+        "w": 16,
+        "h": 18
+      }
+    },
+    "unit.MdTank_MUp-1.png": {
+      "frame": {
+        "x": 368,
+        "y": 341,
+        "w": 16,
+        "h": 18
+      }
+    },
+    "unit.MdTank_MUp-2.png": {
+      "frame": {
+        "x": 391,
+        "y": 341,
+        "w": 16,
+        "h": 18
+      }
+    },
+    "unit.Mech-0.png": {
+      "frame": {
+        "x": 414,
+        "y": 341,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.Mech-1.png": {
+      "frame": {
+        "x": 0,
+        "y": 372,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.Mech_MDown-0.png": {
+      "frame": {
+        "x": 23,
+        "y": 372,
+        "w": 16,
+        "h": 18
+      }
+    },
+    "unit.Mech_MDown-1.png": {
+      "frame": {
+        "x": 46,
+        "y": 372,
+        "w": 16,
+        "h": 18
+      }
+    },
+    "unit.Mech_MDown-2.png": {
+      "frame": {
+        "x": 69,
+        "y": 372,
+        "w": 16,
+        "h": 18
+      }
+    },
+    "unit.Mech_MDown-3.png": {
+      "frame": {
+        "x": 92,
+        "y": 372,
+        "w": 16,
+        "h": 18
+      }
+    },
+    "unit.Mech_MSide-0.png": {
+      "frame": {
+        "x": 115,
+        "y": 372,
+        "w": 16,
+        "h": 17
+      }
+    },
+    "unit.Mech_MSide-1.png": {
+      "frame": {
+        "x": 138,
+        "y": 372,
+        "w": 16,
+        "h": 17
+      }
+    },
+    "unit.Mech_MSide-2.png": {
+      "frame": {
+        "x": 161,
+        "y": 372,
+        "w": 16,
+        "h": 17
+      }
+    },
+    "unit.Mech_MSide-3.png": {
+      "frame": {
+        "x": 184,
+        "y": 372,
+        "w": 16,
+        "h": 17
+      }
+    },
+    "unit.Mech_MUp-0.png": {
+      "frame": {
+        "x": 207,
+        "y": 372,
+        "w": 16,
+        "h": 20
+      }
+    },
+    "unit.Mech_MUp-1.png": {
+      "frame": {
+        "x": 230,
+        "y": 372,
+        "w": 16,
+        "h": 20
+      }
+    },
+    "unit.Mech_MUp-2.png": {
+      "frame": {
+        "x": 253,
+        "y": 372,
+        "w": 16,
+        "h": 20
+      }
+    },
+    "unit.Mech_MUp-3.png": {
+      "frame": {
+        "x": 276,
+        "y": 372,
+        "w": 16,
+        "h": 20
+      }
+    },
+    "unit.MegaTank-0.png": {
+      "frame": {
+        "x": 299,
+        "y": 372,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.MegaTank-1.png": {
+      "frame": {
+        "x": 322,
+        "y": 372,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.MegaTank-2.png": {
+      "frame": {
+        "x": 345,
+        "y": 372,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.MegaTank-3.png": {
+      "frame": {
+        "x": 368,
+        "y": 372,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.MegaTank_MDown-0.png": {
+      "frame": {
+        "x": 391,
+        "y": 372,
+        "w": 16,
+        "h": 18
+      }
+    },
+    "unit.MegaTank_MDown-1.png": {
+      "frame": {
+        "x": 414,
+        "y": 372,
+        "w": 16,
+        "h": 18
+      }
+    },
+    "unit.MegaTank_MDown-2.png": {
+      "frame": {
+        "x": 0,
+        "y": 403,
+        "w": 16,
+        "h": 18
+      }
+    },
+    "unit.MegaTank_MSide-0.png": {
+      "frame": {
+        "x": 23,
+        "y": 403,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.MegaTank_MSide-1.png": {
+      "frame": {
+        "x": 46,
+        "y": 403,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.MegaTank_MSide-2.png": {
+      "frame": {
+        "x": 69,
+        "y": 403,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.MegaTank_MUp-0.png": {
+      "frame": {
+        "x": 92,
+        "y": 403,
+        "w": 16,
+        "h": 18
+      }
+    },
+    "unit.MegaTank_MUp-1.png": {
+      "frame": {
+        "x": 115,
+        "y": 403,
+        "w": 16,
+        "h": 18
+      }
+    },
+    "unit.MegaTank_MUp-2.png": {
+      "frame": {
+        "x": 138,
+        "y": 403,
+        "w": 16,
+        "h": 18
+      }
+    },
+    "unit.Missile-0.png": {
+      "frame": {
+        "x": 161,
+        "y": 403,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.Missile-1.png": {
+      "frame": {
+        "x": 184,
+        "y": 403,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.Missile_MDown-0.png": {
+      "frame": {
+        "x": 207,
+        "y": 403,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.Missile_MDown-1.png": {
+      "frame": {
+        "x": 230,
+        "y": 403,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.Missile_MDown-2.png": {
+      "frame": {
+        "x": 253,
+        "y": 403,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.Missile_MSide-0.png": {
+      "frame": {
+        "x": 276,
+        "y": 403,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.Missile_MSide-1.png": {
+      "frame": {
+        "x": 299,
+        "y": 403,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.Missile_MSide-2.png": {
+      "frame": {
+        "x": 322,
+        "y": 403,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.Missile_MUp-0.png": {
+      "frame": {
+        "x": 345,
+        "y": 403,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.Missile_MUp-1.png": {
+      "frame": {
+        "x": 368,
+        "y": 403,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.Missile_MUp-2.png": {
+      "frame": {
+        "x": 391,
+        "y": 403,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.NeoTank-0.png": {
+      "frame": {
+        "x": 414,
+        "y": 403,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.NeoTank-1.png": {
+      "frame": {
+        "x": 0,
+        "y": 434,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.NeoTank-2.png": {
+      "frame": {
+        "x": 23,
+        "y": 434,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.NeoTank-3.png": {
+      "frame": {
+        "x": 46,
+        "y": 434,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.NeoTank_MDown-0.png": {
+      "frame": {
+        "x": 69,
+        "y": 434,
+        "w": 16,
+        "h": 17
+      }
+    },
+    "unit.NeoTank_MDown-1.png": {
+      "frame": {
+        "x": 92,
+        "y": 434,
+        "w": 16,
+        "h": 17
+      }
+    },
+    "unit.NeoTank_MDown-2.png": {
+      "frame": {
+        "x": 115,
+        "y": 434,
+        "w": 16,
+        "h": 17
+      }
+    },
+    "unit.NeoTank_MSide-0.png": {
+      "frame": {
+        "x": 138,
+        "y": 434,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.NeoTank_MSide-1.png": {
+      "frame": {
+        "x": 161,
+        "y": 434,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.NeoTank_MSide-2.png": {
+      "frame": {
+        "x": 184,
+        "y": 434,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.NeoTank_MUp-0.png": {
+      "frame": {
+        "x": 207,
+        "y": 434,
+        "w": 16,
+        "h": 18
+      }
+    },
+    "unit.NeoTank_MUp-1.png": {
+      "frame": {
+        "x": 230,
+        "y": 434,
+        "w": 16,
+        "h": 18
+      }
+    },
+    "unit.NeoTank_MUp-2.png": {
+      "frame": {
+        "x": 253,
+        "y": 434,
+        "w": 16,
+        "h": 18
+      }
+    },
+    "unit.PipeRunner-0.png": {
+      "frame": {
+        "x": 276,
+        "y": 434,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.PipeRunner-1.png": {
+      "frame": {
+        "x": 299,
+        "y": 434,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.PipeRunner_MDown-0.png": {
+      "frame": {
+        "x": 322,
+        "y": 434,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.PipeRunner_MDown-1.png": {
+      "frame": {
+        "x": 345,
+        "y": 434,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.PipeRunner_MDown-2.png": {
+      "frame": {
+        "x": 368,
+        "y": 434,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.PipeRunner_MSide-0.png": {
+      "frame": {
+        "x": 391,
+        "y": 434,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.PipeRunner_MSide-1.png": {
+      "frame": {
+        "x": 414,
+        "y": 434,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.PipeRunner_MSide-2.png": {
+      "frame": {
+        "x": 0,
+        "y": 465,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.PipeRunner_MUp-0.png": {
+      "frame": {
+        "x": 23,
+        "y": 465,
+        "w": 16,
+        "h": 18
+      }
+    },
+    "unit.PipeRunner_MUp-1.png": {
+      "frame": {
+        "x": 46,
+        "y": 465,
+        "w": 16,
+        "h": 18
+      }
+    },
+    "unit.PipeRunner_MUp-2.png": {
+      "frame": {
+        "x": 69,
+        "y": 465,
+        "w": 16,
+        "h": 18
+      }
+    },
+    "unit.Recon-0.png": {
+      "frame": {
+        "x": 92,
+        "y": 465,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.Recon-1.png": {
+      "frame": {
+        "x": 115,
+        "y": 465,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.Recon-2.png": {
+      "frame": {
+        "x": 138,
+        "y": 465,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.Recon-3.png": {
+      "frame": {
+        "x": 161,
+        "y": 465,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.Recon_MDown-0.png": {
+      "frame": {
+        "x": 184,
+        "y": 465,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.Recon_MDown-1.png": {
+      "frame": {
+        "x": 207,
+        "y": 465,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.Recon_MDown-2.png": {
+      "frame": {
+        "x": 230,
+        "y": 465,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.Recon_MSide-0.png": {
+      "frame": {
+        "x": 253,
+        "y": 465,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.Recon_MSide-1.png": {
+      "frame": {
+        "x": 276,
+        "y": 465,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.Recon_MSide-2.png": {
+      "frame": {
+        "x": 299,
+        "y": 465,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.Recon_MUp-0.png": {
+      "frame": {
+        "x": 322,
+        "y": 465,
+        "w": 16,
+        "h": 17
+      }
+    },
+    "unit.Recon_MUp-1.png": {
+      "frame": {
+        "x": 345,
+        "y": 465,
+        "w": 16,
+        "h": 17
+      }
+    },
+    "unit.Recon_MUp-2.png": {
+      "frame": {
+        "x": 368,
+        "y": 465,
+        "w": 16,
+        "h": 17
+      }
+    },
+    "unit.Rocket-0.png": {
+      "frame": {
+        "x": 391,
+        "y": 465,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.Rocket-1.png": {
+      "frame": {
+        "x": 414,
+        "y": 465,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.Rocket_MDown-0.png": {
+      "frame": {
+        "x": 0,
+        "y": 496,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.Rocket_MDown-1.png": {
+      "frame": {
+        "x": 23,
+        "y": 496,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.Rocket_MDown-2.png": {
+      "frame": {
+        "x": 46,
+        "y": 496,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.Rocket_MSide-0.png": {
+      "frame": {
+        "x": 69,
+        "y": 496,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.Rocket_MSide-1.png": {
+      "frame": {
+        "x": 92,
+        "y": 496,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.Rocket_MSide-2.png": {
+      "frame": {
+        "x": 115,
+        "y": 496,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.Rocket_MUp-0.png": {
+      "frame": {
+        "x": 138,
+        "y": 496,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.Rocket_MUp-1.png": {
+      "frame": {
+        "x": 161,
+        "y": 496,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.Rocket_MUp-2.png": {
+      "frame": {
+        "x": 184,
+        "y": 496,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.Stealth-0.png": {
+      "frame": {
+        "x": 207,
+        "y": 496,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.Stealth-1.png": {
+      "frame": {
+        "x": 230,
+        "y": 496,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.Stealth_MDown-0.png": {
+      "frame": {
+        "x": 253,
+        "y": 496,
+        "w": 19,
+        "h": 23
+      }
+    },
+    "unit.Stealth_MDown-1.png": {
+      "frame": {
+        "x": 276,
+        "y": 496,
+        "w": 19,
+        "h": 23
+      }
+    },
+    "unit.Stealth_MDown-2.png": {
+      "frame": {
+        "x": 299,
+        "y": 496,
+        "w": 19,
+        "h": 23
+      }
+    },
+    "unit.Stealth_MSide-0.png": {
+      "frame": {
+        "x": 322,
+        "y": 496,
+        "w": 23,
+        "h": 21
+      }
+    },
+    "unit.Stealth_MSide-1.png": {
+      "frame": {
+        "x": 345,
+        "y": 496,
+        "w": 23,
+        "h": 21
+      }
+    },
+    "unit.Stealth_MSide-2.png": {
+      "frame": {
+        "x": 368,
+        "y": 496,
+        "w": 23,
+        "h": 21
+      }
+    },
+    "unit.Stealth_MUp-0.png": {
+      "frame": {
+        "x": 391,
+        "y": 496,
+        "w": 19,
+        "h": 21
+      }
+    },
+    "unit.Stealth_MUp-1.png": {
+      "frame": {
+        "x": 414,
+        "y": 496,
+        "w": 19,
+        "h": 21
+      }
+    },
+    "unit.Stealth_MUp-2.png": {
+      "frame": {
+        "x": 0,
+        "y": 527,
+        "w": 19,
+        "h": 21
+      }
+    },
+    "unit.Sub-0.png": {
+      "frame": {
+        "x": 23,
+        "y": 527,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.Sub-1.png": {
+      "frame": {
+        "x": 46,
+        "y": 527,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.Sub-2.png": {
+      "frame": {
+        "x": 69,
+        "y": 527,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.Sub-3.png": {
+      "frame": {
+        "x": 92,
+        "y": 527,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.Sub_MDown-0.png": {
+      "frame": {
+        "x": 115,
+        "y": 527,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.Sub_MDown-1.png": {
+      "frame": {
+        "x": 138,
+        "y": 527,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.Sub_MSide-0.png": {
+      "frame": {
+        "x": 161,
+        "y": 527,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.Sub_MSide-1.png": {
+      "frame": {
+        "x": 184,
+        "y": 527,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.Sub_MUp-0.png": {
+      "frame": {
+        "x": 207,
+        "y": 527,
+        "w": 16,
+        "h": 17
+      }
+    },
+    "unit.Sub_MUp-1.png": {
+      "frame": {
+        "x": 230,
+        "y": 527,
+        "w": 16,
+        "h": 17
+      }
+    },
+    "unit.T-Copter-0.png": {
+      "frame": {
+        "x": 253,
+        "y": 527,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.T-Copter-1.png": {
+      "frame": {
+        "x": 276,
+        "y": 527,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.T-Copter-2.png": {
+      "frame": {
+        "x": 299,
+        "y": 527,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.T-Copter-3.png": {
+      "frame": {
+        "x": 322,
+        "y": 527,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.T-Copter_MDown-0.png": {
+      "frame": {
+        "x": 345,
+        "y": 527,
+        "w": 16,
+        "h": 22
+      }
+    },
+    "unit.T-Copter_MDown-1.png": {
+      "frame": {
+        "x": 368,
+        "y": 527,
+        "w": 16,
+        "h": 22
+      }
+    },
+    "unit.T-Copter_MSide-0.png": {
+      "frame": {
+        "x": 391,
+        "y": 527,
+        "w": 19,
+        "h": 21
+      }
+    },
+    "unit.T-Copter_MSide-1.png": {
+      "frame": {
+        "x": 414,
+        "y": 527,
+        "w": 19,
+        "h": 21
+      }
+    },
+    "unit.T-Copter_MUp-0.png": {
+      "frame": {
+        "x": 0,
+        "y": 558,
+        "w": 16,
+        "h": 23
+      }
+    },
+    "unit.T-Copter_MUp-1.png": {
+      "frame": {
+        "x": 23,
+        "y": 558,
+        "w": 16,
+        "h": 23
+      }
+    },
+    "unit.Tank-0.png": {
+      "frame": {
+        "x": 46,
+        "y": 558,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.Tank-1.png": {
+      "frame": {
+        "x": 69,
+        "y": 558,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.Tank-2.png": {
+      "frame": {
+        "x": 92,
+        "y": 558,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.Tank-3.png": {
+      "frame": {
+        "x": 115,
+        "y": 558,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.Tank_MDown-0.png": {
+      "frame": {
+        "x": 138,
+        "y": 558,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.Tank_MDown-1.png": {
+      "frame": {
+        "x": 161,
+        "y": 558,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.Tank_MDown-2.png": {
+      "frame": {
+        "x": 184,
+        "y": 558,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.Tank_MSide-0.png": {
+      "frame": {
+        "x": 207,
+        "y": 558,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.Tank_MSide-1.png": {
+      "frame": {
+        "x": 230,
+        "y": 558,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.Tank_MSide-2.png": {
+      "frame": {
+        "x": 253,
+        "y": 558,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.Tank_MUp-0.png": {
+      "frame": {
+        "x": 276,
+        "y": 558,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.Tank_MUp-1.png": {
+      "frame": {
+        "x": 299,
+        "y": 558,
+        "w": 16,
+        "h": 16
+      }
+    },
+    "unit.Tank_MUp-2.png": {
+      "frame": {
+        "x": 322,
+        "y": 558,
+        "w": 16,
+        "h": 16
+      }
+    }
+  },
+  "animations": {
+    "map.Airport": [
+      "map.Airport-0.png",
+      "map.Airport-1.png",
+      "map.Airport-2.png",
+      "map.Airport_Rain-0.png",
+      "map.Airport_Rain-1.png",
+      "map.Airport_Rain-2.png",
+      "map.Airport_Snow-0.png",
+      "map.Airport_Snow-1.png",
+      "map.Airport_Snow-2.png"
+    ],
+    "map.Airport_Rain": [
+      "map.Airport_Rain-0.png",
+      "map.Airport_Rain-1.png",
+      "map.Airport_Rain-2.png"
+    ],
+    "map.Airport_Snow": [
+      "map.Airport_Snow-0.png",
+      "map.Airport_Snow-1.png",
+      "map.Airport_Snow-2.png"
+    ],
+    "map.Base": [
+      "map.Base-0.png",
+      "map.Base-1.png",
+      "map.Base-2.png",
+      "map.Base-3.png",
+      "map.Base-4.png",
+      "map.Base-5.png",
+      "map.Base_Rain-0.png",
+      "map.Base_Rain-1.png",
+      "map.Base_Rain-2.png",
+      "map.Base_Rain-3.png",
+      "map.Base_Rain-4.png",
+      "map.Base_Rain-5.png",
+      "map.Base_Snow-0.png",
+      "map.Base_Snow-1.png",
+      "map.Base_Snow-2.png",
+      "map.Base_Snow-3.png",
+      "map.Base_Snow-4.png",
+      "map.Base_Snow-5.png"
+    ],
+    "map.Base_Rain": [
+      "map.Base_Rain-0.png",
+      "map.Base_Rain-1.png",
+      "map.Base_Rain-2.png",
+      "map.Base_Rain-3.png",
+      "map.Base_Rain-4.png",
+      "map.Base_Rain-5.png"
+    ],
+    "map.Base_Snow": [
+      "map.Base_Snow-0.png",
+      "map.Base_Snow-1.png",
+      "map.Base_Snow-2.png",
+      "map.Base_Snow-3.png",
+      "map.Base_Snow-4.png",
+      "map.Base_Snow-5.png"
+    ],
+    "map.City": [
+      "map.City-0.png",
+      "map.City-1.png",
+      "map.City-2.png",
+      "map.City_Rain-0.png",
+      "map.City_Rain-1.png",
+      "map.City_Rain-2.png",
+      "map.City_Snow-0.png",
+      "map.City_Snow-1.png",
+      "map.City_Snow-2.png"
+    ],
+    "map.City_Rain": [
+      "map.City_Rain-0.png",
+      "map.City_Rain-1.png",
+      "map.City_Rain-2.png"
+    ],
+    "map.City_Snow": [
+      "map.City_Snow-0.png",
+      "map.City_Snow-1.png",
+      "map.City_Snow-2.png"
+    ],
+    "map.ComTower": [
+      "map.ComTower-0.png",
+      "map.ComTower-1.png",
+      "map.ComTower-2.png",
+      "map.ComTower_Rain-0.png",
+      "map.ComTower_Rain-1.png",
+      "map.ComTower_Rain-2.png",
+      "map.ComTower_Snow-0.png",
+      "map.ComTower_Snow-1.png",
+      "map.ComTower_Snow-2.png"
+    ],
+    "map.ComTower_Rain": [
+      "map.ComTower_Rain-0.png",
+      "map.ComTower_Rain-1.png",
+      "map.ComTower_Rain-2.png"
+    ],
+    "map.ComTower_Snow": [
+      "map.ComTower_Snow-0.png",
+      "map.ComTower_Snow-1.png",
+      "map.ComTower_Snow-2.png"
+    ],
+    "map.HQ": [
+      "map.HQ-0.png",
+      "map.HQ-1.png",
+      "map.HQ-2.png",
+      "map.HQ_Rain-0.png",
+      "map.HQ_Rain-1.png",
+      "map.HQ_Rain-2.png",
+      "map.HQ_Snow-0.png",
+      "map.HQ_Snow-1.png",
+      "map.HQ_Snow-2.png"
+    ],
+    "map.HQ_Rain": [
+      "map.HQ_Rain-0.png",
+      "map.HQ_Rain-1.png",
+      "map.HQ_Rain-2.png"
+    ],
+    "map.HQ_Snow": [
+      "map.HQ_Snow-0.png",
+      "map.HQ_Snow-1.png",
+      "map.HQ_Snow-2.png"
+    ],
+    "map.Lab": [
+      "map.Lab-0.png",
+      "map.Lab-1.png",
+      "map.Lab-2.png",
+      "map.Lab_Rain-0.png",
+      "map.Lab_Rain-1.png",
+      "map.Lab_Rain-2.png",
+      "map.Lab_Snow-0.png",
+      "map.Lab_Snow-1.png",
+      "map.Lab_Snow-2.png"
+    ],
+    "map.Lab_Rain": [
+      "map.Lab_Rain-0.png",
+      "map.Lab_Rain-1.png",
+      "map.Lab_Rain-2.png"
+    ],
+    "map.Lab_Snow": [
+      "map.Lab_Snow-0.png",
+      "map.Lab_Snow-1.png",
+      "map.Lab_Snow-2.png"
+    ],
+    "map.Port": [
+      "map.Port-0.png",
+      "map.Port-1.png",
+      "map.Port-2.png",
+      "map.Port_Rain-0.png",
+      "map.Port_Rain-1.png",
+      "map.Port_Rain-2.png",
+      "map.Port_Snow-0.png",
+      "map.Port_Snow-1.png",
+      "map.Port_Snow-2.png"
+    ],
+    "map.Port_Rain": [
+      "map.Port_Rain-0.png",
+      "map.Port_Rain-1.png",
+      "map.Port_Rain-2.png"
+    ],
+    "map.Port_Snow": [
+      "map.Port_Snow-0.png",
+      "map.Port_Snow-1.png",
+      "map.Port_Snow-2.png"
+    ],
+    "unit.APC": [
+      "unit.APC-0.png",
+      "unit.APC-1.png",
+      "unit.APC-2.png",
+      "unit.APC-3.png",
+      "unit.APC_MDown-0.png",
+      "unit.APC_MDown-1.png",
+      "unit.APC_MDown-2.png",
+      "unit.APC_MSide-0.png",
+      "unit.APC_MSide-1.png",
+      "unit.APC_MSide-2.png",
+      "unit.APC_MUp-0.png",
+      "unit.APC_MUp-1.png",
+      "unit.APC_MUp-2.png"
+    ],
+    "unit.APC_MDown": [
+      "unit.APC_MDown-0.png",
+      "unit.APC_MDown-1.png",
+      "unit.APC_MDown-2.png"
+    ],
+    "unit.APC_MSide": [
+      "unit.APC_MSide-0.png",
+      "unit.APC_MSide-1.png",
+      "unit.APC_MSide-2.png"
+    ],
+    "unit.APC_MUp": [
+      "unit.APC_MUp-0.png",
+      "unit.APC_MUp-1.png",
+      "unit.APC_MUp-2.png"
+    ],
+    "unit.Anti-Air": [
+      "unit.Anti-Air-0.png",
+      "unit.Anti-Air-1.png",
+      "unit.Anti-Air-2.png",
+      "unit.Anti-Air-3.png",
+      "unit.Anti-Air_MDown-0.png",
+      "unit.Anti-Air_MDown-1.png",
+      "unit.Anti-Air_MDown-2.png",
+      "unit.Anti-Air_MSide-0.png",
+      "unit.Anti-Air_MSide-1.png",
+      "unit.Anti-Air_MSide-2.png",
+      "unit.Anti-Air_MUp-0.png",
+      "unit.Anti-Air_MUp-1.png",
+      "unit.Anti-Air_MUp-2.png"
+    ],
+    "unit.Anti-Air_MDown": [
+      "unit.Anti-Air_MDown-0.png",
+      "unit.Anti-Air_MDown-1.png",
+      "unit.Anti-Air_MDown-2.png"
+    ],
+    "unit.Anti-Air_MSide": [
+      "unit.Anti-Air_MSide-0.png",
+      "unit.Anti-Air_MSide-1.png",
+      "unit.Anti-Air_MSide-2.png"
+    ],
+    "unit.Anti-Air_MUp": [
+      "unit.Anti-Air_MUp-0.png",
+      "unit.Anti-Air_MUp-1.png",
+      "unit.Anti-Air_MUp-2.png"
+    ],
+    "unit.Artillery": [
+      "unit.Artillery-0.png",
+      "unit.Artillery-1.png",
+      "unit.Artillery-2.png",
+      "unit.Artillery-3.png",
+      "unit.Artillery_MDown-0.png",
+      "unit.Artillery_MDown-1.png",
+      "unit.Artillery_MDown-2.png",
+      "unit.Artillery_MSide-0.png",
+      "unit.Artillery_MSide-1.png",
+      "unit.Artillery_MSide-2.png",
+      "unit.Artillery_MUp-0.png",
+      "unit.Artillery_MUp-1.png",
+      "unit.Artillery_MUp-2.png"
+    ],
+    "unit.Artillery_MDown": [
+      "unit.Artillery_MDown-0.png",
+      "unit.Artillery_MDown-1.png",
+      "unit.Artillery_MDown-2.png"
+    ],
+    "unit.Artillery_MSide": [
+      "unit.Artillery_MSide-0.png",
+      "unit.Artillery_MSide-1.png",
+      "unit.Artillery_MSide-2.png"
+    ],
+    "unit.Artillery_MUp": [
+      "unit.Artillery_MUp-0.png",
+      "unit.Artillery_MUp-1.png",
+      "unit.Artillery_MUp-2.png"
+    ],
+    "unit.B-Copter": [
+      "unit.B-Copter-0.png",
+      "unit.B-Copter-1.png",
+      "unit.B-Copter-2.png",
+      "unit.B-Copter-3.png",
+      "unit.B-Copter_MDown-0.png",
+      "unit.B-Copter_MDown-1.png",
+      "unit.B-Copter_MSide-0.png",
+      "unit.B-Copter_MSide-1.png",
+      "unit.B-Copter_MUp-0.png",
+      "unit.B-Copter_MUp-1.png"
+    ],
+    "unit.B-Copter_MDown": [
+      "unit.B-Copter_MDown-0.png",
+      "unit.B-Copter_MDown-1.png"
+    ],
+    "unit.B-Copter_MSide": [
+      "unit.B-Copter_MSide-0.png",
+      "unit.B-Copter_MSide-1.png"
+    ],
+    "unit.B-Copter_MUp": [
+      "unit.B-Copter_MUp-0.png",
+      "unit.B-Copter_MUp-1.png"
+    ],
+    "unit.Battleship": [
+      "unit.Battleship-0.png",
+      "unit.Battleship-1.png",
+      "unit.Battleship_MDown-0.png",
+      "unit.Battleship_MDown-1.png",
+      "unit.Battleship_MSide-0.png",
+      "unit.Battleship_MSide-1.png",
+      "unit.Battleship_MUp-0.png",
+      "unit.Battleship_MUp-1.png"
+    ],
+    "unit.Battleship_MDown": [
+      "unit.Battleship_MDown-0.png",
+      "unit.Battleship_MDown-1.png"
+    ],
+    "unit.Battleship_MSide": [
+      "unit.Battleship_MSide-0.png",
+      "unit.Battleship_MSide-1.png"
+    ],
+    "unit.Battleship_MUp": [
+      "unit.Battleship_MUp-0.png",
+      "unit.Battleship_MUp-1.png"
+    ],
+    "unit.BlackBoat": [
+      "unit.BlackBoat-0.png",
+      "unit.BlackBoat-1.png",
+      "unit.BlackBoat-2.png",
+      "unit.BlackBoat-3.png",
+      "unit.BlackBoat_MDown-0.png",
+      "unit.BlackBoat_MDown-1.png",
+      "unit.BlackBoat_MSide-0.png",
+      "unit.BlackBoat_MSide-1.png",
+      "unit.BlackBoat_MUp-0.png",
+      "unit.BlackBoat_MUp-1.png"
+    ],
+    "unit.BlackBoat_MDown": [
+      "unit.BlackBoat_MDown-0.png",
+      "unit.BlackBoat_MDown-1.png"
+    ],
+    "unit.BlackBoat_MSide": [
+      "unit.BlackBoat_MSide-0.png",
+      "unit.BlackBoat_MSide-1.png"
+    ],
+    "unit.BlackBoat_MUp": [
+      "unit.BlackBoat_MUp-0.png",
+      "unit.BlackBoat_MUp-1.png"
+    ],
+    "unit.BlackBomb": [
+      "unit.BlackBomb-0.png",
+      "unit.BlackBomb-1.png",
+      "unit.BlackBomb-2.png",
+      "unit.BlackBomb-3.png",
+      "unit.BlackBomb_MDown-0.png",
+      "unit.BlackBomb_MDown-1.png",
+      "unit.BlackBomb_MDown-2.png",
+      "unit.BlackBomb_MSide-0.png",
+      "unit.BlackBomb_MSide-1.png",
+      "unit.BlackBomb_MSide-2.png",
+      "unit.BlackBomb_MUp-0.png",
+      "unit.BlackBomb_MUp-1.png",
+      "unit.BlackBomb_MUp-2.png"
+    ],
+    "unit.BlackBomb_MDown": [
+      "unit.BlackBomb_MDown-0.png",
+      "unit.BlackBomb_MDown-1.png",
+      "unit.BlackBomb_MDown-2.png"
+    ],
+    "unit.BlackBomb_MSide": [
+      "unit.BlackBomb_MSide-0.png",
+      "unit.BlackBomb_MSide-1.png",
+      "unit.BlackBomb_MSide-2.png"
+    ],
+    "unit.BlackBomb_MUp": [
+      "unit.BlackBomb_MUp-0.png",
+      "unit.BlackBomb_MUp-1.png",
+      "unit.BlackBomb_MUp-2.png"
+    ],
+    "unit.Bomber": [
+      "unit.Bomber-0.png",
+      "unit.Bomber-1.png",
+      "unit.Bomber_MDown-0.png",
+      "unit.Bomber_MDown-1.png",
+      "unit.Bomber_MDown-2.png",
+      "unit.Bomber_MSide-0.png",
+      "unit.Bomber_MSide-1.png",
+      "unit.Bomber_MSide-2.png",
+      "unit.Bomber_MUp-0.png",
+      "unit.Bomber_MUp-1.png",
+      "unit.Bomber_MUp-2.png"
+    ],
+    "unit.Bomber_MDown": [
+      "unit.Bomber_MDown-0.png",
+      "unit.Bomber_MDown-1.png",
+      "unit.Bomber_MDown-2.png"
+    ],
+    "unit.Bomber_MSide": [
+      "unit.Bomber_MSide-0.png",
+      "unit.Bomber_MSide-1.png",
+      "unit.Bomber_MSide-2.png"
+    ],
+    "unit.Bomber_MUp": [
+      "unit.Bomber_MUp-0.png",
+      "unit.Bomber_MUp-1.png",
+      "unit.Bomber_MUp-2.png"
+    ],
+    "unit.Carrier": [
+      "unit.Carrier-0.png",
+      "unit.Carrier-1.png",
+      "unit.Carrier_MDown-0.png",
+      "unit.Carrier_MDown-1.png",
+      "unit.Carrier_MSide-0.png",
+      "unit.Carrier_MSide-1.png",
+      "unit.Carrier_MUp-0.png",
+      "unit.Carrier_MUp-1.png"
+    ],
+    "unit.Carrier_MDown": [
+      "unit.Carrier_MDown-0.png",
+      "unit.Carrier_MDown-1.png"
+    ],
+    "unit.Carrier_MSide": [
+      "unit.Carrier_MSide-0.png",
+      "unit.Carrier_MSide-1.png"
+    ],
+    "unit.Carrier_MUp": [
+      "unit.Carrier_MUp-0.png",
+      "unit.Carrier_MUp-1.png"
+    ],
+    "unit.Cruiser": [
+      "unit.Cruiser-0.png",
+      "unit.Cruiser-1.png",
+      "unit.Cruiser_MDown-0.png",
+      "unit.Cruiser_MDown-1.png",
+      "unit.Cruiser_MSide-0.png",
+      "unit.Cruiser_MSide-1.png",
+      "unit.Cruiser_MUp-0.png",
+      "unit.Cruiser_MUp-1.png"
+    ],
+    "unit.Cruiser_MDown": [
+      "unit.Cruiser_MDown-0.png",
+      "unit.Cruiser_MDown-1.png"
+    ],
+    "unit.Cruiser_MSide": [
+      "unit.Cruiser_MSide-0.png",
+      "unit.Cruiser_MSide-1.png"
+    ],
+    "unit.Cruiser_MUp": [
+      "unit.Cruiser_MUp-0.png",
+      "unit.Cruiser_MUp-1.png"
+    ],
+    "unit.Fighter": [
+      "unit.Fighter-0.png",
+      "unit.Fighter-1.png",
+      "unit.Fighter_MDown-0.png",
+      "unit.Fighter_MDown-1.png",
+      "unit.Fighter_MDown-2.png",
+      "unit.Fighter_MSide-0.png",
+      "unit.Fighter_MSide-1.png",
+      "unit.Fighter_MSide-2.png",
+      "unit.Fighter_MUp-0.png",
+      "unit.Fighter_MUp-1.png",
+      "unit.Fighter_MUp-2.png"
+    ],
+    "unit.Fighter_MDown": [
+      "unit.Fighter_MDown-0.png",
+      "unit.Fighter_MDown-1.png",
+      "unit.Fighter_MDown-2.png"
+    ],
+    "unit.Fighter_MSide": [
+      "unit.Fighter_MSide-0.png",
+      "unit.Fighter_MSide-1.png",
+      "unit.Fighter_MSide-2.png"
+    ],
+    "unit.Fighter_MUp": [
+      "unit.Fighter_MUp-0.png",
+      "unit.Fighter_MUp-1.png",
+      "unit.Fighter_MUp-2.png"
+    ],
+    "unit.Infantry": [
+      "unit.Infantry-0.png",
+      "unit.Infantry-1.png",
+      "unit.Infantry-2.png",
+      "unit.Infantry-3.png",
+      "unit.Infantry_MDown-0.png",
+      "unit.Infantry_MDown-1.png",
+      "unit.Infantry_MDown-2.png",
+      "unit.Infantry_MDown-3.png",
+      "unit.Infantry_MSide-0.png",
+      "unit.Infantry_MSide-1.png",
+      "unit.Infantry_MSide-2.png",
+      "unit.Infantry_MSide-3.png",
+      "unit.Infantry_MUp-0.png",
+      "unit.Infantry_MUp-1.png",
+      "unit.Infantry_MUp-2.png",
+      "unit.Infantry_MUp-3.png"
+    ],
+    "unit.Infantry_MDown": [
+      "unit.Infantry_MDown-0.png",
+      "unit.Infantry_MDown-1.png",
+      "unit.Infantry_MDown-2.png",
+      "unit.Infantry_MDown-3.png"
+    ],
+    "unit.Infantry_MSide": [
+      "unit.Infantry_MSide-0.png",
+      "unit.Infantry_MSide-1.png",
+      "unit.Infantry_MSide-2.png",
+      "unit.Infantry_MSide-3.png"
+    ],
+    "unit.Infantry_MUp": [
+      "unit.Infantry_MUp-0.png",
+      "unit.Infantry_MUp-1.png",
+      "unit.Infantry_MUp-2.png",
+      "unit.Infantry_MUp-3.png"
+    ],
+    "unit.Lander": [
+      "unit.Lander-0.png",
+      "unit.Lander-1.png",
+      "unit.Lander_MDown-0.png",
+      "unit.Lander_MDown-1.png",
+      "unit.Lander_MSide-0.png",
+      "unit.Lander_MSide-1.png",
+      "unit.Lander_MUp-0.png",
+      "unit.Lander_MUp-1.png"
+    ],
+    "unit.Lander_MDown": [
+      "unit.Lander_MDown-0.png",
+      "unit.Lander_MDown-1.png"
+    ],
+    "unit.Lander_MSide": [
+      "unit.Lander_MSide-0.png",
+      "unit.Lander_MSide-1.png"
+    ],
+    "unit.Lander_MUp": [
+      "unit.Lander_MUp-0.png",
+      "unit.Lander_MUp-1.png"
+    ],
+    "unit.MdTank": [
+      "unit.MdTank-0.png",
+      "unit.MdTank-1.png",
+      "unit.MdTank-2.png",
+      "unit.MdTank-3.png",
+      "unit.MdTank_MDown-0.png",
+      "unit.MdTank_MDown-1.png",
+      "unit.MdTank_MDown-2.png",
+      "unit.MdTank_MSide-0.png",
+      "unit.MdTank_MSide-1.png",
+      "unit.MdTank_MSide-2.png",
+      "unit.MdTank_MUp-0.png",
+      "unit.MdTank_MUp-1.png",
+      "unit.MdTank_MUp-2.png"
+    ],
+    "unit.MdTank_MDown": [
+      "unit.MdTank_MDown-0.png",
+      "unit.MdTank_MDown-1.png",
+      "unit.MdTank_MDown-2.png"
+    ],
+    "unit.MdTank_MSide": [
+      "unit.MdTank_MSide-0.png",
+      "unit.MdTank_MSide-1.png",
+      "unit.MdTank_MSide-2.png"
+    ],
+    "unit.MdTank_MUp": [
+      "unit.MdTank_MUp-0.png",
+      "unit.MdTank_MUp-1.png",
+      "unit.MdTank_MUp-2.png"
+    ],
+    "unit.Mech": [
+      "unit.Mech-0.png",
+      "unit.Mech-1.png",
+      "unit.Mech_MDown-0.png",
+      "unit.Mech_MDown-1.png",
+      "unit.Mech_MDown-2.png",
+      "unit.Mech_MDown-3.png",
+      "unit.Mech_MSide-0.png",
+      "unit.Mech_MSide-1.png",
+      "unit.Mech_MSide-2.png",
+      "unit.Mech_MSide-3.png",
+      "unit.Mech_MUp-0.png",
+      "unit.Mech_MUp-1.png",
+      "unit.Mech_MUp-2.png",
+      "unit.Mech_MUp-3.png"
+    ],
+    "unit.Mech_MDown": [
+      "unit.Mech_MDown-0.png",
+      "unit.Mech_MDown-1.png",
+      "unit.Mech_MDown-2.png",
+      "unit.Mech_MDown-3.png"
+    ],
+    "unit.Mech_MSide": [
+      "unit.Mech_MSide-0.png",
+      "unit.Mech_MSide-1.png",
+      "unit.Mech_MSide-2.png",
+      "unit.Mech_MSide-3.png"
+    ],
+    "unit.Mech_MUp": [
+      "unit.Mech_MUp-0.png",
+      "unit.Mech_MUp-1.png",
+      "unit.Mech_MUp-2.png",
+      "unit.Mech_MUp-3.png"
+    ],
+    "unit.MegaTank": [
+      "unit.MegaTank-0.png",
+      "unit.MegaTank-1.png",
+      "unit.MegaTank-2.png",
+      "unit.MegaTank-3.png",
+      "unit.MegaTank_MDown-0.png",
+      "unit.MegaTank_MDown-1.png",
+      "unit.MegaTank_MDown-2.png",
+      "unit.MegaTank_MSide-0.png",
+      "unit.MegaTank_MSide-1.png",
+      "unit.MegaTank_MSide-2.png",
+      "unit.MegaTank_MUp-0.png",
+      "unit.MegaTank_MUp-1.png",
+      "unit.MegaTank_MUp-2.png"
+    ],
+    "unit.MegaTank_MDown": [
+      "unit.MegaTank_MDown-0.png",
+      "unit.MegaTank_MDown-1.png",
+      "unit.MegaTank_MDown-2.png"
+    ],
+    "unit.MegaTank_MSide": [
+      "unit.MegaTank_MSide-0.png",
+      "unit.MegaTank_MSide-1.png",
+      "unit.MegaTank_MSide-2.png"
+    ],
+    "unit.MegaTank_MUp": [
+      "unit.MegaTank_MUp-0.png",
+      "unit.MegaTank_MUp-1.png",
+      "unit.MegaTank_MUp-2.png"
+    ],
+    "unit.Missile": [
+      "unit.Missile-0.png",
+      "unit.Missile-1.png",
+      "unit.Missile_MDown-0.png",
+      "unit.Missile_MDown-1.png",
+      "unit.Missile_MDown-2.png",
+      "unit.Missile_MSide-0.png",
+      "unit.Missile_MSide-1.png",
+      "unit.Missile_MSide-2.png",
+      "unit.Missile_MUp-0.png",
+      "unit.Missile_MUp-1.png",
+      "unit.Missile_MUp-2.png"
+    ],
+    "unit.Missile_MDown": [
+      "unit.Missile_MDown-0.png",
+      "unit.Missile_MDown-1.png",
+      "unit.Missile_MDown-2.png"
+    ],
+    "unit.Missile_MSide": [
+      "unit.Missile_MSide-0.png",
+      "unit.Missile_MSide-1.png",
+      "unit.Missile_MSide-2.png"
+    ],
+    "unit.Missile_MUp": [
+      "unit.Missile_MUp-0.png",
+      "unit.Missile_MUp-1.png",
+      "unit.Missile_MUp-2.png"
+    ],
+    "unit.NeoTank": [
+      "unit.NeoTank-0.png",
+      "unit.NeoTank-1.png",
+      "unit.NeoTank-2.png",
+      "unit.NeoTank-3.png",
+      "unit.NeoTank_MDown-0.png",
+      "unit.NeoTank_MDown-1.png",
+      "unit.NeoTank_MDown-2.png",
+      "unit.NeoTank_MSide-0.png",
+      "unit.NeoTank_MSide-1.png",
+      "unit.NeoTank_MSide-2.png",
+      "unit.NeoTank_MUp-0.png",
+      "unit.NeoTank_MUp-1.png",
+      "unit.NeoTank_MUp-2.png"
+    ],
+    "unit.NeoTank_MDown": [
+      "unit.NeoTank_MDown-0.png",
+      "unit.NeoTank_MDown-1.png",
+      "unit.NeoTank_MDown-2.png"
+    ],
+    "unit.NeoTank_MSide": [
+      "unit.NeoTank_MSide-0.png",
+      "unit.NeoTank_MSide-1.png",
+      "unit.NeoTank_MSide-2.png"
+    ],
+    "unit.NeoTank_MUp": [
+      "unit.NeoTank_MUp-0.png",
+      "unit.NeoTank_MUp-1.png",
+      "unit.NeoTank_MUp-2.png"
+    ],
+    "unit.PipeRunner": [
+      "unit.PipeRunner-0.png",
+      "unit.PipeRunner-1.png",
+      "unit.PipeRunner_MDown-0.png",
+      "unit.PipeRunner_MDown-1.png",
+      "unit.PipeRunner_MDown-2.png",
+      "unit.PipeRunner_MSide-0.png",
+      "unit.PipeRunner_MSide-1.png",
+      "unit.PipeRunner_MSide-2.png",
+      "unit.PipeRunner_MUp-0.png",
+      "unit.PipeRunner_MUp-1.png",
+      "unit.PipeRunner_MUp-2.png"
+    ],
+    "unit.PipeRunner_MDown": [
+      "unit.PipeRunner_MDown-0.png",
+      "unit.PipeRunner_MDown-1.png",
+      "unit.PipeRunner_MDown-2.png"
+    ],
+    "unit.PipeRunner_MSide": [
+      "unit.PipeRunner_MSide-0.png",
+      "unit.PipeRunner_MSide-1.png",
+      "unit.PipeRunner_MSide-2.png"
+    ],
+    "unit.PipeRunner_MUp": [
+      "unit.PipeRunner_MUp-0.png",
+      "unit.PipeRunner_MUp-1.png",
+      "unit.PipeRunner_MUp-2.png"
+    ],
+    "unit.Recon": [
+      "unit.Recon-0.png",
+      "unit.Recon-1.png",
+      "unit.Recon-2.png",
+      "unit.Recon-3.png",
+      "unit.Recon_MDown-0.png",
+      "unit.Recon_MDown-1.png",
+      "unit.Recon_MDown-2.png",
+      "unit.Recon_MSide-0.png",
+      "unit.Recon_MSide-1.png",
+      "unit.Recon_MSide-2.png",
+      "unit.Recon_MUp-0.png",
+      "unit.Recon_MUp-1.png",
+      "unit.Recon_MUp-2.png"
+    ],
+    "unit.Recon_MDown": [
+      "unit.Recon_MDown-0.png",
+      "unit.Recon_MDown-1.png",
+      "unit.Recon_MDown-2.png"
+    ],
+    "unit.Recon_MSide": [
+      "unit.Recon_MSide-0.png",
+      "unit.Recon_MSide-1.png",
+      "unit.Recon_MSide-2.png"
+    ],
+    "unit.Recon_MUp": [
+      "unit.Recon_MUp-0.png",
+      "unit.Recon_MUp-1.png",
+      "unit.Recon_MUp-2.png"
+    ],
+    "unit.Rocket": [
+      "unit.Rocket-0.png",
+      "unit.Rocket-1.png",
+      "unit.Rocket_MDown-0.png",
+      "unit.Rocket_MDown-1.png",
+      "unit.Rocket_MDown-2.png",
+      "unit.Rocket_MSide-0.png",
+      "unit.Rocket_MSide-1.png",
+      "unit.Rocket_MSide-2.png",
+      "unit.Rocket_MUp-0.png",
+      "unit.Rocket_MUp-1.png",
+      "unit.Rocket_MUp-2.png"
+    ],
+    "unit.Rocket_MDown": [
+      "unit.Rocket_MDown-0.png",
+      "unit.Rocket_MDown-1.png",
+      "unit.Rocket_MDown-2.png"
+    ],
+    "unit.Rocket_MSide": [
+      "unit.Rocket_MSide-0.png",
+      "unit.Rocket_MSide-1.png",
+      "unit.Rocket_MSide-2.png"
+    ],
+    "unit.Rocket_MUp": [
+      "unit.Rocket_MUp-0.png",
+      "unit.Rocket_MUp-1.png",
+      "unit.Rocket_MUp-2.png"
+    ],
+    "unit.Stealth": [
+      "unit.Stealth-0.png",
+      "unit.Stealth-1.png",
+      "unit.Stealth_MDown-0.png",
+      "unit.Stealth_MDown-1.png",
+      "unit.Stealth_MDown-2.png",
+      "unit.Stealth_MSide-0.png",
+      "unit.Stealth_MSide-1.png",
+      "unit.Stealth_MSide-2.png",
+      "unit.Stealth_MUp-0.png",
+      "unit.Stealth_MUp-1.png",
+      "unit.Stealth_MUp-2.png"
+    ],
+    "unit.Stealth_MDown": [
+      "unit.Stealth_MDown-0.png",
+      "unit.Stealth_MDown-1.png",
+      "unit.Stealth_MDown-2.png"
+    ],
+    "unit.Stealth_MSide": [
+      "unit.Stealth_MSide-0.png",
+      "unit.Stealth_MSide-1.png",
+      "unit.Stealth_MSide-2.png"
+    ],
+    "unit.Stealth_MUp": [
+      "unit.Stealth_MUp-0.png",
+      "unit.Stealth_MUp-1.png",
+      "unit.Stealth_MUp-2.png"
+    ],
+    "unit.Sub": [
+      "unit.Sub-0.png",
+      "unit.Sub-1.png",
+      "unit.Sub-2.png",
+      "unit.Sub-3.png",
+      "unit.Sub_MDown-0.png",
+      "unit.Sub_MDown-1.png",
+      "unit.Sub_MSide-0.png",
+      "unit.Sub_MSide-1.png",
+      "unit.Sub_MUp-0.png",
+      "unit.Sub_MUp-1.png"
+    ],
+    "unit.Sub_MDown": [
+      "unit.Sub_MDown-0.png",
+      "unit.Sub_MDown-1.png"
+    ],
+    "unit.Sub_MSide": [
+      "unit.Sub_MSide-0.png",
+      "unit.Sub_MSide-1.png"
+    ],
+    "unit.Sub_MUp": [
+      "unit.Sub_MUp-0.png",
+      "unit.Sub_MUp-1.png"
+    ],
+    "unit.T-Copter": [
+      "unit.T-Copter-0.png",
+      "unit.T-Copter-1.png",
+      "unit.T-Copter-2.png",
+      "unit.T-Copter-3.png",
+      "unit.T-Copter_MDown-0.png",
+      "unit.T-Copter_MDown-1.png",
+      "unit.T-Copter_MSide-0.png",
+      "unit.T-Copter_MSide-1.png",
+      "unit.T-Copter_MUp-0.png",
+      "unit.T-Copter_MUp-1.png"
+    ],
+    "unit.T-Copter_MDown": [
+      "unit.T-Copter_MDown-0.png",
+      "unit.T-Copter_MDown-1.png"
+    ],
+    "unit.T-Copter_MSide": [
+      "unit.T-Copter_MSide-0.png",
+      "unit.T-Copter_MSide-1.png"
+    ],
+    "unit.T-Copter_MUp": [
+      "unit.T-Copter_MUp-0.png",
+      "unit.T-Copter_MUp-1.png"
+    ],
+    "unit.Tank": [
+      "unit.Tank-0.png",
+      "unit.Tank-1.png",
+      "unit.Tank-2.png",
+      "unit.Tank-3.png",
+      "unit.Tank_MDown-0.png",
+      "unit.Tank_MDown-1.png",
+      "unit.Tank_MDown-2.png",
+      "unit.Tank_MSide-0.png",
+      "unit.Tank_MSide-1.png",
+      "unit.Tank_MSide-2.png",
+      "unit.Tank_MUp-0.png",
+      "unit.Tank_MUp-1.png",
+      "unit.Tank_MUp-2.png"
+    ],
+    "unit.Tank_MDown": [
+      "unit.Tank_MDown-0.png",
+      "unit.Tank_MDown-1.png",
+      "unit.Tank_MDown-2.png"
+    ],
+    "unit.Tank_MSide": [
+      "unit.Tank_MSide-0.png",
+      "unit.Tank_MSide-1.png",
+      "unit.Tank_MSide-2.png"
+    ],
+    "unit.Tank_MUp": [
+      "unit.Tank_MUp-0.png",
+      "unit.Tank_MUp-1.png",
+      "unit.Tank_MUp-2.png"
+    ]
+  }
+}
