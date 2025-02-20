@@ -1,43 +1,27 @@
 import Article from "frontend/components/layout/article/Article";
 import { markdownToHTML, stringToSlug } from "frontend/utils/articleUtils";
 import { trpc } from "frontend/utils/trpc-client";
-import type { GetStaticPaths, GetStaticPropsContext, InferGetStaticPropsType } from "next";
+import type { GetServerSideProps } from "next";
 import { prisma } from "server/prisma/prisma-client";
 
-export const getStaticPaths = (async () => {
-  const articles = await prisma.article.findMany({
-    select: {
-      id: true,
-      title: true,
-    },
-  });
-  const paths = articles?.map((article) => {
-    return {
-      params: {
-        slug: [article.id.toString(), stringToSlug(article.title)],
-      },
-    };
-  });
+type Props = {
+  articleId: string;
+  title: string;
+};
 
-  return {
-    paths: paths ?? [],
-    fallback: true,
-  };
-}) satisfies GetStaticPaths;
+export const getServerSideProps: GetServerSideProps<Props> = async ({ params }) => {
+  // These params are the ones you put on the url
+  const articleId = params?.slug?.[0];
+  const paramSlug = params?.slug?.[1];
 
-export const getStaticProps = async (context: GetStaticPropsContext<{ slug: string[] }>) => {
-  // Url Params
-  const articleId = context.params?.slug[0];
-  const paramSlug = context.params?.slug[1];
-
-  const isArticleIdInt = articleId == undefined || !/^[0-9]+$/.test(articleId);
-
-  if (isArticleIdInt) {
+  // If the url Id is invalid
+  if (articleId == undefined || !/^[0-9]+$/.test(articleId)) {
     return {
       notFound: true,
     };
   }
-  // Get article title name
+
+  // Get article title to compare it with the one that's on the url
   const article = await prisma.article.findFirst({
     select: {
       title: true,
@@ -47,14 +31,18 @@ export const getStaticProps = async (context: GetStaticPropsContext<{ slug: stri
     },
   });
 
+  // No article found
   if (article == undefined) {
     return {
       notFound: true,
     };
   }
+
   const title = stringToSlug(article.title);
+
+  // If the slug is incorrect or there are more params
   // Redirect to correct slug
-  if (title != paramSlug || context.params?.slug[2] != undefined) {
+  if (title != paramSlug || params?.slug?.[2] != undefined) {
     return {
       redirect: {
         destination: `/articles/${articleId}/${title}`,
@@ -62,17 +50,17 @@ export const getStaticProps = async (context: GetStaticPropsContext<{ slug: stri
       },
     };
   }
+
   // Render the page
   return {
     props: {
-      articleId: articleId ?? "",
+      articleId: articleId,
       title: title,
     },
-    revalidate: 60,
   };
 };
 
-export default function ArticlePage({ articleId }: InferGetStaticPropsType<typeof getStaticProps>) {
+export default function NewsArticle({ articleId }: Props) {
   const { data: articleData } = trpc.article.getMarkdownById.useQuery(
     { id: articleId },
     { enabled: articleId != undefined },
