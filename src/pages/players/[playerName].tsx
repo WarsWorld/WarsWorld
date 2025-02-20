@@ -1,3 +1,5 @@
+// TODO: Work in progress, for now it's just a mockup.
+
 import { PlayerFavoriteGamesSection } from "frontend/components/player-profile/player-sections/PlayerFavoriteGamesSection";
 import { PlayerFriendSection } from "frontend/components/player-profile/player-sections/PlayerFriendsSection";
 import { PLayerLeagueGeneralSection } from "frontend/components/player-profile/player-sections/PlayerLeagueGeneralSection";
@@ -102,7 +104,7 @@ export default function UserProfile() {
                 dolor sit amet, consectetur adipisicing elit. Provident ipsam consequatur excepturi
                 accusantium quos, eum et?"
             preferedCO="sasha"
-            preferedNation="orange-star"
+            preferedNation="blue-moon"
             realName="Real Name"
             lastActivity="05/21/2024 05:04pm"
             isOnline={true}
