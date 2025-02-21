@@ -48,7 +48,7 @@ If you are having troubleshotting issues, here are some clear steps to help you 
 
 4 - Run `npm run db:up`, `npm run prisma:push`, `npm run prisma:seed` to re-create the docker container and seed the database. You might see the error
 
-5 - Make sure node, npm, git, and docker desktop are all installed properly. Also make sure you copy the "env.example" file to ".env" and setup a random password/string in the PGPASSWORD and NEXTAUTH_SECRET fields.
+5 - Make sure node, npm, git, and docker desktop are all installed properly. Also make sure you copy the ".env.example" file to ".env" and setup a random password/string in the PGPASSWORD and NEXTAUTH_SECRET fields.
 
 # Where is the database? How can we see it?
 
