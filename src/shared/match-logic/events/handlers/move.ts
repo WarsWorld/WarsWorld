@@ -60,7 +60,7 @@ export const moveActionToEvent: MainActionToEvent<MoveAction> = (match, action) 
       throw new DispatchableError("Cannot move to a desired position");
     }
 
-    if (result.path.find((pos) => isSamePosition(pos, position))) {
+    if (result.path.some((pos) => isSamePosition(pos, position))) {
       throw new DispatchableError("The given path passes through the same position twice");
     }
 

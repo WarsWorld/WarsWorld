@@ -10,7 +10,7 @@ type Props = {
   coPower: boolean;
 };
 
-export default function COCalculator({ co, coPower, capture, commtower, gold }: Props) {
+export default function COCalculator({ co, _coPower, capture, commtower, gold }: Props) {
   return (
     <>
       <div className="@col-span-6 @flex @bg-bg-tertiary @justify-between @align-middle @items-center ">

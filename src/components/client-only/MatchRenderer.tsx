@@ -19,7 +19,7 @@ type Props = {
   player: PlayerInMatchWrapper;
   spriteSheets: LoadedSpriteSheet;
   turn: boolean;
-  setTurn: any;
+  setTurn: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 export const baseTileSize = 16;
@@ -30,8 +30,9 @@ export const mapBorder = baseTileSize / 2;
 export function MatchRenderer({ match, player, spriteSheets, turn, setTurn }: Props) {
   const [eventTrigger, setEventTrigger] = useState(0);
   useEffect(() => {
-    setTurn(match.getCurrentTurnPlayer().data.id === player.data.id);
-  }, []);
+    const isPlayerTurn = match.getCurrentTurnPlayer().data.id === player.data.id;
+    setTurn(isPlayerTurn);
+  }, [match, player.data.id, setTurn]);
 
   const { pixiCanvasRef } = usePixi(match, spriteSheets, player);
 
