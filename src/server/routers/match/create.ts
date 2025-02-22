@@ -30,7 +30,7 @@ export const createMatchProcedure = playerBaseProcedure
               name: "andy",
               version: "AW2",
             },
-            eliminated: false,
+            status: "alive",
             //TODO: Handle funds correctly
             funds: 0,
             powerMeter: 0,

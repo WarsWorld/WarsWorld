@@ -1,20 +1,16 @@
 import { DispatchableError } from "shared/DispatchedError";
-import type { AttackAction } from "shared/schemas/action";
-import type { LuckRoll } from "shared/schemas/co";
-import type { Position } from "shared/schemas/position";
-import { getDistance } from "shared/schemas/position";
-import type { AttackEvent } from "shared/types/events";
-import type { MatchWrapper } from "shared/wrappers/match";
-import type { PlayerInMatchWrapper } from "shared/wrappers/player-in-match";
-import type { UnitWrapper } from "../../../wrappers/unit";
-import { calculateEngagementOutcome, getVisualHPfromHP } from "../../calculate-damage";
+import { calculateEngagementOutcome } from "shared/match-logic/calculate-damage";
 import {
-  canAttackWithPrimary,
   createPipeSeamUnitEquivalent,
   getBaseDamage,
-} from "../../game-constants/base-damage";
-import { unitPropertiesMap } from "../../game-constants/unit-properties";
-import type { SubActionToEvent } from "../handler-types";
+} from "shared/match-logic/game-constants/base-damage";
+import { unitPropertiesMap } from "shared/match-logic/game-constants/unit-properties";
+import type { AttackAction } from "shared/schemas/action";
+import type { LuckRoll } from "shared/schemas/co";
+import { getDistance } from "shared/schemas/position";
+import type { AttackEvent } from "shared/types/events";
+import type { SubActionToEvent } from "../../handler-types";
+import { getEliminationReason } from "./getEliminationReason";
 
 type Params = [
   ...Parameters<SubActionToEvent<AttackAction>>,
@@ -22,28 +18,6 @@ type Params = [
   attackerLuck: LuckRoll,
   defenderLuck: LuckRoll,
 ];
-
-function getEliminationReason({
-  attacker,
-  defender,
-  attackerHP,
-  defenderHP,
-}: {
-  attacker: PlayerInMatchWrapper;
-  defender: PlayerInMatchWrapper;
-  attackerHP: number | undefined;
-  defenderHP: number | undefined;
-}): AttackEvent["eliminationReason"] {
-  if (defenderHP === 0 && defender.getUnits().length - 1 <= 0) {
-    return "all-defender-units-destroyed";
-  }
-
-  if (attackerHP === 0 && attacker.getUnits().length - 1 <= 0) {
-    return "all-attacker-units-destroyed";
-  }
-
-  return undefined;
-}
 
 export const attackActionToEvent: (...params: Params) => AttackEvent = (
   match,
@@ -171,108 +145,4 @@ export const attackActionToEvent: (...params: Params) => AttackEvent = (
       defenderHP: Math.max(0, result.defenderHP),
     }),
   };
-};
-
-export const getPowerChargeGain = (
-  attacker: UnitWrapper,
-  attackerHpDiff: number,
-  defender: UnitWrapper,
-  defenderHpDiff: number,
-) => {
-  //power meter charge
-  const attackerVP = attacker.player.getVersionProperties();
-  const defenderVP = defender.player.getVersionProperties();
-
-  return {
-    attackerPowerCharge:
-      attackerVP.powerMeterIncreasePerHP(attacker) * attackerHpDiff +
-      attackerVP.powerMeterIncreasePerHP(defender) *
-        defenderHpDiff *
-        attackerVP.offensivePowerGenMult,
-    defenderPowerCharge:
-      defenderVP.powerMeterIncreasePerHP(defender) * defenderHpDiff +
-      defenderVP.powerMeterIncreasePerHP(attacker) *
-        attackerHpDiff *
-        defenderVP.offensivePowerGenMult,
-  };
-};
-
-export const applyAttackEvent = (match: MatchWrapper, event: AttackEvent, position: Position) => {
-  const attacker = match.getUnitOrThrow(position);
-  const defender = match.getUnit(event.defenderPosition);
-
-  if (defender === undefined) {
-    // pipe seam
-    const pipeTile = match.getTile(event.defenderPosition);
-
-    if (pipeTile.type !== "pipeSeam") {
-      throw new Error("Received pipe seam attack event, but no pipe seam was found");
-    }
-
-    const usedVersion = match.rules.gameVersion ?? attacker.player.data.coId.version;
-
-    //ammo consumption
-    if (canAttackWithPrimary(attacker, usedVersion === "AW1" ? "mediumTank" : "neoTank")) {
-      attacker.setAmmo((attacker.getAmmo() ?? 1) - 1);
-    }
-
-    // hp updates (0 means removed)
-    pipeTile.hp = event.defenderHP;
-    return;
-  }
-
-  //Calculate visible hp difference:
-  const attackerHpDiff =
-    attacker.getVisualHP() - getVisualHPfromHP(event.attackerHP ?? attacker.getVisualHP());
-  const defenderHpDiff = defender.getVisualHP() - getVisualHPfromHP(event.defenderHP);
-
-  //sasha scop funds
-  if (
-    attacker.player.data.coId.name === "sasha" &&
-    attacker.player.data.COPowerState === "super-co-power"
-  ) {
-    attacker.player.data.funds += ((defenderHpDiff * defender.getBuildCost()) / 10) * 0.5;
-  }
-
-  if (
-    defender.player.data.coId.name === "sasha" &&
-    defender.player.data.COPowerState === "super-co-power"
-  ) {
-    defender.player.data.funds += ((attackerHpDiff * attacker.getBuildCost()) / 10) * 0.5;
-  }
-
-  //power charge
-  const { attackerPowerCharge, defenderPowerCharge } = getPowerChargeGain(
-    attacker,
-    attackerHpDiff,
-    defender,
-    defenderHpDiff,
-  );
-
-  attacker.player.gainPowerCharge(attackerPowerCharge);
-  defender.player.gainPowerCharge(defenderPowerCharge);
-
-  //ammo consumption
-  if (canAttackWithPrimary(attacker, defender.data.type)) {
-    attacker.setAmmo((attacker.getAmmo() ?? 1) - 1);
-  }
-
-  if (event.attackerHP !== undefined && canAttackWithPrimary(defender, attacker.data.type)) {
-    defender.setAmmo((defender.getAmmo() ?? 1) - 1);
-  }
-
-  // hp updates (+ removal if unit dies)
-  if (event.defenderHP === 0) {
-    defender.remove();
-  } else {
-    defender.setHp(event.defenderHP);
-  }
-
-  if (event.attackerHP !== undefined) {
-    if (event.attackerHP === 0) {
-      attacker.remove();
-    } else {
-      attacker.setHp(event.attackerHP);
-    }
-  }
 };
