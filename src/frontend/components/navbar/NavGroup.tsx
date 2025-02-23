@@ -1,5 +1,6 @@
 import { useClickOutsideRef } from "frontend/utils/useClickOutsideRef";
 import { useState } from "react";
+import NavbarDropdown from "./NavbarDropdown";
 import { NavItem } from "./NavItem";
 import NavAuthItem from "./user-settings/NavAuthItem";
 import UserSectionDropdown from "./user-settings/UserSectionDropdown";
@@ -68,10 +69,12 @@ export function NavGroup({ setIsOpen, isOpen }: Props) {
           setShowUserDropdown={setShowUserDropdown}
         />
       </div>
-      <UserSectionDropdown
-        showUserDropdown={showUserDropdown}
+      <NavbarDropdown
+        show={showUserDropdown}
         refClickOutsideUserDropdown={refClickOutsideUserDropdown}
-      />
+      >
+        <UserSectionDropdown />
+      </NavbarDropdown>
     </>
   );
 }

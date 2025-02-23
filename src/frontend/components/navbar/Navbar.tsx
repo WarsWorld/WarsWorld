@@ -48,7 +48,7 @@ export function Navbar() {
             href="/"
           >
             <Image
-              className="@w-16 smallscreen:@w-24"
+              className="@w-20 smallscreen:@w-24"
               src="/img/layout/logo.webp"
               alt="AW Logo"
               width={0}

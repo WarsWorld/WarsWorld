@@ -1,6 +1,7 @@
 import { useClickOutsideRef } from "frontend/utils/useClickOutsideRef";
 import { useState } from "react";
-import { NavItem } from "./NavItem";
+import DropdownItem from "./DropdownItem";
+import NavbarDropdown from "./NavbarDropdown";
 import NavAuthItem from "./user-settings/NavAuthItem";
 import UserSectionDropdown from "./user-settings/UserSectionDropdown";
 
@@ -77,27 +78,29 @@ export function NavGroupMobile({ setIsOpen, isOpen }: Props) {
           </div>
         </button>
       </div>
-      <UserSectionDropdown
-        showUserDropdown={showUserDropdown}
+      {/* USER */}
+      <NavbarDropdown
+        show={showUserDropdown}
         refClickOutsideUserDropdown={refClickOutsideUserDropdown}
-      />
-      <div ref={refClickOutsideBurgerMenu}>
-        <ul
-          className={`@absolute @m-0 @p-0 @list-none @overflow-y-hidden @shadow-black @shadow-lg @right-0 @w-full smallscreen:@w-[45vw] @top-[calc(100%_+_0.1em)]
-      @bg-bg-secondary @z-50
-          ${showBurgerDropdown ? "@max-h-[100vh]" : "@max-h-0"}`}
-        >
+      >
+        <UserSectionDropdown />
+      </NavbarDropdown>
+      {/* NAVIGATION */}
+      <NavbarDropdown
+        show={showBurgerDropdown}
+        refClickOutsideUserDropdown={refClickOutsideBurgerMenu}
+      >
+        <ul className="@flex @flex-col @gap-2 @pt-2">
           {navItemObject.map((option) => (
-            <li key={option.text} className={`@py-0 @px-4 @cursor-pointer`}>
-              <NavItem
-                text={option.text}
-                location={option.location}
-                closeBurgerMenu={() => setShowBurgerDropdown(false)}
-              />
-            </li>
+            <DropdownItem
+              key={option.text}
+              className="@border-b-2 @border-bg-tertiary @py-1 last:@border-0"
+              href={option.location}
+              text={option.text}
+            />
           ))}
         </ul>
-      </div>
+      </NavbarDropdown>
     </>
   );
 }
