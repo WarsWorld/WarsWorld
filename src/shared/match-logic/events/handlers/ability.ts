@@ -144,7 +144,7 @@ const eliminatePlayerByCapture = (match: MatchWrapper, capturingUnit: UnitWrappe
     unit.remove();
   }
 
-  playerToEliminate.data.eliminated = true;
+  playerToEliminate.data.status = "captured";
 
   if (match.playerToRemoveWeatherEffect?.data.id === playerToEliminate.data.id) {
     match.playerToRemoveWeatherEffect = playerToEliminate.getNextAlivePlayer();

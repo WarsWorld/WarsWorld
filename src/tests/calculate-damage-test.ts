@@ -1,5 +1,5 @@
 import type { WWMap } from "@prisma/client";
-import { attackActionToEvent } from "shared/match-logic/events/handlers/attack";
+import { attackActionToEvent } from "shared/match-logic/events/handlers/attack/attackActionToEvent";
 import type { PlayerInMatch } from "shared/types/server-match-state";
 import { MatchWrapper } from "shared/wrappers/match";
 import { UnitWrapper } from "shared/wrappers/unit";
@@ -56,6 +56,7 @@ const map: WWMap = {
 const players: PlayerInMatch[] = [
   {
     name: "Grimm Guy",
+    status: "alive",
     army: "orange-star",
     coId: {
       name: "andy",
@@ -71,6 +72,7 @@ const players: PlayerInMatch[] = [
   },
   {
     name: "Incuggarch",
+    status: "alive",
     army: "blue-moon",
     coId: {
       name: "andy",

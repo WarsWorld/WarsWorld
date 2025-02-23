@@ -25,21 +25,6 @@ export const createPipeSeamUnitEquivalent = (
   return new UnitWrapper(unitEquivalent, match);
 };
 
-/**
- * Returns if unit is going to attack enemy unit with primary weapon or not
- */
-export const canAttackWithPrimary = (attacker: UnitWrapper, defenderType: UnitType): boolean => {
-  if (attacker.getAmmo() === 0 || attacker.getAmmo() === null) {
-    return false;
-  }
-
-  return (
-    attacker.player.getVersionProperties().damageChart[attacker.data.type]?.primary?.[
-      defenderType
-    ] !== undefined
-  );
-};
-
 export const getBaseDamage = (attacker: UnitWrapper, defender: UnitWrapper): number | null => {
   const damageValues = attacker.player.getVersionProperties().damageChart[attacker.data.type];
 

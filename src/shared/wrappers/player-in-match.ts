@@ -44,7 +44,7 @@ export class PlayerInMatchWrapper {
     );
   }
 
-  possessesLab() {
+  hasLab() {
     return (
       this.match.changeableTiles.find(
         (tile) => tile.type === "lab" && tile.playerSlot === this.data.slot,
@@ -75,11 +75,7 @@ export class PlayerInMatchWrapper {
   }
 
   getVersionProperties() {
-    if (this.match.rules.gameVersion === undefined) {
-      return versionPropertiesMap[this.data.coId.version];
-    }
-
-    return versionPropertiesMap[this.match.rules.gameVersion];
+    return versionPropertiesMap[this.match.rules.gameVersion ?? this.data.coId.version];
   }
 
   /**
@@ -92,8 +88,7 @@ export class PlayerInMatchWrapper {
     for (let i = nextSlot(this.data.slot); i !== this.data.slot; i = nextSlot(i)) {
       const player = this.match.getPlayerBySlot(i);
 
-      //TODO: This should be false since if the player is NOT eliminated, then we return that player, right?
-      if (player?.data.eliminated === false) {
+      if (player?.data.status === "alive") {
         return player;
       }
     }

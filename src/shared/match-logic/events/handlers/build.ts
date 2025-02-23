@@ -1,11 +1,11 @@
 import { DispatchableError } from "shared/DispatchedError";
 import type { BuildAction } from "shared/schemas/action";
-import { unitPropertiesMap } from "../../game-constants/unit-properties";
 import type { BuildEvent } from "shared/types/events";
 import type { MatchWrapper } from "shared/wrappers/match";
-import type { MainActionToEvent } from "../handler-types";
 import type { PlayerSlot } from "../../../schemas/player-slot";
 import type { UnitWithVisibleStats } from "../../../schemas/unit";
+import { unitPropertiesMap } from "../../game-constants/unit-properties";
+import type { MainActionToEvent } from "../handler-types";
 
 export const buildActionToEvent: MainActionToEvent<BuildAction> = (match, action) => {
   const player = match.getCurrentTurnPlayer();
@@ -14,7 +14,7 @@ export const buildActionToEvent: MainActionToEvent<BuildAction> = (match, action
     throw new DispatchableError("Trying to build a banned unit type");
   }
 
-  if (match.rules.labUnitTypes.includes(action.unitType) && !player.possessesLab()) {
+  if (match.rules.labUnitTypes.includes(action.unitType) && !player.hasLab()) {
     throw new DispatchableError(
       "Trying to build a unit type that requires a lab, but no lab is owned",
     );

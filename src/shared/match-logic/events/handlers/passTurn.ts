@@ -67,8 +67,7 @@ export const passTurnActionToEvent: MainActionToEvent<PassTurnAction> = (match, 
           });
 
           const singleTeamAlive =
-            match.teams.filter((t) => t.players.some((p) => p.data.eliminated !== false)).length <=
-            1;
+            match.teams.filter((t) => t.players.some((p) => p.data.status === "alive")).length <= 1;
 
           if (singleTeamAlive) {
             break turnLoop; // TODO not quite sure what should happen then. some MatchEndEvent logic i guess. maybe another field on PassTurnEvent?

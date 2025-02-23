@@ -1,9 +1,9 @@
 import { DispatchableError } from "shared/DispatchedError";
 import { getFinalPositionSafe } from "shared/schemas/position";
 import type { MatchWrapper } from "shared/wrappers/match";
-import type { MainEvent, MoveEvent } from "../../types/events";
+import type { MainEventsWithoutSubEvents, MoveEventWithSubEvent } from "../../types/events";
 import { applyAbilityEvent } from "./handlers/ability";
-import { applyAttackEvent } from "./handlers/attack";
+import { applyAttackEvent } from "./handlers/attack/applyAttackEvent";
 import { applyBuildEvent } from "./handlers/build";
 import { applyCOPowerEvent } from "./handlers/coPower";
 import { applyDeleteEvent } from "./handlers/delete";
@@ -14,7 +14,10 @@ import { applyRepairEvent } from "./handlers/repair";
 import { applyUnloadNoWaitEvent } from "./handlers/unloadNoWait";
 import { applyUnloadWaitEvent } from "./handlers/unloadWait";
 
-export const applyMainEventToMatch = (match: MatchWrapper, event: MainEvent): void => {
+export const applyMainEventToMatch = (
+  match: MatchWrapper,
+  event: MainEventsWithoutSubEvents,
+): void => {
   switch (event.type) {
     case "build": {
       applyBuildEvent(match, event);
@@ -51,7 +54,10 @@ export const applyMainEventToMatch = (match: MatchWrapper, event: MainEvent): vo
   }
 };
 
-export const applySubEventToMatch = (match: MatchWrapper, { subEvent, path }: MoveEvent) => {
+export const applySubEventToMatch = (
+  match: MatchWrapper,
+  { subEvent, path }: MoveEventWithSubEvent,
+) => {
   const fromPosition = getFinalPositionSafe(path);
   const unit = match.getUnitOrThrow(fromPosition);
 

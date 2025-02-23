@@ -1,9 +1,9 @@
 import type { WWUnit } from "shared/schemas/unit";
 import type { PlayerInMatch } from "shared/types/server-match-state";
+import type { Position } from "../schemas/position";
 import type { MatchWrapper } from "./match";
 import { PlayerInMatchWrapper } from "./player-in-match";
 import { Vision } from "./vision";
-import type { Position } from "../schemas/position";
 
 export class TeamWrapper {
   public players: PlayerInMatchWrapper[];
@@ -16,13 +16,13 @@ export class TeamWrapper {
   ) {
     this.players = players.map((p) => new PlayerInMatchWrapper(p, this));
 
-    if (match.isFow()) {
+    if (match.isFogOfWar()) {
       this.vision = new Vision(this);
     }
   }
 
   isPositionVisible(position: Position) {
-    if (this.match.isFow()) {
+    if (this.match.isFogOfWar()) {
       if (this.vision === null) {
         this.vision = new Vision(this); // that should not happen, but whatever
       }

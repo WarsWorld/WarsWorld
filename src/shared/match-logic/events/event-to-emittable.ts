@@ -1,42 +1,76 @@
-import type { EmittableEvent, EmittableSubEvent, MainEvent, MoveEvent } from "../../types/events";
-import type { MatchWrapper } from "../../wrappers/match";
-import type { Position } from "../../schemas/position";
+import type { Path, Position } from "../../schemas/position";
 import { addDirection, getFinalPositionSafe, getNeighbourPositions } from "../../schemas/position";
-import { getPowerChargeGain } from "./handlers/attack";
-import { getVisualHPfromHP } from "../calculate-damage";
+import type {
+  EmittableEvent,
+  EmittableSubEvent,
+  MainEventsWithoutSubEvents,
+  MainEventWithSubEvents,
+  MoveEventWithoutSubEvent,
+  MoveEventWithSubEvent,
+} from "../../types/events";
+import type { MatchWrapper } from "../../wrappers/match";
 import { TeamWrapper } from "../../wrappers/team";
+import { getVisualHPfromHP } from "../calculate-damage";
+import { getPowerChargeGain } from "./handlers/attack/getPowerChargeGain";
 
-export const subEventToEmittables = (match: MatchWrapper, { subEvent, path }: MoveEvent) => {
+type EmittableSubEventWithExtraInfo = {
+  teamIndex: number;
+  subEvent: EmittableSubEvent;
+  requireLastMovePosition: boolean;
+};
+
+const subEventToEmittables = (
+  match: MatchWrapper,
+  moveEvent: MoveEventWithSubEvent | MoveEventWithoutSubEvent,
+): EmittableSubEventWithExtraInfo[] => {
+  const spectatorTeam = new TeamWrapper([], match, -1);
+  const teamsWithSpectator = [...match.teams, spectatorTeam];
+
+  if (!("subEvent" in moveEvent)) {
+    return teamsWithSpectator.map((team) => ({
+      teamIndex: team.index,
+      subEvent: { type: "wait" },
+      requireLastMovePosition: false,
+    }));
+  }
+
+  const { subEvent, path } = moveEvent;
   const fromPosition = getFinalPositionSafe(path);
-  const teams = [...match.teams];
-  teams.push(new TeamWrapper([], match, -1)); // add spectator vision
 
-  const emittableSubEvents = new Array<EmittableSubEvent>(teams.length);
-  emittableSubEvents.fill({ type: "wait" });
-
-  // array responsible for letting move event know if last position is
+  // requireLastMovePosition is responsible for letting move event know if last position is
   // required for the sub-event to work
-  const requireLastMovePosition = new Array<boolean>(teams.length);
-  requireLastMovePosition.fill(false);
 
   switch (subEvent.type) {
     case "attack": {
       const attacker = match.getUnitOrThrow(fromPosition);
       const defender = match.getUnit(subEvent.defenderPosition);
 
+      switch (subEvent.eliminationReason) {
+        case "all-attacker-units-destroyed": {
+          attacker.player.data.status = "routed";
+          break;
+        }
+        case "all-defender-units-destroyed": {
+          const defender = match.getUnitOrThrow(subEvent.defenderPosition);
+          defender.player.data.status = "routed";
+          break;
+        }
+      }
+
+      const playerUpdate = match.getAllPlayers().map((p) => p.data);
+
       if (defender === undefined) {
         // pipe seam attack
-        for (let i = 0; i < teams.length; ++i) {
-          emittableSubEvents[i] = {
+        return teamsWithSpectator.map((team) => ({
+          teamIndex: team.index,
+          subEvent: {
             ...subEvent,
             attackerPlayerSlot: attacker.data.playerSlot,
             defenderPlayerSlot: -1,
-            attackerPowerCharge: 0,
-            defenderPowerCharge: 0,
-          };
-        }
-
-        break;
+            playerUpdate,
+          },
+          requireLastMovePosition: false,
+        }));
       }
 
       const attackerHpDiff =
@@ -50,145 +84,150 @@ export const subEventToEmittables = (match: MatchWrapper, { subEvent, path }: Mo
         defenderHpDiff,
       );
 
-      for (let i = 0; i < teams.length; ++i) {
-        const canSeeAttacker = teams[i].canSeeUnitAtPosition(fromPosition);
-        const canSeeDefender = teams[i].canSeeUnitAtPosition(subEvent.defenderPosition);
+      return teamsWithSpectator.map((team) => {
+        const canSeeAttacker = team.canSeeUnitAtPosition(fromPosition);
+        const canSeeDefender = team.canSeeUnitAtPosition(subEvent.defenderPosition);
         const showDefenderHP =
           canSeeDefender &&
-          (defender.player.team.index === teams[i].index ||
+          (defender.player.team.index === team.index ||
             defender.player.data.coId.name !== "sonja" ||
             subEvent.defenderHP === 0);
         const showAttackerHP =
           canSeeAttacker &&
-          (attacker.player.team.index === teams[i].index ||
+          (attacker.player.team.index === team.index ||
             attacker.player.data.coId.name !== "sonja" ||
             subEvent.attackerHP === 0);
 
-        emittableSubEvents[i] = {
-          type: "attack",
-          attackerHP: showAttackerHP ? subEvent.attackerHP : undefined,
-          attackerPlayerSlot: attacker.data.playerSlot,
-          defenderHP: showDefenderHP ? subEvent.defenderHP : undefined,
-          defenderPosition: canSeeDefender ? defender.data.position : undefined,
-          defenderPlayerSlot: defender.data.playerSlot,
-          ...powerChargeGain,
-          eliminationReason: subEvent.eliminationReason,
+        return {
+          teamIndex: team.index,
+          subEvent: {
+            type: "attack",
+            attackerHP: showAttackerHP ? subEvent.attackerHP : undefined,
+            attackerPlayerSlot: attacker.data.playerSlot,
+            defenderHP: showDefenderHP ? subEvent.defenderHP : undefined,
+            defenderPosition: canSeeDefender ? defender.data.position : undefined,
+            defenderPlayerSlot: defender.data.playerSlot,
+            playerUpdate,
+            ...powerChargeGain,
+          },
+          requireLastMovePosition: false,
         };
-      }
-
-      break;
+      });
     }
     case "ability": {
-      for (let i = 0; i < teams.length; ++i) {
-        if (teams[i].isPositionVisible(fromPosition)) {
-          emittableSubEvents[i] = subEvent;
+      return teamsWithSpectator.map((team) => {
+        if (team.isPositionVisible(fromPosition)) {
+          return {
+            teamIndex: team.index,
+            subEvent,
+            requireLastMovePosition: false,
+          };
         } else if (
           match.getUnitOrThrow(fromPosition).data.type === "apc" &&
-          (teams[i].isPositionVisible(addDirection(fromPosition, "up")) ||
-            teams[i].isPositionVisible(addDirection(fromPosition, "down")) ||
-            teams[i].isPositionVisible(addDirection(fromPosition, "left")) ||
-            teams[i].isPositionVisible(addDirection(fromPosition, "right")))
+          (team.isPositionVisible(addDirection(fromPosition, "up")) ||
+            team.isPositionVisible(addDirection(fromPosition, "down")) ||
+            team.isPositionVisible(addDirection(fromPosition, "left")) ||
+            team.isPositionVisible(addDirection(fromPosition, "right")))
         ) {
           // that means that at least one supplied unit by apc is visible, so we kinda need to "reveal"
           // the apc location to play the refuel animation (we can later give less information, but it
           // would need a lot more work)
-          emittableSubEvents[i] = subEvent;
-          requireLastMovePosition[i] = true;
+          return {
+            teamIndex: team.index,
+            subEvent,
+            requireLastMovePosition: true,
+          };
         } else if (subEvent.eliminationReason !== undefined) {
           // if it's an hp / lab capture, we have to send the event to everyone,
           // and send the last position as well to reveal which team captured it
-          emittableSubEvents[i] = subEvent;
-          requireLastMovePosition[i] = true;
-        }
-      }
-
-      break;
-    }
-    case "unloadWait": {
-      for (let i = 0; i < match.teams.length + 1; ++i) {
-        const visibleUnloads = subEvent.unloads.filter((unload) =>
-          teams[i].isPositionVisible(addDirection(fromPosition, unload.direction)),
-        );
-
-        if (teams[i].isPositionVisible(fromPosition)) {
-          emittableSubEvents[i] = {
-            ...subEvent,
-            unloads: visibleUnloads,
+          return {
+            teamIndex: team.index,
+            subEvent,
+            requireLastMovePosition: true,
           };
         } else {
-          emittableSubEvents[i] = {
-            ...subEvent,
-            unloads: visibleUnloads,
+          return {
+            teamIndex: team.index,
+            subEvent: { type: "wait" },
+            requireLastMovePosition: false,
           };
-          requireLastMovePosition[i] = true;
         }
-      }
-
-      break;
+      });
+    }
+    case "unloadWait": {
+      return teamsWithSpectator.map((team) => ({
+        teamIndex: team.index,
+        subEvent,
+        unloads: subEvent.unloads.filter((unload) =>
+          team.isPositionVisible(addDirection(fromPosition, unload.direction)),
+        ),
+        requireLastMovePosition: team.isPositionVisible(fromPosition),
+      }));
     }
     case "repair": {
-      for (let i = 0; i < match.teams.length + 1; ++i) {
-        if (teams[i].isPositionVisible(fromPosition)) {
-          emittableSubEvents[i] = subEvent;
-        }
-      }
-
-      break;
+      return teamsWithSpectator.map((team) => ({
+        teamIndex: team.index,
+        subEvent: team.isPositionVisible(fromPosition) ? subEvent : { type: "wait" },
+        requireLastMovePosition: false,
+      }));
     }
     case "launchMissile": {
       // missile is visible for spectators in fog of war as well
       // it requires position to update the missile silo tile
-      for (let i = 0; i < match.teams.length + 1; ++i) {
-        emittableSubEvents[i] = subEvent;
-        requireLastMovePosition[i] = true;
-      }
-
-      break;
+      return teamsWithSpectator.map((team) => ({
+        teamIndex: team.index,
+        subEvent,
+        requireLastMovePosition: true,
+      }));
+    }
+    case "wait": {
+      return teamsWithSpectator.map((team) => ({
+        teamIndex: team.index,
+        subEvent,
+        requireLastMovePosition: false,
+      }));
     }
   }
-
-  return {
-    emittableSubEvents,
-    requireLastMovePosition,
-  };
 };
 
-export const mainEventToEmittables = (match: MatchWrapper, event: MainEvent) => {
-  const teams = [...match.teams];
-  teams.push(new TeamWrapper([], match, -1)); // add spectator vision
-
-  const emittableEvents = new Array<EmittableEvent | undefined>(match.teams.length + 1);
-
-  emittableEvents.forEach((e, i) => {
-    emittableEvents[i] = undefined;
-  });
+export const mainEventToEmittables = (
+  match: MatchWrapper,
+  event: MainEventsWithoutSubEvents | MainEventWithSubEvents,
+): (EmittableEvent | undefined)[] => {
+  const spectatorTeam = new TeamWrapper([], match, -1);
+  const teamsWithSpectator = [...match.teams, spectatorTeam];
 
   switch (event.type) {
     case "move": {
       // the move has already been applied to match !
-      const { requireLastMovePosition, emittableSubEvents } = subEventToEmittables(match, event);
+      const emittableSubEvents = subEventToEmittables(match, {
+        subEvent: { type: "wait" }, // fill a wait subEvent if move doesn't have a subEvent
+        ...event,
+      });
 
-      const unit = match.getUnitOrThrow(event.path[event.path.length - 1]);
+      const unit = match.getUnitOrThrow(getFinalPositionSafe(event.path));
 
-      for (let i = 0; i < match.teams.length + 1; ++i) {
-        const shownPath = [];
-
+      return teamsWithSpectator.map((team) => {
         // special visible function for hidden subs and stealth
         const isPositionVisible =
           "hidden" in unit.data && unit.data.hidden
             ? (position: Position) => {
                 for (const pos of getNeighbourPositions(position)) {
-                  if (match.getUnit(pos)?.player.team.index === match.teams[i].index) {
+                  if (match.getUnit(pos)?.player.team.index === team.index) {
                     return true;
                   }
                 }
 
                 return false;
               }
-            : (position: Position) => teams[i].isPositionVisible(position);
+            : (position: Position) => team.isPositionVisible(position);
+
+        const shownPath: Path = [];
+
+        const emittableSubEvent = emittableSubEvents.find((s) => s.teamIndex === team.index)!;
 
         if (event.path.length === 1) {
-          if (requireLastMovePosition[i] || isPositionVisible(event.path[0])) {
+          if (emittableSubEvent.requireLastMovePosition || isPositionVisible(event.path[0])) {
             shownPath.push(event.path[0]);
           }
         } else {
@@ -207,94 +246,77 @@ export const mainEventToEmittables = (match: MatchWrapper, event: MainEvent) => 
           }
 
           if (
-            isPositionVisible(event.path[event.path.length - 1]) ||
-            isPositionVisible(event.path[event.path.length - 2]) ||
-            requireLastMovePosition[i]
+            isPositionVisible(event.path.at(-1)!) ||
+            isPositionVisible(event.path.at(-2)!) ||
+            emittableSubEvent.requireLastMovePosition
           ) {
-            shownPath.push(event.path[event.path.length - 1]);
+            shownPath.push(getFinalPositionSafe(event.path));
           }
-        }
-
-        if (emittableSubEvents[i] === undefined) {
-          emittableSubEvents[i] = { type: "wait" };
         }
 
         // right now appearing units have all data, but if they go from fog to fog,
         // they may have only unit type (and other stats not visible)
-        emittableEvents[i] = {
-          playerId: getFirstPlayerInTeam(teams[i]),
+        const result: EmittableEvent = {
+          playerId: getFirstPlayerInTeam(team),
           type: "move",
           path: shownPath,
-          trap: teams[i].isPositionVisible(event.path[event.path.length - 1]) ? event.trap : false,
-          subEvent: emittableSubEvents[i],
+          trap: team.isPositionVisible(event.path.at(-1)!) ? event.trap : false,
+          subEvent: emittableSubEvent.subEvent,
           //if unit shows and it was not visible before
           appearingUnit:
-            shownPath.length == 0 || teams[i].isPositionVisible(event.path[0])
+            shownPath.length == 0 || team.isPositionVisible(event.path[0])
               ? undefined
               : match.getUnitOrThrow(getFinalPositionSafe(event.path)).data,
         };
-      }
 
-      break;
+        return result;
+      });
     }
     case "unloadNoWait": {
-      for (let i = 0; i < match.teams.length + 1; ++i) {
+      return teamsWithSpectator.map((team) => {
         // if either the transport or the unloaded unit is visible, send the event
         if (
-          teams[i].isPositionVisible(event.transportPosition) ||
-          teams[i].isPositionVisible(addDirection(event.transportPosition, event.unloads.direction))
+          team.isPositionVisible(event.transportPosition) ||
+          team.isPositionVisible(addDirection(event.transportPosition, event.unloads.direction))
         ) {
-          emittableEvents[i] = {
+          return {
             ...event,
-            playerId: getFirstPlayerInTeam(teams[i]),
+            playerId: getFirstPlayerInTeam(team),
           };
+        } else {
+          return undefined;
         }
-      }
-
-      break;
+      });
     }
     case "build": {
       // NOTE: THIS IS JUST FOR TESTING
       // I suspect that Fog Of War will stop certain players from receiving these events and thus
       // this switch case will have a different implementation.
-      for (let i = 0; i < match.teams.length + 1; ++i) {
-        emittableEvents[i] = {
-          ...event,
-          playerId: getFirstPlayerInTeam(teams[i]),
-        };
-      }
-
-      break;
+      return teamsWithSpectator.map((team) => ({
+        ...event,
+        playerId: getFirstPlayerInTeam(team),
+      }));
     }
     case "delete": {
-      for (let i = 0; i < match.teams.length + 1; ++i) {
+      return teamsWithSpectator.map((team) => {
         // slight inaccuracy: we send the delete position that causes the player to lose
-        if (
-          teams[i].isPositionVisible(event.position) ||
-          ("eliminationReason" in event && event.eliminationReason !== undefined)
-        ) {
-          emittableEvents[i] = {
+        if (team.isPositionVisible(event.position) || event.eliminationReason !== undefined) {
+          return {
             ...event,
-            playerId: getFirstPlayerInTeam(teams[i]),
+            playerId: getFirstPlayerInTeam(team),
           };
+        } else {
+          return undefined;
         }
-      }
-
-      break;
+      });
     }
     default: {
-      for (let i = 0; i < match.teams.length + 1; ++i) {
-        emittableEvents[i] = {
-          ...event,
-          playerId: getFirstPlayerInTeam(teams[i]),
-        };
-      }
-
-      break;
+      return teamsWithSpectator.map((team) => ({
+        ...event,
+        playerId: getFirstPlayerInTeam(team),
+      }));
     }
   }
-
-  return emittableEvents;
 };
 
 function getFirstPlayerInTeam(team: TeamWrapper) {

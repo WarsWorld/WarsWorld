@@ -1,11 +1,12 @@
 import { unitPropertiesMap } from "shared/match-logic/game-constants/unit-properties";
+import { clamp } from "shared/math-utils";
 import type { Position } from "shared/schemas/position";
 import { getNeighbourPositions, isSamePosition } from "shared/schemas/position";
 import type { UnitType, WWUnit } from "shared/schemas/unit";
-import type { MatchWrapper } from "./match";
-import type { PlayerInMatchWrapper } from "./player-in-match";
 import { getBaseMovementCost } from "../match-logic/movement-cost";
 import { getWeatherSpecialMovement } from "../match-logic/weather";
+import type { MatchWrapper } from "./match";
+import type { PlayerInMatchWrapper } from "./player-in-match";
 
 type ExtractUnit<T extends UnitType> = Extract<WWUnit, { type: T }>;
 
@@ -50,15 +51,16 @@ export class UnitWrapper<
       return;
     }
 
-    this.data.stats.fuel = Math.max(0, newFuel);
+    this.data.stats.fuel = clamp(0, newFuel, this.properties.initialFuel);
   }
 
   drainFuel(fuelAmount: number) {
     if (this.data.stats === "hidden") {
+      // hidden can only be true on client
       return;
     }
 
-    this.setFuel(Math.max(this.data.stats.fuel - fuelAmount, 0));
+    this.setFuel(this.data.stats.fuel - fuelAmount);
   }
 
   /**
@@ -77,11 +79,19 @@ export class UnitWrapper<
   }
 
   setAmmo(newAmmo: number) {
-    if (this.data.stats === "hidden" || !("ammo" in this.data.stats)) {
+    if (
+      this.data.stats === "hidden" ||
+      !("ammo" in this.data.stats) ||
+      !("initialAmmo" in this.properties)
+    ) {
       return;
     }
 
-    this.data.stats.ammo = Math.max(0, newAmmo);
+    this.data.stats.ammo = clamp(0, newAmmo, this.properties.initialAmmo);
+  }
+
+  useOneAmmo() {
+    this.setAmmo((this.getAmmo() ?? 1) - 1);
   }
 
   resupply() {

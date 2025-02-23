@@ -8,11 +8,13 @@
   },
   "typescript.tsserver.experimental.enableProjectDiagnostics": true,
   "typescript.referencesCodeLens.enabled": true,
-  "editor.rulers": [100],
+  "editor.rulers": [
+    100
+  ],
   "editor.codeActionsOnSave": [
     "addMissingImports",
     "source.organizeImports",
     "source.formatDocument",
     "source.fixAll.eslint"
-  ]
+  ],
 }
