@@ -3,11 +3,22 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import type { ISpritesheetData, ISpritesheetFrameData } from "pixi.js";
 import sharp from "sharp";
+import yargs from "yargs";
 
-// === START OF CONFIGURABLE PARAMETERS ===
-const texturesBasePath: string = "AWBW-Replay-Player/AWBWApp.Resources/Textures"; // path to obtain textures at
-const outputPath      : string = "output"; // path to save processed sprites to
-// === END OF CONFIGURABLE PARAMETERS ===
+// configurable parameters
+const { texturesBasePath, outputPath } = yargs(process.argv.slice(2))
+  .option('texturesBasePath', {
+    alias: 't', // -t
+    type: 'string',
+    description: 'Path to obtain textures at',
+    default: 'AWBW-Replay-Player/AWBWApp.Resources/Textures',
+  })
+  .option('outputPath', {
+    alias: 'o',
+    type: 'string',
+    description: 'Path to save processed sprites to',
+    default: 'output',
+  }).argv as { texturesBasePath: string, outputPath: string };
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -25,10 +36,14 @@ type Sprite = {
 
 // _eslint-disable-next-line @typescript-eslint/no-misused-promises
 nations.forEach(async (nation) => {
+  // fetch sprites
   const allSprites = await getAllSprites(nation);
+  // generate frames and spritesheet image
   const {frames, spriteSheetImage} = await genFramesAndSpriteSheetImage(nation, allSprites);
-  const animations = await genAnimations(allSprites, frames);
+  // fetch animations map
+  const animations = await fetchAnimations(allSprites, frames);
 
+  // write WebP files
   await spriteSheetImage
     .composite(
       Object.entries(frames).map(([key, { frame }]) => {
@@ -46,12 +61,12 @@ nations.forEach(async (nation) => {
     )
     .toFile(path.resolve(__dirname, outputPath, `${nation}.webp`));
 
-    const spriteSheetData: ISpritesheetData = {
-      meta: {scale: 1},
-      frames,
-      animations,
-    };
-
+  // write JSON files
+  const spriteSheetData: ISpritesheetData = {
+    meta: {scale: 1},
+    frames,
+    animations,
+  };
   await fs.writeFile(
     path.resolve(__dirname, outputPath, `${nation}.json`),
     JSON.stringify(spriteSheetData, null, 2),
@@ -137,7 +152,7 @@ async function genFramesAndSpriteSheetImage(nation: string, allSprites: Sprite[]
   return { spriteSheetImage, frames };
 }
 
-async function genAnimations(allSprites: Sprite[], frames: Record<string, ISpritesheetFrameData>)
+async function fetchAnimations(allSprites: Sprite[], frames: Record<string, ISpritesheetFrameData>)
   : Promise<Record<string, string[]>> {
   const animationFrameRegex = /^(.*)-\d+\.png$/i; // capture pattern "Airport-1.png"
   const animationKeys = new Set(

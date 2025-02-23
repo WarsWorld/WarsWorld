@@ -74,6 +74,7 @@
     "@types/react": "^18.2.48",
     "@types/uuid": "^9.0.8",
     "@types/ws": "^8.5.10",
+    "@types/yargs": "^17.0.33",
     "@typescript-eslint/eslint-plugin": "^6.20.0",
     "@typescript-eslint/parser": "^6.20.0",
     "autoprefixer": "^10.4.17",
@@ -94,6 +95,7 @@
     "typescript": "^5.3.3"
   },
   "utilsDependencies": {
-    "sharp": "^0.33.2"
+    "sharp": "^0.33.2",
+    "yargs": "^17.7.2"
   }
 }
