@@ -126,7 +126,7 @@ async function genFramesAndSpriteSheetImage(nation: string, allSprites: Sprite[]
   const spriteSheetImage = sharp({
     create: {
       width: columnsCount * cellWidth,
-      height: rowsCount * cellHeight,
+      height: columnsCount * cellHeight,
       channels: 4,
       background: {r: 0, g: 0, b: 0,alpha: 0},
     },
@@ -140,14 +140,13 @@ async function genFramesAndSpriteSheetImage(nation: string, allSprites: Sprite[]
       getTexturePath(sprite.type, nation, sprite.name),
     ).metadata();
 
-    frames[sprite.type + "." + sprite.name] = {
-      frame: {
-        x: (i % columnsCount) * cellWidth,
-        y: Math.floor(i / rowsCount) * cellHeight,
-        w: metadata.width!,
-        h: metadata.height!,
-      },
+    const frameData = {
+      x: (i % columnsCount) * cellWidth,
+      y: Math.floor(i / columnsCount) * cellHeight,
+      w: metadata.width!,
+      h: metadata.height!,
     };
+    frames[sprite.type + "." + sprite.name] = { frame: frameData };
   }
   return { spriteSheetImage, frames };
 }
