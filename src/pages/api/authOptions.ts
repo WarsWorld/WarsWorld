@@ -99,6 +99,12 @@ export const authOptions: NextAuthOptions = {
         return searchParams;
       }
 
+      url = url.replace("authModalOpen", "");
+
+      if (url.endsWith("?")) {
+        url = url.slice(0, -1);
+      }
+
       if (url.startsWith("/")) {
         return `${baseUrl}${url}`;
       }

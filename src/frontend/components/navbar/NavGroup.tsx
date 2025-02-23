@@ -2,7 +2,7 @@ import type { Dispatch, SetStateAction } from "react";
 import NavButton from "./NavButton";
 import { NavItem } from "./NavItem";
 import { NavMenuMatches } from "./NavMenuMatches";
-import NavUserDropdown from "./NavUserDropdown";
+import NavUserSection from "./user-settings/NavUserSection";
 
 type Props = {
   showMatchLinks: boolean;
@@ -64,7 +64,7 @@ export function NavGroup({ showMatchLinks, setShowMatchLinks, setIsOpen, isOpen 
         ))}
       </div>
       <div className="@flex @h-12 @w-[15%] @justify-end @items-center @relative">
-        <NavUserDropdown isOpen={isOpen} setIsOpen={setIsOpen} />
+        <NavUserSection isOpen={isOpen} setIsOpen={setIsOpen} />
       </div>
     </>
   );

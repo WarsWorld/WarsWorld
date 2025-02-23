@@ -1,5 +1,5 @@
 import { NavItem } from "./NavItem";
-import NavUserDropdown from "./NavUserDropdown";
+import NavUserSection from "./user-settings/NavUserSection";
 
 type Props = {
   showLinks: boolean;
@@ -57,7 +57,7 @@ export function NavGroupMobile({ showLinks, handleBurgerMenu, setIsOpen, isOpen 
           </div>
         </button>
         <div className="@flex @h-full @justify-center @items-center @relative">
-          <NavUserDropdown isOpen={isOpen} setIsOpen={setIsOpen} width="95vw" />
+          <NavUserSection isOpen={isOpen} setIsOpen={setIsOpen} width="95vw" />
         </div>
       </div>
       <ul
