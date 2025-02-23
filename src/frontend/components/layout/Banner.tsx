@@ -13,6 +13,7 @@ export default function Banner2(props: {
         width={0}
         height={0}
         sizes="100vw"
+        priority
       />
       <div className="@absolute @flex @items-start @gap-10 @h-full @w-full @backdrop-brightness-[0.15] @z-10"></div>
       <div className="@flex @items-start @gap-10 @h-full @w-full @absolute @z-20">

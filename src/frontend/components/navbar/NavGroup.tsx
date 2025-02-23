@@ -1,18 +1,22 @@
-import type { Dispatch, SetStateAction } from "react";
-import NavButton from "./NavButton";
+import { useClickOutsideRef } from "frontend/utils/useClickOutsideRef";
+import { useState } from "react";
 import { NavItem } from "./NavItem";
-import { NavMenuMatches } from "./NavMenuMatches";
-import NavUserSection from "./user-settings/NavUserSection";
+import NavAuthItem from "./user-settings/NavAuthItem";
+import UserSectionDropdown from "./user-settings/UserSectionDropdown";
 
 type Props = {
-  showMatchLinks: boolean;
-  setShowMatchLinks: Dispatch<SetStateAction<boolean>>;
-  setShowLinks: Dispatch<SetStateAction<boolean>>;
   setIsOpen: (value: boolean, callbackUrl?: string) => Promise<void>;
   isOpen: boolean;
 };
 
 const navItemObject = [
+  {
+    text: "GAMES",
+    location: "/your-matches",
+    iconPath: "/img/layout/NeoTank_MSide-0.png",
+    iconAlt: "Teal Galaxy Neo Tank",
+    flip: true,
+  },
   {
     text: "COMPETITION",
     location: "/",
@@ -43,29 +47,31 @@ const navItemObject = [
   },
 ];
 
-export function NavGroup({ showMatchLinks, setShowMatchLinks, setIsOpen, isOpen }: Props) {
+export function NavGroup({ setIsOpen, isOpen }: Props) {
+  const [showUserDropdown, setShowUserDropdown] = useState(false);
+  const refClickOutsideUserDropdown = useClickOutsideRef(
+    () => setShowUserDropdown(false),
+    "user-profile-nav-item",
+  );
+
   return (
     <>
       <div className="@flex @items-center @justify-center @p-2 @gap-10 monitor:@gap-8 @h-full @w-[70vw]">
-        <button
-          onMouseEnter={() => setShowMatchLinks(true)}
-          onMouseLeave={() => setShowMatchLinks(false)}
-          className="@text-white @flex @flex-col relative @justify-center @items-center @cursor-pointer matchLobbyToggle @h-full"
-        >
-          <NavButton key="GAME" hasArrow isOpen={showMatchLinks}>
-            GAME
-          </NavButton>
-          <div className="@flex @justify-center @relative @w-full ">
-            <NavMenuMatches showMatchLinks={showMatchLinks} />
-          </div>
-        </button>
         {navItemObject.map((item) => (
           <NavItem key={item.text} text={item.text} location={item.location} />
         ))}
       </div>
       <div className="@flex @h-12 @w-[15%] @justify-end @items-center @relative">
-        <NavUserSection isOpen={isOpen} setIsOpen={setIsOpen} />
+        <NavAuthItem
+          isOpen={isOpen}
+          setIsOpen={setIsOpen}
+          setShowUserDropdown={setShowUserDropdown}
+        />
       </div>
+      <UserSectionDropdown
+        showUserDropdown={showUserDropdown}
+        refClickOutsideUserDropdown={refClickOutsideUserDropdown}
+      />
     </>
   );
 }

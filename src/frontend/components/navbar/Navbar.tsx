@@ -12,8 +12,6 @@ export function Navbar() {
   const router = useRouter();
 
   const windowWidth = useWindowWidth();
-  const [showLinks, setShowLinks] = useState(false);
-  const [showMatchLinks, setShowMatchLinks] = useState(false);
   const [isMobileWidth, setIsMobileWidth] = useState(false);
   const isOpen = searchParams.has("authModalOpen");
 
@@ -31,10 +29,6 @@ export function Navbar() {
         },
       );
     }
-  };
-
-  const handleBurgerMenu = () => {
-    setShowLinks(!showLinks);
   };
 
   useEffect(() => {
@@ -65,20 +59,9 @@ export function Navbar() {
         </div>
 
         {isMobileWidth ? (
-          <NavGroupMobile
-            showLinks={showLinks}
-            handleBurgerMenu={handleBurgerMenu}
-            isOpen={isOpen}
-            setIsOpen={setIsOpen}
-          />
+          <NavGroupMobile isOpen={isOpen} setIsOpen={setIsOpen} />
         ) : (
-          <NavGroup
-            showMatchLinks={showMatchLinks}
-            setShowMatchLinks={setShowMatchLinks}
-            setShowLinks={setShowLinks}
-            setIsOpen={setIsOpen}
-            isOpen={isOpen}
-          />
+          <NavGroup setIsOpen={setIsOpen} isOpen={isOpen} />
         )}
       </nav>
     </header>

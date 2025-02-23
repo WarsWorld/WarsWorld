@@ -60,6 +60,7 @@ export default function YourMatches() {
           description="Matches you can join."
         />
         <MatchSection
+          jump="spectateGames"
           title="Spectate a Match"
           matches={spectatorMatches}
           description="Matches with two players (not you)."

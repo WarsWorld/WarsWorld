@@ -6,18 +6,21 @@ import UserDropdownItem from "./UserDropdownItems";
 
 type Props = {
   showUserDropdown: boolean;
-  ref: RefObject<HTMLDivElement>;
+  refClickOutsideUserDropdown: RefObject<HTMLDivElement>;
 };
 
-export default function UserSectionDropdown({ showUserDropdown, ref }: Props) {
+export default function UserSectionDropdown({
+  showUserDropdown,
+  refClickOutsideUserDropdown,
+}: Props) {
   const { currentPlayer } = usePlayers();
 
   return (
     <div
-      className={`@absolute @list-none @overflow-y-hidden @m-0 @p-0 @z-50 @duration-500 @w-56 monitor:@w-96 @top-[calc(100%_+_1em)] laptop:@top-[calc(100%_+_0.8em)] @right-0 @shadow-black @shadow-lg @rounded @bg-bg-secondary ${
+      className={`@absolute @list-none @overflow-y-hidden @m-0 @p-0 @z-50 @w-full smallscreen:@w-96 @top-[calc(100%_+_0.1em)] @right-0 smallscreen:@right-2 @shadow-black @shadow-lg @rounded @bg-bg-secondary ${
         showUserDropdown ? "@max-h-[30rem]" : "@max-h-0"
       }`}
-      ref={ref}
+      ref={refClickOutsideUserDropdown}
     >
       <ul className={`@flex @flex-col @rounded @gap-2 @mb-2 @py-2`}>
         <li className="@border-b-2 @border-bg-tertiary">
@@ -28,7 +31,7 @@ export default function UserSectionDropdown({ showUserDropdown, ref }: Props) {
             <div
               className={`@min-w-16 @max-w-16 @min-h-16 @max-h-16 @rounded-full @bg-black/50 @text-center @overflow-hidden`}
             >
-              <img src={`\\img\\CO\\smoothFull\\Awds-sasha.webp`} alt="grit" />
+              <img src={`/img/CO/smoothFull/Awds-sasha.webp`} alt="grit" />
             </div>
             <div className="@flex @flex-col">
               <span className="@text-lg @font-semibold">{currentPlayer?.displayName}</span>
@@ -36,8 +39,11 @@ export default function UserSectionDropdown({ showUserDropdown, ref }: Props) {
             </div>
           </Link>
         </li>
-        <UserDropdownItem text="SWITCH PLAYERS" href="\" />
-        <UserDropdownItem text="CONFIGURATION" href="\" />
+        <UserDropdownItem text="SWITCH PLAYERS" href="/" />
+        <UserDropdownItem text="YOUR GAMES" href="/your-matches" />
+        <UserDropdownItem text="CURRENT GAMES" href="/your-matches#currentGames" />
+        <UserDropdownItem text="COMPLETED GAMES" href="/your-matches#completedGames" />
+        <UserDropdownItem text="CONFIGURATION" href="/" />
         <li>
           <button
             className="@flex @flex-row @w-full @align-middle @justify-start @items-center @px-8 @py-2 @gap-6 @duration-0 hover:@bg-black/20 @text-white hover:@text-white"
