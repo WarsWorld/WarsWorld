@@ -14,7 +14,7 @@ type Props = {
   setIsOpen: (value: boolean, callbackUrl?: string) => Promise<void>;
 };
 
-export default function LoginSignupModal({ isOpen, setIsOpen, width }: Props) {
+export default function AuthenticateModal({ isOpen, setIsOpen, width }: Props) {
   const [currentProviders, setCurrentProviders] =
     useState<Awaited<ReturnType<typeof getProviders>>>();
   const searchParams = useSearchParams();

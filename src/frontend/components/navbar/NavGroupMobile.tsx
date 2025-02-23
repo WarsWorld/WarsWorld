@@ -1,8 +1,11 @@
 import { NavItem } from "./NavItem";
+import NavUserDropdown from "./NavUserDropdown";
 
 type Props = {
   showLinks: boolean;
   handleBurgerMenu: () => void;
+  setIsOpen: (value: boolean, callbackUrl?: string) => Promise<void>;
+  isOpen: boolean;
 };
 
 const navItemObject = [
@@ -39,9 +42,24 @@ const navItemObject = [
   },
 ];
 
-export function NavGroupMobile({ showLinks, handleBurgerMenu }: Props) {
+export function NavGroupMobile({ showLinks, handleBurgerMenu, setIsOpen, isOpen }: Props) {
   return (
     <>
+      <div className="@w-screen @flex @justify-end @items-center @relative @gap-8 tablet:@gap-10 laptop:@gap-16">
+        <button
+          className="@flex @justify-center @items-center @h-7 @w-7"
+          onClick={handleBurgerMenu}
+        >
+          <div className="@flex @flex-col @gap-[0.35rem] smallscreen:@gap-[0.7rem] burgerMenuIcon active:@scale-105">
+            <div className="@h-1 @w-9 smallscreen:@h-[0.3rem] smallscreen:@w-14 @rounded @bg-gradient-to-r @from-primary @to-primary-dark" />
+            <div className="@h-1 @w-9 smallscreen:@h-[0.3rem] smallscreen:@w-14 @rounded @bg-gradient-to-r @from-primary @to-primary-dark" />
+            <div className="@h-1 @w-9 smallscreen:@h-[0.3rem] smallscreen:@w-14 @rounded @bg-gradient-to-r @from-primary @to-primary-dark" />
+          </div>
+        </button>
+        <div className="@flex @h-full @justify-center @items-center @relative">
+          <NavUserDropdown isOpen={isOpen} setIsOpen={setIsOpen} width="95vw" />
+        </div>
+      </div>
       <ul
         className={`@absolute @m-0 @p-0 @list-none @overflow-y-hidden @shadow-black @shadow-lg @right-0 @w-full smallscreen:@w-[45vw] @top-[calc(100%_+_0.3em)]
       @bg-gradient-to-r @from-bg-primary @from-30% @to-bg-secondary @z-50 @duration-[750ms]

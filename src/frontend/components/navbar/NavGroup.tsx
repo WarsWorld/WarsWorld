@@ -1,8 +1,8 @@
 import type { Dispatch, SetStateAction } from "react";
 import NavButton from "./NavButton";
 import { NavItem } from "./NavItem";
-import NavLoginLogout from "./NavLoginLogout";
 import { NavMenuMatches } from "./NavMenuMatches";
+import NavUserDropdown from "./NavUserDropdown";
 
 type Props = {
   showMatchLinks: boolean;
@@ -46,7 +46,7 @@ const navItemObject = [
 export function NavGroup({ showMatchLinks, setShowMatchLinks, setIsOpen, isOpen }: Props) {
   return (
     <>
-      <div className="@flex @items-center @justify-center @gap-10 monitor:@gap-16 @h-full @w-[70vw]">
+      <div className="@flex @items-center @justify-center @p-2 @gap-10 monitor:@gap-8 @h-full @w-[70vw]">
         <button
           onMouseEnter={() => setShowMatchLinks(true)}
           onMouseLeave={() => setShowMatchLinks(false)}
@@ -64,7 +64,7 @@ export function NavGroup({ showMatchLinks, setShowMatchLinks, setIsOpen, isOpen 
         ))}
       </div>
       <div className="@flex @h-12 @w-[15%] @justify-end @items-center @relative">
-        <NavLoginLogout isOpen={isOpen} setIsOpen={setIsOpen} />
+        <NavUserDropdown isOpen={isOpen} setIsOpen={setIsOpen} />
       </div>
     </>
   );
