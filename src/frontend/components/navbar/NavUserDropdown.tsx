@@ -36,10 +36,10 @@ export default function NavUserDropdown({ isOpen, setIsOpen, width }: Props) {
           </>
         )}
         {session?.user && currentPlayer && (
-          <>
+          <div ref={refClickOutsideUserDropdown}>
             <button
               className="@group @relative @cursor-pointer"
-              onClick={() => setShowUserDropdown(!showUserDropdown)}
+              onClick={() => setShowUserDropdown((prev) => !prev)}
             >
               <div
                 className={`@absolute @flex @flex-col @items-center @justify-center @bg-bg-secondary group-hover:@bg-bg-secondary/100 @rounded-full @min-w-6 @min-h-6 @max-w-6 @max-h-6 @-bottom-1 @-right-1 @text-sm @overflow-hidden`}
@@ -66,7 +66,7 @@ export default function NavUserDropdown({ isOpen, setIsOpen, width }: Props) {
                         `}
               >
                 <li className="@cursor-pointer @h-full">
-                  <NavItem text="PROFILE" location="/" />
+                  <NavItem text="PROFILE" location={`/players/${currentPlayer.displayName}`} />
                   <NavItem text="SWITCH PLAYER" location="/" />
                   <NavItem text="CONFIGURATION" location="/" />
                   <div className="@flex @justify-center @items-center @gap-2 @h-full">
@@ -83,7 +83,7 @@ export default function NavUserDropdown({ isOpen, setIsOpen, width }: Props) {
                 </li>
               </ul>
             </div>
-          </>
+          </div>
         )}
       </div>
     </>
