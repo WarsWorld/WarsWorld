@@ -8,7 +8,8 @@ import { getTerrainDefenseStars } from "./game-constants/terrain-properties";
 /** @returns 1-10, whole numbers */
 export const getVisualHPfromHP = (hp: number) => Math.ceil(hp / 10);
 
-const roundUpTo = (value: number, step: number) => {
+// unused yet
+const _roundUpTo = (value: number, step: number) => {
   const scalingFactor = 1 / step;
   return Math.ceil(value * scalingFactor) / scalingFactor;
 };

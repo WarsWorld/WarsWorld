@@ -11,7 +11,7 @@ export const createEmitter = <D extends { matchId: Match["id"] }>() => {
   //New update
   const listenerMap = new Map<Match["id"], Map<string, Listener[]>>();
 
-  const unsubscribe = (matchId: Match["id"], playerId: string, listenerToUnsub: Listener) => {
+  const unsubscribe = (matchId: Match["id"], playerId: string, _listenerToUnsub: Listener) => {
     listenerMap.get(matchId)?.delete(playerId);
   };
 

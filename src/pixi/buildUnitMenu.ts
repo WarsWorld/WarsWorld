@@ -160,7 +160,8 @@ export const buildUnitMenu = (
   return menuContainer;
 };
 
-const createCaptureOption = (match: MatchWrapper, onCapture: () => void): Container => {
+// TODO: unused yet
+const _createCaptureOption = (match: MatchWrapper, onCapture: () => void): Container => {
   const menuElement = new Container();
   menuElement.eventMode = "static";
   //TODO: missing action icons

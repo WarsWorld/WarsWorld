@@ -88,6 +88,8 @@ export const getBattleForecast = (
 };
 
 export const readyUnitClickedAttackableTile = (
+  /* eslint-disable @typescript-eslint/no-unused-vars */
+  // TODO: unused yet
   confirmation: boolean, //only sends action if true
   match: MatchWrapper,
   attacker: UnitWrapper,
@@ -102,6 +104,8 @@ export const readyUnitClickedAttackableTile = (
 };
 
 export const readyUnitClickedAccessibleTile = (
+  /* eslint-disable @typescript-eslint/no-unused-vars */
+  // TODO: unused yet
   match: MatchWrapper,
   unit: UnitWrapper,
   position: Position,

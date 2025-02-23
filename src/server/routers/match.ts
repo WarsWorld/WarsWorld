@@ -36,7 +36,8 @@ export const matchRouter = router({
     ({ ctx: { currentPlayer } }) =>
       playerMatchIndex.getPlayerMatches(currentPlayer.id)?.map(matchToFrontend) ?? [],
   ),
-  full: matchBaseProcedure.query(({ ctx: { match, currentPlayer } }) => ({
+  // currentPlayer unused yet
+  full: matchBaseProcedure.query(({ ctx: { match, _currentPlayer } }) => ({
     id: match.id,
     leagueType: match.leagueType,
     changeableTiles: match.changeableTiles,

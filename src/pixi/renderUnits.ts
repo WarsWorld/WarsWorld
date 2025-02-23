@@ -1,6 +1,6 @@
 import type { FrontendUnit } from "frontend/components/match/FrontendUnit";
 import type { ChangeableTileWithSprite } from "frontend/components/match/types";
-import { AnimatedSprite, Container } from "pixi.js";
+import { /* AnimatedSprite,*/ Container } from "pixi.js";
 import type { MatchWrapper } from "shared/wrappers/match";
 import type { LoadedSpriteSheet } from "./load-spritesheet";
 import { renderUnitSprite } from "./renderUnitSprite";
