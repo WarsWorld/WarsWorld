@@ -56,12 +56,12 @@ export function NavGroup({ setIsOpen, isOpen }: Props) {
 
   return (
     <>
-      <div className="@flex @items-center @justify-center @p-2 @gap-10 monitor:@gap-8 @h-full @w-[70vw]">
+      <div className="@flex @items-center @justify-center @p-2 @gap-10 monitor:@gap-8 @h-full @w-[76%]">
         {navItemObject.map((item) => (
           <NavItem key={item.text} text={item.text} location={item.location} />
         ))}
       </div>
-      <div className="@flex @h-12 @w-[15%] @justify-end @items-center @relative">
+      <div className="@flex @h-12 @w-[12%] @justify-end @items-center @relative">
         <NavAuthItem
           isOpen={isOpen}
           setIsOpen={setIsOpen}

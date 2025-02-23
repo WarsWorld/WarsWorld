@@ -18,14 +18,14 @@ export default function UserSectionDropdown({
   return (
     <div
       className={`@absolute @list-none @overflow-y-hidden @m-0 @p-0 @z-50 @w-full smallscreen:@w-96 @top-[calc(100%_+_0.1em)] @right-0 smallscreen:@right-2 @shadow-black @shadow-lg @rounded @bg-bg-secondary ${
-        showUserDropdown ? "@max-h-[30rem]" : "@max-h-0"
+        showUserDropdown ? "@max-h-[100vh]" : "@max-h-0"
       }`}
       ref={refClickOutsideUserDropdown}
     >
-      <ul className={`@flex @flex-col @rounded @gap-2 @mb-2 @py-2`}>
-        <li className="@border-b-2 @border-bg-tertiary">
+      <ul className={`@flex @flex-col @rounded @gap-2 @py-2`}>
+        <li>
           <Link
-            className="@flex @flex-row @align-middle @justify-start @items-center @px-8 @mt-2 @mb-4 @py-3 @gap-4 @duration-0 hover:@bg-black/20 @text-white hover:@text-white"
+            className="@flex @flex-row @align-middle @justify-start @items-center @px-8 @mt-2 @mb-3 @py-3 @gap-4 @duration-0 hover:@bg-black/20 @text-white hover:@text-white"
             href={`/players/${currentPlayer?.name}`}
           >
             <div
@@ -39,11 +39,14 @@ export default function UserSectionDropdown({
             </div>
           </Link>
         </li>
+        <div className="@h-[2px] @w-full @bg-bg-tertiary" />
         <UserDropdownItem text="SWITCH PLAYERS" href="/" />
+        <UserDropdownItem text="CONFIGURATION" href="/" />
+        <div className="@h-[2px] @w-full @bg-bg-tertiary" />
         <UserDropdownItem text="YOUR GAMES" href="/your-matches" />
         <UserDropdownItem text="CURRENT GAMES" href="/your-matches#currentGames" />
         <UserDropdownItem text="COMPLETED GAMES" href="/your-matches#completedGames" />
-        <UserDropdownItem text="CONFIGURATION" href="/" />
+        <div className="@h-[2px] @w-full @bg-bg-tertiary" />
         <li>
           <button
             className="@flex @flex-row @w-full @align-middle @justify-start @items-center @px-8 @py-2 @gap-6 @duration-0 hover:@bg-black/20 @text-white hover:@text-white"
