@@ -76,7 +76,6 @@ model User {
   state         UserState @default(active)
   role          Role?
   name          String?
-  password      String?
   email         String?   @unique
   emailVerified DateTime?
   image         String?

@@ -6,7 +6,6 @@
 import { PrismaClient } from "@prisma/client";
 import * as fs from "fs/promises";
 import matter from "gray-matter";
-import { hashPassword } from "server/hashPassword";
 import { importAWBWMap } from "server/tools/map-importer-utilities";
 import { developmentPlayerNamePrefix as Prefix } from "server/trpc/middleware/player";
 import { articleSchema } from "shared/schemas/article";
@@ -76,12 +75,9 @@ async function seedArticles(articles: string[], type: string, authorId: string) 
 }
 
 async function main() {
-  const hashedPassword = await hashPassword("secret");
-
   const { id: userId } = await prisma.user.create({
     data: {
       name: "development_user",
-      password: hashedPassword,
       email: "development@example.com",
     },
   });

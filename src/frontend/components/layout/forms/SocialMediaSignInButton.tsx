@@ -13,7 +13,6 @@ const SocialMedia = [
     color: "@bg-github",
     text_color: "@text-white",
     font: "@font-semibold",
-    signinHandler: async () => signIn("github"),
   },
   {
     name: "Discord",
@@ -22,7 +21,6 @@ const SocialMedia = [
     color: "@bg-discord",
     text_color: "@text-white",
     font: "@font-semibold",
-    signinHandler: async () => signIn("discord"),
   },
   {
     name: "Google",
@@ -31,7 +29,6 @@ const SocialMedia = [
     color: "@bg-white",
     text_color: "@text-black/90",
     font: "@font-medium",
-    signinHandler: async () => signIn("google"),
   },
 ];
 
@@ -43,10 +40,9 @@ export default function SocialMediaSignInButton({ disabled, name }: Props) {
   const color = socialMedia?.color ?? "";
   const text_color = socialMedia?.text_color ?? "";
   const font = socialMedia?.font ?? "";
-  const signInHandler = socialMedia?.signinHandler ?? (() => undefined);
 
   const onClickSocialMediaHandler = () => {
-    void signInHandler();
+    void signIn(socialMedia?.name.toLowerCase(), { redirect: false });
   };
 
   return (

@@ -2,17 +2,14 @@
   NOTE: If you try to register or first login with two providers that have the same email, the second provider will fail.
   The first provider will register the first email and so the second cannot be registered.
 */
-import { compare } from "bcrypt";
 import type { NextAuthOptions } from "next-auth";
 import type { Adapter } from "next-auth/adapters";
 import type { Provider } from "next-auth/providers";
-import CredentialsProvider from "next-auth/providers/credentials";
 import type { DiscordProfile } from "next-auth/providers/discord";
 import DiscordProvider from "next-auth/providers/discord";
 import GithubProvider from "next-auth/providers/github";
 import GoogleProvider from "next-auth/providers/google";
 import { prisma } from "server/prisma/prisma-client";
-import { loginSchema } from "shared/schemas/auth";
 import { z } from "zod";
 import WarsWorldAdapter from "./WarsWorldAdapter";
 
@@ -39,54 +36,7 @@ const githubEnvParsed = githubEnvSchema.safeParse(process.env);
 const googleEnvParsed = googleEnvSchema.safeParse(process.env);
 const discordEnvParsed = discordEnvSchema.safeParse(process.env);
 
-const providers: Provider[] = [
-  CredentialsProvider({
-    credentials: {
-      // TODO: Change name to a unique identifier, maybe for email or both idk.
-      name: {
-        label: "Username",
-        type: "username",
-        placeholder: "Username",
-      },
-      password: {
-        label: "Password",
-        type: "password",
-        placeholder: "Password",
-      },
-    },
-    async authorize(credentials) {
-      if (!credentials) {
-        return null;
-      }
-
-      const loginParse = loginSchema.safeParse(credentials);
-
-      if (!loginParse.success) {
-        return null;
-      }
-
-      const dbUser = await prisma.user.findFirst({
-        where: { name: loginParse.data.name },
-      });
-
-      if (dbUser?.password == undefined) {
-        return null;
-      }
-
-      const doPasswordsMatch = await compare(loginParse.data.password, dbUser.password);
-
-      if (!doPasswordsMatch) {
-        return null;
-      }
-
-      return {
-        id: dbUser.id,
-        name: dbUser.name,
-        email: dbUser.email,
-      };
-    },
-  }),
-];
+const providers: Provider[] = [];
 
 if (githubEnvParsed.success) {
   providers.push(
@@ -142,13 +92,22 @@ export const authOptions: NextAuthOptions = {
   },
   callbacks: {
     redirect({ url, baseUrl }) {
+      const callbackUrl = url.split("?").pop();
+      const searchParams = new URLSearchParams(callbackUrl).get("callbackUrl");
+
+      if (searchParams != null) {
+        return searchParams;
+      }
+
       if (url.startsWith("/")) {
         return `${baseUrl}${url}`;
-      } else if (new URL(url).origin === baseUrl) {
+      }
+
+      if (new URL(url).origin === baseUrl) {
         return url;
       }
 
-      return baseUrl; // redirect callback
+      return baseUrl;
     },
     jwt({ token, user }) {
       if (user != undefined) {
