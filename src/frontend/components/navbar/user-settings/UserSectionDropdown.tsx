@@ -15,7 +15,7 @@ export default function UserSectionDropdown() {
     <ul className={`@flex @flex-col @rounded @gap-2 @py-2`}>
       <li>
         <Link
-          className="@flex @flex-row @align-middle @justify-start @items-center @px-8 @mt-2 @mb-3 @py-3 @gap-4 @duration-0 hover:@bg-black/20 @text-white hover:@text-white"
+          className="@flex @flex-row @align-middle @justify-start @items-center @px-8 @my-1 @py-2 @gap-4 @duration-0 hover:@bg-black/20 @text-white hover:@text-white"
           href={`/players/${currentPlayer?.name}`}
         >
           <div
@@ -51,12 +51,12 @@ export default function UserSectionDropdown() {
         </>
       )}
       <div className="@h-[2px] @w-full @bg-bg-tertiary" />
-      <DropdownItem text="CREATE PLAYER" href="/create-player" />
-      <DropdownItem text="CONFIGURATION" href="/" />
-      <div className="@h-[2px] @w-full @bg-bg-tertiary" />
       <DropdownItem text="YOUR GAMES" href="/your-matches" />
       <DropdownItem text="CURRENT GAMES" href="/your-matches#currentGames" />
       <DropdownItem text="COMPLETED GAMES" href="/your-matches#completedGames" />
+      <div className="@h-[2px] @w-full @bg-bg-tertiary" />
+      <DropdownItem text="CREATE PLAYER" href="/create-player" />
+      <DropdownItem text="CONFIGURATION" href="/" />
       <div className="@h-[2px] @w-full @bg-bg-tertiary" />
       <li>
         <button

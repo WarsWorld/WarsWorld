@@ -7,14 +7,9 @@ import { PrismaClient } from "@prisma/client";
 import * as fs from "fs/promises";
 import matter from "gray-matter";
 import { importAWBWMap } from "server/tools/map-importer-utilities";
-import { developmentPlayerNamePrefix as Prefix } from "server/trpc/middleware/player";
 import { articleSchema } from "shared/schemas/article";
 
 const prisma = new PrismaClient();
-
-const developmentPlayerNames = ["Grimm Guy", "Incuggarch", "Master Chief Z", "Dev Player 4"].map(
-  (name) => `${Prefix} ${name}`,
-);
 
 const news = [
   "Good Girl Lash",
@@ -75,28 +70,26 @@ async function seedArticles(articles: string[], type: string, authorId: string) 
 }
 
 async function main() {
-  const { id: userId } = await prisma.user.create({
+  const { id: userId, name } = await prisma.user.create({
     data: {
       name: "development_user",
       email: "development@example.com",
     },
   });
 
-  const devPlayers = await Promise.all(
-    developmentPlayerNames.map((name) =>
-      prisma.player.create({ data: { name, displayName: name, userId } }),
-    ),
-  );
+  const devPlayer = await prisma.player.create({
+    data: { name: name ?? "development_use", displayName: name ?? "development_use", userId },
+  });
 
-  await seedArticles(news, "News", devPlayers[0].id);
-  await seedArticles(guides, "Guide", devPlayers[1].id);
+  await seedArticles(news, "News", devPlayer.id);
+  await seedArticles(guides, "Guide", devPlayer.id);
 
   /**
    * author: "Hellraider",
    * published: "05/11/2008",
    */
 
-  const causticFinaleDBMap = await importAWBWMap({
+  await importAWBWMap({
     name: "Caustic Finale",
     numberOfPlayers: 2,
     tileDataString: `
@@ -224,61 +217,6 @@ async function main() {
   32,31,34,1,44,1,1,1,3,34,29,29,29,29,3,1,26,24,19,1,32,31
   32,31,2,112,1,34,1,2,2,3,30,34,30,30,29,2,5,1,44,3,32,34
 `,
-  });
-
-  await prisma.match.create({
-    data: {
-      leagueType: "standard",
-      rules: {
-        bannedUnitTypes: [],
-        captureLimit: 50,
-        dayLimit: 50,
-        fogOfWar: false,
-        fundsPerProperty: 1000,
-        unitCapPerPlayer: 50,
-        weatherSetting: "clear",
-        labUnitTypes: [],
-        teamMapping: [0, 1],
-      },
-      status: "playing",
-      mapId: causticFinaleDBMap.id,
-      playerState: [
-        {
-          slot: 0,
-          hasCurrentTurn: true,
-          id: devPlayers[0].id,
-          name: devPlayers[0].name,
-          ready: true,
-          coId: {
-            name: "andy",
-            version: "AW2",
-          },
-          eliminated: false,
-          funds: 0,
-          powerMeter: 0,
-          timesPowerUsed: 0,
-          army: "blue-moon",
-          COPowerState: "no-power",
-        },
-        {
-          slot: 1,
-          hasCurrentTurn: false,
-          id: devPlayers[1].id,
-          name: devPlayers[1].name,
-          ready: true,
-          coId: {
-            name: "flak",
-            version: "AW2",
-          },
-          eliminated: false,
-          funds: 0,
-          powerMeter: 0,
-          timesPowerUsed: 0,
-          army: "green-earth",
-          COPowerState: "no-power",
-        },
-      ],
-    },
   });
 }
 
