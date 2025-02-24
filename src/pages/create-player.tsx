@@ -66,6 +66,15 @@ export default function CreatePlayer() {
           isError
         />
       )}
+      <h1>WORK IN PROGRESS</h1>
+      <p>
+        It's for this page functionality to be moved to user's dropdown pop up on the top right.
+      </p>
+      <p>
+        If you get an error that ends with &quot;Unique constraint failed on the fields:
+        `name`&quot;, it means that there is already a player with that name, you can have repeated
+        display names though.{" "}
+      </p>
       <h1>Create Player</h1>
       <form className="@flex @flex-col @gap-8" onSubmit={(e) => void onSubmit(e)}>
         <FormInput

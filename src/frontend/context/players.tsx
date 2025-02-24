@@ -32,8 +32,9 @@ export const ProvidePlayers = ({ children }: { children: ReactNode }) => {
       setUser(data);
 
       const player = data?.ownedPlayers.at(0);
+      const isSavedPlayerIdvalid = data.ownedPlayers.some((p) => p.id === currentPlayerId);
 
-      if (player !== undefined && currentPlayerId === "") {
+      if (player !== undefined && (!isSavedPlayerIdvalid || currentPlayerId === "")) {
         setCurrentPlayerId(player.id);
       }
     }
