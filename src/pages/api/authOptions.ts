@@ -115,13 +115,19 @@ export const authOptions: NextAuthOptions = {
 
       return baseUrl;
     },
-    jwt({ token, user }) {
-      if (user != undefined) {
-        token.id = user.id;
+    jwt({ token, account, user }) {
+      if (account) {
+        token.accessToken = account.access_token;
+        token.id = user?.id;
       }
 
-      token.userRole = "admin";
       return token;
+    },
+    session({ session, token }) {
+      // Send properties to the client, like an access_token from a provider.
+      const newUserSession = { ...session.user, id: token.id };
+
+      return { ...session, user: newUserSession };
     },
   },
 };

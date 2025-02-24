@@ -10,6 +10,7 @@ type UserContext =
       ownedPlayers: Player[] | undefined;
       currentPlayerId: string | null;
       setCurrentPlayerId: (value: string) => void;
+      refetchOwnedPlayers: () => void;
     }
   | undefined;
 
@@ -19,7 +20,7 @@ export const ProvidePlayers = ({ children }: { children: ReactNode }) => {
   const { status } = useSession();
   const [currentPlayerId, setCurrentPlayerId] = useLocalStorage("currentPlayerId", null);
 
-  const { data } = trpc.user.me.useQuery(undefined, {
+  const { data, refetch: refetchOwnedPlayers } = trpc.user.me.useQuery(undefined, {
     refetchOnReconnect: false, // reduce trpc logging, this data doesn't really need to be refetched automatically
     refetchOnWindowFocus: false,
   });
@@ -27,7 +28,7 @@ export const ProvidePlayers = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<typeof data>();
 
   useEffect(() => {
-    if (status === "authenticated") {
+    if (data?.user) {
       setUser(data);
 
       const player = data?.ownedPlayers.at(0);
@@ -35,18 +36,17 @@ export const ProvidePlayers = ({ children }: { children: ReactNode }) => {
       if (player !== undefined && currentPlayerId === "") {
         setCurrentPlayerId(player.id);
       }
-    } else {
-      setCurrentPlayerId("");
     }
-  }, [status, setCurrentPlayerId, data, currentPlayerId]);
+  }, [setCurrentPlayerId, data, currentPlayerId, user, status]);
 
   const userContextValue: UserContext = useMemo(
     () => ({
       ownedPlayers: user?.ownedPlayers,
       currentPlayerId,
       setCurrentPlayerId,
+      refetchOwnedPlayers,
     }),
-    [user?.ownedPlayers, currentPlayerId, setCurrentPlayerId],
+    [user?.ownedPlayers, currentPlayerId, setCurrentPlayerId, refetchOwnedPlayers],
   );
 
   return <playersContext.Provider value={userContextValue}>{children}</playersContext.Provider>;
@@ -54,6 +54,7 @@ export const ProvidePlayers = ({ children }: { children: ReactNode }) => {
 
 export const usePlayers = () => {
   const user = useContext(playersContext);
+  console.log(user?.ownedPlayers);
   const ownedPlayers = user?.ownedPlayers;
   const currentPlayerId = user?.currentPlayerId;
   const setCurrentPlayerId = user?.setCurrentPlayerId;
@@ -69,5 +70,6 @@ export const usePlayers = () => {
     ownedPlayers,
     currentPlayer,
     setCurrentPlayer,
+    refetchOwnedPlayers: user?.refetchOwnedPlayers,
   };
 };

@@ -3,6 +3,7 @@ import { authMiddleware } from "server/trpc/middleware/auth";
 import { playerWithoutCurrentMiddleware } from "server/trpc/middleware/player";
 import { playerBaseProcedure, publicBaseProcedure, router } from "server/trpc/trpc-setup";
 import { preferencesSchema } from "shared/schemas/preferences";
+import { playerSchema } from "shared/schemas/user";
 import { z } from "zod";
 
 export const userRouter = router({
@@ -32,4 +33,13 @@ export const userRouter = router({
         where: { name: input.username },
       }),
   ),
+  createPlayer: publicBaseProcedure.input(playerSchema).mutation(async ({ input, ctx }) => {
+    return await prisma.player.create({
+      data: {
+        name: input.name,
+        displayName: input.name,
+        user: { connect: { id: ctx.session?.user?.id } },
+      },
+    });
+  }),
 });

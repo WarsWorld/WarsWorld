@@ -25,7 +25,7 @@ export default function UserSectionDropdown() {
         </Link>
       </li>
       <div className="@h-[2px] @w-full @bg-bg-tertiary" />
-      <DropdownItem text="SWITCH PLAYERS" href="/" />
+      <DropdownItem text="CREATE PLAYER" href="/create-player" />
       <DropdownItem text="CONFIGURATION" href="/" />
       <div className="@h-[2px] @w-full @bg-bg-tertiary" />
       <DropdownItem text="YOUR GAMES" href="/your-matches" />
