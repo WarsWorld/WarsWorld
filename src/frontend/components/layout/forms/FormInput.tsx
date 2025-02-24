@@ -7,6 +7,7 @@ type Props = {
   errorMessage?: string;
   value?: string | number | readonly string[];
   id?: string;
+  name?: string;
   type?: string;
   onChange?: ChangeEventHandler<HTMLInputElement>;
 };
@@ -14,6 +15,7 @@ type Props = {
 export default function FormInput({
   text,
   id,
+  name,
   type,
   value,
   isError,
@@ -29,11 +31,11 @@ export default function FormInput({
         </label>
         <input
           id={id ?? ""}
-          name={id ?? ""}
+          name={name ?? id ?? ""}
           type={type ?? ""}
           onChange={onChange}
           value={value}
-          className={`@text-white @border-[2.5px] @text-xl smallscreen:@text-2xl @w-full @p-3 @mt-2 @rounded-xl @bg-black/50 ${
+          className={`@text-white @border-[2.5px] @text-base smallscreen:@text-lg @w-full @p-3 @mt-2 @rounded-xl @bg-black/50 ${
             isError == true ? "@border-orange-star" : "@border-primary"
           }`}
         />

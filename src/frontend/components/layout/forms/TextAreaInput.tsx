@@ -30,7 +30,7 @@ export default function TextAreaInput({
           {text}
         </label>
         <textarea
-          className={`@mt-2 @w-full @text-white @p-4 @text-xl smallscreen:@text-2xl @border-[2.5px] @rounded-2xl @bg-black/50 ${
+          className={`@mt-2 @w-full @text-white @p-4 @text-base smallscreen:@text-lg @border-[2.5px] @rounded-2xl @bg-black/50 ${
             isError == true ? "@border-orange-star" : "@border-primary"
           }`}
           name={name}

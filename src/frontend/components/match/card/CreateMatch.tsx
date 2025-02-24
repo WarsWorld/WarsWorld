@@ -4,14 +4,14 @@ import Select from "frontend/components/layout/Select";
 import SquareButton from "frontend/components/layout/SquareButton";
 import { usePlayers } from "frontend/context/players";
 import { trpc } from "frontend/utils/trpc-client";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 type Props = {
   currentPlayer: Player | undefined;
   setCurrentPlayer: (player: Player) => void;
 };
 
-export default function CreateMatch({ currentPlayer, setCurrentPlayer }: Props) {
+export default function CreateMatch({ currentPlayer }: Props) {
   const { ownedPlayers } = usePlayers();
   const utils = trpc.useUtils();
 
@@ -38,24 +38,10 @@ export default function CreateMatch({ currentPlayer, setCurrentPlayer }: Props) 
   const maps: SelectOption[] = [];
   mapQuery?.forEach((map) => maps.push({ label: map.name, value: map.id }));
 
-  const [selectPlayer, setSelectPlayer] = useState<SelectOption | undefined>({
-    label: "No player selected",
-    value: "",
-  });
   const [selectMap, setSelectMap] = useState<SelectOption | undefined>({
     label: "No map selected",
     value: "",
   });
-
-  // Fills the players Select when every time ownedplayers is changed
-  useEffect(() => {
-    if (currentPlayer) {
-      setSelectPlayer({
-        label: currentPlayer.name,
-        value: currentPlayer.id,
-      });
-    }
-  }, [currentPlayer]);
 
   const createMatchHandler = async () => {
     if (currentMapId == null || !currentPlayer) {
@@ -80,21 +66,6 @@ export default function CreateMatch({ currentPlayer, setCurrentPlayer }: Props) 
     });
   };
 
-  const selectPlayerHandler = (o: SelectOption | undefined) => {
-    if (!ownedPlayers) {
-      return;
-    }
-
-    setSelectPlayer(o);
-    const newCurrentPlayer = ownedPlayers.find((p) => p.id === o?.value);
-
-    if (newCurrentPlayer) {
-      setCurrentPlayer(newCurrentPlayer);
-    }
-
-    void utils.match.invalidate();
-  };
-
   const selectMapHandler = (o: SelectOption | undefined) => {
     setSelectMap(o);
     const newCurrentMap = mapQuery?.find((p) => p.id === o?.value);
@@ -109,19 +80,6 @@ export default function CreateMatch({ currentPlayer, setCurrentPlayer }: Props) 
         game.
       </p>
       <br />
-      {ownedPlayers ? (
-        <div className="@flex @flex-col smallscreen:@flex-row @justify-center @items-center @py-2 @pb-6">
-          <p className="@px-0 smallscreen:@pr-8">Current Player: </p>
-          <Select
-            className="@relative @w-64 @my-4 smallscreen:@m-0"
-            options={players}
-            value={selectPlayer}
-            onChange={selectPlayerHandler}
-          />
-        </div>
-      ) : (
-        <p>Loading Players...</p>
-      )}
 
       <div className="@flex @flex-col smallscreen:@flex-row @items-center @justify-center @gap-5 @py-0 smallscreen:@py-4">
         {isLoadingMapQuery ? (
