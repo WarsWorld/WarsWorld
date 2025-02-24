@@ -38,9 +38,6 @@ export default function CreatePlayer() {
         }
       });
     } catch (err) {
-      console.log("ERROR!");
-      console.log(err);
-
       if (err instanceof ZodError) {
         setError(err.message);
       } else if (err instanceof TRPCClientError) {

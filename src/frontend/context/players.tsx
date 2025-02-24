@@ -54,7 +54,6 @@ export const ProvidePlayers = ({ children }: { children: ReactNode }) => {
 
 export const usePlayers = () => {
   const user = useContext(playersContext);
-  console.log(user?.ownedPlayers);
   const ownedPlayers = user?.ownedPlayers;
   const currentPlayerId = user?.currentPlayerId;
   const setCurrentPlayerId = user?.setCurrentPlayerId;
