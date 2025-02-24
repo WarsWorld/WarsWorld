@@ -68,7 +68,7 @@ export default function CreatePlayer() {
       )}
       <h1>WORK IN PROGRESS</h1>
       <p>
-        It's for this page functionality to be moved to user's dropdown pop up on the top right.
+        This page will be removed in the future, it will be moved to the top right pop up later.
       </p>
       <p>
         If you get an error that ends with &quot;Unique constraint failed on the fields:
