@@ -107,6 +107,33 @@ model Account {
 
 enum CO {
   adder
+  andy
+  sami
+  max
+  hawke
+  sturm
+  lash
+  flak
+  kanbei
+  sonja
+  sensei
+  colin
+  drake
+  eagle
+  nell
+  hachi
+  olaf
+  grit
+  jess
+  kindle
+  grimm
+  jake
+  javier
+  jugger
+  koal
+  von_bolt
+  sasha
+  rachel
 }
 
 enum Unit {
@@ -178,10 +205,8 @@ model WWMap {
   matches          Match[]
   createdAt        DateTime @default(now())
 
-  // TODO maps should have different sets of captureLimits and bannedUnitTypes
-  // per league type.
-
   @@map("Map")
+  MatchSetting MatchSetting[]
 }
 
 model ChatMessage {
@@ -232,6 +257,25 @@ model MMR {
   topMmr     Int        @default(800)
 
   @@id([leagueType, playerId])
+}
+
+model MatchSetting {
+  id              String @id @default(cuid())
+  leagueType      LeagueType
+  wwMap           WWMap @relation(fields: [mapId], references: [id])
+  mapId           String
+
+  weather         String
+  unitCap         Int
+  captureLimit    Int
+  gameVersion     String
+
+  labUnitTypes    Unit[]
+  bannedUnitTypes Unit[]
+
+  allowedCOs      CO[]
+
+  teamMapping     Int[]
 }
 
 model Match {

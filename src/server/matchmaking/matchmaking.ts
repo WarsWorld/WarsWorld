@@ -1,23 +1,66 @@
 import type { LeagueType, Player } from "@prisma/client";
 import { getRandomMapSetting } from "./mapList";
+import type { MatchmakingFunction } from "./matchmakingFunctions";
+import { defaultMatchmakingFunction } from "./matchmakingFunctions";
+import { shuffleArray } from "./random";
 
 // Automatic queues will only have 1v1 settings (for now)
 
-type PlayerInQueue = {
+//playerinqueue doesn't work since we can't lose info, make it a boolean (or set of playerId in queue)
+export type PlayerInQueue = {
   playerId: Player["id"];
-  secondsQueued: number;
+  startedQueueing: Date;
+  /**
+   * For each other player, until when they can't be paired (undefined means indefinetly)
+   */
+  bannedPairings: Map<Player["id"], Date | undefined>;
 }; // more info can be added, but most of it should be on the player type itself
-
-/**
- * Gets 2 players in queue and returns true if they can be paired
- * togerther for a match.
- */
-type MatchmakingFunction = (player1: PlayerInQueue, player2: PlayerInQueue) => boolean;
 
 type MatchmakingQueue = {
   leagueType: LeagueType;
   matchmakingFunction: MatchmakingFunction;
-  playersInQueue: PlayerInQueue[];
+  playersInQueue: Map<Player["id"], PlayerInQueue>;
+  dropQueueAfterMatchStart: boolean;
+};
+
+//TODO add queues for live, with distinction
+const currentQueues: Record<LeagueType, MatchmakingQueue> = {
+  standard: {
+    leagueType: "standard",
+    matchmakingFunction: defaultMatchmakingFunction,
+    playersInQueue: new Map(),
+    dropQueueAfterMatchStart: true,
+  },
+  fog: {
+    leagueType: "fog",
+    matchmakingFunction: defaultMatchmakingFunction,
+    playersInQueue: new Map(),
+    dropQueueAfterMatchStart: true,
+  },
+  highFunds: {
+    leagueType: "highFunds",
+    matchmakingFunction: defaultMatchmakingFunction,
+    playersInQueue: new Map(),
+    dropQueueAfterMatchStart: true,
+  },
+  dualLeague: {
+    leagueType: "dualLeague",
+    matchmakingFunction: defaultMatchmakingFunction,
+    playersInQueue: new Map(),
+    dropQueueAfterMatchStart: true,
+  },
+  standardTeams: {
+    leagueType: "standardTeams",
+    matchmakingFunction: defaultMatchmakingFunction,
+    playersInQueue: new Map(),
+    dropQueueAfterMatchStart: true,
+  },
+  broken: {
+    leagueType: "broken",
+    matchmakingFunction: defaultMatchmakingFunction,
+    playersInQueue: new Map(),
+    dropQueueAfterMatchStart: true,
+  },
 };
 
 // this pairing function can be improved a lot, but it will work fine
@@ -26,17 +69,19 @@ export const createMatchmakingPairs = (matchmakingQueue: MatchmakingQueue) => {
   const playerPairs: [PlayerInQueue, PlayerInQueue][] = [];
   const { matchmakingFunction, playersInQueue } = matchmakingQueue;
 
-  for (let i = 0; i < playersInQueue.length; ++i) {
-    for (let j = i + 1; j < playersInQueue.length; ++j) {
-      const player1 = playersInQueue[i];
-      const player2 = playersInQueue[j];
+  const shuffledPlayers = shuffleArray(Array.from(playersInQueue.values()));
+
+  for (let i = 0; i < shuffledPlayers.length; ++i) {
+    for (let j = i + 1; j < shuffledPlayers.length; ++j) {
+      const player1 = shuffledPlayers[i];
+      const player2 = shuffledPlayers[j];
 
       if (matchmakingFunction(player1, player2)) {
         //if 2 players can be paired together
         playerPairs.push([player1, player2]);
 
-        playersInQueue.splice(j, 1);
-        playersInQueue.splice(i, 1);
+        playersInQueue.delete(player1.playerId);
+        playersInQueue.delete(player2.playerId);
         --i;
         break; //only pair with one other player
       }
@@ -65,18 +110,34 @@ export const createPossibleMatches = (matchmakingQueue: MatchmakingQueue) => {
 };
 
 //----------------------------------------------
-export const defaultMatchmakingFunction = (player1: PlayerInQueue, player2: PlayerInQueue) => {
-  //arbitrary constants
-  const eloRange = 100,
-    eloRangeIncPerMinute = 10;
+const nowAfterMinutes = (minutes: number): Date => {
+  const result = new Date();
+  result.setMinutes(result.getMinutes() + minutes);
+  return result;
+};
 
-  const player1EloRange = eloRange + (player1.secondsQueued / 60) * eloRangeIncPerMinute;
-  const player2EloRange = eloRange + (player2.secondsQueued / 60) * eloRangeIncPerMinute;
+const onMatchStart = (leagueType: LeagueType, playerIds: string[]) => {
+  //ban players from pairing each other for a "random" amount of time
+  const banPairingMinutesBase = 1440; //1 day
+  const banPairingMinutesDev = 1440;
 
-  if (true) {
-    /*if abs(player1.certainQueue.elo - player2.etc) < min(p1eloRange, p2eloRange)*/
-    return true;
+  const matchmakingQueue = currentQueues[leagueType];
+
+  for (const playerId1 of playerIds) {
+    for (const playerId2 of playerIds) {
+      if (playerId1 === playerId2) {
+        continue;
+      }
+
+      const banPairingMinutes =
+        banPairingMinutesBase + banPairingMinutesDev * (Math.random() * 2 - 1);
+
+      matchmakingQueue.playersInQueue
+        .get(playerId1)
+        ?.bannedPairings.set(playerId2, nowAfterMinutes(banPairingMinutes));
+      matchmakingQueue.playersInQueue
+        .get(playerId2)
+        ?.bannedPairings.set(playerId1, nowAfterMinutes(banPairingMinutes));
+    }
   }
-
-  return false;
 };
