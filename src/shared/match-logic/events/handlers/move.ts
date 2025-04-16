@@ -1,24 +1,22 @@
 import { DispatchableError } from "shared/DispatchedError";
 import { unitPropertiesMap } from "shared/match-logic/game-constants/unit-properties";
-import type { MoveAction, SubAction } from "shared/schemas/action";
+import type { MoveAction } from "shared/schemas/action";
 import { getFinalPositionSafe, isSamePosition } from "shared/schemas/position";
 import type { UnitWithVisibleStats } from "shared/schemas/unit";
-import type { MoveEvent } from "shared/types/events";
+import type { MoveEventWithoutSubEvent, MoveEventWithSubEvent } from "shared/types/events";
 import type { MatchWrapper } from "shared/wrappers/match";
 import type { UnitWrapper } from "../../../wrappers/unit";
-import { applySubEventToMatch } from "../apply-event-to-match";
-import type { MainActionToEvent } from "../handler-types";
 
-export const createNoMoveEvent = (subAction: SubAction) => ({
-  type: "move",
-  path: [],
-  trap: false,
-  subEvent: { ...subAction },
-});
-
-export const moveActionToEvent: MainActionToEvent<MoveAction> = (match, action) => {
+// we don't use MainActionToEvent here because MoveEvent is special
+// because at this point we don't have the subEvent yet
+// which MainActionToEvent requires.
+export const moveActionToEvent = (
+  match: MatchWrapper,
+  action: MoveAction,
+): MoveEventWithoutSubEvent => {
+  const [unitPosition, ...path] = action.path;
   const player = match.getCurrentTurnPlayer();
-  const unit = match.getUnitOrThrow(action.path[0]);
+  const unit = match.getUnitOrThrow(unitPosition);
 
   if (!player.owns(unit)) {
     throw new DispatchableError("You don't own this unit");
@@ -28,19 +26,21 @@ export const moveActionToEvent: MainActionToEvent<MoveAction> = (match, action) 
     throw new DispatchableError("Trying to move a waited unit");
   }
 
-  const result = createNoMoveEvent(action.subAction);
+  const result: MoveEventWithoutSubEvent = {
+    type: "move",
+    path: [],
+    trap: false,
+  };
 
-  //Unit is waiting in-place if it's path is only the starting tile
-  if (action.path.length === 1) {
-    result.path.push(action.path[0]);
+  if (path.length === 0) {
+    result.path.push(unitPosition);
     return result;
   }
 
   let remainingMovePoints = unit.getMovementPoints();
 
-  const fuelNeeded = action.path.length - 1;
-
-  if (unit.getFuel() < fuelNeeded) {
+  if (unit.getFuel() < path.length) {
+    // TODO isn't there AWDS weather or something that makes units burn >1 fuel per tile?
     throw new DispatchableError("Not enough fuel for this move");
   }
 
@@ -228,21 +228,23 @@ const loadUnitInto = (unitToLoad: UnitWithVisibleStats, transportUnit: UnitWithV
   }
 };
 
-export const getOneTileFuelCost = (match: MatchWrapper, unit: UnitWrapper) => {
-  // in AWDS, snow causes units to consume double fuel when moving (except for olaf)
+const getOneTileFuelCost = (match: MatchWrapper, unit: UnitWrapper): number => {
   const gameVersion = match.rules.gameVersion ?? unit.player.data.coId.version;
 
-  return match.getCurrentWeather() === "snow" &&
+  if (
     gameVersion === "AWDS" &&
+    match.getCurrentWeather() === "snow" &&
     unit.player.data.coId.name !== "olaf"
-    ? 2
-    : 1;
+  ) {
+    return 2;
+  }
+
+  return 1;
 };
 
-export const applyMoveEvent = (match: MatchWrapper, event: MoveEvent) => {
+export const applyMoveEvent = (match: MatchWrapper, event: MoveEventWithoutSubEvent) => {
   //check if unit is moving or just standing still
   if (event.path.length <= 1) {
-    applySubEventToMatch(match, event);
     return;
   }
 
@@ -263,17 +265,15 @@ export const applyMoveEvent = (match: MatchWrapper, event: MoveEvent) => {
   } else {
     if (unit.data.type === unitAtDestination.data.type) {
       //join (hp, fuel, ammo, (keep capture points))
-      const unitProperties = unitPropertiesMap[unit.data.type];
-
-      unitAtDestination.setFuel(
-        Math.min(unit.getFuel() + unitAtDestination.getFuel(), unitProperties.initialFuel),
-      );
+      unitAtDestination.setFuel(unit.getFuel() + unitAtDestination.getFuel());
 
       // yes, this "generates" hp, but it's how it works in game
       const newVisualHP = unit.getVisualHP() + unitAtDestination.getVisualHP();
 
       if (newVisualHP > 10) {
         //gain funds
+        // TODO do we emit funds gain through the events?? how does the client know if / how much they gained?
+        // the client MUST be told because it otherwise can't know the amount when e.g. 2 enemy sonja units join.
         unit.player.data.funds += (unit.getBuildCost() / 10) * (newVisualHP - 10);
       }
 
@@ -293,7 +293,7 @@ export const applyMoveEvent = (match: MatchWrapper, event: MoveEvent) => {
 /**
  * Call this AFTER creating the sub event but BEFORE applying it
  */
-export const updateMoveVision = (match: MatchWrapper, event: MoveEvent) => {
+export const updateMoveVision = (match: MatchWrapper, event: MoveEventWithSubEvent) => {
   if (event.path.length < 2) {
     // if didn't move no vision change
     return;

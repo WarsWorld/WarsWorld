@@ -39,6 +39,7 @@ function infantryOrMechAbilityToEvent(
     type: "ability",
   };
 
+  //Will not capture property
   if (!willCaptureTile(unit)) {
     return basicEvent;
   }
@@ -144,7 +145,7 @@ const eliminatePlayerByCapture = (match: MatchWrapper, capturingUnit: UnitWrappe
     unit.remove();
   }
 
-  playerToEliminate.data.eliminated = true;
+  playerToEliminate.data.status = "captured";
 
   if (match.playerToRemoveWeatherEffect?.data.id === playerToEliminate.data.id) {
     match.playerToRemoveWeatherEffect = playerToEliminate.getNextAlivePlayer();
@@ -214,6 +215,7 @@ export const applyAbilityEvent: ApplySubEvent<AbilityEvent> = (match, event, fro
         unit.player.team.vision?.addOwnedProperty(unit.data.position);
       }
 
+      unit.data.isReady = false;
       break;
     }
     case "apc": {

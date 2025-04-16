@@ -36,8 +36,7 @@ export const matchRouter = router({
     ({ ctx: { currentPlayer } }) =>
       playerMatchIndex.getPlayerMatches(currentPlayer.id)?.map(matchToFrontend) ?? [],
   ),
-  // currentPlayer unused yet
-  full: matchBaseProcedure.query(({ ctx: { match, _currentPlayer } }) => ({
+  full: matchBaseProcedure.query(({ ctx: { match } }) => ({
     id: match.id,
     leagueType: match.leagueType,
     changeableTiles: match.changeableTiles,
@@ -105,7 +104,7 @@ export const matchRouter = router({
         funds: 10000,
         timesPowerUsed: 0,
         powerMeter: 0,
-        eliminated: false,
+        status: "alive",
         hasCurrentTurn: false,
         army: availableArmies[(Math.random() * availableArmies.length) | 0] as Army,
         // army: availableArmies[0] as Army, // use this if there are performance concerns with Math.random
