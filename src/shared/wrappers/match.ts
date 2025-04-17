@@ -30,7 +30,7 @@ export class MatchWrapper<
   ChangeableTileType extends ChangeableTile = ChangeableTile,
   UnitWrapperType extends UnitWrapper = UnitWrapper,
 > {
-  private currentWeather: Weather = "clear"; // made private so no one changes currentWeather without setter on accident
+  private currentWeather: Weather = "clear";
   public playerToRemoveWeatherEffect: PlayerInMatchWrapper | null = null;
   public weatherDaysLeft = 0;
   public teams: TeamWrapper[] = [];
@@ -60,10 +60,7 @@ export class MatchWrapper<
     this.units = units.map((unit) => new UnitWrapperClass(unit, this));
   }
 
-  /**
-   * Returns if the match is currently in fog of war
-   */
-  isFow(): boolean {
+  isFogOfWar(): boolean {
     return (
       this.rules.fogOfWar || (this.rules.gameVersion === "AWDS" && this.currentWeather === "rain")
     );
@@ -81,6 +78,7 @@ export class MatchWrapper<
       }
     }
   }
+
   getCurrentWeather(): Weather {
     return this.currentWeather;
   }

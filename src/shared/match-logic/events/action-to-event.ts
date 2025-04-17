@@ -1,10 +1,10 @@
 import { DispatchableError } from "shared/DispatchedError";
 import type { MainAction, MoveAction } from "shared/schemas/action";
 import { getFinalPositionSafe } from "shared/schemas/position";
-import type { MainEvent, SubEvent } from "shared/types/events";
+import type { MainEventsWithoutSubEvents, SubEvent } from "shared/types/events";
 import type { MatchWrapper } from "shared/wrappers/match";
 import { abilityActionToEvent } from "./handlers/ability";
-import { attackActionToEvent } from "./handlers/attack";
+import { attackActionToEvent } from "./handlers/attack/attackActionToEvent";
 import { buildActionToEvent } from "./handlers/build";
 import { coPowerActionToEvent } from "./handlers/coPower";
 import { deleteActionToEvent } from "./handlers/delete";
@@ -18,7 +18,7 @@ import { unloadWaitActionToEvent } from "./handlers/unloadWait";
 export const validateMainActionAndToEvent = (
   match: MatchWrapper,
   action: MainAction,
-): MainEvent => {
+): MainEventsWithoutSubEvents => {
   switch (action.type) {
     case "build":
       return buildActionToEvent(match, action);

@@ -29,7 +29,8 @@
     "build": "concurrently \"npm:build:*\"",
     "start": "cross-env NODE_ENV=production node dist/server/main-production.js",
     "redundant-code": "npx jscpd --ignore node_modules,dist,public,.next --reporters consoleFull .",
-    "update-depencencies": "npx npm-check-updates -i"
+    "update-depencencies": "npx npm-check-updates -i",
+    "install-utils": "npm install $(jq -r '.utilsDependencies | to_entries | .[] | \"\\(.key)@\\(.value)\"' package.json)"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"
@@ -58,6 +59,7 @@
     "remark": "^15.0.1",
     "remark-html": "^16.0.1",
     "sass": "^1.70.0",
+    "sharp": "^0.33.5",
     "superjson": "^2.2.1",
     "uuid": "^9.0.1",
     "ws": "^8.16.0",
@@ -71,6 +73,7 @@
     "@types/react": "^18.2.48",
     "@types/uuid": "^9.0.8",
     "@types/ws": "^8.5.10",
+    "@types/yargs": "^17.0.33",
     "@typescript-eslint/eslint-plugin": "^6.20.0",
     "@typescript-eslint/parser": "^6.20.0",
     "autoprefixer": "^10.4.17",
@@ -89,5 +92,9 @@
     "tailwindcss": "^3.4.1",
     "tsx": "^4.7.0",
     "typescript": "^5.3.3"
+  },
+  "utilsDependencies": {
+    "sharp": "^0.33.2",
+    "yargs": "^17.7.2"
   }
 }
