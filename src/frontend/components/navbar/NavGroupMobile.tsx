@@ -1,14 +1,17 @@
-import { NavItem } from "./NavItem";
+import { useClickOutsideRef } from "frontend/utils/useClickOutsideRef";
+import { useState } from "react";
+import DropdownItem from "./DropdownItem";
+import NavbarDropdown from "./NavbarDropdown";
+import NavAuthItem from "./user-settings/NavAuthItem";
+import UserSectionDropdown from "./user-settings/UserSectionDropdown";
 
 type Props = {
-  showLinks: boolean;
-  handleBurgerMenu: () => void;
+  setIsOpen: (value: boolean, callbackUrl?: string) => Promise<void>;
+  isOpen: boolean;
 };
 
 const navItemObject = [
-  { text: "YOUR GAMES", location: "/your-matches" },
-  { text: "CURRENT GAMES", location: "/your-matches#currentGames" },
-  { text: "COMPLETED GAMES", location: "/your-matches#completedGames" },
+  { text: "GAMES", location: "/your-matches" },
   {
     text: "COMPETITION",
     location: "/",
@@ -39,27 +42,65 @@ const navItemObject = [
   },
 ];
 
-export function NavGroupMobile({ showLinks, handleBurgerMenu }: Props) {
+export function NavGroupMobile({ setIsOpen, isOpen }: Props) {
+  const [showBurgerDropdown, setShowBurgerDropdown] = useState(false);
+  const refClickOutsideBurgerMenu = useClickOutsideRef(
+    () => setShowBurgerDropdown(false),
+    "burger-menu",
+  );
+
+  const [showUserDropdown, setShowUserDropdown] = useState(false);
+  const refClickOutsideUserDropdown = useClickOutsideRef(
+    () => setShowUserDropdown(false),
+    "user-profile-nav-item",
+  );
+
   return (
     <>
-      <ul
-        className={`@absolute @m-0 @p-0 @list-none @overflow-y-hidden @shadow-black @shadow-lg @right-0 @w-full smallscreen:@w-[45vw] @top-[calc(100%_+_0.3em)]
-      @bg-gradient-to-r @from-bg-primary @from-30% @to-bg-secondary @z-50 @duration-[750ms]
-          ${showLinks ? "@max-h-[100vh]" : "@max-h-0"}`}
+      <div className="@w-screen @flex @justify-end @items-center @relative @gap-8 tablet:@gap-10 laptop:@gap-16">
+        <div className="@flex @h-full @justify-center @items-center @relative">
+          <NavAuthItem
+            setShowUserDropdown={setShowUserDropdown}
+            isOpen={isOpen}
+            setIsOpen={setIsOpen}
+            width="95vw"
+          />
+        </div>
+        <button
+          id="burger-menu"
+          className="@flex @justify-center @items-center @h-8 @w-8 @mx-2"
+          onClick={() => setShowBurgerDropdown((prev) => !prev)}
+        >
+          <div className="@flex @flex-col @gap-[0.35rem] smallscreen:@gap-[0.7rem] burgerMenuIcon active:@scale-105">
+            <div className="@h-[0.3rem] @w-9 smallscreen:@h-[0.3rem] smallscreen:@w-14 @rounded @bg-gradient-to-r @from-primary @to-primary-dark" />
+            <div className="@h-[0.3rem] @w-9 smallscreen:@h-[0.3rem] smallscreen:@w-14 @rounded @bg-gradient-to-r @from-primary @to-primary-dark" />
+            <div className="@h-[0.3rem] @w-9 smallscreen:@h-[0.3rem] smallscreen:@w-14 @rounded @bg-gradient-to-r @from-primary @to-primary-dark" />
+          </div>
+        </button>
+      </div>
+      {/* USER */}
+      <NavbarDropdown
+        show={showUserDropdown}
+        refClickOutsideUserDropdown={refClickOutsideUserDropdown}
       >
-        {navItemObject.map((option) => (
-          <li
-            key={option.text}
-            className={`@py-3 @px-4 large_monitor:@py-4 @cursor-pointer @border-primary-dark @border-b-[1px]`}
-          >
-            <NavItem
+        <UserSectionDropdown />
+      </NavbarDropdown>
+      {/* NAVIGATION */}
+      <NavbarDropdown
+        show={showBurgerDropdown}
+        refClickOutsideUserDropdown={refClickOutsideBurgerMenu}
+      >
+        <ul className="@flex @flex-col @gap-2 @pt-2">
+          {navItemObject.map((option) => (
+            <DropdownItem
+              key={option.text}
+              className="@border-b-2 @border-bg-tertiary @py-1 last:@border-0"
+              href={option.location}
               text={option.text}
-              location={option.location}
-              handleBurgerMenu={handleBurgerMenu}
             />
-          </li>
-        ))}
-      </ul>
+          ))}
+        </ul>
+      </NavbarDropdown>
     </>
   );
 }

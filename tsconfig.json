@@ -1,11 +1,7 @@
 {
   "compilerOptions": {
     "target": "es2022",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "checkJs": true,
     "skipLibCheck": true,
@@ -21,15 +17,8 @@
     "jsx": "preserve",
     "baseUrl": "./src",
     "incremental": true,
-    "downlevelIteration": true,
+    "downlevelIteration": true
   },
-  "include": [
-    ".",
-    ".eslintrc.cjs"
-  ], // .eslintrc.json is extra because the leading period makes it excluded otherwise
-  "exclude": [
-    "node_modules",
-    "dist",
-    ".next"
-  ]
+  "include": [".", ".eslintrc.cjs", "next-auth-extensions.d.ts"], // .eslintrc.json is extra because the leading period makes it excluded otherwise
+  "exclude": ["node_modules", "dist", ".next"]
 }

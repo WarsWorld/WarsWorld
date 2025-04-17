@@ -28,7 +28,7 @@ export function PlayerProfileMainSection({
           <div
             className={`@min-w-48 @max-w-48 @min-h-48 @max-h-48 @border-${preferedNation} @bg-black/50 @border-4 @text-center @overflow-hidden`}
           >
-            <img src={`\\img\\CO\\smoothFull\\Awds-${preferedCO}.webp`} alt="grit" />
+            <img src={`/img/CO/smoothFull/Awds-${preferedCO}.webp`} alt="grit" />
           </div>
           <div className="@min-h-48 @flex @flex-col">
             <div>
@@ -37,7 +37,7 @@ export function PlayerProfileMainSection({
                   <div className="@flex @space-x-2">
                     <img
                       className="[image-rendering:pixelated] @self-center @w-8 @h-8"
-                      src={`\\img\\nations\\${preferedNation}.gif`}
+                      src={`/img/nations/${preferedNation}.gif`}
                       alt="blue-moon"
                     />
                     <div className="@text-2xl smallscreen:@text-4xl @font-semibold">
