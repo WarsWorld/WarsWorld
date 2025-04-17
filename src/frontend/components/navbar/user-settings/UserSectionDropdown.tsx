@@ -33,7 +33,7 @@ export default function UserSectionDropdown() {
         <>
           <div className="@h-[2px] @w-full @bg-bg-tertiary" />
           <span className="@px-8 @text-sm">Other accounts: </span>
-          <ul className="@flex @flex-col @gap-1 @max-h-64 @overflow-scroll">
+          <ul className="@flex @flex-col @gap-1 @max-h-64 @overflow-y-auto">
             {ownedPlayers
               .filter((player) => player.id !== currentPlayer?.id)
               .map((player) => (

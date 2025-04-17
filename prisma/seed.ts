@@ -218,61 +218,6 @@ async function main() {
   32,31,2,112,1,34,1,2,2,3,30,34,30,30,29,2,5,1,44,3,32,34
 `,
   });
-
-  await prisma.match.create({
-    data: {
-      leagueType: "standard",
-      rules: {
-        bannedUnitTypes: [],
-        captureLimit: 50,
-        dayLimit: 50,
-        fogOfWar: false,
-        fundsPerProperty: 1000,
-        unitCapPerPlayer: 50,
-        weatherSetting: "clear",
-        labUnitTypes: [],
-        teamMapping: [0, 1],
-      },
-      status: "playing",
-      mapId: causticFinaleDBMap.id,
-      playerState: [
-        {
-          slot: 0,
-          hasCurrentTurn: true,
-          id: devPlayers[0].id,
-          name: devPlayers[0].name,
-          ready: true,
-          coId: {
-            name: "andy",
-            version: "AW2",
-          },
-          status: "alive",
-          funds: 0,
-          powerMeter: 0,
-          timesPowerUsed: 0,
-          army: "blue-moon",
-          COPowerState: "no-power",
-        },
-        {
-          slot: 1,
-          hasCurrentTurn: false,
-          id: devPlayers[1].id,
-          name: devPlayers[1].name,
-          ready: true,
-          coId: {
-            name: "flak",
-            version: "AW2",
-          },
-          status: "alive",
-          funds: 0,
-          powerMeter: 0,
-          timesPowerUsed: 0,
-          army: "green-earth",
-          COPowerState: "no-power",
-        },
-      ],
-    },
-  });
 }
 
 main()
