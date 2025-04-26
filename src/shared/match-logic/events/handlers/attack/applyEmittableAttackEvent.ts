@@ -23,7 +23,7 @@ export const applyEmittableAttackEvent = (match: MatchWrapper, event: EmittableA
       const attacker = match.getUnitOrThrow(event.attacker.position);
 
       //update ammo
-      if (event.attacker.usedAmmo ?? false) {
+      if (event.attacker.usedAmmo === true) {
         attacker.useOneAmmo();
       }
 
@@ -56,7 +56,7 @@ export const applyEmittableAttackEvent = (match: MatchWrapper, event: EmittableA
       const defender = match.getUnit(event.defender.position);
 
       //update ammo (check defender is a unit and not pipe seam as well)
-      if (defender !== undefined && (event.defender.usedAmmo ?? false)) {
+      if (defender !== undefined && event.defender.usedAmmo === true) {
         defender.useOneAmmo();
       }
 
