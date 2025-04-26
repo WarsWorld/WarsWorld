@@ -10,8 +10,7 @@ import type {
 } from "../../types/events";
 import type { MatchWrapper } from "../../wrappers/match";
 import { TeamWrapper } from "../../wrappers/team";
-import { getVisualHPfromHP } from "../calculate-damage";
-import { getPowerChargeGain } from "./handlers/attack/getPowerChargeGain";
+import { createEmittableAttackEvent } from "./handlers/attack/attackEventToEmittable";
 
 type EmittableSubEventWithExtraInfo = {
   teamIndex: number;
@@ -43,8 +42,8 @@ const subEventToEmittables = (
   switch (subEvent.type) {
     case "attack": {
       const attacker = match.getUnitOrThrow(fromPosition);
-      const defender = match.getUnit(subEvent.defenderPosition);
 
+      //TODO why is this here?
       switch (subEvent.eliminationReason) {
         case "all-attacker-units-destroyed": {
           attacker.player.data.status = "routed";
@@ -57,62 +56,11 @@ const subEventToEmittables = (
         }
       }
 
-      const playerUpdate = match.getAllPlayers().map((p) => p.data);
-
-      if (defender === undefined) {
-        // pipe seam attack
-        return teamsWithSpectator.map((team) => ({
-          teamIndex: team.index,
-          subEvent: {
-            ...subEvent,
-            attackerPlayerSlot: attacker.data.playerSlot,
-            defenderPlayerSlot: -1,
-            playerUpdate,
-          },
-          requireLastMovePosition: false,
-        }));
-      }
-
-      const attackerHpDiff =
-        attacker.getVisualHP() - getVisualHPfromHP(subEvent.attackerHP ?? attacker.getVisualHP());
-      const defenderHpDiff = defender.getVisualHP() - getVisualHPfromHP(subEvent.defenderHP);
-
-      const powerChargeGain = getPowerChargeGain(
-        attacker,
-        attackerHpDiff,
-        defender,
-        defenderHpDiff,
-      );
-
-      return teamsWithSpectator.map((team) => {
-        const canSeeAttacker = team.canSeeUnitAtPosition(fromPosition);
-        const canSeeDefender = team.canSeeUnitAtPosition(subEvent.defenderPosition);
-        const showDefenderHP =
-          canSeeDefender &&
-          (defender.player.team.index === team.index ||
-            defender.player.data.coId.name !== "sonja" ||
-            subEvent.defenderHP === 0);
-        const showAttackerHP =
-          canSeeAttacker &&
-          (attacker.player.team.index === team.index ||
-            attacker.player.data.coId.name !== "sonja" ||
-            subEvent.attackerHP === 0);
-
-        return {
-          teamIndex: team.index,
-          subEvent: {
-            type: "attack",
-            attackerHP: showAttackerHP ? subEvent.attackerHP : undefined,
-            attackerPlayerSlot: attacker.data.playerSlot,
-            defenderHP: showDefenderHP ? subEvent.defenderHP : undefined,
-            defenderPosition: canSeeDefender ? defender.data.position : undefined,
-            defenderPlayerSlot: defender.data.playerSlot,
-            playerUpdate,
-            ...powerChargeGain,
-          },
-          requireLastMovePosition: false,
-        };
-      });
+      return teamsWithSpectator.map((team) => ({
+        teamIndex: team.index,
+        subEvent: createEmittableAttackEvent(match, attacker, subEvent, team),
+        requireLastMovePosition: false,
+      }));
     }
     case "ability": {
       return teamsWithSpectator.map((team) => {

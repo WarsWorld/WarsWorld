@@ -129,14 +129,21 @@ type WithDiscoveries = {
   discoveredProperties?: CapturableTile[];
 };
 
+type EmittableAttackParticipantInfo = {
+  playerSlot: PlayerSlot;
+  powerChargeGained?: number;
+  position?: Position;
+  HP?: number;
+  usedAmmo?: boolean;
+  /**
+   * Only used for Sasha SCOP
+   */
+  damageTakenInFunds?: number;
+};
 export type EmittableAttackEvent = {
   type: "attack";
-  attackerHP?: number;
-  attackerPosition?: Position;
-  attackerPlayerSlot: PlayerSlot;
-  defenderHP?: number;
-  defenderPosition?: Position;
-  defenderPlayerSlot: PlayerSlot;
+  attacker?: EmittableAttackParticipantInfo;
+  defender?: EmittableAttackParticipantInfo;
   playerUpdate: PlayerInMatch[];
 };
 

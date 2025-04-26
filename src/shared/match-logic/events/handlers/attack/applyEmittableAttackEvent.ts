@@ -2,7 +2,6 @@ import type { Position } from "shared/schemas/position";
 import type { EmittableAttackEvent } from "shared/types/events";
 import type { MatchWrapper } from "shared/wrappers/match";
 import { applyPlayerUpdate } from "../apply-player-update";
-import { canAttackWithPrimary } from "./canAttackWithPrimary";
 
 const updateHPorDestroy = (match: MatchWrapper, hp: number | undefined, position?: Position) => {
   if (position !== undefined) {
@@ -19,21 +18,69 @@ const updateHPorDestroy = (match: MatchWrapper, hp: number | undefined, position
 export const applyEmittableAttackEvent = (match: MatchWrapper, event: EmittableAttackEvent) => {
   applyPlayerUpdate(match, event.playerUpdate);
 
-  // i don't think there can be any situation where only attacker OR defender is visible
-  // AND the units ammo is also visible. if there is, fml.
-  if (event.attackerPosition !== undefined && event.defenderPosition !== undefined) {
-    const attacker = match.getUnitOrThrow(event.attackerPosition);
-    const defender = match.getUnitOrThrow(event.defenderPosition);
+  if (event.attacker) {
+    if (event.attacker.position !== undefined) {
+      const attacker = match.getUnitOrThrow(event.attacker.position);
 
-    if (canAttackWithPrimary(attacker, defender)) {
-      attacker.useOneAmmo();
+      //update ammo
+      if (event.attacker.usedAmmo ?? false) {
+        attacker.useOneAmmo();
+      }
+
+      //update hp + destroy if dead
+      updateHPorDestroy(match, event.attacker.HP, event.attacker.position);
     }
 
-    if (event.attackerHP !== undefined && canAttackWithPrimary(defender, attacker)) {
-      defender.useOneAmmo();
+    const attackerPlayer = match.getPlayerBySlot(event.attacker.playerSlot);
+
+    if (attackerPlayer === undefined) {
+      throw new Error("invalid attacker player slot received");
+    }
+
+    //update power charge
+    if (event.attacker.powerChargeGained !== undefined) {
+      attackerPlayer.gainPowerCharge(event.attacker.powerChargeGained);
+    }
+
+    //update funds if using sasha scop
+    if (
+      attackerPlayer.isUsingPower("super-co-power", "sasha") &&
+      event.defender?.damageTakenInFunds !== undefined
+    ) {
+      attackerPlayer.data.funds += event.defender.damageTakenInFunds * 0.5;
     }
   }
 
-  updateHPorDestroy(match, event.attackerHP, event.attackerPosition);
-  updateHPorDestroy(match, event.defenderHP, event.defenderPosition);
+  if (event.defender) {
+    if (event.defender.position !== undefined) {
+      const defender = match.getUnit(event.defender.position);
+
+      //update ammo (check defender is a unit and not pipe seam as well)
+      if (defender !== undefined && (event.defender.usedAmmo ?? false)) {
+        defender.useOneAmmo();
+      }
+
+      //update hp + destroy if dead
+      updateHPorDestroy(match, event.defender.HP, event.defender.position);
+    }
+
+    const defenderPlayer = match.getPlayerBySlot(event.defender.playerSlot);
+
+    if (defenderPlayer === undefined) {
+      throw new Error("invalid defender player slot received");
+    }
+
+    //update power charge
+    if (event.defender.powerChargeGained !== undefined) {
+      defenderPlayer.gainPowerCharge(event.defender.powerChargeGained);
+    }
+
+    //update funds if using sasha scop
+    if (
+      defenderPlayer.isUsingPower("super-co-power", "sasha") &&
+      event.attacker?.damageTakenInFunds !== undefined
+    ) {
+      defenderPlayer.data.funds += event.attacker.damageTakenInFunds * 0.5;
+    }
+  }
 };

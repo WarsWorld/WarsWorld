@@ -6,13 +6,13 @@ import type { UnitWrapper } from "shared/wrappers/unit";
  */
 export const canAttackWithPrimary = (
   attacker: UnitWrapper,
-  defender: UnitType | UnitWrapper,
+  defender: UnitType | "pipe-seam",
 ): boolean => {
   if (attacker.getAmmo() === 0 || attacker.getAmmo() === null) {
     return false;
   }
 
-  const defenderType = typeof defender === "string" ? defender : defender.data.type;
+  const defenderType: UnitType = defender === "pipe-seam" ? "mediumTank" : defender;
 
   return (
     attacker.player.getVersionProperties().damageChart[attacker.data.type]?.primary?.[

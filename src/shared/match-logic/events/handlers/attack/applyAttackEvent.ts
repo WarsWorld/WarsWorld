@@ -19,7 +19,7 @@ export const applyAttackEvent = (match: MatchWrapper, event: AttackEvent, positi
     }
 
     //ammo consumption
-    if (canAttackWithPrimary(attacker, "mediumTank")) {
+    if (canAttackWithPrimary(attacker, "pipe-seam")) {
       attacker.useOneAmmo();
     }
 

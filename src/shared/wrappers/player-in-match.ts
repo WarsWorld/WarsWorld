@@ -1,5 +1,8 @@
+import type { COPowerState } from "shared/match-logic/co";
 import { getCOProperties } from "shared/match-logic/co";
 import type { Hooks } from "shared/match-logic/co-hooks";
+import type { CO } from "shared/schemas/co";
+import type { GameVersion } from "shared/schemas/game-version";
 import type { PropertyTile, Tile } from "shared/schemas/tile";
 import type { UnitWithVisibleStats } from "shared/schemas/unit";
 import type { ChangeableTile, PlayerInMatch } from "shared/types/server-match-state";
@@ -175,5 +178,24 @@ export class PlayerInMatchWrapper {
     this.team.vision?.addUnitVision(unit);
 
     return unit;
+  }
+
+  /**
+   * Check current power activated with optional CO constraints
+   */
+  isUsingPower(power: COPowerState, coName?: CO, coVersion?: GameVersion) {
+    if (power !== this.data.COPowerState) {
+      return false;
+    }
+
+    if (coName && coName !== this.data.coId.name) {
+      return false;
+    }
+
+    if (coVersion && coVersion !== this.data.coId.version) {
+      return false;
+    }
+
+    return true;
   }
 }
