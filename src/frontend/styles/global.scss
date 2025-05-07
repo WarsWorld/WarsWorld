@@ -168,6 +168,10 @@
   .filter-shadow-wrap {
     filter: drop-shadow(10px 10px rgba(0, 0, 0, 0.8));
   }
+
+  .filter-shadow-wrap-small {
+    filter: drop-shadow(5px 5px rgba(0, 0, 0, 0.8));
+  }
 }
 
 @keyframes gameCursor {

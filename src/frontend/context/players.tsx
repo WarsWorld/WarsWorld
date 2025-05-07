@@ -1,6 +1,7 @@
 import type { Player } from "@prisma/client";
 import { trpc } from "frontend/utils/trpc-client";
 import { useLocalStorage } from "frontend/utils/use-local-storage";
+import { useSession } from "next-auth/react";
 import type { ReactNode } from "react";
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 
@@ -9,15 +10,17 @@ type UserContext =
       ownedPlayers: Player[] | undefined;
       currentPlayerId: string | null;
       setCurrentPlayerId: (value: string) => void;
+      refetchOwnedPlayers: () => void;
     }
   | undefined;
 
 const playersContext = createContext<UserContext>(undefined);
 
 export const ProvidePlayers = ({ children }: { children: ReactNode }) => {
+  const { status } = useSession();
   const [currentPlayerId, setCurrentPlayerId] = useLocalStorage("currentPlayerId", null);
 
-  const { data } = trpc.user.me.useQuery(undefined, {
+  const { data, refetch: refetchOwnedPlayers } = trpc.user.me.useQuery(undefined, {
     refetchOnReconnect: false, // reduce trpc logging, this data doesn't really need to be refetched automatically
     refetchOnWindowFocus: false,
   });
@@ -25,25 +28,26 @@ export const ProvidePlayers = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<typeof data>();
 
   useEffect(() => {
-    if (data?.user && data !== user) {
+    if (data?.user) {
       setUser(data);
 
-      // const ownedPlayer =
-      const player = data.ownedPlayers.at(0);
+      const player = data?.ownedPlayers.at(0);
+      const isSavedPlayerIdvalid = data.ownedPlayers.some((p) => p.id === currentPlayerId);
 
-      if (player !== undefined && currentPlayerId === "") {
+      if (player !== undefined && (!isSavedPlayerIdvalid || currentPlayerId === "")) {
         setCurrentPlayerId(player.id);
       }
     }
-  }, [data, currentPlayerId, setCurrentPlayerId, user]);
+  }, [setCurrentPlayerId, data, currentPlayerId, user, status]);
 
   const userContextValue: UserContext = useMemo(
     () => ({
       ownedPlayers: user?.ownedPlayers,
       currentPlayerId,
       setCurrentPlayerId,
+      refetchOwnedPlayers,
     }),
-    [user?.ownedPlayers, currentPlayerId, setCurrentPlayerId],
+    [user?.ownedPlayers, currentPlayerId, setCurrentPlayerId, refetchOwnedPlayers],
   );
 
   return <playersContext.Provider value={userContextValue}>{children}</playersContext.Provider>;
@@ -62,16 +66,10 @@ export const usePlayers = () => {
     }
   };
 
-  const clearLSCurrentPlayer = () => {
-    if (setCurrentPlayerId) {
-      setCurrentPlayerId("");
-    }
-  };
-
   return {
     ownedPlayers,
     currentPlayer,
     setCurrentPlayer,
-    clearLSCurrentPlayer,
+    refetchOwnedPlayers: user?.refetchOwnedPlayers,
   };
 };

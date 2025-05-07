@@ -50,7 +50,6 @@
     "@trpc/client": "^10.45.0",
     "@trpc/next": "^10.45.0",
     "@trpc/server": "^10.45.0",
-    "bcrypt": "^5.1.1",
     "gray-matter": "^4.0.3",
     "next": "^14.1.0",
     "next-auth": "^4.24.5",
