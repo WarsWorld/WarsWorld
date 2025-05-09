@@ -26,6 +26,6 @@
     "downlevelIteration": true
   },
   "include": [".", ".eslintrc.cjs"], // .eslintrc.json is extra because the leading period makes it excluded otherwise
-  "exclude": ["node_modules", "dist", ".next"],
+  "exclude": ["node_modules", "dist", ".next", "bundleServer.mjs"],
 
 }
