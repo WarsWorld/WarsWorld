@@ -13,6 +13,7 @@ export default function WarsWorldAdapter(p: PrismaClient): Adapter {
       await p.player.create({
         data: {
           name: user.name ?? "",
+          displayName: user.name ?? "",
           user: {
             connect: {
               id: user.id,

@@ -4,9 +4,9 @@ import type { SpritesheetDataByArmy } from "frontend/components/match/getSprites
 import type { ChangeableTileWithSprite } from "frontend/components/match/types";
 import { trpc } from "frontend/utils/trpc-client";
 import { loadSpritesFromSpriteMap } from "pixi/load-spritesheet";
+import { useEffect, useState } from "react";
 import { MatchWrapper } from "shared/wrappers/match";
 import { MatchRenderer } from "./MatchRenderer";
-import { useEffect, useState } from "react";
 
 type Props = {
   matchId: string;
@@ -54,9 +54,11 @@ export function MatchLoader({ matchId, playerId, spritesheetDataByArmy }: Props)
   );
 
   // Add useEffect to trigger refetch when turn changes
-  useEffect(() => {
-    void fullMatchQuery.refetch();
-  }, [turn]);
+  useEffect(
+    () => {
+      void fullMatchQuery.refetch();
+    }, //Adding all dependencies here causes an infinite loop
+    /* eslint-disable */ [turn]);
 
   if (fullMatchQuery.isError || spriteSheetQuery.isError) {
     return <p>error {":("}</p>;
@@ -73,12 +75,14 @@ export function MatchLoader({ matchId, playerId, spritesheetDataByArmy }: Props)
   }
 
   return (
-    <MatchRenderer
-      match={fullMatchQuery.data}
-      spriteSheets={spriteSheetQuery.data}
-      turn={turn}
-      setTurn={setTurn}
-      player={player}
-    />
+    <div className="@w-full @h-full @flex @flex-col @items-center @justify-center @py-4">
+      <MatchRenderer
+        match={fullMatchQuery.data}
+        spriteSheets={spriteSheetQuery.data}
+        turn={turn}
+        setTurn={setTurn}
+        player={player}
+      />
+    </div>
   );
 }

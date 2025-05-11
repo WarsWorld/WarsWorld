@@ -1,9 +1,9 @@
 import Banner from "frontend/components/layout/Banner";
 import Head from "next/head";
-import ArticleContent from "./ArticleContent";
+import type { ArticleType } from "server/routers/article";
 import type { ArticleCommentsWithPlayer } from "shared/schemas/article";
 import ArticleCommentSection from "./ArticleCommentSection";
-import type { ArticleType } from "server/routers/article";
+import ArticleContent from "./ArticleContent";
 
 type Props = {
   articleData: {

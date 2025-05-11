@@ -2,19 +2,19 @@
   NOTE: If you try to register or first login with two providers that have the same email, the second provider will fail.
   The first provider will register the first email and so the second cannot be registered.
 */
+import { compare } from "bcrypt";
 import type { NextAuthOptions } from "next-auth";
-import DiscordProvider from "next-auth/providers/discord";
-import type { DiscordProfile } from "next-auth/providers/discord";
+import type { Adapter } from "next-auth/adapters";
+import type { Provider } from "next-auth/providers";
 import CredentialsProvider from "next-auth/providers/credentials";
+import type { DiscordProfile } from "next-auth/providers/discord";
+import DiscordProvider from "next-auth/providers/discord";
 import GithubProvider from "next-auth/providers/github";
 import GoogleProvider from "next-auth/providers/google";
-import { loginSchema } from "shared/schemas/auth";
-import type { Adapter } from "next-auth/adapters";
 import { prisma } from "server/prisma/prisma-client";
-import WarsWorldAdapter from "./WarsWorldAdapter";
-import { compare } from "bcrypt";
-import type { Provider } from "next-auth/providers";
+import { loginSchema } from "shared/schemas/auth";
 import { z } from "zod";
+import WarsWorldAdapter from "./WarsWorldAdapter";
 
 const adapter = WarsWorldAdapter(prisma) as Adapter;
 

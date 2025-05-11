@@ -1,9 +1,9 @@
 import PageTitle from "frontend/components/layout/PageTitle";
 import ArticleGroup from "frontend/components/layout/article/ArticleGroup";
-import Head from "next/head";
-import { trpc } from "frontend/utils/trpc-client";
 import { type ICardInfo } from "frontend/components/news/FeaturedNewsCard";
 import { stringToSlug } from "frontend/utils/articleUtils";
+import { trpc } from "frontend/utils/trpc-client";
+import Head from "next/head";
 
 const data = [
   {
@@ -37,43 +37,45 @@ export default function HowToPlay() {
         <title>Guides | Wars World</title>
       </Head>
 
-      <div className="@w-full @mt-8">
-        <PageTitle svgPathD="M480-120 200-272v-240L40-600l440-240 440 240v320h-80v-276l-80 44v240L480-120Zm0-332 274-148-274-148-274 148 274 148Zm0 241 200-108v-151L480-360 280-470v151l200 108Zm0-241Zm0 90Zm0 0Z">
-          How to Play
-        </PageTitle>
-      </div>
+      <div className="@flex @flex-col @justify-center @items-center @align-middle">
+        <div className="@w-full @mt-8">
+          <PageTitle svgPathD="M480-120 200-272v-240L40-600l440-240 440 240v320h-80v-276l-80 44v240L480-120Zm0-332 274-148-274-148-274 148 274 148Zm0 241 200-108v-151L480-360 280-470v151l200 108Zm0-241Zm0 90Zm0 0Z">
+            How to Play
+          </PageTitle>
+        </div>
 
-      <div className="@flex @flex-col @max-w-[95vw] @px-4 @py-8 laptop:@pb-12">
-        <div className="@flex @flex-col @gap-8">
-          {articleGuides &&
-            data.map((section, index) => {
-              return (
-                <ArticleGroup
-                  key={index}
-                  title={section.title}
-                  description={section.description}
-                  tailwind_color={section.color}
-                  articles={articleGuides
-                    ?.map((guide) => {
-                      return {
-                        subdirectory: `articles/${guide.id}/${stringToSlug(guide.title)}`,
-                        title: guide.title,
-                        description: guide.description,
-                        thumbnail: guide.thumbnail ?? "",
-                        thumbnailAlt: guide.title,
-                        date: guide.createdAt.toDateString(),
-                        category: guide.category[0].toUpperCase() + guide.category.slice(1),
-                      } as ICardInfo;
-                    })
-                    .filter(
-                      (article) =>
-                        article.category?.toLowerCase() == section.title.toLowerCase() ||
-                        (section.title.toLowerCase() == "matches" &&
-                          article.category?.toLowerCase() == "site"),
-                    )}
-                />
-              );
-            })}
+        <div className="@flex @flex-col @max-w-[95vw] @px-4 @py-8 laptop:@pb-12">
+          <div className="@flex @flex-col @gap-8">
+            {articleGuides &&
+              data.map((section, index) => {
+                return (
+                  <ArticleGroup
+                    key={index}
+                    title={section.title}
+                    description={section.description}
+                    tailwind_color={section.color}
+                    articles={articleGuides
+                      ?.map((guide) => {
+                        return {
+                          subdirectory: `articles/${guide.id}/${stringToSlug(guide.title)}`,
+                          title: guide.title,
+                          description: guide.description,
+                          thumbnail: guide.thumbnail ?? "",
+                          thumbnailAlt: guide.title,
+                          date: guide.createdAt.toDateString(),
+                          category: guide.category[0].toUpperCase() + guide.category.slice(1),
+                        } as ICardInfo;
+                      })
+                      .filter(
+                        (article) =>
+                          article.category?.toLowerCase() == section.title.toLowerCase() ||
+                          (section.title.toLowerCase() == "matches" &&
+                            article.category?.toLowerCase() == "site"),
+                      )}
+                  />
+                );
+              })}
+          </div>
         </div>
       </div>
     </>

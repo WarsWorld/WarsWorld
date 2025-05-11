@@ -151,7 +151,7 @@ const AWDSProperties: VersionProperties = {
 };
 
 // as proof of concept:
-const AWBWProperties: VersionProperties = {
+const _AWBWProperties: VersionProperties = {
   gameVersion: "AW2", // not accurate
   baseGoodLuck: 10,
   baseBadLuck: 0,

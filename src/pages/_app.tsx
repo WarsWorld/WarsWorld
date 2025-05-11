@@ -1,11 +1,12 @@
+"use client"; // This is a client component 👈🏽
+import { Layout } from "frontend/components/layout";
 import { ProvidePlayers } from "frontend/context/players";
+import "frontend/styles/global.scss";
 import { trpc } from "frontend/utils/trpc-client";
 import type { Session } from "next-auth";
 import { SessionProvider } from "next-auth/react";
 import type { AppType } from "next/app";
 import Head from "next/head";
-import "frontend/styles/global.scss";
-import { Layout } from "frontend/components/layout";
 
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,

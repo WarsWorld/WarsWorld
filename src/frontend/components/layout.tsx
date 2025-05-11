@@ -12,9 +12,7 @@ export function Layout({ footer, children }: Props) {
     <>
       <Navbar />
       <div className="@relative mainContainer">
-        <main className="@flex @flex-col @w-full @items-center @justify-center mainHeight">
-          {children}
-        </main>
+        <main className="@w-full mainHeight">{children}</main>
       </div>
       {footer != undefined && footer && <Footer />}
     </>

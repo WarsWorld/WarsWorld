@@ -26,7 +26,7 @@ export default {
         "blue-moon": "rgb(70, 110, 254)",
         "green-earth": "rgb(55, 164, 42)",
         "yellow-comet": "rgb(218, 165, 32)",
-        "black-hole": "rgb(12,12,12)",
+        "black-hole": "#800080",
         // Social Media Colors
         discord: "#7289DA",
         github: "#171515",

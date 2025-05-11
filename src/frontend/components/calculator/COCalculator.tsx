@@ -1,6 +1,6 @@
 import type { CO } from "../../../shared/schemas/co";
-import IconText from "./IconText";
 import COSelect from "./COSelect";
+import IconText from "./IconText";
 
 type Props = {
   co: CO;
@@ -10,7 +10,7 @@ type Props = {
   coPower: boolean;
 };
 
-export default function COCalculator({ co, coPower, capture, commtower, gold }: Props) {
+export default function COCalculator({ co, capture, commtower, gold }: Props) {
   return (
     <>
       <div className="@col-span-6 @flex @bg-bg-tertiary @justify-between @align-middle @items-center ">

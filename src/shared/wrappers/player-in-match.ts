@@ -1,5 +1,8 @@
+import type { COPowerState } from "shared/match-logic/co";
 import { getCOProperties } from "shared/match-logic/co";
 import type { Hooks } from "shared/match-logic/co-hooks";
+import type { CO } from "shared/schemas/co";
+import type { GameVersion } from "shared/schemas/game-version";
 import type { PropertyTile, Tile } from "shared/schemas/tile";
 import type { UnitWithVisibleStats } from "shared/schemas/unit";
 import type { ChangeableTile, PlayerInMatch } from "shared/types/server-match-state";
@@ -11,12 +14,14 @@ import { UnitWrapper } from "./unit";
 //TODO: Band-aid fix from chatGPT, needs to be fixed down below
 
 // Type guard to check if the object is a UnitWrapper
-function isUnitWrapper(object: UnitWrapper): object is UnitWrapper {
+function isUnitWrapper(object: Tile | ChangeableTile | UnitWrapper): object is UnitWrapper {
   return "data" in object && "playerSlot" in object.data;
 }
 
 // Type guard to check if the object is a PropertyTile (or has playerSlot directly)
-function isPropertyTile(object: PropertyTile): object is PropertyTile {
+
+function isPropertyTile(object: Tile | ChangeableTile | UnitWrapper): object is PropertyTile {
+
   return "playerSlot" in object;
 }
 
@@ -44,7 +49,7 @@ export class PlayerInMatchWrapper {
     );
   }
 
-  possessesLab() {
+  hasLab() {
     return (
       this.match.changeableTiles.find(
         (tile) => tile.type === "lab" && tile.playerSlot === this.data.slot,
@@ -75,11 +80,7 @@ export class PlayerInMatchWrapper {
   }
 
   getVersionProperties() {
-    if (this.match.rules.gameVersion === undefined) {
-      return versionPropertiesMap[this.data.coId.version];
-    }
-
-    return versionPropertiesMap[this.match.rules.gameVersion];
+    return versionPropertiesMap[this.match.rules.gameVersion ?? this.data.coId.version];
   }
 
   /**
@@ -92,8 +93,7 @@ export class PlayerInMatchWrapper {
     for (let i = nextSlot(this.data.slot); i !== this.data.slot; i = nextSlot(i)) {
       const player = this.match.getPlayerBySlot(i);
 
-      //TODO: This should be false since if the player is NOT eliminated, then we return that player, right?
-      if (player?.data.eliminated === false) {
+      if (player?.data.status === "alive") {
         return player;
       }
     }
@@ -182,5 +182,24 @@ export class PlayerInMatchWrapper {
     this.team.vision?.addUnitVision(unit);
 
     return unit;
+  }
+
+  /**
+   * Check current power activated with optional CO constraints
+   */
+  isUsingPower(power: COPowerState, coName?: CO, coVersion?: GameVersion) {
+    if (power !== this.data.COPowerState) {
+      return false;
+    }
+
+    if (coName && coName !== this.data.coId.name) {
+      return false;
+    }
+
+    if (coVersion && coVersion !== this.data.coId.version) {
+      return false;
+    }
+
+    return true;
   }
 }

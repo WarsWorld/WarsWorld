@@ -2,18 +2,20 @@
 import { trpc } from "frontend/utils/trpc-client";
 import type { LoadedSpriteSheet } from "pixi/load-spritesheet";
 import { useEffect, useState } from "react";
+import { applyAttackEvent } from "shared/match-logic/events/handlers/attack/applyAttackEvent";
 import type { Position } from "shared/schemas/position";
 import type { MatchWrapper } from "shared/wrappers/match";
 import type { PlayerInMatchWrapper } from "shared/wrappers/player-in-match";
 import type { FrontendUnit } from "../../frontend/components/match/FrontendUnit";
 import type { ChangeableTileWithSprite } from "../../frontend/components/match/types";
-import { usePixi } from "./use-pixi";
+import { applyAbilityEvent } from "../../shared/match-logic/events/handlers/ability";
 import { applyBuildEvent } from "../../shared/match-logic/events/handlers/build";
-import { applyPassTurnEvent } from "../../shared/match-logic/events/handlers/passTurn";
 import { applyMoveEvent } from "../../shared/match-logic/events/handlers/move";
 import { applyAbilityEvent } from "../../shared/match-logic/events/handlers/ability";
 import { applyAttackEvent } from "../../shared/match-logic/events/handlers/attack";
 import type { AttackEvent, MoveEvent } from "../../shared/types/events";
+import { applyPassTurnEvent } from "../../shared/match-logic/events/handlers/passTurn";
+import { usePixi } from "./use-pixi";
 
 type Props = {
   match: MatchWrapper<ChangeableTileWithSprite, FrontendUnit>;
@@ -30,9 +32,14 @@ export const mapBorder = baseTileSize / 2;
 
 export function MatchRenderer({ match, player, spriteSheets, turn, setTurn }: Props) {
   const [eventTrigger, setEventTrigger] = useState(0);
-  useEffect(() => {
-    setTurn(match.getCurrentTurnPlayer().data.id === player.data.id);
-  }, []);
+  useEffect(
+    () => {
+      const isPlayerTurn = match.getCurrentTurnPlayer().data.id === player.data.id;
+      setTurn(isPlayerTurn);
+    },
+    //Adding all dependencies here causes an infinite loop
+    /* eslint-disable */ [],
+  );
 
   const { pixiCanvasRef } = usePixi(match, spriteSheets, player);
 

@@ -1,8 +1,8 @@
+import { usePlayers } from "frontend/context/players";
+import { signOut, useSession } from "next-auth/react";
+import Link from "next/link";
 import SquareButton from "../layout/SquareButton";
 import LoginSignupModal from "../modals/LoginSignupModal";
-import { useSession } from "next-auth/react";
-import { signOut } from "next-auth/react";
-import { usePlayers } from "frontend/context/players";
 
 type Props = {
   setIsOpen: (value: boolean, callbackUrl?: string) => Promise<void>;
@@ -11,7 +11,7 @@ type Props = {
 };
 
 export default function NavLoginLogout({ isOpen, setIsOpen, width }: Props) {
-  const { clearLSCurrentPlayer } = usePlayers();
+  const { clearLSCurrentPlayer, currentPlayer } = usePlayers();
   const { data: session } = useSession();
 
   return (
@@ -33,7 +33,12 @@ export default function NavLoginLogout({ isOpen, setIsOpen, width }: Props) {
         )}
         {session?.user && (
           <div className="@flex @flex-col @w-full @align-middle @text-center @justify-center">
-            <p className="@text-md">{session.user.name}</p>
+            <Link
+              href={`/players/${currentPlayer?.name}`}
+              className="@text-white hover:@text-white"
+            >
+              <p className="@text-md @cursor-pointer">{currentPlayer?.name}</p>
+            </Link>
             <div
               className="hover:@scale-[1.02] @text-base smallscreen:@text-lg @cursor-pointer @text-primary-light hover:@text-primary"
               onClick={() => {

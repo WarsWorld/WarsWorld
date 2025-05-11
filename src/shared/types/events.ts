@@ -16,11 +16,11 @@ import type {
 } from "shared/schemas/action";
 import type { Army } from "shared/schemas/army";
 import type { COID } from "shared/schemas/co";
+import type { PlayerSlot } from "shared/schemas/player-slot";
 import type { Position } from "shared/schemas/position";
 import type { WWUnit } from "shared/schemas/unit";
 import type { Weather } from "shared/schemas/weather";
-import type { CapturableTile } from "./server-match-state";
-import type { PlayerSlot } from "shared/schemas/player-slot";
+import type { CapturableTile, PlayerInMatch } from "./server-match-state";
 
 /** player slot 0 implicity starts */
 export type MatchStartEvent = {
@@ -34,10 +34,14 @@ export type MatchEndEvent = {
   // TODO this type can probably be made a lot more fine-grained later on
 };
 
-export type MoveEvent<SubEventType extends SubEvent = SubEvent> = {
+export type MoveEventWithoutSubEvent = {
   trap: boolean;
-  subEvent: SubEventType;
 } & Omit<MoveAction, "subAction">;
+
+export type MoveEventWithSubEvent<SubEventType extends SubEvent = SubEvent> =
+  MoveEventWithoutSubEvent & {
+    subEvent: SubEventType;
+  };
 
 export type AttackEvent = {
   /**
@@ -97,9 +101,8 @@ export type WaitEvent = WaitAction;
 export type UnloadNoWaitEvent = UnloadNoWaitAction;
 export type UnloadWaitEvent = UnloadWaitAction;
 
-export type MainEvent =
+type MainEventsWithoutMoveEvent =
   | MatchStartEvent
-  | MoveEvent
   | UnloadNoWaitEvent
   | PlayerEliminatedEvent
   | COPowerEvent
@@ -107,6 +110,10 @@ export type MainEvent =
   | BuildEvent
   | DeleteEvent
   | MatchEndEvent;
+
+export type MainEventWithSubEvents = MainEventsWithoutMoveEvent | MoveEventWithSubEvent;
+
+export type MainEventsWithoutSubEvents = MainEventsWithoutMoveEvent | MoveEventWithoutSubEvent;
 
 export type SubEvent =
   | AbilityEvent
@@ -118,7 +125,26 @@ export type SubEvent =
 
 type WithDiscoveries = {
   discoveredUnits?: WWUnit[];
+  // TODO we need to add pipeseams to update their HP / destruction state upon discovery
   discoveredProperties?: CapturableTile[];
+};
+
+type EmittableAttackParticipantInfo = {
+  playerSlot: PlayerSlot;
+  powerChargeGained?: number;
+  position?: Position;
+  HP?: number;
+  usedAmmo?: boolean;
+  /**
+   * Only used for Sasha SCOP
+   */
+  damageTakenInFunds?: number;
+};
+export type EmittableAttackEvent = {
+  type: "attack";
+  attacker?: EmittableAttackParticipantInfo;
+  defender?: EmittableAttackParticipantInfo;
+  playerUpdate: PlayerInMatch[];
 };
 
 export type EmittableSubEvent =
@@ -127,18 +153,9 @@ export type EmittableSubEvent =
   | RepairEvent
   | LaunchMissileEvent
   | UnloadWaitEvent
-  | ({
-      type: "attack";
-      attackerHP?: number;
-      attackerPlayerSlot: PlayerSlot;
-      attackerPowerCharge: number;
-      defenderHP?: number;
-      defenderPosition?: Position;
-      defenderPlayerSlot: PlayerSlot;
-      defenderPowerCharge: number;
-    } & WithElimination<`all-${"attacker" | "defender"}-units-destroyed`>);
+  | EmittableAttackEvent;
 
-export type EmittableMoveEvent = Omit<MoveEvent, "subEvent"> &
+export type EmittableMoveEvent = Omit<MoveEventWithSubEvent, "subEvent"> &
   WithDiscoveries & {
     subEvent: EmittableSubEvent;
     /**

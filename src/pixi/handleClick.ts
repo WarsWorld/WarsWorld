@@ -233,7 +233,7 @@ export const handleHover = async (
   unitRangeShowRef: MutableRefObject<"attack" | "movement" | "vision">,
   pathRef: MutableRefObject<Position[] | null>,
   spriteSheets: LoadedSpriteSheet,
-  sendAction: (action: MainAction) => Promise<void>,
+  _sendAction: (action: MainAction) => Promise<void>, // TODO: unused yet
 ) => {
   await Assets.load("/aw2Font.fnt");
 

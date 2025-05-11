@@ -40,14 +40,6 @@ export const usePixi = (
 
   const { actionMutation } = trpcActions();
 
-  const sendAction = async (action: MainAction) => {
-    await actionMutation.mutateAsync({
-      playerId: player.data.id,
-      matchId: match.id,
-      ...action,
-    });
-  };
-
   useEffect(() => {
     const app = new Application({
       view: pixiCanvasRef.current ?? undefined,
@@ -57,6 +49,14 @@ export const usePixi = (
       width: match.map.width * renderedTileSize + renderedTileSize,
       height: match.map.height * renderedTileSize + renderedTileSize,
     });
+
+    const sendAction = async (action: MainAction) => {
+      await actionMutation.mutateAsync({
+        playerId: player.data.id,
+        matchId: match.id,
+        ...action,
+      });
+    };
 
     const onTileClick = async (pos: Position) => {
       if (

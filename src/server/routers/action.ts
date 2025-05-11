@@ -1,5 +1,5 @@
 import { observable } from "@trpc/server/observable";
-import { emit, subscribe, unsubscribe } from "server/emitter/event-emitter";
+import { emit, subscribe } from "server/emitter/event-emitter";
 import { prisma } from "server/prisma/prisma-client";
 import {
   validateMainActionAndToEvent,
@@ -11,16 +11,36 @@ import {
 } from "shared/match-logic/events/apply-event-to-match";
 import { mainActionSchema } from "shared/schemas/action";
 import { getFinalPositionSafe } from "shared/schemas/position";
-import type { Emittable, EmittableEvent } from "shared/types/events";
-import { matchBaseProcedure, playerInMatchBaseProcedure, router } from "../trpc/trpc-setup";
+import type {
+  Emittable,
+  EmittableEvent,
+  MainEventsWithoutSubEvents,
+  MainEventWithSubEvents,
+  SubEvent,
+} from "shared/types/events";
 import { mainEventToEmittables } from "../../shared/match-logic/events/event-to-emittable";
-import { fillDiscoveredUnitsAndProperties } from "../../shared/match-logic/events/vision-update";
 import { updateMoveVision } from "../../shared/match-logic/events/handlers/move";
+import { fillDiscoveredUnitsAndProperties } from "../../shared/match-logic/events/vision-update";
+import { matchBaseProcedure, playerInMatchBaseProcedure, router } from "../trpc/trpc-setup";
+
+const attachSubEvent = (
+  mainEventWithoutSubEvent: MainEventsWithoutSubEvents,
+  subEvent: SubEvent,
+): MainEventWithSubEvents => {
+  if (mainEventWithoutSubEvent.type === "move") {
+    return {
+      ...mainEventWithoutSubEvent,
+      subEvent,
+    };
+  }
+
+  return mainEventWithoutSubEvent;
+};
 
 export const actionRouter = router({
   send: playerInMatchBaseProcedure
     .input(mainActionSchema)
-    .mutation(async ({ input, ctx: { match, player } }) => {
+    .mutation(async ({ input, ctx: { match } }) => {
       /**
        * EXTREMELY IMPORTANT! This order MUST be followed, otherwise some things may not have required information:
        * 1. Move action to event
@@ -36,10 +56,10 @@ export const actionRouter = router({
        */
 
       /* 1. Move action to event */
-      const mainEvent = validateMainActionAndToEvent(match, input);
+      const mainEventWithoutSubEvent = validateMainActionAndToEvent(match, input);
 
       /* 2. Apply move event to match */
-      applyMainEventToMatch(match, mainEvent);
+      applyMainEventToMatch(match, mainEventWithoutSubEvent);
 
       /**
        * TODO important!
@@ -52,29 +72,41 @@ export const actionRouter = router({
 
       let emittableEvents: (EmittableEvent | undefined)[]; // undefined means that team doesn't receive the event
 
-      if (mainEvent.type === "move" && input.type === "move") {
+      // having this subEvent variable is shitty code but it's type-safe and good enough for now.
+      let subEvent: SubEvent = { type: "wait" };
+
+      if (mainEventWithoutSubEvent.type === "move" && input.type === "move") {
         // second condition is only needed for type-gating input event
 
         /* 3. Sub action to event */
         // if there was a trap or join/load, the default subEvent is "wait".
-        const isJoinOrLoad = match.getUnit(getFinalPositionSafe(mainEvent.path)) !== undefined;
-        //todo: isJoinorLoad doesnt really work, have to fix
+        const _isJoinOrLoad =
+          match.getUnit(getFinalPositionSafe(mainEventWithoutSubEvent.path)) !== undefined;
+        // TODO: isJoinorLoad doesnt really work, have to fix
 
-        if (!mainEvent.trap /*&& !isJoinOrLoad*/) {
-          mainEvent.subEvent = validateSubActionAndToEvent(match, input);
+        const mainEventWithSubEvent: MainEventWithSubEvents = {
+          ...mainEventWithoutSubEvent,
+          subEvent: {
+            type: "wait",
+          },
+        };
+
+        if (!mainEventWithoutSubEvent.trap /*&& !isJoinOrLoad*/) {
+          mainEventWithSubEvent.subEvent = validateSubActionAndToEvent(match, input);
         }
 
         /* 4. Sub event to emittable sub events (done inside, first)*/
         /* 5. Move event to emittable move events */
-        emittableEvents = mainEventToEmittables(match, mainEvent);
+        emittableEvents = mainEventToEmittables(match, mainEventWithSubEvent);
 
         /* 6. Update move event vision */
-        updateMoveVision(match, mainEvent);
+        updateMoveVision(match, mainEventWithSubEvent);
 
         /* 7. Apply sub event to match and update sub event vision */
-        applySubEventToMatch(match, mainEvent);
+        applySubEventToMatch(match, mainEventWithSubEvent);
+        subEvent = mainEventWithSubEvent.subEvent;
       } else {
-        emittableEvents = mainEventToEmittables(match, mainEvent);
+        emittableEvents = mainEventToEmittables(match, mainEventWithoutSubEvent);
       }
 
       /* 8. Update move vision (and add new vision in general to emittable events) */
@@ -97,7 +129,7 @@ export const actionRouter = router({
       await prisma.event.create({
         data: {
           matchId: input.matchId,
-          content: mainEvent,
+          content: attachSubEvent(mainEventWithoutSubEvent, subEvent),
         },
       });
 
@@ -122,20 +154,9 @@ export const actionRouter = router({
       //   emit(emittableEliminationEvent)
       // }
     }),
-  onEvent: matchBaseProcedure.subscription(({ ctx: { match, currentPlayer } }) => {
-    return observable<Emittable>((emit) => {
-      const onAdd = (emittable: Emittable) => {
-        // emit emittable to client
-        emit.next(emittable);
-      };
-
-      subscribe(match.id, currentPlayer.id, onAdd);
-
-      return () => {
-        unsubscribe(match.id, currentPlayer.id, onAdd);
-      };
-    });
-  }),
+  onEvent: matchBaseProcedure.subscription(({ ctx: { match, currentPlayer } }) =>
+    observable<Emittable>((emit) => subscribe(match.id, currentPlayer.id, emit.next)),
+  ),
   // TODO create procedure for anonymous users to observe games
   // (they get their own special "-1" team or something)
 });

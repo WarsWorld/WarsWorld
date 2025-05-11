@@ -34,7 +34,7 @@ export default function LoginSignupModal({ isOpen, setIsOpen, width }: Props) {
   useEffect(() => {
     // NOTE: In production erase all the existing logic related to checking
     // if the providers are correctly configured.
-    // This will make a request to check the proviers ever refresh.
+    // This will make a request to check the providers ever refresh.
     void getProviders().then((providers) => setCurrentProviders(providers));
   }, []);
 
@@ -117,7 +117,7 @@ export default function LoginSignupModal({ isOpen, setIsOpen, width }: Props) {
                   ))}
                 </div>
                 <p className="@pt-6 @text-lg smallscreen:@text @text-center">
-                  Developer note: If you want to sign in with one of these proviers, you must follow
+                  Developer note: If you want to sign in with one of these providers, you must follow
                   the respective directions on README.md to set it up.
                 </p>
                 <div className="@h-[0.15rem] @w-full @bg-bg-primary @my-2" />
