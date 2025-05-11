@@ -19,6 +19,7 @@ function isUnitWrapper(object: Tile | ChangeableTile | UnitWrapper): object is U
 }
 
 // Type guard to check if the object is a PropertyTile (or has playerSlot directly)
+
 function isPropertyTile(object: Tile | ChangeableTile | UnitWrapper): object is PropertyTile {
   return "playerSlot" in object;
 }

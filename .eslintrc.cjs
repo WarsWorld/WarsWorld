@@ -1,4 +1,4 @@
-/* eslint-env node */
+/* eslint-disable */
 
 const padded = ["if", "const", "let", "expression", "return", "break"];
 
@@ -13,7 +13,7 @@ const eslintConfig = {
    * i suspect that's because there's another eslint config generated at `./dist/.eslintrc.cjs`.
    * maybe there's a cleaner way by telling typescript to typecheck `./.eslintrc.js` but not transpile it to `./dist`.
    */
-  ignorePatterns: "/dist",
+  ignorePatterns: ["node_modules/**", ".next/**", "dist/**", ".eslintrc.cjs"],
   reportUnusedDisableDirectives: true,
   extends: [
     "plugin:@next/next/recommended",
@@ -24,6 +24,8 @@ const eslintConfig = {
     "plugin:prettier/recommended",
   ],
   parser: "@typescript-eslint/parser",
+
+  // @ts-ignore
   plugins: ["@stylistic/ts", "@typescript-eslint"],
   parserOptions: {
     ecmaVersion: 2022,

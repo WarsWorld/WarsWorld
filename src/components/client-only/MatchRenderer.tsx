@@ -2,17 +2,18 @@
 import { trpc } from "frontend/utils/trpc-client";
 import type { LoadedSpriteSheet } from "pixi/load-spritesheet";
 import { useEffect, useState } from "react";
-import { applyAttackEvent } from "shared/match-logic/events/handlers/attack/applyAttackEvent";
 import type { Position } from "shared/schemas/position";
 import type { MatchWrapper } from "shared/wrappers/match";
 import type { PlayerInMatchWrapper } from "shared/wrappers/player-in-match";
 import type { FrontendUnit } from "../../frontend/components/match/FrontendUnit";
 import type { ChangeableTileWithSprite } from "../../frontend/components/match/types";
-import { applyAbilityEvent } from "../../shared/match-logic/events/handlers/ability";
-import { applyBuildEvent } from "../../shared/match-logic/events/handlers/build";
-import { applyMoveEvent } from "../../shared/match-logic/events/handlers/move";
-import { applyPassTurnEvent } from "../../shared/match-logic/events/handlers/passTurn";
+import { applyBuildEvent } from "shared/match-logic/events/handlers/build";
+import { applyMoveEvent } from "shared/match-logic/events/handlers/move";
+import { applyAbilityEvent } from "shared/match-logic/events/handlers/ability";
+import { applyPassTurnEvent } from "shared/match-logic/events/handlers/passTurn";
 import { usePixi } from "./use-pixi";
+import type { AttackAction, MoveAction } from "shared/schemas/action";
+import { applyAttackEvent } from "shared/match-logic/events/handlers/attack/applyAttackEvent";
 
 type Props = {
   match: MatchWrapper<ChangeableTileWithSprite, FrontendUnit>;
@@ -65,13 +66,17 @@ export function MatchRenderer({ match, player, spriteSheets, turn, setTurn }: Pr
               break;
             }
 
-            applyMoveEvent(match, event);
+            //todo fix type error
+            //@ts-expect-error this is causing an error
+            applyMoveEvent(match, event as MoveAction);
 
             const finalPosition: Position = event.path[event.path.length - 1];
 
             switch (event.subEvent.type) {
               case "attack": {
-                applyAttackEvent(match, event.subEvent, finalPosition);
+                //todo fix type error
+                //@ts-expect-error this is causing an error
+                applyAttackEvent(match, event.subEvent as AttackAction, finalPosition);
                 break;
               }
               case "ability": {

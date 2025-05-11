@@ -117,8 +117,8 @@ export default function LoginSignupModal({ isOpen, setIsOpen, width }: Props) {
                   ))}
                 </div>
                 <p className="@pt-6 @text-lg smallscreen:@text @text-center">
-                  Developer note: If you want to sign in with one of these providers, you must follow
-                  the respective directions on README.md to set it up.
+                  Developer note: If you want to sign in with one of these providers, you must
+                  follow the respective directions on README.md to set it up.
                 </p>
                 <div className="@h-[0.15rem] @w-full @bg-bg-primary @my-2" />
                 <p className="@text-lg smallscreen:@text">Don&apos;t have an account?</p>

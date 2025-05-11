@@ -15,5 +15,5 @@ void (async () => {
     });
   });
 
-  console.log("Development mode: tRPC listening on ws://localhost:3001");
+  console.log(`Development mode: tRPC listening on ${process.env.NEXT_PUBLIC_WS_URL}`);
 })();

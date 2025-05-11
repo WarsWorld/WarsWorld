@@ -58,7 +58,8 @@ export function MatchLoader({ matchId, playerId, spritesheetDataByArmy }: Props)
     () => {
       void fullMatchQuery.refetch();
     }, //Adding all dependencies here causes an infinite loop
-    /* eslint-disable */ [turn]);
+    /* eslint-disable */ [turn],
+  );
 
   if (fullMatchQuery.isError || spriteSheetQuery.isError) {
     return <p>error {":("}</p>;

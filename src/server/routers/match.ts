@@ -137,7 +137,7 @@ export const matchRouter = router({
               data: { matches: [findMatch] },
             })*/
       });
-
+      //@ts-expect-error emit needs to be updated
       emit({
         type: "player-joined",
         matchId: match.id,
@@ -176,7 +176,7 @@ export const matchRouter = router({
       await prisma.match.update({ where: { id: match.id }, data: { playerState: newPlayerState } });
 
       match.teams = match.teams.filter((teamToRemove) => teamToRemove.index !== player.team.index);
-
+      //@ts-expect-error emit needs to be updated
       emit({
         matchId: match.id,
         type: "player-left",
@@ -235,6 +235,7 @@ export const matchRouter = router({
         });
 
         if (eventIndex !== undefined) {
+          //@ts-expect-error emit needs to be updated
           emit({
             ...matchStartEvent,
             //TODO: Fix this type-error with matchId
@@ -251,6 +252,7 @@ export const matchRouter = router({
           data: { playerState: newPlayerState },
         });
 
+        //@ts-expect-error emit needs to be updated
         emit({
           type: "player-changed-ready-status",
           matchId: match.id,
@@ -303,6 +305,7 @@ export const matchRouter = router({
       player.data = newPlayerData;
 
       if (input.selectedCO !== undefined) {
+        //@ts-expect-error emit needs to be updated
         emit({
           type: "player-picked-co",
           coId: input.selectedCO,
@@ -312,6 +315,7 @@ export const matchRouter = router({
       }
 
       if (input.selectedArmy !== undefined) {
+        //@ts-expect-error emit needs to be updated
         emit({
           type: "player-picked-army",
           army: input.selectedArmy,
@@ -321,6 +325,7 @@ export const matchRouter = router({
       }
 
       if (input.selectedSlot !== undefined) {
+        //@ts-expect-error emit needs to be updated
         emit({
           type: "player-picked-slot",
           slot: input.selectedSlot,

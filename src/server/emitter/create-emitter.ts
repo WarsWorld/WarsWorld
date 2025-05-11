@@ -36,6 +36,7 @@ export const createEmitter = <WithMatchId extends { matchId: MatchId }>() => {
       return () => unsubscribe(matchId, playerID, listenerToSubscribe);
     },
     unsubscribe,
+
     emit(playerId: string, dispatched?: WithMatchId) {
       if (!dispatched) {
         return;

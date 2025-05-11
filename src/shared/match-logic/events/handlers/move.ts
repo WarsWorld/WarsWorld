@@ -32,8 +32,10 @@ export const moveActionToEvent = (
     trap: false,
   };
 
-  if (path.length === 0) {
-    result.path.push(unitPosition);
+  //Unit is waiting in-place if it's path is only the starting tile
+  if (action.path.length === 1) {
+    result.path.push(action.path[0]);
+
     return result;
   }
 
@@ -60,7 +62,7 @@ export const moveActionToEvent = (
       throw new DispatchableError("Cannot move to a desired position");
     }
 
-    if (result.path.some((pos) => isSamePosition(pos, position))) {
+    if (result.path.find((pos) => isSamePosition(pos, position))) {
       throw new DispatchableError("The given path passes through the same position twice");
     }
 

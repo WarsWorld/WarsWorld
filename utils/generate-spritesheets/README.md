@@ -1,6 +1,6 @@
 ## generate-spreadsheets
 
-This is a node.js script using sharp.js as a dependency, originally written by FunctionDJ. 
+This is a node.js script using sharp.js as a dependency, originally written by FunctionDJ.
 
 This utility creates spritesheets with images sourced from [AWBW-Replay-Player](https://github.com/DeamonHunter/AWBW-Replay-Player/) by DeamonHunter (MIT License).
 It requires you to setup an input and output directory (see below).

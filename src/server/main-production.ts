@@ -4,7 +4,7 @@ import { parse } from "url";
 import { createTRPCwebSocketServer } from "./common-server";
 import { matchStore } from "./match-store";
 
-const port = parseInt(process.env.PORT ?? "3000", 10);
+const port = parseInt(process.env.PORT ?? "3001", 10);
 const app = next({ dev: false });
 const handler = app.getRequestHandler();
 
@@ -31,6 +31,20 @@ void (async () => {
       return;
     }
 
+    if (req.method === "OPTIONS") {
+      res.writeHead(204, {
+        "Access-Control-Allow-Origin": "http://localhost:3000",
+        "Access-Control-Allow-Credentials": "true",
+        "Access-Control-Allow-Headers": "Content-Type, Authorization",
+        "Access-Control-Allow-Methods": "GET,POST,OPTIONS",
+      });
+      res.end();
+      return;
+    }
+
+    res.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
+    res.setHeader("Access-Control-Allow-Credentials", "true");
+
     // set browsers to deny framing into an iframe (framebusting)
     res.setHeader("X-Frame-Options", "DENY");
 
@@ -50,5 +64,5 @@ void (async () => {
   createTRPCwebSocketServer({ server });
   server.listen(port);
 
-  console.log(`Production mode: Server listening at http://localhost:${port}`);
+  console.log(`Production mode: Server listening at ${process.env.NEXT_PUBLIC_WS_URL}${port}`);
 })();
