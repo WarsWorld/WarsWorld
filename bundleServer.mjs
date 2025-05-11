@@ -1,7 +1,6 @@
 // scripts/build-server.mjs
 import { build } from "esbuild";
 
-
 // Your server entry file (adjust if different)
 const entryFile = "src/server/main-production.ts";
 

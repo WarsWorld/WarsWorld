@@ -7,11 +7,9 @@ import type { MoveEventWithoutSubEvent, MoveEventWithSubEvent } from "shared/typ
 import type { MatchWrapper } from "shared/wrappers/match";
 import type { UnitWrapper } from "../../../wrappers/unit";
 
-
 // we don't use MainActionToEvent here because MoveEvent is special
 // because at this point we don't have the subEvent yet
 // which MainActionToEvent requires.
-//@ts-expect-error this is causing an error
 export const moveActionToEvent = (
   match: MatchWrapper,
   action: MoveAction,
@@ -34,10 +32,8 @@ export const moveActionToEvent = (
     trap: false,
   };
 
-
   //Unit is waiting in-place if it's path is only the starting tile
   if (action.path.length === 1) {
-    //@ts-expect-error this is causing an error
     result.path.push(action.path[0]);
 
     return result;
@@ -66,10 +62,7 @@ export const moveActionToEvent = (
       throw new DispatchableError("Cannot move to a desired position");
     }
 
-
-    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
     if (result.path.find((pos) => isSamePosition(pos, position))) {
-
       throw new DispatchableError("The given path passes through the same position twice");
     }
 
@@ -156,7 +149,6 @@ export const moveActionToEvent = (
       }
     }
 
-    //@ts-expect-error this is causing an error
     result.path.push(action.path[pathIndex]);
   }
 

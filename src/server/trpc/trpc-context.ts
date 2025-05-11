@@ -14,4 +14,5 @@ export async function createContext(opts: CreateNextContextOptions | CreateWSSCo
   };
 }
 
+// Explicitly define Context as an object type
 export type Context = Awaited<ReturnType<typeof createContext>>;

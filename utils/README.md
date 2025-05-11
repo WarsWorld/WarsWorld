@@ -15,4 +15,3 @@ and you can install them automatically with
 ```sh
 npm run install-utils
 ```
-

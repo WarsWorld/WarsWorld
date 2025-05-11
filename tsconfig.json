@@ -1,11 +1,9 @@
 {
   "compilerOptions": {
-
     "paths": {
       "shared/*": ["shared/*"]
     },
     "target": "esnext",
-
 
     "outDir": "dist",
     "lib": ["dom", "dom.iterable", "esnext"],
@@ -25,11 +23,9 @@
     "jsx": "preserve",
     "baseUrl": "./src",
     "incremental": true,
-    "downlevelIteration": true,
+    "downlevelIteration": true
   },
 
   "include": [".", ".eslintrc.cjs"], // .eslintrc.json is extra because the leading period makes it excluded otherwise
-  "exclude": ["node_modules", "dist", ".next", "bundleServer.mjs"],
-
+  "exclude": ["node_modules", "dist", ".next", "bundleServer.mjs"]
 }
-

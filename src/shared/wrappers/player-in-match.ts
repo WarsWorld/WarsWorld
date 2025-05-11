@@ -21,7 +21,6 @@ function isUnitWrapper(object: Tile | ChangeableTile | UnitWrapper): object is U
 // Type guard to check if the object is a PropertyTile (or has playerSlot directly)
 
 function isPropertyTile(object: Tile | ChangeableTile | UnitWrapper): object is PropertyTile {
-
   return "playerSlot" in object;
 }
 
@@ -134,13 +133,11 @@ export class PlayerInMatchWrapper {
   //TODO: Band aid fix applied here
   owns(tileOrUnit: Tile | ChangeableTile | UnitWrapper): boolean {
     // If it's a UnitWrapper, the playerSlot is under tileOrUnit.data
-    //@ts-expect-error yeah idk how to fix this god help you
     if (isUnitWrapper(tileOrUnit)) {
       return tileOrUnit.data.playerSlot === this.data.slot;
     }
 
     // If it's a PropertyTile, playerSlot is directly on the object
-    //@ts-expect-error yeah idk how to fix this god help you
     if (isPropertyTile(tileOrUnit)) {
       return tileOrUnit.playerSlot === this.data.slot;
     }

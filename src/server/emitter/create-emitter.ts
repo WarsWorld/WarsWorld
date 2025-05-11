@@ -40,7 +40,6 @@ export const createEmitter = <WithMatchId extends { matchId: MatchId }>() => {
     emit(playerId: string, dispatched?: WithMatchId) {
       if (!dispatched) {
         return;
-
       }
 
       listenerMap

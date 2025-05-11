@@ -57,7 +57,7 @@ export const getBaseDamage = (attacker: UnitWrapper, defender: UnitWrapper): num
   const secondaryDamage = damageValues.secondary?.[defender.data.type] ?? null;
   const cantUsePrimaryWeapon = attacker.getAmmo() === 0 || attacker.getAmmo() === null;
 
-  return cantUsePrimaryWeapon ? secondaryDamage : primaryDamage ?? secondaryDamage;
+  return cantUsePrimaryWeapon ? secondaryDamage : (primaryDamage ?? secondaryDamage);
 };
 
 type DamageValues = Partial<Record<UnitType, number>>;
