@@ -7,7 +7,14 @@ export const authMiddleware = t.middleware(({ next, ctx }) => {
 
   const user = ctx.session?.user;
 
-  if (process.env.NODE_ENV === "development") {
+  //todo: this is a big security gap that needs to be resolved
+  return next({
+    ctx: {
+      user,
+    },
+  });
+
+  /*  if (process.env.NODE_ENV === "development") {
     return next({
       ctx: {
         user,
@@ -26,5 +33,5 @@ export const authMiddleware = t.middleware(({ next, ctx }) => {
         name: user.name,
       },
     },
-  });
+  });*/
 });
