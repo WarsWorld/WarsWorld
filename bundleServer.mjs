@@ -16,7 +16,7 @@ build({
   external: [
     // leave Prisma client and native deps out of bundle
     "@prisma/client",
-    "bcrypt",
+    "bcryptjs",
     "ws",
     "node_modules",
     "next",

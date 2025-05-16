@@ -1,4 +1,4 @@
-import { genSalt, hash } from "bcrypt";
+import { genSalt, hash } from "bcryptjs";
 
 const SALT_ROUNDS = 12;
 

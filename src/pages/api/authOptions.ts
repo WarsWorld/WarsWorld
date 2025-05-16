@@ -2,7 +2,7 @@
   NOTE: If you try to register or first login with two providers that have the same email, the second provider will fail.
   The first provider will register the first email and so the second cannot be registered.
 */
-import { compare } from "bcrypt";
+import { compare } from "bcryptjs";
 import type { NextAuthOptions } from "next-auth";
 import type { Adapter } from "next-auth/adapters";
 import type { Provider } from "next-auth/providers";
