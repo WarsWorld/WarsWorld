@@ -4,7 +4,7 @@ import { parse } from "url";
 import { createTRPCwebSocketServer } from "./common-server";
 import { matchStore } from "./match-store";
 
-const port = parseInt(process.env.PORT ?? "3001", 10);
+const port = parseInt(process.env.SERVER_PORT ?? "3001", 10);
 const app = next({ dev: false });
 const handler = app.getRequestHandler();
 
