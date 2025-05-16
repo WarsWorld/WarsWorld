@@ -8,7 +8,7 @@ services:
     ports:
       - "3000:3000"
     depends_on:
-      - backend
+      - postgres
     environment:
       NEXT_PUBLIC_API_URL: http://backend:3001
     networks:
@@ -22,7 +22,7 @@ services:
     ports:
       - "3001:3001"
     depends_on:
-      - postgres
+      - frontend
     environment:
       DATABASE_URL: postgresql://postgres:${PGPASSWORD}@postgres:5432/warsworld
       PORT: 3001
