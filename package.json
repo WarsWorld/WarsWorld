@@ -28,7 +28,7 @@
     "build:server": "node bundleServer.mjs",
     "build": "concurrently \"npm:build:*\"",
     "start:next": "next start",
-    "start:server": "npm run prisma:push && npm run prisma:seed && node dist/server/main-production.mjs",
+    "start:server": "npm run prisma:push && node dist/server/main-production.mjs",
     "start": "concurrently \"npm:start:*\"",
     "redundant-code": "npx jscpd --ignore node_modules,dist,public,.next --reporters consoleFull .",
     "update-depencencies": "npx npm-check-updates -i",
