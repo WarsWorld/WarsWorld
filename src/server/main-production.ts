@@ -62,7 +62,7 @@ void (async () => {
   });
 
   createTRPCwebSocketServer({ server });
-  server.listen(port);
+  server.listen(port, "0.0.0.0");
 
   console.log(`Production mode: Server listening at ${process.env.NEXT_PUBLIC_WS_URL}`);
 })();
