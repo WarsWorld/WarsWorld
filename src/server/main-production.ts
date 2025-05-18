@@ -77,5 +77,5 @@ function getAllowedOrigin(requestOrigin: string | undefined): string {
   }
 
   // Fallback to your Railway domain
-  return process.env.RAILWAY_STATIC_URL!;
+  return process.env.RAILWAY_PUBLIC_DOMAIN!;
 }
