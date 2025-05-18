@@ -4,8 +4,8 @@ import { parse } from "url";
 import { createTRPCwebSocketServer } from "./common-server";
 import { matchStore } from "./match-store";
 
-const port = parseInt(process.env.SERVER_PORT ?? "3001", 10);
-const app = next({ dev: false });
+const port = parseInt(process.env.WS_PORT ?? "3001", 10);
+const app = next({ dev: process.env.NODE_ENV !== "production" });
 const handler = app.getRequestHandler();
 
 void (async () => {
@@ -33,7 +33,8 @@ void (async () => {
 
     if (req.method === "OPTIONS") {
       res.writeHead(204, {
-        "Access-Control-Allow-Origin": "http://localhost:3000",
+        // Use dynamic origin based on environment
+        "Access-Control-Allow-Origin": getAllowedOrigin(req.headers.origin),
         "Access-Control-Allow-Credentials": "true",
         "Access-Control-Allow-Headers": "Content-Type, Authorization",
         "Access-Control-Allow-Methods": "GET,POST,OPTIONS",
@@ -42,19 +43,14 @@ void (async () => {
       return;
     }
 
-    res.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
+    // Use dynamic origin based on environment
+    res.setHeader("Access-Control-Allow-Origin", getAllowedOrigin(req.headers.origin));
     res.setHeader("Access-Control-Allow-Credentials", "true");
 
-    // set browsers to deny framing into an iframe (framebusting)
+    // Security headers (these are good, keep them)
     res.setHeader("X-Frame-Options", "DENY");
-
-    // set content security policy
     res.setHeader("Content-Security-Policy", "frame-ancestors 'self'");
-
-    // prevent MIME sniffing
     res.setHeader("X-Content-Type-Options", "nosniff");
-
-    // prevents cross origin script loading
     res.setHeader("Referrer-Policy", "same-origin");
 
     const parsedUrl = parse(req.url, true);
@@ -64,5 +60,22 @@ void (async () => {
   createTRPCwebSocketServer({ server });
   server.listen(port, "0.0.0.0");
 
-  console.log(`Production mode: Server listening at ${process.env.NEXT_PUBLIC_WS_URL}`);
+  console.log(`Server listening at port ${port} in ${process.env.NODE_ENV} mode`);
 })();
+
+// Helper function to set the appropriate CORS origin
+function getAllowedOrigin(requestOrigin: string | undefined): string {
+  // In development, use localhost
+  if (process.env.NODE_ENV !== "production") {
+    return "http://localhost:3000";
+  }
+
+  // In production, use the request origin if it exists
+  // This makes CORS work with your actual domain
+  if (requestOrigin != null) {
+    return requestOrigin;
+  }
+
+  // Fallback to your Railway domain
+  return process.env.RAILWAY_STATIC_URL!;
+}

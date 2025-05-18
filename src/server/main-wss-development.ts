@@ -5,7 +5,7 @@ void (async () => {
   await matchStore.rebuild();
 
   const wss = createTRPCwebSocketServer({
-    port: 3001,
+    port: parseInt(process.env.WS_PORT ?? "3001", 10),
   });
 
   wss.on("connection", (ws) => {
