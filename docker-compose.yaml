@@ -1,4 +1,3 @@
-version: "3.6"
 services:
   # NextJS frontend on port 3000
   frontend:
@@ -9,8 +8,6 @@ services:
       - "3000:3000"
     depends_on:
       - postgres
-    environment:
-      NEXT_PUBLIC_API_URL: http://backend:3001
     networks:
       - app_network
 
@@ -33,13 +30,14 @@ services:
   postgres:
     image: postgres:13
     ports:
-      - "5432:5432" # You can change this if needed
+      - "5932:5432" # You can change this if needed
     restart: always
     volumes:
       - db_data:/var/lib/postgresql/data
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: ${PGPASSWORD}
+      POSTGRES_HOST_AUTH_METHOD: trust
       POSTGRES_DB: warsworld
     networks:
       - app_network

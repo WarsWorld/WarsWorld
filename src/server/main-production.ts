@@ -34,7 +34,10 @@ void (async () => {
     if (req.method === "OPTIONS") {
       res.writeHead(204, {
         // Use dynamic origin based on environment
-        "Access-Control-Allow-Origin": getAllowedOrigin(req.headers.origin),
+        "Access-Control-Allow-Origin":
+          process.env.NODE_ENV === "development"
+            ? "http://localhost:3000"
+            : process.env.RAILWAY_NEXT_SERVER!,
         "Access-Control-Allow-Credentials": "true",
         "Access-Control-Allow-Headers": "Content-Type, Authorization",
         "Access-Control-Allow-Methods": "GET,POST,OPTIONS",
@@ -44,7 +47,12 @@ void (async () => {
     }
 
     // Use dynamic origin based on environment
-    res.setHeader("Access-Control-Allow-Origin", getAllowedOrigin(req.headers.origin));
+    res.setHeader(
+      "Access-Control-Allow-Origin",
+      process.env.NODE_ENV === "development"
+        ? "http://localhost:3000"
+        : process.env.RAILWAY_NEXT_SERVER!,
+    );
     res.setHeader("Access-Control-Allow-Credentials", "true");
 
     // Security headers (these are good, keep them)
@@ -62,20 +70,3 @@ void (async () => {
 
   console.log(`Server listening at port ${port} in ${process.env.NODE_ENV} mode`);
 })();
-
-// Helper function to set the appropriate CORS origin
-function getAllowedOrigin(requestOrigin: string | undefined): string {
-  // In development, use localhost
-  if (process.env.NODE_ENV !== "production") {
-    return "http://localhost:3000";
-  }
-
-  // In production, use the request origin if it exists
-  // This makes CORS work with your actual domain
-  if (requestOrigin != null) {
-    return requestOrigin;
-  }
-
-  // Fallback to your Railway domain
-  return process.env.RAILWAY_PUBLIC_DOMAIN!;
-}
