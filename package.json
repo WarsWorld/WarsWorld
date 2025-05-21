@@ -7,7 +7,7 @@
   },
   "type": "module",
   "scripts": {
-    "db:up": "docker compose up -d",
+    "db:up": "docker compose -f docker-compose-dev.yaml up -d",
     "db:destroy": "docker compose down --volumes --remove-orphans",
     "prisma:push": "prisma db push",
     "prisma:seed": "prisma db seed",
