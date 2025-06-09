@@ -21,7 +21,7 @@ export function renderAttackTiles(
   player: PlayerInMatchWrapper,
   currentUnitClickedRef: MutableRefObject<UnitWrapper | null>,
   spriteSheets: LoadedSpriteSheet,
-  path: Position[] | null,
+  pathRef: MutableRefObject<Position[] | null>,
   sendAction: (action: MainAction) => Promise<void>,
 ) {
   interactiveContainer.getChildByName("preAttackBox")?.destroy();
@@ -35,8 +35,12 @@ export function renderAttackTiles(
   }
 
   //This means we have clicked on a unit
-  if (path) {
-    attackTiles = getAttackTargetTiles(match, currentUnitClickedRef.current, path[path.length - 1]);
+  if (pathRef.current) {
+    attackTiles = getAttackTargetTiles(
+      match,
+      currentUnitClickedRef.current,
+      pathRef.current[pathRef.current.length - 1],
+    );
   } else {
     attackTiles = getAttackTargetTiles(match, currentUnitClickedRef.current);
   }
@@ -53,7 +57,12 @@ export function renderAttackTiles(
       const unit2 = match.getUnit(pos);
 
       if (unit1 !== null && unit2 !== undefined) {
-        attackTileContainer.addChild(renderProbabilities(unit1, unit2));
+        console.log("PATHREF:", pathRef, pathRef.current);
+        const attackingPos =
+          pathRef.current !== null
+            ? pathRef.current[pathRef.current.length - 1]
+            : unit1.data.position;
+        attackTileContainer.addChild(renderProbabilities(unit1, unit2, attackingPos));
       }
     });
 
@@ -62,8 +71,10 @@ export function renderAttackTiles(
       attackTileContainer.getChildByName("probabilities")?.destroy();
     });
 
-    if (path) {
-      attackTile.on("pointerdown", () => {
+    attackTile.on("pointerdown", () => {
+      const path = pathRef.current;
+
+      if (path !== null) {
         void sendAction({
           type: "move",
           subAction: {
@@ -72,18 +83,23 @@ export function renderAttackTiles(
           },
           path: path,
         });
-        //The currentUnitClicked has changed (moved, attacked, died), therefore, we delete the previous information as it is not accurate anymore
-        //this also helps so when the screen resets, we dont have two copies of a unit
-        currentUnitClickedRef.current = null;
-      });
-    }
+      }
+
+      //The currentUnitClicked has changed (moved, attacked, died), therefore, we delete the previous information as it is not accurate anymore
+      //this also helps so when the screen resets, we dont have two copies of a unit
+      currentUnitClickedRef.current = null;
+    });
 
     attackTileContainer.addChild(attackTile);
   });
 
   //todo: at some point maybe refactor all the numbers that are over the place here
   //into somethinc clean and consistent
-  function renderProbabilities(attacker: UnitWrapper, defender: UnitWrapper) {
+  function renderProbabilities(
+    attacker: UnitWrapper,
+    defender: UnitWrapper,
+    attackingPos: Position,
+  ) {
     const defenderPosition = defender.data.position;
     const probabilitiesContainer = new Container();
     probabilitiesContainer.name = "probabilities";
@@ -94,7 +110,6 @@ export function renderAttackTiles(
       return probabilitiesContainer;
     }
 
-    const attackingPos = path !== null ? path[path.length - 1] : attacker.data.position;
     const { attackerDamage, defenderDamage }: BattleForecast = getBattleForecast(
       match,
       attacker,

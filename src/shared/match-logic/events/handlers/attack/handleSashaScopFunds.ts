@@ -1,4 +1,12 @@
+import type { PlayerInMatchWrapper } from "shared/wrappers/player-in-match";
 import type { UnitWrapper } from "shared/wrappers/unit";
+
+export const applySashaFundsDamage = (
+  sashaPlayer: PlayerInMatchWrapper,
+  damageInFundsDealt: number,
+) => {
+  sashaPlayer.data.funds += damageInFundsDealt * 0.5;
+};
 
 export const handleSashaScopFunds = (
   attacker: UnitWrapper,
@@ -10,13 +18,13 @@ export const handleSashaScopFunds = (
     attacker.player.data.coId.name === "sasha" &&
     attacker.player.data.COPowerState === "super-co-power"
   ) {
-    attacker.player.data.funds += ((defenderHpDiff * defender.getBuildCost()) / 10) * 0.5;
+    applySashaFundsDamage(attacker.player, (defenderHpDiff * defender.getBuildCost()) / 10);
   }
 
   if (
     defender.player.data.coId.name === "sasha" &&
     defender.player.data.COPowerState === "super-co-power"
   ) {
-    defender.player.data.funds += ((attackerHpDiff * attacker.getBuildCost()) / 10) * 0.5;
+    applySashaFundsDamage(defender.player, (attackerHpDiff * attacker.getBuildCost()) / 10);
   }
 };

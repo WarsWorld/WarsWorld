@@ -155,7 +155,7 @@ export type EmittableSubEvent =
   | UnloadWaitEvent
   | EmittableAttackEvent;
 
-export type EmittableMoveEvent = Omit<MoveEventWithSubEvent, "subEvent"> &
+export type EmittableMoveEvent = MoveEventWithoutSubEvent &
   WithDiscoveries & {
     subEvent: EmittableSubEvent;
     /**

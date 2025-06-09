@@ -168,7 +168,7 @@ export const handleClick = async (
           player,
           currentUnitClickedRef,
           spriteSheets,
-          null,
+          pathRef,
           sendAction,
         ),
       );

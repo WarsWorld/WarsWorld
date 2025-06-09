@@ -15,16 +15,21 @@ export const getBattleForecast = (
   match: MatchWrapper,
   attacker: UnitWrapper,
   newUnitPosition: Position,
-  attackingPosition: Position,
+  attackingAtPosition: Position,
 ): BattleForecast => {
-  let defender = match.getUnit(attackingPosition);
+  let defender = match.getUnit(attackingAtPosition);
   const isPipeSeamAttack = defender === undefined;
 
   if (!defender) {
-    const attackedTile = match.getTile(attackingPosition);
+    const attackedTile = match.getTile(attackingAtPosition);
 
     if (attackedTile.type == "pipeSeam") {
-      defender = createPipeSeamUnitEquivalent(match, attacker, attackingPosition, attackedTile.hp);
+      defender = createPipeSeamUnitEquivalent(
+        match,
+        attacker,
+        attackingAtPosition,
+        attackedTile.hp,
+      );
     } else {
       throw Error(
         "Creating attackable tile functionality to a tile that does not have a unit / pipeseam",
@@ -70,8 +75,8 @@ export const getBattleForecast = (
   const maxDamageDealt = defender.getHP() - bestAttackerOutcome.defenderHP;
   const minDamageDealt = defender.getHP() - bestDefenderOutcome.defenderHP;
 
-  const maxDamageTaken = attacker.getHP() - (bestDefenderOutcome.attackerHP ?? 0);
-  const minDamageTaken = attacker.getHP() - (bestAttackerOutcome.attackerHP ?? 0);
+  const maxDamageTaken = attacker.getHP() - (bestDefenderOutcome.attackerHP ?? attacker.getHP());
+  const minDamageTaken = attacker.getHP() - (bestAttackerOutcome.attackerHP ?? attacker.getHP());
 
   //Enemy unit is dead or can't attack
   if (minDamageDealt >= defender?.getHP() || maxDamageTaken === attacker.getHP()) {

@@ -29,17 +29,6 @@ export const createEmittableAttackEvent = (
     ? getPowerChargeGain(attacker, attackerHPDiff, defender, defenderHPDiff)
     : { attackerPowerCharge: 0, defenderPowerCharge: 0 };
 
-  /*
-  must fill this info for both attacker and defender:
-
-  type EmittableAttackUnitInfo = {
-    playerSlot: PlayerSlot;
-    position?: Position;
-    HP?: number;
-    visibleHPLost?: number;
-  };
-  */
-
   if (
     teamWitness.canSeeUnitAtPosition(attacker.data.position) ||
     (attacker.player.data.COPowerState === "no-power" && powerChargeGain.attackerPowerCharge !== 0)

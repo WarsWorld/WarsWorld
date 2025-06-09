@@ -45,9 +45,9 @@ export const applyEmittableAttackEvent = (match: MatchWrapper, event: EmittableA
     //update funds if using sasha scop
     if (
       attackerPlayer.isUsingPower("super-co-power", "sasha") &&
-      event.defender?.damageTakenInFunds !== undefined
+      event.defender?.damageDealtInFunds !== undefined
     ) {
-      attackerPlayer.data.funds += event.defender.damageTakenInFunds * 0.5;
+      attackerPlayer.data.funds += event.defender.damageDealtInFunds * 0.5;
     }
   }
 
@@ -78,9 +78,9 @@ export const applyEmittableAttackEvent = (match: MatchWrapper, event: EmittableA
     //update funds if using sasha scop
     if (
       defenderPlayer.isUsingPower("super-co-power", "sasha") &&
-      event.attacker?.damageTakenInFunds !== undefined
+      event.attacker?.damageDealtInFunds !== undefined
     ) {
-      defenderPlayer.data.funds += event.attacker.damageTakenInFunds * 0.5;
+      defenderPlayer.data.funds += event.attacker.damageDealtInFunds * 0.5;
     }
   }
 };

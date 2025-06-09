@@ -15,12 +15,12 @@ import {
   type Position,
 } from "shared/schemas/position";
 import type { UnitWrapper } from "shared/wrappers/unit";
+import { baseTileSize } from "../components/client-only/MatchRenderer";
 import type { MainAction, SubAction } from "../shared/schemas/action";
 import type { MatchWrapper } from "../shared/wrappers/match";
 import type { PlayerInMatchWrapper } from "../shared/wrappers/player-in-match";
 import type { LoadedSpriteSheet } from "./load-spritesheet";
 import { renderAttackTiles } from "./renderAttackTiles";
-import { baseTileSize } from "../components/client-only/MatchRenderer";
 
 export enum AvailableSubActions {
   "Wait",
@@ -367,7 +367,7 @@ export default function subActionMenu(
             player,
             currentUnitClickedRef,
             spriteSheets,
-            pathRef.current,
+            pathRef,
             sendAction,
           ),
         );

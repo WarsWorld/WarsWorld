@@ -1,10 +1,10 @@
 import { getVisualHPfromHP } from "shared/match-logic/calculate-damage";
 import type { Position } from "shared/schemas/position";
-import type { AttackEvent } from "shared/types/events";
+import type { AttackEvent, EmittableAttackEvent } from "shared/types/events";
 import type { MatchWrapper } from "shared/wrappers/match";
 import { canAttackWithPrimary } from "./canAttackWithPrimary";
 import { getPowerChargeGain } from "./getPowerChargeGain";
-import { handleSashaScopFunds } from "./handleSashaScopFunds";
+import { applySashaFundsDamage, handleSashaScopFunds } from "./handleSashaScopFunds";
 
 export const applyAttackEvent = (match: MatchWrapper, event: AttackEvent, position: Position) => {
   const attacker = match.getUnitOrThrow(position);
@@ -67,6 +67,94 @@ export const applyAttackEvent = (match: MatchWrapper, event: AttackEvent, positi
       attacker.remove();
     } else {
       attacker.setHp(event.attackerHP);
+    }
+  }
+};
+
+export const applyEmittableAttackEvent = (match: MatchWrapper, event: EmittableAttackEvent) => {
+  if (event.attacker) {
+    //power charge
+    if (event.attacker.powerChargeGained != null) {
+      const player = match.getPlayerBySlot(event.attacker.playerSlot);
+      player?.gainPowerCharge(event.attacker.powerChargeGained);
+    }
+
+    if (event.attacker.position) {
+      const attackerUnit = match.getUnitOrThrow(event.attacker.position);
+
+      //HP change
+      if (event.attacker.HP != null) {
+        if (event.attacker.HP === 0) {
+          attackerUnit.remove();
+        } else {
+          attackerUnit.setHp(event.attacker.HP);
+        }
+      }
+
+      //ammo consumption (if usedAmmo is true)
+      if (event.attacker.usedAmmo ?? false) {
+        attackerUnit.useOneAmmo();
+      }
+    }
+
+    //special case for Sasha SCOP (damage taken in funds for money)
+    if (event.attacker.damageTakenInFunds != null && event.defender) {
+      const defendingPlayer = match.getPlayerBySlot(event.defender.playerSlot);
+
+      if (defendingPlayer) {
+        //^ should always be true
+        applySashaFundsDamage(defendingPlayer, event.attacker.damageTakenInFunds);
+      }
+    }
+  }
+
+  if (event.defender) {
+    //power charge
+    if (event.defender.powerChargeGained != null) {
+      const player = match.getPlayerBySlot(event.defender.playerSlot);
+      player?.gainPowerCharge(event.defender.powerChargeGained);
+    }
+
+    if (event.defender.position) {
+      const defenderUnit = match.getUnit(event.defender.position);
+
+      if (defenderUnit === undefined) {
+        //pipe seam
+        const pipeTile = match.getTile(event.defender.position);
+
+        if (pipeTile.type !== "pipeSeam") {
+          throw new Error("Received pipe seam attack event, but no pipe seam was found");
+        }
+
+        if (event.defender.HP != null) {
+          //^ should always be true
+          pipeTile.hp = event.defender.HP;
+        }
+      } else {
+        //HP change
+        if (event.defender.HP != null) {
+          if (event.defender.HP === 0) {
+            defenderUnit.remove();
+          } else {
+            defenderUnit.setHp(event.defender.HP);
+          }
+        }
+
+        //ammo consumption (if usedAmmo is true)
+        if (event.defender.usedAmmo ?? false) {
+          defenderUnit.useOneAmmo();
+        }
+      }
+    }
+
+    //special case for Sasha SCOP (damage taken in funds for money)
+    if (event.defender.damageTakenInFunds != null && event.attacker) {
+      const attackingPlayer = match.getPlayerBySlot(event.attacker.playerSlot);
+
+      if (attackingPlayer) {
+        //^ should always be true
+        applySashaFundsDamage(attackingPlayer, event.defender.damageTakenInFunds);
+      }
     }
   }
 };
