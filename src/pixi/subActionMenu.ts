@@ -37,15 +37,16 @@ export enum AvailableSubActions {
   "Attack",
 }
 
-let availableActions: Map<AvailableSubActions, SubAction>;
-
 export const getAvailableSubActions = (
   match: MatchWrapper,
   player: PlayerInMatchWrapper,
   unit: UnitWrapper,
   newPosition: Position,
 ) => {
-  const menuOptions: AvailableSubActions[] = [];
+  const menuOptions: Map<AvailableSubActions, SubAction> = new Map<
+    AvailableSubActions,
+    SubAction
+  >();
   const tile = match.getTile(newPosition);
 
   //This grabs the neighboring units in the new position, units.getNeighboringUnits() gets them in the old position
@@ -55,19 +56,16 @@ export const getAvailableSubActions = (
     neighbourPositions.some((p) => isSamePosition(unit.data.position, p)),
   );
 
-  //check for wait / join / load (move validity a
+  //check for wait / join / load (move validity
   // already checked somewhere else)
   //if loading / joining, there is only one menu option
-  if (
-    match.getUnit(newPosition) === undefined ||
-    (newPosition[0] === unit.data.position[0] && newPosition[1] === unit.data.position[1])
-  ) {
-    availableActions.set(AvailableSubActions.Wait, { type: "wait" });
+  if (match.getUnit(newPosition) === undefined || isSamePosition(newPosition, unit.data.position)) {
+    menuOptions.set(AvailableSubActions.Wait, { type: "wait" });
   } else if (match.getUnit(newPosition)?.data.type === unit.data.type) {
-    availableActions.set(AvailableSubActions.Join, { type: "wait" });
+    menuOptions.set(AvailableSubActions.Join, { type: "wait" });
     return menuOptions;
   } else {
-    availableActions.set(AvailableSubActions.Load, { type: "wait" });
+    menuOptions.set(AvailableSubActions.Load, { type: "wait" });
     return menuOptions;
   }
 
@@ -142,7 +140,7 @@ export const getAvailableSubActions = (
 
     if (addAttackSubaction) {
       //TODO: This implementation needs to actually check where user wants to attack
-      availableActions.set(AvailableSubActions.Attack, {
+      menuOptions.set(AvailableSubActions.Attack, {
         type: "attack",
         defenderPosition: [0, 0],
       });
@@ -152,12 +150,12 @@ export const getAvailableSubActions = (
   //check for capture / launch
   if (unit.isInfantryOrMech()) {
     if ("playerSlot" in tile && tile.playerSlot !== player.data.slot) {
-      availableActions.set(AvailableSubActions.Capture, { type: "ability" });
+      menuOptions.set(AvailableSubActions.Capture, { type: "ability" });
     }
 
     if (tile.type === "unusedSilo") {
       //TODO: This implementation needs to actually check where user wants missile to go
-      availableActions.set(AvailableSubActions.Launch, {
+      menuOptions.set(AvailableSubActions.Launch, {
         type: "launchMissile",
         targetPosition: [0, 0],
       });
@@ -168,7 +166,7 @@ export const getAvailableSubActions = (
   if (unit.data.type === "apc") {
     for (const adjacentUnit of neighbourUnitsInNewPosition) {
       if (adjacentUnit.player.data.id === unit.player.data.id) {
-        availableActions.set(AvailableSubActions.Supply, { type: "ability" });
+        menuOptions.set(AvailableSubActions.Supply, { type: "ability" });
         break;
       }
     }
@@ -176,15 +174,15 @@ export const getAvailableSubActions = (
 
   //check for explode
   if (unit.data.type === "blackBomb") {
-    availableActions.set(AvailableSubActions.Explode, { type: "ability" });
+    menuOptions.set(AvailableSubActions.Explode, { type: "ability" });
   }
 
   //check for hide / show
   if ("hidden" in unit.data) {
     if (unit.data.hidden) {
-      availableActions.set(AvailableSubActions.Show, { type: "ability" });
+      menuOptions.set(AvailableSubActions.Show, { type: "ability" });
     } else {
-      availableActions.set(AvailableSubActions.Hide, { type: "ability" });
+      menuOptions.set(AvailableSubActions.Hide, { type: "ability" });
     }
   }
 
@@ -258,7 +256,7 @@ export const getAvailableSubActions = (
     for (const adjacentUnit of neighbourUnitsInNewPosition) {
       if (adjacentUnit.player.data.id === unit.player.data.id) {
         //TODO: Actually check where user wants to repair
-        availableActions.set(AvailableSubActions.Repair, { type: "repair", direction: "up" });
+        menuOptions.set(AvailableSubActions.Repair, { type: "repair", direction: "up" });
         break;
       }
     }
@@ -279,8 +277,6 @@ export default function subActionMenu(
   spriteSheets: LoadedSpriteSheet,
   sendAction: (action: MainAction) => Promise<void>,
 ) {
-  availableActions = new Map<AvailableSubActions, SubAction>();
-
   const menuOptions = getAvailableSubActions(match, player, unit, newPosition);
 
   const [x, y] = newPosition;
@@ -308,9 +304,9 @@ export default function subActionMenu(
   }
 
   //if our menu would appear below the middle of the map, we need to bring it up!
-  if (y >= match.map.height / 2 && match.map.height - y <= menuOptions.length + 1) {
+  if (y >= match.map.height / 2 && match.map.height - y <= menuOptions.size + 1) {
     const spaceLeft = match.map.height - y;
-    menuContainer.y = (y - Math.abs(spaceLeft - menuOptions.length)) * baseTileSize;
+    menuContainer.y = (y - Math.abs(spaceLeft - menuOptions.size)) * baseTileSize;
   } else {
     menuContainer.y = y * baseTileSize;
   }
@@ -319,7 +315,7 @@ export default function subActionMenu(
   // yValue is not the best name for it but effectively it is that, a y value
   let yValue = 0;
 
-  for (const [name, subAction] of availableActions) {
+  for (const [name, subAction] of menuOptions) {
     //child container to hold all the text and sprite into one place
     const menuElement = new Container();
     menuElement.eventMode = "static";

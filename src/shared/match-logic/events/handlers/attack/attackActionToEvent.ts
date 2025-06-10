@@ -4,7 +4,6 @@ import {
   createPipeSeamUnitEquivalent,
   getBaseDamage,
 } from "shared/match-logic/game-constants/base-damage";
-import { unitPropertiesMap } from "shared/match-logic/game-constants/unit-properties";
 import type { AttackAction } from "shared/schemas/action";
 import type { LuckRoll } from "shared/schemas/co";
 import { getDistance } from "shared/schemas/position";
@@ -36,28 +35,19 @@ export const attackActionToEvent: (...params: Params) => AttackEvent = (
   }
 
   //check if unit is in range
-  const attackerProperties = unitPropertiesMap[attacker.data.type];
+  const attackRange = attacker.getAttackRange();
 
-  if (!("attackRange" in attackerProperties)) {
+  if (attackRange === undefined) {
     throw new DispatchableError("Unit cannot attack");
   }
 
-  if (attackerProperties.attackRange[0] > 1 && unitHasMoved) {
+  if (attackRange.minRange > 1 && unitHasMoved) {
     throw new DispatchableError("Trying to move and attack with an indirect unit");
   }
 
   const attackDistance = getDistance(fromPosition, action.defenderPosition);
 
-  let maximumAttackRange =
-    attackerProperties.attackRange[1] - (match.getCurrentWeather() === "sandstorm" ? 1 : 0);
-  maximumAttackRange =
-    attacker.player.getHook("attackRange")?.(maximumAttackRange, attacker) ?? maximumAttackRange;
-
-  // we'll need this logic to prevent e.g. Max from having
-  // [2, 1] artillery attack range in sandstorms.
-  maximumAttackRange = Math.max(attackerProperties.attackRange[0], maximumAttackRange);
-
-  if (attackerProperties.attackRange[0] > attackDistance || attackDistance > maximumAttackRange) {
+  if (attackRange.minRange > attackDistance || attackDistance > attackRange.maxRange) {
     throw new DispatchableError("Unit is not in range to attack");
   }
 

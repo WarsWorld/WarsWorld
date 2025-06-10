@@ -232,6 +232,25 @@ export class UnitWrapper<
     return this.properties.attackRange[1] > 1;
   }
 
+  getAttackRange(): { minRange: number; maxRange: number } | undefined {
+    const unitProperties = unitPropertiesMap[this.data.type];
+
+    if (!("attackRange" in unitProperties)) {
+      return undefined;
+    }
+
+    let maximumAttackRange =
+      unitProperties.attackRange[1] - (this.match.getCurrentWeather() === "sandstorm" ? 1 : 0);
+    maximumAttackRange =
+      this.player.getHook("attackRange")?.(maximumAttackRange, this) ?? maximumAttackRange;
+
+    // we'll need this logic to prevent e.g. Max from having
+    // [2, 1] artillery attack range in sandstorms.
+    maximumAttackRange = Math.max(unitProperties.attackRange[0], maximumAttackRange);
+
+    return { minRange: unitProperties.attackRange[0], maxRange: maximumAttackRange };
+  }
+
   isInfantryOrMech(): this is UnitWrapper<"infantry" | "mech"> {
     return this.data.type === "infantry" || this.data.type === "mech";
   }

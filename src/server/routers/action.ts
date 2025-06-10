@@ -58,6 +58,11 @@ export const actionRouter = router({
       /* 1. Move action to event */
       const mainEventWithoutSubEvent = validateMainActionAndToEvent(match, input);
 
+      // if there was a trap or join/load, the default subEvent is "wait" (check must be done before moving the unit)
+      const isJoinOrLoad =
+        mainEventWithoutSubEvent.type === "move" &&
+        match.getUnit(getFinalPositionSafe(mainEventWithoutSubEvent.path)) !== undefined;
+
       /* 2. Apply move event to match */
       applyMainEventToMatch(match, mainEventWithoutSubEvent);
 
@@ -79,11 +84,6 @@ export const actionRouter = router({
         // second condition is only needed for type-gating input event
 
         /* 3. Sub action to event */
-        // if there was a trap or join/load, the default subEvent is "wait".
-        const _isJoinOrLoad =
-          match.getUnit(getFinalPositionSafe(mainEventWithoutSubEvent.path)) !== undefined;
-        // TODO: isJoinorLoad doesnt really work, have to fix
-
         const mainEventWithSubEvent: MainEventWithSubEvents = {
           ...mainEventWithoutSubEvent,
           subEvent: {
@@ -91,7 +91,7 @@ export const actionRouter = router({
           },
         };
 
-        if (!mainEventWithoutSubEvent.trap /*&& !isJoinOrLoad*/) {
+        if (!mainEventWithoutSubEvent.trap && !isJoinOrLoad) {
           mainEventWithSubEvent.subEvent = validateSubActionAndToEvent(match, input);
         }
 

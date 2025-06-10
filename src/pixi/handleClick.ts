@@ -2,6 +2,7 @@
 import type { Container } from "pixi.js";
 import { Assets } from "pixi.js";
 import type { MutableRefObject } from "react";
+import { throwIfCantMoveIntoUnit } from "shared/match-logic/events/handlers/move";
 import type { MainAction } from "shared/schemas/action";
 import type { Position } from "shared/schemas/position";
 import { isSamePosition } from "shared/schemas/position";
@@ -71,6 +72,7 @@ export const handleClick = async (
   // meaning the user has already clicked on a unit
   // so now we can process those movements
   else if (currentUnitClickedRef.current && moveTilesRef.current) {
+    const currentUnit = currentUnitClickedRef.current;
     //flag to determine if we clicked on path
     let clickedOnPathFlag = false;
 
@@ -79,39 +81,42 @@ export const handleClick = async (
       if (isSamePosition(clickPosition, pos)) {
         const unitInTile = match.getUnit(clickPosition);
 
-        //TODO: Logic to handle user clicking an unit (we show its path) and
-        // then clicking a transport unit (meaning user is trying to transport that unit
-        if (unitInTile?.isTransport() === true) {
-          //show action menu next to transport?
-          //Handle logic to see if currentUnitClicked can be transported, if not, initiate cleanup
+        let canUnitMoveIntoOther = false;
+
+        if (unitInTile) {
+          try {
+            throwIfCantMoveIntoUnit(currentUnit, unitInTile);
+            canUnitMoveIntoOther = true;
+          } catch (DispatchableError) {}
         }
-        //No unit in tile / tile is empty OR we clicked on the same position unit is already in
-        else if (!unitInTile || isSamePosition(currentUnitClickedRef.current.data.position, pos)) {
+
+        const canMoveToTile =
+          unitInTile === undefined || //empty tile
+          isSamePosition(currentUnit.data.position, pos) || //same position
+          (unitInTile?.player.data.slot === currentUnit.player.data.slot && canUnitMoveIntoOther); //join or load
+
+        if (canMoveToTile) {
+          /*
           //clean game area and add sprite of unit in possible "new" position
           mapContainer.getChildByName("path")?.destroy();
           mapContainer.getChildByName("arrows")?.destroy();
           unitContainer.getChildByName("preAttackBox")?.destroy();
           unitContainer
-            .getChildByName(
-              `unit-${currentUnitClickedRef.current.data.position[0]}-${currentUnitClickedRef.current.data.position[1]}`,
-            )
+            .getChildByName(`unit-${currentUnit.data.position[0]}-${currentUnit.data.position[1]}`)
             ?.destroy();
 
           //create new temporary sprite in selected position
-          const tempUnit = renderUnitSprite(
-            currentUnitClickedRef.current,
-            spriteSheets,
-            clickPosition,
-          );
+          const tempUnit = renderUnitSprite(currentUnit, spriteSheets, clickPosition);
           tempUnit.name = "tempUnit";
           unitContainer.addChild(tempUnit);
+          */
 
           // display subaction menu next to unit in new position
           const subMenu = subActionMenu(
             match,
             player,
             pos,
-            currentUnitClickedRef.current,
+            currentUnit,
             currentUnitClickedRef,
             pathRef,
             unitContainer,

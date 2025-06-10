@@ -84,75 +84,77 @@ export const moveActionToEvent = (
       unitInPosition !== undefined &&
       unitInPosition.data.playerSlot === unit.data.playerSlot
     ) {
-      if (unitInPosition.data.type === unit.data.type) {
-        // trying to join (same unit type)
-        // join logic: if neither unit has loaded units, and the unit at join destination is not 10 hp
-        if (unitInPosition.getVisualHP() === 10) {
-          throw new DispatchableError("Trying to join into a unit at full hp");
-        }
-
-        if ("loadedUnit" in unitInPosition && unitInPosition.loadedUnit !== null) {
-          throw new DispatchableError("Trying to join into a unit that has a loaded unit");
-        }
-
-        if ("loadedUnit" in unit && unit.loadedUnit !== null) {
-          throw new DispatchableError("Trying to join while having a unit loaded");
-        }
-      } else {
-        // trying to load (different unit type)
-        if (!("loadedUnit" in unitInPosition)) {
-          throw new DispatchableError(
-            "Move action ending position is overlapping with an allied unit",
-          );
-        }
-
-        if (
-          unitInPosition.loadedUnit !== null &&
-          (!("loadedUnit2" in unitInPosition) || unitInPosition.loadedUnit2 !== null)
-        ) {
-          throw new DispatchableError("Transport already occupied");
-        }
-
-        //check if unit can go into that transport
-        switch (unitInPosition.data.type) {
-          case "transportCopter":
-          case "apc":
-          case "blackBoat": {
-            if (unit.data.type !== "infantry" && unit.data.type !== "mech") {
-              throw new DispatchableError("Can't load non-soldier in apc / transport / black boat");
-            }
-
-            break;
-          }
-          case "lander": {
-            if (unitPropertiesMap[unit.data.type].facility !== "base") {
-              throw new DispatchableError("Can't load non-land unit to lander");
-            }
-
-            break;
-          }
-          case "cruiser": {
-            if (unit.data.type !== "transportCopter" && unit.data.type !== "battleCopter") {
-              throw new DispatchableError("Can't load non-copter in cruiser");
-            }
-
-            break;
-          }
-          case "carrier": {
-            if (unitPropertiesMap[unit.data.type].facility !== "airport") {
-              throw new DispatchableError("Can't load non-land unit to lander");
-            }
-
-            break;
-          }
-        }
-      }
+      throwIfCantMoveIntoUnit(unit, unitInPosition);
     }
 
     result.path.push(action.path[pathIndex]);
   }
 
   return result;
+};
+
+export const throwIfCantMoveIntoUnit = (unit: UnitWrapper, unitInPosition: UnitWrapper) => {
+  if (unitInPosition.data.type === unit.data.type) {
+    // trying to join (same unit type)
+    // join logic: if neither unit has loaded units, and the unit at join destination is not 10 hp
+    if (unitInPosition.getVisualHP() === 10) {
+      throw new DispatchableError("Trying to join into a unit at full hp");
+    }
+
+    if ("loadedUnit" in unitInPosition && unitInPosition.loadedUnit !== null) {
+      throw new DispatchableError("Trying to join into a unit that has a loaded unit");
+    }
+
+    if ("loadedUnit" in unit && unit.loadedUnit !== null) {
+      throw new DispatchableError("Trying to join while having a unit loaded");
+    }
+  } else {
+    // trying to load (different unit type)
+    if (!("loadedUnit" in unitInPosition)) {
+      throw new DispatchableError("Move action ending position is overlapping with an allied unit");
+    }
+
+    if (
+      unitInPosition.loadedUnit !== null &&
+      (!("loadedUnit2" in unitInPosition) || unitInPosition.loadedUnit2 !== null)
+    ) {
+      throw new DispatchableError("Transport already occupied");
+    }
+
+    //check if unit can go into that transport
+    switch (unitInPosition.data.type) {
+      case "transportCopter":
+      case "apc":
+      case "blackBoat": {
+        if (unit.data.type !== "infantry" && unit.data.type !== "mech") {
+          throw new DispatchableError("Can't load non-soldier in apc / transport / black boat");
+        }
+
+        break;
+      }
+      case "lander": {
+        if (unitPropertiesMap[unit.data.type].facility !== "base") {
+          throw new DispatchableError("Can't load non-land unit to lander");
+        }
+
+        break;
+      }
+      case "cruiser": {
+        if (unit.data.type !== "transportCopter" && unit.data.type !== "battleCopter") {
+          throw new DispatchableError("Can't load non-copter in cruiser");
+        }
+
+        break;
+      }
+      case "carrier": {
+        if (unitPropertiesMap[unit.data.type].facility !== "airport") {
+          throw new DispatchableError("Can't load non-air unit to carrier");
+        }
+
+        break;
+      }
+    }
+  }
 };
 
 const loadUnitInto = (unitToLoad: UnitWithVisibleStats, transportUnit: UnitWithVisibleStats) => {

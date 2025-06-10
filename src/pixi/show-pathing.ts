@@ -107,16 +107,16 @@ export const getAttackableTiles = (
   const attackPositions: Position[] = [];
   const sourcePosition = fromPosition ?? unit.data.position;
 
-  if ("attackRange" in unit.properties && unit.properties.attackRange[0] > 1) {
-    // Ranged unit
+  const attackRange = unit.getAttackRange();
+
+  if (unit.isIndirect() && attackRange !== undefined) {
+    // Ranged unit (2nd condition is for typescript)
+
     for (let x = 0; x < match.map.width; x++) {
       for (let y = 0; y < match.map.height; y++) {
         const distance = getDistance([x, y], sourcePosition);
 
-        if (
-          distance <= unit.properties.attackRange[1] &&
-          distance >= unit.properties.attackRange[0]
-        ) {
+        if (distance <= attackRange.maxRange && distance >= attackRange.minRange) {
           attackPositions.push([x, y]);
         }
       }
