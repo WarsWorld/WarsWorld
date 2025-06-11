@@ -119,7 +119,6 @@ export const handleClick = async (
             currentUnit,
             currentUnitClickedRef,
             pathRef,
-            unitContainer,
             interactiveContainer,
             spriteSheets,
             sendAction,
@@ -167,10 +166,8 @@ export const handleClick = async (
 
       interactiveContainer.addChild(
         renderAttackTiles(
-          unitContainer,
           interactiveContainer,
           match,
-          player,
           currentUnitClickedRef,
           spriteSheets,
           pathRef,

@@ -5,7 +5,6 @@ import type { MainAction } from "shared/schemas/action";
 import { /*baseTileSize,*/ renderedTileSize } from "../components/client-only/MatchRenderer";
 import type { Position } from "../shared/schemas/position";
 import type { MatchWrapper } from "../shared/wrappers/match";
-import type { PlayerInMatchWrapper } from "../shared/wrappers/player-in-match";
 import type { UnitWrapper } from "../shared/wrappers/unit";
 import type { BattleForecast } from "./interactiveTileFunctions";
 import { getBattleForecast } from "./interactiveTileFunctions";
@@ -15,18 +14,16 @@ import { getAttackTargetTiles } from "./show-pathing";
 import { tileConstructor } from "./sprite-constructor";
 
 export function renderAttackTiles(
-  unitContainer: Container<DisplayObject>,
   interactiveContainer: Container<DisplayObject>,
   match: MatchWrapper,
-  player: PlayerInMatchWrapper,
   currentUnitClickedRef: MutableRefObject<UnitWrapper | null>,
   spriteSheets: LoadedSpriteSheet,
   pathRef: MutableRefObject<Position[] | null>,
   sendAction: (action: MainAction) => Promise<void>,
+  attackingPosition?: Position,
 ) {
   interactiveContainer.getChildByName("preAttackBox")?.destroy();
 
-  let attackTiles;
   const attackTileContainer = new Container();
   attackTileContainer.name = "preAttackBox";
 
@@ -34,16 +31,7 @@ export function renderAttackTiles(
     return attackTileContainer;
   }
 
-  //This means we have clicked on a unit
-  if (pathRef.current) {
-    attackTiles = getAttackTargetTiles(
-      match,
-      currentUnitClickedRef.current,
-      pathRef.current[pathRef.current.length - 1],
-    );
-  } else {
-    attackTiles = getAttackTargetTiles(match, currentUnitClickedRef.current);
-  }
+  const attackTiles = getAttackTargetTiles(match, currentUnitClickedRef.current, attackingPosition);
 
   attackTiles.forEach((pos) => {
     const attackTile = tileConstructor(pos, "#be1919");
