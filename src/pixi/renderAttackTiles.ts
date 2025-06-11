@@ -1,6 +1,6 @@
 import type { DisplayObject } from "pixi.js";
 import { BitmapText, Container, Sprite, Texture } from "pixi.js";
-import type { MutableRefObject } from "react";
+import { type MutableRefObject } from "react";
 import type { MainAction } from "shared/schemas/action";
 import { /*baseTileSize,*/ renderedTileSize } from "../components/client-only/MatchRenderer";
 import type { Position } from "../shared/schemas/position";
@@ -19,6 +19,7 @@ export function renderAttackTiles(
   currentUnitClickedRef: MutableRefObject<UnitWrapper | null>,
   spriteSheets: LoadedSpriteSheet,
   pathRef: MutableRefObject<Position[] | null>,
+  mapContainer: Container,
   sendAction: (action: MainAction) => Promise<void>,
   attackingPosition?: Position,
 ) {
@@ -51,6 +52,11 @@ export function renderAttackTiles(
             ? pathRef.current[pathRef.current.length - 1]
             : unit1.data.position;
         attackTileContainer.addChild(renderProbabilities(unit1, unit2, attackingPos));
+
+        if (unit1?.isIndirect() === true) {
+          pathRef.current = null;
+          mapContainer.getChildByName("pathArrows")?.destroy();
+        }
       }
     });
 
@@ -61,9 +67,13 @@ export function renderAttackTiles(
 
     attackTile.on("pointerdown", () => {
       if (currentUnitClickedRef.current !== null) {
-        const path = pathRef.current
-          ? pathRef.current
-          : [currentUnitClickedRef.current.data.position];
+        //unit will not move if path is null (= not moving) or if it's indirect
+        const path =
+          pathRef.current && !currentUnitClickedRef.current.isIndirect()
+            ? pathRef.current
+            : [currentUnitClickedRef.current.data.position];
+
+        console.log("sending action:", pos, path);
         void sendAction({
           type: "move",
           subAction: {

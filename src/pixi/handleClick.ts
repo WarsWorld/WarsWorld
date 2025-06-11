@@ -96,21 +96,6 @@ export const handleClick = async (
           (unitInTile?.player.data.slot === currentUnit.player.data.slot && canUnitMoveIntoOther); //join or load
 
         if (canMoveToTile) {
-          /*
-          //clean game area and add sprite of unit in possible "new" position
-          mapContainer.getChildByName("path")?.destroy();
-          mapContainer.getChildByName("arrows")?.destroy();
-          unitContainer.getChildByName("preAttackBox")?.destroy();
-          unitContainer
-            .getChildByName(`unit-${currentUnit.data.position[0]}-${currentUnit.data.position[1]}`)
-            ?.destroy();
-
-          //create new temporary sprite in selected position
-          const tempUnit = renderUnitSprite(currentUnit, spriteSheets, clickPosition);
-          tempUnit.name = "tempUnit";
-          unitContainer.addChild(tempUnit);
-          */
-
           // display subaction menu next to unit in new position
           interactiveContainer.addChild(
             subActionMenu(
@@ -120,6 +105,7 @@ export const handleClick = async (
               currentUnit,
               currentUnitClickedRef,
               pathRef,
+              mapContainer,
               interactiveContainer,
               spriteSheets,
               sendAction,
@@ -158,7 +144,7 @@ export const handleClick = async (
         Array.from(passablePositions.keys()),
         "#43d9e4",
         999,
-        "path",
+        "highlightedTiles",
       );
 
       moveTilesRef.current = passablePositions;
@@ -171,6 +157,7 @@ export const handleClick = async (
           currentUnitClickedRef,
           spriteSheets,
           pathRef,
+          mapContainer,
           sendAction,
         ),
       );
@@ -201,9 +188,8 @@ export const handleClick = async (
     interactiveContainer.getChildByName("buildMenu")?.destroy();
     interactiveContainer.getChildByName("subActionMenu")?.destroy();
     interactiveContainer.getChildByName("preAttackBox")?.destroy(); //TODO ??
-    unitContainer.getChildByName("tempUnit")?.destroy();
-    mapContainer.getChildByName("path")?.destroy();
-    mapContainer.getChildByName("arrows")?.destroy();
+    mapContainer.getChildByName("highlightedTiles")?.destroy();
+    mapContainer.getChildByName("pathArrows")?.destroy();
 
     if (currentUnitClickedRef.current) {
       //lets add the original unit back to its original position only if the original doesnt exist
@@ -261,7 +247,7 @@ export const handleHover = async (
     );
     pathRef.current = newPath;
     const arrows = showPath(spriteSheets, newPath);
-    mapContainer.getChildByName("arrows")?.destroy();
+    mapContainer.getChildByName("pathArrows")?.destroy();
     mapContainer.addChild(arrows);
   }
 };

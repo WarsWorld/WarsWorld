@@ -27,6 +27,7 @@ export default function subActionMenu(
   unit: UnitWrapper,
   currentUnitClickedRef: React.MutableRefObject<UnitWrapper | null>,
   pathRef: MutableRefObject<Position[] | null>,
+  mapContainer: Container,
   interactiveContainer: Container,
   spriteSheets: LoadedSpriteSheet,
   sendAction: (action: MainAction) => Promise<void>,
@@ -95,6 +96,7 @@ export default function subActionMenu(
               currentUnitClickedRef,
               spriteSheets,
               pathRef,
+              mapContainer,
               sendAction,
               //either last path position or asuumes unit didn't move
               pathRef.current ? pathRef.current[pathRef.current.length - 1] : unit.data.position,
