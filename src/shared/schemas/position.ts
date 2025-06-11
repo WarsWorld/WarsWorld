@@ -72,3 +72,23 @@ export const addDirection = (position: Position, direction: Direction): Position
       return [position[0] + 1, position[1]];
   }
 };
+
+//untested!!
+export const getDirection = (fromPosition: Position, toPosition: Position): Direction => {
+  const dx = toPosition[0] - fromPosition[0];
+  const dy = toPosition[1] - fromPosition[1];
+
+  if (dx > dy) {
+    if (dx > 0) {
+      return "right";
+    }
+
+    return "left";
+  }
+
+  if (dy > 0) {
+    return "down";
+  }
+
+  return "up";
+};

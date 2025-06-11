@@ -11,8 +11,8 @@ import { applyLaunchMissileEvent } from "./handlers/launchMissile";
 import { applyMoveEvent } from "./handlers/move";
 import { applyPassTurnEvent } from "./handlers/passTurn";
 import { applyRepairEvent } from "./handlers/repair";
-import { applyUnloadNoWaitEvent } from "./handlers/unloadNoWait";
-import { applyUnloadWaitEvent } from "./handlers/unloadWait";
+import { applyUnloadNoWaitEvent } from "./handlers/unload/unloadNoWait";
+import { applyUnloadWaitEvent } from "./handlers/unload/unloadWait";
 
 export const applyMainEventToMatch = (
   match: MatchWrapper,

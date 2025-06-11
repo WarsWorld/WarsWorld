@@ -1,10 +1,10 @@
 import { DispatchableError } from "shared/DispatchedError";
 import type { UnloadNoWaitAction } from "shared/schemas/action";
+import { addDirection } from "shared/schemas/position";
 import type { UnloadNoWaitEvent } from "shared/types/events";
 import type { MatchWrapper } from "shared/wrappers/match";
-import { addDirection } from "shared/schemas/position";
-import type { MainActionToEvent } from "../handler-types";
-import { throwIfUnitCantBeUnloadedToTile } from "./unloadWait";
+import type { MainActionToEvent } from "../../handler-types";
+import { throwIfUnitCantBeUnloadedToTile } from "./checkUnloadTiles";
 
 export const unloadNoWaitActionToEvent: MainActionToEvent<UnloadNoWaitAction> = (match, action) => {
   const player = match.getCurrentTurnPlayer();
@@ -43,14 +43,24 @@ export const unloadNoWaitActionToEvent: MainActionToEvent<UnloadNoWaitAction> = 
     throwIfUnitCantBeUnloadedToTile(
       transportUnit.data.loadedUnit2,
       match.getTile(action.transportPosition),
+      transportUnit.player,
     );
-    throwIfUnitCantBeUnloadedToTile(transportUnit.data.loadedUnit2, match.getTile(unloadPosition));
+    throwIfUnitCantBeUnloadedToTile(
+      transportUnit.data.loadedUnit2,
+      match.getTile(unloadPosition),
+      transportUnit.player,
+    );
   } else {
     throwIfUnitCantBeUnloadedToTile(
       transportUnit.data.loadedUnit,
       match.getTile(action.transportPosition),
+      transportUnit.player,
     );
-    throwIfUnitCantBeUnloadedToTile(transportUnit.data.loadedUnit, match.getTile(unloadPosition));
+    throwIfUnitCantBeUnloadedToTile(
+      transportUnit.data.loadedUnit,
+      match.getTile(unloadPosition),
+      transportUnit.player,
+    );
   }
 
   return action;

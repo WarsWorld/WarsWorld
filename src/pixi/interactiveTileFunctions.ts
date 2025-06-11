@@ -92,33 +92,6 @@ export const getBattleForecast = (
   };
 };
 
-export const readyUnitClickedAttackableTile = (
-  /* eslint-disable @typescript-eslint/no-unused-vars */
-  // TODO: unused yet
-  confirmation: boolean, //only sends action if true
-  match: MatchWrapper,
-  attacker: UnitWrapper,
-  newUnitPosition: Position,
-  attackingPosition: Position,
-) => {
-  if (!confirmation) {
-    //remove path tiles, make damage outcome display not disappear until clicked somewhere
-  } else {
-    //send action
-  }
-};
-
-export const readyUnitClickedAccessibleTile = (
-  /* eslint-disable @typescript-eslint/no-unused-vars */
-  // TODO: unused yet
-  match: MatchWrapper,
-  unit: UnitWrapper,
-  position: Position,
-) => {
-  //check if can be a final location (empty tile or join or load)
-  //display subaction menu
-};
-
 //passable tiles colour: "#43d9e4"
 //attackable tiles colour: "#be1919"
 export const createTilesContainer = (

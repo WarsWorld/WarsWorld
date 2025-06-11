@@ -38,9 +38,9 @@ export const getAvailableSubActions = (
   unit: UnitWrapper,
   newPosition: Position,
 ) => {
-  const menuOptions: Map<AvailableSubActions, SubAction> = new Map<
+  const menuOptions: Map<AvailableSubActions, SubAction | undefined> = new Map<
     AvailableSubActions,
-    SubAction
+    SubAction | undefined
   >();
   const tile = match.getTile(newPosition);
 
@@ -134,11 +134,8 @@ export const getAvailableSubActions = (
     }
 
     if (addAttackSubaction) {
-      //TODO: This implementation needs to actually check where user wants to attack
-      menuOptions.set(AvailableSubActions.Attack, {
-        type: "attack",
-        defenderPosition: [0, 0],
-      });
+      //handled later
+      menuOptions.set(AvailableSubActions.Attack, undefined);
     }
   }
 
@@ -149,11 +146,8 @@ export const getAvailableSubActions = (
     }
 
     if (tile.type === "unusedSilo") {
-      //TODO: This implementation needs to actually check where user wants missile to go
-      menuOptions.set(AvailableSubActions.Launch, {
-        type: "launchMissile",
-        targetPosition: [0, 0],
-      });
+      //handled later
+      menuOptions.set(AvailableSubActions.Launch, undefined);
     }
   }
 
@@ -241,8 +235,7 @@ export const getAvailableSubActions = (
     }
 
     if (addUnloadSubaction) {
-      throw new Error("Unload not implemented");
-      // availableActions.set(AvailableSubActions.Unload, {type: "unloadWait", });
+      menuOptions.set(AvailableSubActions.Unload, undefined); //handled later
     }
   }
 
@@ -250,8 +243,8 @@ export const getAvailableSubActions = (
   if (unit.data.type === "blackBoat") {
     for (const adjacentUnit of neighbourUnitsInNewPosition) {
       if (adjacentUnit.player.data.id === unit.player.data.id) {
-        //TODO: Actually check where user wants to repair
-        menuOptions.set(AvailableSubActions.Repair, { type: "repair", direction: "up" });
+        //available directions handled later
+        menuOptions.set(AvailableSubActions.Repair, undefined);
         break;
       }
     }

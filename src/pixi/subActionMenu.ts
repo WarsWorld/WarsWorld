@@ -4,7 +4,12 @@ import {
   AvailableSubActions,
   getAvailableSubActions,
 } from "shared/match-logic/events/available-sub-actions";
-import { isSamePosition, type Position } from "shared/schemas/position";
+import {
+  addDirection,
+  allDirections,
+  isSamePosition,
+  type Position,
+} from "shared/schemas/position";
 import type { UnitWrapper } from "shared/wrappers/unit";
 import { baseTileSize } from "../components/client-only/MatchRenderer";
 import type { MainAction } from "../shared/schemas/action";
@@ -12,6 +17,7 @@ import type { MatchWrapper } from "../shared/wrappers/match";
 import type { PlayerInMatchWrapper } from "../shared/wrappers/player-in-match";
 import type { LoadedSpriteSheet } from "./load-spritesheet";
 import { renderAttackTiles } from "./renderAttackTiles";
+import { tileConstructor } from "./sprite-constructor";
 
 export default function subActionMenu(
   match: MatchWrapper,
@@ -109,7 +115,6 @@ export default function subActionMenu(
     });
 
     menuElement.on("pointerdown", () => {
-      //if its an attack
       switch (name) {
         case AvailableSubActions.Attack: {
           interactiveContainer.addChild(
@@ -126,13 +131,57 @@ export default function subActionMenu(
           );
           break;
         }
+
         case AvailableSubActions.Repair: {
+          const repairTilesContainer = new Container();
+          repairTilesContainer.name = "repairUnitsBox";
+
+          for (const dir of allDirections) {
+            const unitToRepair = match.getUnit(addDirection(unit.data.position, dir));
+
+            if (unitToRepair && unitToRepair.player.data.slot === unit.player.data.slot) {
+              const repairTile = tileConstructor(addDirection(unit.data.position, dir), "#be1919");
+              repairTile.eventMode = "static";
+
+              repairTile.on("pointerdown", () => {
+                if (currentUnitClickedRef.current !== null) {
+                  const path = pathRef.current
+                    ? pathRef.current
+                    : [currentUnitClickedRef.current.data.position];
+
+                  void sendAction({
+                    type: "move",
+                    subAction: {
+                      type: "repair",
+                      direction: dir,
+                    },
+                    path: path,
+                  });
+
+                  currentUnitClickedRef.current = null;
+                }
+              });
+
+              repairTilesContainer.addChild(repairTile);
+            }
+          }
+
+          repairTilesContainer.zIndex = 999;
+          interactiveContainer.addChild(repairTilesContainer);
+          break;
         }
+
         case AvailableSubActions.Launch: {
           //TODO
         }
+
         case AvailableSubActions.Unload: {
+          //TODO depends if unload = wait or not:
+          //if unload != wait then just commit move+wait and open the unloadNoWait action menu
+          //if unload = wait then open unit to unload, then choose location, then unit to unload 2, choose location.
+          //if 2 unloading units, remember to mark 1st unloaded unit location as unaccessible
         }
+
         case AvailableSubActions.Delete: {
           void sendAction({
             type: "delete",
@@ -142,7 +191,15 @@ export default function subActionMenu(
           currentUnitClickedRef.current = null;
           break;
         }
+
         default: {
+          if (subAction === undefined) {
+            throw new Error(
+              "Received undefined subAction from menu option that doesn't require further interaction: " +
+                name,
+            );
+          }
+
           void sendAction({
             type: "move",
             subAction: subAction,

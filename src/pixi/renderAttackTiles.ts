@@ -60,9 +60,10 @@ export function renderAttackTiles(
     });
 
     attackTile.on("pointerdown", () => {
-      const path = pathRef.current;
-
-      if (path !== null) {
+      if (currentUnitClickedRef.current !== null) {
+        const path = pathRef.current
+          ? pathRef.current
+          : [currentUnitClickedRef.current.data.position];
         void sendAction({
           type: "move",
           subAction: {
@@ -71,11 +72,11 @@ export function renderAttackTiles(
           },
           path: path,
         });
-      }
 
-      //The currentUnitClicked has changed (moved, attacked, died), therefore, we delete the previous information as it is not accurate anymore
-      //this also helps so when the screen resets, we dont have two copies of a unit
-      currentUnitClickedRef.current = null;
+        //The currentUnitClicked has changed (moved, attacked, died), therefore, we delete the previous information as it is not accurate anymore
+        //this also helps so when the screen resets, we dont have two copies of a unit
+        currentUnitClickedRef.current = null;
+      }
     });
 
     attackTileContainer.addChild(attackTile);
