@@ -101,7 +101,7 @@ export const throwIfCantMoveIntoUnit = (unit: UnitWrapper, unitInPosition: UnitW
       throw new DispatchableError("Trying to join into a unit at full hp");
     }
 
-    if ("loadedUnit" in unitInPosition && unitInPosition.loadedUnit !== null) {
+    if ("loadedUnit" in unitInPosition.data && unitInPosition.data.loadedUnit !== null) {
       throw new DispatchableError("Trying to join into a unit that has a loaded unit");
     }
 
@@ -110,13 +110,13 @@ export const throwIfCantMoveIntoUnit = (unit: UnitWrapper, unitInPosition: UnitW
     }
   } else {
     // trying to load (different unit type)
-    if (!("loadedUnit" in unitInPosition)) {
+    if (!("loadedUnit" in unitInPosition.data)) {
       throw new DispatchableError("Move action ending position is overlapping with an allied unit");
     }
 
     if (
-      unitInPosition.loadedUnit !== null &&
-      (!("loadedUnit2" in unitInPosition) || unitInPosition.loadedUnit2 !== null)
+      unitInPosition.data.loadedUnit !== null &&
+      (!("loadedUnit2" in unitInPosition.data) || unitInPosition.data.loadedUnit2 !== null)
     ) {
       throw new DispatchableError("Transport already occupied");
     }
