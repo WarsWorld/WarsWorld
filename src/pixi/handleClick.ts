@@ -87,7 +87,7 @@ export const handleClick = async (
           try {
             throwIfCantMoveIntoUnit(currentUnit, unitInTile);
             canUnitMoveIntoOther = true;
-          } catch (DispatchableError) {}
+          } catch (_e) {}
         }
 
         const canMoveToTile =

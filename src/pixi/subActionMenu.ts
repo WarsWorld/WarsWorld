@@ -27,14 +27,15 @@ export enum AvailableSubActions {
   "Join",
   "Load",
   "Capture",
-  "Launch",
+  "Launch", //position handled after subaction selection
   "Supply",
   "Explode",
   "Hide",
   "Show",
-  "Unload",
-  "Repair",
-  "Attack",
+  "Unload", //unit to unload and position handled after subaction selection
+  "Repair", //unit to repair handled after subaction selection
+  "Attack", //unit to attack handled after subaction selection
+  "Delete", //has to be handled in a special way because it's not a subaction
 }
 
 export const getAvailableSubActions = (
@@ -279,6 +280,15 @@ export default function subActionMenu(
 ) {
   const menuOptions = getAvailableSubActions(match, player, unit, newPosition);
 
+  //check if we can add "delete" (not subaction) to menuOptions, which is available if unit hasn't moved
+  if (
+    !pathRef.current ||
+    pathRef.current.length == 0 ||
+    (pathRef.current.length == 1 && isSamePosition(pathRef.current[0], newPosition))
+  ) {
+    menuOptions.set(AvailableSubActions.Delete, { type: "wait" });
+  }
+
   const [x, y] = newPosition;
 
   //The big container holding everything
@@ -354,29 +364,49 @@ export default function subActionMenu(
 
     menuElement.on("pointerdown", () => {
       //if its an attack
-      if (name === AvailableSubActions.Attack) {
-        interactiveContainer.addChild(
-          renderAttackTiles(
-            unitContainer,
-            interactiveContainer,
-            match,
-            player,
-            currentUnitClickedRef,
-            spriteSheets,
-            pathRef,
-            sendAction,
-          ),
-        );
-      } else {
-        void sendAction({
-          type: "move",
-          subAction: subAction,
-          path: pathRef.current ?? [newPosition],
-        });
+      switch (name) {
+        case AvailableSubActions.Attack: {
+          interactiveContainer.addChild(
+            renderAttackTiles(
+              unitContainer,
+              interactiveContainer,
+              match,
+              player,
+              currentUnitClickedRef,
+              spriteSheets,
+              pathRef,
+              sendAction,
+            ),
+          );
+          break;
+        }
+        case AvailableSubActions.Repair: {
+        }
+        case AvailableSubActions.Launch: {
+        }
+        case AvailableSubActions.Unload: {
+        }
+        case AvailableSubActions.Delete: {
+          void sendAction({
+            type: "delete",
+            position: newPosition,
+          });
 
-        //The currentUnitClicked has changed (moved, attacked, died), therefore, we delete the previous information as it is not accurate anymore
-        //this also helps so when the screen resets, we dont have two copies of a unit
-        currentUnitClickedRef.current = null;
+          currentUnitClickedRef.current = null;
+          break;
+        }
+        default: {
+          void sendAction({
+            type: "move",
+            subAction: subAction,
+            path: pathRef.current ?? [newPosition],
+          });
+
+          //The currentUnitClicked has changed (moved, attacked, died), therefore, we delete the previous information as it is not accurate anymore
+          //this also helps so when the screen resets, we dont have two copies of a unit
+          currentUnitClickedRef.current = null;
+          break;
+        }
       }
 
       //as soon a selection is done, destroy/erase the menu
