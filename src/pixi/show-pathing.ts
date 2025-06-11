@@ -132,6 +132,11 @@ export const getAttackableTiles = (
     const visited = makeVisitedMatrix(match.map);
 
     for (const [pos] of accessibleNodes.entries()) {
+      if (match.getUnit(pos) !== undefined && pos !== unit.data.position) {
+        //another unit occupies this spot so we can't move to it to attack
+        continue;
+      }
+
       for (const adjPos of getNeighbourPositions(pos)) {
         if (!match.map.isOutOfBounds(adjPos)) {
           if (!visited[adjPos[0]][adjPos[1]]) {

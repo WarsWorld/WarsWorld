@@ -112,19 +112,19 @@ export const handleClick = async (
           */
 
           // display subaction menu next to unit in new position
-          const subMenu = subActionMenu(
-            match,
-            player,
-            pos,
-            currentUnit,
-            currentUnitClickedRef,
-            pathRef,
-            interactiveContainer,
-            spriteSheets,
-            sendAction,
+          interactiveContainer.addChild(
+            subActionMenu(
+              match,
+              player,
+              pos,
+              currentUnit,
+              currentUnitClickedRef,
+              pathRef,
+              interactiveContainer,
+              spriteSheets,
+              sendAction,
+            ),
           );
-
-          interactiveContainer.addChild(subMenu);
           moveTilesRef.current = null;
         } else {
           resetScreen();
@@ -199,7 +199,7 @@ export const handleClick = async (
   function resetScreen() {
     //removes all temporary sprites (menus, paths, tempunit)
     interactiveContainer.getChildByName("buildMenu")?.destroy();
-    interactiveContainer.getChildByName("subMenu")?.destroy();
+    interactiveContainer.getChildByName("subActionMenu")?.destroy();
     interactiveContainer.getChildByName("preAttackBox")?.destroy(); //TODO ??
     unitContainer.getChildByName("tempUnit")?.destroy();
     mapContainer.getChildByName("path")?.destroy();

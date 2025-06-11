@@ -5,9 +5,10 @@ import { unitPropertiesMap } from "shared/match-logic/game-constants/unit-proper
 import type { MainAction } from "shared/schemas/action";
 import type { Position } from "shared/schemas/position";
 import { unitTypes } from "shared/schemas/unit";
+import { baseTileSize } from "../components/client-only/MatchRenderer";
 import type { MatchWrapper } from "../shared/wrappers/match";
 import type { PlayerInMatchWrapper } from "../shared/wrappers/player-in-match";
-import { baseTileSize } from "../components/client-only/MatchRenderer";
+import { createInGameMenu } from "./menuTemplate";
 
 //only called if player has current turn
 export const buildUnitMenu = (
@@ -17,19 +18,6 @@ export const buildUnitMenu = (
   [x, y]: Position,
   sendAction: (action: MainAction) => Promise<void>,
 ) => {
-  //The big container holding everything
-  //set its eventmode to static for interactivity and sortable for zIndex
-  const menuContainer = new Container();
-  menuContainer.eventMode = "static";
-  menuContainer.sortableChildren = true;
-  menuContainer.zIndex = 999;
-
-  //this is the value we have applied to units (half a tile)
-  const unitSize = baseTileSize / 2;
-
-  //the name lets us find the menu easily with getChildByName for easy removal
-  menuContainer.name = "buildMenu";
-
   const allowedUnits = unitTypes.filter((t) => !match.rules.bannedUnitTypes.includes(t));
 
   const facility = match.getTile([x, y]).type;
@@ -39,26 +27,14 @@ export const buildUnitMenu = (
     .filter((type) => unitPropertiesMap[type].facility === facility)
     .sort((a, b) => unitPropertiesMap[a].cost - unitPropertiesMap[b].cost);
 
-  // if we are over half the map. invert menu placement
-  if (x > match.map.width / 2) {
-    menuContainer.x = x * baseTileSize - baseTileSize * 6; //the menu width is about 6 * baseTileSize
-  }
-  //we are not over half the map, menu is placed next to factory
-  else {
-    menuContainer.x = x * baseTileSize + baseTileSize;
-  }
+  //this is the value we have applied to units (half a tile)
+  const unitSize = baseTileSize / 2;
 
-  //if our menu would appear below the middle of the map, we need to bring it up!
-  if (y >= match.map.height / 2 && match.map.height - y < buildableUnitTypes.length) {
-    const spaceLeft = match.map.height - y;
-    menuContainer.y = (y - Math.abs(spaceLeft - buildableUnitTypes.length)) * baseTileSize;
-  } else {
-    menuContainer.y = y * baseTileSize;
-  }
-
-  //This makes the menu elements be each below each other, it starts at 0 then gets plussed,
-  // so elements keep going down and down. yValue is not the best name for it but effectively it is that, a y value
+  //This makes the menu elements be each below each other, it starts at 0 then gets plussed, so elements keep going down and down.
+  // yValue is not the best name for it but effectively it is that, a y value
   let yValue = 0;
+
+  const menuElements: Container[] = [];
 
   //lets loop through each unit and build the build menu
   for (const unitType of buildableUnitTypes) {
@@ -112,7 +88,7 @@ export const buildUnitMenu = (
     menuElement.addChild(unitCostText);
 
     if (player.data.funds >= unitPropertiesMap[unitType].cost) {
-      //lets add a hover effect to the unitBG when you hover over the menu
+      //hover effect to the unitBG when you hover over the menu
       menuElement.on("pointerenter", () => {
         unitBG.alpha = 1;
       });
@@ -122,7 +98,6 @@ export const buildUnitMenu = (
         unitBG.alpha = 0.5;
       });
 
-      //TODO: WHEN CLICKING
       menuElement.on("pointerdown", () => {
         void sendAction({
           type: "build",
@@ -130,7 +105,7 @@ export const buildUnitMenu = (
           unitType: unitType,
         });
         //as soon a selection is done, destroy/erase the menu
-        menuContainer.destroy();
+        menuElement.parent.destroy();
       });
     }
     //can't afford units
@@ -143,21 +118,12 @@ export const buildUnitMenu = (
     }
 
     yValue += unitSize * 2;
-    menuContainer.addChild(menuElement);
+    menuElements.push(menuElement);
   }
 
-  //The extra border we see around the menu
-  //TODO: Change outerborder color depending on country/army color
-  const menuBG = new Sprite(Texture.WHITE);
-  menuBG.tint = "#cacaca";
-  menuBG.x = -2;
-  menuBG.y = -2;
-  menuBG.width = baseTileSize * 6; //expands 6 tiles worth of space
-  menuBG.height = yValue;
-  menuBG.zIndex = -1;
-  menuBG.alpha = 1;
-  menuContainer.addChild(menuBG);
-  return menuContainer;
+  const buildMenu = createInGameMenu(match, [x, y], yValue, 6, menuElements);
+  buildMenu.name = "buildMenu";
+  return buildMenu;
 };
 
 // TODO: unused yet

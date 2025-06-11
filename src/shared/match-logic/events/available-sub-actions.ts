@@ -37,6 +37,7 @@ export const getAvailableSubActions = (
   player: PlayerInMatchWrapper,
   unit: UnitWrapper,
   newPosition: Position,
+  hasMoved: boolean,
 ) => {
   const menuOptions: Map<AvailableSubActions, SubAction | undefined> = new Map<
     AvailableSubActions,
@@ -69,12 +70,9 @@ export const getAvailableSubActions = (
     let addAttackSubaction = false;
 
     const pipeSeamUnitEquivalent = createPipeSeamUnitEquivalent(match, unit);
-
     const canAttackPipeseams = getBaseDamage(unit, pipeSeamUnitEquivalent) !== null;
 
-    if (unit.isIndirect()) {
-      console.log("unit is indirect");
-
+    if (unit.isIndirect() && !hasMoved) {
       for (let x = 0; x < match.map.width && !addAttackSubaction; x++) {
         for (let y = 0; y < match.map.height && !addAttackSubaction; y++) {
           const distance = getDistance([x, y], unit.data.position);
@@ -248,6 +246,11 @@ export const getAvailableSubActions = (
         break;
       }
     }
+  }
+
+  //check for delete (technically not a subaction)
+  if (!hasMoved) {
+    menuOptions.set(AvailableSubActions.Delete, undefined);
   }
 
   return menuOptions;

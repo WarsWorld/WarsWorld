@@ -16,6 +16,7 @@ import type { MainAction } from "../shared/schemas/action";
 import type { MatchWrapper } from "../shared/wrappers/match";
 import type { PlayerInMatchWrapper } from "../shared/wrappers/player-in-match";
 import type { LoadedSpriteSheet } from "./load-spritesheet";
+import { createInGameMenu } from "./menuTemplate";
 import { renderAttackTiles } from "./renderAttackTiles";
 import { tileConstructor } from "./sprite-constructor";
 
@@ -30,52 +31,22 @@ export default function subActionMenu(
   spriteSheets: LoadedSpriteSheet,
   sendAction: (action: MainAction) => Promise<void>,
 ) {
-  const menuOptions = getAvailableSubActions(match, player, unit, newPosition);
+  const hasMoved =
+    pathRef.current !== null &&
+    !(
+      pathRef.current.length === 0 ||
+      (pathRef.current.length === 1 && isSamePosition(pathRef.current[0], newPosition))
+    );
 
-  //check if we can add "delete" (not subaction) to menuOptions, which is available if unit hasn't moved
-  if (
-    !pathRef.current ||
-    pathRef.current.length == 0 ||
-    (pathRef.current.length == 1 && isSamePosition(pathRef.current[0], newPosition))
-  ) {
-    menuOptions.set(AvailableSubActions.Delete, { type: "wait" });
-  }
+  const menuOptions = getAvailableSubActions(match, player, unit, newPosition, hasMoved);
 
-  const [x, y] = newPosition;
-
-  //The big container holding everything
-  //set its eventmode to static for interactivity and sortable for zIndex
-  const menuContainer = new Container();
-  menuContainer.eventMode = "static";
-  menuContainer.sortableChildren = true;
-  menuContainer.zIndex = 999;
-
-  //this is the value we have applied to units (half a tile)
   const unitSize = baseTileSize / 2;
-
-  //the name lets us find the menu easily with getChildByName for easy removal
-  menuContainer.name = "subMenu";
-
-  // if we are over half the map. invert menu placement
-  if (x > match.map.width / 2) {
-    menuContainer.x = x * baseTileSize - baseTileSize * 3; //the menu width is about 6 * baseTileSize
-  }
-  //we are not over half the map, menu is placed next to factory
-  else {
-    menuContainer.x = x * baseTileSize + baseTileSize;
-  }
-
-  //if our menu would appear below the middle of the map, we need to bring it up!
-  if (y >= match.map.height / 2 && match.map.height - y <= menuOptions.size + 1) {
-    const spaceLeft = match.map.height - y;
-    menuContainer.y = (y - Math.abs(spaceLeft - menuOptions.size)) * baseTileSize;
-  } else {
-    menuContainer.y = y * baseTileSize;
-  }
 
   //This makes the menu elements be each below each other, it starts at 0 then gets plussed, so elements keep going down and down.
   // yValue is not the best name for it but effectively it is that, a y value
   let yValue = 0;
+
+  const menuElements: Container[] = [];
 
   for (const [name, subAction] of menuOptions) {
     //child container to hold all the text and sprite into one place
@@ -214,23 +185,14 @@ export default function subActionMenu(
       }
 
       //as soon a selection is done, destroy/erase the menu
-      menuContainer.destroy();
+      menuElement.parent.destroy();
     });
 
     yValue += unitSize * 2;
-    menuContainer.addChild(menuElement);
+    menuElements.push(menuElement);
   }
 
-  //The extra border we see around the menu
-  //TODO: Change outerborder color depending on country/army color
-  const menuBG = new Sprite(Texture.WHITE);
-  menuBG.tint = "#cacaca";
-  menuBG.x = -2;
-  menuBG.y = -2;
-  menuBG.width = baseTileSize * 3; //expands 3 tiles worth of space
-  menuBG.height = yValue;
-  menuBG.zIndex = -1;
-  menuBG.alpha = 1;
-  menuContainer.addChild(menuBG);
+  const menuContainer = createInGameMenu(match, newPosition, yValue, 3, menuElements);
+  menuContainer.name = "subActionMenu";
   return menuContainer;
 }
