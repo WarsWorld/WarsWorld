@@ -4,29 +4,20 @@ import { AnimatedSprite, BitmapText, Container, Sprite, Texture } from "pixi.js"
 import { unitPropertiesMap } from "shared/match-logic/game-constants/unit-properties";
 import type { MainAction } from "shared/schemas/action";
 import type { Position } from "shared/schemas/position";
+import type { UnitType } from "shared/schemas/unit";
 import { unitTypes } from "shared/schemas/unit";
 import { baseTileSize } from "../components/client-only/MatchRenderer";
 import type { MatchWrapper } from "../shared/wrappers/match";
 import type { PlayerInMatchWrapper } from "../shared/wrappers/player-in-match";
 import { createInGameMenu } from "./menuTemplate";
 
-//only called if player has current turn
-export const buildUnitMenu = (
+/**
+ * Creates menu of units, without applying any behaviour on click/pointerdown (must be implemented afterwards)
+ */
+export const createMenuElementsForUnits = (
   spriteSheet: Spritesheet<ArmySpritesheetData>,
-  match: MatchWrapper,
-  player: PlayerInMatchWrapper,
-  [x, y]: Position,
-  sendAction: (action: MainAction) => Promise<void>,
-) => {
-  const allowedUnits = unitTypes.filter((t) => !match.rules.bannedUnitTypes.includes(t));
-
-  const facility = match.getTile([x, y]).type;
-
-  // Filter allowed units based on facility type and then sort by cost
-  const buildableUnitTypes = allowedUnits
-    .filter((type) => unitPropertiesMap[type].facility === facility)
-    .sort((a, b) => unitPropertiesMap[a].cost - unitPropertiesMap[b].cost);
-
+  unitsInMenu: { unitType: UnitType; selectable: boolean; hp?: number }[],
+): { menuElements: Container[]; yValue: number } => {
   //this is the value we have applied to units (half a tile)
   const unitSize = baseTileSize / 2;
 
@@ -37,7 +28,7 @@ export const buildUnitMenu = (
   const menuElements: Container[] = [];
 
   //lets loop through each unit and build the build menu
-  for (const unitType of buildableUnitTypes) {
+  for (const { unitType, selectable, hp } of unitsInMenu) {
     //child container to hold all the text and sprite into one place
     const menuElement = new Container();
     menuElement.eventMode = "static";
@@ -66,7 +57,8 @@ export const buildUnitMenu = (
     menuElement.addChild(unitSprite);
 
     //name of the unit
-    const unitNameText = new BitmapText(`${unitType.toUpperCase()}`, {
+    //TODO display hp in unit sprite
+    const unitNameText = new BitmapText(`${unitType.toUpperCase()}${hp ?? ""}`, {
       fontName: "awFont",
       fontSize: 10,
     });
@@ -87,7 +79,7 @@ export const buildUnitMenu = (
     unitCostText.anchor.set(0, -0.25);
     menuElement.addChild(unitCostText);
 
-    if (player.data.funds >= unitPropertiesMap[unitType].cost) {
+    if (selectable) {
       //hover effect to the unitBG when you hover over the menu
       menuElement.on("pointerenter", () => {
         unitBG.alpha = 1;
@@ -96,16 +88,6 @@ export const buildUnitMenu = (
       //when you stop hovering the menu
       menuElement.on("pointerleave", () => {
         unitBG.alpha = 0.5;
-      });
-
-      menuElement.on("pointerdown", () => {
-        void sendAction({
-          type: "build",
-          position: [x, y],
-          unitType: unitType,
-        });
-        //as soon a selection is done, destroy/erase the menu
-        menuElement.parent.destroy();
       });
     }
     //can't afford units
@@ -119,6 +101,50 @@ export const buildUnitMenu = (
 
     yValue += unitSize * 2;
     menuElements.push(menuElement);
+  }
+
+  return { menuElements, yValue };
+};
+
+//only called if player has current turn
+export const buildUnitMenu = (
+  spriteSheet: Spritesheet<ArmySpritesheetData>,
+  match: MatchWrapper,
+  player: PlayerInMatchWrapper,
+  [x, y]: Position,
+  sendAction: (action: MainAction) => Promise<void>,
+) => {
+  const allowedUnits = unitTypes.filter((t) => !match.rules.bannedUnitTypes.includes(t));
+
+  const facility = match.getTile([x, y]).type;
+
+  // Filter allowed units based on facility type and then sort by cost
+  const buildableUnitTypes = allowedUnits
+    .filter((type) => unitPropertiesMap[type].facility === facility)
+    .sort((a, b) => unitPropertiesMap[a].cost - unitPropertiesMap[b].cost);
+
+  const { menuElements, yValue } = createMenuElementsForUnits(
+    spriteSheet,
+    buildableUnitTypes.map((type) => ({
+      unitType: type,
+      selectable: player.data.funds >= unitPropertiesMap[type].cost,
+    })),
+  );
+
+  for (let i = 0; i < menuElements.length; i++) {
+    if (!(player.data.funds >= unitPropertiesMap[buildableUnitTypes[i]].cost)) {
+      continue; //if not selectable because no funds, don't implement click behaviour
+    }
+
+    menuElements[i].on("pointerdown", () => {
+      void sendAction({
+        type: "build",
+        position: [x, y],
+        unitType: buildableUnitTypes[i],
+      });
+      //as soon a selection is done, destroy/erase the menu
+      menuElements[i].parent.destroy();
+    });
   }
 
   const buildMenu = createInGameMenu(match, [x, y], yValue, 6, menuElements);

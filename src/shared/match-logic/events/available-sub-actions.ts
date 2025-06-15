@@ -174,7 +174,7 @@ export const getAvailableSubActions = (
   }
 
   //check for unload
-  if (unit.isTransport()) {
+  if (player.getVersionProperties().unloadOnlyAfterMove && unit.isTransport()) {
     let addUnloadSubaction = false;
 
     if (unit.data.loadedUnit !== null) {

@@ -37,16 +37,30 @@ export const throwIfUnitCantBeUnloadedToTile = (
 export const getUnloadablePositions = (
   transportUnit: UnitWrapper,
   unitToUnload: { type: UnitType },
+  newTransportUnitLocation?: Position,
 ) => {
+  const transportPos = newTransportUnitLocation ?? transportUnit.data.position;
+
+  //unit also has to be able to stand on the tile the transport is standing
+  if (
+    !canUnitMoveToTile(
+      unitToUnload,
+      transportUnit.match.getTile(transportPos),
+      transportUnit.player,
+    )
+  ) {
+    return [];
+  }
+
   const unloadablePositions: Position[] = [];
 
-  for (const adjPos of getNeighbourPositions(transportUnit.data.position)) {
+  for (const adjPos of getNeighbourPositions(transportPos)) {
+    if (transportUnit.match.map.isOutOfBounds(adjPos)) {
+      continue;
+    }
+
     if (
-      canUnitMoveToTile(
-        unitToUnload,
-        transportUnit.match.getTile(transportUnit.data.position),
-        transportUnit.player,
-      )
+      canUnitMoveToTile(unitToUnload, transportUnit.match.getTile(adjPos), transportUnit.player)
     ) {
       unloadablePositions.push(adjPos);
     }

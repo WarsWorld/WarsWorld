@@ -19,6 +19,7 @@ import type { LoadedSpriteSheet } from "./load-spritesheet";
 import { createInGameMenu } from "./menuTemplate";
 import { renderAttackTiles } from "./renderAttackTiles";
 import { tileConstructor } from "./sprite-constructor";
+import { createUnloadMenu } from "./unloadSubactionMenu";
 
 export default function subActionMenu(
   match: MatchWrapper,
@@ -110,10 +111,14 @@ export default function subActionMenu(
           repairTilesContainer.name = "repairUnitsBox";
 
           for (const dir of allDirections) {
+            if (match.map.isOutOfBounds(addDirection(unit.data.position, dir))) {
+              continue;
+            }
+
             const unitToRepair = match.getUnit(addDirection(unit.data.position, dir));
 
             if (unitToRepair && unitToRepair.player.data.slot === unit.player.data.slot) {
-              const repairTile = tileConstructor(addDirection(unit.data.position, dir), "#be1919");
+              const repairTile = tileConstructor(addDirection(unit.data.position, dir), "#43d9e4");
               repairTile.eventMode = "static";
 
               repairTile.on("pointerdown", () => {
@@ -153,6 +158,21 @@ export default function subActionMenu(
           //if unload != wait then just commit move+wait and open the unloadNoWait action menu
           //if unload = wait then open unit to unload, then choose location, then unit to unload 2, choose location.
           //if 2 unloading units, remember to mark 1st unloaded unit location as unaccessible
+          const unloadMenu = createUnloadMenu(
+            match,
+            player,
+            newPosition,
+            unit,
+            currentUnitClickedRef,
+            pathRef,
+            interactiveContainer,
+            spriteSheets,
+            sendAction,
+          );
+
+          unloadMenu.zIndex = 999;
+          interactiveContainer.addChild(unloadMenu);
+          break;
         }
 
         case AvailableSubActions.Delete: {
