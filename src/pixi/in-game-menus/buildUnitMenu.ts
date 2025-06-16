@@ -126,13 +126,16 @@ export const buildUnitMenu = (
 
   const { menuElements, yValue } = createMenuElementsForUnits(
     spriteSheet,
-    buildableUnitTypes.map((type) => ({
-      unitType: type,
-      selectable: player.data.funds >= unitPropertiesMap[type].cost,
-      num:
+    buildableUnitTypes.map((type) => {
+      const unitCost =
         player.getHook("buildCost")?.(unitPropertiesMap[type].cost, player.match) ??
-        unitPropertiesMap[type].cost,
-    })),
+        unitPropertiesMap[type].cost;
+      return {
+        unitType: type,
+        selectable: player.data.funds >= unitCost,
+        num: unitCost,
+      };
+    }),
   );
 
   for (let i = 0; i < menuElements.length; i++) {

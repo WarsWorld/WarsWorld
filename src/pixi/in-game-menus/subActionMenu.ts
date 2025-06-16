@@ -157,14 +157,46 @@ export default function subActionMenu(
         }
 
         case AvailableSubActions.Launch: {
-          //TODO
+          const clickableLaunchTilesContainer = new Container();
+          clickableLaunchTilesContainer.name = "launchMissileClickableBox";
+
+          for (let x = 0; x < match.map.width; x++) {
+            for (let y = 0; y < match.map.height; y++) {
+              const hoverableTile = tileConstructor([x, y], "#000000", 0);
+              hoverableTile.eventMode = "static";
+              hoverableTile.on("mouseenter", () => {
+                //TODO render impact tiles
+              });
+              hoverableTile.on("pointerdown", () => {
+                if (currentUnitClickedRef.current !== null) {
+                  const path = pathRef.current
+                    ? pathRef.current
+                    : [currentUnitClickedRef.current.data.position];
+
+                  void sendAction({
+                    type: "move",
+                    subAction: {
+                      type: "launchMissile",
+                      targetPosition: [x, y],
+                    },
+                    path: path,
+                  });
+
+                  currentUnitClickedRef.current = null;
+                }
+              });
+
+              clickableLaunchTilesContainer.addChild(hoverableTile);
+            }
+          }
+
+          clickableLaunchTilesContainer.zIndex = 999;
+          interactiveContainer.addChild(clickableLaunchTilesContainer);
+          break;
         }
 
         case AvailableSubActions.Unload: {
-          //TODO depends if unload = wait or not:
-          //if unload != wait then just commit move+wait and open the unloadNoWait action menu
-          //if unload = wait then open unit to unload, then choose location, then unit to unload 2, choose location.
-          //if 2 unloading units, remember to mark 1st unloaded unit location as unaccessible
+          //TODO implement unload non-subaction
           const unloadMenu = createUnloadMenu(
             match,
             player,

@@ -1,7 +1,7 @@
 import { DispatchableError } from "shared/DispatchedError";
 import type { LaunchMissileAction } from "shared/schemas/action";
-import type { MatchWrapper } from "shared/wrappers/match";
 import type { LaunchMissileEvent } from "shared/types/events";
+import type { MatchWrapper } from "shared/wrappers/match";
 import type { SubActionToEvent } from "../handler-types";
 
 export const launchMissileActionToEvent: SubActionToEvent<LaunchMissileAction> = (
@@ -33,8 +33,13 @@ export const launchMissileActionToEvent: SubActionToEvent<LaunchMissileAction> =
 };
 
 export const applyLaunchMissileEvent = (match: MatchWrapper, event: LaunchMissileEvent) => {
+  match.changeableTiles.push({
+    type: "unusedSilo",
+    fired: true,
+    position: event.targetPosition,
+  });
   match.damageUntil1HPInRadius({
-    radius: 3,
+    radius: 2,
     visualHpAmount: 3,
     epicenter: event.targetPosition,
   });
