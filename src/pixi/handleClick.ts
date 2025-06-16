@@ -10,15 +10,15 @@ import type { MatchWrapper } from "shared/wrappers/match";
 import { isUnitProducingProperty } from "../shared/schemas/tile";
 import type { PlayerInMatchWrapper } from "../shared/wrappers/player-in-match";
 import type { UnitWrapper } from "../shared/wrappers/unit";
-import { buildUnitMenu } from "./buildUnitMenu";
 import { displayEnemyRange } from "./displayEnemyRange";
+import { buildUnitMenu } from "./in-game-menus/buildUnitMenu";
+import subActionMenu from "./in-game-menus/subActionMenu";
 import { createTilesContainer } from "./interactiveTileFunctions";
 import type { LoadedSpriteSheet } from "./load-spritesheet";
 import { renderAttackTiles } from "./renderAttackTiles";
 import { renderUnitSprite } from "./renderUnitSprite";
 import type { PathNode } from "./show-pathing";
 import { getAccessibleNodes, showPath, updatePath } from "./show-pathing";
-import subActionMenu from "./subActionMenu";
 
 export const handleClick = async (
   clickPosition: Position,

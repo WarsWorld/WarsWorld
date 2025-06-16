@@ -6,9 +6,9 @@ import type { MainAction } from "shared/schemas/action";
 import type { Position } from "shared/schemas/position";
 import type { UnitType } from "shared/schemas/unit";
 import { unitTypes } from "shared/schemas/unit";
-import { baseTileSize } from "../components/client-only/MatchRenderer";
-import type { MatchWrapper } from "../shared/wrappers/match";
-import type { PlayerInMatchWrapper } from "../shared/wrappers/player-in-match";
+import { baseTileSize } from "../../components/client-only/MatchRenderer";
+import type { MatchWrapper } from "../../shared/wrappers/match";
+import type { PlayerInMatchWrapper } from "../../shared/wrappers/player-in-match";
 import { createInGameMenu } from "./menuTemplate";
 
 /**

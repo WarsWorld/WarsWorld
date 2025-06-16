@@ -1,7 +1,7 @@
 import { Container, Sprite, Texture } from "pixi.js";
 import type { Position } from "shared/schemas/position";
-import { baseTileSize } from "../components/client-only/MatchRenderer";
-import type { MatchWrapper } from "../shared/wrappers/match";
+import { baseTileSize } from "../../components/client-only/MatchRenderer";
+import type { MatchWrapper } from "../../shared/wrappers/match";
 
 export const createInGameMenu = (
   match: MatchWrapper,

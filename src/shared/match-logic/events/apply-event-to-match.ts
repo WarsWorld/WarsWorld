@@ -59,7 +59,6 @@ export const applySubEventToMatch = (
   { subEvent, path }: MoveEventWithSubEvent,
 ) => {
   const fromPosition = getFinalPositionSafe(path);
-  const unit = match.getUnitOrThrow(fromPosition);
 
   switch (subEvent.type) {
     case "wait": {

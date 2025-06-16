@@ -11,14 +11,14 @@ import {
   type Position,
 } from "shared/schemas/position";
 import type { UnitWrapper } from "shared/wrappers/unit";
-import { baseTileSize } from "../components/client-only/MatchRenderer";
-import type { MainAction } from "../shared/schemas/action";
-import type { MatchWrapper } from "../shared/wrappers/match";
-import type { PlayerInMatchWrapper } from "../shared/wrappers/player-in-match";
-import type { LoadedSpriteSheet } from "./load-spritesheet";
+import { baseTileSize } from "../../components/client-only/MatchRenderer";
+import type { MainAction } from "../../shared/schemas/action";
+import type { MatchWrapper } from "../../shared/wrappers/match";
+import type { PlayerInMatchWrapper } from "../../shared/wrappers/player-in-match";
+import type { LoadedSpriteSheet } from "../load-spritesheet";
+import { renderAttackTiles } from "../renderAttackTiles";
+import { tileConstructor } from "../sprite-constructor";
 import { createInGameMenu } from "./menuTemplate";
-import { renderAttackTiles } from "./renderAttackTiles";
-import { tileConstructor } from "./sprite-constructor";
 import { createUnloadMenu } from "./unloadSubactionMenu";
 
 export const createSubActionMenuElement = (subActionName: string, numberInList: number) => {
