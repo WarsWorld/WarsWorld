@@ -86,6 +86,4 @@ export const applySubEventToMatch = (
       break;
     }
   }
-
-  unit.data.isReady = false;
 };

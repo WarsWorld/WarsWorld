@@ -1,3 +1,4 @@
+import { baseTileSize } from "components/client-only/MatchRenderer";
 import { Container } from "pixi.js";
 import type { MutableRefObject } from "react";
 import { getUnloadablePositions } from "shared/match-logic/events/handlers/unload/checkUnloadTiles";
@@ -10,6 +11,7 @@ import { createMenuElementsForUnits } from "./buildUnitMenu";
 import type { LoadedSpriteSheet } from "./load-spritesheet";
 import { createInGameMenu } from "./menuTemplate";
 import { tileConstructor } from "./sprite-constructor";
+import { createSubActionMenuElement } from "./subActionMenu";
 
 export const createUnloadMenu = (
   match: MatchWrapper,
@@ -48,7 +50,7 @@ export const createUnloadMenu = (
     menuInfo1 = {
       unitType: unit.data.loadedUnit.type,
       selectable: unloadPositions1.length > 0,
-      hp: unit.data.loadedUnit.stats.hp,
+      num: Math.ceil(unit.data.loadedUnit.stats.hp / 10),
     };
     infosForMenu.push(menuInfo1);
   }
@@ -69,7 +71,7 @@ export const createUnloadMenu = (
     menuInfo2 = {
       unitType: unit.data.loadedUnit2.type,
       selectable: unloadPositions2.length > 0,
-      hp: unit.data.loadedUnit2.stats.hp,
+      num: Math.ceil(unit.data.loadedUnit2.stats.hp / 10), //visual hp
     };
     infosForMenu.push(menuInfo2);
   }
@@ -125,21 +127,52 @@ export const createUnloadMenu = (
             }
           } else {
             unloadTilesContainer.visible = false;
-            const step2Menu = createUnloadMenu(
-              match,
-              player,
-              newPosition,
-              unit,
-              currentUnitClickedRef,
-              pathRef,
-              interactiveContainer,
-              spriteSheets,
-              sendAction,
-              { unloadedPosition: unloadPos, isFirstUnit: true },
-            );
 
-            step2Menu.zIndex = 999;
-            interactiveContainer.addChild(step2Menu);
+            const unitSize = baseTileSize / 2;
+
+            const unload2Option = createSubActionMenuElement("UNLOAD", 0);
+            unload2Option.on("pointerdown", () => {
+              const step2Menu = createUnloadMenu(
+                match,
+                player,
+                newPosition,
+                unit,
+                currentUnitClickedRef,
+                pathRef,
+                interactiveContainer,
+                spriteSheets,
+                sendAction,
+                { unloadedPosition: unloadPos, isFirstUnit: true },
+              );
+
+              step2Menu.zIndex = 999;
+              interactiveContainer.addChild(step2Menu);
+              unload2Option.parent.destroy();
+            });
+
+            const waitOption = createSubActionMenuElement("WAIT", 1);
+            waitOption.on("pointerdown", () => {
+              void sendAction({
+                type: "move",
+                subAction: {
+                  type: "unloadWait",
+                  unloads: [
+                    { isSecondUnit: false, direction: getDirection(newPosition, unloadPos) },
+                  ],
+                },
+                path: pathRef.current ?? [newPosition],
+              });
+
+              currentUnitClickedRef.current = null;
+              waitOption.parent.destroy();
+            });
+
+            const unload2OrWaitMenu = createInGameMenu(match, newPosition, 2 * unitSize * 2, 3, [
+              unload2Option,
+              waitOption,
+            ]);
+            unload2OrWaitMenu.name = "unloadStep2ActionMenu";
+            interactiveContainer.addChild(unload2OrWaitMenu);
           }
 
           unloadTilesContainer.destroy();
@@ -166,8 +199,6 @@ export const createUnloadMenu = (
         unloadTile.eventMode = "static";
 
         unloadTile.on("pointerdown", () => {
-          menuElements[meIndex].parent.destroy();
-
           if (
             infosForMenu.length === 1 ||
             unloadPositions1?.every((pos) => {
@@ -204,21 +235,52 @@ export const createUnloadMenu = (
             }
           } else {
             unloadTilesContainer.visible = false;
-            const step2Menu = createUnloadMenu(
-              match,
-              player,
-              newPosition,
-              unit,
-              currentUnitClickedRef,
-              pathRef,
-              interactiveContainer,
-              spriteSheets,
-              sendAction,
-              { unloadedPosition: unloadPos, isFirstUnit: false },
-            );
 
-            step2Menu.zIndex = 999;
-            interactiveContainer.addChild(step2Menu);
+            const unitSize = baseTileSize / 2;
+
+            const unload2Option = createSubActionMenuElement("UNLOAD", 0);
+            unload2Option.on("pointerdown", () => {
+              const step2Menu = createUnloadMenu(
+                match,
+                player,
+                newPosition,
+                unit,
+                currentUnitClickedRef,
+                pathRef,
+                interactiveContainer,
+                spriteSheets,
+                sendAction,
+                { unloadedPosition: unloadPos, isFirstUnit: true },
+              );
+
+              step2Menu.zIndex = 999;
+              interactiveContainer.addChild(step2Menu);
+              unload2Option.parent.destroy();
+            });
+
+            const waitOption = createSubActionMenuElement("WAIT", 1);
+            waitOption.on("pointerdown", () => {
+              void sendAction({
+                type: "move",
+                subAction: {
+                  type: "unloadWait",
+                  unloads: [
+                    { isSecondUnit: true, direction: getDirection(newPosition, unloadPos) },
+                  ],
+                },
+                path: pathRef.current ?? [newPosition],
+              });
+
+              currentUnitClickedRef.current = null;
+              waitOption.parent.destroy();
+            });
+
+            const unload2OrWaitMenu = createInGameMenu(match, newPosition, 2 * unitSize * 2, 3, [
+              unload2Option,
+              waitOption,
+            ]);
+            unload2OrWaitMenu.name = "unloadStep2ActionMenu";
+            interactiveContainer.addChild(unload2OrWaitMenu);
           }
 
           unloadTilesContainer.destroy();
@@ -230,7 +292,7 @@ export const createUnloadMenu = (
       unloadTilesContainer.zIndex = 999;
       interactiveContainer.addChild(unloadTilesContainer);
       //as soon a selection is done, destroy/erase the menu
-      menuElements[meIndex].parent.destroy();
+      menuElements[0].parent.destroy();
     });
   }
 

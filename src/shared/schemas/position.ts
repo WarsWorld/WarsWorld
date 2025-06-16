@@ -78,7 +78,7 @@ export const getDirection = (fromPosition: Position, toPosition: Position): Dire
   const dx = toPosition[0] - fromPosition[0];
   const dy = toPosition[1] - fromPosition[1];
 
-  if (dx > dy) {
+  if (Math.abs(dx) > Math.abs(dy)) {
     if (dx > 0) {
       return "right";
     }

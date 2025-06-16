@@ -22,6 +22,8 @@ export const moveActionToEvent = (
     throw new DispatchableError("You don't own this unit");
   }
 
+  console.log("Unit trying to move:", unit.data);
+
   if (!unit.data.isReady) {
     throw new DispatchableError("Trying to move a waited unit");
   }

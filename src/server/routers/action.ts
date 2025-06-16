@@ -55,6 +55,8 @@ export const actionRouter = router({
        * 10. Save event
        */
 
+      console.log("Received action:", input);
+
       /* 1. Move action to event */
       const mainEventWithoutSubEvent = validateMainActionAndToEvent(match, input);
 

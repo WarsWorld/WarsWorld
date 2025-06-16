@@ -16,7 +16,8 @@ import { createInGameMenu } from "./menuTemplate";
  */
 export const createMenuElementsForUnits = (
   spriteSheet: Spritesheet<ArmySpritesheetData>,
-  unitsInMenu: { unitType: UnitType; selectable: boolean; hp?: number }[],
+  //num property can be any number. For example, cost for building, and hp for unloading
+  unitsInMenu: { unitType: UnitType; selectable: boolean; num: number }[],
 ): { menuElements: Container[]; yValue: number } => {
   //this is the value we have applied to units (half a tile)
   const unitSize = baseTileSize / 2;
@@ -28,7 +29,7 @@ export const createMenuElementsForUnits = (
   const menuElements: Container[] = [];
 
   //lets loop through each unit and build the build menu
-  for (const { unitType, selectable, hp } of unitsInMenu) {
+  for (const { unitType, selectable, num } of unitsInMenu) {
     //child container to hold all the text and sprite into one place
     const menuElement = new Container();
     menuElement.eventMode = "static";
@@ -58,7 +59,7 @@ export const createMenuElementsForUnits = (
 
     //name of the unit
     //TODO display hp in unit sprite
-    const unitNameText = new BitmapText(`${unitType.toUpperCase()}${hp ?? ""}`, {
+    const unitNameText = new BitmapText(`${unitType.toUpperCase()}`, {
       fontName: "awFont",
       fontSize: 10,
     });
@@ -68,8 +69,8 @@ export const createMenuElementsForUnits = (
     unitNameText.anchor.set(0, -0.3);
     menuElement.addChild(unitNameText);
 
-    //cost displayed
-    const unitCostText = new BitmapText(`${unitPropertiesMap[unitType].cost}`, {
+    //cost/hp/any_number displayed
+    const unitCostText = new BitmapText(`${num}`, {
       fontName: "awFont",
       fontSize: 10,
     });
@@ -128,6 +129,9 @@ export const buildUnitMenu = (
     buildableUnitTypes.map((type) => ({
       unitType: type,
       selectable: player.data.funds >= unitPropertiesMap[type].cost,
+      num:
+        player.getHook("buildCost")?.(unitPropertiesMap[type].cost, player.match) ??
+        unitPropertiesMap[type].cost,
     })),
   );
 
