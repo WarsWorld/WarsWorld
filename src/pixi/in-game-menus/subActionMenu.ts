@@ -144,6 +144,7 @@ export default function subActionMenu(
                   });
 
                   currentUnitClickedRef.current = null;
+                  repairTilesContainer.destroy();
                 }
               });
 

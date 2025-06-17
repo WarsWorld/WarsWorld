@@ -143,7 +143,7 @@ export const getAvailableSubActions = (
       menuOptions.set(AvailableSubActions.Capture, { type: "ability" });
     }
 
-    if (tile.type === "unusedSilo") {
+    if (tile.type === "unusedSilo" && "fired" in tile && !tile.fired) {
       //handled later
       menuOptions.set(AvailableSubActions.Launch, undefined);
     }

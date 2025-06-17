@@ -81,7 +81,7 @@ export const applySubEventToMatch = (
       break;
     }
     case "launchMissile": {
-      applyLaunchMissileEvent(match, subEvent);
+      applyLaunchMissileEvent(match, subEvent, fromPosition);
       break;
     }
   }
