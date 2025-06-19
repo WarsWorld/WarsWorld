@@ -197,7 +197,6 @@ export default function subActionMenu(
         }
 
         case AvailableSubActions.Unload: {
-          //TODO implement unload non-subaction
           const unloadMenu = createUnloadMenu(
             match,
             player,

@@ -175,10 +175,11 @@ export const createUnloadMenu = (
 
         unloadTile.on("pointerdown", () => {
           const canOtherUnitBeUnloaded =
-            infosForMenu.length === 1 ||
-            unloadPositions2?.every((pos) => {
-              return isSamePosition(pos, unloadPos);
-            }) === true;
+            player.getVersionProperties().unloadOnlyAfterMove &&
+            (infosForMenu.length === 1 ||
+              unloadPositions2?.every((pos) => {
+                return isSamePosition(pos, unloadPos);
+              }) === true);
 
           unloadTilesContainer.visible = false;
           clickedUnloadPosition(unloadPos, true, canOtherUnitBeUnloaded);
@@ -207,10 +208,11 @@ export const createUnloadMenu = (
 
         unloadTile.on("pointerdown", () => {
           const canOtherUnitBeUnloaded =
-            infosForMenu.length === 1 ||
-            unloadPositions1?.every((pos) => {
-              return isSamePosition(pos, unloadPos);
-            }) === true;
+            player.getVersionProperties().unloadOnlyAfterMove &&
+            (infosForMenu.length === 1 ||
+              unloadPositions1?.every((pos) => {
+                return isSamePosition(pos, unloadPos);
+              }) === true);
 
           unloadTilesContainer.visible = false;
           clickedUnloadPosition(unloadPos, false, canOtherUnitBeUnloaded);

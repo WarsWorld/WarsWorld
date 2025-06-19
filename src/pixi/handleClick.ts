@@ -13,6 +13,7 @@ import type { UnitWrapper } from "../shared/wrappers/unit";
 import { displayEnemyRange } from "./displayEnemyRange";
 import { buildUnitMenu } from "./in-game-menus/buildUnitMenu";
 import subActionMenu from "./in-game-menus/subActionMenu";
+import { createUnloadMenu } from "./in-game-menus/unloadSubactionMenu";
 import { createTilesContainer } from "./interactiveTileFunctions";
 import type { LoadedSpriteSheet } from "./load-spritesheet";
 import { renderAttackTiles } from "./renderAttackTiles";
@@ -132,43 +133,55 @@ export const handleClick = async (
     resetScreen();
 
     //Do we own said unit and is it our turn?
-    if (
-      player.owns(unitClicked) &&
-      match.getCurrentTurnPlayer().data.id === player.data.id &&
-      unitClicked.data.isReady
-    ) {
-      currentUnitClickedRef.current = unitClicked;
+    if (player.owns(unitClicked) && match.getCurrentTurnPlayer().data.id === player.data.id) {
+      //if ready, create path move tiles...
+      if (unitClicked.data.isReady) {
+        currentUnitClickedRef.current = unitClicked;
 
-      const passablePositions = getAccessibleNodes(match, unitClicked);
-      const displayedPassableTiles = createTilesContainer(
-        Array.from(passablePositions.keys()),
-        "#43d9e4",
-        999,
-        "highlightedTiles",
-      );
+        const passablePositions = getAccessibleNodes(match, unitClicked);
+        const displayedPassableTiles = createTilesContainer(
+          Array.from(passablePositions.keys()),
+          "#43d9e4",
+          999,
+          "highlightedTiles",
+        );
 
-      moveTilesRef.current = passablePositions;
-      mapContainer.addChild(displayedPassableTiles);
+        moveTilesRef.current = passablePositions;
+        mapContainer.addChild(displayedPassableTiles);
 
-      interactiveContainer.addChild(
-        renderAttackTiles(
-          interactiveContainer,
+        interactiveContainer.addChild(
+          renderAttackTiles(
+            interactiveContainer,
+            match,
+            currentUnitClickedRef,
+            spriteSheets,
+            pathRef,
+            mapContainer,
+            sendAction,
+          ),
+        );
+      }
+      //if not ready but it's a transport with units and the rules allow to always unload...
+      else if (
+        unitClicked.isTransport() &&
+        unitClicked.data.loadedUnit !== null &&
+        !player.getVersionProperties().unloadOnlyAfterMove
+      ) {
+        //Show subaction menu of transport to drop off units
+        const unloadMenu = createUnloadMenu(
           match,
+          player,
+          clickPosition,
+          unitClicked,
           currentUnitClickedRef,
-          spriteSheets,
           pathRef,
-          mapContainer,
+          interactiveContainer,
+          spriteSheets,
           sendAction,
-        ),
-      );
-    }
-    //todo: handle logic for clicking a transport that is loaded and NOT ready (so it can drop off units)
-    else if (
-      unitClicked.isTransport() /*TODO && isLoaded*/ &&
-      player.owns(unitClicked) &&
-      match.getCurrentTurnPlayer().data.id === player.data.id
-    ) {
-      //Show subaction menu of transport to drop off units
+        );
+        unloadMenu.zIndex = 999;
+        interactiveContainer.addChild(unloadMenu);
+      }
     }
 
     //TODO: We clicked on a unit we do not own OR its not our turn. Display unit movement/attack range/vision
