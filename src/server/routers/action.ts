@@ -55,13 +55,16 @@ export const actionRouter = router({
        * 10. Save event
        */
 
+      console.log("Received action:", input);
+
       /* 1. Move action to event */
       const mainEventWithoutSubEvent = validateMainActionAndToEvent(match, input);
 
       // if there was a trap or join/load, the default subEvent is "wait" (check must be done before moving the unit)
       const isJoinOrLoad =
         mainEventWithoutSubEvent.type === "move" &&
-        match.getUnit(getFinalPositionSafe(mainEventWithoutSubEvent.path)) !== undefined;
+        match.getUnit(getFinalPositionSafe(mainEventWithoutSubEvent.path)) !== undefined &&
+        getFinalPositionSafe(mainEventWithoutSubEvent.path) !== mainEventWithoutSubEvent.path[0];
 
       /* 2. Apply move event to match */
       applyMainEventToMatch(match, mainEventWithoutSubEvent);

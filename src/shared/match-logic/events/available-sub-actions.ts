@@ -1,6 +1,3 @@
-import type { DisplayObject } from "pixi.js";
-import { BitmapText, Container, Sprite, Texture } from "pixi.js";
-import type { MutableRefObject } from "react";
 import {
   createPipeSeamUnitEquivalent,
   getBaseDamage,
@@ -8,33 +5,31 @@ import {
 import { unitPropertiesMap } from "shared/match-logic/game-constants/unit-properties";
 import { getBaseMovementCost } from "shared/match-logic/movement-cost";
 import { getWeatherSpecialMovement } from "shared/match-logic/weather";
+import type { SubAction } from "shared/schemas/action";
 import {
   getDistance,
   getNeighbourPositions,
   isSamePosition,
   type Position,
 } from "shared/schemas/position";
+import type { MatchWrapper } from "shared/wrappers/match";
+import type { PlayerInMatchWrapper } from "shared/wrappers/player-in-match";
 import type { UnitWrapper } from "shared/wrappers/unit";
-import { baseTileSize } from "../components/client-only/MatchRenderer";
-import type { MainAction, SubAction } from "../shared/schemas/action";
-import type { MatchWrapper } from "../shared/wrappers/match";
-import type { PlayerInMatchWrapper } from "../shared/wrappers/player-in-match";
-import type { LoadedSpriteSheet } from "./load-spritesheet";
-import { renderAttackTiles } from "./renderAttackTiles";
 
 export enum AvailableSubActions {
   "Wait",
   "Join",
   "Load",
   "Capture",
-  "Launch",
+  "Launch", //position handled after subaction selection
   "Supply",
   "Explode",
   "Hide",
   "Show",
-  "Unload",
-  "Repair",
-  "Attack",
+  "Unload", //unit to unload and position handled after subaction selection
+  "Repair", //unit to repair handled after subaction selection
+  "Attack", //unit to attack handled after subaction selection
+  "Delete", //has to be handled in a special way because it's not a subaction
 }
 
 export const getAvailableSubActions = (
@@ -42,10 +37,11 @@ export const getAvailableSubActions = (
   player: PlayerInMatchWrapper,
   unit: UnitWrapper,
   newPosition: Position,
+  hasMoved: boolean,
 ) => {
-  const menuOptions: Map<AvailableSubActions, SubAction> = new Map<
+  const menuOptions: Map<AvailableSubActions, SubAction | undefined> = new Map<
     AvailableSubActions,
-    SubAction
+    SubAction | undefined
   >();
   const tile = match.getTile(newPosition);
 
@@ -74,12 +70,9 @@ export const getAvailableSubActions = (
     let addAttackSubaction = false;
 
     const pipeSeamUnitEquivalent = createPipeSeamUnitEquivalent(match, unit);
-
     const canAttackPipeseams = getBaseDamage(unit, pipeSeamUnitEquivalent) !== null;
 
-    if (unit.isIndirect()) {
-      console.log("unit is indirect");
-
+    if (unit.isIndirect() && !hasMoved) {
       for (let x = 0; x < match.map.width && !addAttackSubaction; x++) {
         for (let y = 0; y < match.map.height && !addAttackSubaction; y++) {
           const distance = getDistance([x, y], unit.data.position);
@@ -139,11 +132,8 @@ export const getAvailableSubActions = (
     }
 
     if (addAttackSubaction) {
-      //TODO: This implementation needs to actually check where user wants to attack
-      menuOptions.set(AvailableSubActions.Attack, {
-        type: "attack",
-        defenderPosition: [0, 0],
-      });
+      //handled later
+      menuOptions.set(AvailableSubActions.Attack, undefined);
     }
   }
 
@@ -153,12 +143,9 @@ export const getAvailableSubActions = (
       menuOptions.set(AvailableSubActions.Capture, { type: "ability" });
     }
 
-    if (tile.type === "unusedSilo") {
-      //TODO: This implementation needs to actually check where user wants missile to go
-      menuOptions.set(AvailableSubActions.Launch, {
-        type: "launchMissile",
-        targetPosition: [0, 0],
-      });
+    if (tile.type === "unusedSilo" && "fired" in tile && !tile.fired) {
+      //handled later
+      menuOptions.set(AvailableSubActions.Launch, undefined);
     }
   }
 
@@ -187,7 +174,7 @@ export const getAvailableSubActions = (
   }
 
   //check for unload
-  if (unit.isTransport()) {
+  if (player.getVersionProperties().unloadOnlyAfterMove && unit.isTransport()) {
     let addUnloadSubaction = false;
 
     if (unit.data.loadedUnit !== null) {
@@ -246,8 +233,7 @@ export const getAvailableSubActions = (
     }
 
     if (addUnloadSubaction) {
-      throw new Error("Unload not implemented");
-      // availableActions.set(AvailableSubActions.Unload, {type: "unloadWait", });
+      menuOptions.set(AvailableSubActions.Unload, undefined); //handled later
     }
   }
 
@@ -255,148 +241,17 @@ export const getAvailableSubActions = (
   if (unit.data.type === "blackBoat") {
     for (const adjacentUnit of neighbourUnitsInNewPosition) {
       if (adjacentUnit.player.data.id === unit.player.data.id) {
-        //TODO: Actually check where user wants to repair
-        menuOptions.set(AvailableSubActions.Repair, { type: "repair", direction: "up" });
+        //available directions handled later
+        menuOptions.set(AvailableSubActions.Repair, undefined);
         break;
       }
     }
   }
 
+  //check for delete (technically not a subaction)
+  if (!hasMoved) {
+    menuOptions.set(AvailableSubActions.Delete, undefined);
+  }
+
   return menuOptions;
 };
-
-export default function subActionMenu(
-  match: MatchWrapper,
-  player: PlayerInMatchWrapper,
-  newPosition: Position,
-  unit: UnitWrapper,
-  currentUnitClickedRef: React.MutableRefObject<UnitWrapper | null>,
-  pathRef: MutableRefObject<Position[] | null>,
-  unitContainer: Container<DisplayObject>,
-  interactiveContainer: Container,
-  spriteSheets: LoadedSpriteSheet,
-  sendAction: (action: MainAction) => Promise<void>,
-) {
-  const menuOptions = getAvailableSubActions(match, player, unit, newPosition);
-
-  const [x, y] = newPosition;
-
-  //The big container holding everything
-  //set its eventmode to static for interactivity and sortable for zIndex
-  const menuContainer = new Container();
-  menuContainer.eventMode = "static";
-  menuContainer.sortableChildren = true;
-  menuContainer.zIndex = 999;
-
-  //this is the value we have applied to units (half a tile)
-  const unitSize = baseTileSize / 2;
-
-  //the name lets us find the menu easily with getChildByName for easy removal
-  menuContainer.name = "subMenu";
-
-  // if we are over half the map. invert menu placement
-  if (x > match.map.width / 2) {
-    menuContainer.x = x * baseTileSize - baseTileSize * 3; //the menu width is about 6 * baseTileSize
-  }
-  //we are not over half the map, menu is placed next to factory
-  else {
-    menuContainer.x = x * baseTileSize + baseTileSize;
-  }
-
-  //if our menu would appear below the middle of the map, we need to bring it up!
-  if (y >= match.map.height / 2 && match.map.height - y <= menuOptions.size + 1) {
-    const spaceLeft = match.map.height - y;
-    menuContainer.y = (y - Math.abs(spaceLeft - menuOptions.size)) * baseTileSize;
-  } else {
-    menuContainer.y = y * baseTileSize;
-  }
-
-  //This makes the menu elements be each below each other, it starts at 0 then gets plussed, so elements keep going down and down.
-  // yValue is not the best name for it but effectively it is that, a y value
-  let yValue = 0;
-
-  for (const [name, subAction] of menuOptions) {
-    //child container to hold all the text and sprite into one place
-    const menuElement = new Container();
-    menuElement.eventMode = "static";
-
-    //the grey rectangle bg that each unit has
-    const actionBG = new Sprite(Texture.WHITE);
-    actionBG.x = 0;
-    actionBG.y = yValue;
-    //TODO: Standardize these sizes
-    actionBG.width = baseTileSize * 2.8;
-    actionBG.height = unitSize * 1.35;
-    actionBG.eventMode = "static";
-    actionBG.tint = "#ffffff";
-    actionBG.alpha = 0.5;
-    menuElement.addChild(actionBG);
-
-    const actionText = new BitmapText(`${AvailableSubActions[name].toUpperCase()}`, {
-      fontName: "awFont",
-      fontSize: 10,
-    });
-    actionText.y = yValue;
-    actionText.x = baseTileSize;
-    //trying to line it up nicely wiht the unit icon
-    actionText.anchor.set(0, -0.3);
-    menuElement.addChild(actionText);
-
-    //lets add a hover effect to the actionBG when you hover over the menu
-    menuElement.on("pointerenter", () => {
-      actionBG.alpha = 1;
-    });
-
-    //when you stop hovering the menu
-    menuElement.on("pointerleave", () => {
-      actionBG.alpha = 0.5;
-    });
-
-    menuElement.on("pointerdown", () => {
-      //if its an attack
-      if (name === AvailableSubActions.Attack) {
-        interactiveContainer.addChild(
-          renderAttackTiles(
-            unitContainer,
-            interactiveContainer,
-            match,
-            player,
-            currentUnitClickedRef,
-            spriteSheets,
-            pathRef,
-            sendAction,
-          ),
-        );
-      } else {
-        void sendAction({
-          type: "move",
-          subAction: subAction,
-          path: pathRef.current ?? [newPosition],
-        });
-
-        //The currentUnitClicked has changed (moved, attacked, died), therefore, we delete the previous information as it is not accurate anymore
-        //this also helps so when the screen resets, we dont have two copies of a unit
-        currentUnitClickedRef.current = null;
-      }
-
-      //as soon a selection is done, destroy/erase the menu
-      menuContainer.destroy();
-    });
-
-    yValue += unitSize * 2;
-    menuContainer.addChild(menuElement);
-  }
-
-  //The extra border we see around the menu
-  //TODO: Change outerborder color depending on country/army color
-  const menuBG = new Sprite(Texture.WHITE);
-  menuBG.tint = "#cacaca";
-  menuBG.x = -2;
-  menuBG.y = -2;
-  menuBG.width = baseTileSize * 3; //expands 3 tiles worth of space
-  menuBG.height = yValue;
-  menuBG.zIndex = -1;
-  menuBG.alpha = 1;
-  menuContainer.addChild(menuBG);
-  return menuContainer;
-}

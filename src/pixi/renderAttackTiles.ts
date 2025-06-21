@@ -1,11 +1,10 @@
 import type { DisplayObject } from "pixi.js";
 import { BitmapText, Container, Sprite, Texture } from "pixi.js";
-import type { MutableRefObject } from "react";
+import { type MutableRefObject } from "react";
 import type { MainAction } from "shared/schemas/action";
 import { /*baseTileSize,*/ renderedTileSize } from "../components/client-only/MatchRenderer";
 import type { Position } from "../shared/schemas/position";
 import type { MatchWrapper } from "../shared/wrappers/match";
-import type { PlayerInMatchWrapper } from "../shared/wrappers/player-in-match";
 import type { UnitWrapper } from "../shared/wrappers/unit";
 import type { BattleForecast } from "./interactiveTileFunctions";
 import { getBattleForecast } from "./interactiveTileFunctions";
@@ -15,18 +14,17 @@ import { getAttackTargetTiles } from "./show-pathing";
 import { tileConstructor } from "./sprite-constructor";
 
 export function renderAttackTiles(
-  unitContainer: Container<DisplayObject>,
   interactiveContainer: Container<DisplayObject>,
   match: MatchWrapper,
-  player: PlayerInMatchWrapper,
   currentUnitClickedRef: MutableRefObject<UnitWrapper | null>,
   spriteSheets: LoadedSpriteSheet,
   pathRef: MutableRefObject<Position[] | null>,
+  mapContainer: Container,
   sendAction: (action: MainAction) => Promise<void>,
+  attackingPosition?: Position,
 ) {
   interactiveContainer.getChildByName("preAttackBox")?.destroy();
 
-  let attackTiles;
   const attackTileContainer = new Container();
   attackTileContainer.name = "preAttackBox";
 
@@ -34,16 +32,7 @@ export function renderAttackTiles(
     return attackTileContainer;
   }
 
-  //This means we have clicked on a unit
-  if (pathRef.current) {
-    attackTiles = getAttackTargetTiles(
-      match,
-      currentUnitClickedRef.current,
-      pathRef.current[pathRef.current.length - 1],
-    );
-  } else {
-    attackTiles = getAttackTargetTiles(match, currentUnitClickedRef.current);
-  }
+  const attackTiles = getAttackTargetTiles(match, currentUnitClickedRef.current, attackingPosition);
 
   attackTiles.forEach((pos) => {
     const attackTile = tileConstructor(pos, "#be1919");
@@ -63,6 +52,11 @@ export function renderAttackTiles(
             ? pathRef.current[pathRef.current.length - 1]
             : unit1.data.position;
         attackTileContainer.addChild(renderProbabilities(unit1, unit2, attackingPos));
+
+        if (unit1?.isIndirect() === true) {
+          pathRef.current = null;
+          mapContainer.getChildByName("pathArrows")?.destroy();
+        }
       }
     });
 
@@ -72,9 +66,14 @@ export function renderAttackTiles(
     });
 
     attackTile.on("pointerdown", () => {
-      const path = pathRef.current;
+      if (currentUnitClickedRef.current !== null) {
+        //unit will not move if path is null (= not moving) or if it's indirect
+        const path =
+          pathRef.current && !currentUnitClickedRef.current.isIndirect()
+            ? pathRef.current
+            : [currentUnitClickedRef.current.data.position];
 
-      if (path !== null) {
+        console.log("sending action:", pos, path);
         void sendAction({
           type: "move",
           subAction: {
@@ -83,11 +82,11 @@ export function renderAttackTiles(
           },
           path: path,
         });
-      }
 
-      //The currentUnitClicked has changed (moved, attacked, died), therefore, we delete the previous information as it is not accurate anymore
-      //this also helps so when the screen resets, we dont have two copies of a unit
-      currentUnitClickedRef.current = null;
+        //The currentUnitClicked has changed (moved, attacked, died), therefore, we delete the previous information as it is not accurate anymore
+        //this also helps so when the screen resets, we dont have two copies of a unit
+        currentUnitClickedRef.current = null;
+      }
     });
 
     attackTileContainer.addChild(attackTile);

@@ -49,7 +49,7 @@ export function renderUnitSprite(
   }
 
   unitSprite.play();
-  unitContainer.name = newPosition ? "tempUnit" : `unit-${position[0]}-${position[1]}`;
+  unitContainer.name = `unit-${position[0]}-${position[1]}`;
   unitContainer.addChild(unitSprite);
 
   // Add capture points icon if applicable

@@ -1,27 +1,11 @@
 import { DispatchableError } from "shared/DispatchedError";
-import { terrainProperties } from "shared/match-logic/game-constants/terrain-properties";
-import { unitPropertiesMap } from "shared/match-logic/game-constants/unit-properties";
 import type { UnloadWaitAction } from "shared/schemas/action";
 import type { Position } from "shared/schemas/position";
 import { addDirection } from "shared/schemas/position";
-import type { Tile } from "shared/schemas/tile";
-import type { UnitType } from "shared/schemas/unit";
 import type { UnloadWaitEvent } from "shared/types/events";
-import type { ChangeableTile } from "shared/types/server-match-state";
 import type { MatchWrapper } from "shared/wrappers/match";
-import type { SubActionToEvent } from "../handler-types";
-
-export function throwIfUnitCantBeUnloadedToTile(
-  unit: { type: UnitType },
-  tile: Tile | ChangeableTile,
-) {
-  const loadedUnitMovementType = unitPropertiesMap[unit.type].movementType;
-  const tileType = tile.type;
-
-  if (!(loadedUnitMovementType in terrainProperties[tileType])) {
-    throw new DispatchableError("Cannot unload unit in desired position");
-  }
-}
+import type { SubActionToEvent } from "../../handler-types";
+import { throwIfUnitCantBeUnloadedToTile } from "./checkUnloadTiles";
 
 export const unloadWaitActionToEvent: SubActionToEvent<UnloadWaitAction> = (
   match,
@@ -66,14 +50,27 @@ export const unloadWaitActionToEvent: SubActionToEvent<UnloadWaitAction> = (
         throw new DispatchableError("Transport doesn't currently have a 2nd loaded unit");
       }
 
-      throwIfUnitCantBeUnloadedToTile(transportUnit.data.loadedUnit2, match.getTile(fromPosition));
+      throwIfUnitCantBeUnloadedToTile(
+        transportUnit.data.loadedUnit2,
+        match.getTile(fromPosition),
+        transportUnit.player,
+      );
       throwIfUnitCantBeUnloadedToTile(
         transportUnit.data.loadedUnit2,
         match.getTile(unloadPosition),
+        transportUnit.player,
       );
     } else {
-      throwIfUnitCantBeUnloadedToTile(transportUnit.data.loadedUnit, match.getTile(fromPosition));
-      throwIfUnitCantBeUnloadedToTile(transportUnit.data.loadedUnit, match.getTile(unloadPosition));
+      throwIfUnitCantBeUnloadedToTile(
+        transportUnit.data.loadedUnit,
+        match.getTile(fromPosition),
+        transportUnit.player,
+      );
+      throwIfUnitCantBeUnloadedToTile(
+        transportUnit.data.loadedUnit,
+        match.getTile(unloadPosition),
+        transportUnit.player,
+      );
     }
   } else if (action.unloads.length === 2) {
     if (!("loadedUnit2" in transportUnit.data)) {
@@ -102,8 +99,16 @@ export const unloadWaitActionToEvent: SubActionToEvent<UnloadWaitAction> = (
 
     match.map.throwIfOutOfBounds(unloadPosition2);
 
-    throwIfUnitCantBeUnloadedToTile(transportUnit.data.loadedUnit, match.getTile(unloadPosition));
-    throwIfUnitCantBeUnloadedToTile(transportUnit.data.loadedUnit2, match.getTile(unloadPosition2));
+    throwIfUnitCantBeUnloadedToTile(
+      transportUnit.data.loadedUnit,
+      match.getTile(unloadPosition),
+      transportUnit.player,
+    );
+    throwIfUnitCantBeUnloadedToTile(
+      transportUnit.data.loadedUnit2,
+      match.getTile(unloadPosition2),
+      transportUnit.player,
+    );
   } else {
     throw new DispatchableError("Trying to unload more than 2 units");
   }

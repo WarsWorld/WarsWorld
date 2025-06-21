@@ -16,7 +16,7 @@ export function displayEnemyRange(
       Array.from(passablePositions.keys()),
       "#43d9e4",
       999,
-      "path",
+      "highlightedTiles",
     );
     unitRangeShowRef.current = "attack";
 
@@ -27,7 +27,7 @@ export function displayEnemyRange(
       attackablePositions,
       "#be1919",
       999,
-      "path",
+      "highlightedTiles",
     );
 
     if (match.leagueType === "fog") {

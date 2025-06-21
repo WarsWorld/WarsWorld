@@ -10,15 +10,16 @@ import type { MatchWrapper } from "shared/wrappers/match";
 import { isUnitProducingProperty } from "../shared/schemas/tile";
 import type { PlayerInMatchWrapper } from "../shared/wrappers/player-in-match";
 import type { UnitWrapper } from "../shared/wrappers/unit";
-import { buildUnitMenu } from "./buildUnitMenu";
 import { displayEnemyRange } from "./displayEnemyRange";
+import { buildUnitMenu } from "./in-game-menus/buildUnitMenu";
+import subActionMenu from "./in-game-menus/subActionMenu";
+import { createUnloadMenu } from "./in-game-menus/unloadSubactionMenu";
 import { createTilesContainer } from "./interactiveTileFunctions";
 import type { LoadedSpriteSheet } from "./load-spritesheet";
 import { renderAttackTiles } from "./renderAttackTiles";
 import { renderUnitSprite } from "./renderUnitSprite";
 import type { PathNode } from "./show-pathing";
 import { getAccessibleNodes, showPath, updatePath } from "./show-pathing";
-import subActionMenu from "./subActionMenu";
 
 export const handleClick = async (
   clickPosition: Position,
@@ -87,7 +88,7 @@ export const handleClick = async (
           try {
             throwIfCantMoveIntoUnit(currentUnit, unitInTile);
             canUnitMoveIntoOther = true;
-          } catch (DispatchableError) {}
+          } catch (_e) {}
         }
 
         const canMoveToTile =
@@ -96,36 +97,21 @@ export const handleClick = async (
           (unitInTile?.player.data.slot === currentUnit.player.data.slot && canUnitMoveIntoOther); //join or load
 
         if (canMoveToTile) {
-          /*
-          //clean game area and add sprite of unit in possible "new" position
-          mapContainer.getChildByName("path")?.destroy();
-          mapContainer.getChildByName("arrows")?.destroy();
-          unitContainer.getChildByName("preAttackBox")?.destroy();
-          unitContainer
-            .getChildByName(`unit-${currentUnit.data.position[0]}-${currentUnit.data.position[1]}`)
-            ?.destroy();
-
-          //create new temporary sprite in selected position
-          const tempUnit = renderUnitSprite(currentUnit, spriteSheets, clickPosition);
-          tempUnit.name = "tempUnit";
-          unitContainer.addChild(tempUnit);
-          */
-
           // display subaction menu next to unit in new position
-          const subMenu = subActionMenu(
-            match,
-            player,
-            pos,
-            currentUnit,
-            currentUnitClickedRef,
-            pathRef,
-            unitContainer,
-            interactiveContainer,
-            spriteSheets,
-            sendAction,
+          interactiveContainer.addChild(
+            subActionMenu(
+              match,
+              player,
+              pos,
+              currentUnit,
+              currentUnitClickedRef,
+              pathRef,
+              mapContainer,
+              interactiveContainer,
+              spriteSheets,
+              sendAction,
+            ),
           );
-
-          interactiveContainer.addChild(subMenu);
           moveTilesRef.current = null;
         } else {
           resetScreen();
@@ -147,44 +133,55 @@ export const handleClick = async (
     resetScreen();
 
     //Do we own said unit and is it our turn?
-    if (
-      player.owns(unitClicked) &&
-      match.getCurrentTurnPlayer().data.id === player.data.id &&
-      unitClicked.data.isReady
-    ) {
-      currentUnitClickedRef.current = unitClicked;
+    if (player.owns(unitClicked) && match.getCurrentTurnPlayer().data.id === player.data.id) {
+      //if ready, create path move tiles...
+      if (unitClicked.data.isReady) {
+        currentUnitClickedRef.current = unitClicked;
 
-      const passablePositions = getAccessibleNodes(match, unitClicked);
-      const displayedPassableTiles = createTilesContainer(
-        Array.from(passablePositions.keys()),
-        "#43d9e4",
-        999,
-        "path",
-      );
+        const passablePositions = getAccessibleNodes(match, unitClicked);
+        const displayedPassableTiles = createTilesContainer(
+          Array.from(passablePositions.keys()),
+          "#43d9e4",
+          999,
+          "highlightedTiles",
+        );
 
-      moveTilesRef.current = passablePositions;
-      mapContainer.addChild(displayedPassableTiles);
+        moveTilesRef.current = passablePositions;
+        mapContainer.addChild(displayedPassableTiles);
 
-      interactiveContainer.addChild(
-        renderAttackTiles(
-          unitContainer,
-          interactiveContainer,
+        interactiveContainer.addChild(
+          renderAttackTiles(
+            interactiveContainer,
+            match,
+            currentUnitClickedRef,
+            spriteSheets,
+            pathRef,
+            mapContainer,
+            sendAction,
+          ),
+        );
+      }
+      //if not ready but it's a transport with units and the rules allow to always unload...
+      else if (
+        unitClicked.isTransport() &&
+        unitClicked.data.loadedUnit !== null &&
+        !player.getVersionProperties().unloadOnlyAfterMove
+      ) {
+        //Show subaction menu of transport to drop off units
+        const unloadMenu = createUnloadMenu(
           match,
           player,
+          clickPosition,
+          unitClicked,
           currentUnitClickedRef,
-          spriteSheets,
           pathRef,
+          interactiveContainer,
+          spriteSheets,
           sendAction,
-        ),
-      );
-    }
-    //todo: handle logic for clicking a transport that is loaded and NOT ready (so it can drop off units)
-    else if (
-      unitClicked.isTransport() /*TODO && isLoaded*/ &&
-      player.owns(unitClicked) &&
-      match.getCurrentTurnPlayer().data.id === player.data.id
-    ) {
-      //Show subaction menu of transport to drop off units
+        );
+        unloadMenu.zIndex = 999;
+        interactiveContainer.addChild(unloadMenu);
+      }
     }
 
     //TODO: We clicked on a unit we do not own OR its not our turn. Display unit movement/attack range/vision
@@ -202,11 +199,10 @@ export const handleClick = async (
   function resetScreen() {
     //removes all temporary sprites (menus, paths, tempunit)
     interactiveContainer.getChildByName("buildMenu")?.destroy();
-    interactiveContainer.getChildByName("subMenu")?.destroy();
+    interactiveContainer.getChildByName("subActionMenu")?.destroy();
     interactiveContainer.getChildByName("preAttackBox")?.destroy(); //TODO ??
-    unitContainer.getChildByName("tempUnit")?.destroy();
-    mapContainer.getChildByName("path")?.destroy();
-    mapContainer.getChildByName("arrows")?.destroy();
+    mapContainer.getChildByName("highlightedTiles")?.destroy();
+    mapContainer.getChildByName("pathArrows")?.destroy();
 
     if (currentUnitClickedRef.current) {
       //lets add the original unit back to its original position only if the original doesnt exist
@@ -264,7 +260,7 @@ export const handleHover = async (
     );
     pathRef.current = newPath;
     const arrows = showPath(spriteSheets, newPath);
-    mapContainer.getChildByName("arrows")?.destroy();
+    mapContainer.getChildByName("pathArrows")?.destroy();
     mapContainer.addChild(arrows);
   }
 };

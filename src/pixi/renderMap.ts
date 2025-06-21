@@ -18,9 +18,17 @@ function getTileSprite(
   spriteSheets: LoadedSpriteSheet,
 ): Sprite {
   if (!("playerSlot" in tile)) {
-    const variant = "variant" in tile ? `-${tile.variant}` : "";
-    const key = `${tile.type}${variant}.png`;
-    return new Sprite(spriteSheets.neutral.textures[key]);
+    let spriteName: string = tile.type;
+
+    if ("fired" in tile && tile.fired) {
+      spriteName = "usedSilo";
+    }
+
+    if ("variant" in tile) {
+      spriteName += `-${tile.variant}`;
+    }
+
+    return new Sprite(spriteSheets.neutral.textures[`${spriteName}.png`]);
   }
 
   if (tile.playerSlot === -1) {

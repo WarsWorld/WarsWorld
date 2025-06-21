@@ -12,8 +12,8 @@ import { launchMissileActionToEvent } from "./handlers/launchMissile";
 import { moveActionToEvent } from "./handlers/move";
 import { passTurnActionToEvent } from "./handlers/passTurn";
 import { repairActionToEvent } from "./handlers/repair";
-import { unloadNoWaitActionToEvent } from "./handlers/unloadNoWait";
-import { unloadWaitActionToEvent } from "./handlers/unloadWait";
+import { unloadNoWaitActionToEvent } from "./handlers/unload/unloadNoWait";
+import { unloadWaitActionToEvent } from "./handlers/unload/unloadWait";
 
 export const validateMainActionAndToEvent = (
   match: MatchWrapper,

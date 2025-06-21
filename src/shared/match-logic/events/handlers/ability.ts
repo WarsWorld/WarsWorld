@@ -215,7 +215,6 @@ export const applyAbilityEvent: ApplySubEvent<AbilityEvent> = (match, event, fro
         unit.player.team.vision?.addOwnedProperty(unit.data.position);
       }
 
-      unit.data.isReady = false;
       break;
     }
     case "apc": {
