@@ -3,26 +3,13 @@ import { getCOProperties } from "shared/match-logic/co";
 import type { Hooks } from "shared/match-logic/co-hooks";
 import type { CO } from "shared/schemas/co";
 import type { GameVersion } from "shared/schemas/game-version";
-import type { PropertyTile, Tile } from "shared/schemas/tile";
+import type { Tile } from "shared/schemas/tile";
 import type { UnitWithVisibleStats } from "shared/schemas/unit";
 import type { ChangeableTile, PlayerInMatch } from "shared/types/server-match-state";
 import { versionPropertiesMap } from "../match-logic/game-constants/version-properties";
 import type { MatchWrapper } from "./match";
 import type { TeamWrapper } from "./team";
 import { UnitWrapper } from "./unit";
-
-//TODO: Band-aid fix from chatGPT, needs to be fixed down below
-
-// Type guard to check if the object is a UnitWrapper
-function isUnitWrapper(object: Tile | ChangeableTile | UnitWrapper): object is UnitWrapper {
-  return "data" in object && "playerSlot" in object.data;
-}
-
-// Type guard to check if the object is a PropertyTile (or has playerSlot directly)
-
-function isPropertyTile(object: Tile | ChangeableTile | UnitWrapper): object is PropertyTile {
-  return "playerSlot" in object;
-}
 
 export class PlayerInMatchWrapper {
   public match: MatchWrapper;
@@ -57,7 +44,7 @@ export class PlayerInMatchWrapper {
   }
 
   getUnits() {
-    //TODO: If the match.units is undefined, this throws an error. The error kills usePlayers() which stops FrontEnd work.
+    //If match.units is undefined, this throws an error. The error kills usePlayers() which stops FrontEnd work.
     if (this.match.units !== undefined) {
       return this.match.units.filter((u) => u.data.playerSlot === this.data.slot);
     } else {
@@ -130,19 +117,19 @@ export class PlayerInMatchWrapper {
     this.data.powerMeter = Math.min(value, this.getMaxPowerMeter());
   }
 
-  //TODO: Band aid fix applied here
   owns(tileOrUnit: Tile | ChangeableTile | UnitWrapper): boolean {
-    // If it's a UnitWrapper, the playerSlot is under tileOrUnit.data
-    if (isUnitWrapper(tileOrUnit)) {
-      return tileOrUnit.data.playerSlot === this.data.slot;
+    if ("playerSlot" in tileOrUnit && tileOrUnit.playerSlot === this.data.slot) {
+      return true;
     }
 
-    // If it's a PropertyTile, playerSlot is directly on the object
-    if (isPropertyTile(tileOrUnit)) {
-      return tileOrUnit.playerSlot === this.data.slot;
+    if (
+      "data" in tileOrUnit &&
+      "playerSlot" in tileOrUnit.data &&
+      tileOrUnit.data.playerSlot === this.data.slot
+    ) {
+      return true;
     }
 
-    // If none of the conditions match, return false
     return false;
   }
 
