@@ -208,6 +208,8 @@ export const mainEventToEmittables = (
           teamIndex: team.index,
           type: "move",
           path: shownPath,
+          fundsGained:
+            !match.rules.fogOfWar || unit.player.team === team ? event.fundsGained : undefined,
           trap: team.isPositionVisible(event.path.at(-1)!) ? event.trap : false,
           subEvent: emittableSubEvent.subEvent,
           //if unit shows and it was not visible before

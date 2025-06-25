@@ -87,6 +87,15 @@ export const moveActionToEvent = (
       unitInPosition.data.playerSlot === unit.data.playerSlot
     ) {
       throwIfCantMoveIntoUnit(unit, unitInPosition);
+
+      if (unitInPosition.data.type === unit.data.type) {
+        //join, calculate gained funds
+        const newVisualHP = unit.getVisualHP() + unitInPosition.getVisualHP();
+
+        if (newVisualHP > 10) {
+          result.fundsGained = (unit.getBuildCost() / 10) * (newVisualHP - 10);
+        }
+      }
     }
 
     result.path.push(action.path[pathIndex]);
@@ -276,11 +285,9 @@ export const applyMoveEvent = (match: MatchWrapper, event: MoveEventWithoutSubEv
       // yes, this "generates" hp, but it's how it works in game
       const newVisualHP = unit.getVisualHP() + unitAtDestination.getVisualHP();
 
-      if (newVisualHP > 10) {
-        //gain funds
-        // TODO do we emit funds gain through the events?? how does the client know if / how much they gained?
-        // the client MUST be told because it otherwise can't know the amount when e.g. 2 enemy sonja units join.
-        unit.player.data.funds += (unit.getBuildCost() / 10) * (newVisualHP - 10);
+      //gain funds
+      if (event.fundsGained !== undefined) {
+        unit.player.data.funds += event.fundsGained;
       }
 
       unitAtDestination.setHp(Math.min(newVisualHP, 10) * 10);

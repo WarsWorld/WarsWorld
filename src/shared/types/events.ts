@@ -36,6 +36,7 @@ export type MatchEndEvent = {
 
 export type MoveEventWithoutSubEvent = {
   trap: boolean;
+  fundsGained?: number; //for joining. it is not undefined if and only if the move is a join
 } & Omit<MoveAction, "subAction">;
 
 export type MoveEventWithSubEvent<SubEventType extends SubEvent = SubEvent> =
