@@ -18,6 +18,7 @@ import type {
   MainEventWithSubEvents,
   SubEvent,
 } from "shared/types/events";
+import type { PlayerInMatchWrapper } from "shared/wrappers/player-in-match";
 import { mainEventToEmittables } from "../../shared/match-logic/events/event-to-emittable";
 import { updateMoveVision } from "../../shared/match-logic/events/handlers/move";
 import { fillDiscoveredUnitsAndProperties } from "../../shared/match-logic/events/vision-update";
@@ -119,11 +120,11 @@ export const actionRouter = router({
       // TODO @function either this function gets a list of emittables, or we iterate through them here.
       //  undefined means that team shouldn't receive the event
       //  emittableEvents[i] is from match.teams[i]. emittableEvents has one extra "no team"(spectator) at the end
-      //TODO: See https://github.com/WarsWorld/WarsWorld/issues/235
-      // this emits to the first player on each team, needs to emit to the whole team
       emittableEvents.forEach((emittableEvent: EmittableEvent | undefined) => {
         if (emittableEvent) {
-          emit(emittableEvent.playerId, { ...emittableEvent, matchId: match.id });
+          match.teams[emittableEvent.teamIndex].players.forEach((player: PlayerInMatchWrapper) => {
+            emit(player.data.id, { ...emittableEvent, matchId: match.id });
+          });
         }
       });
 

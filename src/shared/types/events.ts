@@ -175,7 +175,7 @@ export type EmittableEvent = (
   | DeleteEvent
   | MatchEndEvent
 ) &
-  WithDiscoveries & { playerId: string };
+  WithDiscoveries & { teamIndex: number };
 
 export type NonStoredEvent = WithPlayer &
   WithMatchId &

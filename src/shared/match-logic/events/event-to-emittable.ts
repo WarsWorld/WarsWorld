@@ -205,7 +205,7 @@ export const mainEventToEmittables = (
         // right now appearing units have all data, but if they go from fog to fog,
         // they may have only unit type (and other stats not visible)
         const result: EmittableEvent = {
-          playerId: getFirstPlayerInTeam(team),
+          teamIndex: team.index,
           type: "move",
           path: shownPath,
           trap: team.isPositionVisible(event.path.at(-1)!) ? event.trap : false,
@@ -229,7 +229,7 @@ export const mainEventToEmittables = (
         ) {
           return {
             ...event,
-            playerId: getFirstPlayerInTeam(team),
+            teamIndex: team.index,
           };
         } else {
           return undefined;
@@ -242,7 +242,7 @@ export const mainEventToEmittables = (
       // this switch case will have a different implementation.
       return teamsWithSpectator.map((team) => ({
         ...event,
-        playerId: getFirstPlayerInTeam(team),
+        teamIndex: team.index,
       }));
     }
     case "delete": {
@@ -251,7 +251,7 @@ export const mainEventToEmittables = (
         if (team.isPositionVisible(event.position) || event.eliminationReason !== undefined) {
           return {
             ...event,
-            playerId: getFirstPlayerInTeam(team),
+            teamIndex: team.index,
           };
         } else {
           return undefined;
@@ -261,16 +261,8 @@ export const mainEventToEmittables = (
     default: {
       return teamsWithSpectator.map((team) => ({
         ...event,
-        playerId: getFirstPlayerInTeam(team),
+        teamIndex: team.index,
       }));
     }
   }
 };
-
-function getFirstPlayerInTeam(team: TeamWrapper) {
-  if (team.players === undefined || team.players.length === 0) {
-    return "spectator";
-  }
-
-  return team.players[0].data.id;
-}
