@@ -90,24 +90,28 @@ WarsWorld/
 ### Module Boundaries and Responsibilities
 
 #### Frontend Modules (`src/frontend/`, `src/components/`, `src/pages/`)
+
 - **Responsibility**: User interface, game rendering, user input handling
 - **Dependencies**: Can import from `shared/` for game logic
 - **Restrictions**: Cannot import server-side code
 
 #### Server Modules (`src/server/`)
+
 - **Responsibility**: API endpoints, database operations, authentication, WebSocket handling
 - **Dependencies**: Full access to database via Prisma
 - **Restrictions**: Cannot import frontend-specific code or Pixi.js
 
 #### Shared Modules (`src/shared/`)
+
 - **Responsibility**: Core game logic, type definitions, validation schemas
 - **Dependencies**: Must be isomorphic (work on both client and server)
-- **Restrictions**: 
+- **Restrictions**:
   - Cannot import from server or frontend folders
   - No Prisma runtime imports (type-only imports allowed)
   - No Pixi.js imports
 
 #### Pixi Modules (`src/pixi/`)
+
 - **Responsibility**: WebGL rendering, sprite management, visual effects
 - **Dependencies**: Can use Pixi.js and shared game logic
 - **Restrictions**: Must be client-side only
@@ -136,6 +140,7 @@ Player (1) ───── (∞) MMR (per league type)
 ### Core Services
 
 #### Game Engine (`src/shared/match-logic/`)
+
 - **game-entity-wrapper.ts**: Base wrapper for all game entities
 - **unit-wrapper.ts**: Unit state management and actions
 - **player-wrapper.ts**: Player state and resources
@@ -144,6 +149,7 @@ Player (1) ───── (∞) MMR (per league type)
 - **pathfinding.ts**: Movement path calculation
 
 #### API Routers (`src/server/routers/`)
+
 - **match.ts**: Match creation, joining, leaving
 - **action.ts**: Game action processing
 - **map.ts**: Map CRUD operations
@@ -151,11 +157,13 @@ Player (1) ───── (∞) MMR (per league type)
 - **article.ts**: News/blog system
 
 #### WebSocket Server (`src/server/`)
+
 - **main-wss-development.ts**: Development WebSocket server
 - **main-production.ts**: Production server setup
 - **match-store.ts**: In-memory match state cache
 
 #### Event System
+
 - **Event Store Pattern**: All game actions stored as events
 - **Event Replay**: Reconstruct game state from event history
 - **Real-time Broadcasting**: WebSocket events to all match participants
@@ -163,6 +171,7 @@ Player (1) ───── (∞) MMR (per league type)
 ### Background Jobs and Queues
 
 Currently, the system uses:
+
 - **In-memory match store** for active games
 - **WebSocket connections** for real-time updates
 - **No traditional job queue** - all processing is synchronous or event-driven
@@ -170,6 +179,7 @@ Currently, the system uses:
 ### API Endpoints (tRPC Procedures)
 
 #### Match Router
+
 - `match.create` - Create new match
 - `match.join` - Join existing match
 - `match.leave` - Leave match
@@ -178,11 +188,13 @@ Currently, the system uses:
 - `match.updateRules` - Update match settings
 
 #### Action Router
+
 - `action.performAction` - Execute game action
 - `action.validateAction` - Check if action is legal
 - `action.getAvailableActions` - Get possible actions
 
 #### Map Router
+
 - `map.create` - Create custom map
 - `map.getById` - Get map details
 - `map.list` - List available maps
@@ -216,17 +228,20 @@ Role                 -- admin|moderator
 ### Key Tables and Associations
 
 #### Match Table
+
 - **playerState**: JSON column storing complete game state
 - **rules**: JSON column with match configuration
 - **status**: Enum tracking match lifecycle
 - **Events**: Ordered list of all game actions
 
 #### Event Table
+
 - **index**: Sequential order within match
 - **content**: JSON-encoded game action
 - **Composite key**: (matchId, index)
 
 #### WWMap Table
+
 - **tiles**: JSON 2D array of terrain
 - **predeployedUnits**: JSON array of initial units
 - **Immutable**: Maps are versioned, not edited
@@ -308,23 +323,27 @@ PORT=3001  # WebSocket server port
 ### Code Conventions
 
 #### TypeScript
+
 - **No `any`**: Enforced by ESLint
 - **Prefer type aliases** over interfaces
 - **Explicit return types** for public functions
 - **Type-only imports** where possible
 
 #### Naming
+
 - **PascalCase**: React components, types, interfaces
 - **camelCase**: Variables, functions, methods
 - **UPPER_SNAKE_CASE**: Constants
 - **kebab-case**: File names for pages/routes
 
 #### Error Handling
+
 - **Never throw strings**: Use Error objects
 - **Custom errors**: Extend DispatchedError
 - **Preserve error cause**: Include original error
 
 #### React/Next.js
+
 - **No prop-types**: TypeScript only
 - **No React import**: Not needed in JSX files
 - **Client components**: Mark with 'use client' when needed
@@ -358,17 +377,19 @@ PORT=3001  # WebSocket server port
 ### Debugging Tips
 
 #### Game State Issues
+
 ```typescript
 // Check match state in browser console
-window.__MATCH_STATE__ // If exposed
+window.__MATCH_STATE__; // If exposed
 // Or use React DevTools to inspect MatchContext
 
 // Server-side debugging
-console.log(matchWrapper.serialize()) // Full state
-console.log(matchWrapper.getCurrentPlayer()) // Active player
+console.log(matchWrapper.serialize()); // Full state
+console.log(matchWrapper.getCurrentPlayer()); // Active player
 ```
 
 #### WebSocket Connection
+
 ```typescript
 // Monitor WebSocket in browser DevTools
 // Network tab → WS → Check frames
@@ -378,6 +399,7 @@ DEBUG=ws npm run dev:wss // Enable WebSocket debug logs
 ```
 
 #### Database Queries
+
 ```bash
 # Use Prisma Studio for visual debugging
 npm run prisma:studio
@@ -389,16 +411,19 @@ npm run prisma:studio
 ### Performance Considerations
 
 #### Frontend Optimization
+
 - **Pixi.js Batching**: Sprites are automatically batched
 - **React Memoization**: Use React.memo for game components
 - **Lazy Loading**: Dynamic imports for heavy components
 
 #### Backend Optimization
+
 - **Match Store**: In-memory cache for active games
 - **Event Batching**: Group WebSocket broadcasts
 - **Database Indexes**: Ensure proper indexes on frequently queried fields
 
 #### Game Logic
+
 - **Pathfinding Cache**: Reuse calculated paths
 - **Damage Precalculation**: Cache damage charts
 - **State Serialization**: Minimize JSON payload size
@@ -406,21 +431,25 @@ npm run prisma:studio
 ## Architecture Decisions
 
 ### Why Next.js Pages Router (not App Router)
+
 - Stable WebSocket integration
 - Simpler tRPC setup
 - Better documented patterns for game applications
 
 ### Why Pixi.js for Rendering
+
 - Hardware-accelerated 2D graphics
 - Sprite batching for performance
 - Rich ecosystem for game development
 
 ### Why Event Sourcing for Game State
+
 - Complete audit trail of all actions
 - Easy replay/spectator mode
 - Simplified state synchronization
 
 ### Why tRPC over REST/GraphQL
+
 - End-to-end type safety
 - No code generation needed
 - Seamless TypeScript integration
@@ -428,12 +457,14 @@ npm run prisma:studio
 ## Future Considerations
 
 ### Scalability Path
+
 - **Redis** for match state caching
 - **Horizontal scaling** with sticky sessions
 - **CDN** for static assets
 - **Database read replicas** for analytics
 
 ### Feature Roadmap Preparation
+
 - **Replay System**: Already supported by event store
 - **Spectator Mode**: WebSocket rooms structure supports it
 - **Tournament System**: MMR and league types foundation exists

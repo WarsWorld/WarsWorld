@@ -242,6 +242,22 @@ export const matchRouter = router({
             matchId: match.id,
             // index: eventIndex
           });
+
+          // If the first player is a computer, trigger AI turn
+          const firstPlayer = match.getCurrentTurnPlayer();
+
+          if (firstPlayer !== undefined && firstPlayer.data.id === "computer-player-001") {
+            setImmediate(() => {
+              void (async () => {
+              try {
+                const { runAiTurn } = await import("../services/ai-service");
+                await runAiTurn(match.id);
+              } catch (error) {
+                console.error("AI turn failed:", error);
+              }
+              })();
+            });
+          }
         }
       }
       //Both players are NOT ready, therefore match doesnt start

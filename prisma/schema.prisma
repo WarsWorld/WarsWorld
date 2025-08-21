@@ -131,6 +131,17 @@ enum Achievement {
   grizzledYet
 }
 
+enum PlayerKind {
+  human
+  computer
+}
+
+enum MatchMode {
+  pvp
+  pvc
+  ai_vs_ai
+}
+
 model Clan {
   id          String   @id @default(cuid())
   name        String
@@ -146,10 +157,11 @@ model Player {
   name        String        @unique
   displayName String
   secret      Boolean       @default(false) // secret = true means that parent user is hidden on profile
+  kind        PlayerKind    @default(human)
   ChatMessage ChatMessage[]
 
-  user   User   @relation(fields: [userId], references: [id])
-  userId String
+  user   User?  @relation(fields: [userId], references: [id])
+  userId String?
 
   Posts ArticleAuthors[]
 
@@ -239,6 +251,7 @@ model MMR {
 model Match {
   id         String     @id @default(cuid())
   leagueType LeagueType
+  mode       MatchMode  @default(pvp)
 
   /// [PrismaMatchRules]
   rules  Json

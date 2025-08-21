@@ -3,7 +3,14 @@
     "allow": [
       "Bash(npm run prisma:studio:*)",
       "Bash(psql:*)",
-      "Bash(cursor-agent:*)"
+      "Bash(cursor-agent:*)",
+      "Bash(git checkout:*)",
+      "Bash(npm run prisma:push:*)",
+      "Bash(npm run lint)",
+      "Bash(npm run lint:*)",
+      "Bash(npm run build:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)"
     ],
     "deny": [],
     "ask": []

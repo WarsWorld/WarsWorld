@@ -46,6 +46,7 @@ export default function CreateMatch({ currentPlayer, setCurrentPlayer }: Props) 
     label: "No map selected",
     value: "",
   });
+  const [vsComputer, setVsComputer] = useState(false);
 
   // Fills the players Select when every time ownedplayers is changed
   useEffect(() => {
@@ -77,6 +78,7 @@ export default function CreateMatch({ currentPlayer, setCurrentPlayer }: Props) 
       },
       mapId: currentMapId,
       playerId: currentPlayer.id,
+      vsComputer: vsComputer,
     });
   };
 
@@ -136,8 +138,21 @@ export default function CreateMatch({ currentPlayer, setCurrentPlayer }: Props) 
             />
           </div>
         )}
+        <div className="@flex @items-center @gap-4">
+          <label className="@flex @items-center @gap-2">
+            <input
+              type="checkbox"
+              checked={vsComputer}
+              onChange={(e) => setVsComputer(e.target.checked)}
+              className="@w-4 @h-4"
+            />
+            <span>Play vs Computer</span>
+          </label>
+        </div>
         <div className="@pt-4 smallscreen:@py-0 @px-2 @w-64 @h-16 smallscreen:@h-12">
-          <SquareButton onClick={() => void createMatchHandler()}>Create game</SquareButton>
+          <SquareButton onClick={() => void createMatchHandler()}>
+            {vsComputer ? "Start vs Computer" : "Create game"}
+          </SquareButton>
         </div>
       </div>
     </div>

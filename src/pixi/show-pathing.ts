@@ -3,6 +3,11 @@ import {
   createPipeSeamUnitEquivalent,
   getBaseDamage,
 } from "shared/match-logic/game-constants/base-damage";
+import {
+  getAccessibleNodes,
+  calculatePathDistance,
+  type PathNode,
+} from "shared/match-logic/pathfinding";
 import type { Position } from "shared/schemas/position";
 import {
   getDistance,
@@ -13,90 +18,16 @@ import {
 import type { MapWrapper } from "shared/wrappers/map";
 import type { MatchWrapper } from "shared/wrappers/match";
 import { baseTileSize } from "../components/client-only/MatchRenderer";
-import { DispatchableError } from "../shared/DispatchedError";
 import type { UnitWrapper } from "../shared/wrappers/unit";
 import type { LoadedSpriteSheet } from "./load-spritesheet";
-export type PathNode = {
-  //saves distance from origin and parent (to retrieve the shortest path)
-  pos: Position;
-  dist: number;
-  parent: Position | null;
-};
 
 const makeVisitedMatrix = (map: MapWrapper) =>
   Array.from({ length: map.width })
     .fill(false)
     .map(() => Array.from<boolean>({ length: map.height }).fill(false));
 
-export const getAccessibleNodes = (
-  //TODO: save result of function? _ (Sturm d2d?)
-  match: MatchWrapper,
-  unit: UnitWrapper,
-): Map<Position, PathNode> => {
-  const ownerUnitPlayer = match.getPlayerBySlot(unit.data.playerSlot);
-
-  if (ownerUnitPlayer === undefined) {
-    throw new DispatchableError("This unit doesn't have an owner");
-  }
-
-  const accessibleTiles = new Map<Position, PathNode>(); //return variable
-
-  //queues[a] has current queued nodes with distance a from origin (technically a "stack", not a queue, but the result doesn't change)
-  const queues: PathNode[][] = Array.from({ length: unit.getMovementPoints() }, () => []);
-  queues[0].push({ pos: unit.data.position, dist: 0, parent: null }); //queues[0] has the origin node, initially
-
-  const visited = makeVisitedMatrix(match.map);
-
-  for (const unit of ownerUnitPlayer.team.getEnemyUnits()) {
-    //enemy tiles are impassible
-    visited[unit.data.position[0]][unit.data.position[1]] = true;
-  }
-
-  let currentDist = 0; //will check from closest to furthest, to find the shortest path
-
-  while (currentDist < queues.length) {
-    if (queues[currentDist].length === 0) {
-      //increase currentDist if all nodes within that distance have been processed
-      ++currentDist;
-      continue;
-    }
-
-    const currNode = queues[currentDist].pop();
-    const currPos = currNode?.pos;
-
-    if (currNode === undefined || currPos === undefined || visited[currPos[0]][currPos[1]]) {
-      continue;
-    }
-
-    //update variables to mark as visited and add to result
-    visited[currPos[0]][currPos[1]] = true;
-    accessibleTiles.set(currPos, currNode);
-
-    for (const pos of getNeighbourPositions(currPos)) {
-      if (match.map.isOutOfBounds(pos)) {
-        continue;
-      }
-
-      const movementCost = unit.getMovementCost(pos);
-
-      if (movementCost === null) {
-        continue;
-      } //skip if unit can't move there
-
-      const nodeDist = currNode.dist + movementCost;
-
-      if (nodeDist <= unit.getMovementPoints()) {
-        queues[nodeDist - 1].push({
-          pos: pos,
-          dist: nodeDist,
-          parent: currPos,
-        }); //add new node with new distance and parent
-      }
-    }
-  }
-
-  return accessibleTiles;
-};
+// Re-export from shared module for backward compatibility
+export { getAccessibleNodes, type PathNode } from "shared/match-logic/pathfinding";
 
 export const getAttackableTiles = (
   match: MatchWrapper,
@@ -183,23 +114,8 @@ export const getAttackTargetTiles = (
   return attackTargetPositions;
 };
 
-export const calculatePathDistance = (unit: UnitWrapper, path: Position[]) => {
-  let dist = 0;
-
-  path.forEach((pos, index) => {
-    if (index !== 0) {
-      const moveCost = unit.getMovementCost(pos); //TODO cache movement costs
-
-      if (moveCost === null) {
-        return null;
-      }
-
-      dist += moveCost;
-    }
-  });
-
-  return dist;
-};
+// Re-export from shared module for backward compatibility
+export { calculatePathDistance } from "shared/match-logic/pathfinding";
 
 export const updatePath = (
   unit: UnitWrapper,
