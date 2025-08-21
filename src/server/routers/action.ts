@@ -121,7 +121,7 @@ export const actionRouter = router({
       //  undefined means that team shouldn't receive the event
       //  emittableEvents[i] is from match.teams[i]. emittableEvents has one extra "no team"(spectator) at the end
       emittableEvents.forEach((emittableEvent: EmittableEvent | undefined) => {
-        if (emittableEvent) {
+        if (emittableEvent && emittableEvent.teamIndex >= 0) {
           match.teams[emittableEvent.teamIndex].players.forEach((player: PlayerInMatchWrapper) => {
             emit(player.data.id, { ...emittableEvent, matchId: match.id });
           });
