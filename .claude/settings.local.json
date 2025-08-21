@@ -2,7 +2,8 @@
   "permissions": {
     "allow": [
       "Bash(npm run prisma:studio:*)",
-      "Bash(psql:*)"
+      "Bash(psql:*)",
+      "Bash(cursor-agent:*)"
     ],
     "deny": [],
     "ask": []
