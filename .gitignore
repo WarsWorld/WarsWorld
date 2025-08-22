@@ -13,3 +13,5 @@
 # https://www.typescriptlang.org/tsconfig#tsBuildInfoFile
 tsconfig.tsbuildinfo
 prisma/migrations/20230510171142_amogus/migration.sql
+
+/tmp
