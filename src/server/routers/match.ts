@@ -249,12 +249,12 @@ export const matchRouter = router({
           if (firstPlayer !== undefined && firstPlayer.data.id === "computer-player-001") {
             setImmediate(() => {
               void (async () => {
-              try {
-                const { runAiTurn } = await import("../services/ai-service");
-                await runAiTurn(match.id);
-              } catch (error) {
-                console.error("AI turn failed:", error);
-              }
+                try {
+                  const { runAiTurn } = await import("../services/ai-service");
+                  await runAiTurn(match.id);
+                } catch (error) {
+                  console.error("AI turn failed:", error);
+                }
               })();
             });
           }

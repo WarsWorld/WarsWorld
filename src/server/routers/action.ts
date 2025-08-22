@@ -28,12 +28,12 @@ export const actionRouter = router({
           // Trigger AI turn asynchronously to avoid blocking
           setImmediate(() => {
             void (async () => {
-            try {
-              const { runAiTurn } = await import("../services/ai-service");
-              await runAiTurn(match.id);
-            } catch (error) {
-              console.error("AI turn failed:", error);
-            }
+              try {
+                const { runAiTurn } = await import("../services/ai-service");
+                await runAiTurn(match.id);
+              } catch (error) {
+                console.error("AI turn failed:", error);
+              }
             })();
           });
         }

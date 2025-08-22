@@ -49,23 +49,28 @@ export const runAiTurn = async (matchId: string): Promise<void> => {
     let actionCount = 0;
     let _actionsTaken = false;
 
-    // Phase 1: Build Infantry at factories
-    const builtAtFactories = await buildInfantryAtFactories(match, currentPlayer);
-    actionCount += builtAtFactories;
-    _actionsTaken = _actionsTaken || builtAtFactories > 0;
+    // Phase 1: Move one Infantry unit randomly (do this first to free up factory tiles)
+    const moved = await moveRandomInfantry(match, currentPlayer);
 
-    // Phase 2: Move one Infantry unit randomly
-    if (actionCount < MAX_AI_ACTIONS) {
-      const moved = await moveRandomInfantry(match, currentPlayer);
-
-      if (moved) {
-        actionCount++;
-        _actionsTaken = true;
-      }
+    if (moved) {
+      actionCount++;
+      _actionsTaken = true;
     }
 
-    // Phase 3: Pass turn
-    console.log(`AI completed ${actionCount} actions, passing turn`);
+    // Phase 2: Build Infantry at all available factories (after moving units off factories)
+    if (actionCount < MAX_AI_ACTIONS) {
+      const builtAtFactories = await buildInfantryAtFactories(match, currentPlayer);
+      actionCount += builtAtFactories;
+      _actionsTaken = _actionsTaken || builtAtFactories > 0;
+
+      // Phase 3: Pass turn
+      console.log(
+        `AI completed ${actionCount} actions (moved ${moved ? 1 : 0} unit, built ${builtAtFactories} Infantry), passing turn`,
+      );
+    } else {
+      // Phase 3: Pass turn
+      console.log(`AI completed ${actionCount} actions, passing turn`);
+    }
     await passTurn(match, currentPlayer);
   } catch (error) {
     console.error(`AI turn failed for match ${matchId}:`, error);
@@ -142,8 +147,7 @@ const buildInfantryAtFactories = async (
       // Update funds (performAction should handle this, but we track it for our logic)
       player.data.funds -= infantryCost;
 
-      // Only build one Infantry per turn as per requirements
-      break;
+      // Continue to next factory to build more Infantry
     } catch (error) {
       console.error(`Failed to build Infantry at [${position[0]}, ${position[1]}]:`, error);
     }
