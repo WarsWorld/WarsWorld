@@ -1,0 +1,122 @@
+[
+  {
+    "id": "cmenucksf0000gnbpu5rnobq6",
+    "leagueType": "standard",
+    "mode": "pvc",
+    "rules": {
+      "dayLimit": 50,
+      "fogOfWar": false,
+      "teamMapping": [
+        0,
+        1
+      ],
+      "captureLimit": 50,
+      "labUnitTypes": [],
+      "weatherSetting": "clear",
+      "bannedUnitTypes": [],
+      "fundsPerProperty": 1000,
+      "unitCapPerPlayer": 50
+    },
+    "status": "playing",
+    "mapId": "cmenub8q5000913o84ofcfgr7",
+    "playerState": [
+      {
+        "id": "cmenub8p6000213o8ank83dmh",
+        "army": "orange-star",
+        "coId": {
+          "name": "andy",
+          "version": "AW2"
+        },
+        "name": "[dev] Grimm Guy",
+        "slot": 0,
+        "funds": 10000,
+        "ready": true,
+        "status": "alive",
+        "powerMeter": 0,
+        "COPowerState": "no-power",
+        "hasCurrentTurn": true,
+        "timesPowerUsed": 0
+      },
+      {
+        "id": "computer-player-001",
+        "army": "blue-moon",
+        "coId": {
+          "name": "andy",
+          "version": "AW2"
+        },
+        "name": "Computer",
+        "slot": 1,
+        "funds": 10000,
+        "ready": true,
+        "status": "alive",
+        "powerMeter": 0,
+        "COPowerState": "no-power",
+        "hasCurrentTurn": false,
+        "timesPowerUsed": 0
+      }
+    ],
+    "chatIsPublic": false,
+    "createdAt": "2025-08-23T05:51:00.159Z",
+    "Player": []
+  },
+  {
+    "id": "cmenub8qa000b13o88tmn29iy",
+    "leagueType": "standard",
+    "mode": "pvp",
+    "rules": {
+      "dayLimit": 50,
+      "fogOfWar": false,
+      "teamMapping": [
+        0,
+        1
+      ],
+      "captureLimit": 50,
+      "labUnitTypes": [],
+      "weatherSetting": "clear",
+      "bannedUnitTypes": [],
+      "fundsPerProperty": 1000,
+      "unitCapPerPlayer": 50
+    },
+    "status": "playing",
+    "mapId": "cmenub8q5000913o84ofcfgr7",
+    "playerState": [
+      {
+        "id": "cmenub8p6000213o8ank83dmh",
+        "army": "blue-moon",
+        "coId": {
+          "name": "andy",
+          "version": "AW2"
+        },
+        "name": "[dev] Grimm Guy",
+        "slot": 0,
+        "funds": 0,
+        "ready": true,
+        "status": "alive",
+        "powerMeter": 0,
+        "COPowerState": "no-power",
+        "hasCurrentTurn": true,
+        "timesPowerUsed": 0
+      },
+      {
+        "id": "cmenub8pb000613o860681b1z",
+        "army": "green-earth",
+        "coId": {
+          "name": "flak",
+          "version": "AW2"
+        },
+        "name": "[dev] Incuggarch",
+        "slot": 1,
+        "funds": 0,
+        "ready": true,
+        "status": "alive",
+        "powerMeter": 0,
+        "COPowerState": "no-power",
+        "hasCurrentTurn": false,
+        "timesPowerUsed": 0
+      }
+    ],
+    "chatIsPublic": false,
+    "createdAt": "2025-08-23T05:49:57.874Z",
+    "Player": []
+  }
+]

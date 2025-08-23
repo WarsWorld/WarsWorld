@@ -192,30 +192,78 @@ Execute PassTurn action regardless of remaining possibilities
 
 ## Testing Strategy
 
-### Manual Testing Checklist
+### Automated Testing with Playwright
 
-- [ ] Create PvC match with checkbox
-- [ ] Verify computer joins as second player
-- [ ] Confirm AI builds Infantry at all factories with funds
-- [ ] Check AI moves one Infantry randomly
-- [ ] Verify AI passes turn
-- [ ] Test multiple consecutive AI turns
-- [ ] Verify event persistence and replay
-- [ ] Check re-entrancy protection (rapid turn passing)
-- [ ] Test AI with no funds
-- [ ] Test AI with blocked units
+Integration tests are implemented using Playwright with a dedicated test database and static fixtures.
 
-### Automated Testing (Future)
+#### Running Tests
+```bash
+npm run test:e2e               # Run all tests (console output)
+npm run test:e2e:ui            # Interactive UI mode
+npm run test:e2e:html          # HTML report for debugging
 
-```typescript
-// Playwright test structure (to be implemented)
-describe("Player vs Computer", () => {
-  test("AI builds at multiple factories")
-  test("AI movement respects rules")
-  test("AI handles edge cases gracefully")
-  test("Events persist correctly")
-})
+# Run specific test file
+NODE_ENV=test npx playwright test tests/e2e/ai-gameplay.spec.ts
 ```
+
+### Adding New Tests
+
+When creating new Playwright tests, always use the existing fixture data rather than creating fake data. This ensures consistency and uses real-world data structures.
+
+#### Using Existing Fixtures
+```typescript
+import { test, expect } from "@playwright/test";
+import { loadFixtures } from "../helpers/fixtures";
+import { ensureLoggedIn } from "../helpers/auth";
+
+test.describe("Your New Test Suite", () => {
+  test.beforeAll(async () => {
+    // Always load existing fixtures - don't create fake data
+    await loadFixtures();
+  });
+  
+  test.beforeEach(async ({ page }) => {
+    // Use the existing development_user from fixtures
+    await ensureLoggedIn(page);
+  });
+  
+  test("your test case", async ({ page }) => {
+    // Use fixture data IDs directly:
+    // - Match ID: test-match-001
+    // - Player ID: cmen2mmuo0002enn0jh49ys6f
+    // - Map ID: cmen2mmw30009enn0ay7uncow
+    await page.goto("/match2/test-match-001");
+    // ... your test logic
+  });
+});
+```
+
+#### Available Fixture Data
+- **User**: development_user with known credentials
+- **Player**: [dev] Grimm Guy linked to development_user
+- **Map**: Caustic Finale (2-player map)
+- **Match**: PvC match with ID `test-match-001`
+
+#### Missing Fixtures
+If you need test data that doesn't exist in the current fixtures:
+1. **Report to the user** that additional fixtures are needed
+2. Add the required data to the development database
+3. Re-export fixtures using `npm run test:fixtures:export`
+4. Commit the updated JSON files
+
+**Important**: Never create fake/mock data in tests. If the fixtures don't contain what you need, it's better to report the gap than to create inconsistent test data.
+
+
+
+#### Test Coverage
+- **Authentication** (`simple-login-test.spec.ts`) - Verifies login with development_user
+- **Match Creation** (`match-creation.spec.ts`) - Tests creating PvC matches and viewing match list
+- **AI Gameplay** (`ai-gameplay.spec.ts`) - Tests AI turn execution and behavior during gameplay
+
+#### Test Infrastructure
+- **Test Database**: Separate PostgreSQL database (`trpc-starter-websockets-test`)
+- **Static Fixtures**: JSON files in `tests/fixtures/` for consistent test data
+- **Helpers**: Database setup, fixture loading, and authentication utilities
 
 ---
 
@@ -230,6 +278,8 @@ describe("Player vs Computer", () => {
 5. **Documentation**: Update this document's AI Logic Rules section
 
 ### Code Style for AI Development
+
+IMPORTANT: We don't use docker, ignore docker-compose.yml, etc
 
 ```typescript
 // Good: Explicit, debuggable AI decisions
@@ -246,16 +296,3 @@ player.getProperties().filter(p => !match.getUnit(p.position)).forEach(/*...*/)
 2. **Inspect events**: Check database for AI-generated events
 3. **Use replay system**: Events are deterministic and replayable
 4. **Test isolation**: Use `runAiTurn()` directly with test matches
-
----
-
-## Appendix: Decision Log
-
-### Why Start with Simple AI?
-
-The v0.0 AI is intentionally trivial to:
-1. Validate the infrastructure works end-to-end
-2. Ensure clean integration with existing systems
-3. Provide immediate value (playable PvC mode)
-4. Establish patterns for future development
-5. Make the codebase approachable for new contributors

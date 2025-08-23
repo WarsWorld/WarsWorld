@@ -1,0 +1,14 @@
+[
+  {
+    "id": "cmenub8p2000013o8kjuygg6g",
+    "state": "active",
+    "role": null,
+    "name": "development_user",
+    "password": "$2b$12$JeUjLnwOKmxbl.jAAVpndegnoGr6Ceckhq8DGUGTenymqWUq20ICy",
+    "email": "development@example.com",
+    "emailVerified": null,
+    "image": null,
+    "createdAt": "2025-08-23T05:49:57.831Z",
+    "updatedAt": "2025-08-23T05:49:57.831Z"
+  }
+]

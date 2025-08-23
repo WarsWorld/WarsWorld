@@ -1,0 +1,42 @@
+[
+  {
+    "id": "cmenub8p6000213o8ank83dmh",
+    "name": "[dev] Grimm Guy",
+    "displayName": "[dev] Grimm Guy",
+    "secret": false,
+    "kind": "human",
+    "userId": "cmenub8p2000013o8kjuygg6g",
+    "preferences": null,
+    "achievements": []
+  },
+  {
+    "id": "cmenub8pa000413o86wk7rn2s",
+    "name": "[dev] Master Chief Z",
+    "displayName": "[dev] Master Chief Z",
+    "secret": false,
+    "kind": "human",
+    "userId": "cmenub8p2000013o8kjuygg6g",
+    "preferences": null,
+    "achievements": []
+  },
+  {
+    "id": "cmenub8pb000613o860681b1z",
+    "name": "[dev] Incuggarch",
+    "displayName": "[dev] Incuggarch",
+    "secret": false,
+    "kind": "human",
+    "userId": "cmenub8p2000013o8kjuygg6g",
+    "preferences": null,
+    "achievements": []
+  },
+  {
+    "id": "cmenub8pb000813o8oaz55tmv",
+    "name": "[dev] Dev Player 4",
+    "displayName": "[dev] Dev Player 4",
+    "secret": false,
+    "kind": "human",
+    "userId": "cmenub8p2000013o8kjuygg6g",
+    "preferences": null,
+    "achievements": []
+  }
+]
