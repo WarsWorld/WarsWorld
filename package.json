@@ -33,7 +33,16 @@
     "redundant-code": "npx jscpd --ignore node_modules,dist,public,.next --reporters consoleFull .",
     "update-depencencies": "npx npm-check-updates -i",
     "fix-paths": "fix-esm-import-path  dist ",
-    "install-utils": "npm install $(jq -r '.utilsDependencies | to_entries | .[] | \"\\(.key)@\\(.value)\"' package.json)"
+    "install-utils": "npm install $(jq -r '.utilsDependencies | to_entries | .[] | \"\\(.key)@\\(.value)\"' package.json)",
+    "test:e2e": "cross-env NODE_ENV=test playwright test",
+    "test:e2e:ui": "cross-env NODE_ENV=test playwright test --ui",
+    "test:e2e:debug": "cross-env NODE_ENV=test playwright test --debug",
+    "test:db:create": "psql -U postgres -h localhost -p 5432 -c \"CREATE DATABASE \\\"trpc-starter-websockets-test\\\"\" || echo 'Database may already exist'",
+    "test:db:push": "cross-env NODE_ENV=test prisma db push",
+    "test:db:seed": "cross-env NODE_ENV=test tsx tests/helpers/fixtures.ts",
+    "test:db:setup": "npm run test:db:create && npm run test:db:push",
+    "test:fixtures:export": "tsx tests/fixtures/export-fixtures.ts",
+    "playwright:install": "playwright install chromium"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"
@@ -74,6 +83,7 @@
   },
   "devDependencies": {
     "@faker-js/faker": "^8.4.0",
+    "@playwright/test": "^1.55.0",
     "@stylistic/eslint-plugin-ts": "^1.5.4",
     "@types/bcrypt": "^5.0.2",
     "@types/eslint": "^9.6.1",

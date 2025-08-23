@@ -15,5 +15,6 @@ tsconfig.tsbuildinfo
 prisma/migrations/20230510171142_amogus/migration.sql
 
 /tmp
-
+test-results/
+playwright-report/
 .claude/*

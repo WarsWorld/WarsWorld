@@ -231,6 +231,8 @@ describe("Player vs Computer", () => {
 
 ### Code Style for AI Development
 
+IMPORTANT: We don't use docker, ignore docker-compose.yml, etc
+
 ```typescript
 // Good: Explicit, debuggable AI decisions
 const availableFactories = getFactoriesWithoutUnits(player);
@@ -246,16 +248,3 @@ player.getProperties().filter(p => !match.getUnit(p.position)).forEach(/*...*/)
 2. **Inspect events**: Check database for AI-generated events
 3. **Use replay system**: Events are deterministic and replayable
 4. **Test isolation**: Use `runAiTurn()` directly with test matches
-
----
-
-## Appendix: Decision Log
-
-### Why Start with Simple AI?
-
-The v0.0 AI is intentionally trivial to:
-1. Validate the infrastructure works end-to-end
-2. Ensure clean integration with existing systems
-3. Provide immediate value (playable PvC mode)
-4. Establish patterns for future development
-5. Make the codebase approachable for new contributors
