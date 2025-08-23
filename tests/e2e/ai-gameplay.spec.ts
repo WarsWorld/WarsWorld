@@ -1,10 +1,6 @@
 import { test, expect } from "@playwright/test";
 import { loadFixtures } from "../helpers/fixtures";
-
-// Check environment variables once at the start
-if (!process.env.DEV_USER_USERNAME || !process.env.DEV_USER_PASSWORD) {
-  throw new Error("DEV_USER_USERNAME and DEV_USER_PASSWORD environment variables must be set");
-}
+import { ensureLoggedIn } from "../helpers/auth";
 
 test.describe("AI Gameplay Behavior", () => {
   test.beforeAll(async () => {
@@ -12,49 +8,62 @@ test.describe("AI Gameplay Behavior", () => {
     await loadFixtures();
   });
   
+  test.beforeEach(async ({ page }) => {
+    // Ensure user is logged in before each test
+    await ensureLoggedIn(page);
+  });
+  
   test("should execute AI turn when player passes turn", async ({ page }) => {
-    // Step 1: Navigate to the game
-    await page.goto("http://localhost:3000/");
-
-    // Step 2: Click login button
-    await page.click('button:has-text("LOGIN")');
-
-    // Step 3: Enter dev user credentials from environment variables
-    const username = process.env.DEV_USER_USERNAME!;
-    const password = process.env.DEV_USER_PASSWORD!;
+    // Step 1: Navigate to 'your games' page
+    await page.goto("/your-matches");
     
-    // Wait for login form to be visible
-    await page.waitForSelector('#username', { state: 'visible' });
+    // Step 2: Wait for the page to load
+    await page.waitForSelector('text="Match Page"');
     
-    await page.fill('#username', username);
-    await page.fill('#password', password);
+    // Step 3: Select a player from the dropdown (required to see your matches)
+    const dropdownTrigger = page.locator('div[tabindex="0"]:has-text("No player selected")');
+    await dropdownTrigger.click();
     
-    // Click the Login button inside the form (not the navbar LOGIN button)
-    await page.locator('form button:has-text("Login")').click();
-
-    // Wait for navigation after login and ensure we're logged in
-    await page.waitForURL("**/");
+    // Select "[dev] Grimm Guy" who is a player in the PvC match
+    await page.locator('li:has-text("[dev] Grimm Guy")').click();
     
-    // Wait for the page to fully load after login
-    await page.waitForSelector('text=LOGOUT', { state: 'visible' });
-
-    // Step 4: Navigate directly to the test match from fixtures
-    // Using the match ID we created in fixtures
-    const matchId = "test-match-001";
-    await page.goto(`/match2/${matchId}`);
+    // Wait for matches to load after selecting player
+    await page.waitForTimeout(1000);
     
-    // Wait for the match page to load
-    await page.waitForTimeout(3000);
-
-    // Step 5: Check if we're in the match by looking for the Pass Turn button
-    const passTurnButton = page.locator('button:has-text("Pass Turn")');
+    // Step 4: Verify we have matches on the page
+    // Check for the PvC match (with Computer as opponent)
+    const computerMatchText = await page.locator('text="Computer slot: 1"').count();
+    expect(computerMatchText).toBeGreaterThan(0);
+    console.log(`Found ${computerMatchText} PvC match(es)`);
     
-    // Check if Pass Turn button is visible
-    const isInMatch = await passTurnButton.isVisible().catch(() => false);
+    // Step 5: Click on the PvC match to enter it
+    // The match cards are clickable - find the one with Computer and click it
+    // Based on the error context, the Enter Match is a link with href to /match2/...
+    const enterMatchLink = page.locator('a[href*="/match2/"]').filter({ hasText: 'Enter Match' }).first();
     
-    if (!isInMatch) {
-      throw new Error(`Cannot find Pass Turn button. Make sure match ${matchId} exists and is a PvC match with the test user as a player.`);
+    // If Enter Match link exists, click it. Otherwise click the match card itself
+    const hasEnterMatch = await enterMatchLink.isVisible().catch(() => false);
+    if (hasEnterMatch) {
+      await enterMatchLink.click();
+    } else {
+      // Click directly on the match card that has Computer in it
+      const computerMatchCard = page.locator('text="Caustic Finale"').locator('..').filter({ hasText: 'Computer' }).first();
+      await computerMatchCard.click();
     }
+    
+    // Step 6: Wait for the match page to load
+    await page.waitForURL(/match2\/[a-zA-Z0-9-]+/, { timeout: 10000 });
+    
+    // Step 7: Check if we're in the match by looking for the Pass Turn button
+    const passTurnButton = page.locator('button:has-text("Pass Turn")');
+    await passTurnButton.waitFor({ state: "visible", timeout: 5000 });
+    
+    // Take a screenshot of the initial game state before passing turn
+    await page.screenshot({ 
+      path: 'test-results/ai-initial-state.png',
+      fullPage: true 
+    });
+    console.log('Screenshot saved: test-results/ai-initial-state.png');
     
     // Store initial state to verify AI actions
     // Check if there are any units on the board before passing turn

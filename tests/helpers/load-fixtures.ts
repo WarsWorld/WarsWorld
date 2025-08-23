@@ -121,19 +121,7 @@ export async function loadFixtures() {
           }
         });
         
-        // Then create events if any
-        if (match.Event && match.Event.length > 0) {
-          for (const event of match.Event) {
-            await prisma.event.create({
-              data: {
-                matchId: match.id,
-                index: event.index,
-                content: event.content,
-                createdAt: new Date(event.createdAt)
-              }
-            });
-          }
-        }
+        // Events are intentionally not loaded - we want matches to start in initial state
       }
       console.log(`Loaded ${matches.length} match(es)`);
     }
