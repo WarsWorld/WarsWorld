@@ -8,5 +8,15 @@
     "userId": "cmen2mmul0000enn0tmr9tq63",
     "preferences": null,
     "achievements": []
+  },
+  {
+    "id": "computer-player-001",
+    "name": "Computer",
+    "displayName": "Computer",
+    "secret": false,
+    "kind": "computer",
+    "userId": null,
+    "preferences": null,
+    "achievements": []
   }
 ]

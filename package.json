@@ -9,6 +9,7 @@
   "scripts": {
     "db:up": "docker compose up -d",
     "db:destroy": "docker compose down --volumes --remove-orphans",
+    "db:reset": "npm run prisma:push -- --force-reset && npm run prisma:seed",
     "prisma:push": "prisma db push",
     "prisma:seed": "prisma db seed",
     "prisma:reset": "prisma migrate reset",

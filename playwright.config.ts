@@ -10,6 +10,7 @@ export default defineConfig({
   retries: process.env.CI ? 2 : 0,
   workers: 1,
   reporter: "list",
+  timeout: 5000,
   use: {
     baseURL: "http://localhost:3000",
     trace: "on-first-retry",
