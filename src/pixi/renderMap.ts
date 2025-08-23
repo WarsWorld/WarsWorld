@@ -24,6 +24,12 @@ function getTileSprite(
       spriteName = "usedSilo";
     }
 
+    // Convert camelCase tile types to lowercase for sprite matching where needed
+    // (e.g., "pipeSeam" -> "pipeseam")
+    if (spriteName === "pipeSeam") {
+      spriteName = "pipeseam";
+    }
+
     if ("variant" in tile) {
       spriteName += `-${tile.variant}`;
     }

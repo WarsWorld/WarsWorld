@@ -357,3 +357,89 @@ Maps can be exported as `.json` files:
   "predeployedUnits": [...]
 }
 ```
+
+## Importing AWBW Move Planner Maps
+
+WarsWorld supports importing maps from AWBW (Advance Wars By Web) by combining map exports and Move Planner JSON exports. This allows you to bring existing AWBW maps with complete terrain and units into WarsWorld.
+
+### How to Export from AWBW
+
+You need **two exports** from AWBW:
+
+1. **Map Export** (terrain data):
+   - Open your map in AWBW Map Editor
+   - Export the map as text/CSV format
+   - This contains all terrain tiles (forests, mountains, water, roads, etc.)
+
+2. **Move Planner Export** (units and buildings):
+   - Open the same map in AWBW Move Planner
+   - Set up units and initial game state
+   - Export as JSON (this creates a game state snapshot with units and building ownership)
+
+### Import Command
+
+Use the provided task script with both files to import and create a playable match:
+
+```bash
+npx tsx src/server/tasks/import-and-play-awbw-map.ts <map-export-path> <move-planner-export-path>
+```
+
+Example:
+```bash
+npx tsx src/server/tasks/import-and-play-awbw-map.ts /tmp/map-terrain.txt /tmp/move-planner.json
+```
+
+### What Gets Imported
+
+- **Map tiles**: Complete terrain from map export (forests, mountains, water, roads, bridges, etc.)
+- **Building ownership**: Property ownership from move planner (who owns which cities/bases/HQs)
+- **Units**: All predeployed units with:
+  - Correct positions
+  - HP (converted from AWBW 1-10 to WW 1-100 scale)
+  - Fuel and ammo values
+  - Player ownership
+- **Player setup**: Automatically creates a PvC (Player vs Computer) match
+
+### Why Two Files?
+
+The AWBW Move Planner export only contains buildings and units, not base terrain (forests, mountains, water, etc.). The map export provides the complete terrain data. Combining both gives you a fully playable map with proper terrain and units.
+
+### Player Remapping
+
+Since AWBW maps can have 2-4+ players but PvC matches need exactly 2:
+
+- **2-player maps**: Direct mapping (player 0 → human, player 1 → computer)
+- **3+ player maps**: Automatic remapping
+  - First half of players → human (slot 0)
+  - Second half → computer (slot 1)
+  - Example: 4-player map remaps as `0,1→0 (human)` and `2,3→1 (computer)`
+
+### AWBW Move Planner JSON Format
+
+The Move Planner export includes:
+```json
+{
+  "plannerName": "Map Name",
+  "buildingsState": { /* terrain and buildings */ },
+  "unitsState": {
+    "0": {
+      "units_name": "Infantry",
+      "units_x": 5,
+      "units_y": 10,
+      "units_players_id": 0,
+      "units_hit_points": 10,  // 1-10 scale
+      "units_fuel": 99,
+      "units_ammo": -1  // -1 for unlimited
+    }
+  },
+  "playersState": { /* player info */ }
+}
+```
+
+### After Import
+
+The script will:
+1. Create a new WWMap in the database
+2. Create a playable match with human vs computer
+3. Display the match ID for immediate play
+4. Output: `🚀 You can now log in and play the match!`

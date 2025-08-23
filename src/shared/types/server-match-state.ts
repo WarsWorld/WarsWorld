@@ -22,6 +22,7 @@ type LaunchableSiloTile = {
 
 type PipeSeamTile = {
   type: PipeSeamTileType;
+  variant: "right-left" | "top-bottom";
   hp: number;
   position: Position;
 };

@@ -1,0 +1,45 @@
+{
+  "plannerName": "3 Player Test Map",
+  "buildingsState": {
+    "0": { "0": [{ "terrain_id": 34 }] },
+    "1": { "0": [{ "terrain_id": 38 }] },
+    "2": { "0": [{ "terrain_id": 46 }] }
+  },
+  "unitsState": {
+    "0": {
+      "units_id": 0,
+      "units_name": "Infantry",
+      "units_x": 0,
+      "units_y": 0,
+      "units_players_id": 0,
+      "units_fuel": 99,
+      "units_ammo": -1,
+      "units_hit_points": 10
+    },
+    "1": {
+      "units_id": 1,
+      "units_name": "Tank",
+      "units_x": 1,
+      "units_y": 0,
+      "units_players_id": 1,
+      "units_fuel": 70,
+      "units_ammo": 9,
+      "units_hit_points": 10
+    },
+    "2": {
+      "units_id": 2,
+      "units_name": "Mech",
+      "units_x": 2,
+      "units_y": 0,
+      "units_players_id": 2,
+      "units_fuel": 70,
+      "units_ammo": 3,
+      "units_hit_points": 10
+    }
+  },
+  "playersState": {
+    "0": { "players_username": "Player 1" },
+    "1": { "players_username": "Player 2" },
+    "2": { "players_username": "Player 3" }
+  }
+}
