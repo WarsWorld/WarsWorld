@@ -1,8 +1,8 @@
 import { Page } from "@playwright/test";
 
 export async function loginAsDevUser(page: Page) {
-  // Navigate to home page
-  await page.goto("http://localhost:3000/");
+  // Navigate to home page (uses baseURL from config)
+  await page.goto("/");
   
   // Click login button in navbar
   await page.click('button:has-text("LOGIN")');

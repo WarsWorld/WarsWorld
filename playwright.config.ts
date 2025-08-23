@@ -12,7 +12,7 @@ export default defineConfig({
   reporter: "list",
   timeout: 5000,
   use: {
-    baseURL: "http://localhost:3000",
+    baseURL: "http://localhost:3001",
     trace: "on-first-retry",
     screenshot: "only-on-failure",
   },
@@ -26,9 +26,9 @@ export default defineConfig({
 
   webServer: [
     {
-      command: "cross-env NODE_ENV=test npm run prisma:push && npm run dev",
-      url: "http://localhost:3000",
-      reuseExistingServer: !process.env.CI,
+      command: "cross-env NODE_ENV=test npm run prisma:push && cross-env NODE_ENV=test concurrently \"next dev -p 3001\" \"cross-env PORT=3001 tsx watch src/server/main-wss-development.ts --tsconfig tsconfig.server.json\"",
+      url: "http://localhost:3001",
+      reuseExistingServer: false, // Never reuse existing server to avoid conflicts
       timeout: 120 * 1000,
       env: {
         NODE_ENV: "test",
