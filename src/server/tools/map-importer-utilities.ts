@@ -1,11 +1,15 @@
 import { prisma } from "../prisma/prisma-client";
 import type { Tile } from "shared/schemas/tile";
 import type { WWMap } from "@prisma/client";
+import type { UnitWithVisibleStats } from "shared/schemas/unit";
+import { importAWBWMovePlanner } from "./awbw-unit-converter";
+import type { AWBWMovePlannerExport } from "./awbw-move-planner-types";
 
 export type AWBWMapImportSchema = {
   name: string;
   tileDataString: string;
   numberOfPlayers: 2;
+  predeployedUnits?: UnitWithVisibleStats[];
 };
 
 export const importAWBWMap = async (data: AWBWMapImportSchema) => {
@@ -15,11 +19,45 @@ export const importAWBWMap = async (data: AWBWMapImportSchema) => {
         name: data.name,
         numberOfPlayers: data.numberOfPlayers,
         tiles: convertAWBWMapToWWMap(data.tileDataString),
-        predeployedUnits: [] /* TODO ! */,
+        predeployedUnits: data.predeployedUnits || [],
       },
     });
   } catch (error) {
     console.error("An error occurred while importing the map");
+    throw error;
+  }
+};
+
+/**
+ * Import AWBW map from move planner JSON format
+ */
+export const importAWBWMapFromMovePlanner = async (
+  movePlannerData: AWBWMovePlannerExport,
+  mapName?: string,
+  tileDataString?: string
+) => {
+  const { tiles, predeployedUnits, numberOfPlayers } = await importAWBWMovePlanner(
+    movePlannerData,
+    {
+      useBuildingsForTiles: !tileDataString,
+      mapName,
+    }
+  );
+
+  // If tileDataString provided, use it for tiles instead
+  const finalTiles = tileDataString ? convertAWBWMapToWWMap(tileDataString) : tiles;
+
+  try {
+    return await prisma.wWMap.create({
+      data: {
+        name: mapName || movePlannerData.plannerName || "Imported Map",
+        numberOfPlayers: numberOfPlayers as 2 | 3 | 4,
+        tiles: finalTiles,
+        predeployedUnits: predeployedUnits as any, // Type casting needed for Prisma JSON field
+      },
+    });
+  } catch (error) {
+    console.error("An error occurred while importing the map from move planner");
     throw error;
   }
 };
@@ -53,7 +91,7 @@ export const convertAWBWMapToWWMap = (tileDataString: string): WWMap["tiles"] =>
   return parsedArray as WWMap["tiles"];
 };
 
-const awbwTileMapping: Record<string, Tile> = {
+export const awbwTileMapping: Record<string, Tile> = {
   "1": { type: "plain", variant: "normal" },
   "2": { type: "mountain" },
   "3": { type: "forest" },

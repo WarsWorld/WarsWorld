@@ -9,13 +9,36 @@ export const createTRPCwebSocketServer = (wssConfig: ServerOptions) => {
 
   const handler = applyWSSHandler({ wss, router: appRouter, createContext });
 
-  // SIGTERM is a node.js process event
-  // like ctrl + c, it means signal/program termination.
-  process.on("SIGTERM", () => {
-    console.log("SIGTERM");
+  // Handle graceful shutdown
+  const gracefulShutdown = () => {
+    console.log("Shutting down WebSocket server...");
     handler.broadcastReconnectNotification();
-    wss.close();
-  });
+    
+    // Close all active connections
+    wss.clients.forEach((client) => {
+      client.terminate();
+    });
+    
+    wss.close(() => {
+      console.log("WebSocket server closed");
+      process.exit(0);
+    });
+    
+    // Force exit after timeout if server doesn't close
+    setTimeout(() => {
+      console.error("Could not close connections in time, forcefully shutting down");
+      process.exit(1);
+    }, 5000);
+  };
+
+  // SIGTERM is sent by process managers
+  process.on("SIGTERM", gracefulShutdown);
+  
+  // SIGINT is sent by Ctrl+C
+  process.on("SIGINT", gracefulShutdown);
+  
+  // Prevent multiple handlers from being registered
+  process.once("SIGUSR2", gracefulShutdown);
 
   return wss;
 };
