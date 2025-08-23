@@ -1,6 +1,8074 @@
 [
   {
-    "id": "cmen2mmw30009enn0ay7uncow",
+    "id": "cmenub8qf000f13o8xj01v3e4",
+    "name": "Love and Literature",
+    "tiles": [
+      [
+        {
+          "type": "city",
+          "playerSlot": -1
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "base",
+          "playerSlot": 0
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "river",
+          "variant": "top-bottom"
+        },
+        {
+          "type": "mountain"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "city",
+          "playerSlot": -1
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "mountain"
+        },
+        {
+          "type": "mountain"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "city",
+          "playerSlot": -1
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "usedSilo"
+        },
+        {
+          "type": "mountain"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "shoal"
+        }
+      ],
+      [
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "road",
+          "variant": "top-right"
+        },
+        {
+          "type": "road",
+          "variant": "right-bottom-left"
+        },
+        {
+          "type": "bridge",
+          "variant": "right-left"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "city",
+          "playerSlot": -1
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "base",
+          "playerSlot": 0
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "city",
+          "playerSlot": -1
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "shoal"
+        }
+      ],
+      [
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "city",
+          "playerSlot": -1
+        },
+        {
+          "type": "river",
+          "variant": "top-right"
+        },
+        {
+          "type": "river",
+          "variant": "bottom-left"
+        },
+        {
+          "type": "usedSilo"
+        },
+        {
+          "type": "road",
+          "variant": "right-left"
+        },
+        {
+          "type": "road",
+          "variant": "bottom-left"
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "road",
+          "variant": "top-bottom"
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "plain",
+          "variant": "broken-pipe-top-bottom"
+        },
+        {
+          "type": "airport",
+          "playerSlot": 0
+        },
+        {
+          "type": "shoal"
+        }
+      ],
+      [
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "road",
+          "variant": "right-bottom"
+        },
+        {
+          "type": "road",
+          "variant": "top-right-left"
+        },
+        {
+          "type": "plain",
+          "variant": "broken-pipe-right-left"
+        },
+        {
+          "type": "river",
+          "variant": "top-bottom"
+        },
+        {
+          "type": "base",
+          "playerSlot": -1
+        },
+        {
+          "type": "river",
+          "variant": "bottom-left"
+        },
+        {
+          "type": "bridge",
+          "variant": "top-bottom"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "usedSilo"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "city",
+          "playerSlot": -1
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "mountain"
+        },
+        {
+          "type": "city",
+          "playerSlot": -1
+        },
+        {
+          "type": "road",
+          "variant": "top-bottom"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "pipe",
+          "variant": "top-right"
+        },
+        {
+          "hp": 100,
+          "type": "pipeSeam",
+          "variant": "right-left"
+        },
+        {
+          "type": "plain",
+          "variant": "broken-pipe-right-left"
+        }
+      ],
+      [
+        {
+          "type": "mountain"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "river",
+          "variant": "top-bottom"
+        },
+        {
+          "type": "mountain"
+        },
+        {
+          "type": "river",
+          "variant": "top-bottom"
+        },
+        {
+          "type": "city",
+          "playerSlot": -1
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "mountain"
+        },
+        {
+          "type": "mountain"
+        },
+        {
+          "type": "mountain"
+        },
+        {
+          "type": "mountain"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "road",
+          "variant": "top-bottom"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "city",
+          "playerSlot": -1
+        },
+        {
+          "type": "mountain"
+        },
+        {
+          "type": "shoal"
+        }
+      ],
+      [
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "commtower",
+          "playerSlot": -1
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "city",
+          "playerSlot": -1
+        },
+        {
+          "type": "bridge",
+          "variant": "right-left"
+        },
+        {
+          "type": "road",
+          "variant": "right-bottom"
+        },
+        {
+          "type": "usedSilo"
+        },
+        {
+          "type": "road",
+          "variant": "top-left"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "city",
+          "playerSlot": -1
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "road",
+          "variant": "top-right"
+        },
+        {
+          "type": "road",
+          "variant": "right-left"
+        },
+        {
+          "type": "road",
+          "variant": "bottom-left"
+        },
+        {
+          "type": "mountain"
+        },
+        {
+          "type": "shoal"
+        }
+      ],
+      [
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "usedSilo"
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "mountain"
+        },
+        {
+          "type": "bridge",
+          "variant": "right-left"
+        },
+        {
+          "type": "road",
+          "variant": "top-left"
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "road",
+          "variant": "top-bottom"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "city",
+          "playerSlot": -1
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "hq",
+          "playerSlot": 0
+        },
+        {
+          "type": "road",
+          "variant": "top-bottom"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "shoal"
+        }
+      ],
+      [
+        {
+          "type": "city",
+          "playerSlot": -1
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "road",
+          "variant": "right-bottom"
+        },
+        {
+          "type": "road",
+          "variant": "top-left"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "river",
+          "variant": "top-right"
+        },
+        {
+          "type": "river",
+          "variant": "right-left"
+        },
+        {
+          "type": "plain",
+          "variant": "broken-pipe-right-left"
+        },
+        {
+          "type": "city",
+          "playerSlot": -1
+        },
+        {
+          "type": "road",
+          "variant": "right-left"
+        },
+        {
+          "type": "road",
+          "variant": "right-left"
+        },
+        {
+          "type": "road",
+          "variant": "top-left"
+        },
+        {
+          "type": "city",
+          "playerSlot": -1
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "usedSilo"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "mountain"
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "road",
+          "variant": "top-bottom"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "forest"
+        }
+      ],
+      [
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "city",
+          "playerSlot": -1
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "city",
+          "playerSlot": -1
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        }
+      ],
+      [
+        {
+          "type": "forest"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "road",
+          "variant": "top-bottom"
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "mountain"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "usedSilo"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "city",
+          "playerSlot": -1
+        },
+        {
+          "type": "road",
+          "variant": "right-bottom"
+        },
+        {
+          "type": "road",
+          "variant": "right-left"
+        },
+        {
+          "type": "road",
+          "variant": "right-left"
+        },
+        {
+          "type": "city",
+          "playerSlot": -1
+        },
+        {
+          "type": "plain",
+          "variant": "broken-pipe-right-left"
+        },
+        {
+          "type": "river",
+          "variant": "right-left"
+        },
+        {
+          "type": "river",
+          "variant": "bottom-left"
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "road",
+          "variant": "right-bottom"
+        },
+        {
+          "type": "road",
+          "variant": "top-left"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "city",
+          "playerSlot": -1
+        }
+      ],
+      [
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "road",
+          "variant": "top-bottom"
+        },
+        {
+          "type": "hq",
+          "playerSlot": 1
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "city",
+          "playerSlot": -1
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "road",
+          "variant": "top-bottom"
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "road",
+          "variant": "right-bottom"
+        },
+        {
+          "type": "bridge",
+          "variant": "right-left"
+        },
+        {
+          "type": "mountain"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "usedSilo"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        }
+      ],
+      [
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "mountain"
+        },
+        {
+          "type": "road",
+          "variant": "top-right"
+        },
+        {
+          "type": "road",
+          "variant": "right-left"
+        },
+        {
+          "type": "road",
+          "variant": "bottom-left"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "city",
+          "playerSlot": -1
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "road",
+          "variant": "right-bottom"
+        },
+        {
+          "type": "usedSilo"
+        },
+        {
+          "type": "road",
+          "variant": "top-left"
+        },
+        {
+          "type": "bridge",
+          "variant": "right-left"
+        },
+        {
+          "type": "city",
+          "playerSlot": -1
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "commtower",
+          "playerSlot": -1
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        }
+      ],
+      [
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "mountain"
+        },
+        {
+          "type": "city",
+          "playerSlot": -1
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "road",
+          "variant": "top-bottom"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "mountain"
+        },
+        {
+          "type": "mountain"
+        },
+        {
+          "type": "mountain"
+        },
+        {
+          "type": "mountain"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "city",
+          "playerSlot": -1
+        },
+        {
+          "type": "river",
+          "variant": "top-bottom"
+        },
+        {
+          "type": "mountain"
+        },
+        {
+          "type": "river",
+          "variant": "top-bottom"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "mountain"
+        }
+      ],
+      [
+        {
+          "type": "plain",
+          "variant": "broken-pipe-right-left"
+        },
+        {
+          "hp": 100,
+          "type": "pipeSeam",
+          "variant": "right-left"
+        },
+        {
+          "type": "pipe",
+          "variant": "bottom-left"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "road",
+          "variant": "top-bottom"
+        },
+        {
+          "type": "city",
+          "playerSlot": -1
+        },
+        {
+          "type": "mountain"
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "city",
+          "playerSlot": -1
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "usedSilo"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "bridge",
+          "variant": "top-bottom"
+        },
+        {
+          "type": "river",
+          "variant": "top-right"
+        },
+        {
+          "type": "base",
+          "playerSlot": -1
+        },
+        {
+          "type": "river",
+          "variant": "top-bottom"
+        },
+        {
+          "type": "plain",
+          "variant": "broken-pipe-right-left"
+        },
+        {
+          "type": "road",
+          "variant": "right-bottom-left"
+        },
+        {
+          "type": "road",
+          "variant": "top-left"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "shoal"
+        }
+      ],
+      [
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "airport",
+          "playerSlot": 1
+        },
+        {
+          "type": "plain",
+          "variant": "broken-pipe-top-bottom"
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "road",
+          "variant": "top-bottom"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "road",
+          "variant": "top-right"
+        },
+        {
+          "type": "road",
+          "variant": "right-left"
+        },
+        {
+          "type": "usedSilo"
+        },
+        {
+          "type": "river",
+          "variant": "top-right"
+        },
+        {
+          "type": "river",
+          "variant": "bottom-left"
+        },
+        {
+          "type": "city",
+          "playerSlot": -1
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "shoal"
+        }
+      ],
+      [
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "city",
+          "playerSlot": -1
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "base",
+          "playerSlot": 1
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "city",
+          "playerSlot": -1
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "bridge",
+          "variant": "right-left"
+        },
+        {
+          "type": "road",
+          "variant": "top-right-left"
+        },
+        {
+          "type": "road",
+          "variant": "bottom-left"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "shoal"
+        }
+      ],
+      [
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "mountain"
+        },
+        {
+          "type": "usedSilo"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "city",
+          "playerSlot": -1
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "mountain"
+        },
+        {
+          "type": "mountain"
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "city",
+          "playerSlot": -1
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "mountain"
+        },
+        {
+          "type": "river",
+          "variant": "top-bottom"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "base",
+          "playerSlot": 1
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "city",
+          "playerSlot": -1
+        }
+      ]
+    ],
+    "predeployedUnits": [],
+    "numberOfPlayers": 2,
+    "createdAt": "2025-08-23T05:49:57.875Z"
+  },
+  {
+    "id": "cmenub8qg000g13o8opiclj0w",
+    "name": "1v1 Chosin Reservoir",
+    "tiles": [
+      [
+        {
+          "type": "sea"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "reef"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "reef"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "reef"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "reef"
+        }
+      ],
+      [
+        {
+          "type": "sea"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "city",
+          "playerSlot": -1
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "port",
+          "playerSlot": 0
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "reef"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "sea"
+        }
+      ],
+      [
+        {
+          "type": "reef"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "road",
+          "variant": "top-bottom"
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "city",
+          "playerSlot": -1
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "city",
+          "playerSlot": -1
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "road",
+          "variant": "right-bottom"
+        },
+        {
+          "type": "city",
+          "playerSlot": -1
+        },
+        {
+          "type": "usedSilo"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "port",
+          "playerSlot": 0
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "sea"
+        }
+      ],
+      [
+        {
+          "type": "sea"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "city",
+          "playerSlot": -1
+        },
+        {
+          "type": "road",
+          "variant": "right-left"
+        },
+        {
+          "type": "road",
+          "variant": "top-bottom-left"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "road",
+          "variant": "top-bottom"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "road",
+          "variant": "top-right-bottom"
+        },
+        {
+          "type": "road",
+          "variant": "top-left"
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "base",
+          "playerSlot": 1
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "sea"
+        }
+      ],
+      [
+        {
+          "type": "city",
+          "playerSlot": -1
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "road",
+          "variant": "top-right"
+        },
+        {
+          "type": "city",
+          "playerSlot": -1
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "city",
+          "playerSlot": -1
+        },
+        {
+          "type": "road",
+          "variant": "right-bottom-left"
+        },
+        {
+          "type": "road",
+          "variant": "top-left"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "road",
+          "variant": "top-bottom"
+        },
+        {
+          "type": "mountain"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "reef"
+        },
+        {
+          "type": "sea"
+        }
+      ],
+      [
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "city",
+          "playerSlot": -1
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "road",
+          "variant": "top-right"
+        },
+        {
+          "type": "road",
+          "variant": "right-left"
+        },
+        {
+          "type": "road",
+          "variant": "bottom-left"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "road",
+          "variant": "top-bottom"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "road",
+          "variant": "right-bottom"
+        },
+        {
+          "type": "city",
+          "playerSlot": -1
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "base",
+          "playerSlot": -1
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "sea"
+        }
+      ],
+      [
+        {
+          "type": "sea"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "road",
+          "variant": "top-bottom"
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "commtower",
+          "playerSlot": -1
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "city",
+          "playerSlot": -1
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "road",
+          "variant": "top-right"
+        },
+        {
+          "type": "city",
+          "playerSlot": -1
+        },
+        {
+          "type": "road",
+          "variant": "right-left"
+        },
+        {
+          "type": "road",
+          "variant": "top-left"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "airport",
+          "playerSlot": 1
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "sea"
+        }
+      ],
+      [
+        {
+          "type": "sea"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "city",
+          "playerSlot": -1
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "road",
+          "variant": "top-right"
+        },
+        {
+          "type": "road",
+          "variant": "right-left"
+        },
+        {
+          "type": "road",
+          "variant": "right-bottom-left"
+        },
+        {
+          "type": "road",
+          "variant": "top-left"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "mountain"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "base",
+          "playerSlot": 1
+        },
+        {
+          "type": "sea"
+        }
+      ],
+      [
+        {
+          "type": "reef"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "road",
+          "variant": "top-bottom"
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "city",
+          "playerSlot": -1
+        },
+        {
+          "type": "road",
+          "variant": "right-bottom-left"
+        },
+        {
+          "type": "road",
+          "variant": "right-left"
+        },
+        {
+          "type": "road",
+          "variant": "right-left"
+        },
+        {
+          "type": "city",
+          "playerSlot": -1
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "usedSilo"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "hq",
+          "playerSlot": 1
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "sea"
+        }
+      ],
+      [
+        {
+          "type": "sea"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "city",
+          "playerSlot": -1
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "road",
+          "variant": "top-bottom"
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "road",
+          "variant": "top-right"
+        },
+        {
+          "type": "road",
+          "variant": "right-left"
+        },
+        {
+          "type": "road",
+          "variant": "top-right-left"
+        },
+        {
+          "type": "road",
+          "variant": "bottom-left"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "sea"
+        }
+      ],
+      [
+        {
+          "type": "sea"
+        },
+        {
+          "type": "city",
+          "playerSlot": -1
+        },
+        {
+          "type": "road",
+          "variant": "right-left"
+        },
+        {
+          "type": "road",
+          "variant": "bottom-left"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "mountain"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "road",
+          "variant": "top-right"
+        },
+        {
+          "type": "road",
+          "variant": "bottom-left"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "road",
+          "variant": "top-right"
+        },
+        {
+          "type": "port",
+          "playerSlot": 0
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "usedSilo"
+        },
+        {
+          "type": "road",
+          "variant": "bottom-left"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "sea"
+        }
+      ],
+      [
+        {
+          "type": "sea"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "road",
+          "variant": "top-right"
+        },
+        {
+          "type": "road",
+          "variant": "bottom-left"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "city",
+          "playerSlot": -1
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "lab",
+          "playerSlot": -1
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "city",
+          "playerSlot": -1
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "road",
+          "variant": "top-right"
+        },
+        {
+          "type": "road",
+          "variant": "bottom-left"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "sea"
+        }
+      ],
+      [
+        {
+          "type": "sea"
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "road",
+          "variant": "top-right"
+        },
+        {
+          "type": "usedSilo"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "port",
+          "playerSlot": 0
+        },
+        {
+          "type": "road",
+          "variant": "bottom-left"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "road",
+          "variant": "top-right"
+        },
+        {
+          "type": "road",
+          "variant": "bottom-left"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "mountain"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "road",
+          "variant": "top-right"
+        },
+        {
+          "type": "road",
+          "variant": "right-left"
+        },
+        {
+          "type": "city",
+          "playerSlot": -1
+        },
+        {
+          "type": "sea"
+        }
+      ],
+      [
+        {
+          "type": "sea"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "road",
+          "variant": "top-right"
+        },
+        {
+          "type": "road",
+          "variant": "right-bottom-left"
+        },
+        {
+          "type": "road",
+          "variant": "right-left"
+        },
+        {
+          "type": "road",
+          "variant": "bottom-left"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "road",
+          "variant": "top-bottom"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "city",
+          "playerSlot": -1
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "sea"
+        }
+      ],
+      [
+        {
+          "type": "sea"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "hq",
+          "playerSlot": 0
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "usedSilo"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "city",
+          "playerSlot": -1
+        },
+        {
+          "type": "road",
+          "variant": "right-left"
+        },
+        {
+          "type": "road",
+          "variant": "right-left"
+        },
+        {
+          "type": "road",
+          "variant": "top-right-left"
+        },
+        {
+          "type": "city",
+          "playerSlot": -1
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "road",
+          "variant": "top-bottom"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "reef"
+        }
+      ],
+      [
+        {
+          "type": "sea"
+        },
+        {
+          "type": "base",
+          "playerSlot": 0
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "mountain"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "road",
+          "variant": "right-bottom"
+        },
+        {
+          "type": "road",
+          "variant": "top-right-left"
+        },
+        {
+          "type": "road",
+          "variant": "right-left"
+        },
+        {
+          "type": "road",
+          "variant": "bottom-left"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "city",
+          "playerSlot": -1
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "sea"
+        }
+      ],
+      [
+        {
+          "type": "sea"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "airport",
+          "playerSlot": 0
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "road",
+          "variant": "right-bottom"
+        },
+        {
+          "type": "road",
+          "variant": "right-left"
+        },
+        {
+          "type": "city",
+          "playerSlot": -1
+        },
+        {
+          "type": "road",
+          "variant": "bottom-left"
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "city",
+          "playerSlot": -1
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "commtower",
+          "playerSlot": -1
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "road",
+          "variant": "top-bottom"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "sea"
+        }
+      ],
+      [
+        {
+          "type": "sea"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "base",
+          "playerSlot": -1
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "city",
+          "playerSlot": -1
+        },
+        {
+          "type": "road",
+          "variant": "top-left"
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "road",
+          "variant": "top-bottom"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "road",
+          "variant": "top-right"
+        },
+        {
+          "type": "road",
+          "variant": "right-left"
+        },
+        {
+          "type": "road",
+          "variant": "bottom-left"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "city",
+          "playerSlot": -1
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "shoal"
+        }
+      ],
+      [
+        {
+          "type": "sea"
+        },
+        {
+          "type": "reef"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "mountain"
+        },
+        {
+          "type": "road",
+          "variant": "top-bottom"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "road",
+          "variant": "right-bottom"
+        },
+        {
+          "type": "road",
+          "variant": "top-right-left"
+        },
+        {
+          "type": "city",
+          "playerSlot": -1
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "city",
+          "playerSlot": -1
+        },
+        {
+          "type": "road",
+          "variant": "bottom-left"
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "city",
+          "playerSlot": -1
+        }
+      ],
+      [
+        {
+          "type": "sea"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "base",
+          "playerSlot": 0
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "road",
+          "variant": "right-bottom"
+        },
+        {
+          "type": "road",
+          "variant": "top-bottom-left"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "road",
+          "variant": "top-bottom"
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "road",
+          "variant": "top-right-bottom"
+        },
+        {
+          "type": "road",
+          "variant": "right-left"
+        },
+        {
+          "type": "city",
+          "playerSlot": -1
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "sea"
+        }
+      ],
+      [
+        {
+          "type": "sea"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "port",
+          "playerSlot": 1
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "usedSilo"
+        },
+        {
+          "type": "city",
+          "playerSlot": -1
+        },
+        {
+          "type": "road",
+          "variant": "top-left"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "city",
+          "playerSlot": -1
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "city",
+          "playerSlot": -1
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "road",
+          "variant": "top-bottom"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "reef"
+        }
+      ],
+      [
+        {
+          "type": "sea"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "reef"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "port",
+          "playerSlot": 1
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "city",
+          "playerSlot": -1
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "sea"
+        }
+      ],
+      [
+        {
+          "type": "reef"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "reef"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "reef"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "reef"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "sea"
+        }
+      ]
+    ],
+    "predeployedUnits": [],
+    "numberOfPlayers": 2,
+    "createdAt": "2025-08-23T05:49:57.875Z"
+  },
+  {
+    "id": "cmenub8qa000c13o8jko1pf8r",
+    "name": "custom testing",
+    "tiles": [
+      [
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        }
+      ],
+      [
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        }
+      ],
+      [
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        }
+      ],
+      [
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        }
+      ],
+      [
+        {
+          "type": "commtower",
+          "playerSlot": -1
+        },
+        {
+          "type": "commtower",
+          "playerSlot": -1
+        },
+        {
+          "type": "commtower",
+          "playerSlot": -1
+        },
+        {
+          "type": "commtower",
+          "playerSlot": -1
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        }
+      ],
+      [
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "hq",
+          "playerSlot": 1
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        }
+      ],
+      [
+        {
+          "type": "base",
+          "playerSlot": 1
+        },
+        {
+          "type": "base",
+          "playerSlot": 1
+        },
+        {
+          "type": "base",
+          "playerSlot": 1
+        },
+        {
+          "type": "base",
+          "playerSlot": 1
+        },
+        {
+          "type": "base",
+          "playerSlot": 1
+        },
+        {
+          "type": "base",
+          "playerSlot": 1
+        },
+        {
+          "type": "base",
+          "playerSlot": 1
+        },
+        {
+          "type": "base",
+          "playerSlot": 1
+        },
+        {
+          "type": "base",
+          "playerSlot": 1
+        },
+        {
+          "type": "base",
+          "playerSlot": 1
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        }
+      ],
+      [
+        {
+          "type": "road",
+          "variant": "top-bottom"
+        },
+        {
+          "type": "road",
+          "variant": "top-bottom"
+        },
+        {
+          "type": "road",
+          "variant": "top-bottom"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "city",
+          "playerSlot": -1
+        },
+        {
+          "type": "city",
+          "playerSlot": -1
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        }
+      ],
+      [
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        }
+      ],
+      [
+        {
+          "type": "base",
+          "playerSlot": 0
+        },
+        {
+          "type": "base",
+          "playerSlot": 0
+        },
+        {
+          "type": "base",
+          "playerSlot": 0
+        },
+        {
+          "type": "base",
+          "playerSlot": 0
+        },
+        {
+          "type": "base",
+          "playerSlot": 0
+        },
+        {
+          "type": "base",
+          "playerSlot": 0
+        },
+        {
+          "type": "base",
+          "playerSlot": 0
+        },
+        {
+          "type": "base",
+          "playerSlot": 0
+        },
+        {
+          "type": "base",
+          "playerSlot": 0
+        },
+        {
+          "type": "base",
+          "playerSlot": 0
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        }
+      ],
+      [
+        {
+          "type": "port",
+          "playerSlot": 0
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "mountain"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        }
+      ],
+      [
+        {
+          "type": "sea"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "hq",
+          "playerSlot": 0
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "mountain"
+        },
+        {
+          "type": "mountain"
+        },
+        {
+          "type": "city",
+          "playerSlot": -1
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        }
+      ],
+      [
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "city",
+          "playerSlot": -1
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        }
+      ],
+      [
+        {
+          "type": "commtower",
+          "playerSlot": -1
+        },
+        {
+          "type": "commtower",
+          "playerSlot": -1
+        },
+        {
+          "type": "commtower",
+          "playerSlot": -1
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "city",
+          "playerSlot": -1
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        }
+      ],
+      [
+        {
+          "type": "unusedSilo"
+        },
+        {
+          "type": "unusedSilo"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        }
+      ],
+      [
+        {
+          "type": "unusedSilo"
+        },
+        {
+          "type": "unusedSilo"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        }
+      ],
+      [
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        }
+      ],
+      [
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        }
+      ]
+    ],
+    "predeployedUnits": [],
+    "numberOfPlayers": 2,
+    "createdAt": "2025-08-23T05:49:57.874Z"
+  },
+  {
+    "id": "cmenub8qf000e13o8te9n5ttz",
+    "name": "Dubious Procession",
+    "tiles": [
+      [
+        {
+          "type": "mountain"
+        },
+        {
+          "type": "mountain"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "city",
+          "playerSlot": -1
+        },
+        {
+          "type": "mountain"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "city",
+          "playerSlot": -1
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "pipe",
+          "variant": "left"
+        },
+        {
+          "type": "pipe",
+          "variant": "bottom-left"
+        },
+        {
+          "type": "airport",
+          "playerSlot": 0
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "shoal"
+        }
+      ],
+      [
+        {
+          "type": "city",
+          "playerSlot": -1
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "road",
+          "variant": "top-right"
+        },
+        {
+          "type": "road",
+          "variant": "bottom-left"
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "pipe",
+          "variant": "top-right"
+        },
+        {
+          "hp": 100,
+          "type": "pipeSeam",
+          "variant": "right-left"
+        },
+        {
+          "type": "pipe",
+          "variant": "right"
+        },
+        {
+          "type": "road",
+          "variant": "right-bottom"
+        },
+        {
+          "type": "city",
+          "playerSlot": -1
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "base",
+          "playerSlot": 0
+        },
+        {
+          "type": "shoal"
+        }
+      ],
+      [
+        {
+          "type": "road",
+          "variant": "top-right"
+        },
+        {
+          "type": "road",
+          "variant": "bottom-left"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "city",
+          "playerSlot": -1
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "road",
+          "variant": "right-bottom"
+        },
+        {
+          "type": "road",
+          "variant": "top-left"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "mountain"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "forest"
+        }
+      ],
+      [
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "base",
+          "playerSlot": 0
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "mountain"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "road",
+          "variant": "right-bottom"
+        },
+        {
+          "type": "road",
+          "variant": "right-left"
+        },
+        {
+          "type": "city",
+          "playerSlot": -1
+        },
+        {
+          "type": "road",
+          "variant": "top-left"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "city",
+          "playerSlot": -1
+        },
+        {
+          "type": "mountain"
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "mountain"
+        }
+      ],
+      [
+        {
+          "type": "sea"
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "mountain"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "city",
+          "playerSlot": -1
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "mountain"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "road",
+          "variant": "right-bottom"
+        },
+        {
+          "type": "city",
+          "playerSlot": -1
+        }
+      ],
+      [
+        {
+          "type": "sea"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "road",
+          "variant": "right-bottom"
+        },
+        {
+          "type": "city",
+          "playerSlot": -1
+        },
+        {
+          "type": "road",
+          "variant": "bottom-left"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "pipe",
+          "variant": "right"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "mountain"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "road",
+          "variant": "right-bottom"
+        },
+        {
+          "type": "road",
+          "variant": "top-left"
+        },
+        {
+          "type": "forest"
+        }
+      ],
+      [
+        {
+          "type": "sea"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "city",
+          "playerSlot": -1
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "bridge",
+          "variant": "top-bottom"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "road",
+          "variant": "right-bottom"
+        },
+        {
+          "type": "road",
+          "variant": "bottom-left"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "hq",
+          "playerSlot": 0
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "commtower",
+          "playerSlot": -1
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "mountain"
+        }
+      ],
+      [
+        {
+          "type": "mountain"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "road",
+          "variant": "top-bottom"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "road",
+          "variant": "top-right"
+        },
+        {
+          "type": "city",
+          "playerSlot": -1
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "city",
+          "playerSlot": -1
+        }
+      ],
+      [
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "road",
+          "variant": "top-right"
+        },
+        {
+          "type": "city",
+          "playerSlot": -1
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "mountain"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "city",
+          "playerSlot": -1
+        },
+        {
+          "type": "road",
+          "variant": "bottom-left"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        }
+      ],
+      [
+        {
+          "type": "city",
+          "playerSlot": -1
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "city",
+          "playerSlot": -1
+        },
+        {
+          "type": "road",
+          "variant": "bottom-left"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "road",
+          "variant": "top-bottom"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "mountain"
+        }
+      ],
+      [
+        {
+          "type": "mountain"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "commtower",
+          "playerSlot": -1
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "hq",
+          "playerSlot": 1
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "road",
+          "variant": "top-right"
+        },
+        {
+          "type": "road",
+          "variant": "top-left"
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "bridge",
+          "variant": "top-bottom"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "city",
+          "playerSlot": -1
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "sea"
+        }
+      ],
+      [
+        {
+          "type": "forest"
+        },
+        {
+          "type": "road",
+          "variant": "right-bottom"
+        },
+        {
+          "type": "road",
+          "variant": "top-left"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "mountain"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "pipe",
+          "variant": "left"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "road",
+          "variant": "top-right"
+        },
+        {
+          "type": "city",
+          "playerSlot": -1
+        },
+        {
+          "type": "road",
+          "variant": "top-left"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "sea"
+        }
+      ],
+      [
+        {
+          "type": "city",
+          "playerSlot": -1
+        },
+        {
+          "type": "road",
+          "variant": "top-left"
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "mountain"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "city",
+          "playerSlot": -1
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "mountain"
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "sea"
+        }
+      ],
+      [
+        {
+          "type": "mountain"
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "mountain"
+        },
+        {
+          "type": "city",
+          "playerSlot": -1
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "road",
+          "variant": "right-bottom"
+        },
+        {
+          "type": "city",
+          "playerSlot": -1
+        },
+        {
+          "type": "road",
+          "variant": "right-left"
+        },
+        {
+          "type": "road",
+          "variant": "top-left"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "mountain"
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "base",
+          "playerSlot": 1
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        }
+      ],
+      [
+        {
+          "type": "forest"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "mountain"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "road",
+          "variant": "right-bottom"
+        },
+        {
+          "type": "road",
+          "variant": "top-left"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "city",
+          "playerSlot": -1
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "road",
+          "variant": "top-right"
+        },
+        {
+          "type": "road",
+          "variant": "bottom-left"
+        }
+      ],
+      [
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "base",
+          "playerSlot": 1
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "city",
+          "playerSlot": -1
+        },
+        {
+          "type": "road",
+          "variant": "top-left"
+        },
+        {
+          "type": "pipe",
+          "variant": "left"
+        },
+        {
+          "hp": 100,
+          "type": "pipeSeam",
+          "variant": "right-left"
+        },
+        {
+          "type": "pipe",
+          "variant": "bottom-left"
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "road",
+          "variant": "top-right"
+        },
+        {
+          "type": "road",
+          "variant": "bottom-left"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "city",
+          "playerSlot": -1
+        }
+      ],
+      [
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "airport",
+          "playerSlot": 1
+        },
+        {
+          "type": "pipe",
+          "variant": "top-right"
+        },
+        {
+          "type": "pipe",
+          "variant": "right"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "city",
+          "playerSlot": -1
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "mountain"
+        },
+        {
+          "type": "city",
+          "playerSlot": -1
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "mountain"
+        },
+        {
+          "type": "mountain"
+        }
+      ]
+    ],
+    "predeployedUnits": [],
+    "numberOfPlayers": 2,
+    "createdAt": "2025-08-23T05:49:57.874Z"
+  },
+  {
+    "id": "cmenub8qf000d13o84nnr67ly",
+    "name": "1v1 Issus",
+    "tiles": [
+      [
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "city",
+          "playerSlot": -1
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "base",
+          "playerSlot": 1
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "city",
+          "playerSlot": -1
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "city",
+          "playerSlot": -1
+        },
+        {
+          "type": "road",
+          "variant": "bottom-left"
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "city",
+          "playerSlot": -1
+        },
+        {
+          "type": "sea"
+        }
+      ],
+      [
+        {
+          "type": "sea"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "road",
+          "variant": "top-bottom"
+        },
+        {
+          "type": "mountain"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "road",
+          "variant": "right-bottom"
+        },
+        {
+          "type": "road",
+          "variant": "top-right-left"
+        },
+        {
+          "type": "road",
+          "variant": "right-left"
+        },
+        {
+          "type": "road",
+          "variant": "right-left"
+        },
+        {
+          "type": "road",
+          "variant": "bottom-left"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "road",
+          "variant": "top-right-bottom"
+        },
+        {
+          "type": "road",
+          "variant": "right-left"
+        },
+        {
+          "type": "road",
+          "variant": "right-left"
+        },
+        {
+          "type": "road",
+          "variant": "top-left"
+        },
+        {
+          "type": "shoal"
+        }
+      ],
+      [
+        {
+          "type": "sea"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "road",
+          "variant": "right-bottom"
+        },
+        {
+          "type": "road",
+          "variant": "top-right-left"
+        },
+        {
+          "type": "road",
+          "variant": "right-left"
+        },
+        {
+          "type": "city",
+          "playerSlot": -1
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "mountain"
+        },
+        {
+          "type": "road",
+          "variant": "top-bottom"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "city",
+          "playerSlot": -1
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "road",
+          "variant": "top-bottom"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "mountain"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "shoal"
+        }
+      ],
+      [
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "base",
+          "playerSlot": -1
+        },
+        {
+          "type": "road",
+          "variant": "top-left"
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "usedSilo"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "road",
+          "variant": "top-right"
+        },
+        {
+          "type": "road",
+          "variant": "bottom-left"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "usedSilo"
+        },
+        {
+          "type": "road",
+          "variant": "top-left"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "road",
+          "variant": "right-bottom"
+        },
+        {
+          "type": "city",
+          "playerSlot": -1
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "forest"
+        }
+      ],
+      [
+        {
+          "type": "airport",
+          "playerSlot": 0
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "road",
+          "variant": "top-bottom"
+        },
+        {
+          "type": "mountain"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "city",
+          "playerSlot": -1
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "road",
+          "variant": "top-bottom"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "road",
+          "variant": "right-bottom"
+        },
+        {
+          "type": "city",
+          "playerSlot": -1
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        }
+      ],
+      [
+        {
+          "type": "road",
+          "variant": "top-right"
+        },
+        {
+          "type": "road",
+          "variant": "right-bottom-left"
+        },
+        {
+          "type": "road",
+          "variant": "top-left"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "road",
+          "variant": "top-right"
+        },
+        {
+          "type": "road",
+          "variant": "right-left"
+        },
+        {
+          "type": "road",
+          "variant": "right-left"
+        },
+        {
+          "type": "road",
+          "variant": "top-left"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "shoal"
+        }
+      ],
+      [
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "base",
+          "playerSlot": 1
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "reef"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "commtower",
+          "playerSlot": -1
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "hq",
+          "playerSlot": 0
+        }
+      ],
+      [
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "city",
+          "playerSlot": -1
+        },
+        {
+          "type": "road",
+          "variant": "bottom-left"
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "sea"
+        }
+      ],
+      [
+        {
+          "type": "sea"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "mountain"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "city",
+          "playerSlot": -1
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "city",
+          "playerSlot": -1
+        },
+        {
+          "type": "road",
+          "variant": "bottom-left"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "usedSilo"
+        },
+        {
+          "type": "road",
+          "variant": "bottom-left"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "road",
+          "variant": "top-bottom"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "shoal"
+        }
+      ],
+      [
+        {
+          "type": "reef"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "road",
+          "variant": "top-bottom"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "road",
+          "variant": "top-bottom"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "city",
+          "playerSlot": -1
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "road",
+          "variant": "top-bottom"
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "road",
+          "variant": "top-bottom"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "port",
+          "playerSlot": 0
+        },
+        {
+          "type": "sea"
+        }
+      ],
+      [
+        {
+          "type": "sea"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "road",
+          "variant": "right-bottom"
+        },
+        {
+          "type": "road",
+          "variant": "top-right-left"
+        },
+        {
+          "type": "road",
+          "variant": "bottom-left"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "road",
+          "variant": "right-bottom"
+        },
+        {
+          "type": "road",
+          "variant": "right-left"
+        },
+        {
+          "type": "road",
+          "variant": "top-right-left"
+        },
+        {
+          "type": "lab",
+          "playerSlot": -1
+        },
+        {
+          "type": "road",
+          "variant": "right-bottom-left"
+        },
+        {
+          "type": "road",
+          "variant": "right-left"
+        },
+        {
+          "type": "road",
+          "variant": "top-left"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "road",
+          "variant": "top-right"
+        },
+        {
+          "type": "road",
+          "variant": "right-bottom-left"
+        },
+        {
+          "type": "road",
+          "variant": "top-left"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "sea"
+        }
+      ],
+      [
+        {
+          "type": "sea"
+        },
+        {
+          "type": "port",
+          "playerSlot": 0
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "road",
+          "variant": "top-bottom"
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "road",
+          "variant": "top-bottom"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "city",
+          "playerSlot": -1
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "road",
+          "variant": "top-bottom"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "road",
+          "variant": "top-bottom"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "reef"
+        }
+      ],
+      [
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "road",
+          "variant": "top-bottom"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "road",
+          "variant": "top-right"
+        },
+        {
+          "type": "usedSilo"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "road",
+          "variant": "top-right"
+        },
+        {
+          "type": "city",
+          "playerSlot": -1
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "city",
+          "playerSlot": -1
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "mountain"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "sea"
+        }
+      ],
+      [
+        {
+          "type": "sea"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "road",
+          "variant": "top-right"
+        },
+        {
+          "type": "city",
+          "playerSlot": -1
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "shoal"
+        }
+      ],
+      [
+        {
+          "type": "hq",
+          "playerSlot": 1
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "commtower",
+          "playerSlot": -1
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "reef"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "base",
+          "playerSlot": 0
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        }
+      ],
+      [
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "road",
+          "variant": "right-bottom"
+        },
+        {
+          "type": "road",
+          "variant": "right-left"
+        },
+        {
+          "type": "road",
+          "variant": "right-left"
+        },
+        {
+          "type": "road",
+          "variant": "bottom-left"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "road",
+          "variant": "right-bottom"
+        },
+        {
+          "type": "road",
+          "variant": "top-right-left"
+        },
+        {
+          "type": "road",
+          "variant": "bottom-left"
+        }
+      ],
+      [
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "city",
+          "playerSlot": -1
+        },
+        {
+          "type": "road",
+          "variant": "top-left"
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "road",
+          "variant": "top-bottom"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "city",
+          "playerSlot": -1
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "mountain"
+        },
+        {
+          "type": "road",
+          "variant": "top-bottom"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "airport",
+          "playerSlot": 1
+        }
+      ],
+      [
+        {
+          "type": "forest"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "city",
+          "playerSlot": -1
+        },
+        {
+          "type": "road",
+          "variant": "top-left"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "road",
+          "variant": "right-bottom"
+        },
+        {
+          "type": "usedSilo"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "road",
+          "variant": "top-right"
+        },
+        {
+          "type": "road",
+          "variant": "bottom-left"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "usedSilo"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "road",
+          "variant": "right-bottom"
+        },
+        {
+          "type": "base",
+          "playerSlot": -1
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "shoal"
+        }
+      ],
+      [
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "mountain"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "road",
+          "variant": "top-bottom"
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "city",
+          "playerSlot": -1
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "road",
+          "variant": "top-bottom"
+        },
+        {
+          "type": "mountain"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "city",
+          "playerSlot": -1
+        },
+        {
+          "type": "road",
+          "variant": "right-left"
+        },
+        {
+          "type": "road",
+          "variant": "right-bottom-left"
+        },
+        {
+          "type": "road",
+          "variant": "top-left"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "sea"
+        }
+      ],
+      [
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "road",
+          "variant": "right-bottom"
+        },
+        {
+          "type": "road",
+          "variant": "right-left"
+        },
+        {
+          "type": "road",
+          "variant": "right-left"
+        },
+        {
+          "type": "road",
+          "variant": "top-bottom-left"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "road",
+          "variant": "top-right"
+        },
+        {
+          "type": "road",
+          "variant": "right-left"
+        },
+        {
+          "type": "road",
+          "variant": "right-left"
+        },
+        {
+          "type": "road",
+          "variant": "right-bottom-left"
+        },
+        {
+          "type": "road",
+          "variant": "top-left"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "mountain"
+        },
+        {
+          "type": "road",
+          "variant": "top-bottom"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "sea"
+        }
+      ],
+      [
+        {
+          "type": "sea"
+        },
+        {
+          "type": "city",
+          "playerSlot": -1
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "road",
+          "variant": "top-right"
+        },
+        {
+          "type": "city",
+          "playerSlot": -1
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "forest"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "plain",
+          "variant": "normal"
+        },
+        {
+          "type": "city",
+          "playerSlot": -1
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "base",
+          "playerSlot": 0
+        },
+        {
+          "type": "shoal"
+        },
+        {
+          "type": "sea"
+        },
+        {
+          "type": "city",
+          "playerSlot": -1
+        },
+        {
+          "type": "shoal"
+        }
+      ]
+    ],
+    "predeployedUnits": [],
+    "numberOfPlayers": 2,
+    "createdAt": "2025-08-23T05:49:57.874Z"
+  },
+  {
+    "id": "cmenub8q5000913o84ofcfgr7",
     "name": "Caustic Finale",
     "tiles": [
       [
@@ -1234,6 +9302,6 @@
     ],
     "predeployedUnits": [],
     "numberOfPlayers": 2,
-    "createdAt": "2025-08-22T16:55:00.196Z"
+    "createdAt": "2025-08-23T05:49:57.870Z"
   }
 ]

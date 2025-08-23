@@ -1,29 +1,27 @@
 [
   {
-    "id": "test-match-001",
+    "id": "cmenucksf0000gnbpu5rnobq6",
     "leagueType": "standard",
     "mode": "pvc",
     "rules": {
-      "dayLimit": 0,
+      "dayLimit": 50,
       "fogOfWar": false,
       "teamMapping": [
         0,
         1
       ],
-      "captureLimit": 0,
-      "labUnitTypes": [
-        "infantry"
-      ],
+      "captureLimit": 50,
+      "labUnitTypes": [],
       "weatherSetting": "clear",
       "bannedUnitTypes": [],
       "fundsPerProperty": 1000,
       "unitCapPerPlayer": 50
     },
     "status": "playing",
-    "mapId": "cmen2mmw30009enn0ay7uncow",
+    "mapId": "cmenub8q5000913o84ofcfgr7",
     "playerState": [
       {
-        "id": "cmen2mmuo0002enn0jh49ys6f",
+        "id": "cmenub8p6000213o8ank83dmh",
         "army": "orange-star",
         "coId": {
           "name": "andy",
@@ -32,7 +30,7 @@
         "name": "[dev] Grimm Guy",
         "slot": 0,
         "funds": 10000,
-        "ready": false,
+        "ready": true,
         "status": "alive",
         "powerMeter": 0,
         "COPowerState": "no-power",
@@ -58,19 +56,316 @@
       }
     ],
     "chatIsPublic": false,
-    "createdAt": "2025-08-23T04:01:47.890Z",
-    "Player": [
+    "createdAt": "2025-08-23T05:51:00.159Z",
+    "Player": [],
+    "Event": [
       {
-        "id": "cmen2mmuo0002enn0jh49ys6f",
+        "matchId": "cmenucksf0000gnbpu5rnobq6",
+        "index": 1,
+        "content": {
+          "type": "matchStart",
+          "weather": "clear"
+        },
+        "createdAt": "2025-08-23T05:51:24.817Z"
+      },
+      {
+        "matchId": "cmenucksf0000gnbpu5rnobq6",
+        "index": 2,
+        "content": {
+          "type": "build",
+          "position": [
+            8,
+            16
+          ],
+          "unitType": "infantry"
+        },
+        "createdAt": "2025-08-23T05:51:39.419Z"
+      },
+      {
+        "matchId": "cmenucksf0000gnbpu5rnobq6",
+        "index": 3,
+        "content": {
+          "type": "build",
+          "position": [
+            8,
+            1
+          ],
+          "unitType": "infantry"
+        },
+        "createdAt": "2025-08-23T05:51:41.952Z"
+      },
+      {
+        "matchId": "cmenucksf0000gnbpu5rnobq6",
+        "index": 4,
+        "content": {
+          "type": "passTurn",
+          "turns": [
+            {
+              "newWeather": null
+            }
+          ],
+          "matchId": "cmenucksf0000gnbpu5rnobq6",
+          "playerId": "cmenub8p6000213o8ank83dmh"
+        },
+        "createdAt": "2025-08-23T05:51:44.270Z"
+      },
+      {
+        "matchId": "cmenucksf0000gnbpu5rnobq6",
+        "index": 5,
+        "content": {
+          "type": "build",
+          "position": [
+            1,
+            9
+          ],
+          "unitType": "infantry"
+        },
+        "createdAt": "2025-08-23T05:51:44.279Z"
+      },
+      {
+        "matchId": "cmenucksf0000gnbpu5rnobq6",
+        "index": 6,
+        "content": {
+          "type": "build",
+          "position": [
+            16,
+            9
+          ],
+          "unitType": "infantry"
+        },
+        "createdAt": "2025-08-23T05:51:44.280Z"
+      },
+      {
+        "matchId": "cmenucksf0000gnbpu5rnobq6",
+        "index": 7,
+        "content": {
+          "type": "passTurn",
+          "turns": [
+            {
+              "newWeather": null
+            }
+          ],
+          "matchId": "cmenucksf0000gnbpu5rnobq6",
+          "playerId": "computer-player-001"
+        },
+        "createdAt": "2025-08-23T05:51:44.282Z"
+      },
+      {
+        "matchId": "cmenucksf0000gnbpu5rnobq6",
+        "index": 8,
+        "content": {
+          "path": [
+            [
+              8,
+              16
+            ],
+            [
+              9,
+              16
+            ],
+            [
+              9,
+              15
+            ],
+            [
+              10,
+              15
+            ]
+          ],
+          "trap": false,
+          "type": "move",
+          "subEvent": {
+            "type": "ability"
+          }
+        },
+        "createdAt": "2025-08-23T05:51:47.780Z"
+      },
+      {
+        "matchId": "cmenucksf0000gnbpu5rnobq6",
+        "index": 9,
+        "content": {
+          "path": [
+            [
+              8,
+              1
+            ],
+            [
+              7,
+              1
+            ],
+            [
+              7,
+              0
+            ],
+            [
+              6,
+              0
+            ]
+          ],
+          "trap": false,
+          "type": "move",
+          "subEvent": {
+            "type": "ability"
+          }
+        },
+        "createdAt": "2025-08-23T05:51:50.821Z"
+      },
+      {
+        "matchId": "cmenucksf0000gnbpu5rnobq6",
+        "index": 10,
+        "content": {
+          "type": "build",
+          "position": [
+            8,
+            1
+          ],
+          "unitType": "infantry"
+        },
+        "createdAt": "2025-08-23T05:51:52.337Z"
+      },
+      {
+        "matchId": "cmenucksf0000gnbpu5rnobq6",
+        "index": 11,
+        "content": {
+          "type": "build",
+          "position": [
+            8,
+            16
+          ],
+          "unitType": "infantry"
+        },
+        "createdAt": "2025-08-23T05:51:54.596Z"
+      },
+      {
+        "matchId": "cmenucksf0000gnbpu5rnobq6",
+        "index": 12,
+        "content": {
+          "type": "passTurn",
+          "turns": [
+            {
+              "newWeather": null
+            }
+          ],
+          "matchId": "cmenucksf0000gnbpu5rnobq6",
+          "playerId": "cmenub8p6000213o8ank83dmh"
+        },
+        "createdAt": "2025-08-23T05:51:56.085Z"
+      },
+      {
+        "matchId": "cmenucksf0000gnbpu5rnobq6",
+        "index": 13,
+        "content": {
+          "path": [
+            [
+              1,
+              9
+            ],
+            [
+              2,
+              9
+            ],
+            [
+              2,
+              8
+            ]
+          ],
+          "trap": false,
+          "type": "move",
+          "subEvent": {
+            "type": "wait"
+          }
+        },
+        "createdAt": "2025-08-23T05:51:56.087Z"
+      },
+      {
+        "matchId": "cmenucksf0000gnbpu5rnobq6",
+        "index": 14,
+        "content": {
+          "type": "build",
+          "position": [
+            1,
+            9
+          ],
+          "unitType": "infantry"
+        },
+        "createdAt": "2025-08-23T05:51:56.088Z"
+      },
+      {
+        "matchId": "cmenucksf0000gnbpu5rnobq6",
+        "index": 15,
+        "content": {
+          "type": "passTurn",
+          "turns": [
+            {
+              "newWeather": null
+            }
+          ],
+          "matchId": "cmenucksf0000gnbpu5rnobq6",
+          "playerId": "computer-player-001"
+        },
+        "createdAt": "2025-08-23T05:51:56.089Z"
+      }
+    ]
+  },
+  {
+    "id": "cmenub8qa000b13o88tmn29iy",
+    "leagueType": "standard",
+    "mode": "pvp",
+    "rules": {
+      "dayLimit": 50,
+      "fogOfWar": false,
+      "teamMapping": [
+        0,
+        1
+      ],
+      "captureLimit": 50,
+      "labUnitTypes": [],
+      "weatherSetting": "clear",
+      "bannedUnitTypes": [],
+      "fundsPerProperty": 1000,
+      "unitCapPerPlayer": 50
+    },
+    "status": "playing",
+    "mapId": "cmenub8q5000913o84ofcfgr7",
+    "playerState": [
+      {
+        "id": "cmenub8p6000213o8ank83dmh",
+        "army": "blue-moon",
+        "coId": {
+          "name": "andy",
+          "version": "AW2"
+        },
         "name": "[dev] Grimm Guy",
-        "displayName": "[dev] Grimm Guy",
-        "secret": false,
-        "kind": "human",
-        "userId": "cmen2mmul0000enn0tmr9tq63",
-        "preferences": null,
-        "achievements": []
+        "slot": 0,
+        "funds": 0,
+        "ready": true,
+        "status": "alive",
+        "powerMeter": 0,
+        "COPowerState": "no-power",
+        "hasCurrentTurn": true,
+        "timesPowerUsed": 0
+      },
+      {
+        "id": "cmenub8pb000613o860681b1z",
+        "army": "green-earth",
+        "coId": {
+          "name": "flak",
+          "version": "AW2"
+        },
+        "name": "[dev] Incuggarch",
+        "slot": 1,
+        "funds": 0,
+        "ready": true,
+        "status": "alive",
+        "powerMeter": 0,
+        "COPowerState": "no-power",
+        "hasCurrentTurn": false,
+        "timesPowerUsed": 0
       }
     ],
+    "chatIsPublic": false,
+    "createdAt": "2025-08-23T05:49:57.874Z",
+    "Player": [],
     "Event": []
   }
 ]

@@ -1,14 +1,14 @@
 [
   {
-    "id": "cmen2mmul0000enn0tmr9tq63",
+    "id": "cmenub8p2000013o8kjuygg6g",
     "state": "active",
     "role": null,
     "name": "development_user",
-    "password": "$2b$12$ckX0U3LhoMn7rneg6A45legNMzrvFRBwnNIx9Tnf3Lht0XrpZK8em",
+    "password": "$2b$12$JeUjLnwOKmxbl.jAAVpndegnoGr6Ceckhq8DGUGTenymqWUq20ICy",
     "email": "development@example.com",
     "emailVerified": null,
     "image": null,
-    "createdAt": "2025-08-22T16:55:00.141Z",
-    "updatedAt": "2025-08-22T16:55:00.141Z"
+    "createdAt": "2025-08-23T05:49:57.831Z",
+    "updatedAt": "2025-08-23T05:49:57.831Z"
   }
 ]
