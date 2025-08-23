@@ -2,9 +2,13 @@
 
 
 ## Important rules to follow:
-- Always start by reading ARCHITECTURE.md
-- Then read COMPUTERAI-MODE.md
+- Read COMPUTERAI-MODE.md for context on this project
 
+
+## Critical Testing Rules
+  - NEVER manually edit fixture JSON files in tests/fixtures/
+  - If fixture data is missing, ALWAYS report it to the user and request re-export
+  - Direct fixture file modifications will cause inconsistencies
 
 ## Build, run, lint, test
 

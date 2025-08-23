@@ -34,14 +34,15 @@
     "update-depencencies": "npx npm-check-updates -i",
     "fix-paths": "fix-esm-import-path  dist ",
     "install-utils": "npm install $(jq -r '.utilsDependencies | to_entries | .[] | \"\\(.key)@\\(.value)\"' package.json)",
-    "test:e2e": "cross-env NODE_ENV=test playwright test",
+    "test:e2e": "cross-env NODE_ENV=test playwright test --reporter=list",
     "test:e2e:ui": "cross-env NODE_ENV=test playwright test --ui",
     "test:e2e:debug": "cross-env NODE_ENV=test playwright test --debug",
+    "test:e2e:html": "cross-env NODE_ENV=test playwright test --reporter=html",
     "test:db:create": "psql -U postgres -h localhost -p 5432 -c \"CREATE DATABASE \\\"trpc-starter-websockets-test\\\"\" || echo 'Database may already exist'",
     "test:db:push": "cross-env NODE_ENV=test prisma db push",
-    "test:db:seed": "cross-env NODE_ENV=test tsx tests/helpers/fixtures.ts",
+    "test:db:seed": "cross-env NODE_ENV=test tsx tests/helpers/load-fixtures.ts",
     "test:db:setup": "npm run test:db:create && npm run test:db:push",
-    "test:fixtures:export": "tsx tests/fixtures/export-fixtures.ts",
+    "test:fixtures:export": "tsx tests/fixtures/export-from-dev-db.ts",
     "playwright:install": "playwright install chromium"
   },
   "prisma": {

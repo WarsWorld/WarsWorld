@@ -1,0 +1,76 @@
+[
+  {
+    "id": "test-match-001",
+    "leagueType": "standard",
+    "mode": "pvc",
+    "rules": {
+      "dayLimit": 0,
+      "fogOfWar": false,
+      "teamMapping": [
+        0,
+        1
+      ],
+      "captureLimit": 0,
+      "labUnitTypes": [
+        "infantry"
+      ],
+      "weatherSetting": "clear",
+      "bannedUnitTypes": [],
+      "fundsPerProperty": 1000,
+      "unitCapPerPlayer": 50
+    },
+    "status": "playing",
+    "mapId": "cmen2mmw30009enn0ay7uncow",
+    "playerState": [
+      {
+        "id": "cmen2mmuo0002enn0jh49ys6f",
+        "army": "orange-star",
+        "coId": {
+          "name": "andy",
+          "version": "AW2"
+        },
+        "name": "[dev] Grimm Guy",
+        "slot": 0,
+        "funds": 10000,
+        "ready": false,
+        "status": "alive",
+        "powerMeter": 0,
+        "COPowerState": "no-power",
+        "hasCurrentTurn": true,
+        "timesPowerUsed": 0
+      },
+      {
+        "id": "computer-player-001",
+        "army": "blue-moon",
+        "coId": {
+          "name": "andy",
+          "version": "AW2"
+        },
+        "name": "Computer",
+        "slot": 1,
+        "funds": 10000,
+        "ready": true,
+        "status": "alive",
+        "powerMeter": 0,
+        "COPowerState": "no-power",
+        "hasCurrentTurn": false,
+        "timesPowerUsed": 0
+      }
+    ],
+    "chatIsPublic": false,
+    "createdAt": "2025-08-23T04:01:47.890Z",
+    "Player": [
+      {
+        "id": "cmen2mmuo0002enn0jh49ys6f",
+        "name": "[dev] Grimm Guy",
+        "displayName": "[dev] Grimm Guy",
+        "secret": false,
+        "kind": "human",
+        "userId": "cmen2mmul0000enn0tmr9tq63",
+        "preferences": null,
+        "achievements": []
+      }
+    ],
+    "Event": []
+  }
+]

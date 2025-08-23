@@ -6,13 +6,13 @@ if (!process.env.DEV_USER_USERNAME || !process.env.DEV_USER_PASSWORD) {
   throw new Error("DEV_USER_USERNAME and DEV_USER_PASSWORD environment variables must be set");
 }
 
-test.describe("AI Computer Player", () => {
+test.describe("AI Gameplay Behavior", () => {
   test.beforeAll(async () => {
     // Load fixtures before all tests
     await loadFixtures();
   });
   
-  test("should verify computer AI takes turn after player", async ({ page }) => {
+  test("should execute AI turn when player passes turn", async ({ page }) => {
     // Step 1: Navigate to the game
     await page.goto("http://localhost:3000/");
 

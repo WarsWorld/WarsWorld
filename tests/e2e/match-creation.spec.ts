@@ -2,7 +2,7 @@ import { test, expect } from "@playwright/test";
 import { loadFixtures } from "../helpers/fixtures";
 import { ensureLoggedIn } from "../helpers/auth";
 
-test.describe("Player vs Computer Mode", () => {
+test.describe("Match Creation and Management", () => {
   test.beforeAll(async () => {
     // Load fixtures before all tests
     await loadFixtures();
@@ -13,39 +13,31 @@ test.describe("Player vs Computer Mode", () => {
     await ensureLoggedIn(page);
   });
   
-  test("should create a PvC match", async ({ page }) => {
+  test("should create a new PvC match through UI", async ({ page }) => {
     // Navigate to matches page
-    await page.goto("/match");
+    await page.goto("/your-matches");
     
-    // Click on create match button
-    await page.click('button:has-text("Create Match")');
+    // Wait for the page to load
+    await page.waitForSelector('text="Match Page"');
     
-    // Wait for the create match form/modal
-    await page.waitForSelector('text=/Create.*Match/i');
-    
-    // Check the "vs Computer" checkbox
-    const vsComputerCheckbox = page.locator('input[type="checkbox"]').filter({ hasText: /computer|ai|pvc/i });
+    // Check the "Play vs Computer" checkbox
+    const vsComputerCheckbox = page.locator('input[type="checkbox"]');
     await vsComputerCheckbox.check();
     
-    // Select a map (use the first available)
-    const mapSelector = page.locator('select[name="mapId"], [data-testid="map-select"]').first();
-    if (await mapSelector.isVisible()) {
-      await mapSelector.selectOption({ index: 1 });
-    }
-    
-    // Submit the form
-    await page.click('button[type="submit"], button:has-text("Create")');
+    // The map selector should already have a map selected (Caustic Finale)
+    // Just click the Create game button
+    await page.click('button:has-text("Create game")');
     
     // Wait for redirect to the match page
-    await page.waitForURL(/match\/[a-zA-Z0-9-]+/, { timeout: 10000 });
+    await page.waitForURL(/match2\/[a-zA-Z0-9-]+/, { timeout: 10000 });
     
     // Verify the match was created with computer player
     await expect(page.locator('text=/Computer/i')).toBeVisible();
   });
   
-  test("should show existing PvC match from fixtures", async ({ page }) => {
+  test("should display existing matches in match list", async ({ page }) => {
     // Navigate to matches page
-    await page.goto("/match");
+    await page.goto("/your-matches");
     
     // Look for the test match created in fixtures
     const testMatch = page.locator('text=/Test Map/i').first();
