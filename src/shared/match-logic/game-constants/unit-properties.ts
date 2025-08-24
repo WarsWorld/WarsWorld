@@ -206,7 +206,7 @@ const battleCopter: UnitPropertiesWithAmmo = {
   initialFuel: 99,
   facility: "airport",
   movementType: "air",
-  movementPoints: 9000,
+  movementPoints: 6,
   initialAmmo: 6,
   attackRange: directRange,
 };
