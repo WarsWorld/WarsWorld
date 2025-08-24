@@ -6,10 +6,7 @@
     "rules": {
       "dayLimit": 50,
       "fogOfWar": false,
-      "teamMapping": [
-        0,
-        1
-      ],
+      "teamMapping": [0, 1],
       "captureLimit": 50,
       "labUnitTypes": [],
       "weatherSetting": "clear",
@@ -66,10 +63,7 @@
     "rules": {
       "dayLimit": 50,
       "fogOfWar": false,
-      "teamMapping": [
-        0,
-        1
-      ],
+      "teamMapping": [0, 1],
       "captureLimit": 50,
       "labUnitTypes": [],
       "weatherSetting": "clear",

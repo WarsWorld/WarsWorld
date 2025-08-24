@@ -41,9 +41,12 @@
     "test:e2e:html": "cross-env NODE_ENV=test playwright test --reporter=html",
     "test:db:create": "psql -U postgres -h localhost -p 5432 -c \"CREATE DATABASE \\\"trpc-starter-websockets-test\\\"\" || echo 'Database may already exist'",
     "test:db:push": "dotenv -e .env.test -- prisma db push",
-    "test:db:seed": "cross-env NODE_ENV=test tsx tests/helpers/load-fixtures.ts",
+    "test:db:seed": "cross-env NODE_ENV=test tsx src/tests/helpers/load-fixtures.ts",
     "test:db:setup": "npm run test:db:create && npm run test:db:push",
-    "test:fixtures:export": "tsx tests/fixtures/export-from-dev-db.ts",
+    "test:fixtures:export": "tsx src/tests/fixtures/export-from-dev-db.ts",
+    "test:all": "tsx src/tests/run-all-tests.ts",
+    "test:unit": "tsx src/tests/run-unit-tests.ts",
+    "test": "npm run test:all",
     "playwright:install": "playwright install chromium"
   },
   "prisma": {

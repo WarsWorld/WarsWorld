@@ -6,12 +6,50 @@ import type { Position } from "shared/schemas/position";
 import { isUnitProducingProperty } from "shared/schemas/tile";
 import type { MatchWrapper } from "shared/wrappers/match";
 import type { PlayerInMatchWrapper } from "shared/wrappers/player-in-match";
+// New AI modules - commented out for now to maintain backward compatibility
+// import { PerformActionAdapter } from "server/ai/action-adapter";
+// import { StateConverter } from "server/ai/state-converter";
+// import type { AIGameState } from "server/ai/types";
 
 // Maximum actions per AI turn to prevent infinite loops
 const MAX_AI_ACTIONS = 10;
 
 // Track AI processing to prevent re-entrancy
 const aiProcessingMatches = new Set<string>();
+
+/**
+ * Example of how to use the new AI adapter (for future minimax implementation):
+ *
+ * const runAiTurnWithAdapter = async (matchId: string): Promise<void> => {
+ *   const match = matchStore.get(matchId);
+ *   if (!match) return;
+ *
+ *   // Convert to AI state representation
+ *   const aiState = StateConverter.toAIState(match);
+ *
+ *   // Create adapter for executing actions
+ *   const adapter = new PerformActionAdapter(match);
+ *
+ *   // Run minimax algorithm to find best action
+ *   const bestAction = await findBestAction(aiState); // Future minimax implementation
+ *
+ *   // Execute the action through the adapter
+ *   switch (bestAction.type) {
+ *     case "move":
+ *       await adapter.moveUnit(bestAction.unitId!, bestAction.to!);
+ *       break;
+ *     case "attack":
+ *       await adapter.attackWithUnit(bestAction.unitId!, bestAction.targetPosition!);
+ *       break;
+ *     case "build":
+ *       await adapter.buildUnit(bestAction.unitType!, bestAction.to!);
+ *       break;
+ *     case "endTurn":
+ *       await adapter.endTurn();
+ *       break;
+ *   }
+ * };
+ */
 
 export const runAiTurn = async (matchId: string): Promise<void> => {
   // Prevent re-entrancy
@@ -71,6 +109,7 @@ export const runAiTurn = async (matchId: string): Promise<void> => {
       // Phase 3: Pass turn
       console.log(`AI completed ${actionCount} actions, passing turn`);
     }
+
     await passTurn(match, currentPlayer);
   } catch (error) {
     console.error(`AI turn failed for match ${matchId}:`, error);

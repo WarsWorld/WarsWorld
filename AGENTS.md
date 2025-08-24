@@ -1,14 +1,14 @@
 # WarsWorld
 
-
 ## Important rules to follow:
+
 - Read COMPUTERAI-MODE.md for context on this project
 
-
 ## Critical Testing Rules
-  - NEVER manually edit fixture JSON files in tests/fixtures/
-  - If fixture data is missing, ALWAYS report it to the user and request re-export
-  - Direct fixture file modifications will cause inconsistencies
+
+- NEVER manually edit fixture JSON files in tests/fixtures/
+- If fixture data is missing, ALWAYS report it to the user and request re-export
+- Direct fixture file modifications will cause inconsistencies
 
 ## Build, run, lint, test
 

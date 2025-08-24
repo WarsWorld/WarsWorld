@@ -7,6 +7,7 @@ The `MapWrapper` class encapsulates map data for WarsWorld, an Advance Wars-insp
 ## Core Structure
 
 ### Database Schema
+
 ```typescript
 model WWMap {
   id: String                 // CUID identifier
@@ -18,21 +19,24 @@ model WWMap {
 ```
 
 ### MapWrapper Class
+
 ```typescript
 class MapWrapper {
-  data: WWMap               // Raw map data from database
-  width: number            // Computed from tiles[0].length
-  height: number           // Computed from tiles.length
+  data: WWMap; // Raw map data from database
+  width: number; // Computed from tiles[0].length
+  height: number; // Computed from tiles.length
 }
 ```
 
 ## Data Format: JSON
 
 All map data is stored as **JSON** in PostgreSQL's JSONB columns:
+
 - **tiles**: 2D array `[row][column]` of tile objects
 - **predeployedUnits**: Array of unit objects with positions
 
 ### Coordinate System
+
 - **Position**: `[x, y]` tuple where:
   - `x` = column (0 to width-1)
   - `y` = row (0 to height-1)
@@ -45,40 +49,42 @@ All map data is stored as **JSON** in PostgreSQL's JSONB columns:
 ```json
 {
   "type": "base|airport|port|hq|lab|commtower|city",
-  "playerSlot": -1  // -1 = neutral, 0-3 = player owned
+  "playerSlot": -1 // -1 = neutral, 0-3 = player owned
 }
 ```
 
-| Type | Description | Can Build Units | Special |
-|------|-------------|-----------------|---------|
-| `base` | Factory | Infantry, Mech, Vehicles | - |
-| `airport` | Airport | Air units | - |
-| `port` | Port | Naval units | - |
-| `hq` | Headquarters | - | Lose if captured |
-| `lab` | Laboratory | - | Victory condition |
-| `city` | City | - | Income +1000/turn |
-| `commtower` | Comm Tower | - | Attack boost |
+| Type        | Description  | Can Build Units          | Special           |
+| ----------- | ------------ | ------------------------ | ----------------- |
+| `base`      | Factory      | Infantry, Mech, Vehicles | -                 |
+| `airport`   | Airport      | Air units                | -                 |
+| `port`      | Port         | Naval units              | -                 |
+| `hq`        | Headquarters | -                        | Lose if captured  |
+| `lab`       | Laboratory   | -                        | Victory condition |
+| `city`      | City         | -                        | Income +1000/turn |
+| `commtower` | Comm Tower   | -                        | Attack boost      |
 
 ### 2. Terrain Tiles
 
 #### Basic Terrain
+
 ```json
 {
   "type": "forest|mountain|shoal|sea|reef|usedSilo|unusedSilo"
 }
 ```
 
-| Type | Movement Cost | Defense Stars | Special |
-|------|---------------|---------------|---------|
-| `forest` | 2 (inf), 3 (vehicle) | 2 | Hides units in FoW |
-| `mountain` | 4 (inf only) | 4 | Vision +3 |
-| `shoal` | 1 | 0 | Land/sea border |
-| `sea` | - (naval only) | 0 | - |
-| `reef` | 2 (naval) | 1 | Hides naval units |
-| `unusedSilo` | 1 | 0 | Can launch missile once |
-| `usedSilo` | 1 | 0 | Already fired |
+| Type         | Movement Cost        | Defense Stars | Special                 |
+| ------------ | -------------------- | ------------- | ----------------------- |
+| `forest`     | 2 (inf), 3 (vehicle) | 2             | Hides units in FoW      |
+| `mountain`   | 4 (inf only)         | 4             | Vision +3               |
+| `shoal`      | 1                    | 0             | Land/sea border         |
+| `sea`        | - (naval only)       | 0             | -                       |
+| `reef`       | 2 (naval)            | 1             | Hides naval units       |
+| `unusedSilo` | 1                    | 0             | Can launch missile once |
+| `usedSilo`   | 1                    | 0             | Already fired           |
 
 #### Plains (with variants)
+
 ```json
 {
   "type": "plain",
@@ -89,57 +95,67 @@ All map data is stored as **JSON** in PostgreSQL's JSONB columns:
 ### 3. Movement Tiles
 
 #### Roads
+
 ```json
 {
   "type": "road",
   "variant": "right-left|top-bottom|top-right|right-bottom|..."
 }
 ```
+
 - Variants describe connections: `"top-right-bottom"` = T-junction
 - Movement cost: 1 for all ground units
 
 #### Rivers
+
 ```json
 {
   "type": "river",
   "variant": "right-left|top-bottom|top-right|right-bottom|..."
 }
 ```
+
 - Impassable for vehicles
 - Infantry/Mech: movement cost 2
 
 #### Bridges
+
 ```json
 {
   "type": "bridge",
   "variant": "right-left|top-bottom"
 }
 ```
+
 - Allows ground units over water
 - Naval units can pass under
 
 #### Pipes
+
 ```json
 {
   "type": "pipe",
   "variant": "top|right|bottom|left|top-right|right-bottom|..."
 }
 ```
+
 - Only Pipe Runner units can traverse
 - Blocks other units
 
 #### Pipe Seams (Destructible)
+
 ```json
 {
   "type": "pipeSeam",
   "variant": "right-left|top-bottom",
-  "hp": 99  // Can be destroyed
+  "hp": 99 // Can be destroyed
 }
 ```
 
 ## Unit Data Format
 
 ### Basic Unit Structure
+
 ```json
 {
   "type": "infantry",
@@ -157,24 +173,27 @@ All map data is stored as **JSON** in PostgreSQL's JSONB columns:
 ### Unit Types
 
 #### Land Units
+
 - **Infantry/Mech**: Can capture, 99 fuel
+
   ```json
   {
     "type": "infantry|mech",
     "hp": 100,
     "fuel": 99,
-    "ammo": 99,  // Mech only
-    "currentCapturePoints": 10  // Optional, when capturing
+    "ammo": 99, // Mech only
+    "currentCapturePoints": 10 // Optional, when capturing
   }
   ```
 
 - **Vehicles**: Tank, Artillery, Recon, Anti-Air, etc.
+
   ```json
   {
     "type": "tank|artillery|recon|antiAir|missile|rocket",
     "hp": 100,
     "fuel": 99,
-    "ammo": 6  // Varies by unit
+    "ammo": 6 // Varies by unit
   }
   ```
 
@@ -183,7 +202,8 @@ All map data is stored as **JSON** in PostgreSQL's JSONB columns:
   {
     "type": "apc",
     "fuel": 99,
-    "loadedUnit": {  // Optional
+    "loadedUnit": {
+      // Optional
       "type": "infantry",
       "hp": 100,
       "fuel": 99
@@ -192,7 +212,9 @@ All map data is stored as **JSON** in PostgreSQL's JSONB columns:
   ```
 
 #### Air Units
+
 - **Combat**: Fighter, Bomber, Battle Copter
+
   ```json
   {
     "type": "fighter|bomber|battleCopter",
@@ -203,13 +225,14 @@ All map data is stored as **JSON** in PostgreSQL's JSONB columns:
   ```
 
 - **Stealth** (Special)
+
   ```json
   {
     "type": "stealth",
     "hp": 100,
     "fuel": 60,
     "ammo": 6,
-    "hidden": true  // Invisible to enemies
+    "hidden": true // Invisible to enemies
   }
   ```
 
@@ -218,28 +241,31 @@ All map data is stored as **JSON** in PostgreSQL's JSONB columns:
   {
     "type": "transportCopter",
     "fuel": 99,
-    "loadedUnit": null  // Can carry infantry/mech
+    "loadedUnit": null // Can carry infantry/mech
   }
   ```
 
 #### Naval Units
+
 - **Combat**: Battleship, Cruiser, Sub
+
   ```json
   {
     "type": "battleship|cruiser|sub",
     "hp": 100,
     "fuel": 99,
     "ammo": 9,
-    "hidden": true  // Sub only - when submerged
+    "hidden": true // Sub only - when submerged
   }
   ```
 
 - **Transport**: Lander, Black Boat
+
   ```json
   {
     "type": "lander",
     "fuel": 99,
-    "loadedUnit": null,   // Can carry 2 ground units
+    "loadedUnit": null, // Can carry 2 ground units
     "loadedUnit2": null
   }
   ```
@@ -250,45 +276,42 @@ All map data is stored as **JSON** in PostgreSQL's JSONB columns:
     "type": "carrier",
     "fuel": 99,
     "ammo": 9,
-    "loadedUnit": null,   // Can carry 2 air units
+    "loadedUnit": null, // Can carry 2 air units
     "loadedUnit2": null
   }
   ```
 
 ### Unit Attributes
 
-| Attribute | Range | Description |
-|-----------|-------|-------------|
-| `hp` | 1-100 | Health points (visual HP = hp/10 rounded up) |
-| `fuel` | 0-99 | Movement fuel, depletes daily |
-| `ammo` | 0-99 | Ammunition for attacks |
-| `isReady` | boolean | Can act this turn |
-| `isCapturing` | boolean | Currently capturing property |
-| `currentCapturePoints` | 1-20 | Progress capturing (HP/10 per turn) |
-| `hidden` | boolean | Invisible (Stealth/Sub) |
-| `playerSlot` | 0-3 | Owner player |
+| Attribute              | Range   | Description                                  |
+| ---------------------- | ------- | -------------------------------------------- |
+| `hp`                   | 1-100   | Health points (visual HP = hp/10 rounded up) |
+| `fuel`                 | 0-99    | Movement fuel, depletes daily                |
+| `ammo`                 | 0-99    | Ammunition for attacks                       |
+| `isReady`              | boolean | Can act this turn                            |
+| `isCapturing`          | boolean | Currently capturing property                 |
+| `currentCapturePoints` | 1-20    | Progress capturing (HP/10 per turn)          |
+| `hidden`               | boolean | Invisible (Stealth/Sub)                      |
+| `playerSlot`           | 0-3     | Owner player                                 |
 
 ## Example Map Data
 
 ### Minimal 3x3 Map
+
 ```json
 {
   "name": "Test Map",
   "tiles": [
     [
-      {"type": "hq", "playerSlot": 0},
-      {"type": "plain", "variant": "normal"},
-      {"type": "city", "playerSlot": -1}
+      { "type": "hq", "playerSlot": 0 },
+      { "type": "plain", "variant": "normal" },
+      { "type": "city", "playerSlot": -1 }
     ],
+    [{ "type": "road", "variant": "top-bottom" }, { "type": "forest" }, { "type": "mountain" }],
     [
-      {"type": "road", "variant": "top-bottom"},
-      {"type": "forest"},
-      {"type": "mountain"}
-    ],
-    [
-      {"type": "city", "playerSlot": -1},
-      {"type": "plain", "variant": "normal"},
-      {"type": "hq", "playerSlot": 1}
+      { "type": "city", "playerSlot": -1 },
+      { "type": "plain", "variant": "normal" },
+      { "type": "hq", "playerSlot": 1 }
     ]
   ],
   "predeployedUnits": [
@@ -310,14 +333,15 @@ All map data is stored as **JSON** in PostgreSQL's JSONB columns:
 ## Runtime State Management
 
 ### MatchWrapper Integration
+
 ```typescript
 class MatchWrapper {
-  map: MapWrapper           // Map data
-  units: UnitWrapper[]      // Active units (not in map)
-  changeableTiles: []       // Properties that can change ownership
-  
-  getTile(position): Tile   // Get tile at position
-  getUnit(position): Unit   // Get unit at position
+  map: MapWrapper; // Map data
+  units: UnitWrapper[]; // Active units (not in map)
+  changeableTiles: []; // Properties that can change ownership
+
+  getTile(position): Tile; // Get tile at position
+  getUnit(position): Unit; // Get unit at position
 }
 ```
 
@@ -346,6 +370,7 @@ class MatchWrapper {
 ## File Format for Import/Export
 
 Maps can be exported as `.json` files:
+
 ```json
 {
   "version": "1.0",
@@ -367,6 +392,7 @@ WarsWorld supports importing maps from AWBW (Advance Wars By Web) by combining m
 You need **two exports** from AWBW:
 
 1. **Map Export** (terrain data):
+
    - Open your map in AWBW Map Editor
    - Export the map as text/CSV format
    - This contains all terrain tiles (forests, mountains, water, roads, etc.)
@@ -385,6 +411,7 @@ npx tsx src/server/tasks/import-and-play-awbw-map.ts <map-export-path> <move-pla
 ```
 
 Example:
+
 ```bash
 npx tsx src/server/tasks/import-and-play-awbw-map.ts /tmp/map-terrain.txt /tmp/move-planner.json
 ```
@@ -417,28 +444,34 @@ Since AWBW maps can have 2-4+ players but PvC matches need exactly 2:
 ### AWBW Move Planner JSON Format
 
 The Move Planner export includes:
+
 ```json
 {
   "plannerName": "Map Name",
-  "buildingsState": { /* terrain and buildings */ },
+  "buildingsState": {
+    /* terrain and buildings */
+  },
   "unitsState": {
     "0": {
       "units_name": "Infantry",
       "units_x": 5,
       "units_y": 10,
       "units_players_id": 0,
-      "units_hit_points": 10,  // 1-10 scale
+      "units_hit_points": 10, // 1-10 scale
       "units_fuel": 99,
-      "units_ammo": -1  // -1 for unlimited
+      "units_ammo": -1 // -1 for unlimited
     }
   },
-  "playersState": { /* player info */ }
+  "playersState": {
+    /* player info */
+  }
 }
 ```
 
 ### After Import
 
 The script will:
+
 1. Create a new WWMap in the database
 2. Create a playable match with human vs computer
 3. Display the match ID for immediate play

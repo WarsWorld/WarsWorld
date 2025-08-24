@@ -1,11 +1,13 @@
 # Computer AI Mode Documentation
 
 ## Version History
+
 - **v0.0** : Initial Player vs Computer mode implementation with basic AI
-  
+
 ---
 
 ## Table of Contents
+
 1. [Overview](#overview)
 2. [Architecture Decisions](#architecture-decisions)
 3. [Implementation Details](#implementation-details)
@@ -20,15 +22,19 @@
 ## Overview
 
 ### Project Goal
+
 Implement a Player vs Computer (PvC) mode for the Advance Wars OSS game, starting with a simple AI (v0) and iteratively improving it to become extremely sophisticated in terms of strategy and tactics.
 
 ### Current State (v0.0)
+
 The initial implementation provides a functional PvC mode with a deliberately simple AI that:
+
 - Builds Infantry units at all available factories
 - Moves one Infantry unit randomly per turn
 - Passes turn when no actions are available
 
 This foundation was designed to:
+
 1. Establish the infrastructure for AI execution
 2. Integrate cleanly with the existing game architecture
 3. Provide a base for iterative improvements
@@ -39,28 +45,38 @@ This foundation was designed to:
 ## Architecture Decisions
 
 ### 1. Server-Side AI Execution
+
 **Decision**: Run AI logic entirely on the server
+
 - **Rationale**: Ensures security, consistency, and prevents cheating
 - **Trade-off**: Increases server load but maintains game integrity
 
 ### 2. Reuse Existing Action Pipeline
+
 **Decision**: AI uses the same action validation and event system as human players
+
 - **Rationale**: Ensures AI follows all game rules without duplication
 - **Implementation**: Created `performAction` service that bypasses authentication
 
 ### 3. Computer as Special Player
+
 **Decision**: Computer is a Player entity with special identification
+
 - **Rationale**: Minimal changes to existing systems
 - **Current**: Identified by hardcoded ID "computer-player-001"
 - **Future**: Will use `PlayerKind` enum when database migration is ready
 
 ### 4. Event-Driven AI Triggering
+
 **Decision**: AI turns triggered after PassTurn events
+
 - **Rationale**: Natural integration with turn-based flow
 - **Implementation**: Async execution using `setImmediate` to avoid blocking
 
 ### 5. Pathfinding Code Sharing
+
 **Decision**: Extract pathfinding logic to shared module
+
 - **Rationale**: Avoid code duplication between frontend and AI
 - **Location**: `src/shared/match-logic/pathfinding.ts`
 
@@ -87,22 +103,26 @@ graph TD
 ### Key Components
 
 #### 1. AI Service (`src/server/services/ai-service.ts`)
+
 - Entry point for AI turn execution
 - Implements re-entrancy protection
 - Orchestrates AI phases (build → move → pass)
 - Handles errors gracefully
 
 #### 2. Perform Action Service (`src/server/services/perform-action.ts`)
+
 - Extracted 10-step action processing pipeline
 - Allows AI to execute actions without authentication
 - Maintains exact same validation and event flow
 
 #### 3. Pathfinding Module (`src/shared/match-logic/pathfinding.ts`)
+
 - `getAccessibleNodes()`: Calculates reachable tiles for a unit
 - `reconstructPath()`: Builds path from origin to destination
 - `calculatePathDistance()`: Computes movement cost
 
 #### 4. AI Triggering Points
+
 - After PassTurn in `src/server/routers/action.ts`
 - After match start if computer goes first in `src/server/routers/match.ts`
 
@@ -113,6 +133,7 @@ graph TD
 ### Current AI Behavior (v0.0)
 
 #### Phase 1: Move Units
+
 ```typescript
 // Rule: Move ONE random Infantry unit (FIRST to free up factory tiles)
 1. Get all Infantry units owned by AI that are ready
@@ -124,6 +145,7 @@ graph TD
 ```
 
 **Constraints:**
+
 - Only moves units with `isReady = true`
 - Respects movement points and terrain costs
 - Avoids occupied tiles (no combat yet)
@@ -131,6 +153,7 @@ graph TD
 - **Important**: Done BEFORE building to free up factory tiles
 
 #### Phase 2: Build Infantry
+
 ```typescript
 // Rule: Build one Infantry at EACH available factory
 for each factory owned by AI:
@@ -140,6 +163,7 @@ for each factory owned by AI:
 ```
 
 **Constraints:**
+
 - Infantry cost: 1000 funds
 - Only builds at "base" type properties
 - Skips occupied factories
@@ -147,6 +171,7 @@ for each factory owned by AI:
 - **Important**: Done AFTER moving units to maximize available factory tiles
 
 #### Phase 3: End Turn
+
 ```typescript
 // Rule: Always pass turn after actions
 Execute PassTurn action regardless of remaining possibilities
@@ -165,28 +190,28 @@ Execute PassTurn action regardless of remaining possibilities
 
 ### Core AI Files
 
-| File | Purpose | Key Functions |
-|------|---------|---------------|
-| `src/server/services/ai-service.ts` | Main AI logic | `runAiTurn()`, `buildInfantryAtFactories()`, `moveRandomInfantry()` |
-| `src/server/services/perform-action.ts` | Action execution | `performAction()` |
-| `src/shared/match-logic/pathfinding.ts` | Movement calculation | `getAccessibleNodes()`, `reconstructPath()` |
+| File                                    | Purpose              | Key Functions                                                       |
+| --------------------------------------- | -------------------- | ------------------------------------------------------------------- |
+| `src/server/services/ai-service.ts`     | Main AI logic        | `runAiTurn()`, `buildInfantryAtFactories()`, `moveRandomInfantry()` |
+| `src/server/services/perform-action.ts` | Action execution     | `performAction()`                                                   |
+| `src/shared/match-logic/pathfinding.ts` | Movement calculation | `getAccessibleNodes()`, `reconstructPath()`                         |
 
 ### Integration Points
 
-| File | Modification | Purpose |
-|------|-------------|---------|
-| `src/server/routers/action.ts` | AI trigger after PassTurn | Detect computer's turn and start AI |
-| `src/server/routers/match.ts` | AI trigger at match start | Handle computer as first player |
-| `src/server/routers/match/create.ts` | Computer player creation | Add computer to match when PvC selected |
-| `src/frontend/components/match/card/CreateMatch.tsx` | UI checkbox | Allow user to select PvC mode |
+| File                                                 | Modification              | Purpose                                 |
+| ---------------------------------------------------- | ------------------------- | --------------------------------------- |
+| `src/server/routers/action.ts`                       | AI trigger after PassTurn | Detect computer's turn and start AI     |
+| `src/server/routers/match.ts`                        | AI trigger at match start | Handle computer as first player         |
+| `src/server/routers/match/create.ts`                 | Computer player creation  | Add computer to match when PvC selected |
+| `src/frontend/components/match/card/CreateMatch.tsx` | UI checkbox               | Allow user to select PvC mode           |
 
 ### Database Schema
 
-| Model | Field | Type | Purpose |
-|-------|-------|------|---------|
-| Player | kind | enum (human\|computer) | Identify AI players |
-| Match | mode | enum (pvp\|pvc\|ai_vs_ai) | Track match type |
-| Player | user | optional relation | Allow players without user account |
+| Model  | Field | Type                      | Purpose                            |
+| ------ | ----- | ------------------------- | ---------------------------------- |
+| Player | kind  | enum (human\|computer)    | Identify AI players                |
+| Match  | mode  | enum (pvp\|pvc\|ai_vs_ai) | Track match type                   |
+| Player | user  | optional relation         | Allow players without user account |
 
 ---
 
@@ -197,6 +222,7 @@ Execute PassTurn action regardless of remaining possibilities
 Integration tests are implemented using Playwright with a dedicated test database and static fixtures.
 
 #### Running Tests
+
 ```bash
 npm run test:e2e               # Run all tests (console output)
 npm run test:e2e:ui            # Interactive UI mode
@@ -211,6 +237,7 @@ NODE_ENV=test npx playwright test tests/e2e/ai-gameplay.spec.ts
 When creating new Playwright tests, always use the existing fixture data rather than creating fake data. This ensures consistency and uses real-world data structures.
 
 #### Using Existing Fixtures
+
 ```typescript
 import { test, expect } from "@playwright/test";
 import { loadFixtures } from "../helpers/fixtures";
@@ -221,12 +248,12 @@ test.describe("Your New Test Suite", () => {
     // Always load existing fixtures - don't create fake data
     await loadFixtures();
   });
-  
+
   test.beforeEach(async ({ page }) => {
     // Use the existing development_user from fixtures
     await ensureLoggedIn(page);
   });
-  
+
   test("your test case", async ({ page }) => {
     // Use fixture data IDs directly:
     // - Match ID: test-match-001
@@ -239,13 +266,16 @@ test.describe("Your New Test Suite", () => {
 ```
 
 #### Available Fixture Data
+
 - **User**: development_user with known credentials
 - **Player**: [dev] Grimm Guy linked to development_user
 - **Map**: Caustic Finale (2-player map)
 - **Match**: PvC match with ID `test-match-001`
 
 #### Missing Fixtures
+
 If you need test data that doesn't exist in the current fixtures:
+
 1. **Report to the user** that additional fixtures are needed
 2. Add the required data to the development database
 3. Re-export fixtures using `npm run test:fixtures:export`
@@ -253,14 +283,14 @@ If you need test data that doesn't exist in the current fixtures:
 
 **Important**: Never create fake/mock data in tests. If the fixtures don't contain what you need, it's better to report the gap than to create inconsistent test data.
 
-
-
 #### Test Coverage
+
 - **Authentication** (`simple-login-test.spec.ts`) - Verifies login with development_user
 - **Match Creation** (`match-creation.spec.ts`) - Tests creating PvC matches and viewing match list
 - **AI Gameplay** (`ai-gameplay.spec.ts`) - Tests AI turn execution and behavior during gameplay
 
 #### Test Infrastructure
+
 - **Test Database**: Separate PostgreSQL database (`trpc-starter-websockets-test`)
 - **Static Fixtures**: JSON files in `tests/fixtures/` for consistent test data
 - **Helpers**: Database setup, fixture loading, and authentication utilities
@@ -287,7 +317,10 @@ const availableFactories = getFactoriesWithoutUnits(player);
 console.log(`AI found ${availableFactories.length} factories for building`);
 
 // Bad: Opaque one-liners
-player.getProperties().filter(p => !match.getUnit(p.position)).forEach(/*...*/)
+player
+  .getProperties()
+  .filter((p) => !match.getUnit(p.position))
+  .forEach(/*...*/);
 ```
 
 ### Debugging AI Behavior

@@ -9303,5 +9303,137 @@
     "predeployedUnits": [],
     "numberOfPlayers": 2,
     "createdAt": "2025-08-23T05:49:57.870Z"
+  },
+  {
+    "id": "test-plain-xs-map",
+    "name": "Plain only XS",
+    "tiles": [
+      [
+        { "type": "plain", "variant": "normal" },
+        { "type": "plain", "variant": "normal" },
+        { "type": "plain", "variant": "normal" },
+        { "type": "plain", "variant": "normal" },
+        { "type": "plain", "variant": "normal" },
+        { "type": "plain", "variant": "normal" }
+      ],
+      [
+        { "type": "plain", "variant": "normal" },
+        { "type": "plain", "variant": "normal" },
+        { "type": "plain", "variant": "normal" },
+        { "type": "plain", "variant": "normal" },
+        { "type": "plain", "variant": "normal" },
+        { "type": "plain", "variant": "normal" }
+      ],
+      [
+        { "type": "plain", "variant": "normal" },
+        { "type": "plain", "variant": "normal" },
+        { "type": "plain", "variant": "normal" },
+        { "type": "plain", "variant": "normal" },
+        { "type": "plain", "variant": "normal" },
+        { "type": "plain", "variant": "normal" }
+      ],
+      [
+        { "type": "plain", "variant": "normal" },
+        { "type": "plain", "variant": "normal" },
+        { "type": "plain", "variant": "normal" },
+        { "type": "plain", "variant": "normal" },
+        { "type": "plain", "variant": "normal" },
+        { "type": "plain", "variant": "normal" }
+      ],
+      [
+        { "type": "plain", "variant": "normal" },
+        { "type": "plain", "variant": "normal" },
+        { "type": "plain", "variant": "normal" },
+        { "type": "plain", "variant": "normal" },
+        { "type": "plain", "variant": "normal" },
+        { "type": "plain", "variant": "normal" }
+      ],
+      [
+        { "type": "plain", "variant": "normal" },
+        { "type": "plain", "variant": "normal" },
+        { "type": "plain", "variant": "normal" },
+        { "type": "plain", "variant": "normal" },
+        { "type": "plain", "variant": "normal" },
+        { "type": "plain", "variant": "normal" }
+      ]
+    ],
+    "predeployedUnits": [
+      {
+        "type": "infantry",
+        "playerSlot": 0,
+        "position": [1, 1],
+        "isReady": true,
+        "stats": {
+          "hp": 100,
+          "fuel": 99
+        }
+      },
+      {
+        "type": "artillery",
+        "playerSlot": 0,
+        "position": [2, 1],
+        "isReady": true,
+        "stats": {
+          "hp": 100,
+          "fuel": 50,
+          "ammo": 9
+        }
+      },
+      {
+        "type": "apc",
+        "playerSlot": 0,
+        "position": [3, 1],
+        "isReady": true,
+        "stats": {
+          "hp": 100,
+          "fuel": 70
+        },
+        "loadedUnit": null
+      },
+      {
+        "type": "infantry",
+        "playerSlot": 0,
+        "position": [4, 1],
+        "isReady": true,
+        "stats": {
+          "hp": 100,
+          "fuel": 99
+        }
+      },
+      {
+        "type": "infantry",
+        "playerSlot": 1,
+        "position": [1, 4],
+        "isReady": true,
+        "stats": {
+          "hp": 100,
+          "fuel": 99
+        }
+      },
+      {
+        "type": "artillery",
+        "playerSlot": 1,
+        "position": [2, 4],
+        "isReady": true,
+        "stats": {
+          "hp": 100,
+          "fuel": 50,
+          "ammo": 9
+        }
+      },
+      {
+        "type": "apc",
+        "playerSlot": 1,
+        "position": [3, 4],
+        "isReady": true,
+        "stats": {
+          "hp": 100,
+          "fuel": 70
+        },
+        "loadedUnit": null
+      }
+    ],
+    "numberOfPlayers": 2,
+    "createdAt": "2025-08-24T12:00:00.000Z"
   }
 ]
