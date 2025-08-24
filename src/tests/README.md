@@ -28,6 +28,7 @@ src/tests/
 ## AI Module Tests
 
 The AI module tests are located in:
+
 ```
 src/server/ai/
 ├── state-converter.test.ts  # Tests for StateConverter
@@ -37,6 +38,7 @@ src/server/ai/
 ## Running Tests
 
 ### Run all tests (unit + e2e)
+
 ```bash
 npm test
 # or
@@ -44,22 +46,26 @@ npm run test:all
 ```
 
 ### Run only unit tests
+
 ```bash
 npm run test:unit
 ```
 
 ### Run only e2e tests
+
 ```bash
 npm run test:e2e
 ```
 
 ### Run specific test file
+
 ```bash
 npx tsx src/tests/calculate-damage-test.ts
 npx tsx src/server/ai/state-converter.test.ts
 ```
 
 ### Run e2e tests with UI
+
 ```bash
 npm run test:e2e:ui
 ```
@@ -67,12 +73,14 @@ npm run test:e2e:ui
 ## Test Results
 
 ✅ **Unit Tests (All Passing)**
+
 - calculate-damage-test.ts
 - awbw-move-planner-import.test.ts
 - state-converter.test.ts
 - action-adapter.test.ts
 
 ⚠️ **E2E Tests (Partial)**
+
 - Some E2E tests may fail due to UI timing issues
 - Core functionality is verified through unit tests
 

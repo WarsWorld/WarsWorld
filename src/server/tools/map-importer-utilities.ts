@@ -34,14 +34,14 @@ export const importAWBWMap = async (data: AWBWMapImportSchema) => {
 export const importAWBWMapFromMovePlanner = async (
   movePlannerData: AWBWMovePlannerExport,
   mapName?: string,
-  tileDataString?: string
+  tileDataString?: string,
 ) => {
   const { tiles, predeployedUnits, numberOfPlayers } = await importAWBWMovePlanner(
     movePlannerData,
     {
       useBuildingsForTiles: !tileDataString,
       mapName,
-    }
+    },
   );
 
   // If tileDataString provided, use it for tiles instead

@@ -1,12 +1,7 @@
 import type { MatchWrapper } from "shared/wrappers/match";
 import type { Position } from "shared/schemas/position";
 import { performAction } from "server/services/perform-action";
-import type { 
-  BuildAction, 
-  MoveAction, 
-  PassTurnAction 
-} from "shared/types/actions";
-import type { AIPosition } from "./types";
+import type { BuildAction, MoveAction, PassTurnAction } from "shared/types/actions";
 
 /**
  * Adapter that provides a game-engine-agnostic interface for AI actions.
@@ -17,18 +12,24 @@ export class PerformActionAdapter {
 
   /**
    * Move a unit along a path
-   * @param unitId The unique ID of the unit to move
+   * @param unitId The unique ID of the unit to move (format: "x,y")
    * @param path Array of positions forming the movement path
    */
   async moveUnit(unitId: string, path: Position[]): Promise<void> {
-    // Extract position from unitId (format: "type-x-y")
-    const [type, x, y] = unitId.split("-");
-    const fromPosition: Position = [parseInt(x), parseInt(y)];
-    
+    // Extract position from unitId (format: "x,y")
+    const parts = unitId.split(",");
+
+    if (parts.length !== 2) {
+      throw new Error(`Invalid unit ID format: ${unitId}. Expected "x,y"`);
+    }
+
+    const fromPosition: Position = [parseInt(parts[0]), parseInt(parts[1])];
+
     // Find the unit at this position
     const unit = this.match.getUnit(fromPosition);
+
     if (!unit) {
-      throw new Error(`No unit found with ID ${unitId}`);
+      throw new Error(`Unit not found at position ${unitId}`);
     }
 
     // Create move action with wait subaction
@@ -39,40 +40,61 @@ export class PerformActionAdapter {
       subAction: { type: "wait" },
     };
 
-    await performAction(this.match, action, true);
+    try {
+      await performAction(this.match, action, false);
+    } catch (error) {
+      // Game engine rejected the action - this indicates a bug in the AI
+      throw new Error(
+        `AI BUG: Move action rejected by game engine. Unit: ${unitId}, Path: ${JSON.stringify(path)}. ` +
+          `Original error: ${error instanceof Error ? error.message : String(error)}`,
+      );
+    }
   }
 
   /**
    * Attack with a unit
    * @param unitId The unique ID of the attacking unit
+   * @param path Array of positions forming the movement path (AI should have calculated optimal position)
    * @param targetPosition The position of the target to attack
    */
-  async attackWithUnit(unitId: string, targetPosition: Position): Promise<void> {
-    // Extract position from unitId
-    const [type, x, y] = unitId.split("-");
-    const fromPosition: Position = [parseInt(x), parseInt(y)];
-    
-    const unit = this.match.getUnit(fromPosition);
-    if (!unit) {
-      throw new Error(`No unit found with ID ${unitId}`);
+  async attackWithUnit(unitId: string, path: Position[], targetPosition: Position): Promise<void> {
+    // Extract position from unitId (format: "x,y")
+    const parts = unitId.split(",");
+
+    if (parts.length !== 2) {
+      throw new Error(`Invalid unit ID format: ${unitId}. Expected "x,y"`);
     }
 
-    // For ranged units, we might not need to move
-    // For direct combat, we need to move adjacent to target
-    // This is simplified - real implementation would calculate optimal attack position
-    const path = [fromPosition]; // Simplified: assume unit can attack from current position
+    const fromPosition: Position = [parseInt(parts[0]), parseInt(parts[1])];
 
+    const unit = this.match.getUnit(fromPosition);
+
+    if (!unit) {
+      throw new Error(`Unit not found at position ${unitId}`);
+    }
+
+    // AI is responsible for calculating the correct path:
+    // - For indirect units: path should be [currentPosition]
+    // - For direct units: path should lead to adjacent position to target
     const action: MoveAction = {
       type: "move",
       path: path,
       playerId: unit.player.data.id,
       subAction: {
         type: "attack",
-        targetPosition: targetPosition,
+        defenderPosition: targetPosition,
       },
     };
 
-    await performAction(this.match, action, true);
+    try {
+      await performAction(this.match, action, false);
+    } catch (error) {
+      // Game engine rejected the action - this indicates a bug in the AI
+      throw new Error(
+        `AI BUG: Attack action rejected by game engine. Unit: ${unitId}, Path: ${JSON.stringify(path)}, Target: ${JSON.stringify(targetPosition)}. ` +
+          `Original error: ${error instanceof Error ? error.message : String(error)}`,
+      );
+    }
   }
 
   /**
@@ -82,7 +104,7 @@ export class PerformActionAdapter {
    */
   async buildUnit(unitType: string, position: Position): Promise<void> {
     const currentPlayer = this.match.getCurrentTurnPlayer();
-    
+
     const action: BuildAction = {
       type: "build",
       position: position,
@@ -90,29 +112,39 @@ export class PerformActionAdapter {
       unitType: unitType as any, // Type assertion needed due to specific unit type enum
     };
 
-    await performAction(this.match, action, true);
+    try {
+      await performAction(this.match, action, false);
+    } catch (error) {
+      // Game engine rejected the action - this indicates a bug in the AI
+      throw new Error(
+        `AI BUG: Build action rejected by game engine. Unit type: ${unitType}, Position: ${JSON.stringify(position)}. ` +
+          `Original error: ${error instanceof Error ? error.message : String(error)}`,
+      );
+    }
   }
 
   /**
    * Capture a property with a unit
    * @param unitId The unique ID of the capturing unit
-   * @param position The position of the property to capture
+   * @param path Array of positions forming the movement path to the property
    */
-  async captureProperty(unitId: string, position: Position): Promise<void> {
-    // Extract position from unitId
-    const [type, x, y] = unitId.split("-");
-    const fromPosition: Position = [parseInt(x), parseInt(y)];
-    
-    const unit = this.match.getUnit(fromPosition);
-    if (!unit) {
-      throw new Error(`No unit found with ID ${unitId}`);
+  async captureProperty(unitId: string, path: Position[]): Promise<void> {
+    // Extract position from unitId (format: "x,y")
+    const parts = unitId.split(",");
+
+    if (parts.length !== 2) {
+      throw new Error(`Invalid unit ID format: ${unitId}. Expected "x,y"`);
     }
 
-    // Create path to move to the property
-    const path = fromPosition[0] === position[0] && fromPosition[1] === position[1]
-      ? [fromPosition] // Already on the property
-      : [fromPosition, position]; // Move to the property
+    const fromPosition: Position = [parseInt(parts[0]), parseInt(parts[1])];
 
+    const unit = this.match.getUnit(fromPosition);
+
+    if (!unit) {
+      throw new Error(`Unit not found at position ${unitId}`);
+    }
+
+    // AI is responsible for calculating the path to the property
     const action: MoveAction = {
       type: "move",
       path: path,
@@ -120,7 +152,15 @@ export class PerformActionAdapter {
       subAction: { type: "ability" }, // Capture is an ability action
     };
 
-    await performAction(this.match, action, true);
+    try {
+      await performAction(this.match, action, false);
+    } catch (error) {
+      // Game engine rejected the action - this indicates a bug in the AI
+      throw new Error(
+        `AI BUG: Capture action rejected by game engine. Unit: ${unitId}, Path: ${JSON.stringify(path)}. ` +
+          `Original error: ${error instanceof Error ? error.message : String(error)}`,
+      );
+    }
   }
 
   /**
@@ -128,35 +168,45 @@ export class PerformActionAdapter {
    */
   async endTurn(): Promise<void> {
     const currentPlayer = this.match.getCurrentTurnPlayer();
-    
+
     const action: PassTurnAction = {
       type: "passTurn",
       playerId: currentPlayer.data.id,
     };
 
-    await performAction(this.match, action, true);
+    try {
+      await performAction(this.match, action, false);
+    } catch (error) {
+      // Game engine rejected the action - this indicates a bug in the AI
+      throw new Error(
+        `AI BUG: End turn action rejected by game engine. ` +
+          `Original error: ${error instanceof Error ? error.message : String(error)}`,
+      );
+    }
   }
 
   /**
    * Load a unit into a transport
    * @param unitId The unique ID of the unit to load
-   * @param transportId The unique ID of the transport
+   * @param path Array of positions forming the movement path to the transport
    */
-  async loadUnit(unitId: string, transportId: string): Promise<void> {
-    // Extract positions from IDs
-    const [unitType, ux, uy] = unitId.split("-");
-    const [transportType, tx, ty] = transportId.split("-");
-    const unitPos: Position = [parseInt(ux), parseInt(uy)];
-    const transportPos: Position = [parseInt(tx), parseInt(ty)];
-    
-    const unit = this.match.getUnit(unitPos);
-    if (!unit) {
-      throw new Error(`No unit found with ID ${unitId}`);
+  async loadUnit(unitId: string, path: Position[]): Promise<void> {
+    // Extract position from unitId (format: "x,y")
+    const unitParts = unitId.split(",");
+
+    if (unitParts.length !== 2) {
+      throw new Error(`Invalid unit ID format: ${unitId}. Expected "x,y"`);
     }
 
-    // Move to transport and join
-    const path = [unitPos, transportPos];
-    
+    const unitPos: Position = [parseInt(unitParts[0]), parseInt(unitParts[1])];
+
+    const unit = this.match.getUnit(unitPos);
+
+    if (!unit) {
+      throw new Error(`Unit not found at position ${unitId}`);
+    }
+
+    // AI is responsible for calculating the path to the transport
     const action: MoveAction = {
       type: "move",
       path: path,
@@ -164,65 +214,66 @@ export class PerformActionAdapter {
       subAction: { type: "wait" }, // Join happens automatically when moving onto transport
     };
 
-    await performAction(this.match, action, true);
+    try {
+      await performAction(this.match, action, false);
+    } catch (error) {
+      // Game engine rejected the action - this indicates a bug in the AI
+      throw new Error(
+        `AI BUG: Load unit action rejected by game engine. Unit: ${unitId}, Path: ${JSON.stringify(path)}. ` +
+          `Original error: ${error instanceof Error ? error.message : String(error)}`,
+      );
+    }
   }
 
   /**
    * Unload units from a transport
    * @param transportId The unique ID of the transport
-   * @param unitPosition The position where to unload the first unit
-   * @param dropPosition The position where to drop the unit
+   * @param path Array of positions forming the movement path for the transport
+   * @param unitIndices Array of indices of units to unload
+   * @param dropPositions Array of positions where to drop the units
    */
   async unloadUnit(
     transportId: string,
-    unitPosition: Position,
-    dropPosition: Position
+    path: Position[],
+    unitIndices: number[],
+    dropPositions: Position[],
   ): Promise<void> {
-    // Extract position from transportId
-    const [type, x, y] = transportId.split("-");
-    const transportPos: Position = [parseInt(x), parseInt(y)];
-    
-    const transport = this.match.getUnit(transportPos);
-    if (!transport) {
-      throw new Error(`No transport found with ID ${transportId}`);
+    // Extract position from transportId (format: "x,y")
+    const parts = transportId.split(",");
+
+    if (parts.length !== 2) {
+      throw new Error(`Invalid unit ID format: ${transportId}. Expected "x,y"`);
     }
 
-    // Move transport to unload position if needed
-    const path = transportPos[0] === unitPosition[0] && transportPos[1] === unitPosition[1]
-      ? [transportPos]
-      : [transportPos, unitPosition];
+    const transportPos: Position = [parseInt(parts[0]), parseInt(parts[1])];
 
+    const transport = this.match.getUnit(transportPos);
+
+    if (!transport) {
+      throw new Error(`Transport not found at position ${transportId}`);
+    }
+
+    // AI is responsible for calculating the path and unload positions
     const action: MoveAction = {
       type: "move",
       path: path,
       playerId: transport.player.data.id,
       subAction: {
         type: "unloadWait",
-        unitIndices: [0], // Unload first unit
-        dropPositions: [dropPosition],
+        unitIndices: unitIndices,
+        dropPositions: dropPositions,
       },
     };
 
-    await performAction(this.match, action, true);
-  }
-
-  /**
-   * Helper method to convert AI position to game position
-   */
-  private toGamePosition(aiPos: AIPosition): Position {
-    return [aiPos[0], aiPos[1]];
-  }
-
-  /**
-   * Helper method to check if an action is valid
-   * This can be extended to add validation logic
-   */
-  async isActionValid(action: any): Promise<boolean> {
-    // Simplified validation - in reality would check:
-    // - Unit movement range
-    // - Valid targets
-    // - Resource availability
-    // - Turn order
-    return true;
+    try {
+      await performAction(this.match, action, false);
+    } catch (error) {
+      // Game engine rejected the action - this indicates a bug in the AI
+      throw new Error(
+        `AI BUG: Unload action rejected by game engine. Transport: ${transportId}, Path: ${JSON.stringify(path)}, ` +
+          `Indices: ${JSON.stringify(unitIndices)}, Drop positions: ${JSON.stringify(dropPositions)}. ` +
+          `Original error: ${error instanceof Error ? error.message : String(error)}`,
+      );
+    }
   }
 }

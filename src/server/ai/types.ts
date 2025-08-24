@@ -1,12 +1,12 @@
 /**
  * AI Game State Representation
- * 
+ *
  * These types represent a simplified, immutable game state
  * optimized for AI decision-making and minimax algorithms.
  * They are decoupled from the game engine implementation.
  */
 
-export interface AIGameState {
+export type AIGameState = {
   currentPlayerIndex: number;
   players: AIPlayer[];
   units: AIUnit[];
@@ -15,9 +15,9 @@ export interface AIGameState {
   turn: number;
   weather?: AIWeather;
   fogOfWar: boolean;
-}
+};
 
-export interface AIPlayer {
+export type AIPlayer = {
   id: string;
   index: number;
   teamIndex: number;
@@ -26,9 +26,9 @@ export interface AIPlayer {
   coName?: string;
   coPowerCharge?: number;
   coPowerActive?: boolean;
-}
+};
 
-export interface AIUnit {
+export type AIUnit = {
   id: string;
   type: string;
   playerIndex: number;
@@ -39,24 +39,24 @@ export interface AIUnit {
   isReady: boolean;
   captureProgress?: number;
   loadedUnits?: string[]; // Unit IDs that are loaded in this transport
-}
+};
 
-export interface AITile {
+export type AITile = {
   position: AIPosition;
   type: string;
   ownerIndex?: number; // Player index that owns this property
   capturePoints?: number; // Remaining capture points for capturable tiles
   variant?: string; // For tiles with multiple visual variants
-}
+};
 
-export interface AIWeather {
+export type AIWeather = {
   type: "clear" | "rain" | "snow";
   daysRemaining: number;
-}
+};
 
 export type AIPosition = [number, number]; // [x, y]
 
-export interface AIAction {
+export type AIAction = {
   type: "move" | "attack" | "build" | "capture" | "load" | "unload" | "endTurn";
   unitId?: string;
   from?: AIPosition;
@@ -64,12 +64,12 @@ export interface AIAction {
   targetPosition?: AIPosition;
   unitType?: string; // For build actions
   unloadPositions?: AIPosition[]; // For unload actions
-}
+};
 
 /**
  * Result of evaluating a game state
  */
-export interface AIStateEvaluation {
+export type AIStateEvaluation = {
   score: number;
   factors: {
     unitValue: number;
@@ -77,7 +77,7 @@ export interface AIStateEvaluation {
     positionAdvantage: number;
     economicAdvantage: number;
   };
-}
+};
 
 /**
  * Utility functions for working with positions
@@ -92,7 +92,7 @@ export function getManhattanDistance(pos1: AIPosition, pos2: AIPosition): number
 
 export function isPositionInBounds(
   position: AIPosition,
-  mapSize: { width: number; height: number }
+  mapSize: { width: number; height: number },
 ): boolean {
   return (
     position[0] >= 0 &&

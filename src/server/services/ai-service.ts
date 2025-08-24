@@ -19,20 +19,20 @@ const aiProcessingMatches = new Set<string>();
 
 /**
  * Example of how to use the new AI adapter (for future minimax implementation):
- * 
+ *
  * const runAiTurnWithAdapter = async (matchId: string): Promise<void> => {
  *   const match = matchStore.get(matchId);
  *   if (!match) return;
- * 
+ *
  *   // Convert to AI state representation
  *   const aiState = StateConverter.toAIState(match);
- *   
+ *
  *   // Create adapter for executing actions
  *   const adapter = new PerformActionAdapter(match);
- *   
+ *
  *   // Run minimax algorithm to find best action
  *   const bestAction = await findBestAction(aiState); // Future minimax implementation
- *   
+ *
  *   // Execute the action through the adapter
  *   switch (bestAction.type) {
  *     case "move":
@@ -109,6 +109,7 @@ export const runAiTurn = async (matchId: string): Promise<void> => {
       // Phase 3: Pass turn
       console.log(`AI completed ${actionCount} actions, passing turn`);
     }
+
     await passTurn(match, currentPlayer);
   } catch (error) {
     console.error(`AI turn failed for match ${matchId}:`, error);

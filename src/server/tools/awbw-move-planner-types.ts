@@ -2,20 +2,16 @@
  * Type definitions for AWBW Move Planner JSON export format
  */
 
-export interface AWBWMovePlannerExport {
+export type AWBWMovePlannerExport = {
   plannerName: string;
   buildingsState: AWBWBuildingsState;
   unitsState: Record<string, AWBWUnit>;
   fogArray: unknown[]; // Not needed for import
-}
+};
 
-export interface AWBWBuildingsState {
-  [x: string]: {
-    [y: string]: AWBWBuilding | AWBWBuilding[];
-  };
-}
+export type AWBWBuildingsState = Record<string, Record<string, AWBWBuilding | AWBWBuilding[]>>;
 
-export interface AWBWBuilding {
+export type AWBWBuilding = {
   buildings_capture: number;
   buildings_id: number;
   buildings_x: number;
@@ -32,9 +28,9 @@ export interface AWBWBuilding {
   buildings_games_id?: number;
   buildings_last_capture?: number;
   buildings_last_updated?: string;
-}
+};
 
-export interface AWBWUnit {
+export type AWBWUnit = {
   units_id: number;
   units_games_id?: number;
   units_players_id: string | number;
@@ -62,36 +58,36 @@ export interface AWBWUnit {
   countries_code: string;
   generic_id?: number;
   moved?: number;
-}
+};
 
 // Unit name mapping from AWBW to WarsWorld
 export const awbwUnitNameToWWType: Record<string, string> = {
-  "Infantry": "infantry",
-  "Mech": "mech",
-  "Recon": "recon",
-  "Tank": "tank",
-  "APC": "apc",
-  "Artillery": "artillery",
+  Infantry: "infantry",
+  Mech: "mech",
+  Recon: "recon",
+  Tank: "tank",
+  APC: "apc",
+  Artillery: "artillery",
   "Anti-Air": "antiAir",
-  "Missile": "missile",
-  "Rocket": "rocket",
+  Missile: "missile",
+  Rocket: "rocket",
   "Medium Tank": "mediumTank",
   "Md Tank": "mediumTank",
   "Neo Tank": "neoTank",
   "Mega Tank": "megaTank",
-  "Megatank": "megaTank",
+  Megatank: "megaTank",
   "T-Copter": "transportCopter",
   "B-Copter": "battleCopter",
-  "Fighter": "fighter",
-  "Bomber": "bomber",
-  "Stealth": "stealth",
+  Fighter: "fighter",
+  Bomber: "bomber",
+  Stealth: "stealth",
   "Black Bomb": "blackBomb",
   "Black Boat": "blackBoat",
-  "Lander": "lander",
-  "Cruiser": "cruiser",
-  "Sub": "sub",
-  "Battleship": "battleship",
-  "Carrier": "carrier",
-  "Piperunner": "pipeRunner",
+  Lander: "lander",
+  Cruiser: "cruiser",
+  Sub: "sub",
+  Battleship: "battleship",
+  Carrier: "carrier",
+  Piperunner: "pipeRunner",
   "Pipe Runner": "pipeRunner",
 };

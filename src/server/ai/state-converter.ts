@@ -1,13 +1,6 @@
 import type { MatchWrapper } from "shared/wrappers/match";
 import type { UnitWrapper } from "shared/wrappers/unit";
-import type {
-  AIGameState,
-  AIPlayer,
-  AIUnit,
-  AITile,
-  AIPosition,
-  AIWeather,
-} from "./types";
+import type { AIGameState, AIPlayer, AIUnit, AITile, AIPosition, AIWeather } from "./types";
 
 /**
  * Converts between the game engine's MatchWrapper representation
@@ -19,7 +12,9 @@ export class StateConverter {
    */
   static toAIState(match: MatchWrapper): AIGameState {
     const currentPlayer = match.getCurrentTurnPlayer();
-    const currentPlayerIndex = match.getAllPlayers().findIndex((p) => p.data.id === currentPlayer?.data.id);
+    const currentPlayerIndex = match
+      .getAllPlayers()
+      .findIndex((p) => p.data.id === currentPlayer?.data.id);
 
     return {
       currentPlayerIndex: currentPlayerIndex >= 0 ? currentPlayerIndex : 0,
@@ -70,12 +65,14 @@ export class StateConverter {
 
       // Add ammo if unit has it
       const ammo = unit.getAmmo();
+
       if (ammo !== null) {
         aiUnit.ammo = ammo;
       }
 
       // Add loaded units for transports
       const loadedUnits = this.getLoadedUnits(unit);
+
       if (loadedUnits.length > 0) {
         aiUnit.loadedUnits = loadedUnits;
       }
@@ -100,8 +97,10 @@ export class StateConverter {
       // Add owner for capturable tiles
       if ("playerSlot" in changeableTile && changeableTile.playerSlot !== undefined) {
         const owner = match.getPlayerBySlot(changeableTile.playerSlot);
+
         if (owner) {
           const ownerIndex = match.getAllPlayers().findIndex((p) => p.data.id === owner.data.id);
+
           if (ownerIndex >= 0) {
             tile.ownerIndex = ownerIndex;
           }
@@ -135,6 +134,7 @@ export class StateConverter {
    */
   private static extractWeather(match: MatchWrapper): AIWeather | undefined {
     const weather = match.getCurrentWeather();
+
     if (weather === "clear") {
       return undefined;
     }
@@ -171,6 +171,7 @@ export class StateConverter {
       // Hidden units show full HP to AI (we assume AI can see everything for now)
       return 100;
     }
+
     return unit.data.stats.hp;
   }
 
@@ -183,10 +184,10 @@ export class StateConverter {
     }
 
     if (unit.data.stats.capturing) {
-      const tile = unit.match.changeableTiles.find((t) =>
-        t.position[0] === unit.data.position[0] && t.position[1] === unit.data.position[1]
+      const tile = unit.match.changeableTiles.find(
+        (t) => t.position[0] === unit.data.position[0] && t.position[1] === unit.data.position[1],
       );
-      
+
       if (tile && "capturePoints" in tile) {
         // Return how much capture progress has been made
         return 20 - tile.capturePoints;
@@ -201,13 +202,13 @@ export class StateConverter {
    */
   private static getLoadedUnits(unit: UnitWrapper): string[] {
     const loadedUnits: string[] = [];
-    
+
     if ("loadedUnit" in unit.data && unit.data.loadedUnit) {
       loadedUnits.push(
         this.getUnitId({
           data: unit.data.loadedUnit,
           // Create a minimal wrapper for ID generation
-        } as UnitWrapper)
+        } as UnitWrapper),
       );
     }
 
@@ -215,7 +216,7 @@ export class StateConverter {
       loadedUnits.push(
         this.getUnitId({
           data: unit.data.loadedUnit2,
-        } as UnitWrapper)
+        } as UnitWrapper),
       );
     }
 

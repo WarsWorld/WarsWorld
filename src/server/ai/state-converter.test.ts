@@ -49,13 +49,17 @@ function createTestMatch(config: {
 
   const mapWidth = config.mapWidth ?? 10;
   const mapHeight = config.mapHeight ?? 10;
-  
+
   // Create a 2D array of plain tiles for the map
-  const tiles = Array(mapHeight).fill(null).map(() => 
-    Array(mapWidth).fill(null).map(() => ({
-      type: "plain",
-    }))
-  );
+  const tiles = Array(mapHeight)
+    .fill(null)
+    .map(() =>
+      Array(mapWidth)
+        .fill(null)
+        .map(() => ({
+          type: "plain",
+        })),
+    );
 
   const map: WWMap = {
     id: "map1",
@@ -90,7 +94,7 @@ function createTestMatch(config: {
     config.players ?? defaultPlayers,
     config.units ?? [],
     UnitWrapper,
-    config.turn ?? 1
+    config.turn ?? 1,
   );
 
   return match;
@@ -120,7 +124,7 @@ describe("StateConverter", () => {
       const aiState = StateConverter.toAIState(match);
 
       expect(aiState.players).toHaveLength(2);
-      
+
       expect(aiState.players[0]).toEqual({
         id: "player1",
         index: 0,
@@ -175,7 +179,7 @@ describe("StateConverter", () => {
       const aiState = StateConverter.toAIState(match);
 
       expect(aiState.units).toHaveLength(2);
-      
+
       expect(aiState.units[0]).toEqual({
         id: "infantry-3-4",
         type: "infantry",
@@ -227,10 +231,8 @@ describe("StateConverter", () => {
 
       // Should have at least the changeable tiles
       expect(aiState.tiles.length).toBeGreaterThanOrEqual(3);
-      
-      const city = aiState.tiles.find(
-        (t) => t.position[0] === 2 && t.position[1] === 3
-      );
+
+      const city = aiState.tiles.find((t) => t.position[0] === 2 && t.position[1] === 3);
       expect(city).toEqual({
         position: [2, 3],
         type: "city",
@@ -238,9 +240,7 @@ describe("StateConverter", () => {
         capturePoints: 20,
       });
 
-      const base = aiState.tiles.find(
-        (t) => t.position[0] === 7 && t.position[1] === 8
-      );
+      const base = aiState.tiles.find((t) => t.position[0] === 7 && t.position[1] === 8);
       expect(base).toEqual({
         position: [7, 8],
         type: "base",
@@ -313,10 +313,10 @@ describe("StateConverter", () => {
 
     it("should extract weather information", () => {
       const match = createTestMatch({});
-      
+
       // Mock weather state
       match.setWeather("rain", 3);
-      
+
       const aiState = StateConverter.toAIState(match);
 
       expect(aiState.weather).toEqual({
@@ -327,7 +327,7 @@ describe("StateConverter", () => {
 
     it("should return undefined weather for clear weather", () => {
       const match = createTestMatch({});
-      
+
       // Default weather is clear
       const aiState = StateConverter.toAIState(match);
 
@@ -370,7 +370,7 @@ describe("StateConverter", () => {
     it("should deep clone game state", async () => {
       const match = createTestMatch({});
       const aiState = StateConverter.toAIState(match);
-      
+
       const { cloneGameState } = await import("./types");
       const cloned = cloneGameState(aiState);
 
@@ -393,7 +393,7 @@ describe("StateConverter", () => {
 
     it("should check position equality", async () => {
       const { isSamePosition } = await import("./types");
-      
+
       expect(isSamePosition([1, 2], [1, 2])).toBe(true);
       expect(isSamePosition([1, 2], [2, 1])).toBe(false);
       expect(isSamePosition([0, 0], [0, 0])).toBe(true);
@@ -401,7 +401,7 @@ describe("StateConverter", () => {
 
     it("should calculate Manhattan distance", async () => {
       const { getManhattanDistance } = await import("./types");
-      
+
       expect(getManhattanDistance([0, 0], [0, 0])).toBe(0);
       expect(getManhattanDistance([0, 0], [3, 4])).toBe(7);
       expect(getManhattanDistance([5, 5], [3, 8])).toBe(5);
@@ -410,7 +410,7 @@ describe("StateConverter", () => {
     it("should check if position is in bounds", async () => {
       const { isPositionInBounds } = await import("./types");
       const mapSize = { width: 10, height: 10 };
-      
+
       expect(isPositionInBounds([0, 0], mapSize)).toBe(true);
       expect(isPositionInBounds([9, 9], mapSize)).toBe(true);
       expect(isPositionInBounds([10, 0], mapSize)).toBe(false);
@@ -428,21 +428,24 @@ function describe(name: string, fn: () => void) {
 
 function it(name: string, fn: () => void | Promise<void>) {
   const result = fn();
+
   if (result instanceof Promise) {
     result.then(
       () => console.log(`  ✓ ${name}`),
       (error) => {
         console.error(`  ✗ ${name}`);
+
         if (error instanceof Error) {
           console.error(`    ${error.message}`);
         }
-      }
+      },
     );
   } else {
     try {
       console.log(`  ✓ ${name}`);
     } catch (error) {
       console.error(`  ✗ ${name}`);
+
       if (error instanceof Error) {
         console.error(`    ${error.message}`);
       }
@@ -466,6 +469,7 @@ function expect<T>(actual: T) {
       if (!Array.isArray(actual)) {
         throw new Error(`Expected array but got ${typeof actual}`);
       }
+
       if (actual.length !== expected) {
         throw new Error(`Expected length ${expected} but got ${actual.length}`);
       }
@@ -474,6 +478,7 @@ function expect<T>(actual: T) {
       if (typeof actual !== "number") {
         throw new Error(`Expected number but got ${typeof actual}`);
       }
+
       if (actual < expected) {
         throw new Error(`Expected ${actual} to be >= ${expected}`);
       }
@@ -489,7 +494,7 @@ function expect<T>(actual: T) {
 // Run tests if this file is executed directly
 async function runTests() {
   console.log("Running StateConverter tests...");
-  
+
   // Basic conversion tests
   const match1 = createTestMatch({
     turn: 5,
@@ -499,34 +504,38 @@ async function runTests() {
   });
   const aiState1 = StateConverter.toAIState(match1);
   console.log("✓ Basic match conversion test passed");
-  
+
   // Player conversion test
   const match2 = createTestMatch({});
   const aiState2 = StateConverter.toAIState(match2);
   console.log("✓ Player conversion test passed");
-  
+
   // Utility function tests
-  const { isSamePosition, getManhattanDistance, isPositionInBounds, cloneGameState } = await import("./types");
-  
+  const { isSamePosition, getManhattanDistance, isPositionInBounds, cloneGameState } = await import(
+    "./types"
+  );
+
   if (isSamePosition([1, 2], [1, 2]) && !isSamePosition([1, 2], [2, 1])) {
     console.log("✓ Position equality test passed");
   }
-  
+
   if (getManhattanDistance([0, 0], [3, 4]) === 7) {
     console.log("✓ Manhattan distance test passed");
   }
-  
+
   const mapSize = { width: 10, height: 10 };
+
   if (isPositionInBounds([5, 5], mapSize) && !isPositionInBounds([10, 0], mapSize)) {
     console.log("✓ Position bounds test passed");
   }
-  
+
   const cloned = cloneGameState(aiState2);
   aiState2.turn = 999;
+
   if (cloned.turn === 1) {
     console.log("✓ Deep clone test passed");
   }
-  
+
   console.log("\nAll tests complete!");
 }
 
