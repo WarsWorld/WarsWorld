@@ -4,7 +4,7 @@ import { defineConfig, devices } from "@playwright/test";
  * See https://playwright.dev/docs/test-configuration.
  */
 export default defineConfig({
-  testDir: "./tests/e2e",
+  testDir: "./src/tests/e2e",
   fullyParallel: false,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
@@ -36,6 +36,6 @@ export default defineConfig({
     },
   ],
 
-  globalSetup: "./tests/helpers/global-setup.ts",
-  globalTeardown: "./tests/helpers/global-teardown.ts",
+  globalSetup: "./src/tests/helpers/global-setup.ts",
+  globalTeardown: "./src/tests/helpers/global-teardown.ts",
 });

@@ -1,7 +1,7 @@
 /**
  * Script to export fixtures from development database to static JSON files
  * This is a one-time export script to bootstrap test data
- * Run with: npx tsx tests/fixtures/export-from-dev-db.ts
+ * Run with: npx tsx src/tests/fixtures/export-from-dev-db.ts
  * 
  * After running this script, the exported JSON files should be committed to git
  * and used as static test fixtures. The development database can change,

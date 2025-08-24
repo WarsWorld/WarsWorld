@@ -31,7 +31,7 @@ test.describe("AWBW Map Import Test", () => {
     console.log("📁 Importing AWBW map using fixtures...");
     
     // Run the import script and capture output
-    const scriptPath = path.join(__dirname, "../../src/server/tasks/import-and-play-awbw-map.ts");
+    const scriptPath = path.join(__dirname, "../../server/tasks/import-and-play-awbw-map.ts");
     const output = execSync(
       `npx tsx ${scriptPath} ${mapPath} ${movePlannerPath}`,
       { encoding: "utf-8" }

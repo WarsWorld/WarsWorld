@@ -16,7 +16,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // Load fixtures
-const fixturePath = path.join(__dirname, "../../tests/fixtures/awbw-move-planner-sample.json");
+const fixturePath = path.join(__dirname, "./fixtures/awbw-move-planner-sample.json");
 const fixtureData: AWBWMovePlannerExport = JSON.parse(fs.readFileSync(fixturePath, "utf-8"));
 
 // Load 2-player move planner data

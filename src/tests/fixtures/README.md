@@ -29,7 +29,7 @@ To update fixtures with new data from the development database:
 npm run test:fixtures:export
 
 # 3. Commit the updated JSON files
-git add tests/fixtures/*.json
+git add src/tests/fixtures/*.json
 git commit -m "Update test fixtures"
 ```
 
