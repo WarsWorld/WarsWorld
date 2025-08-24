@@ -422,7 +422,10 @@ async function runTests() {
           // Use loadUnit to load infantry into APC
           const infantryId = `${infantry2.data.position[0]},${infantry2.data.position[1]}`;
           // Path for infantry to move from [4,1] to APC at [3,2]
-          const loadPath: Position[] = [[4, 1], [3, 2]];
+          const loadPath: Position[] = [
+            [4, 1],
+            [3, 2],
+          ];
 
           const adapter3b = new PerformActionAdapter(match3b);
 

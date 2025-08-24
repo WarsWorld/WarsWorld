@@ -13,17 +13,17 @@ export const createTRPCwebSocketServer = (wssConfig: ServerOptions) => {
   const gracefulShutdown = () => {
     console.log("Shutting down WebSocket server...");
     handler.broadcastReconnectNotification();
-    
+
     // Close all active connections
     wss.clients.forEach((client) => {
       client.terminate();
     });
-    
+
     wss.close(() => {
       console.log("WebSocket server closed");
       process.exit(0);
     });
-    
+
     // Force exit after timeout if server doesn't close
     setTimeout(() => {
       console.error("Could not close connections in time, forcefully shutting down");
@@ -33,10 +33,10 @@ export const createTRPCwebSocketServer = (wssConfig: ServerOptions) => {
 
   // SIGTERM is sent by process managers
   process.on("SIGTERM", gracefulShutdown);
-  
+
   // SIGINT is sent by Ctrl+C
   process.on("SIGINT", gracefulShutdown);
-  
+
   // Prevent multiple handlers from being registered
   process.once("SIGUSR2", gracefulShutdown);
 

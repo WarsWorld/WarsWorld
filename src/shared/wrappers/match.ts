@@ -57,35 +57,43 @@ export class MatchWrapper<
   ) {
     console.log(`[MatchWrapper] Creating match ${id}`);
     console.log(`[MatchWrapper] Number of players: ${players.length}`);
-    console.log(`[MatchWrapper] Player slots: ${players.map(p => p.slot).join(', ')}`);
+    console.log(`[MatchWrapper] Player slots: ${players.map((p) => p.slot).join(", ")}`);
     console.log(`[MatchWrapper] Number of units: ${units.length}`);
-    
+
     this.map = new MapWrapper(map);
     players.forEach((player) => this.addUnwrappedPlayer(player));
-    
+
     // Debug unit creation
     console.log(`[MatchWrapper] Creating unit wrappers...`);
-    const unitsBySlot = units.reduce((acc, unit) => {
-      const slot = unit.playerSlot;
-      acc[slot] = (acc[slot] || 0) + 1;
-      return acc;
-    }, {} as Record<number, number>);
+    const unitsBySlot = units.reduce(
+      (acc, unit) => {
+        const slot = unit.playerSlot;
+        acc[slot] = (acc[slot] || 0) + 1;
+        return acc;
+      },
+      {} as Record<number, number>,
+    );
     console.log(`[MatchWrapper] Units by player slot:`, unitsBySlot);
-    
+
     try {
       this.units = units.map((unit, index) => {
         if (!this.getPlayerBySlot(unit.playerSlot)) {
-          console.error(`[MatchWrapper] ERROR: No player found for unit at index ${index} with playerSlot ${unit.playerSlot}`);
+          console.error(
+            `[MatchWrapper] ERROR: No player found for unit at index ${index} with playerSlot ${unit.playerSlot}`,
+          );
           console.error(`[MatchWrapper] Unit details:`, JSON.stringify(unit));
         }
+
         return new UnitWrapperClass(unit, this);
       });
     } catch (error) {
       console.error(`[MatchWrapper] Failed to create unit wrappers:`, error);
-      console.error(`[MatchWrapper] Available player slots: ${players.map(p => p.slot).join(', ')}`);
+      console.error(
+        `[MatchWrapper] Available player slots: ${players.map((p) => p.slot).join(", ")}`,
+      );
       throw error;
     }
-    
+
     console.log(`[MatchWrapper] Successfully created ${this.units.length} unit wrappers`);
   }
 

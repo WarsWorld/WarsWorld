@@ -181,7 +181,7 @@ describe("StateConverter", () => {
       expect(aiState.units).toHaveLength(2);
 
       expect(aiState.units[0]).toEqual({
-        id: "infantry-3-4",
+        id: "3,4",
         type: "infantry",
         playerIndex: 0,
         position: [3, 4],
@@ -192,7 +192,7 @@ describe("StateConverter", () => {
       });
 
       expect(aiState.units[1]).toEqual({
-        id: "tank-5-6",
+        id: "5,6",
         type: "tank",
         playerIndex: 1,
         position: [5, 6],
@@ -263,7 +263,7 @@ describe("StateConverter", () => {
       const aiState = StateConverter.toAIState(match);
 
       expect(aiState.units[0]).toEqual({
-        id: "stealth-1-1",
+        id: "1,1",
         type: "stealth",
         playerIndex: 0,
         position: [1, 1],
@@ -308,7 +308,7 @@ describe("StateConverter", () => {
 
       const apc = aiState.units[0];
       expect(apc.type).toBe("apc");
-      expect(apc.loadedUnits).toEqual(["infantry-0-0"]);
+      expect(apc.loadedUnits).toEqual(["0,0"]);
     });
 
     it("should extract weather information", () => {

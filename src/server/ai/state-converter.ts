@@ -149,9 +149,8 @@ export class StateConverter {
    * Get a unique ID for a unit
    */
   private static getUnitId(unit: UnitWrapper): string {
-    // Use position and type as a simple ID
-    // In a real implementation, units might have actual IDs
-    return `${unit.data.type}-${unit.data.position[0]}-${unit.data.position[1]}`;
+    // Use position-only format to match ActionAdapter expectations
+    return `${unit.data.position[0]},${unit.data.position[1]}`;
   }
 
   /**
