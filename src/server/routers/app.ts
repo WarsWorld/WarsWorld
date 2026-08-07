@@ -1,6 +1,6 @@
+import { mapRouter } from "../maps/router";
 import { router } from "../trpc/trpc-setup";
 import { actionRouter } from "./action";
-import { mapRouter } from "./map";
 import { matchRouter } from "./match";
 import { articleRouter } from "./article";
 import { userRouter } from "./user";
