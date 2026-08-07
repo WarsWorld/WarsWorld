@@ -1,6 +1,7 @@
 import type { Match, WWMap } from "@prisma/client";
 import { prisma } from "server/prisma/prisma-client";
 import { MatchWrapper } from "shared/wrappers/match";
+import { logger } from "shared/utils/logger";
 import { pageMatchIndex } from "./page-match-index";
 import { playerMatchIndex } from "./player-match-index";
 import type { ChangeableTile } from "../shared/types/server-match-state";
@@ -74,7 +75,7 @@ export class MatchStore {
   }
 
   async rebuild() {
-    console.log("Rebuilding server state...");
+    logger.info("Rebuilding server state...");
 
     const rawMatches = await prisma.match.findMany({
       where: {
@@ -99,7 +100,7 @@ export class MatchStore {
       });
     });
 
-    console.log("Rebuilding server state done.");
+    logger.info("Rebuilding server state done.");
   }
 
   get(matchId: Match["id"]) {

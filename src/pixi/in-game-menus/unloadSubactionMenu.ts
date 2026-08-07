@@ -165,11 +165,15 @@ export const createUnloadMenu = (
   };
 
   if (unloadPositions1 !== undefined && unloadPositions1.length > 0) {
+    // Captured so the narrowing survives into the handler: `unloadPositions1` is a `let`, and TS
+    // discards the enclosing guard's narrowing inside a callback.
+    const positions1 = unloadPositions1;
+
     menuElements[0].on("pointerdown", () => {
       const unloadTilesContainer = new Container();
       unloadTilesContainer.name = "unloadUnitsBox";
 
-      for (const unloadPos of unloadPositions1) {
+      for (const unloadPos of positions1) {
         const unloadTile = tileConstructor(unloadPos, "#43d9e4");
         unloadTile.eventMode = "static";
 
@@ -197,12 +201,15 @@ export const createUnloadMenu = (
   }
 
   if (unloadPositions2 !== undefined && unloadPositions2.length > 0) {
+    // Captured for the same reason as `positions1` above.
+    const positions2 = unloadPositions2;
     const meIndex = unloadPositions1 === undefined ? 0 : 1; //if unit1 wasnt unloadable, the index will be 0
+
     menuElements[meIndex].on("pointerdown", () => {
       const unloadTilesContainer = new Container();
       unloadTilesContainer.name = "unloadUnitsBox";
 
-      for (const unloadPos of unloadPositions2) {
+      for (const unloadPos of positions2) {
         const unloadTile = tileConstructor(unloadPos, "#43d9e4");
         unloadTile.eventMode = "static";
 
