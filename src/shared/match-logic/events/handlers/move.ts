@@ -1,4 +1,5 @@
 import { DispatchableError } from "shared/DispatchedError";
+import { logger } from "shared/utils/logger";
 import { unitPropertiesMap } from "shared/match-logic/game-constants/unit-properties";
 import type { MoveAction } from "shared/schemas/action";
 import { getFinalPositionSafe, isSamePosition } from "shared/schemas/position";
@@ -22,7 +23,7 @@ export const moveActionToEvent = (
     throw new DispatchableError("You don't own this unit");
   }
 
-  console.log("Unit trying to move:", unit.data);
+  logger.debug("Unit trying to move:", unit.data);
 
   if (!unit.data.isReady) {
     throw new DispatchableError("Trying to move a waited unit");

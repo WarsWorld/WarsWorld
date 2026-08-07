@@ -2,7 +2,7 @@ import { TRPCClientError } from "@trpc/client";
 import { trpc } from "frontend/utils/trpc-client";
 import type { Dispatch, FormEvent, SetStateAction } from "react";
 import { useState } from "react";
-import { passwordSchema, signUpSchema } from "shared/schemas/auth";
+import { passwordSchema, signUpSchema } from "./signup-schema";
 import { ZodError } from "zod";
 import SquareButton from "../layout/SquareButton";
 import ErrorSuccessBlock from "../layout/forms/ErrorSuccessBlock";

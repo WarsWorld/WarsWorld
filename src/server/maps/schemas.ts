@@ -1,6 +1,6 @@
 import { z } from "zod";
-import { tileSchema } from "./tile";
-import { unitSchema } from "./unit";
+import { tileSchema } from "shared/schemas/tile";
+import { unitSchema } from "shared/schemas/unit";
 
 const tileRowSchema = z.array(tileSchema).nonempty().max(99);
 

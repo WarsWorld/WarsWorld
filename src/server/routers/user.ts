@@ -4,8 +4,8 @@ import { prisma } from "server/prisma/prisma-client";
 import { authMiddleware } from "server/trpc/middleware/auth";
 import { playerWithoutCurrentMiddleware } from "server/trpc/middleware/player";
 import { playerBaseProcedure, publicBaseProcedure, router } from "server/trpc/trpc-setup";
-import { signUpSchema } from "shared/schemas/auth";
-import { preferencesSchema } from "shared/schemas/preferences";
+import { signUpSchema } from "server/auth/schemas";
+import { preferencesSchema } from "server/players/schemas";
 import { z } from "zod";
 
 export const userRouter = router({

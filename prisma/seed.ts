@@ -9,7 +9,7 @@ import matter from "gray-matter";
 import { hashPassword } from "server/hashPassword";
 import { importAWBWMap } from "server/tools/map-importer-utilities";
 import { developmentPlayerNamePrefix as Prefix } from "server/trpc/middleware/player";
-import { articleSchema } from "shared/schemas/article";
+import { articleSchema } from "server/articles/schemas";
 
 const prisma = new PrismaClient();
 
