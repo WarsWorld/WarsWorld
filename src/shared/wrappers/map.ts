@@ -1,4 +1,4 @@
-import type { WWMap } from "@prisma/client";
+import type { WWMap } from "shared/types/domain-entities";
 import type { Position } from "shared/schemas/position";
 
 export class MapWrapper {
