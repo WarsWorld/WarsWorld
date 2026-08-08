@@ -1,11 +1,22 @@
-import { prisma } from "server/prisma/prisma-client";
-import type { CreatableMap } from "shared/schemas/map";
-import { mapSchema } from "shared/schemas/map";
+import type { PrismaClient } from "@prisma/client";
 import type { PlayerSlot } from "shared/schemas/player-slot";
 import type { Tile, TileType } from "shared/schemas/tile";
 import { isNotNeutralProperty, isUnitProducingProperty } from "shared/schemas/tile";
-import { publicBaseProcedure, router } from "../trpc/trpc-setup";
+import type { CreatableMap } from "./schemas";
 
+/** Tile types surfaced in the map list's property breakdown. */
+const propertyTileTypes = [
+  "city",
+  "base",
+  "airport",
+  "commtower",
+  "lab",
+  "port",
+] satisfies TileType[];
+
+type PropertyStatsType = Record<(typeof propertyTileTypes)[number], number>;
+
+/** Number of distinct player slots that own a producing property or a predeployed unit. */
 export const getPlayerAmountOfMap = (map: CreatableMap) => {
   const seenPlayerSlots: PlayerSlot[] = [];
 
@@ -27,24 +38,16 @@ export const getPlayerAmountOfMap = (map: CreatableMap) => {
 };
 
 /**
- * This is the list of tile types that are shown
- * on the map list.
+ * The `maps` feature: management (create/list) of the `WWMap` entity. It depends on the engine's
+ * tile/unit vocabulary but owns the map entity and its CRUD. Prisma access is trivial here, so it
+ * stays inline rather than behind a `dbo`.
  */
-const propertyTileTypes = [
-  "city",
-  "base",
-  "airport",
-  "commtower",
-  "lab",
-  "port",
-] satisfies TileType[];
+export class MapsUsecase {
+  constructor(private readonly db: PrismaClient) {}
 
-type PropertyStatsType = Record<(typeof propertyTileTypes)[number], number>;
-
-export const mapRouter = router({
-  getAll: publicBaseProcedure.query(async () => {
+  async listMaps() {
     // TODO pagination / filter / search
-    const allMaps = await prisma.wWMap.findMany();
+    const allMaps = await this.db.wWMap.findMany();
 
     return allMaps.map((map) => {
       const tiles = map.tiles as Tile[][];
@@ -70,8 +73,9 @@ export const mapRouter = router({
         created: map.createdAt,
       };
     });
-  }),
-  save: publicBaseProcedure.input(mapSchema).mutation(async ({ input }) => {
+  }
+
+  async createMap(input: CreatableMap) {
     const numberOfPlayers = getPlayerAmountOfMap(input);
 
     if (numberOfPlayers > 2) {
@@ -84,11 +88,11 @@ export const mapRouter = router({
       throw new Error("All rows of the map must have the same length");
     }
 
-    return prisma.wWMap.create({
+    return this.db.wWMap.create({
       data: {
         ...input,
         numberOfPlayers,
       },
     });
-  }),
-});
+  }
+}
