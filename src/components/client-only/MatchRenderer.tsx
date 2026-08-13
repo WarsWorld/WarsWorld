@@ -1,4 +1,5 @@
 "use client";
+import { logger } from "frontend/utils/logger";
 import { trpc } from "frontend/utils/trpc-client";
 import type { LoadedSpriteSheet } from "pixi/load-spritesheet";
 import { useEffect, useState } from "react";
@@ -103,7 +104,7 @@ export function MatchRenderer({ match, player, spriteSheets, turn, setTurn }: Pr
               matchId: match.id,
             })
             .catch((err) => {
-              console.log(err);
+              logger.error("passTurn failed:", err);
             });
         }}
       >

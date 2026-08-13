@@ -6,7 +6,7 @@ import {
   type ArticleCategories,
   articleSchema,
   articleCommentSchema,
-} from "shared/schemas/article";
+} from "server/articles/schemas";
 
 const bannedWords = ["heck", "frick", "oof", "swag", "amongus"];
 

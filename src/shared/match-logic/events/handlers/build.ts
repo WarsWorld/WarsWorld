@@ -158,4 +158,7 @@ export const applyBuildEvent = (match: MatchWrapper, event: BuildEvent) => {
 
   player.data.funds -= unitPropertiesMap[event.unitType].cost;
   player.addUnwrappedUnit(createUnitFromBuildEvent(player.data.slot, event));
+  // Mark that this player has produced a unit — this arms the "no units left = defeat" rule at the
+  // turn boundary (see applyPassTurnEvent). Before the first build, an empty board isn't a loss.
+  player.data.hasBuiltUnit = true;
 };

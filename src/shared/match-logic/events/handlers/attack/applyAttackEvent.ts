@@ -69,6 +69,15 @@ export const applyAttackEvent = (match: MatchWrapper, event: AttackEvent, positi
       attacker.setHp(event.attackerHP);
     }
   }
+
+  // A player who just lost their last unit is eliminated. Set the status HERE (in the apply step) so
+  // it survives an event-log replay — `event-to-emittable` also sets it, but that only runs on live
+  // emission, not on rebuild, which left game-over (derived from status) unreachable after a restart.
+  if (event.eliminationReason === "all-attacker-units-destroyed") {
+    attacker.player.data.status = "routed";
+  } else if (event.eliminationReason === "all-defender-units-destroyed") {
+    defender.player.data.status = "routed";
+  }
 };
 
 export const applyEmittableAttackEvent = (match: MatchWrapper, event: EmittableAttackEvent) => {

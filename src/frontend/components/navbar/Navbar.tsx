@@ -14,7 +14,6 @@ export function Navbar() {
 
   const windowWidth = useWindowWidth();
   const [showLinks, setShowLinks] = useState(false);
-  const [showMatchLinks, setShowMatchLinks] = useState(false);
   const [isMobileWidth, setIsMobileWidth] = useState(false);
   const isOpen = searchParams.has("authModalOpen");
 
@@ -84,13 +83,7 @@ export function Navbar() {
           </>
         ) : (
           <>
-            <NavGroup
-              showMatchLinks={showMatchLinks}
-              setShowMatchLinks={setShowMatchLinks}
-              setShowLinks={setShowLinks}
-              setIsOpen={setIsOpen}
-              isOpen={isOpen}
-            />
+            <NavGroup setIsOpen={setIsOpen} isOpen={isOpen} />
           </>
         )}
       </nav>

@@ -6,9 +6,7 @@ type Props = {
 };
 
 const navItemObject = [
-  { text: "YOUR GAMES", location: "/your-matches" },
-  { text: "CURRENT GAMES", location: "/your-matches#currentGames" },
-  { text: "COMPLETED GAMES", location: "/your-matches#completedGames" },
+  { text: "GAME", location: "/your-matches" },
   {
     text: "COMPETITION",
     location: "/",

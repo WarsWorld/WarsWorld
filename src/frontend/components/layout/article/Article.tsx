@@ -1,7 +1,7 @@
 import Banner from "frontend/components/layout/Banner";
 import Head from "next/head";
 import type { ArticleType } from "server/routers/article";
-import type { ArticleCommentsWithPlayer } from "shared/schemas/article";
+import type { ArticleCommentsWithPlayer } from "./article-types";
 import ArticleCommentSection from "./ArticleCommentSection";
 import ArticleContent from "./ArticleContent";
 
