@@ -46,6 +46,7 @@ export default function CreateMatch({ currentPlayer, setCurrentPlayer }: Props) 
     label: "No map selected",
     value: "",
   });
+  const [fogOfWar, setFogOfWar] = useState(false);
 
   // Fills the players Select when every time ownedplayers is changed
   useEffect(() => {
@@ -67,7 +68,7 @@ export default function CreateMatch({ currentPlayer, setCurrentPlayer }: Props) 
         bannedUnitTypes: [],
         captureLimit: 50,
         dayLimit: 50,
-        fogOfWar: false,
+        fogOfWar,
         fundsPerProperty: 1000,
         unitCapPerPlayer: 50,
         weatherSetting: "clear",
@@ -140,6 +141,15 @@ export default function CreateMatch({ currentPlayer, setCurrentPlayer }: Props) 
           <SquareButton onClick={() => void createMatchHandler()}>Create game</SquareButton>
         </div>
       </div>
+
+      <label className="@flex @items-center @justify-center @gap-2 @py-2 @select-none">
+        <input
+          type="checkbox"
+          checked={fogOfWar}
+          onChange={(event) => setFogOfWar(event.target.checked)}
+        />
+        Fog of War
+      </label>
     </div>
   );
 }

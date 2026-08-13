@@ -2,6 +2,7 @@ import { matchStore } from "server/match-store";
 import { prisma } from "server/prisma/prisma-client";
 import { mapMiddleware } from "server/trpc/middleware/map";
 import { playerBaseProcedure } from "server/trpc/trpc-setup";
+import { INITIAL_FUNDS } from "shared/match-logic/game-constants/funds";
 import { matchRulesSchema } from "shared/schemas/match-rules";
 import { z } from "zod";
 import { matchToFrontend } from "./util";
@@ -31,8 +32,8 @@ export const createMatchProcedure = playerBaseProcedure
               version: "AW2",
             },
             status: "alive",
-            //TODO: Handle funds correctly
-            funds: 0,
+            // Players start at zero; income is granted per turn (day 1 in applyMatchStartEvent).
+            funds: INITIAL_FUNDS,
             powerMeter: 0,
             timesPowerUsed: 0,
             army: "orange-star",

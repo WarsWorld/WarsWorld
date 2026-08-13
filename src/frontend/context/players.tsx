@@ -28,11 +28,19 @@ export const ProvidePlayers = ({ children }: { children: ReactNode }) => {
     if (data?.user && data !== user) {
       setUser(data);
 
-      // const ownedPlayer =
-      const player = data.ownedPlayers.at(0);
+      // Auto-select a player whenever the stored selection isn't usable: none chosen yet
+      // (`useLocalStorage` defaults to `null`, and "" also means unset), OR a stale id left over
+      // from another account that isn't among THIS user's owned players. Without the stale-id
+      // recovery, `currentPlayer` stays undefined and the match page is stuck on "Loading..."
+      // forever with no way to pick a valid player.
+      const ownedPlayers = data.ownedPlayers;
+      const hasUsableSelection =
+        currentPlayerId !== null &&
+        currentPlayerId !== "" &&
+        ownedPlayers.some((player) => player.id === currentPlayerId);
 
-      if (player !== undefined && currentPlayerId === "") {
-        setCurrentPlayerId(player.id);
+      if (ownedPlayers.length > 0 && !hasUsableSelection) {
+        setCurrentPlayerId(ownedPlayers[0].id);
       }
     }
   }, [data, currentPlayerId, setCurrentPlayerId, user]);

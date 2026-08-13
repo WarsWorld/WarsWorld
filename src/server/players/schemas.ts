@@ -1,6 +1,9 @@
 import { z } from "zod";
-import { coSchema } from "./co";
-import { unitTypeSchema } from "./unit";
+import { coSchema } from "shared/schemas/co";
+import { unitTypeSchema } from "shared/schemas/unit";
+
+// Player preferences are a `players` feature concern (not the game engine); the engine's co/unit
+// vocabulary is reused for the "favourite COs/units" fields. Moved out of src/shared.
 
 const favouriteGamesSchema = z.enum([
   "advance_wars_1",

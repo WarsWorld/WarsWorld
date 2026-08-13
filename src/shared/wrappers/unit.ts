@@ -1,5 +1,4 @@
 import { unitPropertiesMap } from "shared/match-logic/game-constants/unit-properties";
-import { clamp } from "shared/math-utils";
 import type { Position } from "shared/schemas/position";
 import { getNeighbourPositions, isSamePosition } from "shared/schemas/position";
 import type { UnitType, WWUnit } from "shared/schemas/unit";
@@ -9,6 +8,9 @@ import type { MatchWrapper } from "./match";
 import type { PlayerInMatchWrapper } from "./player-in-match";
 
 type ExtractUnit<T extends UnitType> = Extract<WWUnit, { type: T }>;
+
+/** Clamp `value` into the inclusive range [min, max]. */
+const clamp = (min: number, value: number, max: number) => Math.min(max, Math.max(min, value));
 
 export class UnitWrapper<
   Type extends UnitType = UnitType,
