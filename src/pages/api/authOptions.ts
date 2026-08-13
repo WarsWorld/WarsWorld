@@ -12,7 +12,7 @@ import DiscordProvider from "next-auth/providers/discord";
 import GithubProvider from "next-auth/providers/github";
 import GoogleProvider from "next-auth/providers/google";
 import { prisma } from "server/prisma/prisma-client";
-import { loginSchema } from "shared/schemas/auth";
+import { loginSchema } from "server/auth/schemas";
 import { z } from "zod";
 import WarsWorldAdapter from "./WarsWorldAdapter";
 

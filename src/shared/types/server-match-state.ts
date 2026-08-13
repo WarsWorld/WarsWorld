@@ -1,4 +1,3 @@
-import type { Player } from "@prisma/client";
 import type { COPowerState } from "shared/match-logic/co";
 import type { Army } from "shared/schemas/army";
 import type { COID } from "shared/schemas/co";
@@ -31,8 +30,8 @@ export type ChangeableTile = CapturableTile | LaunchableSiloTile | PipeSeamTile;
 export type PlayerInMatch = {
   slot: PlayerSlot;
   hasCurrentTurn?: boolean;
-  id: Player["id"];
-  name: Player["name"];
+  id: string;
+  name: string;
   ready?: boolean;
   coId: COID;
   status: "alive" | "routed" | "captured";

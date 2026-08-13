@@ -1,6 +1,7 @@
 import type { Match, WWMap } from "@prisma/client";
 import { prisma } from "server/prisma/prisma-client";
 import { MatchWrapper } from "shared/wrappers/match";
+import { logger } from "shared/utils/logger";
 import { pageMatchIndex } from "./page-match-index";
 import { playerMatchIndex } from "./player-match-index";
 import type { ChangeableTile } from "../shared/types/server-match-state";
@@ -74,7 +75,7 @@ export class MatchStore {
   }
 
   async rebuild() {
-    console.log("Rebuilding server state...");
+    logger.info("Rebuilding server state...");
 
     const rawMatches = await prisma.match.findMany({
       where: {
@@ -90,16 +91,27 @@ export class MatchStore {
 
     rawMatches.forEach((rawMatch) => {
       const match = this.createMatchAndIndex(rawMatch, rawMatch.map);
-      rawMatch.Event.forEach((dbEvent) => {
-        applyMainEventToMatch(match, dbEvent.content);
 
-        if (dbEvent.content.type === "move") {
-          applySubEventToMatch(match, dbEvent.content);
+      rawMatch.Event.forEach((dbEvent) => {
+        // Replaying the historical event log must not let a single stale/inconsistent event crash
+        // the whole server on boot — that would take down every match and the WS layer at once.
+        // Skip and log the offending event, and keep replaying the rest.
+        try {
+          applyMainEventToMatch(match, dbEvent.content);
+
+          if (dbEvent.content.type === "move") {
+            applySubEventToMatch(match, dbEvent.content);
+          }
+        } catch (error) {
+          console.warn(
+            `[rebuild] skipping unreplayable event #${dbEvent.index} in match ${rawMatch.id}:`,
+            error instanceof Error ? error.message : error,
+          );
         }
       });
     });
 
-    console.log("Rebuilding server state done.");
+    logger.info("Rebuilding server state done.");
   }
 
   get(matchId: Match["id"]) {

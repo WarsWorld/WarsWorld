@@ -5,6 +5,8 @@ import { pageMatchIndex } from "server/page-match-index";
 import { playerMatchIndex } from "server/player-match-index";
 import { prisma } from "server/prisma/prisma-client";
 import { DispatchableError } from "shared/DispatchedError";
+import { applyMainEventToMatch } from "shared/match-logic/events/apply-event-to-match";
+import { INITIAL_FUNDS } from "shared/match-logic/game-constants/funds";
 import { createMatchStartEvent } from "shared/match-logic/events/handlers/match-start";
 import type { Army } from "shared/schemas/army";
 import { armySchema } from "shared/schemas/army";
@@ -100,8 +102,8 @@ export const matchRouter = router({
         slot: input.playerSlot ?? slotToJoin,
         ready: false,
         coId: input.selectedCO,
-        //TODO: Handle funds correctly
-        funds: 10000,
+        // Players start at zero; income is granted per turn (day 1 in applyMatchStartEvent).
+        funds: INITIAL_FUNDS,
         timesPowerUsed: 0,
         powerMeter: 0,
         status: "alive",
@@ -211,7 +213,6 @@ export const matchRouter = router({
       if (allMatchSlotsReady(match)) {
         /**
          * TODO
-         * - give first player funds, maybe we need to everything that passTurn does?
          * - set up timer
          */
         match.status = "playing";
@@ -228,11 +229,18 @@ export const matchRouter = router({
 
           eventIndex = eventOnDB.index;
 
+          // Persist the pre-start snapshot (funds still at INITIAL_FUNDS). Day-1 income is applied
+          // by the matchStart event below and re-derived by replaying it on rebuild, so it must NOT
+          // be baked into this snapshot or it would be granted twice.
           await tx.match.update({
             where: { id: match.id },
             data: { playerState: newPlayerState, status: "playing" },
           });
         });
+
+        // Bring the in-memory match to the same state a rebuild would produce from the event log:
+        // grant the starting player their first turn's income.
+        applyMainEventToMatch(match, matchStartEvent);
 
         if (eventIndex !== undefined) {
           //@ts-expect-error emit needs to be updated

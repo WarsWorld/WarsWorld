@@ -4,6 +4,7 @@ import { type MutableRefObject } from "react";
 import type { MainAction } from "shared/schemas/action";
 import { /*baseTileSize,*/ renderedTileSize } from "../components/client-only/MatchRenderer";
 import type { Position } from "../shared/schemas/position";
+import { isSamePosition } from "../shared/schemas/position";
 import type { MatchWrapper } from "../shared/wrappers/match";
 import type { UnitWrapper } from "../shared/wrappers/unit";
 import type { BattleForecast } from "./interactiveTileFunctions";
@@ -31,6 +32,11 @@ export function renderAttackTiles(
   if (currentUnitClickedRef.current === null) {
     return attackTileContainer;
   }
+
+  // The tile the attack is launched from. It MUST match the origin used to compute the target
+  // tiles below, because the server measures range from the submitted path's final tile — if the
+  // two diverge, a target we highlight as valid gets rejected as "not in range".
+  const attackOrigin = attackingPosition ?? currentUnitClickedRef.current.data.position;
 
   const attackTiles = getAttackTargetTiles(match, currentUnitClickedRef.current, attackingPosition);
 
@@ -67,11 +73,16 @@ export function renderAttackTiles(
 
     attackTile.on("pointerdown", () => {
       if (currentUnitClickedRef.current !== null) {
-        //unit will not move if path is null (= not moving) or if it's indirect
+        // Only submit a move path when it actually ends at the tile these targets were computed
+        // for (the menu "move then Fire" flow). Otherwise — a direct unit attacking in place, an
+        // indirect unit (which can't move and fire), or a stale hover path — launch from the
+        // attack origin itself, keeping the submitted action consistent with the preview.
         const path =
-          pathRef.current && !currentUnitClickedRef.current.isIndirect()
+          !currentUnitClickedRef.current.isIndirect() &&
+          pathRef.current !== null &&
+          isSamePosition(pathRef.current[pathRef.current.length - 1], attackOrigin)
             ? pathRef.current
-            : [currentUnitClickedRef.current.data.position];
+            : [attackOrigin];
 
         console.log("sending action:", pos, path);
         void sendAction({
