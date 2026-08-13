@@ -1,4 +1,5 @@
 import type { Dispatch, SetStateAction } from "react";
+import CurrentPlayerSelect from "./CurrentPlayerSelect";
 import NavButton from "./NavButton";
 import { NavItem } from "./NavItem";
 import NavLoginLogout from "./NavLoginLogout";
@@ -63,7 +64,8 @@ export function NavGroup({ showMatchLinks, setShowMatchLinks, setIsOpen, isOpen 
           <NavItem key={item.text} text={item.text} location={item.location} />
         ))}
       </div>
-      <div className="@flex @h-12 @w-[15%] @justify-end @items-center @relative">
+      <div className="@flex @h-12 @w-[15%] @justify-end @items-center @relative @gap-3">
+        <CurrentPlayerSelect />
         <NavLoginLogout isOpen={isOpen} setIsOpen={setIsOpen} />
       </div>
     </>

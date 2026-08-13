@@ -122,7 +122,11 @@ export const actionRouter = router({
       //  emittableEvents[i] is from match.teams[i]. emittableEvents has one extra "no team"(spectator) at the end
       emittableEvents.forEach((emittableEvent: EmittableEvent | undefined) => {
         if (emittableEvent) {
-          match.teams[emittableEvent.teamIndex].players.forEach((player: PlayerInMatchWrapper) => {
+          // teamIndex is a team's logical index (-1 = spectators, who have no connected players).
+          // Look it up by index and skip when there's no such team, instead of match.teams[-1].
+          const team = match.teams.find((t) => t.index === emittableEvent.teamIndex);
+
+          team?.players.forEach((player: PlayerInMatchWrapper) => {
             emit(player.data.id, { ...emittableEvent, matchId: match.id });
           });
         }

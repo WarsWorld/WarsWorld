@@ -58,6 +58,12 @@ export const applyCOPowerEvent = (match: MatchWrapper, event: COPowerEvent) => {
     ++player.data.timesPowerUsed;
   }
 
+  // Activate the power for the rest of this player's turn — `passTurn` resets it to "no-power" at
+  // the start of their NEXT turn. THIS is what makes the ongoing hook-based effects take hold
+  // (firepower/defense/movement boosts, Sami's insta-capture, …); without it only the one-shot
+  // `instantEffect` below would run and every state-dependent effect would be silently inert.
+  player.data.COPowerState = event.isSuper ? "super-co-power" : "co-power";
+
   //event.positions are for rachel, sturm, von-bolt supers
   power.instantEffect?.(player, event.positions);
 

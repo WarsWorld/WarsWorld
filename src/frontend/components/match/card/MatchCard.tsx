@@ -130,10 +130,20 @@ export default function MatchCard({ match, inMatch }: matchData) {
       }
 
       {match.state != "setup" && match.players.length == 2 ? (
-        <Link href={`/match2/${match.id}`} className="btnMenu @inline-block">
-          {" "}
-          Enter Match
-        </Link>
+        <div className="@flex @items-center @justify-center @gap-2 @mt-1">
+          <span
+            className={`@text-xs @font-semibold @px-2 @py-0.5 @rounded @select-none ${
+              match.finished === true
+                ? "@bg-slate-600 @text-slate-100"
+                : "@bg-emerald-700 @text-emerald-100"
+            }`}
+          >
+            {match.finished === true ? "Completed" : "Ongoing"}
+          </span>
+          <Link href={`/match2/${match.id}`} className="btnMenu @inline-block">
+            {match.finished === true ? "View Result" : "Enter Match"}
+          </Link>
+        </div>
       ) : !inMatch && match.players.length == 2 ? (
         <div>{"Match hasn't started yet."}</div>
       ) : (

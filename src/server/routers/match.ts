@@ -5,10 +5,13 @@ import { pageMatchIndex } from "server/page-match-index";
 import { playerMatchIndex } from "server/player-match-index";
 import { prisma } from "server/prisma/prisma-client";
 import { DispatchableError } from "shared/DispatchedError";
+import { applyMainEventToMatch } from "shared/match-logic/events/apply-event-to-match";
+import { INITIAL_FUNDS } from "shared/match-logic/game-constants/funds";
 import { createMatchStartEvent } from "shared/match-logic/events/handlers/match-start";
 import type { Army } from "shared/schemas/army";
 import { armySchema } from "shared/schemas/army";
 import { coIdSchema } from "shared/schemas/co";
+import { getCOProperties } from "shared/match-logic/co";
 import { playerSlotForUnitsSchema } from "shared/schemas/player-slot";
 import { positionSchema } from "shared/schemas/position";
 import { z } from "zod";
@@ -21,7 +24,23 @@ import {
   router,
 } from "../trpc/trpc-setup";
 import { createMatchProcedure } from "./match/create";
+import { deriveGameOver } from "./match/game-over";
 import { allMatchSlotsReady, matchToFrontend, throwIfMatchNotInSetupState } from "./match/util";
+
+/**
+ * Reject a CO that isn't implemented for its game version (e.g. von-bolt only exists in AWDS). If it
+ * slips through, `getCOProperties` throws deep in the engine and takes down that player's whole turn
+ * snapshot — they can't move or build. Validate at selection so the bad combo never persists.
+ */
+const throwIfCOUnavailable = (selectedCO: z.infer<typeof coIdSchema>) => {
+  try {
+    getCOProperties(selectedCO);
+  } catch {
+    throw new DispatchableError(
+      `CO "${selectedCO.name}" is not available in game version ${selectedCO.version}.`,
+    );
+  }
+};
 
 export const matchRouter = router({
   create: createMatchProcedure,
@@ -36,19 +55,55 @@ export const matchRouter = router({
     ({ ctx: { currentPlayer } }) =>
       playerMatchIndex.getPlayerMatches(currentPlayer.id)?.map(matchToFrontend) ?? [],
   ),
-  full: matchBaseProcedure.query(({ ctx: { match } }) => ({
-    id: match.id,
-    leagueType: match.leagueType,
-    changeableTiles: match.changeableTiles,
-    currentWeather: match.getCurrentWeather(),
-    map: match.map.data,
-    players: match.getAllPlayers().map((player) => player.data),
-    rules: match.rules,
-    status: match.status,
-    turn: match.turn,
-    units: match.units.map((u) => u.data),
-    // match.getPlayerById(currentPlayer.id)?.team.getEnemyUnitsInVision() ?? []
-  })),
+  full: matchBaseProcedure.query(({ ctx: { match, currentPlayer } }) => {
+    const fogOfWar = match.isFogOfWar();
+    const viewerTeam = match.getPlayerById(currentPlayer.id)?.team;
+
+    // Only send units the viewer can actually see. `canSeeUnitAtPosition` is the single engine rule
+    // for both modes: fog off → every non-concealed unit is visible (a concealed sub/stealth only to
+    // its owner or an adjacent enemy); fog on → additionally gated by the team's tile vision. A
+    // spectator has no team, so it sees the non-fog view minus concealed units.
+    const visibleUnits = match.units.filter((unit) =>
+      viewerTeam === undefined
+        ? !("hidden" in unit.data && unit.data.hidden)
+        : viewerTeam.canSeeUnitAtPosition(unit.data.position),
+    );
+
+    // Under fog, the tiles the viewer currently has vision of — the client darkens the rest. Empty
+    // when fog is off (no overlay) or for a spectator (no team vision to expose).
+    const visibleTiles: [number, number][] = [];
+
+    if (fogOfWar && viewerTeam !== undefined) {
+      for (let y = 0; y < match.map.height; y++) {
+        for (let x = 0; x < match.map.width; x++) {
+          if (viewerTeam.isPositionVisible([x, y])) {
+            visibleTiles.push([x, y]);
+          }
+        }
+      }
+    }
+
+    // Match outcome, DERIVED from the engine's elimination status (see deriveGameOver). We don't flip
+    // match.status to "finished" here — that's a separate persistence concern (the passTurn TODO) —
+    // this just lets the client show a game-over screen.
+    const gameOver = deriveGameOver(match, viewerTeam);
+
+    return {
+      id: match.id,
+      leagueType: match.leagueType,
+      changeableTiles: match.changeableTiles,
+      currentWeather: match.getCurrentWeather(),
+      map: match.map.data,
+      players: match.getAllPlayers().map((player) => player.data),
+      rules: match.rules,
+      status: match.status,
+      turn: match.turn,
+      units: visibleUnits.map((u) => u.data),
+      fogOfWar,
+      visibleTiles,
+      gameOver,
+    };
+  }),
   join: matchBaseProcedure
     .input(
       z.object({
@@ -73,6 +128,8 @@ export const matchRouter = router({
       if (input.playerSlot !== null && match.getPlayerBySlot(input.playerSlot) !== undefined) {
         throw new DispatchableError("Player slot is occupied");
       }
+
+      throwIfCOUnavailable(input.selectedCO);
 
       //TODO check if selectedCO is allowed for tier/league/match-blacklist
       // (do players join a match with a CO pick already done or join then choose?)
@@ -100,8 +157,8 @@ export const matchRouter = router({
         slot: input.playerSlot ?? slotToJoin,
         ready: false,
         coId: input.selectedCO,
-        //TODO: Handle funds correctly
-        funds: 10000,
+        // Players start at zero; income is granted per turn (day 1 in applyMatchStartEvent).
+        funds: INITIAL_FUNDS,
         timesPowerUsed: 0,
         powerMeter: 0,
         status: "alive",
@@ -211,7 +268,6 @@ export const matchRouter = router({
       if (allMatchSlotsReady(match)) {
         /**
          * TODO
-         * - give first player funds, maybe we need to everything that passTurn does?
          * - set up timer
          */
         match.status = "playing";
@@ -228,11 +284,18 @@ export const matchRouter = router({
 
           eventIndex = eventOnDB.index;
 
+          // Persist the pre-start snapshot (funds still at INITIAL_FUNDS). Day-1 income is applied
+          // by the matchStart event below and re-derived by replaying it on rebuild, so it must NOT
+          // be baked into this snapshot or it would be granted twice.
           await tx.match.update({
             where: { id: match.id },
             data: { playerState: newPlayerState, status: "playing" },
           });
         });
+
+        // Bring the in-memory match to the same state a rebuild would produce from the event log:
+        // grant the starting player their first turn's income.
+        applyMainEventToMatch(match, matchStartEvent);
 
         if (eventIndex !== undefined) {
           //@ts-expect-error emit needs to be updated
@@ -271,6 +334,10 @@ export const matchRouter = router({
     )
     .mutation(async ({ input, ctx: { match, player } }) => {
       throwIfMatchNotInSetupState(match);
+
+      if (input.selectedCO !== undefined) {
+        throwIfCOUnavailable(input.selectedCO);
+      }
 
       const newPlayerData: PlayerInMatch = { ...player.data };
       newPlayerData.coId = input.selectedCO ?? newPlayerData.coId;

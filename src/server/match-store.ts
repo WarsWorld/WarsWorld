@@ -88,16 +88,32 @@ export class MatchStore {
       },
     });
 
-    rawMatches.forEach((rawMatch) => {
+    for (const rawMatch of rawMatches) {
       const match = this.createMatchAndIndex(rawMatch, rawMatch.map);
-      rawMatch.Event.forEach((dbEvent) => {
-        applyMainEventToMatch(match, dbEvent.content);
 
-        if (dbEvent.content.type === "move") {
-          applySubEventToMatch(match, dbEvent.content);
+      // Replay strictly in order. A single bad event must not crash the whole server on boot (that
+      // would take down every match at once) — but it must ALSO not be silently skipped while later
+      // events keep applying: that corrupts state (turn/ownership scramble) invisibly. So on the
+      // first failure we HALT this match's replay and log loudly, leaving it at its last consistent
+      // point. Stale-but-consistent is recoverable; silently scrambled is not. (CO-version validation
+      // now prevents the usual trigger — an unimplemented CO throwing mid-replay.)
+      for (const dbEvent of rawMatch.Event) {
+        try {
+          applyMainEventToMatch(match, dbEvent.content);
+
+          if (dbEvent.content.type === "move") {
+            applySubEventToMatch(match, dbEvent.content);
+          }
+        } catch (error) {
+          console.error(
+            `[rebuild] match ${rawMatch.id}: event #${dbEvent.index} failed to replay — halting this ` +
+              `match's replay to avoid corrupting its state:`,
+            error instanceof Error ? error.message : error,
+          );
+          break;
         }
-      });
-    });
+      }
+    }
 
     console.log("Rebuilding server state done.");
   }

@@ -1,6 +1,7 @@
 import { TRPCError } from "@trpc/server";
 import type { MapWrapper } from "shared/wrappers/map";
 import type { MatchWrapper } from "shared/wrappers/match";
+import { deriveGameOver } from "./game-over";
 
 export const throwIfMatchNotInSetupState = (match: MatchWrapper) => {
   if (match.status !== "setup") {
@@ -23,6 +24,9 @@ export const matchToFrontend = (match: MatchWrapper) => ({
   players: match.getAllPlayers().map((player) => player.data),
   state: match.status,
   turn: match.turn,
+  // Derived match end (we don't persist status="finished" yet): true once the match is decided, so
+  // the matches list can tell Completed from Ongoing games.
+  finished: deriveGameOver(match, undefined) !== null,
 });
 
 export function allMatchSlotsReady(match: MatchWrapper) {
