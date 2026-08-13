@@ -6,6 +6,7 @@ import * as trpcNext from "@trpc/server/adapters/next";
 import { createContext } from "server/trpc/trpc-context";
 import type { AppRouter } from "server/routers/app";
 import { appRouter } from "server/routers/app";
+import { logger } from "shared/utils/logger";
 
 export default trpcNext.createNextApiHandler<AppRouter>({
   router: appRouter,
@@ -19,7 +20,7 @@ export default trpcNext.createNextApiHandler<AppRouter>({
   onError({ error }) {
     if (error.code === "INTERNAL_SERVER_ERROR") {
       // send to bug reporting
-      console.error("Something went wrong", error);
+      logger.error("Something went wrong", error);
     }
   },
   /**

@@ -1,6 +1,8 @@
-import type { inferRouterOutputs } from "@trpc/server";
-import type { articleRouter } from "server/routers/article";
 import { z } from "zod";
+
+// Frontend-owned article form schemas (client-side validation for UX). The server re-validates the
+// same rules in server/articles/schemas.ts — a small independent copy so the frontend does not
+// import backend code.
 
 export const articleCategoriesSchema = z.enum([
   "basics",
@@ -30,6 +32,3 @@ export const articleCommentSchema = z.object({
 });
 
 export type ArticleCategories = z.infer<typeof articleCategoriesSchema>;
-export type ArticleCommentsWithPlayer = NonNullable<
-  inferRouterOutputs<typeof articleRouter>["getMarkdownById"]
->["Comments"];
