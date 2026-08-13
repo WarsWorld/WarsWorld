@@ -19,6 +19,16 @@ const MatchLoaderNoSSR = dynamic(
   },
 );
 
+// Snapshot-driven board being built for the FE engine cut. Behind `?v2` so the working
+// engine-based board stays the default while this is developed and live-tested.
+const MatchBoardV2NoSSR = dynamic(
+  () => import("components/client-only/MatchBoardV2").then((res) => res.MatchBoardV2),
+  {
+    ssr: false,
+    loading: () => <p>Loading v2 board...</p>,
+  },
+);
+
 type Props = { spritesheetDataByArmy: SpritesheetDataByArmy };
 
 const MatchPage = ({ spritesheetDataByArmy }: Props) => {
@@ -32,6 +42,16 @@ const MatchPage = ({ spritesheetDataByArmy }: Props) => {
 
   if (currentPlayer === undefined) {
     return <p>Loading...</p>;
+  }
+
+  if (query.v2 !== undefined) {
+    return (
+      <MatchBoardV2NoSSR
+        matchId={matchIdResult.data}
+        playerId={currentPlayer.id}
+        spritesheetDataByArmy={spritesheetDataByArmy}
+      />
+    );
   }
 
   return (
