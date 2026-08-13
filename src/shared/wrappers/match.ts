@@ -1,4 +1,4 @@
-import type { LeagueType, Match, MatchStatus, Player, WWMap } from "@prisma/client";
+import type { LeagueType, MatchStatus, WWMap } from "shared/types/domain-entities";
 import { DispatchableError } from "shared/DispatchedError";
 import type { MatchRules } from "shared/schemas/match-rules";
 import type { PlayerSlot } from "shared/schemas/player-slot";
@@ -49,7 +49,7 @@ export class MatchWrapper<
   public map: MapWrapper;
 
   constructor(
-    public id: Match["id"],
+    public id: string,
     public leagueType: LeagueType,
     public changeableTiles: ChangeableTileType[], //TODO change to map from position to changeableTile for better performance
     public rules: MatchRules,
@@ -140,7 +140,7 @@ export class MatchWrapper<
     return this.teams.flatMap((team) => team.players).sort((p1, p2) => p1.data.slot - p2.data.slot);
   }
 
-  getPlayerById(playerId: Player["id"]) {
+  getPlayerById(playerId: string) {
     return this.getAllPlayers().find((p) => p.data.id === playerId);
   }
 

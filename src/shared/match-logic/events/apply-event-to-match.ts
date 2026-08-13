@@ -8,6 +8,7 @@ import { applyBuildEvent } from "./handlers/build";
 import { applyCOPowerEvent } from "./handlers/coPower";
 import { applyDeleteEvent } from "./handlers/delete";
 import { applyLaunchMissileEvent } from "./handlers/launchMissile";
+import { applyMatchStartEvent } from "./handlers/match-start";
 import { applyMoveEvent } from "./handlers/move";
 import { applyPassTurnEvent } from "./handlers/passTurn";
 import { applyRepairEvent } from "./handlers/repair";
@@ -43,9 +44,8 @@ export const applyMainEventToMatch = (
       applyPassTurnEvent(match, event);
       break;
     }
-    //TODO: Starting a match breaks the app because it can't apply "matchStart" event.
-    // Does MatchStart really need an event here? Because this is what fixes it
     case "matchStart": {
+      applyMatchStartEvent(match);
       break;
     }
     default: {

@@ -11,6 +11,13 @@ import type { MatchWrapper } from "./match";
 import type { TeamWrapper } from "./team";
 import { UnitWrapper } from "./unit";
 
+/**
+ * `Omit` over a union collapses it to its members' COMMON keys, dropping variant-specific ones
+ * (e.g. a transport's `loadedUnit`). This distributes the omit across each member so those keys
+ * survive — needed so `addUnwrappedUnit` accepts a fully-specified transport literal.
+ */
+export type DistributiveOmit<T, K extends PropertyKey> = T extends unknown ? Omit<T, K> : never;
+
 export class PlayerInMatchWrapper {
   public match: MatchWrapper;
 
@@ -114,7 +121,12 @@ export class PlayerInMatchWrapper {
       return;
     }
 
-    this.data.powerMeter = Math.min(value, this.getMaxPowerMeter());
+    // Accumulate onto the current meter (callers pass the per-attack delta). The 0 floor accounts
+    // for negative gains (e.g. Sasha's COP draining an enemy's meter).
+    this.data.powerMeter = Math.max(
+      0,
+      Math.min(this.data.powerMeter + value, this.getMaxPowerMeter()),
+    );
   }
 
   owns(tileOrUnit: Tile | ChangeableTile | UnitWrapper): boolean {
@@ -155,7 +167,7 @@ export class PlayerInMatchWrapper {
     return numberOfFundsGivingProperties * fundsPerProperty;
   }
 
-  addUnwrappedUnit(rawUnit: Omit<UnitWithVisibleStats, "playerSlot">) {
+  addUnwrappedUnit(rawUnit: DistributiveOmit<UnitWithVisibleStats, "playerSlot">) {
     const unit = new UnitWrapper(
       { ...rawUnit, playerSlot: this.data.slot } as UnitWithVisibleStats,
       this.match,

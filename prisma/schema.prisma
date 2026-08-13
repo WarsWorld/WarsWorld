@@ -244,6 +244,11 @@ model Match {
   rules  Json
   status MatchStatus
 
+  /// Persisted match outcome (set once, when the game is decided). Null while playing.
+  /// winnerTeamIndex is null on a draw even though the match is finished.
+  winnerTeamIndex Int?
+  finishedAt      DateTime?
+
   map   WWMap  @relation(fields: [mapId], references: [id])
   mapId String
 

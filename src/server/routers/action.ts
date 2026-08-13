@@ -11,6 +11,7 @@ import {
 } from "shared/match-logic/events/apply-event-to-match";
 import { mainActionSchema } from "shared/schemas/action";
 import { getFinalPositionSafe } from "shared/schemas/position";
+import { logger } from "shared/utils/logger";
 import type {
   Emittable,
   EmittableEvent,
@@ -23,6 +24,7 @@ import { mainEventToEmittables } from "../../shared/match-logic/events/event-to-
 import { updateMoveVision } from "../../shared/match-logic/events/handlers/move";
 import { fillDiscoveredUnitsAndProperties } from "../../shared/match-logic/events/vision-update";
 import { matchBaseProcedure, playerInMatchBaseProcedure, router } from "../trpc/trpc-setup";
+import { finalizeIfGameOver } from "./match/finalize";
 
 const attachSubEvent = (
   mainEventWithoutSubEvent: MainEventsWithoutSubEvents,
@@ -56,7 +58,7 @@ export const actionRouter = router({
        * 10. Save event
        */
 
-      console.log("Received action:", input);
+      logger.debug("Received action:", input);
 
       /* 1. Move action to event */
       const mainEventWithoutSubEvent = validateMainActionAndToEvent(match, input);
@@ -122,7 +124,11 @@ export const actionRouter = router({
       //  emittableEvents[i] is from match.teams[i]. emittableEvents has one extra "no team"(spectator) at the end
       emittableEvents.forEach((emittableEvent: EmittableEvent | undefined) => {
         if (emittableEvent) {
-          match.teams[emittableEvent.teamIndex].players.forEach((player: PlayerInMatchWrapper) => {
+          // teamIndex is a team's logical index (-1 = spectators, who have no connected players).
+          // Look it up by index and skip when there's no such team, instead of match.teams[-1].
+          const team = match.teams.find((t) => t.index === emittableEvent.teamIndex);
+
+          team?.players.forEach((player: PlayerInMatchWrapper) => {
             emit(player.data.id, { ...emittableEvent, matchId: match.id });
           });
         }
@@ -136,6 +142,40 @@ export const actionRouter = router({
           content: attachSubEvent(mainEventWithoutSubEvent, subEvent),
         },
       });
+
+      /* 11. If this action decided the match, finalize it: flip status + stamp per-player result,
+       * persist the outcome snapshot (finished matches are archived out of the hot store on reboot,
+       * so the DB is their only record), and push a live matchEnd so open boards flip to their
+       * result screen without a refetch. */
+      const finished = finalizeIfGameOver(match);
+
+      if (finished !== null) {
+        const winningTeamPlayerIds =
+          finished.winnerTeamIndex === null
+            ? null
+            : (match.teams
+                .find((team) => team.index === finished.winnerTeamIndex)
+                ?.players.map((player) => player.data.id) ?? null);
+
+        await prisma.match.update({
+          where: { id: match.id },
+          data: {
+            status: "finished",
+            winnerTeamIndex: finished.winnerTeamIndex,
+            finishedAt: new Date(),
+            playerState: match.getAllPlayers().map((player) => player.data),
+          },
+        });
+
+        match.getAllPlayers().forEach((player) => {
+          emit(player.data.id, {
+            type: "matchEnd",
+            winningTeamPlayerIds,
+            teamIndex: player.team.index,
+            matchId: match.id,
+          });
+        });
+      }
 
       // TODO we still need something like the following to handle timeout eliminations.
 

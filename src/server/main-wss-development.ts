@@ -1,3 +1,4 @@
+import { logger } from "shared/utils/logger";
 import { createTRPCwebSocketServer } from "./common-server";
 import { matchStore } from "./match-store";
 
@@ -9,11 +10,11 @@ void (async () => {
   });
 
   wss.on("connection", (ws) => {
-    console.log(`➕➕ Connection (${wss.clients.size})`);
+    logger.debug(`➕➕ Connection (${wss.clients.size})`);
     ws.once("close", () => {
-      console.log(`➖➖ Connection (${wss.clients.size})`);
+      logger.debug(`➖➖ Connection (${wss.clients.size})`);
     });
   });
 
-  console.log(`Development mode: tRPC listening on ${process.env.NEXT_PUBLIC_WS_URL}`);
+  logger.info(`Development mode: tRPC listening on ${process.env.NEXT_PUBLIC_WS_URL}`);
 })();

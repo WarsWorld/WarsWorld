@@ -3,6 +3,7 @@ import { unitPropertiesMap } from "shared/match-logic/game-constants/unit-proper
 import type { MoveAction } from "shared/schemas/action";
 import { getFinalPositionSafe, isSamePosition } from "shared/schemas/position";
 import type { UnitWithVisibleStats } from "shared/schemas/unit";
+import { logger } from "shared/utils/logger";
 import type { MoveEventWithoutSubEvent, MoveEventWithSubEvent } from "shared/types/events";
 import type { MatchWrapper } from "shared/wrappers/match";
 import type { UnitWrapper } from "../../../wrappers/unit";
@@ -22,7 +23,7 @@ export const moveActionToEvent = (
     throw new DispatchableError("You don't own this unit");
   }
 
-  console.log("Unit trying to move:", unit.data);
+  logger.debug("Unit trying to move:", unit.data);
 
   if (!unit.data.isReady) {
     throw new DispatchableError("Trying to move a waited unit");
@@ -258,14 +259,30 @@ const getOneTileFuelCost = (match: MatchWrapper, unit: UnitWrapper): number => {
 };
 
 export const applyMoveEvent = (match: MatchWrapper, event: MoveEventWithoutSubEvent) => {
+  // Non-throwing lookup: replaying a stale/superseded event during rebuild can reference a tile
+  // whose unit is gone. Skip it instead of throwing, which would crash the whole server on boot.
+  const unit = match.getUnit(event.path[0]);
+
+  if (unit === undefined) {
+    // Expected only for stale events during replay. If it fires on the LIVE apply path it signals a
+    // real desync — so warn loudly rather than swallowing it silently, so the bug is discoverable.
+    logger.warn(
+      `[applyMoveEvent] no unit at ${JSON.stringify(event.path[0])} — skipping move event ` +
+        `(normal for stale events during rebuild; investigate if seen during live play)`,
+    );
+
+    return;
+  }
+
+  // The unit has acted this turn and is done — this MUST run even when standing still
+  // (in-place indirect attack, capture, or plain wait). Otherwise the unit keeps
+  // `isReady: true` and can act again, e.g. indirect units attacking multiple times.
+  unit.data.isReady = false;
+
   //check if unit is moving or just standing still
   if (event.path.length <= 1) {
     return;
   }
-
-  const unit = match.getUnitOrThrow(event.path[0]);
-
-  unit.data.isReady = false;
 
   //if unit was capturing, interrupt capture
   if ("currentCapturePoints" in unit.data) {
