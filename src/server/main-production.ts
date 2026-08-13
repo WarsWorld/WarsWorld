@@ -3,6 +3,7 @@ import next from "next";
 import { parse } from "url";
 import { createTRPCwebSocketServer } from "./common-server";
 import { matchStore } from "./match-store";
+import { logger } from "shared/utils/logger";
 
 const port = parseInt(process.env.PORT ?? "3001", 10);
 const app = next({ dev: false });
@@ -64,5 +65,5 @@ void (async () => {
   createTRPCwebSocketServer({ server });
   server.listen(port);
 
-  console.log(`Production mode: Server listening at ${process.env.NEXT_PUBLIC_WS_URL}${port}`);
+  logger.info(`Production mode: Server listening at ${process.env.NEXT_PUBLIC_WS_URL}${port}`);
 })();

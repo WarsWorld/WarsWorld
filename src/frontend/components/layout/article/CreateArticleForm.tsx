@@ -7,7 +7,7 @@ import FormInput from "../forms/FormInput";
 import type { ArticleCategory } from "@prisma/client";
 import { usePlayers } from "frontend/context/players";
 import { trpc } from "frontend/utils/trpc-client";
-import { articleSchema, type ArticleCategories } from "shared/schemas/article";
+import { articleSchema, type ArticleCategories } from "./article-schemas";
 import Link from "next/link";
 import TextAreaInput from "../forms/TextAreaInput";
 import { ZodError } from "zod";
