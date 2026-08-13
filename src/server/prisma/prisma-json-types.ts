@@ -3,11 +3,11 @@
 // https://www.npmjs.com/package/prisma-json-types-generator#configuration
 
 import type { MatchRules } from "shared/schemas/match-rules";
-import type { Preferences } from "shared/schemas/preferences";
+import type { Preferences } from "server/players/schemas";
 import type { Tile } from "shared/schemas/tile";
 import type { UnitWithVisibleStats } from "shared/schemas/unit";
-import type { MainEventWithSubEvents } from "shared/types/events";
-import type { PlayerInMatch } from "shared/types/server-match-state";
+import type { MainEventWithSubEvents } from "server/engine/types/events";
+import type { PlayerInMatch } from "server/engine/entities/player-in-match-state";
 
 declare global {
   namespace PrismaJson {

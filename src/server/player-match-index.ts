@@ -1,6 +1,6 @@
 import type { Player } from "@prisma/client";
-import type { MatchWrapper } from "shared/wrappers/match";
-import type { PlayerInMatchWrapper } from "shared/wrappers/player-in-match";
+import type { MatchWrapper } from "server/engine/entities/match";
+import type { PlayerInMatchWrapper } from "server/engine/entities/player-in-match";
 
 class PlayerMatchIndex {
   private index = new Map<Player["id"], MatchWrapper[]>();

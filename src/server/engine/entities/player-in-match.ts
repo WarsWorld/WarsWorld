@@ -1,0 +1,202 @@
+import type { COPowerState } from "server/engine/rules/co";
+import { getCOProperties } from "server/engine/rules/co";
+import type { Hooks } from "server/engine/rules/co-hooks";
+import type { CO } from "server/core/schemas/co";
+import type { GameVersion } from "server/core/schemas/game-version";
+import type { Tile } from "server/core/schemas/tile";
+import type { UnitWithVisibleStats } from "server/core/schemas/unit";
+import type { ChangeableTile } from "server/core/schemas/tile-state";
+import type { PlayerInMatch } from "server/engine/entities/player-in-match-state";
+import { versionPropertiesMap } from "server/engine/constants/version-properties";
+import type { MatchWrapper } from "server/engine/entities/match";
+import type { TeamWrapper } from "server/engine/entities/team";
+import { UnitWrapper } from "server/engine/entities/unit";
+
+/**
+ * `Omit` over a union collapses it to its members' COMMON keys, dropping variant-specific ones
+ * (e.g. a transport's `loadedUnit`). This distributes the omit across each member so those keys
+ * survive — needed so `addUnwrappedUnit` accepts a fully-specified transport literal.
+ */
+export type DistributiveOmit<T, K extends PropertyKey> = T extends unknown ? Omit<T, K> : never;
+
+export class PlayerInMatchWrapper {
+  public match: MatchWrapper;
+
+  constructor(
+    public data: PlayerInMatch,
+    public team: TeamWrapper,
+  ) {
+    this.match = team.match;
+  }
+
+  /**
+   * returns amount of commtowers owned * 10 (since 1 commtower gives 10% attack boost)
+   */
+  getCommtowerAttackBoost() {
+    return (
+      10 *
+      this.match.changeableTiles.reduce(
+        (prev, cur) =>
+          cur.type === "commtower" && cur.playerSlot === this.data.slot ? prev + 1 : prev,
+        0,
+      )
+    );
+  }
+
+  hasLab() {
+    return (
+      this.match.changeableTiles.find(
+        (tile) => tile.type === "lab" && tile.playerSlot === this.data.slot,
+      ) !== undefined
+    );
+  }
+
+  getUnits() {
+    //If match.units is undefined, this throws an error. The error kills usePlayers() which stops FrontEnd work.
+    if (this.match.units !== undefined) {
+      return this.match.units.filter((u) => u.data.playerSlot === this.data.slot);
+    } else {
+      return [];
+    }
+  }
+
+  getHook<HookType extends keyof Hooks>(hookType: HookType) {
+    const COProperties = getCOProperties(this.data.coId);
+
+    switch (this.data.COPowerState) {
+      case "no-power":
+        return COProperties.dayToDay?.hooks[hookType];
+      case "co-power":
+        return COProperties.powers.COPower?.hooks?.[hookType];
+      case "super-co-power":
+        return COProperties.powers.superCOPower?.hooks?.[hookType];
+    }
+  }
+
+  getVersionProperties() {
+    return versionPropertiesMap[this.match.rules.gameVersion ?? this.data.coId.version];
+  }
+
+  /**
+   * gets the next player, looping back around to index 0
+   * if needed until current player slot.
+   */
+  getNextAlivePlayer(): PlayerInMatchWrapper | null {
+    const nextSlot = (n: number) => (n + 1) % this.match.map.data.numberOfPlayers;
+
+    for (let i = nextSlot(this.data.slot); i !== this.data.slot; i = nextSlot(i)) {
+      const player = this.match.getPlayerBySlot(i);
+
+      if (player?.data.status === "alive") {
+        return player;
+      }
+    }
+
+    return null;
+  }
+
+  getPowerStarCost() {
+    const versionProperties = this.getVersionProperties();
+    return (
+      versionProperties.baseStarValue *
+      (1 + versionProperties.powerMeterScaling * Math.min(this.data.timesPowerUsed, 10))
+    );
+  }
+
+  getMaxPowerMeter() {
+    const COPowers = getCOProperties(this.data.coId).powers;
+
+    if (COPowers.superCOPower !== undefined) {
+      return COPowers.superCOPower.stars * this.getPowerStarCost();
+    }
+
+    if (COPowers.COPower !== undefined) {
+      return COPowers.COPower.stars * this.getPowerStarCost();
+    }
+
+    return 0;
+  }
+
+  gainPowerCharge(value: number) {
+    if (this.data.COPowerState !== "no-power") {
+      return;
+    }
+
+    // Accumulate onto the current meter (callers pass the per-attack delta). The 0 floor accounts
+    // for negative gains (e.g. Sasha's COP draining an enemy's meter).
+    this.data.powerMeter = Math.max(
+      0,
+      Math.min(this.data.powerMeter + value, this.getMaxPowerMeter()),
+    );
+  }
+
+  owns(tileOrUnit: Tile | ChangeableTile | UnitWrapper): boolean {
+    if ("playerSlot" in tileOrUnit && tileOrUnit.playerSlot === this.data.slot) {
+      return true;
+    }
+
+    if (
+      "data" in tileOrUnit &&
+      "playerSlot" in tileOrUnit.data &&
+      tileOrUnit.data.playerSlot === this.data.slot
+    ) {
+      return true;
+    }
+
+    return false;
+  }
+
+  getFundsPerTurn() {
+    let numberOfFundsGivingProperties = 0;
+
+    for (const changeableTile of this.match.changeableTiles) {
+      if (
+        changeableTile.type !== "lab" &&
+        changeableTile.type !== "commtower" &&
+        this.owns(changeableTile)
+      ) {
+        numberOfFundsGivingProperties++;
+      }
+    }
+
+    let { fundsPerProperty } = this.match.rules;
+
+    if (this.data.coId.name === "sasha") {
+      fundsPerProperty += 100;
+    }
+
+    return numberOfFundsGivingProperties * fundsPerProperty;
+  }
+
+  addUnwrappedUnit(rawUnit: DistributiveOmit<UnitWithVisibleStats, "playerSlot">) {
+    const unit = new UnitWrapper(
+      { ...rawUnit, playerSlot: this.data.slot } as UnitWithVisibleStats,
+      this.match,
+    );
+
+    this.match.units.push(unit);
+
+    this.team.vision?.addUnitVision(unit);
+
+    return unit;
+  }
+
+  /**
+   * Check current power activated with optional CO constraints
+   */
+  isUsingPower(power: COPowerState, coName?: CO, coVersion?: GameVersion) {
+    if (power !== this.data.COPowerState) {
+      return false;
+    }
+
+    if (coName && coName !== this.data.coId.name) {
+      return false;
+    }
+
+    if (coVersion && coVersion !== this.data.coId.version) {
+      return false;
+    }
+
+    return true;
+  }
+}

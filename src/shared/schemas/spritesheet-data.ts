@@ -1,29 +1,4 @@
-import type { ISpritesheetData, ISpritesheetFrameData } from "pixi.js";
-import { z } from "zod";
-
-const sizeSchema = z.strictObject({
-  w: z.number(),
-  h: z.number(),
-}) satisfies z.ZodType<ISpritesheetFrameData["sourceSize"]>;
-
-const sizeAndPositionSchema = sizeSchema.extend({
-  x: z.number(),
-  y: z.number(),
-}) satisfies z.ZodType<ISpritesheetFrameData["frame"]>;
-
-const frameSchema = z.strictObject({
-  frame: sizeAndPositionSchema,
-  rotated: z.boolean(),
-  trimmed: z.boolean(),
-  spriteSourceSize: sizeAndPositionSchema,
-  sourceSize: sizeSchema,
-}) satisfies z.ZodType<ISpritesheetFrameData>;
-
-export const spritesheetDataSchema = z.strictObject({
-  frames: z.record(frameSchema),
-  animations: z.record(z.array(z.string())).optional(),
-  meta: z.object({
-    scale: z.string().or(z.number()),
-    image: z.string(),
-  }),
-}) satisfies z.ZodType<ISpritesheetData>;
+// INTERIM SHIM: the game vocabulary now lives in src/server/core (the shared kernel). This file
+// re-exports it so the frontend and other src/shared code keep compiling until the FE fetches
+// vocabulary from the BE and caches it (game-data-in-DB initiative). Delete when that lands.
+export * from "server/core/schemas/spritesheet-data";

@@ -1,14 +1,4 @@
-import { z } from "zod";
-
-export const weatherSchema = z.union([
-  z.literal("clear"),
-  z.literal("snow"),
-  z.literal("rain"),
-  z.literal("sandstorm"),
-]);
-
-export type Weather = z.infer<typeof weatherSchema>;
-
-export const weatherSettingSchema = weatherSchema.or(z.literal("random"));
-
-export type WeatherSetting = z.infer<typeof weatherSettingSchema>;
+// INTERIM SHIM: the game vocabulary now lives in src/server/core (the shared kernel). This file
+// re-exports it so the frontend and other src/shared code keep compiling until the FE fetches
+// vocabulary from the BE and caches it (game-data-in-DB initiative). Delete when that lands.
+export * from "server/core/schemas/weather";
