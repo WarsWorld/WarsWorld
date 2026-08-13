@@ -1,18 +1,14 @@
-import type { Dispatch, SetStateAction } from "react";
-import NavButton from "./NavButton";
+import CurrentPlayerSelect from "./CurrentPlayerSelect";
 import { NavItem } from "./NavItem";
 import NavLoginLogout from "./NavLoginLogout";
-import { NavMenuMatches } from "./NavMenuMatches";
 
 type Props = {
-  showMatchLinks: boolean;
-  setShowMatchLinks: Dispatch<SetStateAction<boolean>>;
-  setShowLinks: Dispatch<SetStateAction<boolean>>;
   setIsOpen: (value: boolean, callbackUrl?: string) => Promise<void>;
   isOpen: boolean;
 };
 
 const navItemObject = [
+  { text: "GAME", location: "/your-matches" },
   {
     text: "COMPETITION",
     location: "/",
@@ -43,27 +39,16 @@ const navItemObject = [
   },
 ];
 
-export function NavGroup({ showMatchLinks, setShowMatchLinks, setIsOpen, isOpen }: Props) {
+export function NavGroup({ setIsOpen, isOpen }: Props) {
   return (
     <>
       <div className="@flex @items-center @justify-center @gap-10 monitor:@gap-16 @h-full @w-[70vw]">
-        <button
-          onMouseEnter={() => setShowMatchLinks(true)}
-          onMouseLeave={() => setShowMatchLinks(false)}
-          className="@text-white @flex @flex-col relative @justify-center @items-center @cursor-pointer matchLobbyToggle @h-full"
-        >
-          <NavButton key="GAME" hasArrow isOpen={showMatchLinks}>
-            GAME
-          </NavButton>
-          <div className="@flex @justify-center @relative @w-full ">
-            <NavMenuMatches showMatchLinks={showMatchLinks} />
-          </div>
-        </button>
         {navItemObject.map((item) => (
           <NavItem key={item.text} text={item.text} location={item.location} />
         ))}
       </div>
-      <div className="@flex @h-12 @w-[15%] @justify-end @items-center @relative">
+      <div className="@flex @h-12 @w-[15%] @justify-end @items-center @relative @gap-3">
+        <CurrentPlayerSelect />
         <NavLoginLogout isOpen={isOpen} setIsOpen={setIsOpen} />
       </div>
     </>

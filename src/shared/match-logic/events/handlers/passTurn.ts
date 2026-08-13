@@ -148,6 +148,12 @@ export const applyPassTurnEvent: ApplyEvent<PassTurnEvent> = (match, event) => {
 
       APCresupply(unit);
     }
+
+    // A player whose units all crashed this turn (0 left after fuel-out) is eliminated. Set the
+    // status here — in the apply step — so it survives an event-log replay, like combat elimination.
+    if (turn.eliminationReason === "all-units-crashed") {
+      nextTurnPlayer.data.status = "routed";
+    }
   }
 
   for (const team of match.teams) {

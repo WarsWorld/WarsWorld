@@ -44,7 +44,7 @@ export default function MatchPlayer({
             className="@h-7 [image-rendering:pixelated]"
             alt="opponent chosen CO"
           />
-          <p className="@truncate @px-0.5 @text-sm">
+          <p className="@truncate @px-1.5 @py-0.5 @text-sm @font-medium">
             {slot !== undefined ? `${name} slot: ${slot}` : name}
           </p>
         </div>
@@ -69,7 +69,7 @@ export default function MatchPlayer({
             className="@h-7 [image-rendering:pixelated]"
             alt="opponent chosen CO"
           />
-          <p className="@truncate @px-0.5 @text-sm">
+          <p className="@truncate @px-1.5 @py-0.5 @text-sm @font-medium">
             {slot !== undefined ? `${name} slot: ${slot}` : name}
           </p>
         </div>
