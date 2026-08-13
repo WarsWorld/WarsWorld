@@ -1,25 +1,4 @@
-import { z } from "zod";
-
-export const armySchema = z.enum([
-  "orange-star",
-  "blue-moon",
-  "green-earth",
-  "yellow-comet",
-  "black-hole",
-  // "red-fire",
-  // "grey-sky",
-  // "brown-desert",
-  // "amber-blaze",
-  // "jade-sun",
-  // "cobalt-ice",
-  // "pink-cosmos",
-  // "teal-galaxy",
-  // "purple-lighting",
-  // "acid-rain",
-  // "white-nova",
-]);
-
-export const armyWithNeutralSchema = armySchema.or(z.literal("neutral"));
-
-export type Army = z.infer<typeof armySchema>;
-export type ArmyWithNeutral = z.infer<typeof armyWithNeutralSchema>;
+// INTERIM SHIM: the game vocabulary now lives in src/server/core (the shared kernel). This file
+// re-exports it so the frontend and other src/shared code keep compiling until the FE fetches
+// vocabulary from the BE and caches it (game-data-in-DB initiative). Delete when that lands.
+export * from "server/core/schemas/army";

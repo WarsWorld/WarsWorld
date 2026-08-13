@@ -1,6 +1,6 @@
 import { Sprite, Texture } from "pixi.js";
 import type { Position } from "shared/schemas/position";
-import { renderedTileSize } from "../components/client-only/MatchRenderer";
+import { renderedTileSize } from "frontend/components/match/render-constants";
 
 export const tileConstructor = (position: Position, color: string, alpha?: number) => {
   const tile = new Sprite(Texture.WHITE);

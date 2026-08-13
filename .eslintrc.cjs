@@ -98,9 +98,20 @@ const eslintConfig = {
         "@typescript-eslint/no-restricted-imports": [
           "error",
           {
-            // These imports can break the code on the server or frontend
-            // e.g. importing prisma will immediately break on frontend
-            // and using DOM APIs or React on backend will too.
+            // The engine is Prisma-free (see the src/shared migration map in CLAUDE.md). Map DB
+            // rows to domain entities (shared/types/domain-entities) at the adapter boundary — no
+            // Prisma imports at all, not even types. Exact-name `paths` (glob patterns don't match
+            // the "@prisma/client" specifier reliably).
+            paths: [
+              {
+                name: "@prisma/client",
+                message:
+                  "The engine is Prisma-free: map rows to shared/types/domain-entities at the adapter boundary.",
+                allowTypeImports: false,
+              },
+            ],
+            // These imports can break the code on the server or frontend, e.g. DOM APIs or React
+            // on the backend.
             patterns: [
               {
                 group: ["**/{server,frontend}/**"],
@@ -108,8 +119,10 @@ const eslintConfig = {
                 allowTypeImports: true,
               },
               {
-                group: ["@prisma*"],
-                message: "Don't import non-type prisma / DB stuff into shared",
+                // Pixi needs window/document; shared may run server-side. (Folded in here because
+                // the src/** override below no longer applies to shared — see its excludedFiles.)
+                group: ["**pixi**"],
+                message: "Non-type Pixi.js stuff can't be imported into shared (SSR has no window)",
                 allowTypeImports: true,
               },
             ],
@@ -118,8 +131,48 @@ const eslintConfig = {
       },
     },
     {
+      // The game engine now lives in src/server/engine (moved out of src/shared). It stays
+      // Prisma-free and free of frontend/pixi runtime imports so it can run isomorphically. It MAY
+      // import sibling server infra (adapters/core), so — unlike the shared override — server
+      // imports are not banned here.
+      files: ["src/server/engine/**/*.*"],
+      rules: {
+        "@typescript-eslint/no-restricted-imports": [
+          "error",
+          {
+            paths: [
+              {
+                name: "@prisma/client",
+                message:
+                  "The engine is Prisma-free: map rows to engine/types/domain-entities at the adapter boundary.",
+                allowTypeImports: false,
+              },
+            ],
+            patterns: [
+              {
+                group: ["**/frontend/**"],
+                message: "Don't import frontend code into the engine",
+                allowTypeImports: true,
+              },
+              {
+                group: ["**pixi**"],
+                message: "Non-type Pixi.js can't be imported into the engine (SSR has no window)",
+                allowTypeImports: true,
+              },
+            ],
+          },
+        ],
+      },
+    },
+    {
+      // src/shared and src/server/engine have their own stricter overrides above. Exclude them here
+      // so ESLint's "last matching override wins per rule" doesn't clobber those restrictions.
       files: ["src/**/*.*"],
-      excludedFiles: "src/{components/client-only,pixi}/**/*.*",
+      excludedFiles: [
+        "src/{components/client-only,pixi}/**/*.*",
+        "src/shared/**/*.*",
+        "src/server/engine/**/*.*",
+      ],
       rules: {
         "@typescript-eslint/no-restricted-imports": [
           "error",

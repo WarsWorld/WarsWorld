@@ -1,4 +1,4 @@
-import type { Emittable } from "shared/types/events";
+import type { Emittable } from "server/engine/types/events";
 import { createEmitter } from "./create-emitter";
 
 const wwEmitter = createEmitter<Emittable>();

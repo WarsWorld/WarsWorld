@@ -7,7 +7,7 @@ datasource db {
 }
 
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
   binaryTargets = ["native", "windows", "linux-musl-openssl-3.0.x"]
 }
 
@@ -142,6 +142,10 @@ model Clan {
 
 model Player {
   id          String        @id @default(cuid())
+  MatchPlayer MatchPlayer[]
+  PlayerSkill PlayerSkill[]
+  PlayerRank  PlayerRank[]
+  MeritEvent  MeritEvent[]
   MMR         MMR[]
   name        String        @unique
   displayName String
@@ -237,12 +241,26 @@ model MMR {
 }
 
 model Match {
-  id         String     @id @default(cuid())
-  leagueType LeagueType
+  id          String        @id @default(cuid())
+  MatchPlayer MatchPlayer[]
+  leagueType  LeagueType
+  MeritEvent  MeritEvent[]
+
+  /// Seat shape + rules axes. Additive alongside `leagueType`, which the match-creation feature
+  /// removes once every creation site sets these.
+  mode     GameMode  @default(duel)
+  ruleset  Ruleset   @default(standard)
+  isRanked Boolean   @default(false)
+  ratedAt  DateTime?
 
   /// [PrismaMatchRules]
   rules  Json
   status MatchStatus
+
+  /// Persisted match outcome (set once, when the game is decided). Null while playing.
+  /// winnerTeamIndex is null on a draw even though the match is finished.
+  winnerTeamIndex Int?
+  finishedAt      DateTime?
 
   map   WWMap  @relation(fields: [mapId], references: [id])
   mapId String
@@ -286,3 +304,124 @@ model Event {
 
 // 2. move/map data structures
 // 3. tiers in general, map/league tiers?
+
+enum GameMode {
+  duel // 2 players           (UI: "1v1")
+  teams // 4 players, 2v2      (UI: "2v2")
+  ffa // 4 players, free-for-all (UI: "FFA")
+}
+
+enum Ruleset {
+  standard
+  fog
+  highFunds
+  broken // no unit/CO bans
+}
+
+/// The military-rank ladder as DATA, not an enum. Which ranks exist, their order, which are
+/// reachable, and how they're shown are all operational knobs — a season rollover should be a seed
+/// change, not a migration plus deploy. The FE renders from these rows instead of mirroring server
+/// constants, so label/emblem live here too.
+///
+/// What stays in code is the RULE half: how players distribute across the ladder (`RANK_BANDS`) and
+/// how Merit moves (`meritDelta`) — see merit.ts.
+model Rank {
+  /// Stable identifier used by code and stored on PlayerRank/MeritEvent (e.g. "cadet", "marechal").
+  code         String  @id
+  /// Display name, accents included ("Maréchal") — the enum-safe ASCII lives in `code`.
+  label        String
+  /// Presentation reference for the badge (image path or style token). FE renders it, BE never reads it.
+  emblem       String
+  /// Ladder position, lowest first. Ranks activate in the MIDDLE, so this is explicit, not derived.
+  order        Int     @unique
+  /// Reachable right now. The full ladder ships; dormant ranks switch on at a season rollover.
+  active       Boolean @default(true)
+  /// Placements (cadet) and the apex (marechal) carry no divisions.
+  hasDivisions Boolean @default(true)
+  /// Cumulative population share at the TOP of this rank, 0..1 — the ladder is percentile-banded
+  /// rather than threshold-based, so it stays meaningful whatever the playerbase does. Null for a
+  /// rank outside the banded range (placements), which simply never receives a percentile placement.
+  ///
+  /// Data, not rule: the per-rank number lives here so a rollover retunes the curve by reseeding.
+  /// The algorithm that consumes it stays in `server/ranking/merit.ts`.
+  populationShare Float?
+
+  PlayerRank     PlayerRank[] @relation("playerRank")
+  PlayerPeakRank PlayerRank[] @relation("playerPeakRank")
+  MeritEvent     MeritEvent[]
+}
+
+model PlayerSkill {
+  Player   Player   @relation(fields: [playerId], references: [id])
+  playerId String
+  mode     GameMode
+  /// OpenSkill defaults. `ordinal()` (μ−3σ) of a fresh rating is exactly 0.
+  mu       Float    @default(25.0)
+  sigma    Float    @default(8.333333333333334)
+  /// Rated games in this mode — for display ("4/10 placements"); the placement GATE is sigma.
+  games    Int      @default(0)
+
+  @@id([playerId, mode])
+}
+
+model PlayerRank {
+  Player           Player   @relation(fields: [playerId], references: [id])
+  playerId         String
+  mode             GameMode
+  rank             Rank     @relation("playerRank", fields: [rankCode], references: [code])
+  rankCode         String   @default("cadet")
+  /// 5..1, 5 being the lowest. Meaningless for cadet (placements) and marechal (apex).
+  division         Int      @default(5)
+  /// 0..99 within a division. Unbounded at marechal, so the top of the ladder still sorts.
+  merit            Int      @default(0)
+  peakRank         Rank?    @relation("playerPeakRank", fields: [peakRankCode], references: [code])
+  peakRankCode     String?
+  /// Set by the admin visible-rank override: this rank is authoritative and must NOT be masked as
+  /// "placements", even while the hidden skill estimate (sigma) is still provisional. Normal play
+  /// leaves it false, so the placement gate governs everyone else exactly as before.
+  placementsExempt Boolean  @default(false)
+
+  @@id([playerId, mode])
+}
+
+model MeritEvent {
+  match         Match    @relation(fields: [matchId], references: [id])
+  matchId       String
+  Player        Player   @relation(fields: [playerId], references: [id])
+  playerId      String
+  delta         Int
+  rankAfter     Rank     @relation(fields: [rankAfterCode], references: [code])
+  rankAfterCode String
+  divisionAfter Int
+  createdAt     DateTime @default(now())
+
+  @@id([matchId, playerId])
+  @@index([playerId, createdAt])
+}
+
+model MatchPlayer {
+  id       String @id @default(cuid())
+  match    Match  @relation(fields: [matchId], references: [id], onDelete: Cascade)
+  matchId  String
+  player   Player @relation(fields: [playerId], references: [id])
+  playerId String
+
+  slot Int
+  team Int // authoritative team; rules.teamMapping is derived from this at spawn
+  army String // faction colour (Army enum lives in TS/zod, not Prisma)
+
+  /// [PrismaCoId] chosen general — null until picked; hidden from enemies until Match.revealedAt
+  coId Json?
+
+  ready       Boolean @default(false) // CO locked in during the setup/picker round
+  isSpectator Boolean @default(false)
+
+  /// [PrismaPlayerSkins] per-match cosmetic override; defaults from Player.preferences.skins
+  skins Json?
+
+  result    String? // "won" | "lost" | "drawn" (set at finalize)
+  createdAt DateTime @default(now())
+
+  @@unique([matchId, playerId])
+  @@index([playerId]) // fast "player X's matches", W/L, CO usage
+}

@@ -65,7 +65,7 @@ export default function MatchCardSetup({
 
   if (inMatch) {
     return (
-      <div className="@flex">
+      <div className="@flex @flex-wrap @justify-center @gap-1 @px-2 @pb-2">
         {/* **** CO Button and Menu **** */}
         <div>
           <button
@@ -284,7 +284,7 @@ export default function MatchCardSetup({
   // Not part of the game, can't change CO or Army or Ready
   else {
     return (
-      <div className="@flex  ">
+      <div className="@flex @justify-center @px-2 @pb-2">
         <div>
           <button
             className=" btnMenu"

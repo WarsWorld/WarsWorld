@@ -9,7 +9,8 @@ import matter from "gray-matter";
 import { hashPassword } from "server/hashPassword";
 import { importAWBWMap } from "server/tools/map-importer-utilities";
 import { developmentPlayerNamePrefix as Prefix } from "server/trpc/middleware/player";
-import { articleSchema } from "shared/schemas/article";
+import { articleSchema } from "server/articles/schemas";
+import { seedRanks } from "./scripts/seed-ranks";
 
 const prisma = new PrismaClient();
 
@@ -76,6 +77,10 @@ async function seedArticles(articles: string[], type: string, authorId: string) 
 }
 
 async function main() {
+  // The rank ladder is DATA, so a fresh database has no ranks at all. Ranked degrades to
+  // "no ladder in this deployment" rather than breaking, but a dev DB should have one.
+  await seedRanks(prisma);
+
   const hashedPassword = await hashPassword("secret");
 
   const { id: userId } = await prisma.user.create({
