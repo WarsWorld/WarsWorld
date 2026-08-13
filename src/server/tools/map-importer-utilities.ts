@@ -1,4 +1,5 @@
 import { prisma } from "../prisma/prisma-client";
+import { logger } from "shared/utils/logger";
 import type { Tile } from "shared/schemas/tile";
 import type { WWMap } from "@prisma/client";
 
@@ -19,7 +20,7 @@ export const importAWBWMap = async (data: AWBWMapImportSchema) => {
       },
     });
   } catch (error) {
-    console.error("An error occurred while importing the map");
+    logger.error("An error occurred while importing the map");
     throw error;
   }
 };

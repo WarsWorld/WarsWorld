@@ -1,3 +1,10 @@
 node_modules/
 .next/
 dist/
+
+# Tool/IDE state, not source. Left unformatted these fail `npm run lint` locally for reasons that
+# have nothing to do with the code under review.
+.moonlight/
+.moonlight-local/
+.ai/
+.omc/

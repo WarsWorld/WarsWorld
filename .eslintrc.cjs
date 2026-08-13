@@ -98,9 +98,20 @@ const eslintConfig = {
         "@typescript-eslint/no-restricted-imports": [
           "error",
           {
-            // These imports can break the code on the server or frontend
-            // e.g. importing prisma will immediately break on frontend
-            // and using DOM APIs or React on backend will too.
+            // The engine is Prisma-free (see the src/shared migration map in CLAUDE.md). Map DB
+            // rows to domain entities (shared/types/domain-entities) at the adapter boundary — no
+            // Prisma imports at all, not even types. Exact-name `paths` (glob patterns don't match
+            // the "@prisma/client" specifier reliably).
+            paths: [
+              {
+                name: "@prisma/client",
+                message:
+                  "The engine is Prisma-free: map rows to shared/types/domain-entities at the adapter boundary.",
+                allowTypeImports: false,
+              },
+            ],
+            // These imports can break the code on the server or frontend, e.g. DOM APIs or React
+            // on the backend.
             patterns: [
               {
                 group: ["**/{server,frontend}/**"],
@@ -108,8 +119,10 @@ const eslintConfig = {
                 allowTypeImports: true,
               },
               {
-                group: ["@prisma*"],
-                message: "Don't import non-type prisma / DB stuff into shared",
+                // Pixi needs window/document; shared may run server-side. (Folded in here because
+                // the src/** override below no longer applies to shared — see its excludedFiles.)
+                group: ["**pixi**"],
+                message: "Non-type Pixi.js stuff can't be imported into shared (SSR has no window)",
                 allowTypeImports: true,
               },
             ],
@@ -118,8 +131,10 @@ const eslintConfig = {
       },
     },
     {
+      // src/shared has its own stricter override above. Exclude it here so ESLint's
+      // "last matching override wins per rule" doesn't clobber the shared restrictions.
       files: ["src/**/*.*"],
-      excludedFiles: "src/{components/client-only,pixi}/**/*.*",
+      excludedFiles: ["src/{components/client-only,pixi}/**/*.*", "src/shared/**/*.*"],
       rules: {
         "@typescript-eslint/no-restricted-imports": [
           "error",
