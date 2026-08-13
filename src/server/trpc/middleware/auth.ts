@@ -1,4 +1,3 @@
-import { TRPCError } from "@trpc/server";
 import { t } from "../trpc-init";
 
 export const authMiddleware = t.middleware(({ next, ctx }) => {

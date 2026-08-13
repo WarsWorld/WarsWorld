@@ -43,19 +43,8 @@ const subEventToEmittables = (
     case "attack": {
       const attacker = match.getUnitOrThrow(fromPosition);
 
-      //TODO why is this here?
-      switch (subEvent.eliminationReason) {
-        case "all-attacker-units-destroyed": {
-          attacker.player.data.status = "routed";
-          break;
-        }
-        case "all-defender-units-destroyed": {
-          const defender = match.getUnitOrThrow(subEvent.defenderPosition);
-          defender.player.data.status = "routed";
-          break;
-        }
-      }
-
+      // Elimination status is set only in the apply step (`applyAttackEvent`), which runs on both live
+      // play and event-log replay. Setting it here too (emission-only) was redundant double-ownership.
       return teamsWithSpectator.map((team) => ({
         teamIndex: team.index,
         subEvent: createEmittableAttackEvent(match, attacker, subEvent, team),

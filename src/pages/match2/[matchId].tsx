@@ -11,11 +11,13 @@ import path from "node:path";
 import { spritesheetDataSchema } from "shared/schemas/spritesheet-data";
 import { z } from "zod";
 
-const MatchLoaderNoSSR = dynamic(
-  () => import("components/client-only/MatchLoader").then((res) => res.MatchLoader),
+// Snapshot-driven, server-authoritative board — the only board. The FE consumes BE
+// snapshot/preview endpoints and never runs the engine.
+const MatchBoardV2NoSSR = dynamic(
+  () => import("components/client-only/MatchBoardV2").then((res) => res.MatchBoardV2),
   {
     ssr: false,
-    loading: () => <p>Loading MatchLoader component...</p>,
+    loading: () => <p>Loading board...</p>,
   },
 );
 
@@ -35,11 +37,11 @@ const MatchPage = ({ spritesheetDataByArmy }: Props) => {
   }
 
   return (
-    <MatchLoaderNoSSR
+    <MatchBoardV2NoSSR
       matchId={matchIdResult.data}
       playerId={currentPlayer.id}
       spritesheetDataByArmy={spritesheetDataByArmy}
-    ></MatchLoaderNoSSR>
+    />
   );
 };
 

@@ -43,9 +43,13 @@ export class Vision {
       for (let x = 0; x < this.mapWidth; x++) {
         const tile = team.match.getTile([x, y]);
 
+        // Check ownership against THIS team's own players. `match.getPlayerBySlot` can't be used
+        // here: the Vision is built inside the TeamWrapper constructor, before the team is pushed
+        // into `match.teams`, so a match-wide player lookup would resolve to nothing and no property
+        // would ever register (leaving owned properties fogged).
         if (
           ("playerSlot" in tile &&
-            team.match.getPlayerBySlot(tile.playerSlot)?.team.index === team.index) ||
+            team.players.some((player) => player.data.slot === tile.playerSlot)) ||
           tile.type === "pipeSeam"
         ) {
           this.addOwnedProperty([x, y]);
@@ -80,8 +84,10 @@ export class Vision {
    */
   addOwnedProperty(position: Position) {
     this.ownedProperties.add(position);
-    // you will always have vision of a property you just captured cause a unit has to be on top
-    this.changeVision(position, false);
+    // An owned property reveals its own tile in fog (independently of any unit standing on it), so
+    // ADD vision here — matching `recalculateVision`. (This was previously subtracting, which
+    // underflowed the counter and left owned properties fogged once a unit's vision also touched them.)
+    this.changeVision(position, true);
   }
 
   /**

@@ -1,4 +1,3 @@
-import type { Player } from "@prisma/client";
 import type { WithMatchId } from "server/trpc/middleware/match";
 import type {
   AbilityAction,
@@ -64,7 +63,7 @@ export type COPowerEvent = COPowerAction & {
 };
 
 type WithPlayer = {
-  playerId: Player["id"];
+  playerId: string;
 };
 
 export type PlayerEliminatedEvent = WithPlayer & {
@@ -74,7 +73,7 @@ export type PlayerEliminatedEvent = WithPlayer & {
     | { eliminationReason: Exclude<AttackEvent["eliminationReason"], undefined> }
     | {
         eliminationReason: Exclude<AbilityEvent["eliminationReason"], undefined>;
-        capturedByPlayerId: Player["id"];
+        capturedByPlayerId: string;
       }
     | { eliminationReason: "timer-ran-out" }
   );
